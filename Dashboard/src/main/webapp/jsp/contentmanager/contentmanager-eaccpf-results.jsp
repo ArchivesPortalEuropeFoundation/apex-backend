@@ -231,11 +231,11 @@
                                                 <s:text name="content.message.publish" />
                                             </option>
                                         </c:if>
-                                        <c:if test="${eacCpfResult.editable}">
+<%--                                        <c:if test="${eacCpfResult.editable}">
                                             <option value="_blank|editEacCpf.action">
                                                 <s:text name="label.edit" />
                                             </option>
-                                        </c:if>
+                                        </c:if>--%>
                                         <c:if test="${eacCpfResult.validated}">
 <%--                                            <option value="_blank|preview.action">
                                                 <s:text name="content.message.preview" />
