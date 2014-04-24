@@ -52,7 +52,7 @@
 		});
 		$('#providernothing').click(function() {
 			$('#hiddenCustomProvider').hide();
-		});	
+		});
 
 		$('#licensecreativecommons').click(function() {
 			$('#hiddenCreativeCommonsLicense').show();
@@ -65,10 +65,14 @@
 		$('#licensecpdm').click(function() {
 			$('#hiddenCreativeCommonsLicense').hide();
 			$('#hiddenEuropeanaLicense').hide();
-		});		
+		});
 		$('#licenseeuropeana').click(function() {
 			$('#hiddenCreativeCommonsLicense').hide();
 			$('#hiddenEuropeanaLicense').show();
+		});
+		$('#licenseoutofcopyright').click(function() {
+			$('#hiddenCreativeCommonsLicense').hide();
+			$('#hiddenEuropeanaLicense').hide();
 		});
 
 	});
@@ -236,7 +240,7 @@
 			<br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
 			</td>
 		</tr>
-		<s:if test="license=='europeana'">
+		<s:if test="license=='cc0' || license=='cpdm' || license=='europeana' || license=='outofcopyright'">
 			<c:set var="creativeCommonsInvisible" value="style=\"display: none;\""></c:set>
 		</s:if>
 		<s:else>

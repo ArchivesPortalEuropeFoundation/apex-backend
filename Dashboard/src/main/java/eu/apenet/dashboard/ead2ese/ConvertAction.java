@@ -33,20 +33,35 @@ import eu.apenet.persistence.vo.QueueAction;
 
 public class ConvertAction extends AbstractInstitutionAction {
 
+	// Licence types.
 	private static final String CREATIVECOMMONS_CPDM = "cpdm";
 	private static final String CREATIVECOMMONS_CC0 = "cc0";
 	private static final String CREATIVECOMMONS = "creativecommons";
-	private static final String INHERITLANGUAGE_PROVIDE = "provide";
 	private static final String EUROPEANA = "europeana";
-	private static final String TYPE_TEXT = "TEXT";	// Constant for type "text".
-	private static final String OPTION_YES = "yes";	// Constant for value "yes".
-	private static final String OPTION_NO = "no";		// Constant for value "no".
-	private static final String OPTION_FULL = "full";	// Constant for value "full".
-	private static final String OPTION_MINIMAL = "minimal";		// Constant for value "minimal".
+	private static final String OUT_OF_COPYRIGHT = "outofcopyright";
+	// DAO role.
+	private static final String TYPE_3D = "3D"; // Constant for type "3D".
+	private static final String TYPE_IMAGE = "IMAGE"; // Constant for type "image".
+	private static final String TYPE_SOUND = "TEXT"; // Constant for type "sound".
+	private static final String TYPE_TEXT = "TEXT"; // Constant for type "text".
+	private static final String TYPE_VIDEO = "VIDEO"; // Constant for type "video".
+	// Inherit options.
+	private static final String INHERITLANGUAGE_PROVIDE = "provide";
+	// Options.
+	private static final String OPTION_YES = "yes"; // Constant for value "yes".
+	private static final String OPTION_NO = "no"; // Constant for value "no".
+	// Conversion type.
+	private static final String OPTION_FULL = "full"; // Constant for value "full".
+	private static final String OPTION_MINIMAL = "minimal"; // Constant for value "minimal".
+	// Europeana licences.
+	private static final String EUROPEANA_FREE = "http://www.europeana.eu/rights/rr-f/"; // Constant for link to europeana free license.
+	private static final String EUROPEANA_NON_COMMERCIAL = "http://www.europeana.eu/rights/out-of-copyright-non-commercial/"; // Constant for link to europeana non-commercial license.
+	private static final String EUROPEANA_ORPHAN = "http://www.europeana.eu/rights/orphan-work-eu/"; // Constant for link to europeana orphan license.
+	private static final String EUROPEANA_PAID = "http://www.europeana.eu/rights/rr-p"; // Constant for link to europeana paid license.
 
 	protected final Logger log = Logger.getLogger(getClass());
 	/**
-	 * 
+	 * Serializable.
 	 */
 	private static final long serialVersionUID = -304486360468003677L;
 	private String id;
@@ -147,34 +162,34 @@ public class ConvertAction extends AbstractInstitutionAction {
 		for (String language : isoLanguages) {
 			String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
 			//String label = language + " (" +  languageDescription + ")"; 
-			languages.add(new SelectItem(language, languageDescription));
+			this.languages.add(new SelectItem(language, languageDescription));
 		}
 
-		conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_FULL, getText("ead2ese.label.full.conversion")));
-		conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_MINIMAL, getText("ead2ese.label.minimal.conversion")));
+		this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_FULL, this.getText("ead2ese.label.full.conversion")));
+		this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_MINIMAL, this.getText("ead2ese.label.minimal.conversion")));
 		//list="#{'IMAGE':'Image', 'TEXT':'Text', 'SOUND':'Sound', 'VIDEO':'Video'}"
-		typeSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
-		typeSet.add(new SelectItem("3D", getText("ead2ese.content.type.3D")));
-		typeSet.add(new SelectItem("IMAGE", getText("ead2ese.content.type.image")));
-		typeSet.add(new SelectItem(ConvertAction.TYPE_TEXT, getText("ead2ese.content.type.text")));
-		typeSet.add(new SelectItem("SOUND", getText("ead2ese.content.type.sound")));
-		typeSet.add(new SelectItem("VIDEO", getText("ead2ese.content.type.video")));
-		yesNoSet.add(new SelectItem(ConvertAction.OPTION_YES, getText("ead2ese.content.yes")));
-		yesNoSet.add(new SelectItem(ConvertAction.OPTION_NO, getText("ead2ese.content.no")));
-		inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_YES, getText("ead2ese.content.yes")));
-		inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_NO, getText("ead2ese.content.no")));
-		inheritLanguageSet.add(new SelectItem(INHERITLANGUAGE_PROVIDE, getText("ead2ese.label.language.select")));
-		licenseSet.add(new SelectItem(EUROPEANA, getText("ead2ese.content.license.europeana")));
-		licenseSet.add(new SelectItem(CREATIVECOMMONS, getText("ead2ese.content.license.creativecommons")));
-		licenseSet.add(new SelectItem(CREATIVECOMMONS_CC0, getText("ead2ese.content.license.creativecommons.cc0")));
-		licenseSet.add(new SelectItem(CREATIVECOMMONS_CPDM, getText("ead2ese.content.license.creativecommons.publicdomain")));
-		license = EUROPEANA;
-		europeanaLicenseSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
-		europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
-		europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-f/", getText("ead2ese.content.license.europeana.access.free")));
-		europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-r/", getText("ead2ese.content.license.europeana.access.restricted")));
-		europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/unknown/", getText("ead2ese.content.license.europeana.access.unknown")));
-		this.setHierarchyPrefix(getText("ead2ese.content.hierarchy.prefix" ));
+		this.typeSet.add(new SelectItem("", this.getText("ead2ese.content.selectone")));
+		this.typeSet.add(new SelectItem(ConvertAction.TYPE_3D, this.getText("ead2ese.content.type.3D")));
+		this.typeSet.add(new SelectItem(ConvertAction.TYPE_IMAGE, this.getText("ead2ese.content.type.image")));
+		this.typeSet.add(new SelectItem(ConvertAction.TYPE_SOUND, this.getText("ead2ese.content.type.sound")));
+		this.typeSet.add(new SelectItem(ConvertAction.TYPE_TEXT, this.getText("ead2ese.content.type.text")));
+		this.typeSet.add(new SelectItem(ConvertAction.TYPE_VIDEO, this.getText("ead2ese.content.type.video")));
+		this.yesNoSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
+		this.yesNoSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
+		this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
+		this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
+		this.inheritLanguageSet.add(new SelectItem(ConvertAction.INHERITLANGUAGE_PROVIDE, this.getText("ead2ese.label.language.select")));
+		this.licenseSet.add(new SelectItem(ConvertAction.EUROPEANA, this.getText("ead2ese.content.license.europeana")));
+		this.licenseSet.add(new SelectItem(ConvertAction.OUT_OF_COPYRIGHT, this.getText("ead2ese.content.license.out.of.copyright")));
+		this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS, this.getText("ead2ese.content.license.creativecommons")));
+		this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS_CC0, this.getText("ead2ese.content.license.creativecommons.cc0")));
+		this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS_CPDM, this.getText("ead2ese.content.license.creativecommons.publicdomain")));
+		this.license = EUROPEANA;
+		this.europeanaLicenseSet.add(new SelectItem("", this.getText("ead2ese.content.selectone")));
+		this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_FREE, this.getText("ead2ese.content.license.europeana.access.free")));
+		this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_ORPHAN, this.getText("ead2ese.content.license.europeana.access.orphan")));
+		this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_PAID, this.getText("ead2ese.content.license.europeana.access.paid")));
+		this.setHierarchyPrefix(this.getText("ead2ese.content.hierarchy.prefix" ));
     }
 
 	public String input() throws IOException, SAXException, ParserConfigurationException{
@@ -272,7 +287,9 @@ public class ConvertAction extends AbstractInstitutionAction {
     	}
     	if (ConvertAction.EUROPEANA.equals(this.getLicense())){
     		config.setRights(this.getEuropeanaLicense());
-    	}else if(ConvertAction.CREATIVECOMMONS_CC0.equals(license)){
+    	} else if (ConvertAction.OUT_OF_COPYRIGHT.equals(this.getLicense())) {
+    		config.setRights(ConvertAction.EUROPEANA_NON_COMMERCIAL);
+    	} else if(ConvertAction.CREATIVECOMMONS_CC0.equals(license)){
     		config.setRights("http://creativecommons.org/publicdomain/zero/1.0/");
     	}else if(ConvertAction.CREATIVECOMMONS_CPDM.equals(license)){
     		config.setRights("http://creativecommons.org/publicdomain/mark/1.0/");
