@@ -4,7 +4,13 @@
  */
 package eu.apenet.dashboard.manual.eaccpf;
 
+import eu.apenet.commons.types.XmlType;
+import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
 import eu.apenet.dpt.utils.eaccpf.*;
+import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.UploadMethod;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -20,12 +26,16 @@ public class CreateEacCpf {
 
     private EacCpf eacCpf = new EacCpf();
     private Map parameters;
+    private eu.apenet.persistence.vo.EacCpf newEac = new eu.apenet.persistence.vo.EacCpf();
+    private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+    private int aiId;
 
     //global StringBuilder for date format
     StringBuilder standardDate = new StringBuilder();
 
-    public CreateEacCpf(HttpServletRequest request) {
+    public CreateEacCpf(HttpServletRequest request, int aiId) {
         this.parameters = request.getParameterMap();
+        this.aiId = aiId;
 
         Control control = fillControl();
         CpfDescription cpfDescription = fillCpfDescription();
@@ -51,6 +61,14 @@ public class CreateEacCpf {
                 control.getRecordId().setValue(content[0]);
             }
         } else {
+            UploadMethod uploadMethod = new UploadMethod();
+            uploadMethod.setMethod(UploadMethod.HTTP);
+            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+            newEac.setIdentifier("eac_");
+            newEac.setUploadMethod(uploadMethod);
+            newEac.setArchivalInstitution(archivalInstitution);
+            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
+            eacCpfDAO.store(newEac);
             Random random = new Random();
             int fakeId = random.nextInt(1000000000);
             control.getRecordId().setValue("eac_" + Integer.toString(fakeId));
@@ -642,7 +660,7 @@ public class CreateEacCpf {
 
                 // .../functions/function/placeEntry
                 if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                    while (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty() || parameters.containsKey("placeTable_" + tableCounter + parameterName5 + rowCounter)) {
+                     while (parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("placeTable_" + tableCounter + parameterName5 + rowCounter)) {
                         PlaceEntry placeEntry = new PlaceEntry();
 
                         // .../placeEntry@countryCode

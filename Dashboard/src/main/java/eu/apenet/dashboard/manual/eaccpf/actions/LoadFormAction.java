@@ -11,7 +11,10 @@ import eu.apenet.dashboard.manual.eaccpf.util.IdentifierType;
 import eu.apenet.dashboard.manual.eaccpf.util.MapEntry;
 import eu.apenet.dashboard.manual.eaccpf.util.NameEntryType;
 import eu.apenet.dashboard.manual.eaccpf.util.RelationType;
+import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.User;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -61,17 +64,24 @@ public class LoadFormAction extends EacCpfAction {
         } else {
             cpfType = getServletRequest().getParameter("cpfType");
             this.loader.setRecordId("");
-            this.loader.setControlResponsiblePerson(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getPartner().getName());
+            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
+            if (archivalInstitution.getPartner() != null) {
+                this.loader.setControlResponsiblePerson(archivalInstitution.getPartner().getName());
+            } else {
+                UserDAO partnerdao = DAOFactory.instance().getUserDAO();
+                User countryManager = partnerdao.getCountryManagerOfCountry(archivalInstitution.getCountry());
+                this.loader.setControlResponsiblePerson(countryManager.getName());
+            }
             this.loader.setAgencyCode(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getRepositorycode());
             useMode = "new";
         }
-        if (cpfType.equals(EacCpfAction.PERSON)){
+        if (cpfType.equals(EacCpfAction.PERSON)) {
             cpfTypeDescriptionText = "Description of a person";
             cpfTypeIdentifierText = "Identifier of the person";
-        } else if (cpfType.equals(EacCpfAction.CORPORATE_BODY)){
+        } else if (cpfType.equals(EacCpfAction.CORPORATE_BODY)) {
             cpfTypeDescriptionText = "Description of a corporate body";
             cpfTypeIdentifierText = "Identifier of the corporate body";
-        } else if (cpfType.equals(EacCpfAction.FAMILY)){
+        } else if (cpfType.equals(EacCpfAction.FAMILY)) {
             cpfTypeDescriptionText = "Description of a family";
             cpfTypeIdentifierText = "Identifier of the family";
         } else {

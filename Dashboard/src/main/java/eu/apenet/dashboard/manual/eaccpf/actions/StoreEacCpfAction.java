@@ -28,7 +28,7 @@ public class StoreEacCpfAction extends EacCpfAction {
 
     @Override
     public String execute() throws Exception {
-        CreateEacCpf creator = new CreateEacCpf(getServletRequest());
+        CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId());
         EacCpf eac = creator.getEacCpf();
         String filename = eac.getControl().getRecordId().getValue() + ".xml";
 
