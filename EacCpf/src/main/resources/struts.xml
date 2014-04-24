@@ -10,11 +10,11 @@
             <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" />
         </result-types>
 
-        <action name="index" class="eu.apex.eaccpf.actions.IndexAction">
+        <action name="indexEacCpf" class="eu.apex.eaccpf.actions.IndexAction">
             <result name="success" type="tiles">index</result>
         </action>
 
-        <action name="edit" class="eu.apex.eaccpf.actions.LoadFormAction">
+        <action name="editEacCpf" class="eu.apex.eaccpf.actions.LoadFormAction">
             <result name="success" type="tiles">edit</result>
             <result name="input" type="tiles">index</result>
         </action>
