@@ -1057,7 +1057,9 @@
         </action>
 
         <action name="storeEacCpf" class="eu.apenet.dashboard.manual.eaccpf.actions.StoreEacCpfAction">
-            
+            <result name="success" type="redirectAction">
+                <param name="actionName">contentmanager</param>
+            </result>
         </action>
     </package>
 </struts>

@@ -53,8 +53,8 @@
             <tr>
                 <td><input type="button" class="rightButton" id="buttonPreviousTab" value="Previous tab" onclick='loadPreviousTab($("#currentTab").attr("value"));' /></td>
                 <td><input type="button" id="buttonNextTab" value="Next tab" onclick='loadNextTab($("#currentTab").attr("value"));' /></td>
-                <td><input type="button" class="rightButton" id="buttonSaveEacCpf" value="Save (and download)" onclick='clickSaveAction("yada", "chooseTypeError", "identityError", "descriptionError", "relationsError", "controlError", "some message");' /></td>
-                <td><input type="button" id="buttonExit" value="Exit form" onclick='clickExitAction();' /></td>
+                <td><input type="button" class="rightButton" id="buttonSaveEacCpf" value="Save and exit" onclick='clickSaveAction("yada", "chooseTypeError", "identityError", "descriptionError", "relationsError", "controlError", "some message");' /></td>
+                <td><input type="button" id="buttonExit" value="Exit without save" onclick='clickExitAction();' /></td>
             </tr>
         </table>
     </form>
