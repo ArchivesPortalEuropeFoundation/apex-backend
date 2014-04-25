@@ -12,6 +12,7 @@ import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.UploadMethod;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,15 +34,16 @@ import org.xml.sax.SAXParseException;
  * @author papp
  */
 public class StoreEacCpfAction extends EacCpfAction {
-
-    private final Logger log = Logger.getLogger(StoreEacCpfAction.class);
-    private final String countryCode = new ArchivalLandscape().getmyCountry();
-    private final String basePath = APEnetUtilities.FILESEPARATOR + countryCode + APEnetUtilities.FILESEPARATOR
-            + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
-    private final List<String> warnings_ead = new ArrayList<String>();
+    private List<String> warnings_ead = new ArrayList<String>();
 
     @Override
     public String execute() throws Exception {
+        Logger log = Logger.getLogger(StoreEacCpfAction.class);
+        String countryCode = new ArchivalLandscape().getmyCountry();
+        String basePath = APEnetUtilities.FILESEPARATOR + countryCode + APEnetUtilities.FILESEPARATOR
+            + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
+
+
         CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId());
         EacCpf eac = creator.getEacCpf();
         String filename = eac.getControl().getRecordId().getValue() + ".xml";
@@ -81,11 +83,15 @@ public class StoreEacCpfAction extends EacCpfAction {
                 //update ddbb entry
                 EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
                 ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId());
-                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(getAiId(), "eac_" + archivalInstitution.getRepositorycode());
+                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), "eac_" + archivalInstitution.getRepositorycode());
                 //TODO: Move nameBuilder method from CreateEacCpfTask to some utility class and make it static, then apply it here
                 storedEacEntry.setTitle("Test title");
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
+                UploadMethod uploadMethod = new UploadMethod();
+                uploadMethod.setMethod(UploadMethod.HTTP);
+                uploadMethod.setId(3);
+                storedEacEntry.setUploadMethod(uploadMethod);
                 storedEacEntry.setIdentifier(eac.getControl().getRecordId().getValue());
                 eacCpfDAO.update(storedEacEntry);
             } else {

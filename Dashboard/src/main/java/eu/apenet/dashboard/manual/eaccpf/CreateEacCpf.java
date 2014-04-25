@@ -63,6 +63,7 @@ public class CreateEacCpf {
         } else {
             UploadMethod uploadMethod = new UploadMethod();
             uploadMethod.setMethod(UploadMethod.HTTP);
+            uploadMethod.setId(3);
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
             String tempIdentifier = "eac_" + archivalInstitution.getRepositorycode();
             newEac.setUploadDate(new java.util.Date());
@@ -71,7 +72,7 @@ public class CreateEacCpf {
             newEac.setArchivalInstitution(archivalInstitution);
             newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
             eacCpfDAO.store(newEac);
-            newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, tempIdentifier);
+            newEac = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), tempIdentifier);
 
             control.getRecordId().setValue("eac_" + Integer.toString(newEac.getId()));
         }
