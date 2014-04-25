@@ -60,7 +60,7 @@ public class ValidateTask extends AbstractEadTask {
 							.add(new SAXParseException(
 									"The file is not UTF-8 - We will try to convert it right now to UTF-8 or make sure your file is UTF-8 before re-uploading. If not, the file will not pass the index step and will fail.",
 									new LocatorImpl()));
-					logger.warn("ERROR - not UTF-8 ? - Trying to convert it to UTF-8",e);
+					logger.warn("ERROR - not UTF-8 ? - Trying to convert it to UTF-8");
 					try {
 						simpleUtf8Conversion(
 								APEnetUtilities.getDashboardConfig().getRepoDirPath() + ead.getPathApenetead(),
