@@ -397,23 +397,19 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ArchivalInstitution> getArchivalInstitutionsByRepositorycode(String repositorycode) {
+	public ArchivalInstitution getArchivalInstitutionByRepositoryCode(String repositorycode) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		if (repositorycode != null) {
 			criteria.add(Restrictions.eq("repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
 		}
-		return criteria.list();
+		List<ArchivalInstitution> archivalInstitutions = criteria.list();
+		if (archivalInstitutions.size() > 0){
+			return archivalInstitutions.get(0);
+		}
+		return null;
 	}
 
-	private Criteria createArchivalInstitutionsByRepositorycodeCriteria(String repositorycode) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		if (repositorycode != null) {
-			criteria.add(Restrictions.eq("repositorycode", repositorycode));
-		}
-		return criteria;
-	}
 
 	@SuppressWarnings("unchecked")
 	public List<ArchivalInstitution> getArchivalInstitutionsByAutform(String autform) {
