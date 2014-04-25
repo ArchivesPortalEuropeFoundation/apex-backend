@@ -149,7 +149,6 @@
 		<module>stopwords</module>
 		<module>database-mock</module>
 		<module>PortugalHarvesterConverter</module>
-	 <module>EacCpf</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
