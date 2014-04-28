@@ -59,6 +59,11 @@
 	<s:form action="forceSolrCommit" theme="simple" method="post">
 		<s:submit value="Force Solr commit"></s:submit>
 	</s:form>
+	<c:if test="${not queueActive}">
+		<s:form action="republishAllEagFiles" theme="simple" method="post">
+			<s:submit value="Republish all EAG files"></s:submit>
+		</s:form>	
+	</c:if>
 	<c:if test="${!empty firstItems}">
 		<h2>First items:</h2>
 		<table class="defaultlayout">
