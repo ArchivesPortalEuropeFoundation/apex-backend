@@ -259,7 +259,7 @@ public class EagSolrPublisher  extends AbstractSolrPublisher{
 		ArchivalInstitution archivalInstitution = eagSolrObject.getArchivalInstitution();
 		SolrInputDocument doc = new SolrInputDocument();
 		doc.addField(SolrFields.ID, archivalInstitution.getAiId());
-		doc.addField(SolrFields.EAG_REPOSITORY_CODE, archivalInstitution.getRepositorycode());
+		doc.addField(SolrFields.REPOSITORY_CODE, archivalInstitution.getRepositorycode());
 		doc.addField(SolrFields.EAG_NAME, archivalInstitution.getAiname());		
 //		add(doc,SolrFields.EAC_CPF_RECORD_ID, eagSolrObject.getRecordId());
 //		addLowerCase(doc,SolrFields.EAC_CPF_FACET_ENTITY_TYPE, eagSolrObject.getEntityType());
