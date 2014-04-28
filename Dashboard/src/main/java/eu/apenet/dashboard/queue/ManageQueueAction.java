@@ -14,9 +14,12 @@ import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.eag.publish.EagSolrPublisher;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
@@ -158,6 +161,23 @@ public class ManageQueueAction extends AbstractAction {
 		return SUCCESS;
 	}
 
+	public String republishAllEagFiles(){
+		try {
+			EagSolrPublisher publisher = new EagSolrPublisher();
+			publisher.deleteEverything();
+			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsWithRepositoryCode();
+			for (ArchivalInstitution archivalInstitution: archivalInstitutions){
+				LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
+				publisher = new EagSolrPublisher();
+				publisher.publish(archivalInstitution);
+				publisher.commitSolrDocuments();
+			}
+		}catch(Exception e){
+			LOGGER.error(e.getMessage(), e);
+		}	
+		return SUCCESS;
+	}
 	public String startStopQueue() {
 		if (QueueDaemon.isActive()) {
 			QueueDaemon.stop();
