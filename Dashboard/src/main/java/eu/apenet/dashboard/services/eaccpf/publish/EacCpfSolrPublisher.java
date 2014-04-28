@@ -292,7 +292,7 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 		add(doc, SolrFields.AI, archivalInstitution.getAiname() + COLON + archivalInstitution.getAiId());
 		doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
 		add(doc, SolrFields.OTHER,eacCpfSolrObject.getOther());
-		doc.addField(SolrFields.EAC_CPF_AGENCY_CODE, archivalInstitution.getRepositorycode());
+		doc.addField(SolrFields.REPOSITORY_CODE, archivalInstitution.getRepositorycode());
 		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS, eacCpfSolrObject.getNumberOfArchivalMaterialRelations());
 		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_NAME_RELATIONS, eacCpfSolrObject.getNumberOfNameRelations());
 		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS, eacCpfSolrObject.getNumberOfInstitutionsRelations());
