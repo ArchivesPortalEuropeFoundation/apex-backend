@@ -56,7 +56,6 @@ public final class SolrFields {
 	 */
 
 	public final static String EAC_CPF_RECORD_ID = "recordId";
-	public final static String EAC_CPF_AGENCY_CODE = "agencyCode";
 	public final static String EAC_CPF_ENTITY_ID = "entityId";
 	public final static String EAC_CPF_NAMES = "names";
 	public final static String EAC_CPF_PLACES = "places";
@@ -76,7 +75,7 @@ public final class SolrFields {
 	public final static String EAC_CPF_NUMBER_OF_NAME_RELATIONS = "numberOfNameRelations";
 	public final static String EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS = "numberOfInstitutions";
 	
-	public final static String EAG_REPOSITORY_CODE="repositoryCode";
+	public final static String REPOSITORY_CODE="repositoryCode";
 	public final static String EAG_NAME="name";
 	public final static String EAG_OTHER_NAMES = "names";
 }
