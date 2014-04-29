@@ -4,10 +4,6 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Fetch;
-import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -17,12 +13,11 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HgSgFaRelation;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
+import eu.archivesportaleurope.util.ApeUtil;
 
 public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> implements CLevelDAO {
 
@@ -40,9 +35,9 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 
 		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND eadContent.eadid= :eadid AND archivalInstitution.repositorycode = :repoCode";			
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
-		query.setParameter("unitid", unitid);
-		query.setParameter("eadid", eadid);
-		query.setParameter("repoCode", repositoryCode);	
+		query.setParameter("unitid", ApeUtil.decodeSpecialCharacters(unitid));
+		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
+		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));		
 		query.setMaxResults(5);
 		return query.getResultList();
 	}
@@ -59,8 +54,8 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.clId  = :id AND eadContent.eadid= :eadid AND archivalInstitution.repositorycode = :repoCode";			
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
 		query.setParameter("id", id);
-		query.setParameter("eadid", eadid);
-		query.setParameter("repoCode", repositoryCode);		
+		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
+		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));		
 		query.setMaxResults(1);
 		List<CLevel> results = query.getResultList();
 		if (results.size() > 0){
