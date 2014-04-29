@@ -133,7 +133,7 @@
 				title scopecontent other alterdate
 			</str>
 			<str name="fl">
-				id,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level
+				id,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode
 			</str>
 			<str name="q.alt">*:*</str>
 			<str name="hl.fl">title scopecontent other alterdate</str>
