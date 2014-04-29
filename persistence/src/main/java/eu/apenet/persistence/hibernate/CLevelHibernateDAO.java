@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -13,13 +17,57 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HgSgFaRelation;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 
 public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> implements CLevelDAO {
 
 	private final static Logger LOG = Logger.getLogger(CLevelHibernateDAO.class);
+	
+	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid){
+		String varName = "findingAid";
+		if (FindingAid.class.equals(clazz)){
+			varName = "findingAid";
+		}if (SourceGuide.class.equals(clazz)){
+			varName = "sourceGuide";
+		}else if (HoldingsGuide.class.equals(clazz)){
+			varName = "holdingsGuide";
+		}
+
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND eadContent.eadid= :eadid AND archivalInstitution.repositorycode = :repoCode";			
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		query.setParameter("unitid", unitid);
+		query.setParameter("eadid", eadid);
+		query.setParameter("repoCode", repositoryCode);	
+		query.setMaxResults(5);
+		return query.getResultList();
+	}
+	public CLevel getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Long id){
+		String varName = "findingAid";
+		if (FindingAid.class.equals(clazz)){
+			varName = "findingAid";
+		}if (SourceGuide.class.equals(clazz)){
+			varName = "sourceGuide";
+		}else if (HoldingsGuide.class.equals(clazz)){
+			varName = "holdingsGuide";
+		}
+
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.clId  = :id AND eadContent.eadid= :eadid AND archivalInstitution.repositorycode = :repoCode";			
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		query.setParameter("id", id);
+		query.setParameter("eadid", eadid);
+		query.setParameter("repoCode", repositoryCode);		
+		query.setMaxResults(1);
+		List<CLevel> results = query.getResultList();
+		if (results.size() > 0){
+			return results.get(0);
+		}
+		return null;
+	}
 	@Override
 	public Long countCLevels(Class<? extends Ead> clazz, Integer id){
 		String propertyName = "faId";
