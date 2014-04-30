@@ -6,6 +6,8 @@ import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eaccpf.CreateEacCpf;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
+import eu.apenet.dpt.utils.eaccpf.Identity;
+import eu.apenet.dpt.utils.eaccpf.Part;
 import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.Xsd_enum;
@@ -13,6 +15,7 @@ import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
+import eu.apenet.persistence.vo.ValidatedState;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,6 +37,7 @@ import org.xml.sax.SAXParseException;
  * @author papp
  */
 public class StoreEacCpfAction extends EacCpfAction {
+
     private List<String> warnings_ead = new ArrayList<String>();
 
     @Override
@@ -41,8 +45,7 @@ public class StoreEacCpfAction extends EacCpfAction {
         Logger log = Logger.getLogger(StoreEacCpfAction.class);
         String countryCode = new ArchivalLandscape().getmyCountry();
         String basePath = APEnetUtilities.FILESEPARATOR + countryCode + APEnetUtilities.FILESEPARATOR
-            + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
-
+                + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
 
         CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId());
         EacCpf eac = creator.getEacCpf();
@@ -64,7 +67,7 @@ public class StoreEacCpfAction extends EacCpfAction {
 
             jaxbMarshaller.marshal(eac, eacCpfTempFile);
 
-            // It is necessary to validate the file against APEnet EAG schema.
+            // It is necessary to validate the file against apeEAC-CPF schema.
             log.debug("Beginning EAC-CPF validation");
             if (validateFile(eacCpfTempFile)) {
                 log.info("EAC-CPF file is valid");
@@ -79,13 +82,19 @@ public class StoreEacCpfAction extends EacCpfAction {
                     }
                 }
                 FileUtils.moveFile(eacCpfTempFile, eacCpfFinalFile);
+                if (eacCpfTempFile.exists()) {
+                    try {
+                        FileUtils.forceDelete(eacCpfTempFile);
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
 
                 //update ddbb entry
                 EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
                 ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId());
                 eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), "eac_" + archivalInstitution.getRepositorycode());
-                //TODO: Move nameBuilder method from CreateEacCpfTask to some utility class and make it static, then apply it here
-                storedEacEntry.setTitle("Test title");
+                storedEacEntry.setTitle(getTitleFromFile(eac));
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
                 UploadMethod uploadMethod = new UploadMethod();
@@ -93,8 +102,9 @@ public class StoreEacCpfAction extends EacCpfAction {
                 uploadMethod.setId(3);
                 storedEacEntry.setUploadMethod(uploadMethod);
                 storedEacEntry.setIdentifier(eac.getControl().getRecordId().getValue());
+                storedEacEntry.setValidated(ValidatedState.VALIDATED);
                 eacCpfDAO.update(storedEacEntry);
-            } else {
+                            } else {
                 log.warn("The file " + filename + " is not valid");
                 for (int i = 0; i < warnings_ead.size(); i++) {
                     String warning = warnings_ead.get(i).replace("<br/>", "");
@@ -143,5 +153,64 @@ public class StoreEacCpfAction extends EacCpfAction {
             throw new APEnetException("Exception while validating: SAXException", e);
         }
         return true;
+    }
+
+    private String getTitleFromFile(EacCpf eacCpf) {
+        String title = "";
+        StringBuilder builderTitle = new StringBuilder();
+        try {
+            List<Object> allNameEntries = eacCpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry();
+            List<Identity.NameEntry> nameEntries = new ArrayList<Identity.NameEntry>();
+            for (Object object : allNameEntries) {
+                if (object instanceof Identity.NameEntry) {
+                    nameEntries.add((Identity.NameEntry) object);
+                }
+            }
+            if (!nameEntries.isEmpty()) {
+                Identity.NameEntry firstEntry = nameEntries.get(0);
+                List<Part> parts = firstEntry.getPart();
+                if (!parts.isEmpty()) {
+
+                    String result = parts.get(0).getLocalType();
+                    if (result.equalsIgnoreCase("corpname") || (result.equalsIgnoreCase("persname")) || result.equalsIgnoreCase("famname") || result.equalsIgnoreCase("error")) {
+                        // the title is the first occurrence of the element nameEntry/part
+                        title = parts.get(0).getContent();
+                    } else {
+                        // the title is formed by "surname, firstname patronymic"
+                        StringBuilder surname = new StringBuilder();
+                        StringBuilder firstname = new StringBuilder();
+                        StringBuilder patronymic = new StringBuilder();
+                        for (Part part : parts) {
+                            if (part.getLocalType().equals("surname")) {
+                                surname.append(part.getContent());
+                            }
+                            if (part.getLocalType().equals("firstname")) {
+                                firstname.append(part.getContent());
+                            }
+                            if (part.getLocalType().equals("patronymic")) {
+                                patronymic.append(part.getContent());
+                            }
+                        }
+                        // build the title
+                        builderTitle.append(surname);
+                        if (builderTitle.length() != 0) {
+                            builderTitle.append(", ");
+                        }
+                        builderTitle.append(firstname);
+                        if (builderTitle.length() != 0) {
+                            builderTitle.append(" ");
+                        }
+                        builderTitle.append(patronymic);
+                        if (builderTitle.length() == 0) {
+                            builderTitle.append(" ");
+                        }
+                        title = builderTitle.toString();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            title = "";
+        }
+        return title;
     }
 }
