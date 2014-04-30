@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
+import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
@@ -153,6 +154,8 @@ public class ManageQueueAction extends AbstractAction {
 			LOGGER.info("Start hard commit solr cores");
 			EacCpfSolrServerHolder.getInstance().hardCommit();
 			LOGGER.info("EAC-CPF hard commit finished");
+			EagSolrServerHolder.getInstance().hardCommit();
+			LOGGER.info("EAG hard commit finished");
 			EadSolrServerHolder.getInstance().hardCommit();
 			LOGGER.info("EAD hard commit finished");
 		} catch (Exception de) {
