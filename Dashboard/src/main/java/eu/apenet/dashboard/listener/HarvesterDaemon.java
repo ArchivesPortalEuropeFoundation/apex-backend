@@ -1,7 +1,6 @@
 package eu.apenet.dashboard.listener;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,40 +18,40 @@ import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
  */
 public class HarvesterDaemon {
     private static final Logger LOGGER = Logger.getLogger(HarvesterDaemon.class);
+	private final static int MINUTE_IN_SECONDS = 60;
+
+	private final static int HOUR_IN_SECONDS = 60 * MINUTE_IN_SECONDS;
+
+	private final static int DAY_IN_SECONDS = 24 * HOUR_IN_SECONDS;
     private static ScheduledExecutorService scheduler;
     private static boolean harvesterProcessing = false;
     private static boolean processOnceADay = true;
     private static HarvestObject harvestObject = null;
-
+    private static final Duration DAILY_HARVESTING_DURATION = new Duration(5, 0, 0);
+    private static final Duration TEN_MINUTES_HARVESTING_DURATION = new Duration(0, 10, 0);
+    private static final Duration TEN_MINUTES_HARVESTING_DELAY = new Duration(0, 5, 0);
     public static synchronized void start(boolean processOnceADay) {
     	HarvesterDaemon.processOnceADay = processOnceADay;
         if (scheduler == null && !harvesterProcessing) {
             scheduler = Executors.newScheduledThreadPool(1);
-
+            LOGGER.info("Harvester daemon started");
+            LOGGER.info("-----------------------------");
             if(HarvesterDaemon.processOnceADay) {
-                Calendar calendar = GregorianCalendar.getInstance();
-                calendar.setTime(new Date());
-                int startTonight = 23 - calendar.get(Calendar.HOUR_OF_DAY);
-                if(startTonight < 0)
-                    startTonight = 0;
-                LOGGER.info("Daily harvesting started. Next harvester task will be started in " + startTonight + " hours.");
-                addTask(new Duration(startTonight, 1, 0), new Duration(5, 0, 0), new Duration(24, 0, 0));
+                Calendar currentDate = GregorianCalendar.getInstance();
+        	    int currentTimeInSeconds = convertToSeconds(currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), currentDate.get(Calendar.SECOND));
+        	    int startTime = convertToSeconds(0,1,0);
+        	    int intDelayInSeconds = calculateDelaySeconds(currentTimeInSeconds, startTime);
+        	    LOGGER.info("Daily harvesting started. Next harvester task will be started at " + convertNumberToDuration(startTime) + ", so task have to wait " + convertNumberToDuration(intDelayInSeconds));
+                scheduler.scheduleAtFixedRate(new HarvesterTask(scheduler,DAILY_HARVESTING_DURATION), intDelayInSeconds, MINUTE_IN_SECONDS, TimeUnit.SECONDS);
             } else {
             	LOGGER.info("Ten minutes harvesting started.");
-                addTask(new Duration(0, 0, 0), new Duration(0, 10, 0), new Duration(0, 5, 0));
+                HarvesterTask harvesterTask = new HarvesterTask(scheduler, TEN_MINUTES_HARVESTING_DURATION, TEN_MINUTES_HARVESTING_DELAY);
+                scheduler.schedule(harvesterTask, 0, TimeUnit.SECONDS);
             }
 
-            LOGGER.info("Harvester daemon started");
+            LOGGER.info("-----------------------------");
         }else if (harvesterProcessing){
             LOGGER.info("Could not start Harvester daemon, because the queue is still processing");
-        }
-    }
-
-    public static void addTask(Duration startTime, Duration maxDuration, Duration delay){
-        if (scheduler != null){
-            LOGGER.info("Add harvester task");
-            HarvesterTask harvesterTask = new HarvesterTask(scheduler, maxDuration, delay);
-            scheduler.schedule(harvesterTask, startTime.getMilliseconds(), TimeUnit.MILLISECONDS);
         }
     }
 
@@ -92,5 +91,51 @@ public class HarvesterDaemon {
 	public static void setHarvestObject(HarvestObject harvestObject) {
 		HarvesterDaemon.harvestObject = harvestObject;
 	}
-    
+	private static int convertToSeconds (int hours, int minutes, int seconds){
+		return seconds + minutes*60 + hours*60*60;
+	}
+	private static int calculateDelaySeconds(int currentTime, int startTime){
+	    int intDelayInSeconds = 0;
+	    if (currentTime < startTime){
+	    	intDelayInSeconds = startTime- currentTime;
+	    }else {
+	    	intDelayInSeconds = DAY_IN_SECONDS - currentTime + startTime;
+	    }	
+	    return intDelayInSeconds;
+	}
+	private static String convertNumberToDuration(int seconds) {
+
+			String result = "";
+			// check if days
+			if (seconds > 0) {
+				int days = seconds / DAY_IN_SECONDS;
+				if (days > 0) {
+					result += days + "D ";
+					seconds = seconds % DAY_IN_SECONDS;
+				}
+				int hours = seconds / HOUR_IN_SECONDS;
+				if (hours > 0) {
+					result += hours + "H ";
+					seconds = seconds % HOUR_IN_SECONDS;
+				}else {
+					result +=  "00H ";
+				}
+				int minutes = seconds / MINUTE_IN_SECONDS;
+				if (minutes > 0) {
+					result += minutes + "M ";
+					seconds = seconds % MINUTE_IN_SECONDS;
+				}else {
+					result += "00M ";
+				}
+				if (seconds > 0) {
+					result += seconds + "S";
+				}else {
+					result += "00S";
+				}
+			}
+
+			return result;
+
+
+	}
 }

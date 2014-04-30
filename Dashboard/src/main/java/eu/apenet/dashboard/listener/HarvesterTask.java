@@ -35,9 +35,18 @@ public class HarvesterTask implements Runnable {
 		JpaUtil.init();
 	}
 
+	public HarvesterTask(ScheduledExecutorService scheduler, Duration maxDuration) {
+		this.duration = maxDuration;
+		this.scheduler = scheduler;
+		JpaUtil.init();
+	}
 	@Override
 	public void run() {
-		LOGGER.debug("Harvester process active");
+		if (delay == null){
+			LOGGER.info("Harvester process started");			
+		}else {
+			LOGGER.debug("Harvester process started");
+		}
 		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 		boolean stopped = false;
 		while (!stopped && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
@@ -64,8 +73,12 @@ public class HarvesterTask implements Runnable {
 				stopped = true;
 			}
 		}
-		LOGGER.debug("Harvester process inactive");
-		if (!scheduler.isShutdown()) {
+		if (delay == null){
+			LOGGER.info("Harvester process stopped");			
+		}else {
+			LOGGER.debug("Harvester process stopped");
+		}
+		if (delay != null && !scheduler.isShutdown()) {
 			scheduler.schedule(new HarvesterTask(scheduler, duration, delay), delay.getMilliseconds(),
 					TimeUnit.MILLISECONDS);
 		}
