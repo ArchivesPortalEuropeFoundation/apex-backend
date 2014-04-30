@@ -41,10 +41,10 @@ public class DisplayHarvestProfileItem {
 		this.set = archivalInstitutionOaiPmh.getSet();
 		this.metadataPrefix = archivalInstitutionOaiPmh.getMetadataPrefix();
 		if (archivalInstitutionOaiPmh.getLastHarvesting() != null){
-			this.lastHarvesting = DATE_TIME.format(archivalInstitutionOaiPmh.getLastHarvesting());
+			this.lastHarvesting = DATE.format(archivalInstitutionOaiPmh.getLastHarvesting());
 		}
 		if (archivalInstitutionOaiPmh.getNewHarvesting() != null){
-			this.newHarvesting = DATE_TIME.format(archivalInstitutionOaiPmh.getNewHarvesting());
+			this.newHarvesting = DATE.format(archivalInstitutionOaiPmh.getNewHarvesting());
 			readyForHarvesting = now.after(archivalInstitutionOaiPmh.getNewHarvesting());
 
 		}else {
