@@ -42,6 +42,7 @@ import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
@@ -243,11 +244,18 @@ public class EadService {
 		if (upFile != null && deleteUpFile) {
 			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename();
 			File file = new File(filename);
-			File aiDir = file.getParentFile();
+			File parentDir = file.getParentFile();
 			ContentUtils.deleteFile(file, false);
-			if (aiDir.exists() && aiDir.listFiles().length == 0) {
-				ContentUtils.deleteFile(aiDir, false);
+			if (parentDir.exists() && parentDir.listFiles().length == 0) {
+				ContentUtils.deleteFile(parentDir, false);
 			}
+			if (UploadMethod.OAI_PMH.equals(upFile.getUploadMethod().getMethod())){
+				parentDir = parentDir.getParentFile();
+				if (parentDir.exists() && parentDir.listFiles().length == 0) {
+					ContentUtils.deleteFile(parentDir, false);
+				}
+			}
+
 		}
 		DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
 		if (upFile != null && deleteUpFile) {
