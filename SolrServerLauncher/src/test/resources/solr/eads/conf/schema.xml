@@ -134,7 +134,7 @@
 	  
 	  <field name="eadid" type="string" indexed="true" stored="true" required="false"/>	  
 	  <field name="unitidfond" type="string" indexed="true" stored="true" required="false"/>	
-	  <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="true"/> 
+	  <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/> 
 	  <field name="dao" type="boolean" indexed="true" stored="true" required="false"/>
 	  <field name="roledao" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
 
