@@ -266,10 +266,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 */
 	public String upload() throws SAXException, APEnetException{
 		String state = ERROR;
-		String httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + "AL.xml";
-		File httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
-				File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-				File.separatorChar + "AL"+ File.separatorChar +
+		String httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + AL_FILE_NAME;
+		File httpFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
+				File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase(),
 				httpFileFileName);
 		try {
 			if(this.httpFile==null && this.httpFileFileName==null){
@@ -423,11 +422,21 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	private void fillMainFiles() {
-		this.httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + "AL.xml";
-		this.httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
-			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-			File.separatorChar + "AL"+ File.separatorChar +
+		this.httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() +AL_FILE_NAME;
+		this.httpFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
+			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase(),
 			this.httpFileFileName);
+	}
+	private void cleanMainFiles(){
+		if (httpFile != null){
+			try {
+			File parentDirectory = httpFile.getParentFile();
+			ContentUtils.deleteFile(httpFile, false);
+			if (parentDirectory.list().length == 0){
+				ContentUtils.deleteFile(parentDirectory, false);
+			}
+			}catch (IOException e){}
+		}
 	}
 
 	public String checkReportAndIngestLogic() throws SAXException, APEnetException {
@@ -867,44 +876,50 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 */
 	public String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
 		String state = ERROR;
-		if (this.httpFile == null) {
-			this.fillMainFiles();
-		}
-		Boolean firstState = ArchivalLandscape.checkIdentifiers(this.httpFile);
+		try {
 		
-		if (firstState==null){
-			validateUploadedAL(this.httpFile);
-			state=ERROR_IDENTIFIERS;
-			Iterator<String> it = this.warnings_ead.iterator();
-			while(it.hasNext()){
-				addActionMessage(it.next());
+			if (this.httpFile == null) {
+				this.fillMainFiles();
 			}
-		} else if (!firstState) {
-			this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
-			return ERROR_DUPLICATE_IDENTIFIERS;
-		} else{
-			String countryCode = ArchivalLandscapeUtils.getXMLEadidCountrycode(this.httpFile);
-			if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
-//				if(this.country==null){
-					this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
-//				}
-				Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,true);
-				if(archivalInstitutions!=null){
-					try{
-						state = checkAndUpdateFromToDDBB(archivalInstitutions,true);
-					}catch(Exception e){
-						log.error("Exception checking institutions with ddbb to be replaced",e);
-					}
-				} else if (this.isInvalidChars()) {
-					state = ERROR_INVALID_CHARS;
-				} else {
-					state = ERROR_LANG;
+			Boolean firstState = ArchivalLandscape.checkIdentifiers(this.httpFile);
+			
+			if (firstState==null){
+				validateUploadedAL(this.httpFile);
+				state=ERROR_IDENTIFIERS;
+				Iterator<String> it = this.warnings_ead.iterator();
+				while(it.hasNext()){
+					addActionMessage(it.next());
 				}
-			}else{
-				state = ERROR_COUNTRY ;
+			} else if (!firstState) {
+				this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
+				return ERROR_DUPLICATE_IDENTIFIERS;
+			} else{
+				String countryCode = ArchivalLandscapeUtils.getXMLEadidCountrycode(this.httpFile);
+				if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
+	//				if(this.country==null){
+						this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
+	//				}
+					Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,true);
+					if(archivalInstitutions!=null){
+						try{
+							state = checkAndUpdateFromToDDBB(archivalInstitutions,true);
+						}catch(Exception e){
+							log.error("Exception checking institutions with ddbb to be replaced",e);
+						}
+					} else if (this.isInvalidChars()) {
+						state = ERROR_INVALID_CHARS;
+					} else {
+						state = ERROR_LANG;
+					}
+				}else{
+					state = ERROR_COUNTRY ;
+				}
 			}
+		 
+		}finally {
+			cleanMainFiles();
 		}
-		 return state;
+		return state;
 	}
 
 	private void validateUploadedAL(File file) throws SAXException, APEnetException {
