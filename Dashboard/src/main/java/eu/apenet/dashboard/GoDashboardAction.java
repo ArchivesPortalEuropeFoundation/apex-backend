@@ -73,10 +73,6 @@ public class GoDashboardAction extends AbstractAction {
 				List<ArchivalInstitution> newList = new LinkedList<ArchivalInstitution>();
 				while(it.hasNext()){
 					ArchivalInstitution tempArchivalInstitution = it.next();
-					String aiName = tempArchivalInstitution.getAiname();
-					aiName = URLDecoder.decode(aiName,"UTF-8");
-					aiName = aiName.replaceAll("&amp;","&");
-					tempArchivalInstitution.setAiname(aiName);
 					newList.add(tempArchivalInstitution);
 				}
 				this.archives = newList;
