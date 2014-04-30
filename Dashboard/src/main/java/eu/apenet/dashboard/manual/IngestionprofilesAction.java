@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     /**
-     *
+     * Serializable.
      */
     private static final long serialVersionUID = 292033613637062110L;
     private static final String CREATIVECOMMONS_CPDM = "cpdm";
@@ -39,6 +39,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private static final String CREATIVECOMMONS = "creativecommons";
     private static final String EUROPEANA = "europeana";
     private static final String INHERITLANGUAGE_PROVIDE = "provide";
+	private static final String OUT_OF_COPYRIGHT = "outofcopyright";
 
     //Collections for basic tab
     private Set<SelectItem> ingestionprofiles = new LinkedHashSet<SelectItem>();
@@ -182,11 +183,16 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setEuropeanaLanguages(langTemp.toString());
         profile.setEuropeanaLanguagesFromFile(Boolean.parseBoolean(languageCheck));
         profile.setEuropeanaLicense(license);
-        if (license.equals(EUROPEANA)) {
+        if (IngestionprofilesAction.EUROPEANA.equals(this.license)) {
             profile.setEuropeanaLicenseDetails(europeanaLicense);
-        }
-        if (license.equals(CREATIVECOMMONS)) {
+        } else if (IngestionprofilesAction.CREATIVECOMMONS.equals(this.license)) {
             profile.setEuropeanaLicenseDetails(cc_js_result_uri);
+        } else if (IngestionprofilesAction.CREATIVECOMMONS_CC0.equals(this.license)) {
+            profile.setEuropeanaLicenseDetails("http://creativecommons.org/publicdomain/zero/1.0/");
+        } else if (IngestionprofilesAction.CREATIVECOMMONS_CPDM.equals(this.license)) {
+            profile.setEuropeanaLicenseDetails("http://creativecommons.org/publicdomain/mark/1.0/");
+        } else {
+        	profile.setEuropeanaLicenseDetails("http://www.europeana.eu/rights/out-of-copyright-non-commercial/");
         }
         profile.setEuropeanaAddRights(licenseAdditionalInformation);
         profile.setEuropeanaHierarchyPrefixCheck(Boolean.parseBoolean(hierarchyPrefixCheck));
@@ -281,8 +287,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         daoTypes.add(new SelectItem("0", getText("ingestionprofiles.dao.unspecified")));
 
         //Europeana preferences
-        conversiontypeSet.add(new SelectItem("true", "minimal conversion"));
-        conversiontypeSet.add(new SelectItem("false", "full conversion"));
+        conversiontypeSet.add(new SelectItem("true", this.getText("ead2ese.label.minimal.conversion")));
+        conversiontypeSet.add(new SelectItem("false", this.getText("ead2ese.label.full.conversion")));
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
@@ -303,11 +309,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         licenseSet.add(new SelectItem(CREATIVECOMMONS, getText("ead2ese.content.license.creativecommons")));
         licenseSet.add(new SelectItem(CREATIVECOMMONS_CC0, getText("ead2ese.content.license.creativecommons.cc0")));
         licenseSet.add(new SelectItem(CREATIVECOMMONS_CPDM, getText("ead2ese.content.license.creativecommons.publicdomain")));
+        licenseSet.add(new SelectItem(IngestionprofilesAction.OUT_OF_COPYRIGHT, this.getText("ead2ese.content.license.out.of.copyright")));
         europeanaLicenseSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
-        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-f/", getText("ead2ese.content.license.europeana.access.free")));
-        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-r/", getText("ead2ese.content.license.europeana.access.restricted")));
-        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/unknown/", getText("ead2ese.content.license.europeana.access.unknown")));
+        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/orphan-work-eu/", this.getText("ead2ese.content.license.europeana.access.orphan")));
+        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
     }
 
     public Set<SelectItem> getIngestionprofiles() {

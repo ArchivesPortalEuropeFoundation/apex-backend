@@ -44,6 +44,11 @@
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').show();
         });
+
+		$('#licenseoutofcopyright').click(function() {
+			$('#hiddenCreativeCommonsLicense').hide();
+			$('#hiddenEuropeanaLicense').hide();
+		});
     });
 
     function changeHierarchyPrefixState(value) {
@@ -160,12 +165,12 @@
                 <br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
                 </td>
             </tr>
-        <s:if test="license=='europeana'">
+        <s:if test="license=='cc0' || license=='cpdm' || license=='europeana' || license=='outofcopyright'">
             <c:set var="creativeCommonsInvisible" value="style=\"display: none;\""></c:set>
         </s:if>
-        <s:else>
+        <s:if test="license=='creativecommons' || license=='cc0' || license=='cpdm' || license=='outofcopyright'">
             <c:set var="europeanaInvisible" value="style=\"display: none;\""></c:set>
-        </s:else>
+        </s:if>
         <tr id="hiddenEuropeanaLicense"  ${europeanaInvisible}>
             <td class="inputLabel"><s:label key="ead2ese.label.license.europeana" for="europeanaLicense" />*:</td>
             <td><s:select id="europeanaLicense" name="europeanaLicense" list="europeanaLicenseSet" listKey="value" listValue="content"/><s:fielderror fieldName="europeanaLicense"/>
