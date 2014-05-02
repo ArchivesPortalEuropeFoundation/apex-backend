@@ -39,6 +39,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Coordinates;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import eu.archivesportaleurope.util.ApeUtil;
 
 /**
  * @author fernando
@@ -363,7 +364,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	}
 
 	public void setCo_name(String co_name) {
-		this.co_name = co_name;
+		this.co_name = ApeUtil.replaceQuotesAndReturns(co_name);
 	}
 
 	public String getCo_street() {
@@ -371,7 +372,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	}
 
 	public void setCo_street(String co_street) {
-		this.co_street = co_street;
+		this.co_street = ApeUtil.replaceQuotesAndReturns(co_street);
 	}
 
 	public String getCo_postalCity() {
@@ -379,7 +380,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	}
 
 	public void setCo_postalCity(String co_postalCity) {
-		this.co_postalCity = co_postalCity;
+		this.co_postalCity = ApeUtil.replaceQuotesAndReturns(co_postalCity);
 	}
 
 	public String getCo_country() {
@@ -387,7 +388,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	}
 
 	public void setCo_country(String co_country) {
-		this.co_country = co_country;
+		this.co_country = ApeUtil.replaceQuotesAndReturns(co_country);
 	}
 
 	public double getCo_lat() {
