@@ -1,27 +1,4 @@
-CREATE TABLE coordinates (
-    id serial NOT NULL,
-    ai_id integer NOT NULL,
-    name_institution character varying NOT NULL,
-    street character varying(255) NOT NULL,
-    postalcity character varying(255) NOT NULL,
-    country character varying(255) NOT NULL,
-    lat numeric,
-    lon numeric,
-      CONSTRAINT coordinates_pkey PRIMARY KEY (id),
-      CONSTRAINT coordinates_archival_institution_fkey FOREIGN KEY (ai_id)
-      REFERENCES archival_institution (id) ON UPDATE NO ACTION ON DELETE CASCADE
-);
-
-REVOKE ALL ON TABLE coordinates FROM PUBLIC;
-REVOKE ALL ON TABLE coordinates FROM postgres;
-GRANT ALL ON TABLE coordinates TO postgres;
-GRANT ALL ON TABLE coordinates TO admin;
-GRANT ALL ON TABLE coordinates TO apenet_dashboard;
-GRANT SELECT ON TABLE coordinates TO apenet_portal;
-
-REVOKE ALL ON SEQUENCE coordinates_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE coordinates_id_seq FROM postgres;
-GRANT ALL ON SEQUENCE coordinates_id_seq TO postgres;
-GRANT ALL ON SEQUENCE coordinates_id_seq TO apenet_dashboard;
-GRANT SELECT ON SEQUENCE coordinates_id_seq TO apenet_portal;
-GRANT ALL ON SEQUENCE coordinates_id_seq TO admin;
+ALTER TABLE coordinates ADD CONSTRAINT coordinates_pkey PRIMARY KEY (id);
+ALTER INDEX partner_pkey RENAME TO dashboard_user_pkey
+ALTER INDEX index_queue_pkey RENAME TO queue_pkey
+ALTER TABLE queue ADD CONSTRAINT queue_pkey PRIMARY KEY (id);
