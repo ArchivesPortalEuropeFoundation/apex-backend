@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.harvest;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
@@ -101,7 +103,16 @@ public class ManageHarvestAction extends AbstractAction {
     		archivalInstitutionOaiPmh.setEnabled(true);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}else if ("DELETE".equals(selectedAction)){
-    		archivalInstitutionOaiPmh.setEnabled(true);
+			if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
+				String[] items = DataHarvester.getErrorResponsePaths(archivalInstitutionOaiPmh);
+				for (String item: items){
+					try {
+						ContentUtils.deleteFile(item , false);
+					} catch (IOException e) {
+						LOGGER.error("Could not delete: " + item + " " + e.getMessage());
+					}
+				}
+			}
     		archivalInstitutionOaiPmhDAO.delete(archivalInstitutionOaiPmh);
     	}else if ("FULL".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setFrom(null);
