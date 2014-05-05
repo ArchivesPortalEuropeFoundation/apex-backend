@@ -71,6 +71,7 @@ public class CreateEacCpf {
             newEac.setUploadMethod(uploadMethod);
             newEac.setArchivalInstitution(archivalInstitution);
             newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
+            newEac.setTitle("temporary title");
             eacCpfDAO.store(newEac);
             newEac = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), tempIdentifier);
 
