@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Properties;
 
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+
 import org.apache.commons.io.FileUtils;
 
 import com.ctc.wstx.exc.WstxParsingException;
@@ -13,6 +14,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
@@ -20,6 +22,7 @@ import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.UploadMethod;
 
 public class CreateEadTask extends AbstractEadTask {
 
@@ -91,8 +94,15 @@ public class CreateEadTask extends AbstractEadTask {
 			if (srcFile.exists())
 				FileUtils.forceDelete(srcFile);
 
-			if (uploadDir.listFiles().length == 0)
+			if (uploadDir.exists() && uploadDir.listFiles().length == 0) {
 				FileUtils.forceDelete(uploadDir);
+			}
+			if (UploadMethod.OAI_PMH.equals(upFile.getUploadMethod().getMethod())){
+				File parentDir = uploadDir.getParentFile();
+				if (parentDir.exists() && parentDir.listFiles().length == 0) {
+					FileUtils.forceDelete(parentDir);
+				}
+			}
 			LinkingService.linkWithHgOrSg(newEad);
 			logAction(xmlType, fileName, null);
 			return newEad;
