@@ -63,6 +63,7 @@ public final class EacXslt {
         XsltTransformer transformer = executable.load();
         transformer.setParameter(new QName("eaccontent.extref.prefix"), new XdmAtomicValue(secondDisplayUrl));
         transformer.setParameter(new QName("language.selected"), new XdmAtomicValue(language));
+        transformer.setParameter(new QName("eac.repository.code"), new XdmAtomicValue("ES-00000000793"));
         transformer.setSource(xmlSource);
         Serializer serializer = new Serializer();
         serializer.setOutputWriter(writer);
