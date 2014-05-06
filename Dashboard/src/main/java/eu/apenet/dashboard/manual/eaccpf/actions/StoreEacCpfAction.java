@@ -104,7 +104,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                 storedEacEntry.setIdentifier(eac.getControl().getRecordId().getValue());
                 storedEacEntry.setValidated(ValidatedState.VALIDATED);
                 eacCpfDAO.update(storedEacEntry);
-                            } else {
+            } else {
                 log.warn("The file " + filename + " is not valid");
                 for (int i = 0; i < warnings_ead.size(); i++) {
                     String warning = warnings_ead.get(i).replace("<br/>", "");
@@ -131,10 +131,11 @@ public class StoreEacCpfAction extends EacCpfAction {
         return SUCCESS;
     }
 
-    public boolean validateFile(File tempFile) throws APEnetException, SAXException {
+    public boolean validateFile(File tempFile) throws APEnetException, SAXException, IOException {
         Xsd_enum schema = Xsd_enum.XSD_APE_EAC_SCHEMA;
+        InputStream in = null;
         try {
-            InputStream in = new FileInputStream(tempFile);
+            in = new FileInputStream(tempFile);
             List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);
             if (exceptions != null) {
                 StringBuilder warn;
@@ -151,6 +152,10 @@ public class StoreEacCpfAction extends EacCpfAction {
             throw new APEnetException("Exception while validating: File not found", e);
         } catch (SAXException e) {
             throw new APEnetException("Exception while validating: SAXException", e);
+        } finally {
+            if (in != null) {
+                in.close();
+            }
         }
         return true;
     }
