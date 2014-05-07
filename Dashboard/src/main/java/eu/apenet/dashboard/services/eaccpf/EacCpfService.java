@@ -358,9 +358,9 @@ public class EacCpfService {
                 EacCpf newEacCpf = null;
                 if ((eacCpf = doesFileExist(upFile, identifier)) != null) {
                     if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
-                        boolean eadDeleted = false;
+                        boolean eacCpfDeleted = false;
                         try {
-                            queueItem.setEad(null);
+                            queueItem.setEacCpf(null);
                             queueItem.setUpFile(null);
                             queueItemDAO.store(queueItem);
 
@@ -369,11 +369,11 @@ public class EacCpfService {
 //                            new DeleteEseEdmTask().execute(eacCpf, preferences);
                             new UnpublishTask().execute(eacCpf, preferences);
                             new DeleteTask().execute(eacCpf, preferences);
-                            eadDeleted = true;
+                            eacCpfDeleted = true;
                             newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
                             DAOFactory.instance().getUpFileDAO().delete(upFile);
                         } catch (Exception e) {
-                            if (!eadDeleted) {
+                            if (!eacCpfDeleted) {
                                 queueItem.setEacCpf(eacCpf);
                                 eacCpf.setQueuing(QueuingState.ERROR);
                                 eacDAO.store(eacCpf);
@@ -571,6 +571,6 @@ public class EacCpfService {
     }
 
     private static EacCpf doesFileExist(UpFile upFile, String identifier) {
-        return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getAiId() + "", identifier);
+        return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier);
     }
 }
