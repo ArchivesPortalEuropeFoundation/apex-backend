@@ -23,7 +23,9 @@ public class EacCpfResult extends TypeResult {
 
     public EacCpfResult(EacCpf eacCpf) {
         this.id = eacCpf.getId();
-        if (eacCpf.getTitle().length() > MAX_TITLE) {
+        if (eacCpf.getTitle() == null || eacCpf.getTitle().isEmpty()){
+            this.title = "empty";
+        } else if (eacCpf.getTitle().length() > MAX_TITLE) {
             this.title = eacCpf.getTitle().substring(0, MAX_TITLE) + "...";
         } else {
             this.title = eacCpf.getTitle();
