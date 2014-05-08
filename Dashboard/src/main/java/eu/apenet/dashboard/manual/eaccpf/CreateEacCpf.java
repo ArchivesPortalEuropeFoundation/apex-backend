@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -72,8 +71,7 @@ public class CreateEacCpf {
             newEac.setArchivalInstitution(archivalInstitution);
             newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
             newEac.setTitle("temporary title");
-            eacCpfDAO.store(newEac);
-            newEac = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), tempIdentifier);
+            newEac = eacCpfDAO.store(newEac);
 
             control.getRecordId().setValue("eac_" + Integer.toString(newEac.getId()));
         }
