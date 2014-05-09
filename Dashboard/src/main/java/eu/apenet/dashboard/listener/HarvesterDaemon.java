@@ -27,7 +27,7 @@ public class HarvesterDaemon {
     private static boolean harvesterProcessing = false;
     private static boolean processOnceADay = true;
     private static HarvestObject harvestObject = null;
-    private static final Duration DAILY_HARVESTING_DURATION = new Duration(5, 0, 0);
+    private static final Duration DAILY_HARVESTING_DURATION = new Duration(3, 0, 0);
     private static final Duration TEN_MINUTES_HARVESTING_DURATION = new Duration(0, 10, 0);
     private static final Duration TEN_MINUTES_HARVESTING_DELAY = new Duration(0, 5, 0);
     public static synchronized void start(boolean processOnceADay) {
