@@ -15,13 +15,14 @@
 		<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
 	</xsl:template>
 	<xsl:template match="/">
-	
+		<xsl:variable name="existDates" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates"/>
+		<xsl:variable name="entityType" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
 		<h1 class="blockHeader">
-	      <!--    <xsl:call-template name="nameEntry"/> -->
+		    <!-- nameEntry -->
 	      	<xsl:call-template name="multilanguageName">
 		       		 <xsl:with-param name="list" select="//eac:nameEntry"/>
 		    </xsl:call-template> 
-			<xsl:variable name="existDates" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates"></xsl:variable>
+			
 			<!-- when there are only 1 dateSet -->
 			<xsl:if test="$existDates/eac:dateSet and (($existDates/eac:dateSet/eac:dateRange and $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text() and $existDates/eac:dateSet/eac:dateRange/eac:toDate/text()) or ($existDates/eac:dateSet/eac:date and $existDates/eac:dateSet/eac:date/text()))">
 				<xsl:text> (</xsl:text>
@@ -40,41 +41,91 @@
 				<xsl:apply-templates select="$existDates/eac:date"/>
 				<xsl:text>)</xsl:text>
 			</xsl:if>
+			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
 				<xsl:text> </xsl:text>
-			<!--<xsl:value-of select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/> -->
 				<span>
-					<xsl:apply-templates select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType" mode="other"/>
+					<xsl:apply-templates select="$entityType" mode="other"/>
 				</span>
 			</xsl:if>
 		</h1>
 		<div id="details">	
 			<!-- Dates -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates/eac:dateRange/eac:fromDate/text()">
+			<xsl:if test="$existDates/eac:dateRange/eac:fromDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text()">
 				<div class="row">
 						<div class="leftcolumn">
-							<h2><xsl:value-of select="ape:resource('eaccpf.portal.birthDate')"/></h2>	
+							<h2>
+								<xsl:if test="$entityType = 'person' or $entityType = 'family'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.birthDate')"/>
+								</xsl:if>
+								<xsl:if test="$entityType = 'corporateBody'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.foundationDate')"/>
+								</xsl:if>	
+								<xsl:text>:</xsl:text>
+							</h2>	
 						</div>
 						<div class="rightcolumn">
-							<xsl:call-template name="birthDate"/>
+							<xsl:if test="$existDates/eac:dateRange">
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:fromDate"/>
+									</xsl:call-template>	
+								</xsl:if> 
+								<xsl:if test="$existDates/eac:dateSet/eac:dateRange">
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateSet/eac:dateRange/eac:fromDate"/>
+									</xsl:call-template>	
+							</xsl:if>
+							<xsl:if test="$entityType = 'person' or $entityType = 'family'">
+								<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']">
+							  		<xsl:text>, </xsl:text>
+							  		<xsl:call-template name="multilanguagePlaceEntry">
+							  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']"/>
+							  		</xsl:call-template>		
+							    </xsl:if>
+							</xsl:if>
 						</div>
 				</div>
 			</xsl:if>
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates/eac:dateRange/eac:toDate/text()">
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.deathDate')"/></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="deathDate"/>
-						</div>
-				</div>	
+			<xsl:if test="$existDates/eac:dateRange/eac:toDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:toDate/text()">
+					<div class="row">
+							<div class="leftcolumn">
+						   		<h2>
+						   		<xsl:if test="$entityType = 'person' or $entityType = 'family'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.deathDate')"/>
+								</xsl:if>
+								<xsl:if test="$entityType = 'corporateBody'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.closingDate')"/>
+								</xsl:if>
+						   		<xsl:text>:</xsl:text>
+						   		</h2>
+						   	</div>
+						   	<div class="rightcolumn">
+						   	    <xsl:if test="$existDates/eac:dateRange">
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:toDate"/>
+									</xsl:call-template>	
+								</xsl:if> 
+								<xsl:if test="$existDates/eac:dateSet/eac:dateRange">
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateSet/eac:dateRange/eac:toDate"/>
+									</xsl:call-template>	
+								</xsl:if>	
+							    <xsl:if test="$entityType = 'person' or $entityType = 'family'">
+									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']">
+								  		<xsl:text>, </xsl:text>
+								  		<xsl:call-template name="multilanguagePlaceEntry">
+								  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']"/>
+								  		</xsl:call-template>		
+								    </xsl:if>
+							</xsl:if>
+							</div>
+					</div>
 			</xsl:if> 
 			<!-- alternative names -->
 			<xsl:if test="count(//eac:nameEntry) > 1">
 				<div class="row">
 					<div class="leftcolumn">
-				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.alternativeForms')"/></h2>
+				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.alternativeForms')"/><xsl:text>:</xsl:text></h2>
 				   	</div>
 				   	<div class="rightcolumn">
 				   			<xsl:call-template name="alternativeName">
@@ -84,144 +135,256 @@
 					</div>
 				</div>
 			</xsl:if>
+			<!-- location -->
+			<xsl:if test="$entityType='corporateBody'">
+				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
+					<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.location')"/></h2>
+					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
+					    <!-- placeEntry in localDescription -->
+						<xsl:call-template name="commonChild">
+				    		<xsl:with-param name="list" select="./eac:placeEntry"/>
+				    		<xsl:with-param name="clazz" select="'locationPlace'"/>
+				    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+				    	</xsl:call-template>
+				       <!-- placeRole -->
+				       <xsl:if test="./eac:placeRole/text()">
+					       	<div class="row subrow">
+							    <div class="leftcolumn">
+						   			<h2><xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/><xsl:text>:</xsl:text></h2>
+						   	    </div>
+						     	<div class="rightcolumn">
+						     		<xsl:apply-templates select="./eac:placeRole" mode="other"/>
+							    </div>
+					        </div>
+					    </xsl:if>
+				     </xsl:for-each>	   
+				</xsl:if>
+			</xsl:if>
 			<!-- localDescription -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription">
 			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.localDescription')"/></h2>
-				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:term/text()">	 
-					<div class="row subrow">
-							<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.localDescription')"/><xsl:text>:</xsl:text></h2>
-						   	</div>
-						   	<div class="rightcolumn">
-								<xsl:call-template name="multilanguage">
-					   				<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:term"/>
-					   				<xsl:with-param name="clazz" select="'localDescription'"/>
-					   			</xsl:call-template>
-							</div>
-					</div>
-				</xsl:if>
-				<!-- placeEntry in localDescription -->
-				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:placeEntry/text()">	 
-					<div class="row subrow">
-							<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.location')"/><xsl:text>:</xsl:text></h2>
-						   	</div>
-						   	<div class="rightcolumn">
-								<xsl:call-template name="multilanguagePlaces">
-					   				<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:placeEntry"/>
-					   				<xsl:with-param name="clazz" select="'locationLocalDescription'"/>
-					   			</xsl:call-template>
-							</div>
-					</div>
-				</xsl:if>
-				<!-- descriptiveNote in localDescription -->
-				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:descriptiveNote/eac:p/text()">	 
-					<div class="row subrow">
-							<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.description')"/><xsl:text>:</xsl:text></h2>
-						   	</div>
-						   	<div class="rightcolumn">
-								<xsl:call-template name="multilanguage">
-					   				<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:descriptiveNote/eac:p"/>
-					   				<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescription'"/>
-					   			</xsl:call-template>
-							</div>
-					</div>
-				</xsl:if>
-				<!-- citation in localDescription -->
-				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:citation/text()">	 
-					<div class="row subrow">
-							<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.citation')"/><xsl:text>:</xsl:text></h2>
-						   	</div>
-						   	<div class="rightcolumn">
-								<xsl:call-template name="multilanguage">
-					   				<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:citation"/>
-					   				<xsl:with-param name="clazz" select="'citationLocalDescription'"/>
-					   			</xsl:call-template>
-							</div>
-					</div>
-				</xsl:if>
-				<!-- dates in localDescription -->
-				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:date or
-				              ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:dateRange or
-				              ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:dateSet">
-				    <div class="row subrow">
-				    	<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
-						</div>          
-				        <div class="rightcolumn">  
-							<xsl:variable name="dateLocalDescription" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription"></xsl:variable>
-							<!-- when there are only 1 dateSet -->
-							<xsl:if test="$dateLocalDescription/eac:dateSet and (($dateLocalDescription/eac:dateSet/eac:dateRange and $dateLocalDescription/eac:dateSet/eac:dateRange/eac:fromDate/text() and $dateLocalDescription/eac:dateSet/eac:dateRange/eac:toDate/text()) or ($dateLocalDescription/eac:dateSet/eac:date and $dateLocalDescription/eac:dateSet/eac:date/text()))">
-								<xsl:text> (</xsl:text>
-								<xsl:apply-templates select="$dateLocalDescription/eac:dateSet"/>
-								<xsl:text>)</xsl:text>
-							</xsl:if>
-							<!-- when there are only 1 dateRange -->
-							<xsl:if test="$dateLocalDescription/eac:dateRange and $dateLocalDescription/eac:dateRange/eac:fromDate/text() and $dateLocalDescription/eac:dateRange/eac:toDate/text()">
-								<xsl:text> (</xsl:text>
-								<xsl:apply-templates select="$dateLocalDescription/eac:dateRange"/>
-								<xsl:text>)</xsl:text>
-							</xsl:if>
-							<!-- when there are only 1 date -->
-							<xsl:if test="$dateLocalDescription/eac:date and $dateLocalDescription/eac:date/text()">
-								<xsl:text> (</xsl:text>
-								<xsl:apply-templates select="$dateLocalDescription/eac:date"/>
-								<xsl:text>)</xsl:text>
-							</xsl:if>
-						</div> 
-					</div>
-				</xsl:if>
-			</xsl:if>	
-			
-			<!-- function -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:term/text()">	   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.function')"/></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-				   				<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:term"/>
-				   				<xsl:with-param name="clazz" select="'function'"/>
-				   			</xsl:call-template>
-						</div>
-				</div>
-			</xsl:if> 
-			<!-- occupation --> 
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:term/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.occupation')"/></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:term"/>
-					   			<xsl:with-param name="clazz" select="'occupation'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
-			</xsl:if> 
-			<!-- mandates -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:term/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.mandate')"/></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:term"/>
-					   			<xsl:with-param name="clazz" select="'mandates'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
-			</xsl:if> 
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions"> 
+				    <xsl:for-each select="./eac:localDescription">
+				    		<!-- term localDescription -->
+					    	<xsl:call-template name="term">
+					    		<xsl:with-param name="list" select="./eac:term"/>
+					    		<xsl:with-param name="clazz" select="'localDescription'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.localDescription'"/>
+					    	</xsl:call-template>
+							<!-- placeEntry in localDescription -->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
+					    		<xsl:with-param name="clazz" select="'locationLocalDescription'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+					    	</xsl:call-template>
+							<!-- citation in localDescription -->
+						  	<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:citation"/>
+					    		<xsl:with-param name="clazz" select="'citationLocalDescription'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+					    	</xsl:call-template>
+							<!-- dates in localDescription -->
+							<xsl:call-template name="commonDates">
+					    		<xsl:with-param name="date" select="./eac:date"/>
+					    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+					    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					    	</xsl:call-template>
+							<!-- descriptiveNote in localDescription -->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescription'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+					    	</xsl:call-template>
+					</xsl:for-each>
+						<!-- descriptiveNote in localDescriptions -->
+						 <xsl:call-template name="commonChild">
+				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescriptions'"/>
+				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    	 </xsl:call-template>
+				</xsl:for-each>		
+		   </xsl:if>
+		   <!-- legalStatus -->
+		   <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus">
+			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.legalStatus')"/></h2>
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses"> 
+				    <xsl:for-each select="./eac:legalStatus">
+				    		<!-- term localDescription -->
+					    	<xsl:call-template name="term">
+					    		<xsl:with-param name="list" select="./eac:term"/>
+					    		<xsl:with-param name="clazz" select="'legalStatus'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.legalStatus'"/>
+					    	</xsl:call-template>
+							<!-- placeEntry in localDescription -->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
+					    		<xsl:with-param name="clazz" select="'locationLegalStatus'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+					    	</xsl:call-template>
+							<!-- citation in localDescription -->
+						  	<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:citation"/>
+					    		<xsl:with-param name="clazz" select="'citationLegalStatus'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+					    	</xsl:call-template>
+							<!-- dates in localDescription -->
+							<xsl:call-template name="commonDates">
+					    		<xsl:with-param name="date" select="./eac:date"/>
+					    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+					    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					    	</xsl:call-template>
+							<!-- descriptiveNote in localDescription -->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatus'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+					    	</xsl:call-template>
+					</xsl:for-each>
+						<!-- descriptiveNote in localDescriptions -->
+						 <xsl:call-template name="commonChild">
+				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatuses'"/>
+				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    	 </xsl:call-template>
+				</xsl:for-each>		
+		   </xsl:if>
+		   <!-- function -->
+		   <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function">
+			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.function')"/></h2>
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions"> 
+				    <xsl:for-each select="./eac:function">
+				    		<!-- term function -->
+					    	<xsl:call-template name="term">
+					    		<xsl:with-param name="list" select="./eac:term"/>
+					    		<xsl:with-param name="clazz" select="'function'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.function'"/>
+					    	</xsl:call-template>
+							<!-- placeEntry in function-->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
+					    		<xsl:with-param name="clazz" select="'locationFunction'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+					    	</xsl:call-template>
+							<!-- citation in function -->
+						  	<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:citation"/>
+					    		<xsl:with-param name="clazz" select="'citationFunction'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+					    	</xsl:call-template>
+							<!-- dates in function-->
+							<xsl:call-template name="commonDates">
+					    		<xsl:with-param name="date" select="./eac:date"/>
+					    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+					    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					    	</xsl:call-template>
+							<!-- descriptiveNote in function-->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteFunction'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+					    	</xsl:call-template>
+					</xsl:for-each>
+						<!-- descriptiveNote in functions -->
+						 <xsl:call-template name="commonChild">
+				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteFunctions'"/>
+				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    	 </xsl:call-template>
+				</xsl:for-each>		
+		    </xsl:if>
+		    <!-- occupation -->
+		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation">
+			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.occupation')"/></h2>
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations"> 
+				    <xsl:for-each select="./eac:occupation">
+				    		<!-- term function -->
+					    	<xsl:call-template name="term">
+					    		<xsl:with-param name="list" select="./eac:term"/>
+					    		<xsl:with-param name="clazz" select="'occupation'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.occupation'"/>
+					    	</xsl:call-template>
+							<!-- placeEntry in function-->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
+					    		<xsl:with-param name="clazz" select="'locationOccupation'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+					    	</xsl:call-template>
+							<!-- citation in function -->
+						  	<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:citation"/>
+					    		<xsl:with-param name="clazz" select="'citationOccupation'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+					    	</xsl:call-template>
+							<!-- dates in function-->
+							<xsl:call-template name="commonDates">
+					    		<xsl:with-param name="date" select="./eac:date"/>
+					    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+					    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					    	</xsl:call-template>
+							<!-- descriptiveNote in function-->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupation'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+					    	</xsl:call-template>
+					</xsl:for-each>
+						<!-- descriptiveNote in functions -->
+						 <xsl:call-template name="commonChild">
+				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupations'"/>
+				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    	 </xsl:call-template>
+				</xsl:for-each>		
+		    </xsl:if>
+		    <!--mandates-->
+		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate">
+			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.mandate')"/></h2>
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates"> 
+				    <xsl:for-each select="./eac:mandate">
+				    		<!-- term function -->
+					    	<xsl:call-template name="term">
+					    		<xsl:with-param name="list" select="./eac:term"/>
+					    		<xsl:with-param name="clazz" select="'mandate'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.mandate'"/>
+					    	</xsl:call-template>
+							<!-- placeEntry in function-->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
+					    		<xsl:with-param name="clazz" select="'locationMandate'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+					    	</xsl:call-template>
+							<!-- citation in function -->
+						  	<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:citation"/>
+					    		<xsl:with-param name="clazz" select="'citationMandate'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+					    	</xsl:call-template>
+							<!-- dates in function-->
+							<xsl:call-template name="commonDates">
+					    		<xsl:with-param name="date" select="./eac:date"/>
+					    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+					    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					    	</xsl:call-template>
+							<!-- descriptiveNote in function-->
+							<xsl:call-template name="commonChild">
+					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteMandate'"/>
+					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+					    	</xsl:call-template>
+					</xsl:for-each>
+						<!-- descriptiveNote in functions -->
+						 <xsl:call-template name="commonChild">
+				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteMandates'"/>
+				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    	 </xsl:call-template>
+				</xsl:for-each>		
+		    </xsl:if>
 			<!--languagesUsed -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language/text()">   
 				<div class="row">
 						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/></h2>
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn">
 							<xsl:call-template name="multilanguage">
@@ -235,7 +398,7 @@
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script/text()">   
 				<div class="row">
 						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.scriptUsed')"/></h2>
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.scriptUsed')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn">
 							<xsl:call-template name="multilanguage">
@@ -253,7 +416,7 @@
 				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p/text()">
 					<div class="row">
 							<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.description')"/></h2>
+						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.generalContext')"/><xsl:text>:</xsl:text></h2>
 						   	</div>
 						   	<div class="rightcolumn">
 								<xsl:call-template name="multilanguage">
@@ -268,7 +431,7 @@
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:p/text()">   
 				<div class="row">
 						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/></h2>
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn leftSide">
 							<xsl:call-template name="multilanguage">
@@ -282,7 +445,7 @@
 			<xsl:if test="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName/text()">   
 				<div class="row">
 						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.agencyName')"/></h2>
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.agencyName')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn">
 							<xsl:choose>
@@ -299,27 +462,70 @@
 				</div>
 			</xsl:if>   
 			<!-- other information -->
-			<h2 class="otherInformation"><xsl:value-of select="ape:resource('eaccpf.portal.otherInformation')"/></h2>
-			     <!-- last update -->
-			<div class="row grey">
-				<div class="leftcolumn">
-					<h2 class="grey"><xsl:value-of select="ape:resource('eaccpf.portal.eventDate')"/></h2>
-				</div>
-				<div class="rightcolumn"> 
-					<xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceHistory/eac:maintenanceEvent/eac:eventDateTime[last()]" mode="other"/>
-				</div>
-			</div>	
-				<!-- identifier-->
-			<div class="row grey">
-				<div class="leftcolumn">
-					<h2 class="grey"><xsl:value-of select="ape:resource('eaccpf.portal.identifier')"/></h2>
-				</div>
-				<div class="rightcolumn"> 
-					<xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:recordId" mode="other"/>
-				</div>
+			<div id="footer">
+				<h2 class="otherInformation"><xsl:value-of select="ape:resource('eaccpf.portal.otherInformation')"/></h2>
+					<!-- identifier-->
+				<xsl:if test="./eac:eac-cpf/eac:control/eac:recordId/text()">  	
+					<div class="row grey">
+						<div class="leftcolumn">
+							<h2 class="grey"><xsl:value-of select="ape:resource('eaccpf.portal.identifier')"/><xsl:text>:</xsl:text></h2>
+						</div>
+						<div class="rightcolumn"> 
+							<xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:recordId" mode="other"/>
+						</div>
+					</div>
+				</xsl:if>
+				<!-- other identifier -->
+				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityId/text()">  
+					<div class="row grey">
+						<div class="leftcolumn">
+							<h2 class="grey"><xsl:value-of select="ape:resource('eaccpf.portal.otherIdentifier')"/><xsl:text>:</xsl:text></h2>
+						</div>
+						<div class="rightcolumn moreDisplay" id="otherIdentifier"> 
+							<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityId">
+								<xsl:if test="./text()">
+									   	<xsl:choose>
+											<xsl:when test="@localType!=''">
+												<p>
+													<xsl:variable name="href" select="./@localType"/>
+													<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+												</p>
+											</xsl:when>
+											<xsl:otherwise>
+												<p>
+													<xsl:apply-templates select="." mode="other"/> 
+												</p>
+											</xsl:otherwise>
+										</xsl:choose>
+								   
+								 </xsl:if>  
+							</xsl:for-each>
+							<div class="linkMore">
+								<a class="displayLinkShowMore linkShow" href="javascript:showMore('otherIdentifier', 'p');">
+									<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
+								</a>
+								<a class="displayLinkShowLess linkShow" href="javascript:showLess('otherIdentifier', 'p');">
+									<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
+								</a>
+							</div>
+						</div>
+					</div>
+				</xsl:if>
+				<!-- last update -->
+				<xsl:if test="./eac:eac-cpf/eac:control/eac:maintenanceHistory/eac:maintenanceEvent/eac:eventDateTime/text()">     
+					<div class="row grey">
+						<div class="leftcolumn">
+							<h2 class="grey"><xsl:value-of select="ape:resource('eaccpf.portal.eventDate')"/><xsl:text>:</xsl:text></h2>
+						</div>
+						<div class="rightcolumn"> 
+							<xsl:variable name="lastMaintenance" select="./eac:eac-cpf/eac:control/eac:maintenanceHistory/eac:maintenanceEvent[last()]"/>		
+							<xsl:apply-templates select="$lastMaintenance/eac:eventDateTime" mode="other"/>
+						</div>
+					</div>	
+				</xsl:if>
 			</div>
 	</div>
-	<!-- BOXES -->
+	<!-- Relations boxes-->
 	<div id="relations">
 		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/text()">
 			<div id="material" class="box">
@@ -345,13 +551,18 @@
 							   			 	<xsl:with-param name="list" select="./eac:relationEntry[not(@localType)]"/>
 							   		</xsl:call-template>
 						   		</xsl:when>
-						   		<xsl:when test="./not[eac:relationEntry]">
+						   		<!-- TODO -->
+						   		<xsl:otherwise>
 						   			<xsl:variable name="href" select="./@xlink:href"/>
 						   			<a href="{$href}" target="_blank">
 						   				<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-						   			</a>	
-						   		</xsl:when>
-						   		<xsl:otherwise/>
+										<xsl:text> (</xsl:text>
+										<xsl:call-template name="relationType">
+										     <xsl:with-param name="current" select="."/>
+										</xsl:call-template>
+										<xsl:text>)</xsl:text>
+						   			</a>
+						   		</xsl:otherwise>
 					   		</xsl:choose>
 				   		</li>
 			   		</xsl:for-each>
@@ -359,10 +570,10 @@
 		   		<div class="whitespace">
 		   		<!--   &nbsp;--> 
 		   		</div>
-		   		<a class="displayLinkShowMore" href="javascript:showMoreRelation('material', 'li');">
+		   		<a class="displayLinkShowMore" href="javascript:showMore('material', 'li');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/><xsl:text>...</xsl:text>
 				</a>
-				<a class="displayLinkShowLess" href="javascript:showLessRelation('material', 'li');">
+				<a class="displayLinkShowLess" href="javascript:showLess('material', 'li');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/><xsl:text>...</xsl:text>
 				</a>
 			</div>
@@ -386,11 +597,13 @@
 							   			 	<xsl:with-param name="list" select="./eac:relationEntry[@localType='title']"/>
 							   		</xsl:call-template>
 						   		</xsl:when>
+						   		<!-- TODO: -->
 						   		<xsl:when test="./eac:relationEntry[not(@localType='title')]">
 						   			<xsl:call-template name="multilanguageRelations">
 							   			 	<xsl:with-param name="list" select="./eac:relationEntry[not(@localType)]"/>
 							   		</xsl:call-template>
 						   		</xsl:when>
+						   		<!-- TODO: -->
 						   		<xsl:when test="./not[eac:relationEntry]">
 						   			<xsl:variable name="href" select="./@xlink:href"/>
 						   			<a href="{$href}" target="_blank">
@@ -405,10 +618,10 @@
 		   		<div class="whitespace">
 		   		 <!--   &nbsp;--> 
 		   		</div>
-		   		<a class="displayLinkShowMore" href="javascript:showMoreRelation('persons', 'li');">
+		   		<a class="displayLinkShowMore" href="javascript:showMore('persons', 'li');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/><xsl:text>...</xsl:text>
 				</a>
-				<a class="displayLinkShowLess" href="javascript:showLessRelation('persons', 'li');">
+				<a class="displayLinkShowLess" href="javascript:showLess('persons', 'li');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/><xsl:text>...</xsl:text>
 				</a>
 			</div>
@@ -443,10 +656,10 @@
 		   		<div class="whitespace">
 		   		 <!--   &nbsp;--> 
 		   		</div>
-		   		<a class="displayLinkShowMore" href="javascript:showMoreRelation('archives', 'li');">
+		   		<a class="displayLinkShowMore" href="javascript:showMore('archives', 'li');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/><xsl:text>...</xsl:text>
 				</a>
-				<a class="displayLinkShowLess" href="javascript:showLessRelation('archives', 'li');">
+				<a class="displayLinkShowLess" href="javascript:showLess('archives', 'li');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/><xsl:text>...</xsl:text>
 				</a>
 			</div>
@@ -458,7 +671,6 @@
 	<xsl:template name="alternativeName">
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
-
 		<div id="{$clazz}" class= "moreDisplay">
 			<xsl:for-each select="$list">
 				<p>
@@ -468,18 +680,97 @@
 					</xsl:call-template> 
 			    </p>
 			</xsl:for-each>
-
 			<div class="linkMore">
-				<a class="displayLinkShowMore linkShow" href="javascript:showMoreRelation('{$clazz}', 'p');">
+				<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'p');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
 				</a>
-				<a class="displayLinkShowLess linkShow" href="javascript:showLessRelation('{$clazz}', 'p');">
+				<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'p');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
 				</a>
 			</div>	
 		</div>
 	</xsl:template>
 	
+	<!-- template term -->
+	<xsl:template name="term">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+		<xsl:param name="title"/>
+		<xsl:if test="$list/text()">
+			<div class="row subrow">
+					<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource($title)"/>
+				   			<xsl:if test="$list/parent::node()/@localType">
+					   			<xsl:text> (</xsl:text>
+					   			<xsl:value-of select="$list/parent::node()/@localType"/>
+					   			<xsl:text>)</xsl:text>
+					   		</xsl:if>	
+				   			<xsl:text>:</xsl:text>
+				   		</h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguageWithVocabularySource">
+			   				<xsl:with-param name="list" select="$list"/>
+			   				<xsl:with-param name="clazz" select="$clazz"/>
+			   			</xsl:call-template>
+					</div>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	<!--template for common childs -->
+	<xsl:template name="commonChild">
+		<xsl:param name="list"/>
+	    <xsl:param name="clazz"/>
+	    <xsl:param name="title"/>
+		<xsl:if test="$list/text()">	 
+			<div class="row subrow">
+					<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource($title)"/><xsl:text>:</xsl:text></h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguageWithVocabularySource">
+			   				<xsl:with-param name="list" select="$list"/>
+			   				<xsl:with-param name="clazz" select="$clazz"/>
+			   			</xsl:call-template>
+					</div>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- template for commons dates -->
+	<xsl:template name="commonDates">
+		<xsl:param name="date"/>
+		<xsl:param name="dateRange"/>
+		<xsl:param name="dateSet"/>
+		<xsl:if test="$date or $dateRange or $dateSet">
+		    <div class="row subrow">
+		    	<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
+				</div>          
+		        <div class="rightcolumn">
+					<!-- when there are only 1 dateSet -->
+					<xsl:if test="$dateSet and (($dateSet/eac:dateRange and $dateSet/eac:dateRange/eac:fromDate/text() and $dateSet/eac:dateRange/eac:toDate/text()) or ($dateSet/eac:date and $dateSet/eac:date/text()))">
+						<xsl:text> (</xsl:text>
+						<xsl:apply-templates select="$dateSet"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+					<!-- when there are only 1 dateRange -->
+					<xsl:if test="$dateRange and $dateRange/eac:fromDate/text() and $dateRange/eac:toDate/text()">
+						<xsl:text> (</xsl:text>
+						<xsl:apply-templates select="$dateRange"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+					<!-- when there are only 1 date -->
+					<xsl:if test="$date and $date/text()">
+						<xsl:text> (</xsl:text>
+						<xsl:apply-templates select="$date"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
+				</div> 
+			</div>
+		</xsl:if>
+	</xsl:template>
 	<!-- template for language nameEntry -->
 	<xsl:template name="multilanguageName">
 		<xsl:param name="list"/>
@@ -619,8 +910,8 @@
 	    </xsl:choose>
 	</xsl:template> 
 	
-	<!-- template for places -->
-	<xsl:template name="multilanguagePlaces">
+	<!-- template for nodes with attribute @vocabularySource -->
+	<xsl:template name="multilanguageWithVocabularySource">
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
 		<xsl:choose>
@@ -633,10 +924,9 @@
 									<xsl:choose>
 										<xsl:when test="@vocabularySource">
 											<xsl:variable name="href" select="./@vocabularySource"/>
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!--<xsl:value-of select="."/>--></a>
+											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 										</xsl:when>
 										<xsl:otherwise>
-										<!-- <xsl:value-of select="."/>-->
 											<xsl:apply-templates select="." mode="other"/> 
 										</xsl:otherwise>
 									</xsl:choose>
@@ -649,10 +939,9 @@
 									<xsl:choose>
 										<xsl:when test="@vocabularySource">
 											<xsl:variable name="href" select="./@vocabularySource"/>
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!-- <xsl:value-of select="."/> --></a>
+											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 										</xsl:when>
 										<xsl:otherwise>
-											<!--<xsl:value-of select="."/>-->
 										 <xsl:apply-templates select="." mode="other"/> 
 										</xsl:otherwise>
 									</xsl:choose>
@@ -660,16 +949,14 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-						   <xsl:text>withoutLanguage</xsl:text>
 						  	<xsl:for-each select="$list[not(@xml:lang)]"> 
 								 	  <p>
 										 <xsl:choose>
 											<xsl:when test="@vocabularySource">
 												<xsl:variable name="href" select="./@vocabularySource"/>
-												<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!-- <xsl:value-of select="."/> --></a>
+												<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 											</xsl:when>
 											<xsl:otherwise>
-												<!--<xsl:value-of select="."/>-->
 											 <xsl:apply-templates select="." mode="other"/> 
 											</xsl:otherwise>
 										</xsl:choose>
@@ -686,10 +973,9 @@
 											<xsl:choose>
 												<xsl:when test="@vocabularySource">
 													<xsl:variable name="href" select="./@vocabularySource"/>
-													<a href="{$href}" target="_blank"><!--<xsl:value-of select="$currentText"/>--><xsl:apply-templates select="$currentText" mode="other"/></a>
+													<a href="{$href}" target="_blank"><xsl:apply-templates select="$currentText" mode="other"/></a>
 												</xsl:when>
 												<xsl:otherwise>
-													<!--<xsl:value-of select="$currentText"/>-->
 												 <xsl:apply-templates select="$currentText" mode="other"/> 
 												</xsl:otherwise>
 											</xsl:choose>
@@ -699,10 +985,10 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<div class="linkMore">
-					<a class="displayLinkShowMore linkShow" href="javascript:showMoreRelation('{$clazz}', 'p');">
+					<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'p');">
 						<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
 					</a>
-					<a class="displayLinkShowLess linkShow" href="javascript:showLessRelation('{$clazz}', 'p');">
+					<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'p');">
 						<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
 					</a>
 				</div>
@@ -713,10 +999,9 @@
 					<xsl:choose>
 						<xsl:when test="@vocabularySource">
 							<xsl:variable name="href" select="./@vocabularySource"/>
-							<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!--<xsl:value-of select="."/>--></a>
+							<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<!--<xsl:value-of select="."/>-->
 						 <xsl:apply-templates select="." mode="other"/> 
 						</xsl:otherwise>
 					</xsl:choose>
@@ -724,7 +1009,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
 	
 	<!-- template for language only one element -->
 	<xsl:template name="multilanguagePlaceEntry">
@@ -740,10 +1024,9 @@
 								<xsl:choose>
 									<xsl:when test="($list=$placeEntryBirth or $list=$placeEntryDeath) and $list[@vocabularySource]">
 										<xsl:variable name="href" select="$list/@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!--<xsl:value-of select="."/>--></a>
+										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 									</xsl:when>
 									<xsl:otherwise>
-									<!-- <xsl:value-of select="."/>-->
 										<xsl:apply-templates select="." mode="other"/> 
 									</xsl:otherwise>
 								</xsl:choose>	
@@ -756,10 +1039,9 @@
 								<xsl:choose>
 									<xsl:when test="($list=$placeEntryBirth or $list=$placeEntryDeath) and $list[@vocabularySource]">
 										<xsl:variable name="href" select="$list/@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!-- <xsl:value-of select="."/> --></a>
+										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 									</xsl:when>
 									<xsl:otherwise>
-										<!--<xsl:value-of select="."/>-->
 									 <xsl:apply-templates select="." mode="other"/> 
 									</xsl:otherwise>
 								</xsl:choose>
@@ -773,10 +1055,9 @@
 									 <xsl:choose>
 										<xsl:when test="($list=$placeEntryBirth or $list=$placeEntryDeath) and $list[@vocabularySource]">
 											<xsl:variable name="href" select="$list/@vocabularySource"/>
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!-- <xsl:value-of select="."/> --></a>
+											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 										</xsl:when>
 										<xsl:otherwise>
-											<!--<xsl:value-of select="."/>-->
 										 <xsl:apply-templates select="." mode="other"/> 
 										</xsl:otherwise>
 									</xsl:choose>
@@ -793,10 +1074,9 @@
 											<xsl:choose>
 												<xsl:when test="($list=$placeEntryBirth or $list=$placeEntryDeath) and $list[@vocabularySource]">
 													<xsl:variable name="href" select="$list/@vocabularySource"/>
-													<a href="{$href}" target="_blank"><!--<xsl:value-of select="$currentText"/>--><xsl:apply-templates select="$currentText" mode="other"/></a>
+													<a href="{$href}" target="_blank"><xsl:apply-templates select="$currentText" mode="other"/></a>
 												</xsl:when>
 												<xsl:otherwise>
-													<!--<xsl:value-of select="$currentText"/>-->
 												 <xsl:apply-templates select="$currentText" mode="other"/> 
 												</xsl:otherwise>
 											</xsl:choose>
@@ -811,10 +1091,9 @@
 					<xsl:choose>
 						<xsl:when test="($list=$placeEntryBirth or $list=$placeEntryDeath) and $list[@vocabularySource]">
 							<xsl:variable name="href" select="$list/@vocabularySource"/>
-							<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/> <!--<xsl:value-of select="."/>--></a>
+							<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 						</xsl:when>
 						<xsl:otherwise>
-							<!--<xsl:value-of select="."/>-->
 						 <xsl:apply-templates select="." mode="other"/> 
 						</xsl:otherwise>
 					</xsl:choose>
@@ -822,9 +1101,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
-	<!-- Template for surname, firstname or patronymic -->
-	
 	
 	<!-- Template for birth date  -->
 	<xsl:template name="birthDate">
@@ -835,7 +1111,6 @@
         		<xsl:text>?</xsl:text>
         	</xsl:when>
         	<xsl:otherwise>
-        		<!--  <xsl:value-of select="$birthDate"></xsl:value-of>-->
         		<xsl:apply-templates select="$birthdate" mode="other"/>
         	</xsl:otherwise>
         </xsl:choose> 
@@ -847,25 +1122,17 @@
 	  </xsl:if>
 	</xsl:template>
 	
-	<!-- Template for deathDate -->
-	<xsl:template name="deathDate">
-		<xsl:variable name="deathDate" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates/eac:dateRange/eac:toDate/text()">
-	  	</xsl:variable>	
+	<!-- Template for toDate -->
+	<xsl:template name="dateUnknow">
+		<xsl:param name="dateUnknow"/>
 	  	<xsl:choose>
-        	<xsl:when test="$deathDate='unknown'">
+        	<xsl:when test="$dateUnknow='unknown'">
         		<xsl:text>?</xsl:text>
         	</xsl:when>
         	<xsl:otherwise>
-        		<!--  <xsl:value-of select="$birthDate"></xsl:value-of>-->
-        		<xsl:apply-templates select="$deathDate" mode="other"/>
+        		<xsl:apply-templates select="$dateUnknow" mode="other"/>
         	</xsl:otherwise>
         </xsl:choose> 
-		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']">
-	  		<xsl:text>, </xsl:text>
-	  		<xsl:call-template name="multilanguagePlaceEntry">
-	  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']"/>
-	  		</xsl:call-template>		
-	  </xsl:if>
 	</xsl:template>
 	
 	<!-- template for dateSet -->
@@ -1492,10 +1759,10 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<div class="linkMore">
-					<a class="displayLinkShowMore linkShow" href="javascript:showMoreRelation('{$clazz}', 'p');">
+					<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'p');">
 						<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
 					</a>
-					<a class="displayLinkShowLess linkShow" href="javascript:showLessRelation('{$clazz}', 'p');">
+					<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'p');">
 						<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
 					</a>
 				</div>
