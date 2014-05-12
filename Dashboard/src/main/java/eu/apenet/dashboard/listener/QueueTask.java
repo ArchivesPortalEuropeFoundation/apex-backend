@@ -50,7 +50,7 @@ public class QueueTask implements Runnable {
     @Override
     public void run() {
         boolean stopped = false;
-        if (HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted()) {
+        if (EadService.isHarvestingStarted()) {
             stopped = true;
             LOGGER.info("Queuing process active, but will be stopped immediately, because of harvesting");
         } else {
@@ -61,12 +61,9 @@ public class QueueTask implements Runnable {
 
         int numberOfTries = 0;
         while (!stopped && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
-            if (EadService.isHarvestingStarted() || HarvesterDaemon.isHarvesterProcessing()) {
+            if (EadService.isHarvestingStarted()) {
                 if (numberOfTries >= 2) {
                     stopped = true;
-                }
-                if (numberOfTries == 0 && HarvesterDaemon.isHarvesterProcessing()) {
-                    LOGGER.info("Harvesting process is started, the queue process is stopped");
                 }
                 if (numberOfTries == 0 && EadService.isHarvestingStarted()) {
                     LOGGER.info("Europeana harvesting process is started, the queue process is stopped");
