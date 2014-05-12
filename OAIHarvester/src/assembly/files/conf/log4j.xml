@@ -15,6 +15,11 @@
             <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %m%n"/>
         </layout>
     </appender>
+	<logger name="OAI-PMH_PROGRESS">
+		<level value="INFO" />
+		<appender-ref ref="file" /> 
+		<appender-ref ref="console" /> 
+	</logger>    
 	<logger name="eu">
 		<level value="INFO" />
 		<appender-ref ref="file" /> 
