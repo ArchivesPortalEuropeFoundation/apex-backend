@@ -15,7 +15,7 @@ import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
 import eu.archivesportaleurope.harvester.util.StreamUtil;
 
 public class OaiPmhParser extends AbstractOaiPmhParser {
-	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
+	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.LOGGER_STRING);
 	private Integer maxNumberOfRecords;
 	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRecords) {
 		super(outputDirectory);
