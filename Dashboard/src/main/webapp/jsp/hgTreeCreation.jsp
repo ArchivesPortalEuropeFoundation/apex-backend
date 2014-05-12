@@ -50,20 +50,61 @@
                 href:"#editColorbox"
             }
         );
-        $("#myMenu .delete a").click(function(){
-            if(confirm('<s:property value="getText('dashboard.hgcreation.areyousuredeletechildren')" />')){
-                var node = $("#tree").dynatree("getActiveNode");
-                $.post("${pageContext.request.contextPath}/deleteLevelHG.action", {key: node.data.key}, function(databack){
-                    if(databack.success){
-                        var parent = node.parent;
-                        node.remove();
-                        parent.render();
-                    }
-                });
-            }
-        });
+         $("#myMenu .delete a").click(function(){
+        	 $.colorbox(
+   	            {
+   	            	width:"30%",
+   	                height:"160px",
+   	                inline:true,
+   	                overlayClose:false,
+   	                escKey:false,
+   	                onOpen:function(){
+   	                    $(document).unbind('keydown.cbox_close');
+   	                    $("#myMenu").hide();
+   	                },
+   	                onLoad:function(){
+   	                    $('#cboxClose').remove();
+   	                    doConfirm();
+   	                },
+   	                onCleanup:function(){ $("#myMenu").show(); },
+   	                href:"#deleteColorBox"
+   	            }
+   	        );
+        }); 
+         
     }
 
+    function doConfirm() {
+		unbindDeleteBtn();
+        $("#deleteBtnYes").click(yesFn);
+        $("#deleteBtnNo").click(noFn);
+    }
+
+    function unbindDeleteBtn(){
+        $("#deleteBtnYes").unbind('click');
+        $("#deleteBtnNo").unbind('click');
+    }
+
+    function yesFn() {
+        getResponse();
+        $("#html").show();
+    }
+
+    function noFn() {
+        $.fn.colorbox.close();
+    }
+ 
+    function getResponse() {
+	    var node = $("#tree").dynatree("getActiveNode");
+	    $.post("${pageContext.request.contextPath}/deleteLevelHG.action", {key: node.data.key}, function(databack){
+	        if(databack.success){
+	            var parent = node.parent;
+	            node.remove();
+	            parent.render();
+	        }
+	    });
+	        $.fn.colorbox.close();
+   }
 
     function unbindContextMenu(){
         $("#myMenu .edit a").unbind();
@@ -246,7 +287,7 @@
     }
 
     $(document).ready(function() {
-    	var emptyTitle = '<s:property value="getText(\'dashboard.hgcreation.label.emptyTitle\')" />';
+    	var emptyTitle = $("#emptyTitle").val();
        
         createTreeWithoutData(emptyTitle);
 
@@ -402,4 +443,36 @@
             </form>
         </div>
     </div>
+
+    <div style="display:none;">
+    	<div id="deleteColorBox" class="colorboxLeft">
+    		<table>
+    		<tr>
+					<td colspan="2" align="left">
+						<div><br/></div>
+					</td>
+				</tr>    
+    			<tr>
+					<td colspan="2" align="left">
+						<div id="question"><s:property value="getText('dashboard.hgcreation.areyousuredeletechildren')" /></div>
+					</td>
+				</tr>  
+				<tr>
+					<td colspan="2" align="left">
+						<div><br/></div>
+					</td>
+				</tr>    
+    			<tr>
+					<td class="left">
+           		 		<input type="button" id="deleteBtnYes" value="<s:property value="getText('content.message.yes')" />" />
+					</td>					
+					<td class="left">
+			            <input type="button" id="deleteBtnNo" value="<s:property value="getText('ead2ese.content.no')" />" />
+					</td>
+				</tr>    			
+    		</table>
+		</div>
+    </div>
+
+    <input type="hidden" id="emptyTitle" value="<s:property value="getText('dashboard.hgcreation.label.emptyTitle')" />"/>
 </div>
