@@ -18,7 +18,8 @@ import eu.archivesportaleurope.harvester.verb.ListIdentifiersVerb;
 import eu.archivesportaleurope.harvester.verb.ListRecordsVerb;
 
 public class OaiPmhHarvester {
-	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
+	public static final String LOGGER_STRING = "OAI-PMH_PROGRESS";
+	private static final Logger LOGGER = Logger.getLogger(LOGGER_STRING);
 	private static final int MAX_NUMBER_OF_ERRORS = 5;
 	public static void harvestByListRecords(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
 			OaiPmhParser oaiPmhParser, File errorDir, OaiPmhHttpClient oaiPmhHttpClient) throws Exception {
