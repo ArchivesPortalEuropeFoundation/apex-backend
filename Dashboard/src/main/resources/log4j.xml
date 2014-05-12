@@ -28,6 +28,12 @@
 			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %C{1}:%L - %m%n" />
 		</layout>
 	</appender>
+	<appender name="oaiPmhFile" class="eu.archivesportaleurope.commons.logging.DailyRollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/dashboard-oaipmh.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %C{1}:%L - %m%n" />
+		</layout>
+	</appender>	
 	<appender name="operationsFile" class="eu.archivesportaleurope.commons.logging.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/dashboard-operations.log" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -39,7 +45,11 @@
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{ABSOLUTE} - %m%n" />
 		</layout>
-	</appender>	
+	</appender>
+	<logger name="OAI-PMH_PROGRESS">
+		<level value="info" />
+		<appender-ref ref="oaiPmhFile" /> 
+	</logger>	
 	<logger name="eu.apenet.dashboard.utils.ChangeControl">
 		<level value="info" />
 		<appender-ref ref="operationsFile" /> 
