@@ -218,7 +218,7 @@
 
 				<tr>
 					<td id="tdContactAddVisitorsAddressTranslation" colspan="2">
-						<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("eag2012.commons.addVisitorTranslationAddress")' />" onclick="contactAddVisitorsAddressTranslation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("eag2012.commons.addVisitorTranslationAddress")' />" onclick="contactAddVisitorsAddressTranslation('<s:property value="getText('eag2012.commons.pleaseFillDataAddress')" />');" />
 					</td>
 				</tr>
 
@@ -318,7 +318,7 @@
 
 					<tr id="trButtonContacPostalAddressTranslation" style="display:none;">
 						<td colspan="2">
-							<input type="button" id="buttonContacPostalAddressTranslation" value="<s:property value="getText('eag2012.commons.addPostalTranslationAddress')"/>" onclick="contactAddPostalAddressTranslation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
+							<input type="button" id="buttonContacPostalAddressTranslation" value="<s:property value="getText('eag2012.commons.addPostalTranslationAddress')"/>" onclick="contactAddPostalAddressTranslation('<s:property value="getText('eag2012.commons.pleaseFillDataAddress')" />');" />
 						</td>
 						<td colspan="2">
 						</td>

@@ -2696,9 +2696,14 @@ function contactChangeTabName(text1) {
 	}
 }
 
+/***
+ * Adds a new Visitors address in Contact Tab if there is filled Contact Address + Visitors Address
+ * @param text1
+ */
 function contactAddVisitorsAddressTranslation(text1) {
 	var currentTab = getCurrentTab();
 	var counter = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
+	var counterP = $("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_']").length;
 
 	var street = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" textarea#textContactStreetOfTheInstitution").attr("value");
 	var city = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" textarea#textContactCityOfTheInstitution").attr("value");
@@ -2717,6 +2722,16 @@ function contactAddVisitorsAddressTranslation(text1) {
 		alertEmptyFields(text1);
 		return;
 	}
+	
+	//postal address validation
+	var streetP = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counterP+" textarea#textContactPAStreet").attr("value");
+	var cityP = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counterP+" textarea#textContactPACity").attr("value");
+	if (streetP == null || streetP == ""
+			|| cityP == null || cityP == "") {
+		alertEmptyFields(text1);
+		return;
+	}
+	//end validation for Postal
 
 	var clone = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_"+counter+"']").clone();
 	clone = "<table id='"+("contactTableVisitorsAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
@@ -2748,6 +2763,14 @@ function contactAddVisitorsAddressTranslation(text1) {
 	$("table#contactTableVisitorsAddress_1 input#textContactLongitudeOfTheInstitution").removeAttr("disabled");
 }
 
+/***
+ * Adds a new Postal address in Contact Tab if there is filled Contact Address + Visitors Address
+ * @param property1 postalAddress
+ * @param property2 selectLanguage
+ * @param property3 street
+ * @param property4 cityTownWithPostalcode
+ * @param control var control=true from webFormEAG2012.jsp
+ */
 function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,control) {
 	var currentTab = getCurrentTab();
 	var selectContactLanguagePostalAddressOnChange = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged($(this).parent().parent().parent().parent());">'+$("#selectLanguageVisitorAddress").html()+'</select>';
@@ -2759,6 +2782,19 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	var textContactPACityOnChange = '<textarea id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());"/>';
 	var textContactPACityNoChange = '<textarea id="textContactPACity" />';
 	var textContactPACity = "";
+	
+	//Control Add Visitors address
+	var counterV = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
+	var street = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactStreetOfTheInstitution").attr("value");
+	var city = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCityOfTheInstitution").attr("value");
+	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCountryOfTheInstitution").attr("value");
+	if (street == null || street == ""
+			|| city == null || city == "" 
+			|| country == null || country == "") {
+		alertEmptyFields(text1);
+		return;
+	}
+	//end control Add visitors Address
 
 	if (currentTab == "_1") {
 		textContactPAStreet = textContactPAStreetOnChange;
@@ -2816,6 +2852,19 @@ function contactAddPostalAddressTranslation(text1) {
 		alertEmptyFields(text1);
 		return;
 	}
+	
+	//Control Add Visitors address
+	var counterV = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
+	var streetV = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactStreetOfTheInstitution").attr("value");
+	var cityV = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCityOfTheInstitution").attr("value");
+	var countryV = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCountryOfTheInstitution").attr("value");
+	if (streetV == null || streetV == ""
+	|| cityV == null || cityV == ""
+	|| countryV == null || countryV == "") {
+	alertEmptyFields(text1);
+	return;
+	}
+	//end control Add visitors Address 
 
 	var clone = $("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_"+counter+"']").clone();
 	clone = "<table id='"+("contactTablePostalAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
