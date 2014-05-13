@@ -38,7 +38,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		query.setParameter("unitid", ApeUtil.decodeSpecialCharacters(unitid));
 		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
 		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));		
-		query.setMaxResults(5);
+		query.setMaxResults(2);
 		return query.getResultList();
 	}
 	public CLevel getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Long id){
