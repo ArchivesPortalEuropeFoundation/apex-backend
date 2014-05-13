@@ -1,7 +1,7 @@
 package eu.archivesportaleurope.util;
 
 public class ApeUtil {
-	private static final int MAX_ERROR_LINES = 2;
+	private static final int MAX_ERROR_LINES = 4;
     public static String generateThrowableLog(Throwable throwable){
     	String result = "";
     	result+= throwable.getClass().getName()+ " " +throwable.getMessage()  + "\n";
