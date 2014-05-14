@@ -62,6 +62,8 @@ public class ApeUtil {
 	        result = result.replaceAll("\\)", "_RRDBRKT_");
 	        result = result.replaceAll("!", "_EXCLMARK_");
 	        result = result.replaceAll("~", "_TILDE_");
+	        result = result.replaceAll("<", "_LT_");
+	        result = result.replaceAll(">", "_GT_");
 	        return result;
     	}else {
     		return null;
@@ -88,6 +90,8 @@ public class ApeUtil {
 	        result = result.replaceAll("_RRDBRKT_", ")");
 	        result = result.replaceAll("_EXCLMARK_", "!");
 	        result = result.replaceAll("_TILDE_", "~");
+	        result = result.replaceAll("_LT_","<");
+	        result = result.replaceAll("_GT_",">");	        
 	        return result.trim();
     	}else {
     		return null;
