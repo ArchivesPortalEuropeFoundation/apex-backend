@@ -26,7 +26,7 @@ public interface EadDAO extends GenericDAO<Ead, Integer> {
 
 	public Ead getEadByEadid(Class<? extends Ead> clazz, Integer aiId, String eadid);
 
-	public Ead getEadByEadid(Class<? extends Ead> clazz, String repositorycode, String eadid);
+	public Ead getPublishedEadByEadid(Class<? extends Ead> clazz, String repositorycode, String eadid);
 	
 	public List<Integer> getAllIds(Class<? extends Ead> clazz, Integer aiId);
 
