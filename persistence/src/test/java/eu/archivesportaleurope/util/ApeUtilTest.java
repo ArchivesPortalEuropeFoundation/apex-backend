@@ -6,8 +6,8 @@ import org.junit.Test;
 
 public class ApeUtilTest {
 
-	private static final String INPUT_ENCODED = "_COLON__ASTERISK__COMP__SLASH__BSLASH__LSQBRKT__RSQBRKT__PLUS__PERCENT__ATCHAR__AMP__DOLLAR__HASH__CFLEX__LRDBRKT__RRDBRKT__EXCLMARK__TILDE__LT__GT_";
-	private static final String INPUT = ":*=/\\[]+%@&$#^()!~<>";
+	private static final String INPUT_ENCODED = "_COLON__ASTERISK__COMP__SLASH__BSLASH__LSQBRKT__RSQBRKT__PLUS__PERCENT__ATCHAR__AMP__DOLLAR__HASH__CFLEX__LRDBRKT__RRDBRKT__EXCLMARK__TILDE__LT__GT__QUOTE_";
+	private static final String INPUT = ":*=/\\[]+%@&$#^()!~<>\"";
 
 	@Test
 	public void testEncodeRepositoryCode() {
