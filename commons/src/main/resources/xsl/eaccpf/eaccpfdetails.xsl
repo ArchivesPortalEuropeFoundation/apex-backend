@@ -22,30 +22,37 @@
 	      	<xsl:call-template name="multilanguageName">
 		       		 <xsl:with-param name="list" select="//eac:nameEntry"/>
 		    </xsl:call-template> 
-			
-			<!-- when there are only 1 dateSet -->
-			<xsl:if test="$existDates/eac:dateSet and (($existDates/eac:dateSet/eac:dateRange and $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text() and $existDates/eac:dateSet/eac:dateRange/eac:toDate/text()) or ($existDates/eac:dateSet/eac:date and $existDates/eac:dateSet/eac:date/text()))">
+			<!-- dates -->
+			<xsl:if test="$existDates/eac:date/text() or $existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate or $existDates/eac:dateSet/eac:date/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate">
 				<xsl:text> (</xsl:text>
-				<xsl:apply-templates select="$existDates/eac:dateSet"/>
+				<span class="nameEtryDates">
+					<!-- when there are only 1 dateSet -->
+					<xsl:if test="$existDates/eac:dateSet and (($existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate) or ($existDates/eac:dateSet/eac:date and $existDates/eac:dateSet/eac:date/text()))">
+						<xsl:apply-templates select="$existDates/eac:dateSet"/>
+					</xsl:if>
+					<!-- when there are only 1 dateRange -->
+					<xsl:if test="$existDates/eac:dateRange and ($existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate)">
+						<xsl:apply-templates select="$existDates/eac:dateRange"/>
+					</xsl:if>
+					<!-- when there are only 1 date -->
+					<xsl:if test="$existDates/eac:date and $existDates/eac:date/text()">
+						<xsl:apply-templates select="$existDates/eac:date"/>
+					</xsl:if>
+				</span>
 				<xsl:text>)</xsl:text>
 			</xsl:if>
-			<!-- when there are only 1 dateRange -->
-			<xsl:if test="$existDates/eac:dateRange and $existDates/eac:dateRange/eac:fromDate/text() and $existDates/eac:dateRange/eac:toDate/text()">
-				<xsl:text> (</xsl:text>
-				<xsl:apply-templates select="$existDates/eac:dateRange"/>
-				<xsl:text>)</xsl:text>
-			</xsl:if>
-			<!-- when there are only 1 date -->
-			<xsl:if test="$existDates/eac:date and $existDates/eac:date/text()">
-				<xsl:text> (</xsl:text>
-				<xsl:apply-templates select="$existDates/eac:date"/>
-				<xsl:text>)</xsl:text>
-			</xsl:if>
-			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
 				<xsl:text> </xsl:text>
-				<span>
-					<xsl:apply-templates select="$entityType" mode="other"/>
+				<span id="entityType">
+					<xsl:if test="$entityType='person'">
+					   <xsl:value-of select="ape:resource('eaccpf.portal.person')"/>
+					</xsl:if>
+					<xsl:if test="$entityType='corporateBody'">
+					   <xsl:value-of select="ape:resource('eaccpf.portal.corporateBody')"/>
+					</xsl:if>
+					<xsl:if test="$entityType='family'">
+					   <xsl:value-of select="ape:resource('eaccpf.portal.family')"/>
+					</xsl:if>
 				</span>
 			</xsl:if>
 		</h1>
@@ -68,11 +75,11 @@
 							<xsl:if test="$existDates/eac:dateRange">
 									<xsl:call-template name="dateUnknow">
 										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:fromDate"/>
-									</xsl:call-template>	
+									</xsl:call-template>
 								</xsl:if> 
-								<xsl:if test="$existDates/eac:dateSet/eac:dateRange">
-									<xsl:call-template name="dateUnknow">
-										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateSet/eac:dateRange/eac:fromDate"/>
+								<xsl:if test="$existDates/eac:dateSet/eac:dateRange/eac:fromDate">
+									<xsl:call-template name="multilanguageOneDate">
+										<xsl:with-param name="list" select="$existDates/eac:dateSet/eac:dateRange/eac:fromDate"/>
 									</xsl:call-template>	
 							</xsl:if>
 							<xsl:if test="$entityType = 'person' or $entityType = 'family'">
@@ -105,10 +112,10 @@
 										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:toDate"/>
 									</xsl:call-template>	
 								</xsl:if> 
-								<xsl:if test="$existDates/eac:dateSet/eac:dateRange">
-									<xsl:call-template name="dateUnknow">
-										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateSet/eac:dateRange/eac:toDate"/>
-									</xsl:call-template>	
+								<xsl:if test="$existDates/eac:dateSet/eac:dateRange/eac:toDate">
+									<xsl:call-template name="multilanguageOneDate">
+										<xsl:with-param name="list" select="$existDates/eac:dateSet/eac:dateRange/eac:toDate"/>
+									</xsl:call-template>		
 								</xsl:if>	
 							    <xsl:if test="$entityType = 'person' or $entityType = 'family'">
 									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']">
@@ -431,7 +438,15 @@
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:p/text()">   
 				<div class="row">
 						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/><xsl:text>:</xsl:text></h2>
+					   		<h2>
+					   			<xsl:if test="$entityType='corporateBody'">
+					   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
+					   			</xsl:if>
+					   			<xsl:if test="$entityType='person' or $entityType='family'">
+					   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
+					   			</xsl:if>
+					   			<xsl:text>:</xsl:text>
+					   		</h2>
 					   	</div>
 					   	<div class="rightcolumn leftSide">
 							<xsl:call-template name="multilanguage">
@@ -556,12 +571,10 @@
 						   			<xsl:variable name="href" select="./@xlink:href"/>
 						   			<a href="{$href}" target="_blank">
 						   				<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-										<xsl:text> (</xsl:text>
-										<xsl:call-template name="relationType">
-										     <xsl:with-param name="current" select="."/>
-										</xsl:call-template>
-										<xsl:text>)</xsl:text>
 						   			</a>
+						   			<xsl:call-template name="relationType">
+										<xsl:with-param name="current" select="."/>
+									</xsl:call-template>
 						   		</xsl:otherwise>
 					   		</xsl:choose>
 				   		</li>
@@ -597,20 +610,20 @@
 							   			 	<xsl:with-param name="list" select="./eac:relationEntry[@localType='title']"/>
 							   		</xsl:call-template>
 						   		</xsl:when>
-						   		<!-- TODO: -->
-						   		<xsl:when test="./eac:relationEntry[not(@localType='title')]">
+						   		<xsl:when test="./eac:relationEntry[not(@localType)]">
 						   			<xsl:call-template name="multilanguageRelations">
 							   			 	<xsl:with-param name="list" select="./eac:relationEntry[not(@localType)]"/>
 							   		</xsl:call-template>
 						   		</xsl:when>
-						   		<!-- TODO: -->
-						   		<xsl:when test="./not[eac:relationEntry]">
+						   		<xsl:otherwise>
 						   			<xsl:variable name="href" select="./@xlink:href"/>
 						   			<a href="{$href}" target="_blank">
 						   				<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedName')"/>
-						   			</a>	
-						   		</xsl:when>
-						   		<xsl:otherwise/>
+						   			</a>
+						   			<xsl:call-template name="relationType">
+										<xsl:with-param name="current" select="."/>
+									</xsl:call-template>
+						   		</xsl:otherwise>
 					   		</xsl:choose>
 				   		</li>
 			   		</xsl:for-each>
@@ -749,24 +762,20 @@
 				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
 				</div>          
 		        <div class="rightcolumn">
-					<!-- when there are only 1 dateSet -->
-					<xsl:if test="$dateSet and (($dateSet/eac:dateRange and $dateSet/eac:dateRange/eac:fromDate/text() and $dateSet/eac:dateRange/eac:toDate/text()) or ($dateSet/eac:date and $dateSet/eac:date/text()))">
-						<xsl:text> (</xsl:text>
-						<xsl:apply-templates select="$dateSet"/>
-						<xsl:text>)</xsl:text>
-					</xsl:if>
-					<!-- when there are only 1 dateRange -->
-					<xsl:if test="$dateRange and $dateRange/eac:fromDate/text() and $dateRange/eac:toDate/text()">
-						<xsl:text> (</xsl:text>
-						<xsl:apply-templates select="$dateRange"/>
-						<xsl:text>)</xsl:text>
-					</xsl:if>
-					<!-- when there are only 1 date -->
-					<xsl:if test="$date and $date/text()">
-						<xsl:text> (</xsl:text>
-						<xsl:apply-templates select="$date"/>
-						<xsl:text>)</xsl:text>
-					</xsl:if>
+		        	<span class="nameEtryDates">
+						<!-- when there are only 1 dateSet -->
+						<xsl:if test="$dateSet and (($dateSet/eac:dateRange/eac:fromDate or $dateSet/eac:dateRange/eac:toDate) or ($dateSet/eac:date and $dateSet/eac:date/text()))">
+							<xsl:apply-templates select="$dateSet"/>
+						</xsl:if>
+						<!-- when there are only 1 dateRange -->
+						<xsl:if test="$dateRange and ($dateRange/eac:fromDate or $dateRange/eac:toDate)">
+							<xsl:apply-templates select="$dateRange"/>
+						</xsl:if>
+						<!-- when there are only 1 date -->
+						<xsl:if test="$date and $date/text()">
+							<xsl:apply-templates select="$date"/>
+						</xsl:if>
+					</span>
 				</div> 
 			</div>
 		</xsl:if>
@@ -910,7 +919,7 @@
 	    </xsl:choose>
 	</xsl:template> 
 	
-	<!-- template for nodes with attribute @vocabularySource -->
+	<!-- template for nodes with attribute @vocabularySource and several elements-->
 	<xsl:template name="multilanguageWithVocabularySource">
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
@@ -1049,7 +1058,6 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-						   <xsl:text>withoutLanguage</xsl:text>
 						  	<xsl:for-each select="$list[not(@xml:lang)]"> 
 							 	  <xsl:if test="position()=1"> 
 									 <xsl:choose>
@@ -1102,27 +1110,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!-- Template for birth date  -->
-	<xsl:template name="birthDate">
-		<xsl:variable name="birthdate" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates/eac:dateRange/eac:fromDate/text()">
-	  	</xsl:variable>	
-	  	<xsl:choose>
-        	<xsl:when test="$birthdate='unknown'">
-        		<xsl:text>?</xsl:text>
-        	</xsl:when>
-        	<xsl:otherwise>
-        		<xsl:apply-templates select="$birthdate" mode="other"/>
-        	</xsl:otherwise>
-        </xsl:choose> 
-		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']">
-	  		<xsl:text>, </xsl:text>
-	  		<xsl:call-template name="multilanguagePlaceEntry">
-	  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']"/>
-	  		</xsl:call-template>		
-	  </xsl:if>
-	</xsl:template>
-	
-	<!-- Template for toDate -->
+	<!-- Template for toDate or fromDate to detect the unknow value-->
 	<xsl:template name="dateUnknow">
 		<xsl:param name="dateUnknow"/>
 	  	<xsl:choose>
@@ -1138,51 +1126,277 @@
 	<!-- template for dateSet -->
 	<xsl:template match="eac:dateSet">
 		<xsl:if test="eac:dateRange or eac:date">
-			<xsl:for-each select="eac:date">
-				<xsl:if test="current()/text()">
-					<xsl:value-of select="."/>
-					<xsl:if test="position() != last()">
-						<xsl:text>, </xsl:text>
-					</xsl:if>
-				</xsl:if>
-			</xsl:for-each>
-			<xsl:if test="eac:dateRange and eac:dateRange/eac:fromDate/text() and eac:dateRange/eac:toDate/text() and eac:date/text()">
+			<xsl:call-template name="multilanguageDate">
+				<xsl:with-param name="list" select="eac:date"/>
+			</xsl:call-template>
+		<!--  	<xsl:if test="(eac:dateRange/eac:fromDate or eac:dateRange/eac:toDate) and eac:date/text()">
 				<xsl:text>, </xsl:text>
+			</xsl:if>-->
+			<xsl:if test="eac:dateRange/eac:fromDate or eac:dateRange/eac:toDate">
+				<xsl:call-template name="multilanguageDateRange">
+					<xsl:with-param name="list" select="eac:dateRange"/>	
+				</xsl:call-template>
 			</xsl:if>
-			<xsl:for-each select="eac:dateRange">
-				<xsl:if test="./eac:fromDate/text() and ./eac:toDate/text()">
-					<xsl:variable name="var" select="./eac:toDate"></xsl:variable>
-					<xsl:choose>	
-						<xsl:when test="./eac:fromDate/text()='unknown'">
-							<xsl:text>?</xsl:text>
-						</xsl:when>
-					    <xsl:otherwise>
-					    	<xsl:value-of select="./eac:fromDate"/>
-					    </xsl:otherwise>
-					</xsl:choose>
-				<!--  	<xsl:variable name="var" select="./eac:toDate"></xsl:variable>-->
-					<xsl:choose>
-						<xsl:when test="string(number(substring($var,1,2)))!='NaN' or ($var/text() = 'unknown' and ./eac:fromDate/text() !='unknown')">
-							<xsl:text> - </xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text> </xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:choose>	
-						<xsl:when test="./eac:toDate/text()='unknown' and ./eac:fromDate/text() != 'unknown'">
-							<xsl:text>?</xsl:text>
-						</xsl:when>
-					    <xsl:otherwise>
-					    	<xsl:value-of select="./eac:toDate"/>
-					    </xsl:otherwise>
-					</xsl:choose>
-					<xsl:if test="position() != last()">
-						<xsl:text>, </xsl:text>
-					</xsl:if>
-				</xsl:if>
-			</xsl:for-each>
 		</xsl:if>
+	</xsl:template>
+	
+	<!-- template for multilanguageDate -->
+	<xsl:template name="multilanguageDate">
+		<xsl:param name="list"/>
+		<xsl:choose>
+			<xsl:when test="count($list) > 1">
+				<xsl:choose>
+					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+						<xsl:for-each select="$list[@xml:lang = $language.selected]">
+							<xsl:if test="current()/text()">
+							    <xsl:apply-templates select="." mode="other"/> 
+							    <xsl:if test="position() != last()">
+									<xsl:text>, </xsl:text>
+								</xsl:if>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+						<xsl:for-each select="$list[@xml:lang = $language.default]">
+							<xsl:if test="current()/text()">
+							    <xsl:apply-templates select="." mode="other"/> 
+							    <xsl:if test="position() != last()">
+									<xsl:text>, </xsl:text>
+								</xsl:if>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
+						  	<xsl:for-each select="$list[not(@xml:lang)]"> 
+								<xsl:if test="current()/text()">
+								    <xsl:apply-templates select="." mode="other"/> 
+								    <xsl:if test="position() != last()">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+							    </xsl:if>
+						   	</xsl:for-each> 
+					</xsl:when>
+					<xsl:otherwise> <!-- first language -->
+						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
+						<xsl:for-each select="$list">
+							<xsl:if test="current()/text()">
+								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+								<xsl:if test="$currentLang = $language.first">
+								    <xsl:apply-templates select="." mode="other"/> 
+								    <xsl:if test="position() != last()">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:if>			
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:for-each select="$list">
+					<xsl:apply-templates select="." mode="other"/> 
+				</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>	
+	
+	<!-- template for multilanguageDateRange -->
+	<xsl:template name="multilanguageDateRange">
+		<xsl:param name="list"/>
+		<xsl:choose>
+			<xsl:when test="count($list) > 1">
+				<xsl:choose>
+					<xsl:when test="($list/eac:fromDate[@xml:lang = $language.selected] and $list/eac:fromDate[@xml:lang = $language.selected]/text() and $list/eac:fromDate[@xml:lang = $language.selected]/text() != '')
+					                 or ($list/eac:toDate[@xml:lang = $language.selected] and $list/eac:toDate[@xml:lang = $language.selected]/text() and $list/eac:toDate[@xml:lang = $language.selected]/text() != '')">
+						<xsl:for-each select="$list">
+						    <xsl:variable name="currentLangFrom" select="current()/eac:fromDate/@xml:lang"/>
+						    <xsl:variable name="currentLangTo" select="current()/eac:toDate/@xml:lang"/>
+						    <xsl:choose>
+						    	<xsl:when test="./eac:fromDate">
+						    		<xsl:if test="($currentLangFrom = $language.selected)">
+						    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+										<xsl:call-template name="fromToDate">
+				          	 				<xsl:with-param name="dateRange" select="."/>
+			                			</xsl:call-template>
+									</xsl:if>
+						    	</xsl:when>
+						    	<xsl:when test="./eac:toDate">
+						    		<xsl:if test="($currentLangTo = $language.selected)">
+						    			<xsl:if test="position() > 1  or (position() = 1 and ./parent::node()/eac:date/text())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+										<xsl:call-template name="fromToDate">
+				          	 				<xsl:with-param name="dateRange" select="."/>
+			                			</xsl:call-template>
+									</xsl:if>
+						    	</xsl:when>
+						    	<xsl:otherwise/>
+						    </xsl:choose>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="($list/eac:fromDate[@xml:lang = $language.default] and $list/eac:fromDate[@xml:lang = $language.default]/text() and $list/eac:fromDate[@xml:lang = $language.default]/text() != '') 
+					                or ($list/eac:toDate[@xml:lang = $language.default] and $list/eac:toDate[@xml:lang = $language.default]/text() and $list/eac:toDate[@xml:lang = $language.default]/text() != '')">
+						<xsl:for-each select="$list">
+						    <xsl:variable name="currentLangFrom" select="current()/eac:fromDate/@xml:lang"/>
+						    <xsl:variable name="currentLangTo" select="current()/eac:toDate/@xml:lang"/>
+							<xsl:choose>
+						    	<xsl:when test="./eac:fromDate">
+						    		<xsl:if test="($currentLangFrom = $language.default)">
+						    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+										<xsl:call-template name="fromToDate">
+				          	 				<xsl:with-param name="dateRange" select="."/>
+			                			</xsl:call-template>
+									</xsl:if>
+						    	</xsl:when>
+						    	<xsl:when test="./eac:toDate">
+						    		<xsl:if test="($currentLangTo = $language.default)">
+						    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+										<xsl:call-template name="fromToDate">
+				          	 				<xsl:with-param name="dateRange" select="."/>
+			                			</xsl:call-template>
+									</xsl:if>
+						    	</xsl:when>
+						    	<xsl:otherwise/>
+						    </xsl:choose>
+						</xsl:for-each> 
+					</xsl:when>
+					<xsl:when test="($list/eac:fromDate[not(@xml:lang)] and $list/eac:fromDate[not(@xml:lang)]/text() and $list/eac:fromDate[not(@xml:lang)]/text() != '')
+					                or ($list/eac:toDate[not(@xml:lang)] and $list/eac:toDate[not(@xml:lang)]/text() and $list/eac:toDate[not(@xml:lang)]/text() != '')">
+							  	<xsl:for-each select="$list">
+									<xsl:choose>
+								    	<xsl:when test="./eac:fromDate">
+								    		<xsl:if test="./eac:fromDate[not(@xml:lang)]">
+								    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+													<xsl:text>, </xsl:text>
+												</xsl:if>
+												<xsl:call-template name="fromToDate">
+						          	 				<xsl:with-param name="dateRange" select="."/>
+					                			</xsl:call-template>
+											</xsl:if>
+								    	</xsl:when>
+								    	<xsl:when test="./eac:toDate">
+								    		<xsl:if test="./eac:toDate[not(@xml:lang)]">
+								    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+													<xsl:text>, </xsl:text>
+												</xsl:if>
+												<xsl:call-template name="fromToDate">
+						          	 				<xsl:with-param name="dateRange" select="."/>
+					                			</xsl:call-template>
+											</xsl:if>
+								    	</xsl:when>
+							    	<xsl:otherwise/>
+							    </xsl:choose>
+						     </xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise> <!-- first language -->
+						<xsl:variable name="language.first" select="$list[1]/eac:fromDate/@xml:lang"/>
+						<xsl:variable name="languageTo.first" select="$list[1]/eac:toDate/@xml:lang"/>
+						<xsl:for-each select="$list">
+								<xsl:variable name="currentLang" select="current()/eac:fromDate/@xml:lang"/>
+								<xsl:variable name="currentToLang" select="current()/eac:toDate/@xml:lang"/>
+								<xsl:choose>
+									<xsl:when test="$language.first">
+										<xsl:choose>
+										    	<xsl:when test="./eac:fromDate">
+										    		<xsl:if test="$currentLang=$language.first">
+										    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+															<xsl:text>, </xsl:text>
+														</xsl:if>
+														<xsl:call-template name="fromToDate">
+								          	 				<xsl:with-param name="dateRange" select="."/>
+							                			</xsl:call-template>
+													</xsl:if>
+										    	</xsl:when>
+										    	<xsl:when test="./eac:toDate">
+										    		<xsl:if test="$currentToLang=$language.first">
+										    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+															<xsl:text>, </xsl:text>
+														</xsl:if>
+														<xsl:call-template name="fromToDate">
+								          	 				<xsl:with-param name="dateRange" select="."/>
+							                			</xsl:call-template>
+													</xsl:if>
+										    	</xsl:when>
+									    	<xsl:otherwise/>
+									    </xsl:choose>
+									 </xsl:when>
+									 <xsl:otherwise>
+									 	<xsl:choose>
+										    	<xsl:when test="./eac:fromDate">
+										    		<xsl:if test="$currentLang=$languageTo.first">
+										    			<xsl:if test="position() > 1">
+															<xsl:text>, </xsl:text>
+														</xsl:if>
+														<xsl:call-template name="fromToDate">
+								          	 				<xsl:with-param name="dateRange" select="."/>
+							                			</xsl:call-template>
+													</xsl:if>
+										    	</xsl:when>
+										    	<xsl:when test="./eac:toDate">
+										    		<xsl:if test="$currentToLang=$languageTo.first">
+										    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+															<xsl:text>, </xsl:text>
+														</xsl:if>
+														<xsl:call-template name="fromToDate">
+								          	 				<xsl:with-param name="dateRange" select="."/>
+							                			</xsl:call-template>
+													</xsl:if>
+										    	</xsl:when>
+									    	<xsl:otherwise/>
+									    </xsl:choose>
+									 </xsl:otherwise> 
+							    </xsl:choose>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise> <!--only one dateRange-->
+				<xsl:if test ="$list/parent::node()/eac:date/text()">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
+				<xsl:call-template name="fromToDate">
+					<xsl:with-param name="dateRange" select="$list"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>	
+	
+	<!--template fromDate toDate-->
+	<xsl:template name="fromToDate">
+		<xsl:param name="dateRange"/>
+		<xsl:choose>
+			<xsl:when test="$dateRange/eac:fromDate/text()='unknown'">
+				<xsl:text>?</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="$dateRange/eac:fromDate" mode="other"/>
+		    </xsl:otherwise>
+		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="string(number(substring($dateRange/eac:toDate,1,2)))!='NaN' or ($dateRange/eac:toDate/text() = 'unknown' and $dateRange/eac:fromDate/text() !='unknown')
+			                or not($dateRange/eac:toDate) or not($dateRange/eac:fromDate)">
+				<xsl:text> - </xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text> </xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:choose>	
+			<xsl:when test="$dateRange/eac:toDate/text()='unknown' and $dateRange/eac:fromDate/text() != 'unknown'">
+				<xsl:text>?</xsl:text>
+			</xsl:when>
+		    <xsl:otherwise>
+		    	<xsl:if test="$dateRange/eac:toDate/text()!='unknown'"> 
+		    		<xsl:apply-templates select="$dateRange/eac:toDate" mode="other"/> 
+		   		</xsl:if>
+		    </xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<!-- template for date -->
@@ -1191,14 +1405,13 @@
 			<xsl:if test="position() != 1">
 				<xsl:text>, </xsl:text>
 			</xsl:if>
-			<xsl:value-of select="text()"/>
+	        <xsl:apply-templates mode="other"/>
 			<xsl:for-each select="eac:date">
 				<xsl:if test="current()/text()">
-					<xsl:value-of select="."/>
 					<xsl:if test="position() != last()">
 						<xsl:text>, </xsl:text>
 					</xsl:if>
-					<xsl:value-of select="current()"/>
+					<xsl:apply-templates select="current()" mode="other"/>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:if>
@@ -1206,40 +1419,67 @@
 	
 	<!-- template for dateRange -->
 	<xsl:template match="eac:dateRange">
-		<xsl:if test="./eac:fromDate/text() and ./eac:toDate/text()">
-			<xsl:if test="position() != 1">
-				<xsl:text>, </xsl:text>
-			</xsl:if>
-			<xsl:value-of select="./eac:fromDate"/>
-			<xsl:variable name="var" select="./eac:toDate"></xsl:variable>
+			<xsl:call-template name="fromToDate">
+				<xsl:with-param name="dateRange" select="."/>
+			</xsl:call-template>
+	</xsl:template>
+	
+	<!-- template for multilanguage only one element date in birth, death, foundation or closing-->
+	<xsl:template name="multilanguageOneDate">
+		<xsl:param name="list"/>
 			<xsl:choose>
-				<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
-					<xsl:text> - </xsl:text>
+				<xsl:when test="count($list) > 1">
+					<xsl:choose>
+						<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+						    <xsl:for-each select="$list[@xml:lang = $language.selected]">
+								<xsl:if test="position()=1"> 
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="."/>
+									</xsl:call-template>
+							 	</xsl:if> 
+					 	    </xsl:for-each> 
+						</xsl:when>
+						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+						 	<xsl:for-each select="$list[@xml:lang = $language.default]"> 
+								  <xsl:if test="position()=1">
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="."/>
+									</xsl:call-template>
+								 </xsl:if>
+						  	</xsl:for-each>
+						</xsl:when>
+						<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
+						  	<xsl:for-each select="$list[not(@xml:lang)]"> 
+							 	  <xsl:if test="position()=1"> 
+									 <xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="."/>
+									</xsl:call-template>
+							  	 </xsl:if>
+						   	</xsl:for-each> 
+						</xsl:when>
+						<xsl:otherwise> 
+						 	<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
+							<xsl:for-each select="$list">
+								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+										<xsl:if test="$currentLang = $language.first">
+											<xsl:if test="position() = 1">
+												<xsl:call-template name="dateUnknow">
+										           <xsl:with-param name="dateUnknow" select="."/>
+												</xsl:call-template>
+										  	</xsl:if>
+										</xsl:if>
+							</xsl:for-each>
+					   </xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text> </xsl:text>
+					<xsl:for-each select="$list">
+							<xsl:call-template name="dateUnknow">
+								<xsl:with-param name="dateUnknow" select="."/>
+							</xsl:call-template>
+					</xsl:for-each>
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:value-of select="./eac:toDate"/>
-			<xsl:for-each select="eac:dateRange">
-				<xsl:if test="current()/eac:fromDate/text() and current()/eac:toDate/text()">
-					<xsl:value-of select="./eac:fromDate"/>
-					<xsl:variable name="var" select="./eac:toDate"></xsl:variable>
-					<xsl:value-of select="./eac:toDate"/>
-					<xsl:if test="position() != last()">
-						<xsl:text>, </xsl:text>
-					</xsl:if>
-					<xsl:choose>
-						<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
-							<xsl:text> - </xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text> </xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:if>
-			</xsl:for-each>
-		</xsl:if>
 	</xsl:template>
 	
 	<!-- template for links to file type -->
@@ -1248,7 +1488,7 @@
 	   	<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
 			<a href="{$link}" target="_blank"><xsl:apply-templates select="current()" mode="other"/></a>
 			<xsl:call-template name="relationType">
-			   	 <xsl:with-param name="current" select="current()"/>
+			   	 <xsl:with-param name="current" select="current()/parent::node()"/>
 			</xsl:call-template>
  	   </xsl:if>
  	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
@@ -1256,7 +1496,7 @@
           <!--   <xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@xlink:href)"></xsl:value-of>');</script></xsl:attribute>-->
 		   <xsl:apply-templates select="current()" mode="other"/></a>
 		<xsl:call-template name="relationType">
-		     <xsl:with-param name="current" select="current()"/>
+		     <xsl:with-param name="current" select="current()/parent::node()"/>
 		</xsl:call-template>
  	   </xsl:if>
 	</xsl:template>
@@ -1264,50 +1504,50 @@
 	<!-- template for attribute @cpfRelationType or @resourceRelationType -->
 	<xsl:template name="relationType">
 		<xsl:param name="current"/>
-		<xsl:if test="name($current/parent::node())='cpfRelation' and $current/parent::node()[@cpfRelationType]"> 
+		<xsl:if test="name($current)='cpfRelation' and $current[@cpfRelationType]"> 
 			<xsl:text> (</xsl:text>
 			<xsl:choose>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='associative']"> 
+				<xsl:when test="$current[@cpfRelationType='associative']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.associative')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='identity']"> 
+				<xsl:when test="$current[@cpfRelationType='identity']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.identity')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='hierarchical']"> 
+				<xsl:when test="$current[@cpfRelationType='hierarchical']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.hierarchical')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='hierarchical-parent']"> 
+				<xsl:when test="$current[@cpfRelationType='hierarchical-parent']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.hierarchicalParent')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='hierarchical-child']"> 
+				<xsl:when test="$current[@cpfRelationType='hierarchical-child']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.hierarchicalChild')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='temporal']"> 
+				<xsl:when test="$current[@cpfRelationType='temporal']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.temporal')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='temporal-earlier']"> 
+				<xsl:when test="$current[@cpfRelationType='temporal-earlier']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.temporalEarlier')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='temporal-later']"> 
+				<xsl:when test="$current[@cpfRelationType='temporal-later']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.temporalLater')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@cpfRelationType='family']"> 
+				<xsl:when test="$current[@cpfRelationType='family']"> 
 					<xsl:value-of select="ape:resource('eaccpf.portal.family')"/>
 				</xsl:when>
 				<xsl:otherwise/>
 			</xsl:choose>
 			<xsl:text>)</xsl:text>	
 		</xsl:if>
-		<xsl:if test="name($current/parent::node())='resourceRelation' and $current/parent::node()[@resourceRelationType]"> 
+		<xsl:if test="name($current)='resourceRelation' and $current[@resourceRelationType]"> 
 			<xsl:text> (</xsl:text>
 			<xsl:choose>
-				<xsl:when test="$current/parent::node()[@resourceRelationType='creatorOf']">
+				<xsl:when test="$current[@resourceRelationType='creatorOf']">
 					<xsl:value-of select="ape:resource('eaccpf.portal.creatorOf')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@resourceRelationType='subjectOf']">
+				<xsl:when test="$current[@resourceRelationType='subjectOf']">
 					<xsl:value-of select="ape:resource('eaccpf.portal.subjectOf')"/>
 				</xsl:when>
-				<xsl:when test="$current/parent::node()[@resourceRelationType='other']">
+				<xsl:when test="$current[@resourceRelationType='other']">
 					<xsl:value-of select="ape:resource('eaccpf.portal.other')"/>
 				</xsl:when>
 				<xsl:otherwise/>
@@ -1353,7 +1593,7 @@
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/>
 										<xsl:call-template name="relationType">
-											<xsl:with-param name="current" select="current()"/>
+											<xsl:with-param name="current" select="current()/parent::node()"/>
 										</xsl:call-template>
 									</xsl:otherwise>	
 								</xsl:choose>
@@ -1372,7 +1612,7 @@
 											<xsl:otherwise>
 												<xsl:apply-templates select="." mode="other"/>
 												<xsl:call-template name="relationType">
-													<xsl:with-param name="current" select="current()"/>
+													<xsl:with-param name="current" select="current()/parent::node()"/>
 												</xsl:call-template>
 											</xsl:otherwise>	
 										</xsl:choose>
@@ -1394,7 +1634,7 @@
 											<xsl:otherwise>
 												<xsl:apply-templates select="." mode="other"/>
 												<xsl:call-template name="relationType">
-													<xsl:with-param name="current" select="current()"/>
+													<xsl:with-param name="current" select="current()/parent::node()"/>
 												</xsl:call-template>
 											</xsl:otherwise>	
 										</xsl:choose>
@@ -1416,7 +1656,7 @@
 								<xsl:otherwise>
 									<xsl:apply-templates select="." mode="other"/>
 									<xsl:call-template name="relationType">
-										<xsl:with-param name="current" select="current()"/>
+										<xsl:with-param name="current" select="current()/parent::node()"/>
 									</xsl:call-template>
 								</xsl:otherwise>	
 							</xsl:choose>
@@ -1462,7 +1702,7 @@
 						 	 		</xsl:otherwise>
 						 	 	</xsl:choose>
 						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list"/>
+									<xsl:with-param name="current" select="$list/parent::node()"/>
 								</xsl:call-template> 
 						</xsl:when>		
 						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
@@ -1495,7 +1735,7 @@
 						 	 		</xsl:otherwise>
 						 	 	</xsl:choose>
 						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list"/>
+									<xsl:with-param name="current" select="$list/parent::node()"/>
 								</xsl:call-template> 
 						</xsl:when>
 						<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
@@ -1528,7 +1768,7 @@
 						 	 		</xsl:otherwise>
 						 	 	</xsl:choose>
 						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list"/>
+									<xsl:with-param name="current" select="$list/parent::node()"/>
 								</xsl:call-template> 
 						</xsl:when>
 						<xsl:otherwise> <!-- first language -->
@@ -1571,7 +1811,7 @@
 						 	 		</xsl:otherwise>
 						 	 	</xsl:choose>
 						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list"/>
+									<xsl:with-param name="current" select="$list/parent::node()"/>
 								</xsl:call-template> 
 						</xsl:otherwise>
 					</xsl:choose>
@@ -1603,7 +1843,7 @@
 			 	 		</xsl:otherwise>
 			 	 	</xsl:choose>
 			 	 	<xsl:call-template name="relationType">
-						<xsl:with-param name="current" select="$list"/>
+						<xsl:with-param name="current" select="$list/parent::node()"/>
 					</xsl:call-template>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -1776,5 +2016,5 @@
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>	
+	</xsl:template>
 </xsl:stylesheet>
