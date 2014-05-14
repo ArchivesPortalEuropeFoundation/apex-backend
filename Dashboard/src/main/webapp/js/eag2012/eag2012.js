@@ -2726,10 +2726,11 @@ function contactAddVisitorsAddressTranslation(text1) {
 	//postal address validation
 	var streetP = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counterP+" textarea#textContactPAStreet").attr("value");
 	var cityP = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counterP+" textarea#textContactPACity").attr("value");
-	if (streetP == null || streetP == ""
-			|| cityP == null || cityP == "") {
-		alertEmptyFields(text1);
-		return;
+	if (streetP!=null && cityP!=null){
+		if ( streetP.trim() == "" ||  cityP.trim() == "") {
+			alertEmptyFields(text1);
+			return;
+		}
 	}
 	//end validation for Postal
 
@@ -2771,7 +2772,7 @@ function contactAddVisitorsAddressTranslation(text1) {
  * @param property4 cityTownWithPostalcode
  * @param control var control=true from webFormEAG2012.jsp
  */
-function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,control) {
+function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,text1,control) {
 	var currentTab = getCurrentTab();
 	var selectContactLanguagePostalAddressOnChange = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged($(this).parent().parent().parent().parent());">'+$("#selectLanguageVisitorAddress").html()+'</select>';
 	var selectContactLanguagePostalAddressNoChange = '<select id="selectContactLanguagePostalAddress">'+$("#selectLanguageVisitorAddress").html()+'</select>';
@@ -2788,9 +2789,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	var street = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactStreetOfTheInstitution").attr("value");
 	var city = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCityOfTheInstitution").attr("value");
 	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCountryOfTheInstitution").attr("value");
-	if (street == null || street == ""
-			|| city == null || city == "" 
-			|| country == null || country == "") {
+	if (street == "" || city == "" || country == "") {
 		alertEmptyFields(text1);
 		return;
 	}
@@ -2815,7 +2814,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 		'</tr>'+
 		'<tr id="contactPostalAddressStreet">'+
 			'<td>'+
-				'<label for="textContactPAStreet">'+property3+'<span class="required">*</span>:</label>'+
+				'<label for="textContactPAStreet">'+property3+'<span class="required"></span>:</label>'+
 			'</td>'+
 			'<td>'+textContactPAStreet+
 			'</td>'+
@@ -2827,7 +2826,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 		'</tr>'+
 		'<tr id="contactPostalAddressCity">'+
 			'<td>'+
-				'<label for="textContactPACity">'+property4+'<span class="required">*</span>:</label>'+
+				'<label for="textContactPACity">'+property4+'<span class="required"></span>:</label>'+
 			'</td>'+
 			'<td>'+textContactPACity+
 			'</td>'+

@@ -79,7 +79,7 @@
 					//alert(postalField1+","+postalField2+","+postalField3);
 					if(postalField1.length>0 || postalField2.length>0 || postalField3.length>0){
 						var control=true;
-						contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>',control);
+						contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>', '<s:property value="getText('eag2012.commons.addVisitorTranslationAddress')" />', control );
 						$("#textContactPAStreet").attr("value",postalField1);
 						$("#textContactPACity").attr("value",postalField2);
 						$("#selectContactLanguagePostalAddress").attr("value",postalField3);

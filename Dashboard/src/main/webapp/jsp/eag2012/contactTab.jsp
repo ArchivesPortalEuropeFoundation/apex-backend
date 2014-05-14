@@ -241,7 +241,7 @@
 									<tr id="contactPostalAddressStreet">
 										<td>
 											<s:if test="%{#status.index == 0}">
-												<label for="textContactPAStreet"><s:property value="getText('eag2012.commons.street')" /><span class="required">*</span>:</label>
+												<label for="textContactPAStreet"><s:property value="getText('eag2012.commons.street')" /><span class="required"></span>:</label>
 											</s:if>
 											<s:else>
 												<label for="textContactPAStreet"><s:property value="getText('eag2012.commons.street')" />:</label>
@@ -278,7 +278,7 @@
 									<tr id="contactPostalAddressCity">
 										<td>
 											<s:if test="%{#status.index == 0}">
-												<label for="textContactPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" /><span class="required">*</span>:</label>
+												<label for="textContactPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" /><span class="required"></span>:</label>
 											</s:if>
 											<s:else>
 												<label for="textContactPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />:</label>
@@ -312,7 +312,7 @@
 				<s:else>
 					<tr id="trButtonContactAddPostalAddressIfDifferent">
 						<td colspan="4">
-							<input type="button" id="buttonContactAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>');" />
+							<input type="button" id="buttonContactAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>','<s:property value="getText('eag2012.commons.addVisitorTranslationAddress')"/>','<s:property value="getText('eag2012.commons.addVisitorTranslationAddress')"/>');" />
 						</td>
 					</tr>
 
@@ -775,7 +775,7 @@
 
 		<tr id="trButtonContactAddPostalAddressIfDifferent">
 			<td colspan="4">
-				<input type="button" id="buttonContactAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>');" />
+				<input type="button" id="buttonContactAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>','<s:property value="getText('eag2012.commons.addVisitorTranslationAddress')"/>');" />
 			</td>
 		</tr>
 
