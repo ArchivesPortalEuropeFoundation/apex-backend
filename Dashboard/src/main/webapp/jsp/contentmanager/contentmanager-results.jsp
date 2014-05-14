@@ -217,9 +217,9 @@
                 <c:forEach var="eadResult" items="${results.eadResults}">
                     <tr class="${eadResult.cssClass}">
                         <td id="tdLabel_${eadResult.id}"><input class="checkboxSave" type="checkbox" name="check" id="check_${eadResult.id}" value="${eadResult.id}" onclick="enable_features"/></td>
-                        <td id="tdId_${eadResult.id}" class="nocenter">${eadResult.eadid}</td>
+                        <td id="tdId_${eadResult.id}" class="nocenter"><c:out value="${eadResult.eadid}"/></td>
                         <td id="tdTitle_${eadResult.id}" class="nocenter">
-                        	<span class="title">${eadResult.title}</span>
+                        	<span class="title"><c:out value="${eadResult.title}"/></span>
                         </td>
                         <td id="tdDate_${eadResult.id}">${eadResult.date}</td>
                         <td id="tdConverted_${eadResult.id}" class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>

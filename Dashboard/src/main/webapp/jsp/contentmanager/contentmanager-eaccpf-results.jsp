@@ -174,8 +174,8 @@
                     <tr class="${eacCpfResult.cssClass}">
                         <td id="tdLabel_${eacCpfResult.id}"><input class="checkboxSave" type="checkbox" name="check" id="check_${eacCpfResult.id}"
                                    value="${eacCpfResult.id}" onclick="enable_features"/></td>
-                        <td id="tdId_${eacCpfResult.id}" class="nocenter">${eacCpfResult.identifier}</td>
-                        <td id="tdName_${eacCpfResult.id}" class="nocenter"><span class="title">${eacCpfResult.title}</span></td>
+                        <td id="tdId_${eacCpfResult.id}" class="nocenter"><c:out value="${eacCpfResult.identifier}"/></td>
+                        <td id="tdName_${eacCpfResult.id}" class="nocenter"><span class="title"><c:out value="${eacCpfResult.title}"/></span></td>
                         <td id="tdDate_${eacCpfResult.id}">${eacCpfResult.date}</td>
                         <td id="tdConverted_${eacCpfResult.id}" class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
                         <td id="tdValidated_${eacCpfResult.id}" class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
