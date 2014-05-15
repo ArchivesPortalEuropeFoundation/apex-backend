@@ -149,10 +149,13 @@
 				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
 					<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.location')"/></h2>
 					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
+						<xsl:variable name="posChild" select="position()"/>
 					    <!-- placeEntry in localDescription -->
 						<xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:placeEntry"/>
-				    		<xsl:with-param name="clazz" select="'locationPlace'"/>
+				    		<xsl:with-param name="clazz" select="'locationPlace_'"/>
+				    		<xsl:with-param name="posParent" select="''"/>
+					    	<xsl:with-param name="posChild" select="$posChild"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 				    	</xsl:call-template>
 				       <!-- placeRole -->
@@ -173,23 +176,31 @@
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription">
 			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.localDescription')"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions"> 
+					<xsl:variable name="posParent" select="position()"/>
 				    <xsl:for-each select="./eac:localDescription">
 				    		<!-- term localDescription -->
+				    		<xsl:variable name="posChild" select="position()"/>
 					    	<xsl:call-template name="term">
 					    		<xsl:with-param name="list" select="./eac:term"/>
-					    		<xsl:with-param name="clazz" select="'localDescription'"/>
+					    		<xsl:with-param name="clazz" select="'localDescription_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.localDescription'"/>
 					    	</xsl:call-template>
 							<!-- placeEntry in localDescription -->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
-					    		<xsl:with-param name="clazz" select="'locationLocalDescription'"/>
+					    		<xsl:with-param name="clazz" select="'locationLocalDescription_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 					    	</xsl:call-template>
 							<!-- citation in localDescription -->
 						  	<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:citation"/>
-					    		<xsl:with-param name="clazz" select="'citationLocalDescription'"/>
+					    		<xsl:with-param name="clazz" select="'citationLocalDescription_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
 					    	</xsl:call-template>
 							<!-- dates in localDescription -->
@@ -201,14 +212,18 @@
 							<!-- descriptiveNote in localDescription -->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-					    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescription'"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescription_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 					    	</xsl:call-template>
 					</xsl:for-each>
 						<!-- descriptiveNote in localDescriptions -->
 						 <xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-				    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescriptions'"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescriptions_'"/>
+				    		<xsl:with-param name="posParent" select="$posParent"/>
+				    		<xsl:with-param name="posChild" select="''"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 				    	 </xsl:call-template>
 				</xsl:for-each>		
@@ -216,24 +231,32 @@
 		   <!-- legalStatus -->
 		   <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus">
 			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.legalStatus')"/></h2>
-				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses"> 
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses">
+					<xsl:variable name="posParent" select="position()"/> 
 				    <xsl:for-each select="./eac:legalStatus">
+				    		<xsl:variable name="posChild" select="position()"/>
 				    		<!-- term localDescription -->
 					    	<xsl:call-template name="term">
 					    		<xsl:with-param name="list" select="./eac:term"/>
-					    		<xsl:with-param name="clazz" select="'legalStatus'"/>
+					    		<xsl:with-param name="clazz" select="'legalStatus_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.legalStatus'"/>
 					    	</xsl:call-template>
 							<!-- placeEntry in localDescription -->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
-					    		<xsl:with-param name="clazz" select="'locationLegalStatus'"/>
+					    		<xsl:with-param name="clazz" select="'locationLegalStatus_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 					    	</xsl:call-template>
 							<!-- citation in localDescription -->
 						  	<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:citation"/>
-					    		<xsl:with-param name="clazz" select="'citationLegalStatus'"/>
+					    		<xsl:with-param name="clazz" select="'citationLegalStatus_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
 					    	</xsl:call-template>
 							<!-- dates in localDescription -->
@@ -245,14 +268,18 @@
 							<!-- descriptiveNote in localDescription -->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-					    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatus'"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatus_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 					    	</xsl:call-template>
 					</xsl:for-each>
 						<!-- descriptiveNote in localDescriptions -->
 						 <xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-				    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatuses'"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatuses_'"/>
+				    		<xsl:with-param name="posParent" select="$posParent"/>
+				    		<xsl:with-param name="posChild" select="''"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 				    	 </xsl:call-template>
 				</xsl:for-each>		
@@ -260,24 +287,32 @@
 		   <!-- function -->
 		   <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function">
 			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.function')"/></h2>
-				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions"> 
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions">
+					<xsl:variable name="posParent" select="position()"/> 
 				    <xsl:for-each select="./eac:function">
+				    		<xsl:variable name="posChild" select="position()"/>
 				    		<!-- term function -->
 					    	<xsl:call-template name="term">
 					    		<xsl:with-param name="list" select="./eac:term"/>
-					    		<xsl:with-param name="clazz" select="'function'"/>
+					    		<xsl:with-param name="clazz" select="'function_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.function'"/>
 					    	</xsl:call-template>
 							<!-- placeEntry in function-->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
-					    		<xsl:with-param name="clazz" select="'locationFunction'"/>
+					    		<xsl:with-param name="clazz" select="'locationFunction_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 					    	</xsl:call-template>
 							<!-- citation in function -->
 						  	<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:citation"/>
-					    		<xsl:with-param name="clazz" select="'citationFunction'"/>
+					    		<xsl:with-param name="clazz" select="'citationFunction_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
 					    	</xsl:call-template>
 							<!-- dates in function-->
@@ -289,14 +324,18 @@
 							<!-- descriptiveNote in function-->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-					    		<xsl:with-param name="clazz" select="'descriptiveNoteFunction'"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteFunction_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 					    	</xsl:call-template>
 					</xsl:for-each>
 						<!-- descriptiveNote in functions -->
 						 <xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-				    		<xsl:with-param name="clazz" select="'descriptiveNoteFunctions'"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteFunctions_'"/>
+				    		<xsl:with-param name="posParent" select="$posParent"/>
+				    		<xsl:with-param name="posChild" select="''"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 				    	 </xsl:call-template>
 				</xsl:for-each>		
@@ -305,23 +344,31 @@
 		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation">
 			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.occupation')"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations"> 
+					<xsl:variable name="posParent" select="position()"/> 
 				    <xsl:for-each select="./eac:occupation">
+				    		<xsl:variable name="posChild" select="position()"/> 
 				    		<!-- term function -->
 					    	<xsl:call-template name="term">
 					    		<xsl:with-param name="list" select="./eac:term"/>
-					    		<xsl:with-param name="clazz" select="'occupation'"/>
+					    		<xsl:with-param name="clazz" select="'occupation_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.occupation'"/>
 					    	</xsl:call-template>
 							<!-- placeEntry in function-->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
-					    		<xsl:with-param name="clazz" select="'locationOccupation'"/>
+					    		<xsl:with-param name="clazz" select="'locationOccupation_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 					    	</xsl:call-template>
 							<!-- citation in function -->
 						  	<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:citation"/>
-					    		<xsl:with-param name="clazz" select="'citationOccupation'"/>
+					    		<xsl:with-param name="clazz" select="'citationOccupation_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
 					    	</xsl:call-template>
 							<!-- dates in function-->
@@ -333,14 +380,18 @@
 							<!-- descriptiveNote in function-->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-					    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupation'"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupation_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 					    	</xsl:call-template>
 					</xsl:for-each>
 						<!-- descriptiveNote in functions -->
 						 <xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-				    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupations'"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupations_'"/>
+				    		<xsl:with-param name="posParent" select="$posParent"/>
+				    		<xsl:with-param name="posChild" select="''"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 				    	 </xsl:call-template>
 				</xsl:for-each>		
@@ -348,24 +399,32 @@
 		    <!--mandates-->
 		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate">
 			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.mandate')"/></h2>
-				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates"> 
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates">
+					<xsl:variable name="posParent" select="position()"/>  
 				    <xsl:for-each select="./eac:mandate">
+				    		<xsl:variable name="posChild" select="position()"/> 
 				    		<!-- term function -->
 					    	<xsl:call-template name="term">
 					    		<xsl:with-param name="list" select="./eac:term"/>
-					    		<xsl:with-param name="clazz" select="'mandate'"/>
+					    		<xsl:with-param name="clazz" select="'mandate_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.mandate'"/>
 					    	</xsl:call-template>
 							<!-- placeEntry in function-->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:placeEntry"/>
-					    		<xsl:with-param name="clazz" select="'locationMandate'"/>
+					    		<xsl:with-param name="clazz" select="'locationMandate_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 					    	</xsl:call-template>
 							<!-- citation in function -->
 						  	<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:citation"/>
-					    		<xsl:with-param name="clazz" select="'citationMandate'"/>
+					    		<xsl:with-param name="clazz" select="'citationMandate_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
 					    	</xsl:call-template>
 							<!-- dates in function-->
@@ -377,14 +436,18 @@
 							<!-- descriptiveNote in function-->
 							<xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-					    		<xsl:with-param name="clazz" select="'descriptiveNoteMandate'"/>
+					    		<xsl:with-param name="clazz" select="'descriptiveNoteMandate_'"/>
+					    		<xsl:with-param name="posParent" select="$posParent"/>
+					    		<xsl:with-param name="posChild" select="$posChild"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 					    	</xsl:call-template>
 					</xsl:for-each>
 						<!-- descriptiveNote in functions -->
 						 <xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-				    		<xsl:with-param name="clazz" select="'descriptiveNoteMandates'"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteMandates_'"/>
+				    		<xsl:with-param name="posParent" select="$posParent"/>
+				    		<xsl:with-param name="posChild" select="''"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 				    	 </xsl:call-template>
 				</xsl:for-each>		
@@ -799,6 +862,8 @@
 	<xsl:template name="term">
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
+		<xsl:param name="posParent"/>
+		<xsl:param name="posChild"/>
 		<xsl:param name="title"/>
 		<xsl:if test="$list/text()">
 			<div class="row subrow">
@@ -816,6 +881,8 @@
 						<xsl:call-template name="multilanguageWithVocabularySource">
 			   				<xsl:with-param name="list" select="$list"/>
 			   				<xsl:with-param name="clazz" select="$clazz"/>
+			   				<xsl:with-param name="posParent" select="$posParent"/>
+			   				<xsl:with-param name="posChild" select="$posChild"/>
 			   			</xsl:call-template>
 					</div>
 			</div>
@@ -826,6 +893,8 @@
 	<xsl:template name="commonChild">
 		<xsl:param name="list"/>
 	    <xsl:param name="clazz"/>
+	    <xsl:param name="posParent"/>
+	    <xsl:param name="posChild"/>
 	    <xsl:param name="title"/>
 		<xsl:if test="$list/text()">	 
 			<div class="row subrow">
@@ -836,6 +905,8 @@
 						<xsl:call-template name="multilanguageWithVocabularySource">
 			   				<xsl:with-param name="list" select="$list"/>
 			   				<xsl:with-param name="clazz" select="$clazz"/>
+			   				<xsl:with-param name="posParent" select="$posParent"/>
+			   				<xsl:with-param name="posChild" select="$posChild"/>
 			   			</xsl:call-template>
 					</div>
 			</div>
@@ -1010,13 +1081,15 @@
 	    </xsl:choose>
 	</xsl:template> 
 	
-	<!-- template for nodes with attribute @vocabularySource and several elements-->
+	<!-- template for nodes with attribute @vocabularySource or not and several elements-->
 	<xsl:template name="multilanguageWithVocabularySource">
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
+		<xsl:param name="posParent"/>
+		<xsl:param name="posChild"/>
 		<xsl:choose>
 			<xsl:when test="count($list) > 1">
-			<div id="{$clazz}" class= "moreDisplay">
+			<div id="{$clazz}{$posParent}{$posChild}" class= "moreDisplay">
 				<xsl:choose>
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
@@ -1085,10 +1158,10 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<div class="linkMore">
-					<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'p');">
+					<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}{$posParent}{$posChild}', 'p');">
 						<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
 					</a>
-					<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'p');">
+					<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}{$posParent}{$posChild}', 'p');">
 						<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
 					</a>
 				</div>
