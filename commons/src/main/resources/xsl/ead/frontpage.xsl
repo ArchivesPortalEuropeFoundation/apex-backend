@@ -75,6 +75,9 @@
 							<xsl:if test="ead:repository">
 								<xsl:call-template name="repository" />
 							</xsl:if>
+							<xsl:if test="ead:container/text()">
+								<xsl:call-template name="container" />
+							</xsl:if>
 							<xsl:if test="ead:physloc/text()">
 								<xsl:call-template name="physloc" />
 							</xsl:if>

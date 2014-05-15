@@ -589,6 +589,28 @@
 		   </xsl:for-each>
 		</div>
 	</xsl:template>
+	
+	<!-- aqui falta container, lo movemos desde la linea 1003 encima de Extent option-->
+		<xsl:template name="container">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.container')" />
+		</h2>
+		<div class="ead-content">
+		  <xsl:for-each select="ead:container">
+		    <xsl:if test="./text()">
+			 	<xsl:if test="./@type" >
+				    <xsl:value-of select="./@type" />
+				    <xsl:text>: </xsl:text>
+			    </xsl:if>
+			  <xsl:apply-templates mode="otherwithoutwhitespace"/>
+			  <xsl:if test="position() != last() and not(./text()[position()+1=last()])">
+			      <xsl:text>, </xsl:text>
+			  </xsl:if>
+			 </xsl:if> 
+		   </xsl:for-each>
+		</div>
+	</xsl:template>
+	
 	<xsl:template name="materialspec">
 		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.materialspec')" />
@@ -999,16 +1021,16 @@
 		</div>
 	</xsl:template>
 	
-	<xsl:template name="container">
+<!-- 	<xsl:template name="container">
 		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.container')" />
 		</h2>
 		<div class="ead-content">
-			<xsl:for-each select="ead:container">
-				<xsl:apply-templates mode="other" />
-			</xsl:for-each>
+		<xsl:for-each select="ead:container">
+			<xsl:apply-templates mode="otherwithcoma"/>
+		</xsl:for-each> 
 		</div>
-	</xsl:template>
+	</xsl:template> -->
 	
 	<!-- Extent option -->
 	<xsl:template match="ead:extent">
