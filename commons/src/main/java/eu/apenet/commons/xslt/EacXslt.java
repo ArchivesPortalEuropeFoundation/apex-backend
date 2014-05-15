@@ -1,8 +1,5 @@
 package eu.apenet.commons.xslt;
 
-import java.io.File;
-
-import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
@@ -25,6 +22,9 @@ import eu.apenet.commons.solr.SolrField;
 import eu.apenet.commons.xslt.extensions.EadidCheckerExtension;
 import eu.apenet.commons.xslt.extensions.HighlighterExtension;
 import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
+import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEacIdExtension;
+import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEadIdExtension;
+import eu.apenet.commons.xslt.extensions.SpecialCharactersEncoderExtension;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Lang;
 
@@ -33,37 +33,53 @@ public final class EacXslt {
     private static final Logger LOG = Logger.getLogger(EacXslt.class);
 
     
-	private static XsltExecutable getXsltExecutable(String xslUrl, String searchTerms, List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource, Integer aiId, boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
+	private static XsltExecutable getXsltExecutable(String xslUrl, String searchTerms, List<SolrField> highlightFields,
+			ResourceBundleSource resourceBundleSource, Integer aiId, boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
         ClassLoader classLoader = (ClassLoader) Thread.currentThread().getContextClassLoader();
         Source xsltSource = new StreamSource(classLoader.getResourceAsStream(xslUrl));	
         Processor processor = new Processor(false);
         HighlighterExtension highLighter = new HighlighterExtension (solrStopwordsUrl, searchTerms, highlightFields);
         ResourcebundleExtension  resourcebundleRetriever = new ResourcebundleExtension (resourceBundleSource);
         EadidCheckerExtension  eadidChecker = new EadidCheckerExtension (aiId, isPreview);
+        SpecialCharactersEncoderExtension specialCharactersEncoder = new SpecialCharactersEncoderExtension();
+        RetrieveRepositoryCodeFromEacIdExtension repositoryCodeEac = new RetrieveRepositoryCodeFromEacIdExtension();
+        RetrieveRepositoryCodeFromEadIdExtension repositoryCodeEad = new RetrieveRepositoryCodeFromEadIdExtension();
         processor.registerExtensionFunction(highLighter);
         processor.registerExtensionFunction(resourcebundleRetriever);
         processor.registerExtensionFunction(eadidChecker);
+        processor.registerExtensionFunction(specialCharactersEncoder);
+        processor.registerExtensionFunction(repositoryCodeEac);
+        processor.registerExtensionFunction(repositoryCodeEad);
         XsltCompiler compiler = processor.newXsltCompiler();
         compiler.setURIResolver(new ClasspathURIResolver(xslUrl));
         return compiler.compile(xsltSource);
 	}
 
-    public static void convertEacToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms, List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource,String secondDisplayUrl, Integer aiId,boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
+    public static void convertEacToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms,
+    		List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource,String secondDisplayUrl,
+    		Integer aiId,boolean isPreview, String solrStopwordsUrl, String aiCodeUrl, String eacUrlBase,
+    		String eadUrl) throws SaxonApiException{
 		String language = resourceBundleSource.getLocale().getLanguage();
 		String languageIso3 = "eng";
 		Lang lang = DAOFactory.instance().getLangDAO().getLangByIso2Name(language);
 		if (lang != null){
 			languageIso3 = lang.getIsoname().toLowerCase();
 		}
-		convertEacToHtml(xslUrl, writer, xmlSource, searchTerms, highlightFields, resourceBundleSource, languageIso3, secondDisplayUrl, aiId, isPreview, solrStopwordsUrl);
+		convertEacToHtml(xslUrl, writer, xmlSource, searchTerms, highlightFields, resourceBundleSource, languageIso3,
+				secondDisplayUrl, aiId, isPreview, solrStopwordsUrl, aiCodeUrl, eacUrlBase, eadUrl);
     }
 
-    public static void convertEacToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms, List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource, String language, String secondDisplayUrl, Integer aiId,boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
+    public static void convertEacToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms,
+    		List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource, String language,
+    		String secondDisplayUrl, Integer aiId,boolean isPreview, String solrStopwordsUrl, String aiCodeUrl,
+    		String eacUrlBase, String eadUrl) throws SaxonApiException{
     	XsltExecutable executable = getXsltExecutable(xslUrl, searchTerms, highlightFields,resourceBundleSource, aiId, isPreview, solrStopwordsUrl);
         XsltTransformer transformer = executable.load();
         transformer.setParameter(new QName("eaccontent.extref.prefix"), new XdmAtomicValue(secondDisplayUrl));
         transformer.setParameter(new QName("language.selected"), new XdmAtomicValue(language));
-        transformer.setParameter(new QName("eac.repository.code"), new XdmAtomicValue("ES-00000000793"));
+        transformer.setParameter(new QName("aiCodeUrl"), new XdmAtomicValue(aiCodeUrl));
+        transformer.setParameter(new QName("eacUrlBase"), new XdmAtomicValue(eacUrlBase));
+        transformer.setParameter(new QName("eadUrl"), new XdmAtomicValue(eadUrl));
         transformer.setSource(xmlSource);
         Serializer serializer = new Serializer();
         serializer.setOutputWriter(writer);

@@ -38,6 +38,19 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     }
 
     @Override
+    public EacCpf getFirstEacCpfByIdentifier(String identifier) {
+        Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+        criteria.setMaxResults(1);
+        List<EacCpf> list = criteria.list();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier) {
         TypedQuery<EacCpf> query = getEntityManager().createQuery(
                 "SELECT id FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);

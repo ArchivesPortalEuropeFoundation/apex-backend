@@ -273,6 +273,17 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		return list;
 	}
 
+	@Override
+	public Ead getFirstEadByEadid(Class<? extends Ead> clazz, String eadid) {
+		Criteria criteria = getSession().createCriteria(clazz, "ead");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.add(Restrictions.eq("eadid", ApeUtil.decodeSpecialCharacters(eadid)));
+		List<Ead> list = criteria.list();
+		if (list.size() > 0)
+			return list.get(0);
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Ead getEadByEadid(Class<? extends Ead> clazz, Integer aiId, String eadid) {

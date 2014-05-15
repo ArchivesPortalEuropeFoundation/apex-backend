@@ -38,6 +38,12 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	private String eacUrl;
 	private String repositoryCode;
 	private String eaccpfIdentifier;
+
+	// Variables for the relations.
+	private String aiCodeUrl;
+	private String eacUrlBase;
+	private String eadUrl;
+
 	private final static Logger LOG = Logger.getLogger(AbstractEacTag.class);
 	private static final List<SolrField> DEFAULT_HIGHLIGHT_FIELDS = SolrField.getDefaults();
 
@@ -64,7 +70,8 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 				LOG.warn("EAC-CPF xsl type does not exist: " + getType());
 			}else {
 				EacXslt.convertEacToHtml(xslLocation, this.getJspContext().getOut(), xmlSource, searchTerms,
-					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(), getSolrStopwordsUrl());
+					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(),
+					getSolrStopwordsUrl(), this.getAiCodeUrl(), this.getEacUrlBase(), this.getEadUrl());
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -182,6 +189,48 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	 */
 	public void setEaccpfIdentifier(String eaccpfIdentifier) {
 		this.eaccpfIdentifier = eaccpfIdentifier;
+	}
+
+	/**
+	 * @return the aiCodeUrl
+	 */
+	public String getAiCodeUrl() {
+		return this.aiCodeUrl;
+	}
+
+	/**
+	 * @param aiCodeUrl the aiCodeUrl to set
+	 */
+	public void setAiCodeUrl(String aiCodeUrl) {
+		this.aiCodeUrl = aiCodeUrl;
+	}
+
+	/**
+	 * @return the eacUrlBase
+	 */
+	public String getEacUrlBase() {
+		return this.eacUrlBase;
+	}
+
+	/**
+	 * @param eacUrlBase the eacUrlBase to set
+	 */
+	public void setEacUrlBase(String eacUrlBase) {
+		this.eacUrlBase = eacUrlBase;
+	}
+
+	/**
+	 * @return the eadUrl
+	 */
+	public String getEadUrl() {
+		return this.eadUrl;
+	}
+
+	/**
+	 * @param eadUrl the eadUrl to set
+	 */
+	public void setEadUrl(String eadUrl) {
+		this.eadUrl = eadUrl;
 	}
 
 }
