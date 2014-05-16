@@ -126,7 +126,7 @@
 
 	<requestHandler name="list" class="solr.SearchHandler">
 		<lst name="defaults">
-			<str name="defType">dismax</str>
+			<str name="defType">edismax</str>
 			<str name="echoParams">explicit</str>
 			<float name="tie">0.01</float>
 			<str name="qf">
@@ -154,7 +154,7 @@
 
 	<requestHandler name="context" class="solr.SearchHandler">
 		<lst name="defaults">
-			<str name="defType">dismax</str>
+			<str name="defType">edismax</str>
 			<str name="echoParams">explicit</str>
 			<float name="tie">0.01</float>
 			<str name="qf">
