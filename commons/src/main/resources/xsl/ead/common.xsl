@@ -590,8 +590,7 @@
 		</div>
 	</xsl:template>
 	
-	<!-- aqui falta container, lo movemos desde la linea 1003 encima de Extent option-->
-		<xsl:template name="container">
+	<xsl:template name="container">
 		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.container')" />
 		</h2>
