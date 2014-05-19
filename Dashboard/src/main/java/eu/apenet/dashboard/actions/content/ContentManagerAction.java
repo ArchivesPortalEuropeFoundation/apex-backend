@@ -259,11 +259,12 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         return contentSearchOptions;
     }
 
-        private String processEad(ContentSearchOptions contentSearchOptions) {
+    private String processEad(ContentSearchOptions contentSearchOptions) {
         EadDAO eadDAO = DAOFactory.instance().getEadDAO();
         EadContentManagerResults results = new EadContentManagerResults(contentSearchOptions);
         results.setEads(eadDAO.getEads(contentSearchOptions));
         results.setTotalNumberOfResults(eadDAO.countEads(contentSearchOptions));
+        Long countResults=results.totalNumberOfResults;
         /*
         * statistics for total converted files
         */
@@ -323,8 +324,12 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         dynamicEadSearchOptions.setContentClass(SourceGuide.class);
         results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
         getServletRequest().setAttribute("results", results);
-        getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
-        return SUCCESS;
+        getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
+        
+        if (countResults>0)
+        	return SUCCESS;
+        else
+        	return "empty";
     }
 
     private String processEacCpf(ContentSearchOptions contentSearchOptions) {
@@ -332,6 +337,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         EacCpfContentManagerResults results = new EacCpfContentManagerResults(contentSearchOptions);
         results.setEacCpfs(eacCpfDAO.getEacCpfs(contentSearchOptions));
         results.setTotalNumberOfResults(eacCpfDAO.countEacCpfs(contentSearchOptions));
+        Long countResults=results.totalNumberOfResults;
         /*
         * statistics for number of converted files
         */
@@ -381,7 +387,11 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         getServletRequest().setAttribute("results", results);
 //            getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
-        return "success-eaccpf";
+        
+        if (countResults>0)
+        	return "success-eaccpf";
+        else
+        	return "empty";
     }
 
     public Map<String, String> getConvertedStatusList() {

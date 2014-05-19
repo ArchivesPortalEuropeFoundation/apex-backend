@@ -2,13 +2,13 @@ var globalRefresh_interval, globalIndex, globalRefresh;
 
 function initContentManager() {
     clearFilesFromSession();
-    hideOrShowSelectAllFAsWindow();
 	initSearchOptions();
 	initSubpage();
 
 }
 function initSearchOptions() {
 	$(".typeRadio").click(function(event) {
+		 hideOrShowSelectAllFAsWindow();
 		if ($(this).val() == 0){
 			$(".findingAidOptions").removeClass("hidden");
 		}else {
@@ -40,19 +40,22 @@ function initSubpage() {
 		event.preventDefault();
 		performBatchContentAction($("#updateCurrentSearch_xmlTypeId").val());
 	});
+	
+	//floating box
 	$("#clearAll").bind("click", function(value) {
 		clearFilesFromSession();
+		select_none();
 	});
+	//floating box
 	$("#selectAllFiles").bind("click", function(value) {
-            if($("input[name=xmlTypeId]:checked").val() == '2'){
-                addAllEacCpfsInSession();
-            } else {
-		addAllFAsInSession();
-            }
+		select_all();
 	});
+	//----------------------------------------------------
+	
 	$(".checkboxSave").bind("click", function() {
 		addOneFile($(this).val());
 	});
+	//listview
 	$("#selectAll").bind("click", function() {
 		var ids = new Array();
 		$("input:checkbox[name=check]").each(function() {
@@ -63,6 +66,7 @@ function initSubpage() {
 		});
 		addFewFiles(ids);
 	});
+	//listview
 	$("#selectNone").bind("click", function() {
 		var ids = new Array();
 		$("input:checkbox[name=check]").each(function() {
@@ -73,6 +77,8 @@ function initSubpage() {
 		});
 		addFewFiles(ids);
 	});
+	//----------------------------------------------------------
+	
 	count();
 }
 
@@ -140,7 +146,7 @@ function performContentAction(action, id, type) {
 			window.open(actionUrl, windowType);
 		}
 	}
-
+	count();
 }
 function performBatchContentAction(type) {
 	//If the select option refresh equals to refresh, then, set it to not refresh, perform action and later set it again to refresh
@@ -184,7 +190,10 @@ function performBatchContentAction(type) {
 			if (originalStatus==1){
 				reloadRefresh(true);
 			}
+			
+			clearFilesFromSession();
 		});
+		count();
 	}
 }
 function performNewSearch() {
@@ -203,8 +212,6 @@ function getUpdateCurrentSearchResultsForm() {
 }
 
 function updateCurrentSearchResults(formData) {
-    hideOrShowSelectAllFAsWindow();
-
 	if (formData == null) {
 		formData = getUpdateCurrentSearchResultsForm();
 	}
@@ -222,6 +229,9 @@ function updateCurrentSearchResults(formData) {
 			refreshIntervalFunc(globalIndex, false);
 		}
 	});
+	
+	clearFilesFromSession();
+	count();
 }
 
 function changeOrder(fieldValue, fieldSorting) {
@@ -253,12 +263,15 @@ function initResultsHandlers(refresh_interval) {
 }
 
 function hideOrShowSelectAllFAsWindow() {
-    if($('#newSearchForm_xmlTypeId0').is(':checked')) {
+	clearFilesFromSession();
+	count();
+    if(($('#newSearchForm_xmlTypeId0').is(':checked')) || ($('#newSearchForm_xmlTypeId2').is(':checked'))) {
         $("#listFiles").removeClass("hidden");
     } else {
         $("#listFiles").addClass("hidden");
     }
 }
+
 function createColorboxForConversionOptions() {
     $("#conversionOpts").colorbox(
         {
@@ -327,6 +340,7 @@ function refreshIntervalFunc(lastIndex, execute) {
 	} else {
 		globalRefresh = false;
 	}
+	count();
 }
 function reloadBottom(index,seconds) {
 	var selectedIndex = $("select#refreshInterval").prop("selectedIndex");

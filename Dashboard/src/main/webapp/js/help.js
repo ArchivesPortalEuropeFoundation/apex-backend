@@ -12,16 +12,23 @@ function uploadBlackout(text_value) {
     };
     return curtain;
 }
+
 function count() {
-    var loadUrl = "getFAsFromSession.action";
-    $.post(loadUrl, null, function(databack) {
-        if(databack != null){
-            printCount(databack.listId);
-        }
-    }, 'json');
+    try{
+    	var loadUrl = "getFilesFromSession.action";
+	    $.post(loadUrl, null, function(databack) {
+	        if(databack != null){
+	            printCount(databack.listId);
+	        }
+	    }, 'json');
+    }
+    catch (e) {
+	}
 }
+
 function printCount(listId){
     var nb = 0;
+    
     $.each(listId, function(index, value) {
         nb++;
         if($("#check_" + value).length > 0){
@@ -30,6 +37,7 @@ function printCount(listId){
             }
         }
     });
+
     if(nb > 1) {
         $("#sizeFiles").html(nb + " selected files");
     } else {
@@ -118,6 +126,7 @@ function uncheckAllCheckboxes(){
             $(this).removeAttr('checked');
     });
 }
+
 function checkCurrentOpts() {
     var loadUrl = "checkCurrentConversionOptions.action";
     $.post(loadUrl, null, function(databack){
