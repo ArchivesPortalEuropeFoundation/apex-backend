@@ -394,16 +394,8 @@
 </s:else>
 <script type="text/javascript">
 	        $(document).ready(function(){
-	        	
-	        	changes = new Array();
-	        	
+
 	        	eadidarray.splice(0,eadidarray.length);
-	        	
-	        	$("div[id^=divChangeEadid]").each(function(){
-	        		var id = $(this).attr("id");
-	        		id = id.substring("divChangeEadid".length);
-	        		changes.push(id);
-	        	});	       
 
 	        	checkActiveButtonAccept();
 
@@ -506,13 +498,8 @@
 	        	}); 
 	        	
 	        	if (!exit){
-		        	if(changes.length>0 && $("select#existingFilesAnswers option:selected").val()=="Change ID"){
-		        		var strOut='<s:property value='getText("content.message.UserHasNotCheckedAvailability")'/>' + filesWithErrors;
-		        		alert(strOut);
-		        	}else{
-		        		$("form#overwriteexistingfiles").attr("action","overwriteexistingfiles.action");//action="overwriteexistingfiles"
-		        		$("form#overwriteexistingfiles").submit();
-		        	}
+		        	$("form#overwriteexistingfiles").attr("action","overwriteexistingfiles.action");//action="overwriteexistingfiles"
+		        	$("form#overwriteexistingfiles").submit();
 	        	}
  	        	else{
         			var strErr = '<s:property value="getText('content.message.filesEADIDerror')"/>' + " " + filesWithErrors;
@@ -561,7 +548,7 @@
 						var enableAccept = true;
 						$("input[id^='SaveChangesButton']").each(function(){
 							var disabled = $(this).attr("disabled");
-							if (disabled == null || disabled != "disabled") {
+							if (disabled == null || (disabled != "" && disabled != "disabled")) {
 								enableAccept = false;
 							}
 						});
@@ -645,7 +632,7 @@
 						$("input[id^='SaveChangesButton']").each(function(){
 							var id = $(this).attr("id");
 							var disabled = document.getElementById(id).getAttribute("disabled");
-							if (disabled == null || disabled != "disabled") {
+							if (disabled == null || (disabled != "" && disabled != "disabled")) {
 								enableAccept = false;
 							}
 						});
@@ -759,10 +746,6 @@
 														
 							$("input#form_submit").attr("disabled","disabled");
 							if (dataResponse.existingChangeEADIDAnswers == "OK") {
-								//changes[oldeadid] = neweadid;
-								if(changes.indexOf(oldeadid)>=0){
-									changes.splice(changes.indexOf(oldeadid));
-								}
 								//Change the value of the select OK or KO
 								dataResponse.existingChangeEADIDAnswers= "OK";
 								document.getElementById(labelanswermessage).style.color="green";
@@ -797,7 +780,7 @@
 							    var enableAccept = true;
 								$("input[id^='SaveChangesButton']").each(function(){
 									var disabled = $(this).attr("disabled");
-									if (disabled == null || disabled != "disabled") {
+									if (disabled == null || (disabled != "" && disabled != "disabled")) {
 										enableAccept = false;
 									}
 								});
@@ -806,9 +789,6 @@
 								} 
 							}
 							else if (dataResponse.existingChangeEADIDAnswers == "KO") {
-								if(changes.indexOf(oldeadid)){
-									changes.push(oldeadid);
-								}
 								document.getElementById(labelanswermessage).style.color="red";
 								document.getElementById(labelanswermessage).style.font.bold = "true";
 								var selectanswer;
