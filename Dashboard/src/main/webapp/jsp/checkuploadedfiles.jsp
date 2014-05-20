@@ -159,7 +159,7 @@
 								<input type="button"
 									id="SaveChangesButtonRepeated<s:property value="%{#stat.index}" />"
 									name="SaveChangesButtonRepeated<s:property value="%{#stat.index}" />"
-									onclick="getAndCheckEADIDavailability('<s:property value="%{#stat.index}" />','<s:property value="%{#stat.index}" />','<s:property value="%{top.fileId}" />', true)" 
+									onclick="getAndCheckEADIDavailability('<s:property value="%{#stat.index}" />','<s:property value="%{#stat.index}" />','<s:property value="%{top.fileId}" />', '<s:property value="%{top.eadType}" />', true)" 
 									value="<s:property value="getText('content.message.checkbutton')"/>"
 									disabled="disabled" />
 
@@ -284,7 +284,7 @@
 								<input type="button" style="display: inline;"
 									id="SaveChangesButtonEmpty<s:property value="%{#stat.index}" />"
 									name="SaveChangesButtonEmpty<s:property value="%{#stat.index}" />"
-									onclick="getAndCheckEADIDavailability('<s:property value="%{#stat.index}" />','<s:property value='%{top.eadid}' />','<s:property value="%{top.fileId}" />', false)"
+									onclick="getAndCheckEADIDavailability('<s:property value="%{#stat.index}" />','<s:property value='%{top.eadid}' />','<s:property value="%{top.fileId}" />', '<s:property value="%{top.eadType}" />', false)"
 									value="<s:property value="getText('content.message.checkbutton')"/>" />
 							</div>
 							<p></p>
@@ -396,6 +396,7 @@
 	        $(document).ready(function(){
 
 	        	eadidarray.splice(0,eadidarray.length);
+	        	recordidarray.splice(0, recordidarray.length);
 
 	        	checkActiveButtonAccept();
 
@@ -508,9 +509,11 @@
 	        }
 	        	        
 	        var eadidarray = new Array();
+	        var recordidarray = new Array();
 	        var filesWithErrors = new Array();
-			//check all inputs to check if the EADID is already used, in case no, remove it from the array
+			//check all inputs to check if the EADID or RECORDID is already used, in case no, remove it from the array
 			var eadidarrayInText=new Array();
+			var recordidarrayInText = new Array();
 
 			
 	        function changeEADID(text,eadid,method, isRepeated)
@@ -555,7 +558,7 @@
 						if (enableAccept) {
 							$("input#form_submit").removeAttr("disabled");
 						} 
-						//clean the value in the eadidarray
+						//clean the value in the eadidarray or recordidarray
 						var textToRemove;
 						if (isRepeated) {
 							textToRemove = $("input#neweadidRepeated" + eadid).val();
@@ -563,7 +566,15 @@
 							textToRemove = $("input#neweadidEmpty" + eadid).val();
 						}
 						var indexLabel = parseInt(eadid);
-						var indexArray = eadidarray.indexOf(textToRemove);
+
+						// Check the correct array to recover.
+						var fileType = $("div#" + divname + " input[name$='.eadType']").val();
+						var indexArray;
+						if (fileType == "EAC-CPF") {
+							indexArray = recordidarray.indexOf(textToRemove);
+						} else {
+							indexArray = eadidarray.indexOf(textToRemove);
+						}
 						if (indexLabel > -1 && indexArray > -1){
 							var label;
 							if (isRepeated) {
@@ -574,7 +585,11 @@
 					    	if(label!=null && label.length){
 					    		var color = label.text();
 					    		if(color=="<s:property value="getText('content.message.EadidAvailable')" />"){
-					    			eadidarray.splice(indexArray,1);
+									if (fileType == "EAC-CPF") {
+										recordidarray.splice(indexArray,1);
+									} else {
+						    			eadidarray.splice(indexArray,1);
+									}
 					    		}
 						     }
 						}
@@ -640,7 +655,13 @@
 							$("input#form_submit").removeAttr("disabled");
 						}
 						//clean all values from the array when cancel
-						eadidarray.splice(0,eadidarray.length);
+						// Check the correct array to recover.
+						var fileType = $("div#" + divname + " input[name$='.eadType']").val();
+						if (fileType == "EAC-CPF") {
+							recordidarray.splice(0,recordidarray.length);
+						} else {
+							eadidarray.splice(0,eadidarray.length);
+						}
 						//clean textbox
 						var textBoxName;
 						if (isRepeated) {
@@ -688,11 +709,12 @@
 				document.getElementById(labelanswermessage).style.display='block';
 			}
 						
-			function checkEADIDavailability(oldeadid, neweadid, fileId, indexRepeated,isRepeated) {
+			function checkEADIDavailability(oldeadid, neweadid, fileId, type, indexRepeated, isRepeated) {
 				$.getJSON("${pageContext.request.contextPath}/generateEadidResponseJSON.action", 
 						{ eadid: oldeadid, 
 					      neweadid: neweadid, 
-					      fileId: fileId }, 
+					      fileId: fileId,
+					      type: type}, 
 					    function(dataResponse)
 						{
 							//Show the message.
@@ -705,43 +727,59 @@
 							document.getElementById(labelanswermessage).style.display='block';
 							var object = document.getElementById(labelanswermessage);
 							object.innerHTML=dataResponse.message;
-						    
-							var sizeValue= eadidarray.length;
+
+							// Check the correct array to recover.
+							var id = $("label#" + labelanswermessage).parent().attr("id");
+							var fileType = $("div#" + id + " input[name$='.eadType']").val();
+							var currentArray;
+							if (fileType == "EAC-CPF") {
+								currentArray = recordidarray;
+							} else {
+								currentArray = eadidarray;
+							}
+
+							var sizeValue = currentArray.length;
 							
 							if(sizeValue>0){
 			                  //remove all the values in the array
-			                  eadidarray.splice(0,eadidarray.length);
+			                  currentArray.splice(0, currentArray.length);
 			                }
-//							var idNew;
-//							if (isRepeated) {
-//								idNew = "neweadidRepeated" + indexRepeated;
-//							} else {
-//								idNew = "neweadidEmpty" + dataResponse.eadid;
-//							}
-//			                $("input[id^='" + idNew + "']").each(function(i,value){
 							$("input[id^='neweadid']").each(function(i,value){
 			                	//for each input keep the value if it is not repeated and not empty
 			                  $(value).val($.trim($(value).val())); //remove unussed whitespaces
+
+							  var innerId = $(this).parent().parent().attr("id");
+			                  var innerFileType = $("div#" + innerId + " input[name$='.eadType']").val();
+
 			                  var textInput= $(value).val();
-			                   if(eadidarray.length==0){
-			                     if(textInput!=""){
-						            eadidarray.push(textInput);
-					             }
-			                   }else{
-			                    if (textInput!=""){
-				                    var index = eadidarray.indexOf(textInput);
-				                    if (index > -1){
-				                      //the value is repeated
-				                      if (dataResponse.existingChangeEADIDAnswers!= "KO"){
-										 dataResponse.existingChangeEADIDAnswers= "KO";
-										 document.getElementById(labelanswermessage).innerHTML=dataResponse.komessage;
-									  }
-				                    }else{ 
-				                    	//keep the value in the eadidarray
-				                      eadidarray.push(textInput);
+			                  if (innerFileType == fileType) {
+				                   if(currentArray.length==0){
+				                     if(textInput!=""){
+							            currentArray.push(textInput);
+						             }
+				                   }else{
+				                    if (textInput!=""){
+					                    var index = currentArray.indexOf(textInput);
+					                    if (index > -1){
+					                      //the value is repeated
+					                      if (dataResponse.existingChangeEADIDAnswers!= "KO"){
+											 dataResponse.existingChangeEADIDAnswers= "KO";
+											 document.getElementById(labelanswermessage).innerHTML=dataResponse.komessage;
+										  }
+					                    }else{
+					                    	//keep the value in the currentArray
+					                      currentArray.push(textInput);
+					                    }
 				                    }
-			                    }
-			                   }
+				                   }
+								}
+
+			                   // Set the current array to the correct array.
+								if (innerFileType == "EAC-CPF") {
+									recordidarray = currentArray;
+								} else {
+									eadidarray = currentArray;
+								}
 			                });
 														
 							$("input#form_submit").attr("disabled","disabled");
@@ -814,7 +852,7 @@
 			}
 			
 			
-			function getAndCheckEADIDavailability(index,eadid,fileId, isRepeated){
+			function getAndCheckEADIDavailability(index, eadid, fileId, type, isRepeated){
 				var iddivneweadid = "";
 				var indexRepeated = -1;
 				if (eadid != "") {
@@ -826,7 +864,7 @@
 					eadid=index;
 				}
 				var neweadid= document.getElementById(iddivneweadid).value;
-				checkEADIDavailability(eadid,neweadid,fileId, indexRepeated, isRepeated);
+				checkEADIDavailability(eadid, neweadid, fileId, type, indexRepeated, isRepeated);
 			}
 
 			$('#text_filesSuccessful').click(function(){
