@@ -894,7 +894,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 	});
 	jsonData += ",'postalAddress':{";
 	for(var j=0; j<postalAddress.length; j++) {
-           var contactPAMandatoryElements = new Array("textContactPAStreet", "textContactPACity");
+//           var contactPAMandatoryElements = new Array("textContactPAStreet", "textContactPACity");
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
@@ -909,17 +909,17 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 
                        // Check fill mandatory fields.
-			if ($.trim($(this).attr("value")) != '' && j == 0) {
-				var position = $.inArray($(this).attr("id"),contactPAMandatoryElements);
-				if (position != -1) {
-					contactPAMandatoryElements.splice(position, 1);
-				}
-			}else if ($.trim($(this).attr("value")).length == 0){     //the field is empty
-                              counter++;
-                         }
-                         if (counter==2){  //if street and city are empty there aren't required fields 
-                                  contactPAMandatoryElements.splice(0,2);
-                          }
+//			if ($.trim($(this).attr("value")) != '' && j == 0) {
+//				var position = $.inArray($(this).attr("id"),contactPAMandatoryElements);
+//				if (position != -1) {
+//					contactPAMandatoryElements.splice(position, 1);
+//				}
+//			}else if ($.trim($(this).attr("value")).length == 0){     //the field is empty
+//                              counter++;
+//                         }
+//                         if (counter==2){  //if street and city are empty there aren't required fields 
+//                                  contactPAMandatoryElements.splice(0,2);
+//                          }
 
 		});
 		//select options selected
@@ -929,9 +929,9 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
-        if(contactPAMandatoryElements.length>0 && j == 0){
-			validationArray.push(postalAddress[j],contactPAMandatoryElements);
-		}
+//        if(contactPAMandatoryElements.length>0 && j == 0){
+//			validationArray.push(postalAddress[j],contactPAMandatoryElements);
+//		}
                 
 		jsonData += "}";
 	}
@@ -2715,10 +2715,10 @@ function contactAddVisitorsAddressTranslation(text1) {
 	var latitude = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactLatitudeOfTheInstitution").attr("value");
 	var longitude = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactLongitudeOfTheInstitution").attr("value");
 	
-	if (street == null || street == ""
-			|| city == null || city == "" /*|| district == null || district == ""
+	if (street == null || street.trim() == ""
+			|| city == null || city.trim() == "" /*|| district == null || district == ""
 			|| county == null || county == "" || region == null || region == "" */
-			|| country == null || country == "") {
+			|| country == null || country.trim() == "") {
 		alertEmptyFields(text1);
 		return;
 	}
@@ -2770,6 +2770,7 @@ function contactAddVisitorsAddressTranslation(text1) {
  * @param property2 selectLanguage
  * @param property3 street
  * @param property4 cityTownWithPostalcode
+ * @param text1 error message
  * @param control var control=true from webFormEAG2012.jsp
  */
 function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,text1,control) {
@@ -2789,7 +2790,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	var street = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactStreetOfTheInstitution").attr("value");
 	var city = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCityOfTheInstitution").attr("value");
 	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCountryOfTheInstitution").attr("value");
-	if (street == "" || city == "" || country == "") {
+	if (street.trim() == "" || city.trim() == "" || country.trim() == "") {
 		alertEmptyFields(text1);
 		return;
 	}
@@ -2846,8 +2847,8 @@ function contactAddPostalAddressTranslation(text1) {
 	var street = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" textarea#textContactPAStreet").attr("value");
 	var city = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" textarea#textContactPACity").attr("value");
 
-	if (street == null || street == ""
-			|| city == null || city == "") {
+	if (street == null || street.trim() == ""
+			|| city == null || city.trim() == "") {
 		alertEmptyFields(text1);
 		return;
 	}
@@ -2857,9 +2858,9 @@ function contactAddPostalAddressTranslation(text1) {
 	var streetV = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactStreetOfTheInstitution").attr("value");
 	var cityV = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCityOfTheInstitution").attr("value");
 	var countryV = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counterV+" textarea#textContactCountryOfTheInstitution").attr("value");
-	if (streetV == null || streetV == ""
-	|| cityV == null || cityV == ""
-	|| countryV == null || countryV == "") {
+	if (streetV == null || streetV.trim() == ""
+	|| cityV == null || cityV.trim() == ""
+	|| countryV == null || countryV.trim() == "") {
 	alertEmptyFields(text1);
 	return;
 	}
@@ -2873,8 +2874,8 @@ function contactAddPostalAddressTranslation(text1) {
 		$(this).val(""); // Clean all textarea.
 	});
 	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)+" #selectContactLanguagePostalAddress").attr("value","none");
-	// Remove "*".
-	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)).find("span").remove();
+//	// Remove "*".
+//	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)).find("span").remove();
 }
 
 function addFurtherTelephoneOfTheInstitution(text1){

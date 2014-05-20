@@ -76,7 +76,7 @@
 					var postalField1 = "<s:property value="loader.streetPostal"/>";
 					var postalField2 = "<s:property value="loader.municipalityPostalcodePostal"/>";
 					var postalField3 = "<s:property value="loader.streetPostalLang"/>";
-					//alert(postalField1+","+postalField2+","+postalField3);
+
 					if(postalField1.length>0 || postalField2.length>0 || postalField3.length>0){
 						var control=true;
 						contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>', '<s:property value="getText('eag2012.commons.pleaseFillDataAddress')" />', control );

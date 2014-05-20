@@ -240,12 +240,7 @@
 
 									<tr id="contactPostalAddressStreet">
 										<td>
-											<s:if test="%{#status.index == 0}">
-												<label for="textContactPAStreet"><s:property value="getText('eag2012.commons.street')" /><span class="required"></span>:</label>
-											</s:if>
-											<s:else>
-												<label for="textContactPAStreet"><s:property value="getText('eag2012.commons.street')" />:</label>
-											</s:else>
+											<label for="textContactPAStreet"><s:property value="getText('eag2012.commons.street')" />:</label>
 										</td>
 										<td>
 											<s:if test="%{#counter > 0}">
@@ -277,12 +272,7 @@
 
 									<tr id="contactPostalAddressCity">
 										<td>
-											<s:if test="%{#status.index == 0}">
-												<label for="textContactPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" /><span class="required"></span>:</label>
-											</s:if>
-											<s:else>
-												<label for="textContactPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />:</label>
-											</s:else>
+											<label for="textContactPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />:</label>
 										</td>
 										<td>
 											<s:if test="%{#counter > 0}">
