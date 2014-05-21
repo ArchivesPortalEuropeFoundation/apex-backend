@@ -1,10 +1,5 @@
 package eu.apenet.commons.xslt.extensions;
 
-import java.util.List;
-
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -14,6 +9,9 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**
  * Class for retrieve the identifier of the Archival Institution from the
@@ -90,18 +88,16 @@ public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
 				String value = "";
 
 				ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-				List<ArchivalInstitution> archivalInstitutionList = null;
+				ArchivalInstitution archivalInstitution = null;
 
 				if (firstArgValue != null && !firstArgValue.isEmpty()) {
-					archivalInstitutionList = archivalInstitutionDAO.getArchivalInstitutionsByRepositorycode(firstArgValue);
+					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(firstArgValue);
 				} else if(this.requiredAIRepositorCode != null && !this.requiredAIRepositorCode.isEmpty()) {
-					archivalInstitutionList = archivalInstitutionDAO.getArchivalInstitutionsByRepositorycode(firstArgValue);
+					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(requiredAIRepositorCode);
 				}
 
-				if (archivalInstitutionList != null
-						&& !archivalInstitutionList.isEmpty()
-						&& archivalInstitutionList.size() > 0) {
-					value = String.valueOf(archivalInstitutionList.get(0).getAiId());
+				if (archivalInstitution != null) {
+					value = String.valueOf(archivalInstitution.getAiId());
 				}
 
 				return SingletonIterator.makeIterator(new StringValue(value));
