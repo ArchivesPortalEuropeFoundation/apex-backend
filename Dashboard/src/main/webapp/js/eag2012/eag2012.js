@@ -2815,7 +2815,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 		'</tr>'+
 		'<tr id="contactPostalAddressStreet">'+
 			'<td>'+
-				'<label for="textContactPAStreet">'+property3+'<span class="required"></span>:</label>'+
+				'<label for="textContactPAStreet">'+property3+':</label>'+
 			'</td>'+
 			'<td>'+textContactPAStreet+
 			'</td>'+
@@ -2827,7 +2827,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 		'</tr>'+
 		'<tr id="contactPostalAddressCity">'+
 			'<td>'+
-				'<label for="textContactPACity">'+property4+'<span class="required"></span>:</label>'+
+				'<label for="textContactPACity">'+property4+':</label>'+
 			'</td>'+
 			'<td>'+textContactPACity+
 			'</td>'+
