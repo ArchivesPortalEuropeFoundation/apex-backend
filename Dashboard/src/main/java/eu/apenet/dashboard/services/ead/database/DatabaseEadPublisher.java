@@ -2,8 +2,10 @@ package eu.apenet.dashboard.services.ead.database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -73,10 +75,11 @@ public class DatabaseEadPublisher {
 			publishData.setFullHierarchy(fullHierarchy);
 			publishData.setArchdesc(true);
 			eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent, publishData));
+			Set<String> unitids = new HashSet<String>();
 			int cOrderId = 0;
 			CLevel clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
 			while (clevel != null) {
-				eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevel,eadContent.getEcId(),ead, solrPublisher, upperLevels, fullHierarchy));
+				eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevel,eadContent.getEcId(),ead, solrPublisher, upperLevels, fullHierarchy,unitids));
 				cOrderId++;
 				clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
 			}
