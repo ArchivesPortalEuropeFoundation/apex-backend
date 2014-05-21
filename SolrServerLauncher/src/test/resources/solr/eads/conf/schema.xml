@@ -113,7 +113,6 @@
       <field name="unitidsort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
 	  <field name="titlesort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 	
 	  <field name="unitidfondsort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 
- 	  <!--<field name="ALOrder" type="int" indexed="true" stored="true" required="false"/>-->
 
 	  <field name="unitid" type="unitidType" indexed="true" stored="true" required="false"/>
 	  <field name="otherunitid" type="unitidType" indexed="true" stored="true" required="false" multiValued="true"/>
@@ -135,26 +134,17 @@
 	  
 	  <field name="eadid" type="string" indexed="true" stored="true" required="false"/>	  
 	  <field name="unitidfond" type="string" indexed="true" stored="true" required="false"/>	
-	  
-<!--	  <field name="unitidfond" type="string" indexed="true" stored="true" required="false"/>-->
+	  <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/> 
 	  <field name="dao" type="boolean" indexed="true" stored="true" required="false"/>
 	  <field name="roledao" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
-<!--	  <field name="levelref" type="string" indexed="true" stored="true" required="false"/>	 	  
-	  <field name="note" type="string" indexed="true" stored="true" required="false"/>
-	-->  
+
 	  <field name="type" type="string" indexed="true" stored="true" required="false"/>
 	 
-
-<!--	
-  
-	  <field name="texto" type="text" indexed="true" stored="true" termVectors="true" multiValued="true"/>
--->		  
+	  
 	  <field name="fondId" type="string" indexed="true" stored="false" required="false"/>
 	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
 	  <field name="aiId" type="int" indexed="true" stored="false" required="false"/>	  
-<!--	  <field name="treeId" type="int" indexed="true" stored="true" required="false"/>	 
-	  <field name="firstTreeId" type="int" indexed="true" stored="true" required="false"/>
-      <field name="lastTreeId" type="int" indexed="true" stored="true" required="false"/> -->
+
       <field name="parentId" type="string" indexed="true" stored="true" required="false"/>
 	  <field name="leaf" type="boolean" indexed="true" stored="true" required="false"/>
 	  <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
