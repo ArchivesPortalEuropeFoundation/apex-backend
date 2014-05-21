@@ -443,6 +443,9 @@ public class SolrPublisher {
 		}
 		add(doc1, SolrFields.UNITID, unitid);
 		add(doc1, SolrFields.OTHERUNITID, otherunitid);
+		if (StringUtils.isNotBlank(unitid)){
+			doc1.addField(SolrFields.DUPLICATE_UNITID, publishData.isDuplicateUnitid());
+		}
 		add(doc1, SolrFields.SCOPECONTENT, scopecontent);
 		add(doc1, SolrFields.TITLE, title);
 		if (publishData.isArchdesc()){

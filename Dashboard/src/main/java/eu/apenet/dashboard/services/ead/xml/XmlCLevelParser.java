@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
+
+import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
@@ -21,6 +24,10 @@ import eu.apenet.persistence.vo.Ead;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class XmlCLevelParser extends AbstractParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5610349150703103517L;
 	public static final QName CLEVEL = new QName(APENET_EAD, "c");
 	private static final QName UNITTITLE = new QName(APENET_EAD, "unittitle");
 	private static final QName UNITID = new QName(APENET_EAD, "unitid");
@@ -34,7 +41,7 @@ public class XmlCLevelParser extends AbstractParser {
 
 
 	public static EADCounts parse(XMLStreamReader xmlReader, Long eadContentId,
-			Long parentId, int orderId, Ead ead, SolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
+			Long parentId, int orderId, Ead ead, SolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids)
 			throws Exception {
 		// QName elementName = xmlReader.getName();
 		LinkedList<QName> path = new LinkedList<QName>();
@@ -66,6 +73,13 @@ public class XmlCLevelParser extends AbstractParser {
 						noCLevelFound = false;
 						xmlWriterHolder.close();
 						clevel.setLeaf(false);
+						if (StringUtils.isNotBlank(clevel.getUnitid())){
+							if (unitids.contains(clevel.getUnitid())){
+								clevel.setDuplicateUnitid(true);
+							}else {
+								unitids.add(clevel.getUnitid());
+							}
+						}						
 						clevel.setXml(stringWriter.toString());
 						JpaUtil.getEntityManager().persist(clevel);
 						stringWriter.close();
@@ -81,6 +95,7 @@ public class XmlCLevelParser extends AbstractParser {
 							publishData.setLeaf(clevel.isLeaf());
 							publishData.setUpperLevelUnittitles(upperLevelUnittitles);
 							publishData.setFullHierarchy(fullHierarchy);
+							publishData.setDuplicateUnitid(clevel.isDuplicateUnitid());
 							if (publishData.getParentId() == null) {
 								publishData.setOrderId(clevel.getOrderId()+1);
 							}else {
@@ -93,7 +108,7 @@ public class XmlCLevelParser extends AbstractParser {
 						clevel = null;
 					}					
 					eadCounts.addEadCounts(XmlCLevelParser.parse(xmlReader, eadContentId,
-							clId, childOrderId++,ead, solrPublisher, unittitles, fullHierarchy));
+							clId, childOrderId++,ead, solrPublisher, unittitles, fullHierarchy, unitids));
 
 				} else {
 					add(path, lastElement);
@@ -160,6 +175,13 @@ public class XmlCLevelParser extends AbstractParser {
 		if (noCLevelFound){
 			noCLevelFound = false;
 			xmlWriterHolder.close();
+			if (StringUtils.isNotBlank(clevel.getUnitid())){
+				if (unitids.contains(clevel.getUnitid())){
+					clevel.setDuplicateUnitid(true);
+				}else {
+					unitids.add(clevel.getUnitid());
+				}
+			}
 			clevel.setXml(stringWriter.toString());
 			JpaUtil.getEntityManager().persist(clevel);
 			stringWriter.close();
@@ -172,6 +194,7 @@ public class XmlCLevelParser extends AbstractParser {
 				publishData.setLeaf(clevel.isLeaf());
 				publishData.setUpperLevelUnittitles(upperLevelUnittitles);
 				publishData.setFullHierarchy(fullHierarchy);
+				publishData.setDuplicateUnitid(clevel.isDuplicateUnitid());
 				if (publishData.getParentId() == null) {
 					publishData.setOrderId(clevel.getOrderId()+1);
 				}else {
