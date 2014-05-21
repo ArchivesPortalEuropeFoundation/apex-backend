@@ -27,7 +27,7 @@ public class HarvesterDaemon {
     private static boolean harvesterProcessing = false;
     private static boolean processOnceADay = true;
     private static HarvestObject harvestObject = null;
-    private static final Duration DAILY_HARVESTING_DURATION = new Duration(6, 0, 0);
+    private static final Duration DAILY_HARVESTING_DURATION = new Duration(4, 0, 0);
     private static final Duration TEN_MINUTES_HARVESTING_DURATION = new Duration(0, 10, 0);
     private static final Duration TEN_MINUTES_HARVESTING_DELAY = new Duration(0, 5, 0);
     public static synchronized void start(boolean processOnceADay) {
@@ -39,7 +39,7 @@ public class HarvesterDaemon {
             if(HarvesterDaemon.processOnceADay) {
                 Calendar currentDate = GregorianCalendar.getInstance();
         	    int currentTimeInSeconds = convertToSeconds(currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), currentDate.get(Calendar.SECOND));
-        	    int startTime = convertToSeconds(18,0,0);
+        	    int startTime = convertToSeconds(20,0,0);
         	    int intDelayInSeconds = calculateDelaySeconds(currentTimeInSeconds, startTime);
         	    LOGGER.info("Daily harvesting started. Next harvester task will be started at " + convertNumberToDuration(startTime) + ", so task have to wait " + convertNumberToDuration(intDelayInSeconds));
                 scheduler.scheduleAtFixedRate(new HarvesterTask(scheduler,DAILY_HARVESTING_DURATION), intDelayInSeconds, DAY_IN_SECONDS, TimeUnit.SECONDS);
