@@ -40,6 +40,8 @@ public class CLevel implements Serializable{
 	private EadContent eadContent;
 	private String unittitle;
 	private String unitid;
+	@Column(name = "duplicate_unitid")	
+	private boolean duplicateUnitid;
 	private String level;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="parent_cl_id", insertable=false, updatable=false)
@@ -140,4 +142,11 @@ public class CLevel implements Serializable{
             return null;
         return set.iterator().next();
     }
+	public boolean isDuplicateUnitid() {
+		return duplicateUnitid;
+	}
+	public void setDuplicateUnitid(boolean duplicateUnitid) {
+		this.duplicateUnitid = duplicateUnitid;
+	}
+    
 }

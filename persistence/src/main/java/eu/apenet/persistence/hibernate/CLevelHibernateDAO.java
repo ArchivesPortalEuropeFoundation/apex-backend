@@ -33,7 +33,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			varName = "holdingsGuide";
 		}
 
-		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND clevel.duplicateUnitid = false AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
 		query.setParameter("unitid", ApeUtil.decodeSpecialCharacters(unitid));
 		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
