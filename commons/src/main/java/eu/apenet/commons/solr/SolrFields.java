@@ -50,5 +50,7 @@ public final class SolrFields {
 	public final static String FA_DYNAMIC_NAME = "F0"+ DYNAMIC_STRING_SUFFIX;
 	public final static String HG_DYNAMIC_NAME = "H0"+ DYNAMIC_STRING_SUFFIX;
 	public final static String SG_DYNAMIC_NAME = "S0"+ DYNAMIC_STRING_SUFFIX;
+	
+	public final static String REPOSITORY_CODE="repositoryCode";
 }
 
