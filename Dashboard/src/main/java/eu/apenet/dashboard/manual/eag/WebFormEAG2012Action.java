@@ -50,6 +50,7 @@ import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import java.util.logging.Level;
 
 /**
  * Action used to manage and store the new EAG2012.
@@ -62,7 +63,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private static final long serialVersionUID = 732801399037503323L;
 
 	private final Logger log = Logger.getLogger(getClass());
-	
+
 	/**
 	 * This action is used to render the EAG2012 webform.
 	 */
@@ -93,7 +94,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private String repositoridCountryCode;
 	private String otherRepositorIdValue;
 	private String recordIdValue;
-	private String autformValue;			// Will be an ordered list. 
+	private String autformValue;			// Will be an ordered list.
 	private String autformLang;				// Will be an ordered list.
 	private String parformValue;			// Will be an ordered list.
 	private String parformLang;				// Will be an ordered list.
@@ -108,7 +109,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private String repositoryTypeValue;		// Will be an ordered list.
 
 	private String eagPath;
-	
+
 	public String getEagPath(){
 		return this.eagPath;
 	}
@@ -145,7 +146,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_BRANCH, getText("eag2012.options.role.branch"));
 		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_INTERIM, getText("eag2012.options.role.interimArchive"));
 		return this.getRepositoryRoleMap();
-		
+
 	}
 
 	public Map<String,String> getTypeOfInstitutionList() {
@@ -226,7 +227,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	public Map<String,String> getYesNoMap() {
 		return this.yesNoMap;
 	}
-	
+
 	public Map<String,String> getNoneYesNoMap(){
 		return this.noneYesNoMap;
 	}
@@ -682,39 +683,39 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	/**
 	 * Returns the into ISO_2Characteres.
-	 * @return CC 
+	 * @return CC
 	 */
 	public String getCountryCode(){
 		return new ArchivalLandscape().getmyCountry();
 	}
-	
+
 	/**
 	 * Generates unique isocode for ID used in APE.
-	 * 
+	 *
 	 * @return ISO_CODE
 	 */
 	public String getIdUsedInAPE(){
 		return Eag2012.generatesISOCode(getAiId());
 	}
-	
+
 	private String form;
 
 	private EAG2012Loader loader;
 
 	private boolean newEag;
-	
+
 	public Boolean isNewEag(){
 		return this.newEag;
 	}
-	
+
 	public EAG2012Loader getLoader(){
 		return this.loader;
 	}
-	
+
 	public void setForm(String form){
 		this.form = form;
 	}
-	
+
 	public String getForm(){
 		return this.form;
 	}
@@ -745,7 +746,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						for (int i = 0; i < this.getWarnings().size(); i++) {
 							String warning = this.getWarnings().get(i).replace("<br/>", "");
 							log.debug(warning);
-							ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
+							ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this);
 							if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
 								String currentError = parseEag2012Errors.errorsValidation();
 								if (!this.getActionMessages().contains(currentError)) {
@@ -754,7 +755,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							} else {
 								addActionMessage(parseEag2012Errors.errorsValidation());
 							}
-							
+
 						}
 					}
 				} else {
@@ -798,7 +799,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		}
 		return state;
 	}
-	
+
 	public String createEAG2012() {
 		Eag2012 eag2012 = null;
 		boolean existEag=false;
@@ -809,7 +810,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if (log.isDebugEnabled()){
 				log.debug(e.getMessage());
 			}
-			
+
 		}
 		if(eag2012!=null){
 			String basePath = APEnetUtilities.FILESEPARATOR + this.getCountryCode() + APEnetUtilities.FILESEPARATOR +
@@ -834,7 +835,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		            eag = (Eag) jaxbUnmarshaller.unmarshal(eagStream);
 
-		            eagStream.close();		
+		            eagStream.close();
 				} catch (JAXBException jaxbe) {
 					log.info(jaxbe.getMessage());
 				} catch (IOException ioe) {
@@ -873,12 +874,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					File eagFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
 					if (eagFinalFile.exists()) {
 						try {
-							FileUtils.forceDelete(eagFinalFile);
+                                                    FileUtils.forceDelete(eagFinalFile);
 						} catch (IOException e) {
 							log.error(e.getMessage(),e);
-						}
+                                            }
 					}
-					FileUtils.moveFile(eagTempFile, eagFinalFile);
+					// Windows file lock workaround; uncomment if necessary
+                                        // System.gc();
+                                        // Thread.sleep(2000);
+                                        FileUtils.moveFile(eagTempFile, eagFinalFile);
 
 					//store ddbb path
 					ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
@@ -898,14 +902,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					// After store the new EAG, review the values to fill the coordinates table.
 					this.insertCoordinatesValues(archivalInstitution);
 				} else {
-					
+
 					this.setWarnings(apEnetEAGDashboard.showWarnings());
 					//The EAG has been neither validated nor converted.
 					log.warn("The file " + eagFile.getName() + " is not valid");
 					for (int i = 0; i < this.getWarnings().size(); i++) {
 						String warning = this.getWarnings().get(i).replace("<br/>", "");
 						log.debug(warning);
-						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
+						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this);
 						if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
 							String currentError = parseEag2012Errors.errorsValidation();
 							if (!this.getActionMessages().contains(currentError)) {
@@ -924,7 +928,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				log.error(e.getMessage());
 			} catch (IOException e) {
 				log.error(e.getMessage(),e);
-			}
+                        // belonging to Windows file lock workaround (see above)
+                        // } catch (InterruptedException ex) {
+                        //    log.error(ex.getMessage(),ex);
+                        }
 		}
 		String result = this.editWebFormEAG2012();
 
@@ -939,7 +946,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	public String removeInvalidEAG2012() {
 		return this.removeInvalidEAG(this.getAiId());
 	}
-	
+
 	private void fillDefaultLoaderValues() { //TODO, now only works with main repository
 		this.newEag = true;
 		this.loader = new EAG2012Loader();
@@ -955,7 +962,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		{
 			nameOfInstitution = getNameOfInstitution();
 		} else {
-			nameOfInstitution = getInitialAutformValue(); 
+			nameOfInstitution = getInitialAutformValue();
 		}
 		this.loader.setInitialAutform(getInitialAutformValue());
 		this.loader.setId(getAiId());
@@ -1048,7 +1055,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		}
 		return field;
 	}
-	
+
 	private Eag2012 getAndFillEag2012Object() throws JSONException {
 		Eag2012 eag2012 = null;
 		if(this.form!=null && !this.form.isEmpty()){
@@ -1067,7 +1074,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			JSONObject jsonObj = new JSONObject(this.form.trim());
 			this.form = null;
 			if(jsonObj.has("yourInstitution")){ //first_tab -> 'yourInstitution' : array[{},..,{}]
-				eag2012 = parseYourInstitutionJsonObjToEag2012(eag2012,jsonObj);				
+				eag2012 = parseYourInstitutionJsonObjToEag2012(eag2012,jsonObj);
 			}
 			if(jsonObj.has("identity")){
 				eag2012 = parseIdentityJsonObjToEag2012(eag2012,jsonObj);
@@ -1075,10 +1082,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	        if(jsonObj.has("contact")){
 	        	eag2012 = parseContactJsonObjToEag2012(eag2012, jsonObj);
 	        }
-		
+
 	        if(jsonObj.has("accessAndServices")){
 	        	eag2012 = parseAccesAndServicesJsonObjToEag2012(eag2012, jsonObj);
-	        } 		
+	        }
 		    if(jsonObj.has("description")){
 		    	eag2012 = parseDescriptionJsonObjToEag2012(eag2012, jsonObj);
 		    }
@@ -1242,10 +1249,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
 						 }
 						 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
-					 }	
+					 }
 				}//end while resourceRelations
 			}//end if resourceRelation
-			
+
 			//institution Repository section
 			if(relation.has("institutionRelations")){
 				JSONObject institutionRelations = relation.getJSONObject("institutionRelations");
@@ -1320,7 +1327,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					    }
 					    eag2012.setRelationEntryLang(listRelationEnrtyMap);
 					}
-					
+
 					if(institutionRelationTable.has("textInstitutionDescriptionOfRelation")){
 						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
 						 if(descriptiveNotePValue==null){
@@ -1389,9 +1396,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 				}//end while institution
 			}//end if institution
-			
+
 		}//end if relation
-		
+
 		return eag2012;
 	}
 	private Eag2012 parseControlJsonObjToEag2012(Eag2012 eag2012, JSONObject jsonObj) throws JSONException{
@@ -1444,16 +1451,16 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 				i++;
 			}
-		  //convention declaration	
+		  //convention declaration
 		  i=0;
 		  while(control.has("textContactAbbreviation_"+(++i)) && (control.has("textContactFullName_"+i))){
 			if(control.has("textContactAbbreviation_"+i)){
 			  List<String> abbreviation = eag2012.getAbbreviationValue();
 			  if(abbreviation == null){
-				  abbreviation = new ArrayList<String>(); 
+				  abbreviation = new ArrayList<String>();
 			  }
-			  abbreviation.add(replaceIfExistsSpecialReturnString(control.getString("textContactAbbreviation_"+i)));	  
-              eag2012.setAbbreviationValue(abbreviation);			
+			  abbreviation.add(replaceIfExistsSpecialReturnString(control.getString("textContactAbbreviation_"+i)));
+              eag2012.setAbbreviationValue(abbreviation);
 			}
 			if(control.has("textContactFullName_"+i)){
 				List<Map<String, List<String>>> listCitationMap = eag2012.getCitationValue();
@@ -1481,21 +1488,21 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			    }
 			    eag2012.setCitationValue(listCitationMap);
 			}
-			
+
 		 }//end while
 		}//end first if
 		return eag2012;
 	}
-	
+
 	private Eag2012 parseDescriptionJsonObjToEag2012(Eag2012 eag2012, JSONObject jsonObj) throws JSONException {
 		JSONObject description = jsonObj.getJSONObject("description");
 		if(description!=null){
 			int i=0;
 			while(description.has("descriptionTable_"+(i+1))){
-				JSONObject descriptionTable = description.getJSONObject("descriptionTable_"+(i+1)); 
-			    
+				JSONObject descriptionTable = description.getJSONObject("descriptionTable_"+(i+1));
+
 				//repository description section
-				
+
 				int j=0;
 				while (descriptionTable.has("textRepositoryHistory_"+(++j)) && (descriptionTable.has("selectLanguageRepositoryHistory_"+(j)))){
 					if(descriptionTable.has("textRepositoryHistory_"+j)){
@@ -1563,7 +1570,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
 						 }
 						 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
-					 }	
+					 }
 				}
 				//date y rule of repositorfound
 				if(descriptionTable.has("textDateOfRepositoryFoundation")){  //date
@@ -1575,7 +1582,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(dateValue.size()>i && dateValue.get(i)!=null){
 						 dateMapMapMap = dateValue.get(i);
 					 }else{
-						 dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+						 dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
 					 }
 					 Map<String, Map<String, List<List<String>>>> dateMapMap = null;
 					 if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -1626,7 +1633,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				//rule of repositorfound
 				j=0;
 				while(descriptionTable.has("textRuleOfRepositoryFoundation_"+(++j)) && descriptionTable.has("selectLanguageRuleOfRepositoryFoundation_"+(j))) {
-				 if(descriptionTable.has("textRuleOfRepositoryFoundation_"+j)){	
+				 if(descriptionTable.has("textRuleOfRepositoryFoundation_"+j)){
 					List<Map<String, List<String>>> listRulesMap = eag2012.getRuleValue();
 					if(listRulesMap==null){
 						listRulesMap= new ArrayList<Map<String,List<String>>>();
@@ -1651,7 +1658,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				    	listRulesMap.add(rulesMap);
 				    }
 				    eag2012.setRuleValue(listRulesMap);
-				 }	
+				 }
 				 if(descriptionTable.has("selectLanguageRuleOfRepositoryFoundation_"+j)){
 					 List<Map<String,List<String>>> listRulesLang =eag2012.getRuleLang();
 					 if(listRulesLang==null){
@@ -1665,7 +1672,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> rulesLangList = null;
 					 if((rulesLangMap.size()>i || !rulesLangMap.isEmpty()) && rulesLangMap.get(Eag2012.REPOSITOR_FOUND)!=null){
-						rulesLangList=rulesLangMap.get(Eag2012.REPOSITOR_FOUND); 
+						rulesLangList=rulesLangMap.get(Eag2012.REPOSITOR_FOUND);
 					 }else{
 						 rulesLangList = new ArrayList<String>();
 					 }
@@ -1677,12 +1684,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listRulesLang.add(rulesLangMap);
 					 }
 				    eag2012.setRuleLang(listRulesLang);
-				 }	
+				 }
 				}
-				
+
 				//date of repositorsup
-				
-				if(descriptionTable.has("textDateOfRepositorySuppression")){  
+
+				if(descriptionTable.has("textDateOfRepositorySuppression")){
 					 List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateValue = eag2012.getDateStandardDate();
 					 if(dateValue==null){
 						 dateValue = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
@@ -1691,7 +1698,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(dateValue.size()>i && dateValue.get(i)!=null){
 						 dateMapMapMap = dateValue.get(i);
 					 }else{
-						 dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+						 dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
 					 }
 					 Map<String, Map<String, List<List<String>>>> dateMapMap = null;
 					 if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -1735,12 +1742,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 dateValue.add(dateMapMapMap);
 					 }
 					 eag2012.setDateStandardDate(dateValue);
-				 }				
+				 }
 				//rule repositorsup
-				
+
 				j=0;
 				while(descriptionTable.has("textRuleOfRepositorySuppression_"+(++j)) && descriptionTable.has("selectLanguageRuleOfRepositorySuppression_"+(j))) {
-				 if(descriptionTable.has("textRuleOfRepositorySuppression_"+j)){	
+				 if(descriptionTable.has("textRuleOfRepositorySuppression_"+j)){
 					List<Map<String, List<String>>> listRulesMap = eag2012.getRuleValue();
 					if(listRulesMap==null){
 						listRulesMap= new ArrayList<Map<String,List<String>>>();
@@ -1765,7 +1772,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				    	listRulesMap.add(rulesMap);
 				    }
 				    eag2012.setRuleValue(listRulesMap);
-				 }	
+				 }
 				 if(descriptionTable.has("selectLanguageRuleOfRepositorySuppression_"+j)){
 					 List<Map<String,List<String>>> listRulesLang =eag2012.getRuleLang();
 					 if(listRulesLang==null){
@@ -1779,7 +1786,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> rulesLangList = null;
 					 if(rulesLangMap.size()>i && rulesLangMap.get(Eag2012.REPOSITOR_SUP)!=null){
-						rulesLangList=rulesLangMap.get(Eag2012.REPOSITOR_SUP); 
+						rulesLangList=rulesLangMap.get(Eag2012.REPOSITOR_SUP);
 					 }else{
 						 rulesLangList = new ArrayList<String>();
 					 }
@@ -1791,11 +1798,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listRulesLang.add(rulesLangMap);
 					 }
 				    eag2012.setRuleLang(listRulesLang);
-				 }	
+				 }
 				}
-				
+
 				 //Administrative structure
-				
+
 				 String target1 = "textUnitOfAdministrativeStructure";
 				 String target2 = "selectLanguageUnitOfAdministrativeStructure";
 				 int targetNumber = 1;
@@ -1842,7 +1849,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setAdminunitLang(adminUnitLang);
 					 }
 				 }while(descriptionTable.has(target1) && descriptionTable.has(target2));
-				 
+
 				 //Building description
 				 target1 = "textBuilding";
 				 target2 = "selectLanguageBuilding";
@@ -1866,7 +1873,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(descriptiveNotePMap.size()>0 && descriptiveNotePMap.get(Eag2012.TAB_DESCRIPTION)!=null){
 							 descriptiveNotePMapMap = descriptiveNotePMap.get(Eag2012.TAB_DESCRIPTION);
 						 }else{
-							 descriptiveNotePMapMap = new HashMap<String, List<String>>(); 
+							 descriptiveNotePMapMap = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNotePMapMapList = null;
 						 if(descriptiveNotePMapMap.size()>0 && descriptiveNotePMapMap.get(Eag2012.BUILDING)!=null){
@@ -1899,7 +1906,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(descriptiveNotePMap.size()>0 && descriptiveNotePMap.get(Eag2012.TAB_DESCRIPTION)!=null){
 							 descriptiveNotePMapMap = descriptiveNotePMap.get(Eag2012.TAB_DESCRIPTION);
 						 }else{
-							 descriptiveNotePMapMap = new HashMap<String, List<String>>(); 
+							 descriptiveNotePMapMap = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNotePMapMapList = null;
 						 if(descriptiveNotePMapMap.size()>0 && descriptiveNotePMapMap.get(Eag2012.BUILDING)!=null){
@@ -1918,7 +1925,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setDescriptiveNotePLang(descriptiveNotePs);
 					 }
 				 }while(descriptionTable.has(target1) && descriptionTable.has(target2));
-				 
+
 				 if(descriptionTable.get("textRepositoryArea")!=null){
 					 List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
 					 if(numValue==null){
@@ -1928,7 +1935,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(numValue.size()>i && numValue.get(i)!=null){
 						 numMapMapMap = numValue.get(i);
 					 }else{
-						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 					 }
 					 Map<String, Map<String, List<String>>> numMapMap = null;
 					 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -1968,7 +1975,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(numValue.size()>i && numValue.get(i)!=null){
 						 numMapMapMap = numValue.get(i);
 					 }else{
-						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 					 }
 					 Map<String, Map<String, List<String>>> numMapMap = null;
 					 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -1999,7 +2006,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setNumValue(numValue);
 				 }
-               
+
 				 //holding description
 				   j=0;
 					while (descriptionTable.has("textArchivalAndOtherHoldings_"+(++j)) && (descriptionTable.has("selectLanguageArchivalAndOtherHoldings_"+(j)))){
@@ -2068,13 +2075,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePValue.add(descriptiveNoteMapMapList);
 							 }
 							 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
-						 }	
+						 }
 					}
 			 	 //date of holdings
-					
+
 				  j=0;
 				  while(descriptionTable.has("textYearWhenThisNameWasUsed_"+(++j))){
-					if(descriptionTable.has("textYearWhenThisNameWasUsed_"+j)){  
+					if(descriptionTable.has("textYearWhenThisNameWasUsed_"+j)){
 					  List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateValue = eag2012.getDateStandardDate();
 					  if(dateValue==null){
 						dateValue = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
@@ -2083,7 +2090,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					   if(dateValue.size()>i && dateValue.get(i)!=null){
 						 dateMapMapMap = dateValue.get(i);
 					   }else{
-						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
 					   }
 					   Map<String, Map<String, List<List<String>>>> dateMapMap = null;
 					   if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -2104,7 +2111,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listDates = new ArrayList<List<String>>();
 					   }
 					   List<String> dates = null;
-					   if(listDates.size()>0){ 
+					   if(listDates.size()>0){
 						   dates = listDates.get(0);
 					   }else{
 						   dates = new ArrayList<String>();
@@ -2118,7 +2125,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}
 					//   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsed_"+j)));
 					   if(listDates.size()>0){
-						   listDates.set(0,dates);  
+						   listDates.set(0,dates);
 					   }else{
 						   listDates.add(dates);
 					   }
@@ -2131,12 +2138,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 dateValue.add(dateMapMapMap);
 					   }
 					   eag2012.setDateStandardDate(dateValue);
-					}	  
+					}
 				  }
 			  	 //date range of holdings
 				  j=0;
 				  while(descriptionTable.has("textYearWhenThisNameWasUsedFrom_"+(++j)) && descriptionTable.has("textYearWhenThisNameWasUsedTo_"+j)){
-					  if(descriptionTable.has("textYearWhenThisNameWasUsedFrom_"+j)){  
+					  if(descriptionTable.has("textYearWhenThisNameWasUsedFrom_"+j)){
 						  List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateValue = eag2012.getFromDateStandardDate();
 						  if(dateValue==null){
 							dateValue = new ArrayList<Map<String,Map<String,Map<String,List<List<String>>>>>>();
@@ -2145,7 +2152,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						   if(dateValue.size()>i && dateValue.get(i)!=null){
 							 dateMapMapMap = dateValue.get(i);
 						   }else{
-							  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+							  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
 						   }
 						   Map<String, Map<String, List<List<String>>>> dateMapMap = null;
 						   if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -2180,7 +2187,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							}
 						//   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedFrom_"+j)));
 						   if(listDates.size()>0){
-							   listDates.set(0, dates);  
+							   listDates.set(0, dates);
 						   }else{
 							   listDates.add(dates);
 						   }
@@ -2193,8 +2200,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 dateValue.add(dateMapMapMap);
 						   }
 						   eag2012.setFromDateStandardDate(dateValue);
-						}	  
-					  if(descriptionTable.has("textYearWhenThisNameWasUsedTo_"+j)){  
+						}
+					  if(descriptionTable.has("textYearWhenThisNameWasUsedTo_"+j)){
 						  List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateValue = eag2012.getToDateStandardDate();
 						  if(dateValue==null){
 							dateValue = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
@@ -2203,7 +2210,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						   if(dateValue.size()>i && dateValue.get(i)!=null){
 							 dateMapMapMap = dateValue.get(i);
 						   }else{
-							  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+							  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
 						   }
 						   Map<String, Map<String, List<List<String>>>> dateMapMap = null;
 						   if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -2238,7 +2245,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							}
 					//	   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedTo_"+j)));
 						   if(listDates.size()>0){
-							   listDates.set(0, dates);  
+							   listDates.set(0, dates);
 						   }else{
 							   listDates.add(dates);
 						   }
@@ -2251,7 +2258,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 dateValue.add(dateMapMapMap);
 						   }
 						   eag2012.setToDateStandardDate(dateValue);
-						}	  
+						}
 				  }
 				  if (!descriptionTable.has("textYearWhenThisNameWasUsedFrom_"+j) || !descriptionTable.has("textYearWhenThisNameWasUsedTo_"+j)) {
 					  // From date.
@@ -2263,7 +2270,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					   if(dateValue.size()>i && dateValue.get(i)!=null){
 						 dateMapMapMap = dateValue.get(i);
 					   }else{
-						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
 					   }
 					   Map<String, Map<String, List<List<String>>>> dateMapMap = null;
 					   if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -2291,7 +2298,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					   }
 					   dates.add("");
 					   if(listDates.size()>0){
-						   listDates.set(0, dates);  
+						   listDates.set(0, dates);
 					   }else{
 						   listDates.add(dates);
 					   }
@@ -2313,7 +2320,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					   if(dateValue.size()>i && dateValue.get(i)!=null){
 						 dateMapMapMap = dateValue.get(i);
 					   }else{
-						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
 					   }
 					   dateMapMap = null;
 					   if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -2341,7 +2348,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					   }
 					   dates.add("");
 					   if(listDates.size()>0){
-						   listDates.set(0, dates);  
+						   listDates.set(0, dates);
 					   }else{
 						   listDates.add(dates);
 					   }
@@ -2365,7 +2372,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(numValue.size()>i && numValue.get(i)!=null){
 							 numMapMapMap = numValue.get(i);
 						 }else{
-							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 						 }
 						 Map<String, Map<String, List<String>>> numMapMap = null;
 						 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
@@ -2394,36 +2401,36 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 numValue.add(numMapMapMap);
 						 }
-						 eag2012.setNumValue(numValue);  
+						 eag2012.setNumValue(numValue);
 				  }
-				  
+
 			 i++;
 			}//end while description
-			
+
 		}
-		
-	return eag2012;	
+
+	return eag2012;
 	}
-	
+
 	private Eag2012 parseAccesAndServicesJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
 		JSONObject accessAndServices = jsonObj.getJSONObject("accessAndServices");
 		if(accessAndServices!=null){
 			int i=0;
 			while(accessAndServices.has("accessAndServicesTable_"+(i+1))){
 				JSONObject accessTable = accessAndServices.getJSONObject("accessAndServicesTable_"+(i+1));
-             
-              //opening times and opening langs 
-				
+
+              //opening times and opening langs
+
 				int j=0;
 				while(accessTable.has("textOpeningTimes_"+(++j)) && (accessTable.has("selectLanguageOpeningTimes_"+(j)))){
 				  if(accessTable.has("textOpeningTimes_"+j)){
 				     List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
 					 if(openingValues == null){
-					   openingValues = new ArrayList<Map<String,List<String>>>();  
+					   openingValues = new ArrayList<Map<String,List<String>>>();
 					 }
 					 Map<String, List<String>> openingMap = null;
 					 if((openingValues.size() > i) && (openingValues.get(i)!=null)){
-					   openingMap = openingValues.get(i);	  
+					   openingMap = openingValues.get(i);
 					 }else{
 						 openingMap = new HashMap<String,List<String>>();
 					 }
@@ -2445,11 +2452,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				  if(accessTable.has("selectLanguageOpeningTimes_"+j)){
 					     List<Map<String,List<String>>> openingLangs = eag2012.getOpeningLang();
 						 if(openingLangs == null){
-						   openingLangs = new ArrayList<Map<String,List<String>>>();  
+						   openingLangs = new ArrayList<Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> openingMap = null;
 						 if((openingLangs.size() > i) && (openingLangs.get(i)!=null)){
-						   openingMap = openingLangs.get(i);	  
+						   openingMap = openingLangs.get(i);
 						 }else{
 							 openingMap = new HashMap<String,List<String>>();
 						 }
@@ -2468,21 +2475,21 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					    }
 					    eag2012.setOpeningLang(openingLangs);
 				 }
-				  
+
 				}//end while opening times
-				
+
 				//closing times and langs closing
-	            
-				j=0;			
+
+				j=0;
 				while(accessTable.has("textClosingDates_"+(++j)) && (accessTable.has("selectLanguageClosingDates_"+(j)))){
 				  if(accessTable.has("textClosingDates_"+j)){
 				     List<Map<String,List<String>>> closingValues = eag2012.getClosingStandardDate();
 					 if(closingValues == null){
-						 closingValues = new ArrayList<Map<String,List<String>>>();  
+						 closingValues = new ArrayList<Map<String,List<String>>>();
 					 }
 					 Map<String, List<String>> closingMap = null;
 					 if((closingValues.size() > i) && (closingValues.get(i)!=null)){
-						 closingMap = closingValues.get(i);	  
+						 closingMap = closingValues.get(i);
 					 }else{
 						 closingMap = new HashMap<String,List<String>>();
 					 }
@@ -2504,11 +2511,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				  if(accessTable.has("selectLanguageClosingDates_"+j)){
 					     List<Map<String,List<String>>> closingLangs = eag2012.getClosingLang();
 						 if(closingLangs == null){
-							 closingLangs = new ArrayList<Map<String,List<String>>>();  
+							 closingLangs = new ArrayList<Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> closingMap = null;
 						 if((closingLangs.size() > i) && (closingLangs.get(i)!=null)){
-							 closingMap = closingLangs.get(i);	  
+							 closingMap = closingLangs.get(i);
 						 }else{
 							 closingMap = new HashMap<String,List<String>>();
 						 }
@@ -2527,9 +2534,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					    }
 					    eag2012.setClosingLang(closingLangs);
 				 }
-				  
+
 				}//end while closing times
-				
+
 				//directions
 				j=0;
 				while((accessTable.has("textTravellingDirections_"+(++j))) && (accessTable.has("selectASATDSelectLanguage_"+(j))) && (accessTable.has("textTravelLink_"+(j)))){
@@ -2540,7 +2547,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				  		}
 				  		List<String> directionList = null;
 				  		if((listDirectionsList.size()>i) && (listDirectionsList.get(i)!=null)){
-				  		  directionList=listDirectionsList.get(i);	
+				  		  directionList=listDirectionsList.get(i);
 				  		}else{
 				  			directionList = new ArrayList<String>();
 				  		}
@@ -2597,15 +2604,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					    }
 					    eag2012.setCitationHref(listCitationMap);
 				  	}
-				
+
 				}//end while directions
-				
+
                 //access yes or no, it appears in tab yourinstitution, in tab accessAndServices and for each repository
-				
+
 				if(accessTable.has("selectASAccesibleToThePublic")){
 					List<Map<String, String>> accessQuestions = eag2012.getAccessQuestion();
 					if(accessQuestions == null){
-						accessQuestions = new ArrayList<Map<String, String>>(); 
+						accessQuestions = new ArrayList<Map<String, String>>();
 					}
 					Map<String, String> accessQuestionRepo = null;
 					if(accessQuestions.size()>i && accessQuestions.get(i)!=null){
@@ -2621,19 +2628,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}
 					eag2012.setAccessQuestion(accessQuestions);
 				}
-				
+
 			     //access information and access langs
-			     
+
 			     j=0;
 				 while((accessTable.has("textASAccessRestrictions_"+(++j))) && (accessTable.has("selectASARSelectLanguage_"+(j)))){
 					if(accessTable.has("textASAccessRestrictions_"+j)){
 						List<Map<String,List<String>>> listMapRestaccessList = eag2012.getRestaccessValue();
 						if(listMapRestaccessList==null){
-						  listMapRestaccessList = new ArrayList<Map<String, List<String>>>();	
+						  listMapRestaccessList = new ArrayList<Map<String, List<String>>>();
 						}
 						 Map<String, List<String>> restaccess = null;
 						 if((listMapRestaccessList.size()>i) && (listMapRestaccessList.get(i)!=null)){
-							restaccess=listMapRestaccessList.get(i); 
+							restaccess=listMapRestaccessList.get(i);
 						 }else{
 							 restaccess=new HashMap<String,List<String>>();
 						 }
@@ -2655,11 +2662,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					if(accessTable.has("selectASARSelectLanguage_"+j)) {   //access information lang
 						List<Map<String,List<String>>> listMapRestaccessList = eag2012.getRestaccessLang();
 						if(listMapRestaccessList==null){
-						  listMapRestaccessList = new ArrayList<Map<String, List<String>>>();	
+						  listMapRestaccessList = new ArrayList<Map<String, List<String>>>();
 						}
 						 Map<String, List<String>> restaccessLang = null;
 						 if((listMapRestaccessList.size()>i) && (listMapRestaccessList.get(i)!=null)){
-							 restaccessLang=listMapRestaccessList.get(i); 
+							 restaccessLang=listMapRestaccessList.get(i);
 						 }else{
 							 restaccessLang=new HashMap<String,List<String>>();
 						 }
@@ -2676,10 +2683,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					     }else{
 					    	 listMapRestaccessList.add(restaccessLang);
 					     }
-					    eag2012.setRestaccessLang(listMapRestaccessList);		
+					    eag2012.setRestaccessLang(listMapRestaccessList);
 					}
 				}// end while access information
-				
+
 				//terms of use
 				 j=0;
 				 while((accessTable.has("textASTermOfUse_"+(++j))) && (accessTable.has("selectASAFTOUSelectLanguage_"+(j))) && (accessTable.has("textASTOULink_"+(j)))){
@@ -2690,7 +2697,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					  		}
 					  		List<String> termsList = null;
 					  		if((listTermsList.size()>i) && (listTermsList.get(i)!=null)){
-					  			termsList=listTermsList.get(i);	
+					  			termsList=listTermsList.get(i);
 					  		}else{
 					  			termsList = new ArrayList<String>();
 					  		}
@@ -2726,7 +2733,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					  		if(listTermsHrefList==null){
 					  			listTermsHrefList=new ArrayList<List<String>>();
 					  		}
-					  		List<String> termsHrefList = null;	
+					  		List<String> termsHrefList = null;
 					  		if(listTermsHrefList.size()>i && (listTermsHrefList.get(i)!=null)){
 					  			termsHrefList=listTermsHrefList.get(i);
 					  		}else{
@@ -2740,15 +2747,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					  		}
 					  	  eag2012.setTermsOfUseHref(listTermsHrefList);
 					  	}
-					
+
 					}//end while terms of use
-				 
+
 				//accessibility yes or no, it appears in tab yourinstitution, in tab accessAndServices and for each repository
-				 
+
 				  if(accessTable.has("selectASFacilitiesForDisabledPeopleAvailable")){
 					List<Map<String, String>> listAccessibilityMap = eag2012.getAccessibilityQuestion();
 					if(listAccessibilityMap == null){
-						listAccessibilityMap = new ArrayList<Map<String, String>>(); 
+						listAccessibilityMap = new ArrayList<Map<String, String>>();
 					}
 					Map<String, String> accessibilityMap = null;
 					if(listAccessibilityMap.size()>i && listAccessibilityMap.get(i)!=null){
@@ -2764,17 +2771,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}
 					eag2012.setAccessibilityQuestion(listAccessibilityMap);
 				  }
-				  
+
 				   j=0;
 				   while((accessTable.has("textASAccessibility_"+(++j))) && (accessTable.has("selectASASelectLanguage_"+(j)))){
 						if(accessTable.has("textASAccessibility_"+j)){
 							List<Map<String,List<String>>> listMapAccessibilityList = eag2012.getAccessibilityValue();
 							if(listMapAccessibilityList==null){
-								listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();	
+								listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();
 							}
 							 Map<String, List<String>> accesibility = null;
 							 if((listMapAccessibilityList.size()>i) && (listMapAccessibilityList.get(i)!=null)){
-								 accesibility=listMapAccessibilityList.get(i); 
+								 accesibility=listMapAccessibilityList.get(i);
 							 }else{
 								 accesibility=new HashMap<String,List<String>>();
 							 }
@@ -2796,11 +2803,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						if(accessTable.has("selectASASelectLanguage_"+j)) {   //accessibility information lang
 							List<Map<String,List<String>>> listMapAccessibilityList = eag2012.getAccessibilityLang();
 							if(listMapAccessibilityList==null){
-								listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();	
+								listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();
 							}
 							 Map<String, List<String>> accessibilityLang = null;
 							 if((listMapAccessibilityList.size()>i) && (listMapAccessibilityList.get(i)!=null)){
-								 accessibilityLang=listMapAccessibilityList.get(i); 
+								 accessibilityLang=listMapAccessibilityList.get(i);
 							 }else{
 								 accessibilityLang=new HashMap<String,List<String>>();
 							 }
@@ -2817,10 +2824,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						     }else{
 						    	 listMapAccessibilityList.add( accessibilityLang);
 						     }
-						    eag2012.setAccessibilityLang(listMapAccessibilityList);		
+						    eag2012.setAccessibilityLang(listMapAccessibilityList);
 						}
 					}// end while accessibility
-				
+
 				 //search_room section
 				 if(accessTable.has("textASSRTelephone_1")){
 					 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
@@ -2831,7 +2838,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(telephones.size()>i && telephones.get(i)!=null){ //repo
 						 telephonesMap = telephones.get(i);
 					 }else{
-						 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
+						 telephonesMap = new HashMap<String, Map<String, List<String>>>();
 					 }
 					 Map<String, List<String>> telephonesMapList = null;
 					 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -2879,7 +2886,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASSREmailAddress")));
-					 emailMap.put(Eag2012.SEARCHROOM,listEmail); 
+					 emailMap.put(Eag2012.SEARCHROOM,listEmail);
 					 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 					 if(listMapEmailValueList.size()>i){
 						 listMapEmailValueList.set(i,email);
@@ -2912,7 +2919,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASSREmailLinkTitle")));
-					 emailMap.put(Eag2012.SEARCHROOM,listEmail); 
+					 emailMap.put(Eag2012.SEARCHROOM,listEmail);
 					 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 					 if(listMapEmailList.size()>i){
 						 listMapEmailList.set(i,email);
@@ -2946,17 +2953,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add("");
-					 emailMap.put(Eag2012.SEARCHROOM,listEmail); 
+					 emailMap.put(Eag2012.SEARCHROOM,listEmail);
 					 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 					 if(listMapEmailList.size()>i){
 						 listMapEmailList.set(i,email);
 					 }else{
 						 listMapEmailList.add(email);
 					 }
-					 eag2012.setEmailLang(listMapEmailList);  
+					 eag2012.setEmailLang(listMapEmailList);
 				 }
 				 // End empty language to the map email
-				 
+
 				 if(accessTable.has("textASSRWebpage")){
 					 List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getWebpageHref();
 					 if(listMapWebpagelList==null){
@@ -3055,11 +3062,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapWebpageValueList.add(webpage);
 					 }
-					 eag2012.setWebpageLang(listMapWebpageValueList); 
-					 
+					 eag2012.setWebpageLang(listMapWebpageValueList);
+
 				 }
 				 //End empty language to the webpage map
-				 
+
 				 if(accessTable.has("textASSRWorkPlaces")){
 					 List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
 					 if(numValue==null){
@@ -3069,7 +3076,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(numValue.size()>i && numValue.get(i)!=null){
 						 numMapMapMap = numValue.get(i);
 					 }else{
-						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 					 }
 					 Map<String, Map<String, List<String>>> numMapMap = null;
 					 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -3109,7 +3116,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(numValue.size()>i && numValue.get(i)!=null){
 						 numMapMapMap = numValue.get(i);
 					 }else{
-						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 					 }
 					 Map<String, Map<String, List<String>>> numMapMap = null;
 					 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -3216,7 +3223,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 }while(accessTable.has(target1) && accessTable.has(target2));
 				 target1 = null;
 				 target2 = null;
-				 
+
 				 if(accessTable.has("textASSRMicrofilmPlaces")){
 					 List<Map<String, Map<String, Map<String, List<String>>>>> nums = eag2012.getNumValue();
 					 if(nums==null){
@@ -3238,7 +3245,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 if(numsMapMapList.size()>0 && numsMapMapList.get(Eag2012.SEARCHROOM)!=null){
 						 numsMapList = numsMapMapList.get(Eag2012.SEARCHROOM);
 					 }else{
-						 numsMapList = new HashMap<String, List<String>>(); 
+						 numsMapList = new HashMap<String, List<String>>();
 					 }
 					 List<String> numsList = null;
 					 if(numsMapList.size()>0 && numsMapList.get(Eag2012.MICROFILM)!=null){
@@ -3336,7 +3343,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setReadersTicketHref(readersTicketHref);
 					 }
 				 }while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
-				 
+
 				 target1 = "textASSRAdvancedOrders";
 				 target2 = "textASSRAOLink";
 				 target3 = "selectASSRAFOIUSelectLanguage";
@@ -3404,7 +3411,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setAdvancedOrdersLang(advancedOrdersLang);
 					 }
 				 }while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
-				 
+
 				 target1 = "textASSRResearchServices";
 				 target2 = "textASSRRSSelectLanguage";
 				 targetNumber=1;
@@ -3427,7 +3434,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
 							 descriptiveNoteMapList = descriptiveNotePValue.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
-							 descriptiveNoteMapList = new HashMap<String, List<String>>(); 
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNoteList = null;
 						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012.RESEARCH_SERVICES)!=null){
@@ -3460,7 +3467,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(descriptiveNotePLang.size()>0 && descriptiveNotePLang.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
 							 descriptiveNoteMapList = descriptiveNotePLang.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
-							 descriptiveNoteMapList = new HashMap<String, List<String>>(); 
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNoteList = null;
 						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012.RESEARCH_SERVICES)!=null){
@@ -3479,7 +3486,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setDescriptiveNotePLang(descriptiveNotesPLang);
 					 }
 				 }while(accessTable.has(target1) && accessTable.has(target2));
-					
+
 				  //library section
 					 if(accessTable.has("selectASLibrary")){
 						 String library = replaceIfExistsSpecialReturnString(accessTable.getString("selectASLibrary"));
@@ -3493,7 +3500,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						    libraryList.add(library);
 						 }
 						 eag2012.setLibraryQuestion(libraryList);
-					
+
 					 }
 					 if(accessTable.has("textASLTelephone_1")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
@@ -3504,7 +3511,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(telephones.size()>i && telephones.get(i)!=null){ //repo
 							 telephonesMap = telephones.get(i);
 						 }else{
-							 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
+							 telephonesMap = new HashMap<String, Map<String, List<String>>>();
 						 }
 						 Map<String, List<String>> telephonesMapList = null;
 						 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -3528,7 +3535,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setTelephoneValue(telephones);
 					 }
-					
+
 					 if(accessTable.has("textASLEmailAddress")){
 						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailHref();
 						 if(listMapEmailValueList==null){
@@ -3553,7 +3560,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASLEmailAddress")));
-						 emailMap.put(Eag2012.LIBRARY,listEmail); 
+						 emailMap.put(Eag2012.LIBRARY,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailValueList.size()>i){
 							 listMapEmailValueList.set(i,email);
@@ -3562,7 +3569,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setEmailHref(listMapEmailValueList);
 					 }
-					
+
 					 if(accessTable.has("textASLEmailLinkTitle")){
 						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
 						 if(listMapEmailList==null){
@@ -3587,7 +3594,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASLEmailLinkTitle")));
-						 emailMap.put(Eag2012.LIBRARY,listEmail); 
+						 emailMap.put(Eag2012.LIBRARY,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
@@ -3621,15 +3628,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add("");
-						 emailMap.put(Eag2012.LIBRARY,listEmail); 
+						 emailMap.put(Eag2012.LIBRARY,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
 						 }else{
 							 listMapEmailList.add(email);
 						 }
-						 eag2012.setEmailLang(listMapEmailList); 
-						 
+						 eag2012.setEmailLang(listMapEmailList);
+
 					 }
 					 //End empty value to lang email
 					 if(accessTable.has("textASLWebpage")){
@@ -3730,8 +3737,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapWebpageValueList.add(webpage);
 						 }
-						 eag2012.setWebpageLang(listMapWebpageValueList); 
-						 
+						 eag2012.setWebpageLang(listMapWebpageValueList);
+
 					 }
 					 //End empty value to lang webpage
 					 if(accessTable.has("textASLMonographocPublication")){
@@ -3743,7 +3750,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(numValue.size()>i && numValue.get(i)!=null){
 							 numMapMapMap = numValue.get(i);
 						 }else{
-							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 						 }
 						 Map<String, Map<String, List<String>>> numMapMap = null;
 						 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -3774,7 +3781,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setNumValue(numValue);
 					 }
-					 
+
 					 if(accessTable.has("textASLSerialPublication")){
 						 List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
 						 if(numValue==null){
@@ -3784,7 +3791,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(numValue.size()>i && numValue.get(i)!=null){
 							 numMapMapMap = numValue.get(i);
 						 }else{
-							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 						 }
 						 Map<String, Map<String, List<String>>> numMapMap = null;
 						 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -3815,9 +3822,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setNumValue(numValue);
 					 }
-					 
+
 					 //internet access
-					 
+
 					 if(accessTable.has("selectASInternetAccess")){
 						 String internet = replaceIfExistsSpecialReturnString(accessTable.getString("selectASInternetAccess"));
 						 List<String> internetList = eag2012.getInternetAccessQuestion();
@@ -3828,10 +3835,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 internetList.set(i,internet);
 						 }else{
 						   internetList.add(internet);
-						 } 
+						 }
 						 eag2012.setInternetAccessQuestion(internetList);
 					 }
-					 
+
 					 target1 = "textASDescription";
 					 target2 = "selectASDSelectLanguage";
 					 targetNumber = 1;
@@ -3873,7 +3880,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 						 }
 						 if(accessTable.has(target2)){
-							
+
 							 List<Map<String, Map<String, List<String>>>> descriptiveNotePLang = eag2012.getDescriptiveNotePLang();
 							 if(descriptiveNotePLang==null){
 								 descriptiveNotePLang = new ArrayList<Map<String, Map<String, List<String>>>>();
@@ -3905,12 +3912,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePLang.add(descriptiveNoteMapMapList);
 							 }
 							 eag2012.setDescriptiveNotePLang(descriptiveNotePLang);
-							 	 
+
 						 }
 					 }while(accessTable.has(target1) && accessTable.has(target2));
-					 
+
 					 //technical services section Restoration Lab
-					 
+
 					 if(accessTable.has("selectASTSRestaurationLab")){
 						 String restoration = replaceIfExistsSpecialReturnString(accessTable.getString("selectASTSRestaurationLab"));
 						 List<String> restorationList = eag2012.getRestorationlabQuestion();
@@ -3924,7 +3931,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setRestorationlabQuestion(restorationList);
 					 }
-					 
+
 					 target1 = "textASTSDescriptionOfRestaurationLab";
 					 target2 = "selectASTSSelectLanguage";
 					 targetNumber = 1;
@@ -3966,7 +3973,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 						 }
 						 if(accessTable.has(target2)){
-							
+
 							 List<Map<String, Map<String, List<String>>>> descriptiveNotePLang = eag2012.getDescriptiveNotePLang();
 							 if(descriptiveNotePLang==null){
 								 descriptiveNotePLang = new ArrayList<Map<String, Map<String, List<String>>>>();
@@ -3997,12 +4004,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 }else{
 								 descriptiveNotePLang.add(descriptiveNoteMapMapList);
 							 }
-							 eag2012.setDescriptiveNotePLang(descriptiveNotePLang); 
-							 
-							 
+							 eag2012.setDescriptiveNotePLang(descriptiveNotePLang);
+
+
 						 }
 					 }while(accessTable.has(target1) && accessTable.has(target2));
-				     
+
 					 if(accessTable.has("textASTSTelephone_1")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 						 if(telephones==null){
@@ -4012,7 +4019,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(telephones.size()>i && telephones.get(i)!=null){ //repo
 							 telephonesMap = telephones.get(i);
 						 }else{
-							 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
+							 telephonesMap = new HashMap<String, Map<String, List<String>>>();
 						 }
 						 Map<String, List<String>> telephonesMapList = null;
 						 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -4036,7 +4043,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setTelephoneValue(telephones);
 					 }
-				
+
 					 if(accessTable.has("textASRSEmail")){
 						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailHref();
 						 if(listMapEmailValueList==null){
@@ -4061,7 +4068,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASRSEmail")));
-						 emailMap.put(Eag2012.RESTORATION_LAB,listEmail); 
+						 emailMap.put(Eag2012.RESTORATION_LAB,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailValueList.size()>i){
 							 listMapEmailValueList.set(i,email);
@@ -4070,7 +4077,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setEmailHref(listMapEmailValueList);
 					 }
-	                 
+
 					 if(accessTable.has("textASRSEmailLinkTitle")){
 						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
 						 if(listMapEmailList==null){
@@ -4095,7 +4102,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASRSEmailLinkTitle")));
-						 emailMap.put(Eag2012.RESTORATION_LAB,listEmail); 
+						 emailMap.put(Eag2012.RESTORATION_LAB,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
@@ -4129,17 +4136,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add("");
-						 emailMap.put(Eag2012.RESTORATION_LAB,listEmail); 
+						 emailMap.put(Eag2012.RESTORATION_LAB,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
 						 }else{
 							 listMapEmailList.add(email);
 						 }
-						 eag2012.setEmailLang(listMapEmailList); 
+						 eag2012.setEmailLang(listMapEmailList);
 					 }
 					 //End empty value to lang email
-	                
+
 					 if(accessTable.has("textASRSWebpage")){
 						 List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getWebpageHref();
 						 if(listMapWebpagelList==null){
@@ -4238,12 +4245,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapWebpageValueList.add(webpage);
 						 }
-						 eag2012.setWebpageLang(listMapWebpageValueList); 
+						 eag2012.setWebpageLang(listMapWebpageValueList);
 					 }
 					 //End empty value to lang webpage
-					 
+
 				    //Reproductions services section
-					 
+
 					 if(accessTable.has("selectASTSReproductionService")){
 						 String reproductionser = replaceIfExistsSpecialReturnString(accessTable.getString("selectASTSReproductionService"));
 						 List<String> reproductionserList = eag2012.getReproductionserQuestion();
@@ -4254,10 +4261,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 reproductionserList.set(i,reproductionser);
 						 }else{
 						   reproductionserList.add(reproductionser);
-						 } 
+						 }
 						 eag2012.setReproductionserQuestion(reproductionserList);
 					 }
-					 
+
 					 target1 = "textASTSDescriptionOfReproductionService";
 					 target2 = "selectASTSRSSelectLanguage";
 					 targetNumber = 1;
@@ -4299,7 +4306,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 						 }
 						 if(accessTable.has(target2)){
-							
+
 							 List<Map<String, Map<String, List<String>>>> descriptiveNotePLang = eag2012.getDescriptiveNotePLang();
 							 if(descriptiveNotePLang==null){
 								 descriptiveNotePLang = new ArrayList<Map<String, Map<String, List<String>>>>();
@@ -4330,12 +4337,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 }else{
 								 descriptiveNotePLang.add(descriptiveNoteMapMapList);
 							 }
-							 eag2012.setDescriptiveNotePLang(descriptiveNotePLang); 
-							 
-							 
+							 eag2012.setDescriptiveNotePLang(descriptiveNotePLang);
+
+
 						 }
 					 }while(accessTable.has(target1) && accessTable.has(target2));
-				     
+
 					 if(accessTable.has("textASTSRSTelephone_1")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 						 if(telephones==null){
@@ -4345,7 +4352,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 if(telephones.size()>i && telephones.get(i)!=null){ //repo
 							 telephonesMap = telephones.get(i);
 						 }else{
-							 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
+							 telephonesMap = new HashMap<String, Map<String, List<String>>>();
 						 }
 						 Map<String, List<String>> telephonesMapList = null;
 						 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null){
@@ -4369,7 +4376,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setTelephoneValue(telephones);
 					 }
-				
+
 					 if(accessTable.has("textASTSRSEmailAddress")){
 						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailHref();
 						 if(listMapEmailValueList==null){
@@ -4394,7 +4401,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASTSRSEmailAddress")));
-						 emailMap.put(Eag2012.REPRODUCTIONSER,listEmail); 
+						 emailMap.put(Eag2012.REPRODUCTIONSER,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailValueList.size()>i){
 							 listMapEmailValueList.set(i,email);
@@ -4403,7 +4410,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setEmailHref(listMapEmailValueList);
 					 }
-	                 
+
 					 if(accessTable.has("textASTSEmailAddressLinkTitle")){
 						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
 						 if(listMapEmailList==null){
@@ -4428,7 +4435,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASTSEmailAddressLinkTitle")));
-						 emailMap.put(Eag2012.REPRODUCTIONSER,listEmail); 
+						 emailMap.put(Eag2012.REPRODUCTIONSER,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
@@ -4462,14 +4469,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add("");
-						 emailMap.put(Eag2012.REPRODUCTIONSER,listEmail); 
+						 emailMap.put(Eag2012.REPRODUCTIONSER,listEmail);
 						 email.put(Eag2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
 						 }else{
 							 listMapEmailList.add(email);
 						 }
-						 eag2012.setEmailLang(listMapEmailList); 
+						 eag2012.setEmailLang(listMapEmailList);
 					 }
 					 //End empty value to lang email
 					 if(accessTable.has("textASTSRSWebpage")){
@@ -4584,11 +4591,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 microformList.set(i,microform);
 						 }else{
 						   microformList.add(microform);
-						 } 
+						 }
 						 eag2012.setMicroformserQuestion(microformList);
 					 }
-					 
-					 
+
+
 					 //photograph
 					 if(accessTable.has("selectASTSRSPhotographServices")){
 						 String photograph = replaceIfExistsSpecialReturnString(accessTable.getString("selectASTSRSPhotographServices"));
@@ -4600,11 +4607,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 photographList.set(i,photograph);
 						 }else{
 							 photographList.add(photograph);
-						 } 
+						 }
 						 eag2012.setPhotographserQuestion(photographList);
 					 }
-					 
-					 
+
+
 					 //digitalser
 					 if(accessTable.has("selectASTSRSDigitalServices")){
 						 String digitalser = replaceIfExistsSpecialReturnString(accessTable.getString("selectASTSRSDigitalServices"));
@@ -4616,10 +4623,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 digitalserList.set(i,digitalser);
 						 }else{
 							 digitalserList.add(digitalser);
-						 } 
+						 }
 						 eag2012.setDigitalserQuestion(digitalserList);
 					 }
-					 
+
 					 //photocopyser
 					 if(accessTable.has("selectASTSRSPhotocopyServices")){
 						 String photocopyser = replaceIfExistsSpecialReturnString(accessTable.getString("selectASTSRSPhotocopyServices"));
@@ -4631,10 +4638,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 photocopyserList.set(i,photocopyser);
 						 }else{
 							 photocopyserList.add(photocopyser);
-						 } 
+						 }
 						 eag2012.setPhotocopyserQuestion(photocopyserList);
 					 }
-					
+
 					//Recreational services
 				 	// Refreshment area and refreshment area lang
 					j = 0;
@@ -4815,7 +4822,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageValue(listMapWebList); 
+								eag2012.setWebpageValue(listMapWebList);
 							}
 							//Add empty value to lang webpage
 							if(accessTable.has(target2) || accessTable.has(target3)){
@@ -4849,7 +4856,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageLang(listMapWebList); 
+								eag2012.setWebpageLang(listMapWebList);
 							}
 							//End empty value to lang webpage
 							if(accessTable.has(target4)){
@@ -4886,7 +4893,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
 							}
 						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3) && accessTable.has(target4));
-						
+
 						target1 = "textASReSeToursAndSessions";
 						target2 = "textASReSeTSWebpage";
 						target3 = "textASReSeWebpageTSLinkTitle";
@@ -4995,7 +5002,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageValue(listMapWebList); 
+								eag2012.setWebpageValue(listMapWebList);
 							}
 							//Add empty value to lang webpage
 							if(accessTable.has(target2) || accessTable.has(target3)){
@@ -5029,7 +5036,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageLang(listMapWebList); 
+								eag2012.setWebpageLang(listMapWebList);
 							}
 							//End empty value to lang webpage
 							if(accessTable.has(target4)){
@@ -5066,7 +5073,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
 							}
 						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3) && accessTable.has(target4));
-						
+
 						target1 = "textASReSeOtherServices";
 						target2 = "textASReSeOSWebpage";
 						target3 = "textASReSeWebpageOSLinkTitle";
@@ -5175,7 +5182,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageValue(listMapWebList); 
+								eag2012.setWebpageValue(listMapWebList);
 							}
 							//Add empty lang webpage
 							if(accessTable.has(target2) || accessTable.has(target2)){
@@ -5209,7 +5216,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageLang(listMapWebList); 	
+								eag2012.setWebpageLang(listMapWebList);
 							}
 							//End empty lang webpage
 							if(accessTable.has(target4)){
@@ -5249,18 +5256,18 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						++i;
 				}
 			}
-			return eag2012;	
+			return eag2012;
 		}
-		
+
 		private Eag2012 parseContactJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
 			JSONObject contact = jsonObj.getJSONObject("contact");
 			if(contact!=null){
 				int x = 0;
 				while(contact.has("contactTable_"+(x+1))){ //each child of contact is the container of visitor address and all attributes
-					
+
 					JSONObject contactTable = contact.getJSONObject("contactTable_"+(x+1));
 					//Contact visitorsAddress
-					
+
 					if(contactTable.has("textNameOfRepository")){
 					String nameOfRepository = replaceIfExistsSpecialReturnString(contactTable.getString("textNameOfRepository"));
 					List<String> repositorNames = eag2012.getRepositoryNameValue();
@@ -5279,7 +5286,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					rolesOfRepository.add(roleOfRepository);
 					eag2012.setRepositoryRoleValue(rolesOfRepository);
 				}
-				
+
 				JSONObject visitorAddress = contactTable.getJSONObject("visitorsAddress");
 				if(visitorAddress!=null){
 					List<String> listStreet = new ArrayList<String>();
@@ -5291,14 +5298,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<String> listLatitudes = new ArrayList<String>();
 					List<String> listLongitudes = new ArrayList<String>();
 					List<String> listStreetLanguage = new ArrayList<String>();
-					
+
 					int i=1;
 					if(visitorAddress.has("contactTableVisitorsAddress_"+i)){
-				    	
+
 				      do{
 				    	    JSONObject visitorAddressTable = visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i);
 							listStreet.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textContactStreetOfTheInstitution")));
-							listStreetLanguage.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("selectLanguageVisitorAddress"))); 
+							listStreetLanguage.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("selectLanguageVisitorAddress")));
 				            listCities.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textContactCityOfTheInstitution")));
 				            listDistrict.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textContactDistrictOfTheInstitution")));
 				            listLocalAuthority.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textContactCountyOfTheInstitution")));
@@ -5306,10 +5313,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				            listCountries.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textContactCountryOfTheInstitution")));
 				            listLatitudes.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textContactLatitudeOfTheInstitution")));
 				            listLongitudes.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textContactLongitudeOfTheInstitution")));
-				            
-				      
+
+
 				      }while(visitorAddress.has("contactTableVisitorsAddress_"+(++i)));
-				        
+
 				        List<Map<String, List<String>>> tempListList = null;
 				        Map<String, List<String>> tempListMap = null;
 				        if(eag2012.getStreetValue()==null){
@@ -5449,10 +5456,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListList.add(tempListMap);
 				        }
 						eag2012.setLocationLongitude(tempListList);
-				      
+
 				      }
 				}
-				
+
 				JSONObject postalAddress = contactTable.getJSONObject("postalAddress");
 				if(postalAddress!=null){
 					List<String> listStreet = new ArrayList<String>();
@@ -5460,15 +5467,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<String> listCities = new ArrayList<String>();
 					int i=1;
 					if(postalAddress.has("contactTablePostalAddress_"+i)){
-						
+
 						do{
 							JSONObject postalAddressTable = postalAddress.getJSONObject("contactTablePostalAddress_"+i);
 							listStreet.add(replaceIfExistsSpecialReturnString(postalAddressTable.getString("textContactPAStreet")));
 							listStreetLanguage.add(replaceIfExistsSpecialReturnString(postalAddressTable.getString("selectContactLanguagePostalAddress")));
 							listCities.add(replaceIfExistsSpecialReturnString(postalAddressTable.getString("textContactPACity")));
-							
+
 						}while(postalAddress.has("contactTablePostalAddress_"+(++i)));
-						
+
 						//begin listStreet
 						List<Map<String, List<String>>> tempListList2 = null;
 						if(eag2012.getPostalStreetValue()==null){
@@ -5617,7 +5624,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					if(telephones.size()>x && telephones.get(x)!=null){ //repo
 						telephonesMap = telephones.get(x);
 					}else{
-						telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
+						telephonesMap = new HashMap<String, Map<String, List<String>>>();
 					}
 					Map<String, List<String>> telephonesMapList = null;
 					if(telephonesMap.size()>0 && telephonesMap.get(Eag2012.TAB_CONTACT)!=null){
@@ -5641,7 +5648,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}
 					eag2012.setTelephoneValue(telephones);
 				}
-				
+
 			    i=0;
 				while(contactTable.has("textContactFaxOfTheInstitution_"+(++i))){
 					List<Map<String, List<String>>> listMapFaxList = null;
@@ -5669,9 +5676,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						listMapFaxList.add(fax);
 					}
-					eag2012.setFaxValue(listMapFaxList); 	
+					eag2012.setFaxValue(listMapFaxList);
 				}
-				
+
 				 i=1;
 				 if (x > 0) {
 					 i = 0;
@@ -5737,7 +5744,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(replaceIfExistsSpecialReturnString(contactTable.getString("textContactLinkTitleForEmailOfTheInstitution_"+i)));
-					  
+
 					 emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
 					 email.put(Eag2012.TAB_CONTACT, emailMap);
 					 if(listMapEmailValueList.size()>x){
@@ -5745,7 +5752,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapEmailValueList.add(email);
 					 }
-					 eag2012.setEmailValue(listMapEmailValueList); 	
+					 eag2012.setEmailValue(listMapEmailValueList);
 				 }
 				 i=1;
 				 if (x > 0) {
@@ -5775,7 +5782,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(replaceIfExistsSpecialReturnString(contactTable.getString("selectEmailLanguageOfTheInstitution_"+i)));
-					  
+
 					 emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
 					 email.put(Eag2012.TAB_CONTACT, emailMap);
 					 if(listMapEmailValueList.size()>x){
@@ -5783,7 +5790,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapEmailValueList.add(email);
 					 }
-					 eag2012.setEmailLang(listMapEmailValueList); 	
+					 eag2012.setEmailLang(listMapEmailValueList);
 				 }
 				 i=1;
 				 if (x > 0) {
@@ -5820,7 +5827,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapWebpageHrefList.add(mapMapListWeb);
 					 }
-					 eag2012.setWebpageHref(listMapWebpageHrefList); 	
+					 eag2012.setWebpageHref(listMapWebpageHrefList);
 				 }
 				 i=1;
 				 if (x > 0) {
@@ -5857,7 +5864,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapWebpageHrefList.add(mapMapListWeb);
 					 }
-					 eag2012.setWebpageLang(listMapWebpageHrefList); 	
+					 eag2012.setWebpageLang(listMapWebpageHrefList);
 				 }
 				 i=1;
 				 if (x > 0) {
@@ -5894,14 +5901,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapWebList.add(mapMapListWeb);
 					 }
-					 eag2012.setWebpageValue(listMapWebList); 	
+					 eag2012.setWebpageValue(listMapWebList);
 				}
 				x++;
 			}
 		}
-		return eag2012;	
+		return eag2012;
 	}
-	
+
 	private Eag2012 parseIdentityJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
 		JSONObject identity = jsonObj.getJSONObject("identity");
 		if(identity!=null){
@@ -6095,9 +6102,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							yearValue.add(yearMapMapMap);
 						}
 						eag2012.setFromDateStandardDate(yearValue);
-					
+
 					}
-					if(previousNameOfTheArchive.has("textYearWhenThisNameWasUsedTo_"+j)){ 
+					if(previousNameOfTheArchive.has("textYearWhenThisNameWasUsedTo_"+j)){
 					//Identity Range Year To
 						List<Map<String, Map<String, Map<String, List<List<String>>>>>> yearValue = eag2012.getToDateStandardDate();
 						if(yearValue==null){
@@ -6155,7 +6162,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							yearValue.add(yearMapMapMap);
 						}
 						eag2012.setToDateStandardDate(yearValue);
-					}	//end if toDate			
+					}	//end if toDate
 				}//end While rangeDates
 				// Check if list of "Date" and "DateRange" has the same size.
 					List<List<String>> dateList = null;
@@ -6224,11 +6231,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					} else if (dateList.size() < dateFromList.size()) {
 						dateList.add(new ArrayList<String>());
 					}
-			  }//end while 
+			  }//end while
 			}//end if formerly name
 			//Identity Type of the Institution
 			if (identity.has("selectTypeOfTheInstitution")){
-				List<String> listRepositoryType = new ArrayList<String>(); 
+				List<String> listRepositoryType = new ArrayList<String>();
 				listRepositoryType.add(replaceIfExistsSpecialReturnString(identity.getString("selectTypeOfTheInstitution")));
 				eag2012.setRepositoryTypeValue(listRepositoryType);
 			}
@@ -6237,9 +6244,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	/**
-	 * Fill a eag2012 object got from params, fill it with the information provided into 
-	 * JSONObject (got from params) and returns the target EAG2012 object. 
-	 * 
+	 * Fill a eag2012 object got from params, fill it with the information provided into
+	 * JSONObject (got from params) and returns the target EAG2012 object.
+	 *
 	 * @param Eag2012
 	 * @param JSONObj
 	 * @return Eag2012
@@ -6256,10 +6263,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			//used afterwards
 			//eag2012.setCountryValue(yourInstitution.get("textYIInstitutionCountryCode").toString()); //this tag is used into each repository. TODO, needs to be parsed to ISO3_Characters
 			//eag2012.setRepositoridRepositorycode(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
-			
-			
+
+
 		//	  eag2012.setOtherRepositorId(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
-			
+
 		//	eag2012.setRepositoridRepositorycode(eag2012.getOtherRepositorId());
 			eag2012.setRecordIdValue(replaceIfExistsSpecialReturnString(yourInstitution.getString("textYIIdUsedInAPE")));
 			//looper
@@ -6268,17 +6275,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			String localTypeNo = replaceIfExistsSpecialReturnString(yourInstitution.getString("selectYICodeISIL"));
 			otherRecordIds.add(replaceIfExistsSpecialReturnString(yourInstitution.getString("textYIIdentifierOfTheInstitution")));
 			localtypeOtherRecordIds.add(replaceIfExistsSpecialReturnString(yourInstitution.getString("selectYICodeISIL")));
-	
+
 			if(Eag2012.OPTION_NO.equalsIgnoreCase(localTypeNo)) {
 				eag2012.setOtherRepositorId(replaceIfExistsSpecialReturnString(yourInstitution.getString("textYIIdentifierOfTheInstitution") ));
-			 
+
 			}
 			eag2012.setRepositoridRepositorycode(replaceIfExistsSpecialReturnString(yourInstitution.getString("textYIIdUsedInAPE")));
-			
+
 			for(int i=0;yourInstitution.has("otherRepositorId_"+(i)) && yourInstitution.has("selectOtherRepositorIdCodeISIL_"+i);i++){
 				localTypeNo = replaceIfExistsSpecialReturnString(yourInstitution.getString("selectOtherRepositorIdCodeISIL_"+(i)));
 				if((Eag2012.OPTION_NO.equalsIgnoreCase(localTypeNo)) && eag2012.getOtherRepositorId()==null){
-				  eag2012.setOtherRepositorId(replaceIfExistsSpecialReturnString(yourInstitution.getString("otherRepositorId_"+(i))));	
+				  eag2012.setOtherRepositorId(replaceIfExistsSpecialReturnString(yourInstitution.getString("otherRepositorId_"+(i))));
 				}
 				otherRecordIds.add(replaceIfExistsSpecialReturnString(yourInstitution.getString("otherRepositorId_"+(i))));
 				localtypeOtherRecordIds.add(replaceIfExistsSpecialReturnString(yourInstitution.getString("selectOtherRepositorIdCodeISIL_"+i)));
@@ -6289,7 +6296,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if(localtypeOtherRecordIds.size()>0){
 				eag2012.setOtherRecordIdLocalType(localtypeOtherRecordIds);
 			}
-			
+
 			List<String> tempList = new ArrayList<String>();
 			if(yourInstitution.has("textYINameOfTheInstitution")){
 				tempList.add(replaceIfExistsSpecialReturnString(yourInstitution.getString("textYINameOfTheInstitution")));
@@ -6331,7 +6338,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						listLongitudes.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("textYILongitude")));
 						listStreetLanguage.add(replaceIfExistsSpecialReturnString(visitorAddressTable.getString("selectYIVASelectLanguage")));
 					}//"yiTableVisitorsAddress_"+(++i)
-					
+
 					List<Map<String, List<String>>> tempListList = new ArrayList<Map<String, List<String>>>();//at first time list must be in 0 position for first <location> tag into <repository> and
 					HashMap<String, List<String>> listTempMap = new HashMap<String, List<String>>();
 					listTempMap.put(Eag2012.TAB_YOUR_INSTITUTION,listStreets);
@@ -6449,7 +6456,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				//end listMunicipalities
 			}
 			//your institution - last part
-			
+
 			if(yourInstitution.has("textYITelephone")){
 				List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 				if(telephones==null){
@@ -6459,7 +6466,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(telephones.size()>0 && telephones.get(0)!=null){ //repo
 					telephonesMap = telephones.get(0);
 				}else{
-					telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
+					telephonesMap = new HashMap<String, Map<String, List<String>>>();
 				}
 				Map<String, List<String>> telephonesMapList = null;
 				if(telephonesMap.size()>0 && telephonesMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
@@ -6674,7 +6681,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 			}while(yourInstitution.has(target1));
-			
+
 			targetNumber = 1;
 			target1 = "selectTextYILangWebpage";
 			do{
@@ -6714,18 +6721,18 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 			}while(yourInstitution.has(target1));
-			
+
 			targetNumber = 1;
 			target1 = "textYIOpeningTimes";
 			do{
 				if(yourInstitution.has(target1)){
 					List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
 					 if(openingValues == null){
-					   openingValues = new ArrayList<Map<String,List<String>>>();  
+					   openingValues = new ArrayList<Map<String,List<String>>>();
 					 }
 					 Map<String, List<String>> openingMap = null;
 					 if((openingValues.size() > 0) && (openingValues.get(0)!=null)){
-					   openingMap = openingValues.get(0);	  
+					   openingMap = openingValues.get(0);
 					 }else{
 						 openingMap = new HashMap<String,List<String>>();
 					 }
@@ -6753,11 +6760,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(yourInstitution.has(target1)){
 					List<Map<String,List<String>>> openingValues = eag2012.getOpeningLang();
 					 if(openingValues == null){
-					   openingValues = new ArrayList<Map<String,List<String>>>();  
+					   openingValues = new ArrayList<Map<String,List<String>>>();
 					 }
 					 Map<String, List<String>> openingMap = null;
 					 if((openingValues.size() > 0) && (openingValues.get(0)!=null)){
-					   openingMap = openingValues.get(0);	  
+					   openingMap = openingValues.get(0);
 					 }else{
 						 openingMap = new HashMap<String,List<String>>();
 					 }
@@ -6785,11 +6792,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(yourInstitution.has(target1)){
 					List<Map<String,List<String>>> closingValues = eag2012.getClosingStandardDate();
 					 if(closingValues == null){
-						 closingValues = new ArrayList<Map<String,List<String>>>();  
+						 closingValues = new ArrayList<Map<String,List<String>>>();
 					 }
 					 Map<String, List<String>> closingMap = null;
 					 if((closingValues.size() > 0) && (closingValues.get(0)!=null)){
-						 closingMap = closingValues.get(0);	  
+						 closingMap = closingValues.get(0);
 					 }else{
 						 closingMap = new HashMap<String,List<String>>();
 					 }
@@ -6817,11 +6824,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(yourInstitution.has(target1)){
 					List<Map<String,List<String>>> closingValues = eag2012.getClosingLang();
 					 if(closingValues == null){
-						 closingValues = new ArrayList<Map<String,List<String>>>();  
+						 closingValues = new ArrayList<Map<String,List<String>>>();
 					 }
 					 Map<String, List<String>> closingMap = null;
 					 if((closingValues.size() > 0) && (closingValues.get(0)!=null)){
-						 closingMap = closingValues.get(0);	  
+						 closingMap = closingValues.get(0);
 					 }else{
 						 closingMap = new HashMap<String,List<String>>();
 					 }
@@ -6846,7 +6853,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if(yourInstitution.has("selectAccessibleToThePublic")){
 				List<Map<String, String>> accessQuestions = eag2012.getAccessQuestion();
 				if(accessQuestions == null){
-					accessQuestions = new ArrayList<Map<String, String>>(); 
+					accessQuestions = new ArrayList<Map<String, String>>();
 				}
 				Map<String, String> accessQuestionRepo = null;
 				if(accessQuestions.size()>0 && accessQuestions.get(0)!=null){
@@ -6868,13 +6875,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(yourInstitution.has(target1)){
 					List<Map<String, List<String>>> restAccessValue = eag2012.getRestaccessValue();
 					if(restAccessValue == null){
-						restAccessValue = new ArrayList<Map<String, List<String>>>(); 
+						restAccessValue = new ArrayList<Map<String, List<String>>>();
 					}
 					Map<String, List<String>> restAccessMap = null;
 					if(restAccessValue.size()>0 && restAccessValue.get(0)!=null){
 						restAccessMap = restAccessValue.get(0);
 					}else{
-						restAccessMap = new HashMap<String, List<String>>(); 
+						restAccessMap = new HashMap<String, List<String>>();
 					}
 					List<String> restAccessList = null;
 					if(restAccessMap.size()>0 && restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
@@ -6889,7 +6896,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						restAccessValue.add(restAccessMap);
 					}
-					eag2012.setRestaccessValue(restAccessValue); 
+					eag2012.setRestaccessValue(restAccessValue);
 				}
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
@@ -6900,13 +6907,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(yourInstitution.has(target1)){
 					List<Map<String, List<String>>> restAccessValue = eag2012.getRestaccessLang();
 					if(restAccessValue == null){
-						restAccessValue = new ArrayList<Map<String, List<String>>>(); 
+						restAccessValue = new ArrayList<Map<String, List<String>>>();
 					}
 					Map<String, List<String>> restAccessMap = null;
 					if(restAccessValue.size()>0 && restAccessValue.get(0)!=null){
 						restAccessMap = restAccessValue.get(0);
 					}else{
-						restAccessMap = new HashMap<String, List<String>>(); 
+						restAccessMap = new HashMap<String, List<String>>();
 					}
 					List<String> restAccessList = null;
 					if(restAccessMap.size()>0 && restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
@@ -6921,7 +6928,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						restAccessValue.add(restAccessMap);
 					}
-					eag2012.setRestaccessLang(restAccessValue); 
+					eag2012.setRestaccessLang(restAccessValue);
 				}
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
@@ -6929,7 +6936,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if(yourInstitution.has("selectFacilitiesForDisabledPeopleAvailable")){
 				List<Map<String, String>> accessibilityQuestions = eag2012.getAccessibilityQuestion();
 				if(accessibilityQuestions == null){
-					accessibilityQuestions = new ArrayList<Map<String, String>>(); 
+					accessibilityQuestions = new ArrayList<Map<String, String>>();
 				}
 				Map<String, String> accessibilityQuestionRepo = null;
 				if(accessibilityQuestions.size()>0 && accessibilityQuestions.get(0)!=null){
@@ -6943,7 +6950,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}else{
 					accessibilityQuestions.add(accessibilityQuestionRepo);
 				}
-				eag2012.setAccessibilityQuestion(accessibilityQuestions);	
+				eag2012.setAccessibilityQuestion(accessibilityQuestions);
 			}
 			targetNumber = 1;
 			target1 = "futherInformationOnExistingFacilities";
@@ -6951,11 +6958,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(yourInstitution.has(target1)){
 					List<Map<String, List<String>>> accessibilityValue =eag2012.getAccessibilityValue();
 					if(accessibilityValue == null){
-						accessibilityValue = new ArrayList<Map<String, List<String>>>();	
+						accessibilityValue = new ArrayList<Map<String, List<String>>>();
 					}
 					Map<String, List<String>> accessibilityMap = null;
 					if(accessibilityValue.size()>0 && accessibilityValue.get(0)!= null){
-					  accessibilityMap = accessibilityValue.get(0);	
+					  accessibilityMap = accessibilityValue.get(0);
 					}else{
 						accessibilityMap = new HashMap<String, List<String>>();
 					}
@@ -6972,7 +6979,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						accessibilityValue.add(accessibilityMap);
 					}
-					eag2012.setAccessibilityValue(accessibilityValue); 	
+					eag2012.setAccessibilityValue(accessibilityValue);
 				}
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
@@ -6983,11 +6990,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(yourInstitution.has(target1)){
 					List<Map<String, List<String>>> accessibilityValue =eag2012.getAccessibilityLang();
 					if(accessibilityValue == null){
-						accessibilityValue = new ArrayList<Map<String, List<String>>>();	
+						accessibilityValue = new ArrayList<Map<String, List<String>>>();
 					}
 					Map<String, List<String>> accessibilityMap = null;
 					if(accessibilityValue.size()>0 && accessibilityValue.get(0)!= null){
-					  accessibilityMap = accessibilityValue.get(0);	
+					  accessibilityMap = accessibilityValue.get(0);
 					}else{
 						accessibilityMap = new HashMap<String, List<String>>();
 					}
@@ -7004,7 +7011,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						accessibilityValue.add(accessibilityMap);
 					}
-					eag2012.setAccessibilityLang(accessibilityValue); 	
+					eag2012.setAccessibilityLang(accessibilityValue);
 				}
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
@@ -7019,7 +7026,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}
 					List<String> resourceList = null;
 					if(resourceRelationHref.size()>0 && resourceRelationHref.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
-						resourceList = resourceRelationHref.get(Eag2012.TAB_YOUR_INSTITUTION); 
+						resourceList = resourceRelationHref.get(Eag2012.TAB_YOUR_INSTITUTION);
 					}else{
 						resourceList = new ArrayList<String>();
 					}
@@ -7062,7 +7069,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 			}while(yourInstitution.has(target1));
-			
+
 			target1 = "selectYIReferencetoHoldingsguide";
 			targetNumber = 1;
 			do{
@@ -7095,7 +7102,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				targetNumber++;
 				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 			}while(yourInstitution.has(target1));
-			
+
 			if(yourInstitution.has("selectYIContinent")){
 				String continent = replaceIfExistsSpecialReturnString(yourInstitution.getString("selectYIContinent"));
 				eag2012.setGeogareaValue(continent);
@@ -7115,7 +7122,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		} catch (UnsupportedEncodingException e) {
 			log.error("No date decode possible.");
 		};
-		
+
 		return StringEscapeUtils.unescapeHtml(unescapeString);
 	}
 
@@ -7159,7 +7166,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		List<Country> countryList = countryDAO.getCountries(countryCode);
 		if (countryList != null && !countryList.isEmpty()) {
 			Country country = countryList.get(0);
-			Set<CouAlternativeName> couAlternativeNameSet = country.getCouAlternativeNames();		
+			Set<CouAlternativeName> couAlternativeNameSet = country.getCouAlternativeNames();
 			//check if there is a valid list or a empty one
 			if(couAlternativeNameSet != null){
 				//Get the country name in the language of the country
@@ -7175,12 +7182,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}
 			        }
 					if(localeList!=null && !localeList.isEmpty()){
-						Iterator<Locale> localeIt = localeList.iterator();					
+						Iterator<Locale> localeIt = localeList.iterator();
 						boolean found = false;
 						while (!found && localeIt.hasNext()) {
 							Locale local = localeIt.next();
 							String langCode = local.getLanguage();
-							
+
 							lang = langDAO.getLangByIso2Name(langCode);
 							if (lang!=null){
 								countryName = iterate(lang, couAlternativeNameSet);
