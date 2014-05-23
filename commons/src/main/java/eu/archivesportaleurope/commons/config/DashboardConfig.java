@@ -69,6 +69,7 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 	@Override
 	protected void initBeforeFinalize() {
         try {
+        	System.setProperty("org.apache.xml.dtm.DTMManager", "org.apache.xml.dtm.ref.DTMManagerDefault");
        		xpathFactory = XPathFactory.newInstance(XPathFactory.DEFAULT_OBJECT_MODEL_URI,"org.apache.xpath.jaxp.XPathFactoryImpl", this.getClass().getClassLoader());
 		} catch (XPathFactoryConfigurationException e) {
 			throw new BadConfigurationException(e);
