@@ -54,7 +54,7 @@ public class SolrPublisher {
 	public static final String COLON = ":";
 	private static final Logger LOG = Logger.getLogger(SolrPublisher.class);
 	public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
-	//private int numberOfPublishedItems = 0;
+	private int numberOfPublishedItems = 0;
 	private String language;
 	private String archdesc_langmaterial;
 	private String eadidstring;
@@ -153,6 +153,7 @@ public class SolrPublisher {
 					+ "/ead:ead/ead:archdesc/ead:did/ead:physdesc or " + "/ead:ead/ead:archdesc/ead:did/ead:dao");
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(true);
+			factory.setIgnoringComments(true);  
 			builder = factory.newDocumentBuilder();
 		} catch (Exception e) {
 			LOG.info(e.getMessage(), e);
@@ -517,6 +518,8 @@ public class SolrPublisher {
 		if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
 			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
+			numberOfPublishedItems += MAX_NUMBER_OF_PENDING_DOCS;
+			LOG.debug(this.eadidstring + " #published: " + numberOfPublishedItems);
 		}
 	}
 
@@ -529,6 +532,8 @@ public class SolrPublisher {
 	public void commitAll(EADCounts eadCounts) throws MalformedURLException, SolrServerException, IOException {
 		if (docs.size() > 0) {
 			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
+			numberOfPublishedItems += docs.size();
+			LOG.debug(this.eadidstring + " #published: " + numberOfPublishedItems);
 			docs = new ArrayList<SolrInputDocument>();
 		}
 		removeWarnings();
