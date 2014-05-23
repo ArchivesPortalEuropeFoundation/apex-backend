@@ -45,7 +45,8 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	
 
 	public Long countCLevels(Class<? extends Ead> clazz, Integer id);
-
+	public List<CLevel> getCLevels(Class<? extends Ead> clazz, Integer id, int pageNumber, int pageSize);
+	
 	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid);
 	public CLevel getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Long id);
 }

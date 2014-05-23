@@ -75,7 +75,20 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		query.setParameter("fileId", id);		
 		return query.getSingleResult();
 	}
-
+	@Override
+	public List<CLevel> getCLevels(Class<? extends Ead> clazz, Integer id, int pageNumber, int pageSize){
+		String propertyName = "faId";
+		if (clazz.equals(HoldingsGuide.class))
+			propertyName = "hgId";
+		else if (clazz.equals(SourceGuide.class))
+			propertyName = "sgId";
+		TypedQuery<CLevel> query = getEntityManager().createQuery(
+				"SELECT clevel FROM CLevel clevel WHERE clevel.eadContent." + propertyName+ " = :fileId", CLevel.class);
+		query.setParameter("fileId", id);
+		query.setMaxResults(pageSize);
+		query.setFirstResult(pageSize * (pageNumber - 1));
+		return query.getResultList();
+	}
 	public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends Ead> clazz, int firstResult, int maxResult) {
 		String propertyName = "faId";
 		if (clazz.equals(HoldingsGuide.class))
