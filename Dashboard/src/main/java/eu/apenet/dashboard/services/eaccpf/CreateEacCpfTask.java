@@ -108,25 +108,15 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         Map<String, String> titleMap = new HashMap<String, String>();
         try {
 
-            if (ExistingFilesChecker.isElementContent(path, "nameEntryParallel")) {
-                String result = ExistingFilesChecker.extractAttributeFromXML(path, "eac-cpf/cpfDescription/identity/nameEntryParallel/nameEntry/part", "localType", false, true);
-                if (result.equalsIgnoreCase("corpname") || (result.equalsIgnoreCase("persname")) || result.equalsIgnoreCase("famname") || result.equalsIgnoreCase("error")) {
-                    // the title is the first occurrence of the element nameEntryParallel/part
-                    title = ExistingFilesChecker.extractAttributeFromXML(path, "eac-cpf/identity/nameEntryParallel/nameEntry/part", null, true, true);
-                } else {
-                    // the title is formed by "surname, firstname patronymic"
-                    titleMap = searchForAllElementTitle(path, "eac-cpf/cpfDescription/identity/nameEntryParallel/nameEntry/part");
-                }
-            } else { //only has "nameEntry"
-                String result = ExistingFilesChecker.extractAttributeFromXML(path, "eac-cpf/cpfDescription/identity/nameEntry/part", "localType", false, true);
-                if (result.equalsIgnoreCase("corpname") || (result.equalsIgnoreCase("persname")) || result.equalsIgnoreCase("famname") || result.equalsIgnoreCase("error")) {
-                    // the title is the first occurrence of the element nameEntry/part
-                    title = ExistingFilesChecker.extractAttributeFromXML(path, "eac-cpf/cpfDescription/identity/nameEntry/part", null, true, true);
-                } else {
-                    // the title is formed by "surname, firstname patronymic"
-                    titleMap = searchForAllElementTitle(path, "eac-cpf/cpfDescription/identity/nameEntry/part");
-                }
-            }
+        	String result = ExistingFilesChecker.extractAttributeFromXML(path, "nameEntry/part", "localType", true, true);
+        	if (result.equalsIgnoreCase("corpname") || (result.equalsIgnoreCase("persname")) || result.equalsIgnoreCase("famname") || result.equalsIgnoreCase("error")) {
+        		//the title is the first occurrence of the element nameEntry/part
+        		title = ExistingFilesChecker.extractAttributeFromXML(path, "nameEntry/part", null, true, true);
+        	} else{
+        		// the title is formed by "surname, firstname patronymic"
+                titleMap = searchForAllElementTitle(path, "nameEntry/part");
+        	}
+        	
             //List the elements if the titleMap is not empty
             if (titleMap != null && !titleMap.isEmpty()) {
                 Iterator<?> it = titleMap.entrySet().iterator();
@@ -203,9 +193,9 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
     }
 
     /**
-     * Method to recover all the values of the one repeatable element.
+     * Method to recover all the values of <part> in one repeatable element <nameEntry>.
      *
-     * @param element, the repeatable element
+     * @param element, the repeatable element <part>
      *
      * @return all the values of the element
      */
@@ -236,11 +226,11 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                 switch (input.next()) {
                     case XMLEvent.START_ELEMENT:
                         if (input.getLocalName().equalsIgnoreCase(pathElements[(pathElements.length - 1)])) {
-                            addText = true;
                             for (int i = 0; i < input.getAttributeCount(); i++) {
                                 if (input.getAttributeLocalName(i).equals("localType") && (input.getAttributeValue(i).equals("surname")
                                         || (input.getAttributeValue(i).equals("firstname")) || (input.getAttributeValue(i).equals("patronymic")))) {
                                     localTypeValue = input.getAttributeValue(i);
+                                    addText = true;
                                 }
                             }
                         }
@@ -260,6 +250,9 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                         }
                         break;
                     case XMLEvent.END_ELEMENT:
+                    	if (input.getLocalName().equalsIgnoreCase(pathElements[0])){  //if it's nameEntry final 
+                    		abort = true;
+                    	}
                         break;
                 }
             }
