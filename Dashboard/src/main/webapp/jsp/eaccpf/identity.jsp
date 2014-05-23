@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+F<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s" %>
 
 <div id="headerContainer">
@@ -15,7 +15,7 @@
                     <th class="sectionHeader" colspan="4">Name</th>
                 </tr>
                 <tr id="trNamePart_1">
-                    <td><label for="textPersonName">Full name or part of name:*</label></td>
+                    <td><label for="textPersonName"><b>Full name or part of name:*</b></label></td>
                     <td><input type="text" id="textPersonName" name="identityPersonName_<s:property value="#status.index + 1" />_part_1" required="required" value="<s:property value="#current.name" />" /></td>
                     <td><label for="identityComponentOfName">Component of the name:</label></td>
                     <td>
@@ -103,7 +103,7 @@
                 <th class="sectionHeader" colspan="4">Name</th>
             </tr>
             <tr id="trNamePart_1">
-                <td><label for="textPersonName">Full name or part of name:*</label></td>
+                <td><label for="textPersonName"><b>Full name or part of name:*</b></label></td>
                 <td><input type="text" id="textPersonName" name="identityPersonName_1_part_1" /></td>
                 <td><label for="identityComponentOfName">Component of the name:</label></td>
                 <td>
