@@ -63,8 +63,8 @@ public class StoreEacCpfAction extends EacCpfAction {
             jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EacCpfNamespaceMapper());
 
             // Save in temporal file
+            FileUtils.forceMkdir(new File(APEnetUtilities.getConfig().getRepoDirPath() + basePath));
             File eacCpfTempFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
-
             jaxbMarshaller.marshal(eac, eacCpfTempFile);
 
             // It is necessary to validate the file against apeEAC-CPF schema.
@@ -121,7 +121,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                 }
             }
         } catch (JAXBException jaxbe) {
-            log.info(jaxbe.getMessage());
+            log.error(jaxbe.getMessage(), jaxbe);
         } catch (APEnetException e) {
             log.error(e.getMessage(), e);
         } catch (SAXException e) {
