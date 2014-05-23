@@ -16,6 +16,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
 
 public class SecondDisplayAction extends ActionSupport implements ServletRequestAware {
@@ -27,6 +28,7 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 	private String term;
 	private String solrid;
 	private String eadid;
+	private String identifier;
 	private String id;
 	private String xmlTypeId;
 	private String aiId;
@@ -125,7 +127,6 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 				} else if (StringUtils.isNotBlank(id) && StringUtils.isNumeric(id)) {
 					ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), xmlType.getClazz());
 				}
-
 			}
 			if (ead == null) {
 				logger.error("Could not found EAD in second display for URL params: " + request.getRequestURI() + "?"
@@ -159,7 +160,65 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 						couAlternativeDAO.getLocalizedCountry(country.getIsoname(), language));
 				request.setAttribute("locale", locale.getLanguage());
 			}
-			return SUCCESS;
+		  return SUCCESS;
+		  
+		} catch (Exception e) {
+			logger.error(
+					"Error in second display process for URL params: " + request.getRequestURI() + "?"
+							+ request.getQueryString(), e);
+			addActionError(getText("error.user.second.display.notexist"));
+			return ERROR;
+		}
+	}
+/**
+ * Function to display the EAC-CPF preview in the second display
+ * @return
+ * @throws Exception
+ */
+	public String displayEacCpf() throws Exception{
+
+		try {
+			ArchivalInstitution archivalInstitution = null;
+			EacCpf eaccpf = null;
+			XmlType xmlType = XmlType.getType(Integer.parseInt(xmlTypeId));
+			if (StringUtils.isNotBlank(aiId) && StringUtils.isNumeric(aiId)) {
+				if (StringUtils.isNotBlank(identifier)) {
+					eaccpf = DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(Integer.parseInt(aiId), identifier);
+				}
+
+			} else if (StringUtils.isNotBlank(id) && StringUtils.isNumeric(id)) {
+				eaccpf = DAOFactory.instance().getEacCpfDAO().findById(Integer.parseInt(id), xmlType.getClazz());
+			}
+			
+			if (eaccpf == null) {
+				logger.error("Could not found EAC-CPF in second display for URL params: " + request.getRequestURI() + "?"
+						+ request.getQueryString());
+				addActionError(getText("error.user.second.display.notexist"));
+				return ERROR;
+			} else {
+				if (dashboard || eaccpf.isPublished()) {
+					title = eaccpf.getTitle();
+					archivalInstitution = eaccpf.getArchivalInstitution();
+				} else {
+					logger.error("Found not indexed EAD in second display for URL params: " + request.getRequestURI()
+							+ "?" + request.getQueryString());
+					addActionError(getText("error.user.second.display.notindexed"));
+					return ERROR;
+				}
+			}
+			request.setAttribute("eac", eaccpf);
+			request.setAttribute("xmlTypeId", XmlType.getContentType(eaccpf).getIdentifier());
+			request.setAttribute("archivalInstitution", archivalInstitution);
+			request.setAttribute("eaccpfIdentifier", eaccpf.getIdentifier());
+			request.setAttribute("repositoryCode",eaccpf.getArchivalInstitution().getRepositorycode());
+			Locale locale = getLocale();
+			if (locale == null) {
+				request.setAttribute("locale", "en");
+			} else {
+				request.setAttribute("locale", locale.getLanguage());
+			}
+		  return "success-eaccpf";
+		  
 		} catch (Exception e) {
 			logger.error(
 					"Error in second display process for URL params: " + request.getRequestURI() + "?"

@@ -1,0 +1,150 @@
+@CHARSET "UTF-8";
+@import url(normalize.css);
+
+body {
+	background-color: #FFFFFF;
+	background-position: center center;
+	background-repeat: repeat-y;
+	color: #333333;
+	font-size: 8pt;
+	font-family: Arial, sans-serif;
+}
+
+#eacCpfDisplayPortlet {
+	background-image: none;
+	background-color: white;
+	color: #2A4862;
+}
+#eacCpfDisplayPortlet #printEacDetails {
+    float: inherit;
+    margin-left: 240px;
+}
+#eacCpfDisplayPortlet #details{
+	width:70%;
+	float:left;
+}
+#eacCpfDisplayPortlet h1 {
+	border-bottom: 1px solid #79B7E7;
+    color: #2A4862;
+    font-size: 130%;
+    font-weight: bold;
+    margin: 0.3em 0;
+    text-align: left;
+    width:70%;	
+}
+#eacCpfDisplayPortlet h1 span#entityType{
+	color:#83736A;
+	font-weight:normal;
+}
+#eacCpfDisplayPortlet h2.otherInformation{
+	color:#83736A;
+	border-bottom:1px solid #83736A;
+	padding-top:20px;
+	text-align:left;
+}
+#eacCpfDisplayPortlet h2.title{
+	border-bottom: none;
+	font-size:9pt;
+	font-weight:bold;
+	text-transform: uppercase;
+	text-align:left;
+	padding-top:8px;
+}
+#eacCpfDisplayPortlet .subrow{
+	margin-left:40px;
+}
+#eaccpfcontent .leftcolumn h2{
+	border-bottom: none;
+	font-size:8pt;
+	font-weight:bold;
+}
+#eacCpfDisplayPortlet .grey {
+	color:#83736A;
+}
+#eacCpfDisplayPortlet .row {
+	display:block;
+	font-size:8pt;
+	overflow:auto;
+}
+
+#eacCpfDisplayPortlet .leftcolumn {
+	float:left;
+	overflow-y: auto;
+	margin-top:9px;
+}
+#eacCpfDisplayPortlet .rightcolumn {
+	/*text-align:auto;*/
+	text-align:left;
+	margin-left:180px;
+	margin-top:9px;
+}
+/*#eacCpfDisplayPortlet .leftSide {
+ clear:both;
+ margin-left:0px;
+}*/
+#eacCpfDisplayPortlet #language{
+	float:none;
+}
+#eacCpfDisplayPortlet #relations{
+	float:right;
+	width:260px;
+	font-size:8pt;
+	text-align:left;
+}
+#eacCpfDisplayPortlet .box .boxtitle{
+	height:12px;
+	cursor:pointer;
+}
+#relations .collapsibleIcon {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+}
+.expanded {
+    background-image: url("../../images/expand/arrow-down.gif");
+    background-position: left center;
+    background-repeat: no-repeat;
+}
+.collapsed {
+    background-image: url("../../images/expand/arrow-right.gif");
+    background-position: left center;
+    background-repeat: no-repeat;
+}
+#relations ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 0 5px;
+}
+.displayLinkShowMore:link, .displayLinkShowLess:link{
+ color:#2A4862;	
+}
+
+.linkShow:link{
+	color: #C65400;
+	text-decoration:underline;
+}
+.linkMore{
+	float:right;
+}
+
+@media screen {
+	
+	#eacCpfDisplayPortlet #eaccpfcontent em{
+		background-color: #afdefc;
+	}	
+}
+
+#eacCpfDisplayPortlet #eaccpfcontent em{
+	font-size: 110%;
+	padding-left:2px;
+	padding-right:2px;
+}
+
+#eacCpfDisplayPortlet .defaultlayout {
+	text-align: center;
+}
+
+#eacCpfDisplayPortlet em {
+	font-weight: bold;
+	font-style: normal;
+}

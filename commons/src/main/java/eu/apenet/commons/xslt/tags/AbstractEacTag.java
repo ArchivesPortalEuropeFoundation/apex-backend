@@ -53,8 +53,7 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	}
 	
 	public final void doTag() throws JspException, IOException {
-		FileReader eacFile = new FileReader(APEnetUtilities.getApePortalConfig().getRepoDirPath() + this.getEacUrl());
-		
+		FileReader eacFile = new FileReader(APEnetUtilities.getApePortalAndDashboardConfig().getRepoDirPath() + this.getEacUrl());
 		Source xmlSource = new StreamSource(new StringReader(this.readFile(eacFile)));
 		List<SolrField> highlightFields = SolrField.getSolrFieldsByIdString(searchFieldsSelection);
 		if (highlightFields.size() == 0) {

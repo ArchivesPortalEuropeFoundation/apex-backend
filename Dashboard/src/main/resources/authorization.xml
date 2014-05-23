@@ -14,7 +14,7 @@
             batchAction, previewEdm, htmlPreview,
             displayConvertEseBatch, startConvertEseBatch,
             generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
-            eacCpfActions, batchEacCpfActions, downloadEacCpf,
+            eacCpfActions, batchEacCpfActions, downloadEacCpf, printEacCpfDetails,
 
             GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
 

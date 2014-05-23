@@ -513,7 +513,7 @@
 					   			<xsl:text>:</xsl:text>
 					   		</h2>
 					   	</div>
-					   	<div class="rightcolumn leftSide">
+					   	<div class="rightcolumn">
 							<xsl:call-template name="multilanguage">
 					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:p"/>
 					   			<xsl:with-param name="clazz" select="'biogist'"/>
@@ -534,7 +534,6 @@
 								<a href="{$href}" target="_blank"><xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/> <!--<xsl:value-of select="."/>--></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<!--<xsl:value-of select="."/>-->
 							 <xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/> 
 							</xsl:otherwise>
 							</xsl:choose>

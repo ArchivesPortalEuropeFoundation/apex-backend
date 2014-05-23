@@ -5,7 +5,7 @@
 
     <constant name="struts.enable.DynamicMethodInvocation" value="true" />
     <constant name="struts.devMode" value="false" />
-    <constant name="struts.custom.i18n.resources" value="i18n/ApplicationResources,i18n/eag2012,i18n/admin" />
+    <constant name="struts.custom.i18n.resources" value="i18n/ApplicationResources,i18n/eag2012,i18n/admin,i18n/eac-cpf/eac-cpf" />
 
     <!-- To avoid the typical problem of encoding of accents and ensure compatibility with any Operative System, use UTF-8: -->
     <constant name="struts.i18n.encoding" value="UTF-8" />
@@ -263,9 +263,15 @@
 
         <action name="preview" class="eu.apenet.dashboard.actions.PreviewSecondDisplayAction">
             <result name="success">/jsp/eadcontent/eadcontent.jsp</result>
+            <result name="success-eaccpf">/jsp/eaccpf/eaccpf.jsp</result>
             <result name="error">/jsp/eadcontent/error.jsp</result>
         </action>
-
+		
+        <action name="printEacCpfDetails" class="eu.apenet.commons.seconddisplay.SecondDisplayAction" method="displayEacCpf">
+        	<result name="success-eaccpf">/jsp/eaccpf/printEacCpfDetails.jsp</result>
+        	<result name="error">/jsp/eadcontent/error.jsp</result>
+        </action>
+        
         <action name="generateTreeJSON" class="eu.apenet.commons.seconddisplay.GenerateTreeJSONAction">
             <result name="SUCCESS" type="stream">
                 <param name="inputName">outputStream</param>
@@ -310,7 +316,7 @@
         <action name="downloadEacCpf" class="eu.apenet.dashboard.actions.content.eaccpf.EacCpfActions" method="download">
 
         </action>
-
+        
         <!--Upload: Main page -->
         <action name="upload" class="eu.apenet.dashboard.manual.UploadContentAction">
             <interceptor-ref name="changeLanguageStack"/>

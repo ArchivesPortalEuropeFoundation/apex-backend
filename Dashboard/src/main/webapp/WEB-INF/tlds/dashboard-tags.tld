@@ -79,5 +79,38 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>			
+	</tag>
+	<tag>
+		<name>eac</name>
+		<tag-class>eu.apenet.dashboard.jsp.EacTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>type</name>
+			<required>true</required>			
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>eacUrl</name>
+			<required>true</required>			
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>repositoryCode</name>
+			<required>true</required>			
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>eaccpfIdentifier</name>
+			<required>true</required>			
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>searchFieldsSelection</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>searchTerms</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>		
 </taglib>

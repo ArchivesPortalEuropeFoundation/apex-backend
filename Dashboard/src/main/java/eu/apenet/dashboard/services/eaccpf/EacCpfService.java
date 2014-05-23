@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.services.eaccpf;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.EacCpfDAO;
@@ -573,4 +574,10 @@ public class EacCpfService {
     private static EacCpf doesFileExist(UpFile upFile, String identifier) {
         return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier);
     }
+
+	public static void createPreviewHTML(XmlType xmlType, Integer id) {
+		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+		EacCpf eacCpf = eacCpfDAO.findById(id, xmlType.getClazz());
+		SecurityContext.get().checkAuthorized(eacCpf);
+	}
 }
