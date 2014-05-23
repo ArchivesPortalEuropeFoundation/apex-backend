@@ -16,7 +16,8 @@ import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.SourceGuide;
 
 
 
@@ -24,7 +25,7 @@ public class DatabaseCLevelPublisher {
 	private static final int NUMBER_OF_CLEVEL_ONCE = 1;
 
 	public static EADCounts publish(CLevel clevel, Long eadContentId,
-			Ead ead, SolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids)
+			Ead ead, SolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids,EadDatabaseSaver eadDatabaseSaver)
 			throws Exception {
 		CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 		List<LevelInfo> unittitles = new ArrayList<LevelInfo>();
@@ -39,10 +40,9 @@ public class DatabaseCLevelPublisher {
 		publishData.setFullHierarchy(fullHierarchy);
 		if (StringUtils.isNotBlank(clevel.getUnitid())){
 			if (unitids.contains(clevel.getUnitid())){
-				JpaUtil.beginDatabaseTransaction();
 				publishData.setDuplicateUnitid(true);
 				clevel.setDuplicateUnitid(true);
-				clevelDAO.updateSimple(clevel);
+				eadDatabaseSaver.update(clevel);
 			}else {
 				unitids.add(clevel.getUnitid());
 			}
@@ -54,14 +54,14 @@ public class DatabaseCLevelPublisher {
 			publishData.setOrderId(clevel.getOrderId());
 		}
 		eadCounts.addClevel(solrPublisher.parseCLevel(publishData));
-		if (clevel.getHrefEadid() != null){
-			LinkingService.linkWithoutCommit(ead, clevel);
+		if ((ead instanceof SourceGuide || ead instanceof HoldingsGuide) && clevel.getHrefEadid() != null){
+			eadDatabaseSaver.insert(LinkingService.getNewLink(ead, clevel));
 		}
 		unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
 		int childOrderId = 0;
 		List<CLevel> clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		while (clevels.size() > 0) {
-			eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevels.get(0),eadContentId,ead, solrPublisher, unittitles, fullHierarchy, unitids));
+			eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevels.get(0),eadContentId,ead, solrPublisher, unittitles, fullHierarchy, unitids,eadDatabaseSaver));
 			childOrderId++;
 			clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		}
