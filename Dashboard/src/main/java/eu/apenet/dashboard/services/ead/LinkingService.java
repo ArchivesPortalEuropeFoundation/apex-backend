@@ -42,7 +42,7 @@ public class LinkingService {
 
     public static final String PREFIX_UNITID = "unitid";
     public static final String TITLE_TITLEPROPER = "titleproper";
-	public static boolean linkWithoutCommit(Ead hgOrSg, CLevel clevel) {
+	public static HgSgFaRelation getNewLink(Ead hgOrSg, CLevel clevel) {
 		if (hgOrSg instanceof HoldingsGuide || hgOrSg instanceof SourceGuide) {
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(hgOrSg.getAiId());
@@ -65,11 +65,20 @@ public class LinkingService {
 				} else if (hgOrSg instanceof SourceGuide) {
 					hgSgFaRelation.setSgId(hgOrSg.getId());
 				}
-				JpaUtil.getEntityManager().persist(hgSgFaRelation);
-				return true;
+				return hgSgFaRelation;
 			}
 		}
-		return false;
+		return null;
+	}
+	public static boolean linkWithoutCommit(Ead hgOrSg, CLevel clevel) {
+		HgSgFaRelation hgSgFaRelation = getNewLink(hgOrSg,clevel);
+		if (hgSgFaRelation == null){
+			return false;
+		}else {
+			JpaUtil.getEntityManager().persist(hgSgFaRelation);
+			return true;
+		}
+
 	}
 
 	public static boolean linkWithHgOrSg(Ead ead) {
