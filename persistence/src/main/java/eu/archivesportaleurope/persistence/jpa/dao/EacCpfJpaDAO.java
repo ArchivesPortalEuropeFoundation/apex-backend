@@ -38,10 +38,11 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     }
 
     @Override
-    public EacCpf getFirstEacCpfByIdentifier(String identifier) {
+    public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier) {
         Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+		criteria.add(Restrictions.eq("published", true));
         criteria.setMaxResults(1);
         List<EacCpf> list = criteria.list();
         if (list.size() > 0) {
@@ -72,6 +73,23 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         criteria = criteria.createAlias("eacCpf.archivalInstitution", "archivalInstitution");
         criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
         criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+        criteria.setMaxResults(1);
+        List<EacCpf> list = criteria.list();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public EacCpf getPublishedEacCpfByIdentifier(String repositorycode, String identifier) {
+        Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria = criteria.createAlias("eacCpf.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
+        criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+		criteria.add(Restrictions.eq("published", true));
         criteria.setMaxResults(1);
         List<EacCpf> list = criteria.list();
         if (list.size() > 0) {
