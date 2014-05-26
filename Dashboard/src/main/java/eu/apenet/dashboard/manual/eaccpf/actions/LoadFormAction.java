@@ -212,7 +212,7 @@ public class LoadFormAction extends EacCpfAction {
             placeEntryList.add(new MapEntry("foundation", "Place of foundation"));
         }
         if (cpfType.equals(PERSON) || cpfType.equals(FAMILY)) {
-            placeEntryList.add(new MapEntry("protected-residence", "Private residence"));
+            placeEntryList.add(new MapEntry("private-residence", "Private residence"));
         }
         placeEntryList.add(new MapEntry("business-residence", "Business residence"));
         if (cpfType.equals(PERSON)) {

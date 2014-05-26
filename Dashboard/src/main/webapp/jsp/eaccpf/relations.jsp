@@ -34,7 +34,7 @@
                     <td><label>Type of relation:*</label></td>
                     <td><select id="cpfRelationType" name="cpfRelationType_<s:property value="#status.index + 1" />">
                             <s:iterator value="cpfRelationTypeList" var="relationType">
-                                <option value='<s:property value="#relationType"/>' <s:if test='%{#relationType==#current.relationType}'>selected="selected"</s:if>><s:property value="#relationType"/></option>
+                                <option value='<s:property value="#relationType.key"/>' <s:if test='%{#relationType.key==#current.relationType}'>selected="selected"</s:if>><s:property value="#relationType.value"/></option>
                             </s:iterator>
                         </select>
                     </td>
@@ -102,7 +102,7 @@
                 <td><label>Type of relation:*</label></td>
                 <td><select id="cpfRelationType" name="cpfRelationType_1" onchange="">
                         <s:iterator value="cpfRelationTypeList" var="relationType">
-                            <option value='<s:property value="#relationType"/>'><s:property value="#relationType"/></option>
+                            <option value='<s:property value="#relationType.key"/>'><s:property value="#relationType.value"/></option>
                         </s:iterator>
                     </select>
                 </td>
@@ -160,7 +160,7 @@
                     <td><label>Type of relation:*</label></td>
                     <td><select id="resRelationType" name="resRelationType_<s:property value="#status.index + 1" />">
                             <s:iterator value="resRelationTypeList" var="relationType">
-                                <option value='<s:property value="#relationType"/>' <s:if test='%{#relationType==#current.relationType}'>selected="selected"</s:if>><s:property value="#relationType"/></option>
+                                <option value='<s:property value="#relationType.key"/>' <s:if test='%{#relationType.key==#current.relationType}'>selected="selected"</s:if>><s:property value="#relationType.value"/></option>
                             </s:iterator>
                         </select>
                     </td>
@@ -228,7 +228,7 @@
                 <td><label>Type of relation:*</label></td>
                 <td><select id="resRelationType" name="resRelationType_1" onchange="">
                         <s:iterator value="resRelationTypeList" var="relationType">
-                            <option value='<s:property value="#relationType"/>'><s:property value="#relationType"/></option>
+                            <option value='<s:property value="#relationType.key"/>'><s:property value="#relationType.value"/></option>
                         </s:iterator>
                     </select>
                 </td>
@@ -286,7 +286,7 @@
                     <td><label>Type of relation:*</label></td>
                     <td><select id="fncRelationType" name="fncRelationType_<s:property value="#status.index + 1" />">
                             <s:iterator value="fncRelationTypeList" var="relationType">
-                                <option value='<s:property value="#relationType"/>' <s:if test='%{#relationType==#current.relationType}'>selected="selected"</s:if>><s:property value="#relationType"/></option>
+                                <option value='<s:property value="#relationType.key"/>' <s:if test='%{#relationType.key==#current.relationType}'>selected="selected"</s:if>><s:property value="#relationType.value"/></option>
                             </s:iterator>
                         </select>
                     </td>
@@ -354,7 +354,7 @@
                 <td><label>Type of relation:*</label></td>
                 <td><select id="fncRelationType" name="fncRelationType_1" onchange="">
                         <s:iterator value="fncRelationTypeList" var="relationType">
-                            <option value='<s:property value="#relationType"/>'><s:property value="#relationType"/></option>
+                            <option value='<s:property value="#relationType.key"/>'><s:property value="#relationType.value"/></option>
                         </s:iterator>
                     </select>
                 </td>

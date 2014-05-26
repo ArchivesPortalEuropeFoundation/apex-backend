@@ -662,7 +662,7 @@ public class CreateEacCpf {
 
                 // .../functions/function/placeEntry
                 if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                     while (parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("placeTable_" + tableCounter + parameterName5 + rowCounter)) {
+                     while (parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter)) {
                         PlaceEntry placeEntry = new PlaceEntry();
 
                         // .../placeEntry@countryCode
@@ -799,7 +799,7 @@ public class CreateEacCpf {
 
                 // .../occupations/occupation/placeEntry
                 if ((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                    while (!((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty() || parameters.containsKey("placeTable_" + tableCounter + parameterName5 + rowCounter)) {
+                    while (parameters.containsKey("occupationTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("occupationTable_" + tableCounter + parameterName5 + rowCounter)) {
                         PlaceEntry placeEntry = new PlaceEntry();
 
                         // .../placeEntry@countryCode
