@@ -82,7 +82,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 		@Override
 		public SequenceIterator call(SequenceIterator[] arguments, XPathContext arg1)
 				throws XPathException {
-			if (arguments.length == 2) {
+			if (arguments!= null && arguments.length == 2) {
 				String firstArgValue = arguments[0].next().getStringValue();
 				String secondArgValue = arguments[1].next().getStringValue();
 				String value = "";
@@ -100,7 +100,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 						type = "fa";
 					} else {
 						// First FA with identifier.
-						ead = eadDAO.getFirstEadByEadid(FindingAid.class, firstArgValue);
+						ead = eadDAO.getFirstPublishedEadByEadid(FindingAid.class, firstArgValue);
 						type = "fa";
 					}
 
@@ -112,7 +112,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 							type = "hg";
 						} else {
 							// First HG with identifier.
-							ead = eadDAO.getFirstEadByEadid(HoldingsGuide.class, firstArgValue);
+							ead = eadDAO.getFirstPublishedEadByEadid(HoldingsGuide.class, firstArgValue);
 							type = "hg";
 						}
 					}
@@ -125,7 +125,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 							type = "sg";
 						} else {
 							// First SG with identifier.
-							ead = eadDAO.getFirstEadByEadid(SourceGuide.class, firstArgValue);
+							ead = eadDAO.getFirstPublishedEadByEadid(SourceGuide.class, firstArgValue);
 							type = "sg";
 						}
 					}

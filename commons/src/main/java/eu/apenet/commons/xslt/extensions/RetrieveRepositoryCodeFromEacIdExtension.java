@@ -56,11 +56,11 @@ public class RetrieveRepositoryCodeFromEacIdExtension extends ExtensionFunctionD
 	}
 
 	public int getMinimumNumberOfArguments() {
-		return 1;
+		return 2;
 	}
 
 	public int getMaximumNumberOfArguments() {
-		return 1;
+		return 2;
 	}
 
 	class RetrieveRepositoryCodeFromEacIdCall extends ExtensionFunctionCall {
@@ -79,8 +79,9 @@ public class RetrieveRepositoryCodeFromEacIdExtension extends ExtensionFunctionD
 		@Override
 		public SequenceIterator call(SequenceIterator[] arguments, XPathContext arg1)
 				throws XPathException {
-			if (arguments.length == 1) {
+			if (arguments.length == 2) {
 				String firstArgValue = arguments[0].next().getStringValue();
+				String secondArgValue = arguments[1].next().getStringValue();
 				String value = "";
 
 				// apeEAC-CPF.
@@ -88,7 +89,11 @@ public class RetrieveRepositoryCodeFromEacIdExtension extends ExtensionFunctionD
 				EacCpf eacCpf = null;
 
 				if (firstArgValue != null && !firstArgValue.isEmpty()) {
-					eacCpf = eacCpfDAO.getFirstEacCpfByIdentifier(firstArgValue);
+					if (secondArgValue != null && !secondArgValue.isEmpty()) {
+						eacCpf = eacCpfDAO.getPublishedEacCpfByIdentifier(secondArgValue, firstArgValue);
+					} else {
+						eacCpf = eacCpfDAO.getFirstPublishedEacCpfByIdentifier(firstArgValue);
+					}
 				}
 
 				if (eacCpf != null) {

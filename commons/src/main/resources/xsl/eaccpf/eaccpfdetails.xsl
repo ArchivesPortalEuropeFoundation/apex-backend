@@ -13,6 +13,11 @@
 	<xsl:param name="eacUrlBase"/>
 	<xsl:param name="eadUrl"/>
 	<xsl:variable name="language.default" select="'eng'"/>
+	<xsl:include href="commons.xsl"/>
+	<xsl:include href="alternativeDescriptions.xsl"/>
+	<xsl:include href="archivalMaterials.xsl"/>
+	<xsl:include href="relatedNames.xsl"/>
+	<xsl:include href="archives.xsl"/>
 	<xsl:template match="text()" mode="other">
 		<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
 	</xsl:template>
@@ -520,26 +525,44 @@
 					   		</xsl:call-template>
 						</div>
 				</div>
-			</xsl:if> 
-			<!-- provided by -->	
-			<xsl:if test="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName/text()">   
+			</xsl:if>
+			<!-- provided by -->
+			<xsl:if test="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName/text()">
 				<div class="row">
 						<div class="leftcolumn">
 					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.agencyName')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn">
 							<xsl:choose>
-							<xsl:when test="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyCode/text()">
-								<xsl:variable name="href" select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyCode"/>
-								<a href="{$href}" target="_blank"><xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/> <!--<xsl:value-of select="."/>--></a>
-							</xsl:when>
-							<xsl:otherwise>
-							 <xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/> 
-							</xsl:otherwise>
+								<xsl:when test="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyCode/text()">
+									<xsl:variable name="href" select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyCode"/>
+									<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
+										<a href="{$href}" target="_blank">
+											<xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/>
+										</a>
+							  		</xsl:if>
+							  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
+							  			<xsl:variable name="aiCode" select="ape:checkAICode($href, '', 'true')" />
+							  			<xsl:choose>
+							  				<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
+												<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+												<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+													<xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/>
+												</a>
+							  				</xsl:when>
+							  				<xsl:otherwise>
+							  					<xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/>
+							  				</xsl:otherwise>
+							  			</xsl:choose>
+									</xsl:if>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName" mode="other"/>
+								</xsl:otherwise>
 							</xsl:choose>
 						</div>
 				</div>
-			</xsl:if>   
+			</xsl:if>
 			<!-- other information -->
 			<div id="footer">
 				<h2 class="otherInformation"><xsl:value-of select="ape:resource('eaccpf.portal.otherInformation')"/></h2>
@@ -608,227 +631,22 @@
 	<div id="relations">
 		<!-- Alternative descriptions. -->
 		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent/eac:componentEntry/text()">
-			<div id="alternative" class="box">
-				<div class="boxtitle">
-					<span class="collapsibleIcon expanded"> </span>
-					<span class="text"><xsl:value-of select="ape:resource('eaccpf.portal.alternativeDescriptions')"/>
-						<xsl:text> (</xsl:text>
-						<xsl:value-of select="count(./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent)"/>
-						<xsl:text>)</xsl:text>
-					</span>
-				</div>
-				<ul>
-					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent">
-						<li>
-							<xsl:choose>
-								<xsl:when test="./eac:componentEntry[@localType='title']">
-									<xsl:call-template name="multilanguageAlternativeSetTitle">
-							   			 	<xsl:with-param name="list" select="./eac:componentEntry[@localType='title']"/>
-							   		</xsl:call-template>
-						   		</xsl:when>
-						   		<xsl:when test="./eac:componentEntry[not(@localType)]">
-						   			<xsl:call-template name="multilanguageAlternativeSet">
-							   			 	<xsl:with-param name="list" select="./eac:componentEntry[not(@localType)]"/>
-							   		</xsl:call-template>
-						   		</xsl:when>
-						   		<xsl:otherwise>
-						   			<xsl:variable name="href" select="./@xlink:href"/>
-						   			<a href="{$href}" target="_blank">
-						   				<xsl:value-of select="ape:resource('eaccpf.portal.goToAlternativeDescription')"/>
-						   			</a>
-						   			<xsl:call-template name="agencyAlternativeSet">
-										<xsl:with-param name="current" select="."/>
-									</xsl:call-template>
-						   		</xsl:otherwise>
-					   		</xsl:choose>
-				   		</li>
-			   		</xsl:for-each>
-		   		</ul>
-		   		<div class="whitespace">
-		   		 <!--   &nbsp;--> 
-		   		</div>
-		   		<a class="displayLinkShowMore" href="javascript:showMore('alternative', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/><xsl:text>...</xsl:text>
-				</a>
-				<a class="displayLinkShowLess" href="javascript:showLess('alternative', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/><xsl:text>...</xsl:text>
-				</a>
-			</div>
-		</xsl:if>	
+			<xsl:call-template name="alternativeDescriptions"/>
+		</xsl:if>
 
+		<!-- Archival materials. -->
 		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/text()">
-			<div id="material" class="box">
-				<div class="boxtitle">
-					<span class="collapsibleIcon expanded"> </span>
-					<span class="text"><xsl:value-of select="ape:resource('eaccpf.portal.archivalMaterial')"/>
-						<xsl:text> (</xsl:text>
-						<xsl:value-of select="count(./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation)"/>
-						<xsl:text>)</xsl:text>
-					</span>
-				</div>
-				<ul>
-					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation">
-						<li>
-							<xsl:choose>
-								<xsl:when test="./eac:relationEntry[@localType='title']">
-									<xsl:call-template name="multilanguageRelationsTitle">
-							   			 	<xsl:with-param name="list" select="./eac:relationEntry[@localType='title']"/>
-							   		</xsl:call-template>
-						   		</xsl:when>
-						   		<xsl:when test="./eac:relationEntry[not(@localType)]">
-						   			<xsl:call-template name="multilanguageRelations">
-							   			 	<xsl:with-param name="list" select="./eac:relationEntry[not(@localType)]"/>
-							   		</xsl:call-template>
-						   		</xsl:when>
-						   		<xsl:otherwise>
-									<xsl:variable name="link" select="./@xlink:href"/>
-									<xsl:choose>
-										<xsl:when test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-						   						<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-						   					</a>
-										</xsl:when>
-										<xsl:when test="./eac:relationEntry[@localType='agencyCode']">
-											<xsl:variable name="href" select="./eac:relationEntry[@localType='agencyCode']"/>
-									  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-											<xsl:variable name="aiCode" select="ape:aiFromEad($link, $href)"/>
-											<xsl:choose>
-												<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-													<a href="{$eadUrl}/{$aiCode}">
-														<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-													</a>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-												</xsl:otherwise>
-											</xsl:choose>
-											</xsl:if>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:variable name="aiCode" select="ape:aiFromEad($link, '')"/>
-											<xsl:choose>
-												<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-													<a href="{$eadUrl}/{$aiCode}">
-														<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-													</a>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:otherwise>	
-									</xsl:choose>
+			<xsl:call-template name="archivalMaterials"/>
+		</xsl:if>
 
-						   			<xsl:call-template name="relationType">
-										<xsl:with-param name="current" select="."/>
-									</xsl:call-template>
-						   		</xsl:otherwise>
-					   		</xsl:choose>
-				   		</li>
-			   		</xsl:for-each>
-		   		</ul>
-		   		<div class="whitespace">
-		   		<!--   &nbsp;--> 
-		   		</div>
-		   		<a class="displayLinkShowMore" href="javascript:showMore('material', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/><xsl:text>...</xsl:text>
-				</a>
-				<a class="displayLinkShowLess" href="javascript:showLess('material', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/><xsl:text>...</xsl:text>
-				</a>
-			</div>
-		</xsl:if>
+		<!-- Related names. -->
 		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation/eac:relationEntry/text()">
-			<div id="persons" class="box">
-				<div class="boxtitle">
-					<span class="collapsibleIcon expanded"> </span>
-					<span class="text"><xsl:value-of select="ape:resource('eaccpf.portal.relatedName')"/>
-						<xsl:text> (</xsl:text>
-						<xsl:value-of select="count(./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation)"/>
-						<xsl:text>)</xsl:text>
-					</span>
-				</div>
-				<ul>
-					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation">
-						<li>
-							<xsl:choose>
-								<xsl:when test="./eac:relationEntry[@localType='title']">
-									<xsl:call-template name="multilanguageRelationsTitle">
-							   			 	<xsl:with-param name="list" select="./eac:relationEntry[@localType='title']"/>
-							   		</xsl:call-template>
-						   		</xsl:when>
-						   		<xsl:when test="./eac:relationEntry[not(@localType)]">
-						   			<xsl:call-template name="multilanguageRelations">
-							   			 	<xsl:with-param name="list" select="./eac:relationEntry[not(@localType)]"/>
-							   		</xsl:call-template>
-						   		</xsl:when>
-						   		<xsl:otherwise>
-						   			<xsl:variable name="href" select="./@xlink:href"/>
-						   			<a href="{$href}" target="_blank">
-						   				<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedName')"/>
-						   			</a>
-						   			<xsl:call-template name="relationType">
-										<xsl:with-param name="current" select="."/>
-									</xsl:call-template>
-						   		</xsl:otherwise>
-					   		</xsl:choose>
-				   		</li>
-			   		</xsl:for-each>
-		   		</ul>
-		   		<div class="whitespace">
-		   		 <!--   &nbsp;--> 
-		   		</div>
-		   		<a class="displayLinkShowMore" href="javascript:showMore('persons', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/><xsl:text>...</xsl:text>
-				</a>
-				<a class="displayLinkShowLess" href="javascript:showLess('persons', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/><xsl:text>...</xsl:text>
-				</a>
-			</div>
+			<xsl:call-template name="relatedNames"/>
 		</xsl:if>
-		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/@localType='agencyName'">	
-			<div id="archives" class="box">
-				<div class="boxtitle">
-					<span class="collapsibleIcon expanded"> </span>
-					<span class="text"><xsl:value-of select="ape:resource('eaccpf.portal.archives')"/>
-					    <xsl:text> (</xsl:text>
-						<xsl:value-of select="count(./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation[eac:relationEntry[@localType='agencyName']])"/>
-						<xsl:text>)</xsl:text>
-					</span>
-				</div>
-				<ul>
-					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation">
-							<xsl:choose>
-								<xsl:when test="./eac:relationEntry[@localType='agencyName']">
-									<li>
-										<xsl:call-template name="multilanguageArchives">
-						   					<xsl:with-param name="list" select="./eac:relationEntry[@localType='agencyName']"/>
-						   				</xsl:call-template>
-					   				</li>
-								</xsl:when>
-								<xsl:when test="./eac:relationEntry[not(@localType='agencyName')] and ./eac:relationEntry[@localType='agencyCode']">
-								<!-- TODO -->
-<!-- 									<li>
-										<xsl:call-template name="multilanguageArchivesOnlyCode">
-						   					<xsl:with-param name="list" select="./eac:relationEntry[not(@localType='agencyName')] and ./eac:relationEntry[@localType='agencyCode']"/>
-						   				</xsl:call-template>
-					   				</li> --> 
-								</xsl:when>
-								<xsl:otherwise/>
-							</xsl:choose>
-							
-		   		    </xsl:for-each>
-		   		</ul>
-		   		<div class="whitespace">
-		   		 <!--   &nbsp;--> 
-		   		</div>
-		   		<a class="displayLinkShowMore" href="javascript:showMore('archives', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/><xsl:text>...</xsl:text>
-				</a>
-				<a class="displayLinkShowLess" href="javascript:showLess('archives', 'li');">
-					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/><xsl:text>...</xsl:text>
-				</a>
-			</div>
+
+		<!-- Archives. -->
+		<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/@localType='agencyName'">
+			<xsl:call-template name="archivesRelations"/>
 		</xsl:if>	
 	</div>
 	</xsl:template>
@@ -941,6 +759,7 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
+
 	<!-- template for language nameEntry -->
 	<xsl:template name="multilanguageName">
 		<xsl:param name="list"/>
@@ -1004,7 +823,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- template for compose the name -->
 	<xsl:template name="compositeName">
 		<xsl:param name="listName"/>
@@ -1079,7 +898,7 @@
 	    	</xsl:otherwise>
 	    </xsl:choose>
 	</xsl:template> 
-	
+
 	<!-- template for nodes with attribute @vocabularySource or not and several elements-->
 	<xsl:template name="multilanguageWithVocabularySource">
 		<xsl:param name="list"/>
@@ -1181,7 +1000,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- template for language only one element -->
 	<xsl:template name="multilanguagePlaceEntry">
 		<xsl:param name="list"/>
@@ -1272,7 +1091,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- Template for toDate or fromDate to detect the unknow value-->
 	<xsl:template name="dateUnknow">
 		<xsl:param name="dateUnknow"/>
@@ -1285,7 +1104,7 @@
         	</xsl:otherwise>
         </xsl:choose> 
 	</xsl:template>
-	
+
 	<!-- template for dateSet -->
 	<xsl:template match="eac:dateSet">
 		<xsl:if test="eac:dateRange or eac:date">
@@ -1302,7 +1121,7 @@
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- template for multilanguageDate -->
 	<xsl:template name="multilanguageDate">
 		<xsl:param name="list"/>
@@ -1362,7 +1181,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>	
-	
+
 	<!-- template for multilanguageDateRange -->
 	<xsl:template name="multilanguageDateRange">
 		<xsl:param name="list"/>
@@ -1529,7 +1348,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>	
-	
+
 	<!--template fromDate toDate-->
 	<xsl:template name="fromToDate">
 		<xsl:param name="dateRange"/>
@@ -1561,7 +1380,7 @@
 		    </xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- template for date -->
 	<xsl:template match="eac:date">
 		<xsl:if test="./text()">
@@ -1579,14 +1398,14 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- template for dateRange -->
 	<xsl:template match="eac:dateRange">
 			<xsl:call-template name="fromToDate">
 				<xsl:with-param name="dateRange" select="."/>
 			</xsl:call-template>
 	</xsl:template>
-	
+
 	<!-- template for multilanguage only one element date in birth, death, foundation or closing-->
 	<xsl:template name="multilanguageOneDate">
 		<xsl:param name="list"/>
@@ -1644,1204 +1463,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	</xsl:template>
-	
-	<!-- template for links to file type -->
-	<xsl:template name="linkToFile">
-		<xsl:param name="link"/>
-	   	<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-			<a href="{$link}" target="_blank"><xsl:apply-templates select="current()" mode="other"/></a>
-			<xsl:call-template name="relationType">
-			   	 <xsl:with-param name="current" select="current()/parent::node()"/>
-			</xsl:call-template>
-		</xsl:if>
-		<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-			<xsl:choose>
-				<xsl:when test="name(./parent::node()) = 'cpfRelation'">
-					<xsl:choose>
-						<xsl:when test="./parent::node()[eac:relationEntry[@localType='agencyCode']]">
-							<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-					  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-								<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-								<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-								<a href="{$eacUrlBase}/aicode/{$encodedHref}/type/ec/id/{$encodedlink}">
-									<xsl:apply-templates select="." mode="other"/>
-								</a>
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:variable name="aiCode" select="ape:aiFromEac($link)"/>
-							<xsl:choose>
-								<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-								<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-									<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}">
-										<xsl:apply-templates select="." mode="other"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="." mode="other"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:otherwise>	
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="name(./parent::node()) = 'resourceRelation'">
-					<xsl:choose>
-						<xsl:when test="./parent::node()[eac:relationEntry[@localType='agencyCode']]">
-							<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-					  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-							<xsl:variable name="aiCode" select="ape:aiFromEad($link, $href)"/>
-							<xsl:choose>
-								<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-									<a href="{$eadUrl}/{$aiCode}">
-										<xsl:apply-templates select="." mode="other"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="." mode="other"/>
-								</xsl:otherwise>
-							</xsl:choose>
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:variable name="aiCode" select="ape:aiFromEad($link, '')"/>
-							<xsl:choose>
-								<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-									<a href="{$eadUrl}/{$aiCode}">
-										<xsl:apply-templates select="." mode="other"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="." mode="other"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:otherwise>	
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="name(./parent::node()) != 'alternativeSet'">
-					<xsl:choose>
-						<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
-							<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
-					  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-								<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-								<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-								<a href="{$eacUrlBase}/aicode/{$encodedHref}/type/ec/id/{$encodedlink}">
-									<xsl:apply-templates select="." mode="other"/>
-								</a>
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:variable name="aiCode" select="ape:aiFromEac($link)"/>
-							<xsl:choose>
-								<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-								<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-									<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}">
-										<xsl:apply-templates select="." mode="other"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="." mode="other"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:otherwise>	
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<!-- TODO: functionRelation -->
-					<a href="#">
-						<xsl:apply-templates select="." mode="other"/>
-					</a>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:call-template name="relationType">
-				<xsl:with-param name="current" select="current()"/>
-			</xsl:call-template>
-		</xsl:if>
-	</xsl:template>
-	
-	<!-- template for attribute @cpfRelationType or @resourceRelationType -->
-	<xsl:template name="relationType">
-		<xsl:param name="current"/>
-		<xsl:if test="name($current)='cpfRelation' and $current[@cpfRelationType]"> 
-			<xsl:text> (</xsl:text>
-			<xsl:choose>
-				<xsl:when test="$current[@cpfRelationType='associative']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.associative')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='identity']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.identity')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='hierarchical']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.hierarchical')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='hierarchical-parent']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.hierarchicalParent')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='hierarchical-child']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.hierarchicalChild')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='temporal']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.temporal')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='temporal-earlier']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.temporalEarlier')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='temporal-later']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.temporalLater')"/>
-				</xsl:when>
-				<xsl:when test="$current[@cpfRelationType='family']"> 
-					<xsl:value-of select="ape:resource('eaccpf.portal.family')"/>
-				</xsl:when>
-				<xsl:otherwise/>
-			</xsl:choose>
-			<xsl:text>)</xsl:text>	
-		</xsl:if>
-		<xsl:if test="name($current)='resourceRelation' and $current[@resourceRelationType]"> 
-			<xsl:text> (</xsl:text>
-			<xsl:choose>
-				<xsl:when test="$current[@resourceRelationType='creatorOf']">
-					<xsl:value-of select="ape:resource('eaccpf.portal.creatorOf')"/>
-				</xsl:when>
-				<xsl:when test="$current[@resourceRelationType='subjectOf']">
-					<xsl:value-of select="ape:resource('eaccpf.portal.subjectOf')"/>
-				</xsl:when>
-				<xsl:when test="$current[@resourceRelationType='other']">
-					<xsl:value-of select="ape:resource('eaccpf.portal.other')"/>
-				</xsl:when>
-				<xsl:otherwise/>
-			</xsl:choose>
-			<xsl:text>)</xsl:text>	
-		</xsl:if>
-	</xsl:template>
-	
-	<!-- template for multilanguage relations -->
-	<xsl:template name="multilanguageRelations">
-		<xsl:param name="list"/>
-			<xsl:choose>
-				<xsl:when test="count($list) > 1">
-					<xsl:choose>
-						<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						 	<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							   <xsl:if test="position()=1">
-									<xsl:choose>
-										<xsl:when test="./parent::node()/@xlink:href">
-											<xsl:call-template name="linkToFile">
-												<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:call-template name="relationType">
-												<xsl:with-param name="current" select="current()"/>
-											</xsl:call-template>
-										</xsl:otherwise>	
-									</xsl:choose>
-								</xsl:if>	
-								
-						 	</xsl:for-each> 
-						</xsl:when>
-						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-							<xsl:for-each select="$list[@xml:lang = $language.default]">
-								<xsl:if test="position()=1"><xsl:choose>
-									<xsl:when test="./parent::node()/@xlink:href">
-										<xsl:call-template name="linkToFile">
-											<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/>
-										<xsl:call-template name="relationType">
-											<xsl:with-param name="current" select="current()/parent::node()"/>
-										</xsl:call-template>
-									</xsl:otherwise>	
-								</xsl:choose>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:when>
-						<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-							  	<xsl:for-each select="$list[not(@xml:lang)]"> 
-									<xsl:if test="position()=1">
-										<xsl:choose>
-											<xsl:when test="./parent::node()/@xlink:href">
-												<xsl:call-template name="linkToFile">
-													<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-												</xsl:call-template>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:apply-templates select="." mode="other"/>
-												<xsl:call-template name="relationType">
-													<xsl:with-param name="current" select="current()/parent::node()"/>
-												</xsl:call-template>
-											</xsl:otherwise>	
-										</xsl:choose>
-									</xsl:if>
-							   	</xsl:for-each> 
-						</xsl:when>
-						<xsl:otherwise> <!-- first language -->
-							<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-							<xsl:for-each select="$list">
-								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-								<xsl:if test="$currentLang = $language.first">
-									<xsl:if test="position()=1">
-										<xsl:choose>
-											<xsl:when test="./parent::node()/@xlink:href">
-												<xsl:call-template name="linkToFile">
-													<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-												</xsl:call-template>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:apply-templates select="." mode="other"/>
-												<xsl:call-template name="relationType">
-													<xsl:with-param name="current" select="current()/parent::node()"/>
-												</xsl:call-template>
-											</xsl:otherwise>	
-										</xsl:choose>
-									</xsl:if>			
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:for-each select="$list">
-						 <xsl:if test="position()=1">
-							<xsl:choose>
-								<xsl:when test="./parent::node()/@xlink:href">
-									<xsl:call-template name="linkToFile">
-										<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="." mode="other"/>
-									<xsl:call-template name="relationType">
-										<xsl:with-param name="current" select="current()/parent::node()"/>
-									</xsl:call-template>
-								</xsl:otherwise>	
-							</xsl:choose>
-						 </xsl:if>
-					</xsl:for-each>
-				</xsl:otherwise>
-			</xsl:choose>
-	</xsl:template>
 
-	<!-- template for multilanguage alternativeSet -->
-	<xsl:template name="multilanguageAlternativeSet">
-		<xsl:param name="list"/>
-			<xsl:choose>
-				<xsl:when test="count($list) > 1">
-					<xsl:choose>
-						<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						 	<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							   <xsl:if test="position()=1">
-									<xsl:choose>
-										<xsl:when test="./parent::node()/@xlink:href">
-											<xsl:call-template name="linkToFile">
-												<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:call-template name="agencyAlternativeSet">
-												<xsl:with-param name="current" select="current()"/>
-											</xsl:call-template>
-										</xsl:otherwise>	
-									</xsl:choose>
-								</xsl:if>	
-								
-						 	</xsl:for-each> 
-						</xsl:when>
-						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-							<xsl:for-each select="$list[@xml:lang = $language.default]">
-								<xsl:if test="position()=1"><xsl:choose>
-									<xsl:when test="./parent::node()/@xlink:href">
-										<xsl:call-template name="linkToFile">
-											<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/>
-										<xsl:call-template name="agencyAlternativeSet">
-											<xsl:with-param name="current" select="current()/parent::node()"/>
-										</xsl:call-template>
-									</xsl:otherwise>	
-								</xsl:choose>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:when>
-						<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-							  	<xsl:for-each select="$list[not(@xml:lang)]"> 
-									<xsl:if test="position()=1">
-										<xsl:choose>
-											<xsl:when test="./parent::node()/@xlink:href">
-												<xsl:call-template name="linkToFile">
-													<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-												</xsl:call-template>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:apply-templates select="." mode="other"/>
-												<xsl:call-template name="agencyAlternativeSet">
-													<xsl:with-param name="current" select="current()/parent::node()"/>
-												</xsl:call-template>
-											</xsl:otherwise>	
-										</xsl:choose>
-									</xsl:if>
-							   	</xsl:for-each> 
-						</xsl:when>
-						<xsl:otherwise> <!-- first language -->
-							<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-							<xsl:for-each select="$list">
-								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-								<xsl:if test="$currentLang = $language.first">
-									<xsl:if test="position()=1">
-										<xsl:choose>
-											<xsl:when test="./parent::node()/@xlink:href">
-												<xsl:call-template name="linkToFile">
-													<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-												</xsl:call-template>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:apply-templates select="." mode="other"/>
-												<xsl:call-template name="agencyAlternativeSet">
-													<xsl:with-param name="current" select="current()/parent::node()"/>
-												</xsl:call-template>
-											</xsl:otherwise>	
-										</xsl:choose>
-									</xsl:if>			
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:for-each select="$list">
-						 <xsl:if test="position()=1">
-							<xsl:choose>
-								<xsl:when test="./parent::node()/@xlink:href">
-									<xsl:call-template name="linkToFile">
-										<xsl:with-param name="link" select="./parent::node()/@xlink:href"/>
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="." mode="other"/>
-									<xsl:call-template name="agencyAlternativeSet">
-										<xsl:with-param name="current" select="current()/parent::node()"/>
-									</xsl:call-template>
-								</xsl:otherwise>	
-							</xsl:choose>
-						 </xsl:if>
-					</xsl:for-each>
-				</xsl:otherwise>
-			</xsl:choose>
-	</xsl:template>
-
-	<!--template for multilanguage alternativeSet with @localType='title'-->
-	<xsl:template name="multilanguageAlternativeSetTitle">
-		<xsl:param name="list"/>
-			<xsl:choose>
-				<xsl:when test="count($list) > 1">
-					<xsl:choose>
-						<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						 	 	<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list[@xml:lang = $language.selected]">
-													<xsl:apply-templates select="." mode="other"/>
-													<xsl:text>. </xsl:text>
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-														<a href="{$eacUrlBase}/aicode/{$encodedHref}/type/ec/id/{$encodedlink}">
-															<xsl:apply-templates select="." mode="other"/>
-														</a>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEac($link)"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-															<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}">
-																<xsl:apply-templates select="." mode="other"/>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:apply-templates select="." mode="other"/>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>	
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list[@xml:lang = $language.selected]">
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:text>. </xsl:text>
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="agencyAlternativeSet">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:when>		
-						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-							<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list[@xml:lang = $language.default]">
-													<xsl:apply-templates select="." mode="other"/>
-													<xsl:text>. </xsl:text>
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-														<a href="{$eacUrlBase}/aicode/{$encodedHref}/type/ec/id/{$encodedlink}">
-															<xsl:apply-templates select="." mode="other"/>
-														</a>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEac($link)"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-															<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}">
-																<xsl:apply-templates select="." mode="other"/>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:apply-templates select="." mode="other"/>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>	
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list[@xml:lang = $language.default]">
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:text>. </xsl:text>
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="agencyAlternativeSet">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:when>
-						<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-							  	<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list[not(@xml:lang)]">
-													<xsl:apply-templates select="." mode="other"/>
-													<xsl:text>. </xsl:text>
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-														<a href="{$eacUrlBase}/aicode/{$encodedHref}/type/ec/id/{$encodedlink}">
-															<xsl:apply-templates select="." mode="other"/>
-														</a>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEac($link)"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-															<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}">
-																<xsl:apply-templates select="." mode="other"/>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:apply-templates select="." mode="other"/>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>	
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list[not(@xml:lang)]">
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:text>. </xsl:text>
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="agencyAlternativeSet">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:when>
-						<xsl:otherwise> <!-- first language -->
-							<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-							<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list">
-													<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-													<xsl:if test="$currentLang = $language.first">
-														<xsl:apply-templates select="." mode="other"/>
-														<xsl:text>. </xsl:text>
-													</xsl:if>	
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-														<a href="{$eacUrlBase}/aicode/{$encodedHref}/type/ec/id/{$encodedlink}">
-															<xsl:apply-templates select="." mode="other"/>
-														</a>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEac($link)"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-														<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-															<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}">
-																<xsl:apply-templates select="." mode="other"/>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:apply-templates select="." mode="other"/>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>	
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list">
-											<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-											<xsl:if test="$currentLang = $language.first">
-												<xsl:apply-templates select="." mode="other"/>
-												<xsl:text>. </xsl:text>
-											</xsl:if>	
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="agencyAlternativeSet">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-			 	 	<xsl:choose>
-			 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-			 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-								<a href="{$link}" target="_blank">
-									<xsl:for-each select="$list">
-										<xsl:apply-templates select="." mode="other"/>
-								 	</xsl:for-each>
-								</a>
-					 	   </xsl:if>
-					 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-							<xsl:choose>
-								<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
-									<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
-							  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-										<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-										<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-										<a href="{$eacUrlBase}/aicode/{$encodedHref}/type/ec/id/{$encodedlink}">
-											<xsl:apply-templates select="." mode="other"/>
-										</a>
-									</xsl:if>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:variable name="aiCode" select="ape:aiFromEac($link)"/>
-									<xsl:choose>
-										<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-										<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
-											<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}">
-												<xsl:apply-templates select="." mode="other"/>
-											</a>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="." mode="other"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:otherwise>	
-							</xsl:choose>
-					 	   </xsl:if>
-			 	 		</xsl:when>
-			 	 		<xsl:otherwise>
-			 	 			<xsl:for-each select="$list">
-								<xsl:apply-templates select="." mode="other"/>
-						 	</xsl:for-each>
-			 	 		</xsl:otherwise>
-			 	 	</xsl:choose>
-			 	 	<xsl:call-template name="agencyAlternativeSet">
-						<xsl:with-param name="current" select="$list/parent::node()"/>
-					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
-	</xsl:template>
-
-	<!-- template for the link to the related institution of an AlternativeSet -->
-	<xsl:template name="agencyAlternativeSet">
-		<xsl:param name="current"/>
-		<xsl:choose>
-			<xsl:when test="current/componentEntry[@localType='agencyCode'] and $current/componentEntry[@localType='agencyName']">
-				<xsl:text> (</xsl:text>
-				<xsl:variable name="link" select="$current/componentEntry[@localType='agencyCode']"/>
-				<a href="{$link}" target="_blank">
-					<xsl:value-of select="$current/componentEntry[@localType='agencyName']"/>
-				</a>
-				<xsl:text>)</xsl:text>
-			</xsl:when>
-			<xsl:when test="$current/componentEntry[@localType='agencyCode']">
-				<xsl:text> (</xsl:text>
-				<xsl:variable name="link" select="$current/componentEntry[@localType='agencyCode']"/>
-				<a href="{$link}" target="_blank">
-					<xsl:value-of select="$link"/>
-				</a>
-				<xsl:text>)</xsl:text>
-			</xsl:when>
-			<xsl:when test="$current/componentEntry[@localType='agencyName']">
-				<xsl:text> (</xsl:text>
-				<xsl:value-of select="$current/componentEntry[@localType='agencyName']"/>
-				<xsl:text>)</xsl:text>	
-			</xsl:when>
-			<xsl:otherwise/>
-		</xsl:choose>
-	</xsl:template>
-
-	<!--template for multilanguage resourceRelations with @localType='title'-->
-	<xsl:template name="multilanguageRelationsTitle">
-		<xsl:param name="list"/>
-			<xsl:choose>
-				<xsl:when test="count($list) > 1">
-					<xsl:choose>
-						<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						 	 	<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list[@xml:lang = $language.selected]">
-													<xsl:apply-templates select="." mode="other"/>
-													<xsl:text>. </xsl:text>
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:relationEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="aiCode" select="ape:aiFromEad($link, $href)"/>
-														<xsl:choose>
-															<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-																<a href="{$eadUrl}/{$aiCode}">
-																	<xsl:for-each select="$list[@xml:lang = $language.selected]">
-																		<xsl:apply-templates select="." mode="other"/>
-																		<xsl:text>. </xsl:text>
-																 	</xsl:for-each>
-																</a>
-															</xsl:when>
-															<xsl:otherwise>
-																<xsl:for-each select="$list[@xml:lang = $language.selected]">
-																	<xsl:apply-templates select="." mode="other"/>
-																	<xsl:text>. </xsl:text>
-															 	</xsl:for-each>
-															</xsl:otherwise>
-														</xsl:choose>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEad($link, '')"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-															<a href="{$eadUrl}/{$aiCode}">
-																<xsl:for-each select="$list[@xml:lang = $language.selected]">
-																	<xsl:apply-templates select="." mode="other"/>
-																	<xsl:text>. </xsl:text>
-															 	</xsl:for-each>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:for-each select="$list[@xml:lang = $language.selected]">
-																<xsl:apply-templates select="." mode="other"/>
-																<xsl:text>. </xsl:text>
-														 	</xsl:for-each>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list[@xml:lang = $language.selected]">
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:text>. </xsl:text>
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:when>		
-						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-							<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list[@xml:lang = $language.default]">
-													<xsl:apply-templates select="." mode="other"/>
-													<xsl:text>. </xsl:text>
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:relationEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="aiCode" select="ape:aiFromEad($link, $href)"/>
-														<xsl:choose>
-															<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-																<a href="{$eadUrl}/{$aiCode}">
-																	<xsl:for-each select="$list[@xml:lang = $language.default]">
-																		<xsl:apply-templates select="." mode="other"/>
-																		<xsl:text>. </xsl:text>
-																 	</xsl:for-each>
-																</a>
-															</xsl:when>
-															<xsl:otherwise>
-																<xsl:for-each select="$list[@xml:lang = $language.default]">
-																	<xsl:apply-templates select="." mode="other"/>
-																	<xsl:text>. </xsl:text>
-															 	</xsl:for-each>
-															</xsl:otherwise>
-														</xsl:choose>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEad($link, '')"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-															<a href="{$eadUrl}/{$aiCode}">
-																<xsl:for-each select="$list[@xml:lang = $language.default]">
-																	<xsl:apply-templates select="." mode="other"/>
-																	<xsl:text>. </xsl:text>
-															 	</xsl:for-each>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:for-each select="$list[@xml:lang = $language.default]">
-																<xsl:apply-templates select="." mode="other"/>
-																<xsl:text>. </xsl:text>
-														 	</xsl:for-each>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list[@xml:lang = $language.default]">
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:text>. </xsl:text>
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:when>
-						<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-							  	<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list[not(@xml:lang)]">
-													<xsl:apply-templates select="." mode="other"/>
-													<xsl:text>. </xsl:text>
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:relationEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="aiCode" select="ape:aiFromEad($link, $href)"/>
-														<xsl:choose>
-															<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-																<a href="{$eadUrl}/{$aiCode}">
-																	<xsl:for-each select="$list[not(@xml:lang)]">
-																		<xsl:apply-templates select="." mode="other"/>
-																		<xsl:text>. </xsl:text>
-																 	</xsl:for-each>
-																</a>
-															</xsl:when>
-															<xsl:otherwise>
-																<xsl:for-each select="$list[not(@xml:lang)]">
-																	<xsl:apply-templates select="." mode="other"/>
-																	<xsl:text>. </xsl:text>
-															 	</xsl:for-each>
-															</xsl:otherwise>
-														</xsl:choose>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEad($link, '')"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-															<a href="{$eadUrl}/{$aiCode}">
-																<xsl:for-each select="$list[not(@xml:lang)]">
-																	<xsl:apply-templates select="." mode="other"/>
-																	<xsl:text>. </xsl:text>
-															 	</xsl:for-each>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:for-each select="$list[not(@xml:lang)]">
-																<xsl:apply-templates select="." mode="other"/>
-																<xsl:text>. </xsl:text>
-														 	</xsl:for-each>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list[not(@xml:lang)]">
-											<xsl:apply-templates select="." mode="other"/>
-											<xsl:text>. </xsl:text>
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:when>
-						<xsl:otherwise> <!-- first language -->
-							<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-							<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-						 	 	<xsl:choose>
-						 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-						 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:for-each select="$list">
-													<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-													<xsl:if test="$currentLang = $language.first">
-														<xsl:apply-templates select="." mode="other"/>
-														<xsl:text>. </xsl:text>
-													</xsl:if>	
-											 	</xsl:for-each>
-											</a>
-								 	   </xsl:if>
-								 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<xsl:choose>
-												<xsl:when test="./parent::node()[eac:relationEntry[@localType='agencyCode']]">
-													<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="aiCode" select="ape:aiFromEad($link, $href)"/>
-														<xsl:choose>
-															<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-																<a href="{$eadUrl}/{$aiCode}">
-																	<xsl:for-each select="$list">
-																		<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-																		<xsl:if test="$currentLang = $language.first">
-																			<xsl:apply-templates select="." mode="other"/>
-																			<xsl:text>. </xsl:text>
-																		</xsl:if>
-																 	</xsl:for-each>
-																</a>
-															</xsl:when>
-															<xsl:otherwise>
-																<xsl:for-each select="$list">
-																	<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-																	<xsl:if test="$currentLang = $language.first">
-																		<xsl:apply-templates select="." mode="other"/>
-																		<xsl:text>. </xsl:text>
-																	</xsl:if>
-															 	</xsl:for-each>
-															</xsl:otherwise>
-														</xsl:choose>
-													</xsl:if>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:variable name="aiCode" select="ape:aiFromEad($link, '')"/>
-													<xsl:choose>
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-															<a href="{$eadUrl}/{$aiCode}">
-																<xsl:for-each select="$list">
-																	<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-																	<xsl:if test="$currentLang = $language.first">
-																		<xsl:apply-templates select="." mode="other"/>
-																		<xsl:text>. </xsl:text>
-																	</xsl:if>
-															 	</xsl:for-each>
-															</a>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:for-each select="$list">
-																<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-																<xsl:if test="$currentLang = $language.first">
-																	<xsl:apply-templates select="." mode="other"/>
-																	<xsl:text>. </xsl:text>
-																</xsl:if>
-														 	</xsl:for-each>
-														</xsl:otherwise>
-													</xsl:choose>
-												</xsl:otherwise>
-											</xsl:choose>
-								 	   </xsl:if>
-						 	 		</xsl:when>
-						 	 		<xsl:otherwise>
-						 	 			<xsl:for-each select="$list">
-											<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-											<xsl:if test="$currentLang = $language.first">
-												<xsl:apply-templates select="." mode="other"/>
-												<xsl:text>. </xsl:text>
-											</xsl:if>	
-									 	</xsl:for-each>
-						 	 		</xsl:otherwise>
-						 	 	</xsl:choose>
-						 	 	<xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="$list/parent::node()"/>
-								</xsl:call-template> 
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
-			 	 	<xsl:choose>
-			 	 		<xsl:when test="$list/parent::node()/@xlink:href">
-			 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-								<a href="{$link}" target="_blank">
-									<xsl:for-each select="$list">
-										<xsl:apply-templates select="." mode="other"/>
-								 	</xsl:for-each>
-								</a>
-					 	   </xsl:if>
-					 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-								<xsl:choose>
-									<xsl:when test="./parent::node()[eac:relationEntry[@localType='agencyCode']]">
-										<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-								  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-											<xsl:variable name="aiCode" select="ape:aiFromEad($link, $href)"/>
-											<xsl:choose>
-												<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-													<a href="{$eadUrl}/{$aiCode}">
-														<xsl:for-each select="$list">
-															<xsl:apply-templates select="." mode="other"/>
-															<xsl:text>. </xsl:text>
-													 	</xsl:for-each>
-													</a>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:for-each select="$list">
-														<xsl:apply-templates select="." mode="other"/>
-														<xsl:text>. </xsl:text>
-												 	</xsl:for-each>
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:if>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:variable name="aiCode" select="ape:aiFromEad($link, '')"/>
-										<xsl:choose>
-											<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-												<a href="{$eadUrl}/{$aiCode}">
-													<xsl:for-each select="$list">
-														<xsl:apply-templates select="." mode="other"/>
-														<xsl:text>. </xsl:text>
-												 	</xsl:for-each>
-												</a>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:for-each select="$list">
-													<xsl:apply-templates select="." mode="other"/>
-													<xsl:text>. </xsl:text>
-											 	</xsl:for-each>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:otherwise>
-								</xsl:choose>
-					 	   </xsl:if>
-			 	 		</xsl:when>
-			 	 		<xsl:otherwise>
-			 	 			<xsl:for-each select="$list">
-								<xsl:apply-templates select="." mode="other"/>
-						 	</xsl:for-each>
-			 	 		</xsl:otherwise>
-			 	 	</xsl:choose>
-			 	 	<xsl:call-template name="relationType">
-						<xsl:with-param name="current" select="$list/parent::node()"/>
-					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
-	</xsl:template>
-	
-	<!-- template for multilanguage archives -->
-	<xsl:template name="multilanguageArchives">
-		<xsl:param name="list"/>
-			<xsl:choose>
-				<xsl:when test="count($list) > 1">
-					<xsl:choose>
-						<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						 	<xsl:for-each select="$list[@xml:lang = $language.selected]"> 
-							   <xsl:if test="position()=1">
-										<xsl:choose>
-											<xsl:when test="./parent::node()/@localType='agencyCode'">
-												<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-											  		<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
-														<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-											  		</xsl:if>
-											  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-														<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-														<a href="{$aiCodeUrl}/{$encodedHref}">
-															<xsl:apply-templates select="." mode="other"/>
-														</a>
-													</xsl:if>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:apply-templates select="." mode="other"/>
-											</xsl:otherwise>	
-										</xsl:choose>
-								</xsl:if>
-						 	</xsl:for-each> 
-						</xsl:when>
-						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-							<xsl:for-each select="$list[@xml:lang = $language.default]">
-								<xsl:if test="position()=1">
-										<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-										<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-								  		</xsl:if>
-								  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-											<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-											<a href="{$aiCodeUrl}/{$encodedHref}">
-	       											<xsl:apply-templates select="." mode="other"/>
-											</a>
-										</xsl:if>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:when>
-						<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-							  	<xsl:for-each select="$list[not(@xml:lang)]"> 
-									<xsl:if test="position()=1">
-										<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-										<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-								  		</xsl:if>
-								  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-											<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-												<a href="{$aiCodeUrl}/{$encodedHref}">
-												<xsl:apply-templates select="." mode="other"/>
-											</a>
-										</xsl:if>
-									</xsl:if>
-							   	</xsl:for-each> 
-						</xsl:when>
-						<xsl:otherwise> <!-- first language -->
-							<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-							<xsl:for-each select="$list">
-								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-								<xsl:if test="$currentLang = $language.first">
-									<xsl:if test="position()=1">
-										<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-										<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-								  		</xsl:if>
-								  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-											<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-											<a href="{$aiCodeUrl}/{$encodedHref}">
-												<xsl:apply-templates select="." mode="other"/>
-											</a>
-										</xsl:if>
-									</xsl:if>			
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:for-each select="$list">
-						 <xsl:if test="position()=1">
-							<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
-							<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
-								<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-					  		</xsl:if>
-					  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-					  			<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-								<a href="{$aiCodeUrl}/{$encodedHref}">
-									<xsl:apply-templates select="." mode="other"/>
-								</a>
-							</xsl:if>
-						 </xsl:if>
-					</xsl:for-each>
-				</xsl:otherwise>
-			</xsl:choose>
-	</xsl:template>
-	
-	<!-- template for multilanguage archives -->
-<!-- 	<xsl:template name="multilanguageArchivesOnlyCode">
-		<xsl:param name="list"/>
-		<xsl:variable name="counter" select="count($list)"/>
-		<xsl:choose>
-			<xsl:when test="count($list) > 1">
-				<xsl:for-each select="$list">
-					<xsl:value-of select="$counter"/>
-				</xsl:for-each>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:for-each select="$list">
-					 <xsl:if test="position()=1">
-						<xsl:variable name="href" select="."/>
-						<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
-							<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-				  		</xsl:if>
-				  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
-				  			<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
-							<a href="{$aiCodeUrl}/{$encodedHref}">
-								<xsl:apply-templates select="." mode="other"/>
-							</a>
-						</xsl:if>
-					 </xsl:if>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template> -->
-	
 	<!-- template for multilanguage -->
 	<xsl:template name="multilanguage">
 		<xsl:param name="list"/>

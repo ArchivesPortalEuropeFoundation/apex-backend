@@ -6,11 +6,13 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
 
     public boolean existEacCpf(String identifier);
 
-    public EacCpf getFirstEacCpfByIdentifier(String identifier);
+    public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier);
 
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier);
 
     public EacCpf getEacCpfByIdentifier(String repositorycode, String identifier);
+
+    public EacCpf getPublishedEacCpfByIdentifier(String repositorycode, String identifier);
 
     public List<EacCpf> getEacCpfs(ContentSearchOptions contentSearchOptions);
 
