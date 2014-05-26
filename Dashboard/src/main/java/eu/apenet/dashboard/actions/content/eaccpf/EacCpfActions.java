@@ -7,10 +7,12 @@ package eu.apenet.dashboard.actions.content.eaccpf;
 
 import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.SUCCESS;
+import com.opensymphony.xwork2.ActionContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -33,7 +35,9 @@ public class EacCpfActions extends AbstractEacCpfActions {
     @Override
     public String convertValidatePublishEacCpf(Properties properties) {
         try {
-            EacCpfService.convertValidatePublish(id, properties);
+            String language = retrieveCurrentLanguage();
+
+            EacCpfService.convertValidatePublish(id, properties, language);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -44,7 +48,9 @@ public class EacCpfActions extends AbstractEacCpfActions {
     @Override
     public String convertValidateEacCpf(Properties properties) {
         try {
-            EacCpfService.convertValidate(id, properties);
+            String language = retrieveCurrentLanguage();
+
+            EacCpfService.convertValidate(id, properties, language);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -55,7 +61,9 @@ public class EacCpfActions extends AbstractEacCpfActions {
     @Override
     public String convertEacCpf(Properties properties) {
         try {
-            EacCpfService.convert(id, properties);
+            String language = retrieveCurrentLanguage();
+
+            EacCpfService.convert(id, properties, language);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -162,4 +170,8 @@ public class EacCpfActions extends AbstractEacCpfActions {
         return null;
     }
 
+    private String retrieveCurrentLanguage() {
+        String result = ActionContext.getContext().getLocale().toString();
+        return result;
+    }
 }

@@ -40,31 +40,35 @@ import org.apache.commons.lang.StringUtils;
 public class EacCpfService {
 
     protected static final Logger LOGGER = Logger.getLogger(EacCpfService.class);
+    private static final String CURRENT_LANGUAGE_KEY = "currentLanguage";
     // private static final long NOT_USED_TIME = 60 * 60 * 24 * 7;
 
-    public static boolean convertValidatePublish(Integer id, Properties properties) throws IOException {
+    public static boolean convertValidatePublish(Integer id, Properties properties, String currentLanguage) throws IOException {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
         if (!eacCpf.isPublished()) {
+            properties.put(CURRENT_LANGUAGE_KEY, currentLanguage);
             addToQueue(eacCpf, QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
         }
         return true;
     }
 
-    public static boolean convertValidate(Integer id, Properties properties) throws IOException {
+    public static boolean convertValidate(Integer id, Properties properties, String currentLanguage) throws IOException {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
+        properties.put(CURRENT_LANGUAGE_KEY, currentLanguage);
         addToQueue(eacCpf, QueueAction.CONVERT_VALIDATE, properties);
         return true;
     }
 
-    public static void convert(Integer id, Properties properties) throws Exception {
+    public static void convert(Integer id, Properties properties, String currentLanguage) throws Exception {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
         if (ConvertTask.valid(eacCpf)) {
+            properties.put(CURRENT_LANGUAGE_KEY, currentLanguage);
             addToQueue(eacCpf, QueueAction.CONVERT, properties);
         }
     }

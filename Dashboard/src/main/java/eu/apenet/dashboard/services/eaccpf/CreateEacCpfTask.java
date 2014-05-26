@@ -77,8 +77,8 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
             File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
 
             //Windows file lock workaround; uncomment if necessary
-            //System.gc();
-            //Thread.sleep(2000);
+            System.gc();
+            Thread.sleep(2000);
 
             if (srcFile.exists()) {
                 FileUtils.forceDelete(srcFile);
@@ -116,7 +116,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         		// the title is formed by "surname, firstname patronymic"
                 titleMap = searchForAllElementTitle(path, "nameEntry/part");
         	}
-        	
+
             //List the elements if the titleMap is not empty
             if (titleMap != null && !titleMap.isEmpty()) {
                 Iterator<?> it = titleMap.entrySet().iterator();
@@ -250,7 +250,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                         }
                         break;
                     case XMLEvent.END_ELEMENT:
-                    	if (input.getLocalName().equalsIgnoreCase(pathElements[0])){  //if it's nameEntry final 
+                    	if (input.getLocalName().equalsIgnoreCase(pathElements[0])){  //if it's nameEntry final
                     		abort = true;
                     	}
                         break;
