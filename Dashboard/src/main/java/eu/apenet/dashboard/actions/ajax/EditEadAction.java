@@ -547,8 +547,17 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 				Iterator<String> eadIdIt = eadIdSet.iterator();
 				if (eadIdIt.hasNext()) {
 					String eadIdValue = jsonObject.getString(eadIdIt.next());
+		    		// Unescape char '.
 		    		if (eadIdValue.contains("%27")) { 
 		    			eadIdValue = eadIdValue.replaceAll("%27", "'");
+		    		}
+		    		// Unescape char <.
+		    		if (eadIdValue.contains("%3C")) { 
+		    			eadIdValue = eadIdValue.replaceAll("%3C", "<");
+		    		}
+		    		// Unescape char >.
+		    		if (eadIdValue.contains("%3E")) { 
+		    			eadIdValue = eadIdValue.replaceAll("%3E", ">");
 		    		}
 					this.setChagedEADID(eadIdValue);
 				}

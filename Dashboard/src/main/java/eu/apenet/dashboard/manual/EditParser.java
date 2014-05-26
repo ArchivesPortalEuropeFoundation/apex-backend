@@ -822,8 +822,17 @@ public class EditParser extends AbstractParser {
     		String key = keyList.iterator().next();
     		String value = this.getFormValues().get(key);
     		this.getFormValues().remove(key);
+    		// Unescape char '.
     		if (value.contains("%27")) { 
     			value = value.replaceAll("%27", "'");
+    		}
+    		// Unescape char <.
+    		if (value.contains("%3C")) { 
+    			value = value.replaceAll("%3C", "<");
+    		}
+    		// Unescape char >.
+    		if (value.contains("%3E")) { 
+    			value = value.replaceAll("%3E", ">");
     		}
     		return value;
     	}

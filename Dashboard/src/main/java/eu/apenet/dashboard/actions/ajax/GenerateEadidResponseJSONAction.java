@@ -188,6 +188,12 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
     		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
         	idUsed = eadDAO.isEadidUsed(this.neweadid.trim(), ai_id, FindingAid.class) != null;
         }
+
+        // Escape char ".
+        String escapedEADID = this.getEadid();
+		if (escapedEADID.contains("\"")) { 
+			escapedEADID = escapedEADID.replaceAll("\"", "%22");
+		}
        
         if (idUsed)
         {
@@ -196,7 +202,7 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
         	buffer.append(COMMA);
         	buffer.append("\"existingChangeEADIDAnswers\": \"KO\"");
         	buffer.append(COMMA);
-        	buffer.append("\"eadid\":" + SEPARATOR + this.eadid + SEPARATOR);
+        	buffer.append("\"eadid\":" + SEPARATOR + escapedEADID + SEPARATOR);
         	buffer.append(END_ITEM);
         	LOG.info("There is another file with this new EADID.");
         	return buffer;
@@ -210,7 +216,7 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
     	    	buffer.append(COMMA);
     	    	buffer.append("\"existingChangeEADIDAnswers\": " + SEPARATOR + "KO" + SEPARATOR);
     	    	buffer.append(COMMA);
-    	    	buffer.append("\"eadid\":" + SEPARATOR + this.eadid + SEPARATOR);
+    	    	buffer.append("\"eadid\":" + SEPARATOR + escapedEADID + SEPARATOR);
     	    	buffer.append(END_ITEM);
     	    	return buffer;
     		}
@@ -221,7 +227,7 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
 		    	buffer.append(COMMA);
 		    	buffer.append("\"existingChangeEADIDAnswers\": " + SEPARATOR + "OK" + SEPARATOR);
 		    	buffer.append(COMMA);
-		    	buffer.append("\"eadid\":" + SEPARATOR + this.eadid + SEPARATOR);
+		    	buffer.append("\"eadid\":" + SEPARATOR + escapedEADID + SEPARATOR);
 		    	buffer.append(COMMA);
 		    	buffer.append("\"komessage\":" + SEPARATOR + getText("content.message.Repeatedfile") + SEPARATOR);
 		    	buffer.append(END_ITEM);

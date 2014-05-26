@@ -151,8 +151,17 @@ function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountryco
 		if ($(this).val() != undefined) {
 			content += (content.length>start.length) ? "," : "";
 			var value = $(this).val();
+			// Escape char '.
 			while (value.indexOf("'") != -1) {
 				value = value.replace(/'/g, "%27");
+			}
+			// Escape char <.
+			while (value.indexOf("<") != -1) {
+				value = value.replace(/</g, "%3C");
+			}
+			// Escape char >.
+			while (value.indexOf(">") != -1) {
+				value = value.replace(/>/g, "%3E");
 			}
 			content += "'" + $(this).attr("name") + "':" + "'" + value + "'";
 		}
@@ -422,6 +431,24 @@ function isNewEADIDavailable(fileId) {
 		if (firstIndex == lastIndex) {
 			var neweadid = $.trim($("input[name=" + name + "]").val());
 			var oldeadid = $.trim($("input#oldEADID").val());
+
+			// Unescape char '.
+			while (oldeadid.indexOf("%27") != -1) {
+				oldeadid = oldeadid.replace("%27", "'");
+			}
+			// Unescape char ".
+			while (oldeadid.indexOf("%22") != -1) {
+				oldeadid = oldeadid.replace("%22", "\"");
+			}
+			// Unescape char <.
+			while (oldeadid.indexOf("%3C") != -1) {
+				oldeadid = oldeadid.replace("%3C", "<");
+			}
+			// Unescape char >.
+			while (oldeadid.indexOf("%3E") != -1) {
+				oldeadid = oldeadid.replace("%3E", ">");
+			}
+
 			if (neweadid != oldeadid) {
 				$.ajaxSetup({async: false}); // If timeout needed add ", timeout: 5000"
 				$.post("generateEadidResponseJSONWhenEdit.action", 
@@ -506,7 +533,23 @@ function checkEADIDValue(messageEmptyEADID) {
 
 			// Add the initial value as hidden field.
 			var value = $("input[name="+ name + "]").val();
-			$("input[name="+ name + "]").before("<input type=\"hidden\" id=\"oldEADID\" value=\""+ value +"\" \">");
+			// Escape char '.
+			while (value.indexOf("'") != -1) {
+				value = value.replace(/'/g, "%27");
+			}
+			// Escape char ".
+			while (value.indexOf("\"") != -1) {
+				value = value.replace(/\"/g, "%22");
+			}
+			// Escape char <.
+			while (value.indexOf("<") != -1) {
+				value = value.replace(/</g, "%3C");
+			}
+			// Escape char >.
+			while (value.indexOf(">") != -1) {
+				value = value.replace(/>/g, "%3E");
+			}
+			$("input[name="+ name + "]").before("<input type=\"hidden\" id=\"oldEADID\" value=\""+ value +"\" >");
 		}
 	});
 }
