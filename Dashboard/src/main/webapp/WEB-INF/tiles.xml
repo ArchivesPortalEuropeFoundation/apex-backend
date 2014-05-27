@@ -947,4 +947,8 @@
 		    <add-attribute type="string" value="/js/browsers.js"/>
 		</put-list-attribute>
     </definition>
+    <definition name="showLogFiles" extends="AdminLayout" >
+        <put-attribute name="title" value="admin.showlogfiles.title" />
+        <put-attribute name="body" value="/jsp/admin/showlogfiles.jsp" />
+    </definition>    
 </tiles-definitions>
