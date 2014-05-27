@@ -33,7 +33,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			varName = "holdingsGuide";
 		}
 
-		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND clevel.duplicateUnitid = false AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
 		query.setParameter("unitid", ApeUtil.decodeSpecialCharacters(unitid));
 		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
@@ -137,17 +137,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return results;
 	}
 
-	@Override
-	public List<CLevel> findChildrenOrderUnitId(Long parentId) {
-		long startTime = System.currentTimeMillis();
-		Criteria criteria = createChildCLevelsCriteria(parentId);
-		criteria.addOrder(Order.asc("clevel.unitid"));
-		List<CLevel> results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (LOG.isDebugEnabled())
-			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		return results;
-	}
 
 	@Override
 	public Long countChildCLevels(Long parentCLevelId) {
@@ -260,31 +249,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return criteria;
 	}
 
-	@Override
-	public List<CLevel> findTopCLevelsOrderUnitid(Long eadContentId) {
-		long startTime = System.currentTimeMillis();
-		Criteria criteria = createTopCLevelsCriteria(eadContentId);
-		criteria.addOrder(Order.asc("clevel.unitid"));
-		List<CLevel> results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (LOG.isDebugEnabled())
-			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		return results;
-	}
-
-	@Override
-	public CLevel findByUnitid(String unitid, Long eadContentId) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("clevel.ecId", eadContentId));
-		criteria.add(Restrictions.eq("clevel.unitid", unitid));
-		try {
-			return (CLevel) criteria.uniqueResult();
-		} catch (Exception e) {
-			LOG.error("Error with unitid " + unitid + ", there are more than one, we return the first one");
-			return (CLevel) criteria.list().get(0);
-		}
-	}
 
 	public Long getClIdByUnitid(String unitid, Long eadContentId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
@@ -323,14 +287,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
 		query.setParameter("id", id);
 		return query.getResultList();
-	}
-
-	@Override
-	public Long countNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
-		String jpaQuery = "SELECT count(clevel)" + buildNotLinkedCLevelsFromQuery(id, clazz);
-		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);
-		query.setParameter("id", id);
-		return query.getSingleResult();
 	}
 
 	private String buildNotLinkedCLevelsFromQuery(Integer id, Class<? extends Ead> clazz) {

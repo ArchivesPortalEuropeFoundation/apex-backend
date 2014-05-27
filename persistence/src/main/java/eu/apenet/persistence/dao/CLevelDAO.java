@@ -33,21 +33,11 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	@Deprecated
 	public List<CLevel> findTopCLevels(Long eadContentId);
 
-	@Deprecated
-	public List<CLevel> findTopCLevelsOrderUnitid(Long eadContentId);
-
-	@Deprecated
-	public List<CLevel> findChildrenOrderUnitId(Long parentId);
-
-	public CLevel findByUnitid(String unitid, Long eadContentId);
-
-	public Long getClIdByUnitid(String unitid, Long eadContentId);
 
 	public Long countPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz);
 
 	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends Ead> clazz);
 
-	public Long countNotLinkedCLevels(Integer id, Class<? extends Ead> clazz);
 
 	public List<CLevel> getClevelsFromSgOrHg(Integer aiId, String eadid);
 
@@ -56,7 +46,7 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 
 	public Long countCLevels(Class<? extends Ead> clazz, Integer id);
 	public List<CLevel> getCLevels(Class<? extends Ead> clazz, Integer id, int pageNumber, int pageSize);
-
+	
 	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid);
 	public CLevel getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Long id);
 }
