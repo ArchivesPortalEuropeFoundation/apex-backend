@@ -93,7 +93,7 @@ public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
 				if (firstArgValue != null && !firstArgValue.isEmpty()) {
 					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(firstArgValue);
 				} else if(this.requiredAIRepositorCode != null && !this.requiredAIRepositorCode.isEmpty()) {
-					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(firstArgValue);
+					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(requiredAIRepositorCode);
 				}
 
 				if (archivalInstitution != null) {
