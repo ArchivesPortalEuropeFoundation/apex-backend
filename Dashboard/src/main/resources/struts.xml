@@ -1047,5 +1047,11 @@
         <action name="downloadHarvesterErrorsText" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadText">
             <result name="error" type="tiles">error</result>
         </action>
+		<action name="downloadLogFile" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction" method="download">
+            <result name="error" type="tiles">error</result>
+        </action>  
+        <action name="showLogFiles" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction">
+            <result name="success" type="tiles">showLogFiles</result>
+        </action>              
     </package>
 </struts>
