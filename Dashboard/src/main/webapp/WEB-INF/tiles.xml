@@ -665,4 +665,8 @@
         <put-attribute name="title" value="dptversion.title"/>
         <put-attribute name="body" value="/jsp/dptversion.jsp"/>
     </definition>
+    <definition name="showLogFiles" extends="AdminLayout" >
+        <put-attribute name="title" value="admin.showlogfiles.title" />
+        <put-attribute name="body" value="/jsp/admin/showlogfiles.jsp" />
+    </definition>    
 </tiles-definitions>
