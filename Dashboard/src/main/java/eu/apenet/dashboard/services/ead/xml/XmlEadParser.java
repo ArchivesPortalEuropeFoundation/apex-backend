@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -34,6 +36,10 @@ import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class XmlEadParser extends AbstractParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8880198006458289413L;
 	private static Logger LOG = Logger.getLogger(XmlEadParser.class);
 	public static final String UTF_8 = "utf-8";
 	public static final QName EAD = new QName(APENET_EAD, "ead");
@@ -78,8 +84,8 @@ public class XmlEadParser extends AbstractParser {
 
         eadContent.setEadid(ead.getEadid());
         upperLevels.add(new LevelInfo(ead.getId()));
-        String initialFilePath = ead.getPathApenetead();
-        fileInputStream = getFileInputStream(ead.getPathApenetead());
+        String initialFilePath = ead.getPath();
+        fileInputStream = getFileInputStream(ead.getPath());
 
 
 		String eadid = eadContent.getEadid();
@@ -113,6 +119,7 @@ public class XmlEadParser extends AbstractParser {
 		EADCounts eadCounts = new EADCounts();
 		boolean noCLevelFound = true;
 		Long ecId = null;
+		Set<String> unitids = new HashSet<String>();
 		try {
 			JpaUtil.beginDatabaseTransaction();
 			for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
@@ -142,7 +149,7 @@ public class XmlEadParser extends AbstractParser {
 							ecId  = eadContent.getEcId();
 							eadContent = null;
 						}						
-						eadCounts.addEadCounts(XmlCLevelParser.parse(xmlReader, ecId, null, cOrderId++, ead, solrPublisher, upperLevels, fullHierarchy));
+						eadCounts.addEadCounts(XmlCLevelParser.parse(xmlReader, ecId, null, cOrderId++, ead, solrPublisher, upperLevels, fullHierarchy, unitids));
 					} else {
 						xmlWriterHolder.writeStartElement(xmlReader);
 					}

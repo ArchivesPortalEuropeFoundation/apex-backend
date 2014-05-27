@@ -140,14 +140,14 @@ public abstract class AbstractSolrPublisher {
 			solrTime += getSolrServerHolder().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
 			numberOfPublishedItems += MAX_NUMBER_OF_PENDING_DOCS;
-			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
+			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems);
 		}
 	}
 	public void commitSolrDocuments() throws SolrServerException{
 		if (docs.size() > 0) {
 			solrTime += getSolrServerHolder().add(docs);
 			numberOfPublishedItems += docs.size();
-			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
+			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems );
 			docs = new ArrayList<SolrInputDocument>();
 		}
 	}

@@ -89,7 +89,7 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 	private static XPathExpression otherExpression;
 	private static XPathExpression displayIntroExpression;
 	private static XPathExpression displayDidExpression;
-
+	private static DocumentBuilder builder;
 	static {
 		try {
 			XPATH.setNamespaceContext(new EADNamespaceContext());
@@ -105,7 +105,7 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 			fondTitleExpression = XPATH
 					.compile("/ead:ead/ead:eadheader/ead:filedesc/ead:titlestmt/ead:titleproper[1]//text()");
 			textBelowExpression = XPATH.compile("./text()");
-			countNumberOfDAOsExpression = XPATH.compile("count(//ead:dao[not(@xlink:title='thumbnail')])");
+			countNumberOfDAOsExpression = XPATH.compile("count(./ead:dao[not(@xlink:title='thumbnail')])");
 			daoRoleAttributeExpression = XPATH.compile("./ead:dao/@xlink:role");
 			// daoRoleAttributeExpression =
 			// XPATH.compile("./ead:dao[not(@xlink:title='thumbnail')]/@xlink:role");
@@ -122,7 +122,7 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 			unitdateNormalExpression = XPATH.compile("./ead:unitdate/@normal");
 			langmaterialExpression = XPATH.compile("./ead:langmaterial/ead:language/@langcode");
 			didOtherExpression = XPATH
-					.compile("./ead:did/node()[not(name()='unittitle' or name()='unitid' or name()='unitdate' or name()='dao')]//text()");
+					.compile("./node()[not(name()='unittitle' or name()='unitid' or name()='unitdate' or name()='dao')]//text()");
 			scopecontentExpression = XPATH.compile("./ead:scopecontent//text()");
 			otherExpression = XPATH.compile("./node()[not(name()='scopecontent' or name()='did')]//text()");
 			displayIntroExpression = XPATH.compile("/ead:ead/ead:archdesc/ead:scopecontent or"
@@ -144,7 +144,11 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 					+ "/ead:ead/ead:archdesc/ead:did/ead:physloc/@label or "
 					+ "/ead:ead/ead:archdesc/ead:did/ead:materialspec or "
 					+ "/ead:ead/ead:archdesc/ead:did/ead:physdesc or " + "/ead:ead/ead:archdesc/ead:did/ead:dao");
-		} catch (XPathExpressionException e) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setNamespaceAware(true);
+			factory.setIgnoringComments(true);  
+			builder = factory.newDocumentBuilder();
+		} catch (Exception e) {
 			LOG.info(e.getMessage(), e);
 		}
 	}
@@ -156,12 +160,11 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 	}
 
 	public long parseHeader(EadContent eadContent, PublishData publishData) throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
 		long numberOfDaos = 0l;
 		archivalinstitution = ead.getArchivalInstitution();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(new InputSource(new StringReader(eadContent.getXml())));
+		StringReader stringReader = new StringReader(eadContent.getXml());
+		Document doc = builder.parse(new InputSource(stringReader));
+		stringReader.close();
 		doc.getDocumentElement().normalize();
 		// Obtain the archival institution.
 
@@ -207,10 +210,9 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 	}
 
 	public long parseCLevel(PublishData indexData) throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(new InputSource(new StringReader(indexData.getXml())));
+		StringReader stringReader = new StringReader(indexData.getXml());
+		Document doc = builder.parse(new InputSource(stringReader));
+		stringReader.close();
 		doc.getDocumentElement().normalize();
 		Node cLevelNode = (Node) cLevelExpression.evaluate(doc, XPathConstants.NODE);
 		return parseCLevelOrArchdesc(cLevelNode, indexData);
@@ -248,7 +250,7 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 			otherinfo += WHITE_SPACE
 					+ getText((NodeList) otherUnitdateExpression.evaluate(didNode, XPathConstants.NODESET));
 		}
-		otherinfo += WHITE_SPACE + getText((NodeList) didOtherExpression.evaluate(cLevelOrArchdescNode, XPathConstants.NODESET));
+		otherinfo += WHITE_SPACE + getText((NodeList) didOtherExpression.evaluate(didNode, XPathConstants.NODESET));
 		// other parsing
 		String scopecontent = getText((NodeList) scopecontentExpression.evaluate(cLevelOrArchdescNode, XPathConstants.NODESET));
 		otherinfo += WHITE_SPACE + getText((NodeList) otherExpression.evaluate(cLevelOrArchdescNode, XPathConstants.NODESET));
@@ -359,6 +361,9 @@ public class EadSolrPublisher extends AbstractSolrPublisher{
 		}
 		add(doc1, SolrFields.UNITID, unitid);
 		add(doc1, SolrFields.OTHERUNITID, otherunitid);
+		if (StringUtils.isNotBlank(unitid)){
+			doc1.addField(SolrFields.DUPLICATE_UNITID, publishData.isDuplicateUnitid());
+		}
 		add(doc1, SolrFields.SCOPECONTENT, scopecontent);
 		add(doc1, SolrFields.TITLE, title);
 		if (publishData.isArchdesc()){

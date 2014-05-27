@@ -2,8 +2,10 @@ package eu.apenet.dashboard.services.ead.database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -21,14 +23,13 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class DatabaseEadPublisher {
 	private static final Logger LOG = Logger.getLogger(DatabaseEadPublisher.class);
 
 	public static long publish(Ead ead) throws Exception {
+		EadDatabaseSaver eadDatabaseSaver = new EadDatabaseSaver();
 		CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 		EadContent eadContent = ead.getEadContent();
 		eadContent.setVisible(true);
@@ -36,7 +37,7 @@ public class DatabaseEadPublisher {
 		ArchivalInstitution ai = ead.getArchivalInstitution();
 		Map<String, Object> fullHierarchy = new HashMap<String, Object>();
 		upperLevels.add(new LevelInfo(ead.getId()));
-		String initialFilePath = ead.getPathApenetead();
+		String initialFilePath = ead.getPath();
 		String eadid = eadContent.getEadid();
 		List<ArchivalInstitution> ais = new ArrayList<ArchivalInstitution>();
 		while (ai != null) {
@@ -63,9 +64,6 @@ public class DatabaseEadPublisher {
 		EadSolrPublisher solrPublisher = new EadSolrPublisher(ead);
 		Class<? extends Ead> clazz = XmlType.getContentType(ead).getEadClazz();
 		try {
-			if (ead instanceof SourceGuide || ead instanceof HoldingsGuide){
-				JpaUtil.beginDatabaseTransaction();
-			}
 			PublishData publishData = new PublishData();
 			publishData.setXml(eadContent.getXml());
 			publishData.setId(ead.getId().longValue());
@@ -73,16 +71,16 @@ public class DatabaseEadPublisher {
 			publishData.setFullHierarchy(fullHierarchy);
 			publishData.setArchdesc(true);
 			eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent, publishData));
+			Set<String> unitids = new HashSet<String>();
 			int cOrderId = 0;
 			CLevel clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
 			while (clevel != null) {
-				eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevel,eadContent.getEcId(),ead, solrPublisher, upperLevels, fullHierarchy));
+				eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevel,eadContent.getEcId(),ead, solrPublisher, upperLevels, fullHierarchy,unitids, eadDatabaseSaver));
 				cOrderId++;
 				clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
 			}
-			if (!(ead instanceof SourceGuide || ead instanceof HoldingsGuide)){
-				JpaUtil.beginDatabaseTransaction();
-			}
+			JpaUtil.beginDatabaseTransaction();
+			eadDatabaseSaver.updateAll();
 			solrPublisher.commitAll(eadCounts);
 			JpaUtil.commitDatabaseTransaction();
 

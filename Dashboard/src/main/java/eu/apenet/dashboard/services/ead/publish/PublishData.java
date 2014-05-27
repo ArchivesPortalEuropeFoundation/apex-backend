@@ -12,6 +12,7 @@ public class PublishData {
 	private Map<String, Object> fullHierarchy;
 	private int orderId = 0;
 	private boolean archdesc;
+	private boolean duplicateUnitid = false;
 	public String getXml() {
 		return xml;
 	}
@@ -61,6 +62,12 @@ public class PublishData {
 	}
 	public void setArchdesc(boolean archdesc) {
 		this.archdesc = archdesc;
+	}
+	public boolean isDuplicateUnitid() {
+		return duplicateUnitid;
+	}
+	public void setDuplicateUnitid(boolean duplicateUnitid) {
+		this.duplicateUnitid = duplicateUnitid;
 	}
 
 }
