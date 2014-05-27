@@ -54,11 +54,11 @@
 	</logger>	
 	<logger name="eu.apenet.dashboard.services.eaccpf.publish.EacCpfSolrPublisher">
 		<level value="debug" />
-		<appender-ref ref="solr" /> 
+		<appender-ref ref="publish" /> 
 	</logger>	
 	<logger name="eu.apenet.dashboard.services.eag.publish.EagSolrPublisher">
 		<level value="debug" />
-		<appender-ref ref="solr" /> 
+		<appender-ref ref="publish" /> 
 	</logger>	
 	<logger name="eu">
 		<level value="info" />
