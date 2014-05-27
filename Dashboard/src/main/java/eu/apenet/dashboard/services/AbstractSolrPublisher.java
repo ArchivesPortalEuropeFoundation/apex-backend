@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 import eu.apenet.commons.solr.AbstractSolrServerHolder;
 
 public abstract class AbstractSolrPublisher {
-	private static final Logger LOGGER = Logger.getLogger(AbstractSolrPublisher.class);
+	private final Logger logger = Logger.getLogger(this.getClass());
 	protected static final String WHITE_SPACE = " ";
 	public static final String COLON = ":";
 	private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
@@ -42,7 +42,7 @@ public abstract class AbstractSolrPublisher {
 	}
 
 
-	protected static String obtainDate(String onedate, boolean isStartDate) {
+	protected String obtainDate(String onedate, boolean isStartDate) {
 		String year = null;
 		String month = null;
 		String day = null;
@@ -74,7 +74,7 @@ public abstract class AbstractSolrPublisher {
 			}
 			return obtainDate(year, month, day, isStartDate);
 		} catch (Exception ex) {
-			LOGGER.error("Error trying to obtain Date in Indexer: " + ex.getMessage());
+			logger.error("Error trying to obtain Date in Indexer: " + ex.getMessage());
 		}
 		return null;
 	}
@@ -140,14 +140,14 @@ public abstract class AbstractSolrPublisher {
 			solrTime += getSolrServerHolder().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
 			numberOfPublishedItems += MAX_NUMBER_OF_PENDING_DOCS;
-			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems);
+			logger.debug(getKey() + " #published: " + numberOfPublishedItems);
 		}
 	}
 	public void commitSolrDocuments() throws SolrServerException{
 		if (docs.size() > 0) {
 			solrTime += getSolrServerHolder().add(docs);
 			numberOfPublishedItems += docs.size();
-			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems );
+			logger.debug(getKey() + " #published: " + numberOfPublishedItems );
 			docs = new ArrayList<SolrInputDocument>();
 		}
 	}
