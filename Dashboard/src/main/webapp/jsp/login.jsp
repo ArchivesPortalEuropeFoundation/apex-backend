@@ -10,14 +10,14 @@
 		<h1 id="maintenanceMode"><s:text name="user.maintenancemode"/></h1>
 
 	</c:if>
-	<s:form action="login" method="post">
+	<s:form id="login" action="login" method="post"  focusElement="username">
 	<br></br>
 	<s:actionerror />
 	<s:actionmessage/>
 		<br></br>
 		
-		<s:textfield name="username" key="label.email_address"/>
-		<s:password name="password" key="label.password" cssClass="small"/>
+		<s:textfield name="username" key="label.email_address" id="username" />
+		<s:password name="password" key="label.password"/>
 		<s:checkbox name="dropOtherSession" key="label.login.dropothersession"/>
 					<br/>
 			<br/>
