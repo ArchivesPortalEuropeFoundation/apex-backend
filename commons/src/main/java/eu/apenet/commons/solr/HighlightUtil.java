@@ -148,7 +148,7 @@ public class HighlightUtil {
 				
 			}
 		} catch (Exception io) {
-			LOGGER.error("Unable to read the stopwords file: " + filename, io);
+			LOGGER.error("Unable to read the stopwords file: " + filename);
 		}
 		return stopwords;
 	}
