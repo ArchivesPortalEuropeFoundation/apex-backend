@@ -76,6 +76,7 @@ public final class SolrFields {
 	public final static String EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS = "numberOfInstitutions";
 	
 	public final static String REPOSITORY_CODE="repositoryCode";
+	public final static String DUPLICATE_UNITID = "duplicateUnitid";
 	public final static String EAG_NAME="name";
 	public final static String EAG_OTHER_NAMES = "names";
 }
