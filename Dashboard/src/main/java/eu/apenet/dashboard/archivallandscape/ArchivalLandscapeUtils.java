@@ -836,6 +836,10 @@ public class ArchivalLandscapeUtils {
 				if(aName.contains("&")){
 					aName = aName.replaceAll("&","&amp;");
 				}
+				//escape the character <
+				if(aName.contains("<")){
+					aName = aName.replaceAll("<", "&lt;");
+				}
 				didNode.append(aName);
 				didNode.append("</unittitle>");
 			}
@@ -857,6 +861,10 @@ public class ArchivalLandscapeUtils {
 					}
 					if(aName.contains("&")){
 						aName = aName.replaceAll("&","&amp;");
+					}
+					//escape the character <
+					if(aName.contains("<")){
+						aName = aName.replaceAll("<", "&lt;");
 					}
 					didNode.append(aName);
 					didNode.append("</unittitle>");

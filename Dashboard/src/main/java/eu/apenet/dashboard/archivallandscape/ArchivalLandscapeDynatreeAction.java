@@ -138,6 +138,7 @@ public class ArchivalLandscapeDynatreeAction extends DynatreeAction {
 			if (title.trim().length() == 0) {
 				title = " ";
 			}
+			title = title.replaceAll("<", "&lt;");
 		}
 		buffer.append(" \"" + title + "\"");
 	}

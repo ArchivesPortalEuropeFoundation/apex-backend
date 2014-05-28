@@ -66,10 +66,10 @@
 	                   			<s:iterator var="breadcrumb" value="breadcrumbRoute" status="breadcrumbStatus">&nbsp;-&nbsp;
 	                   				<c:choose>
 	                   					<c:when test="${breadcrumbStatus.last or empty breadcrumb.href}">
-	                   						<span class="withoutLinkBread" >${breadcrumb.place}</span>
+	                   						<span class="withoutLinkBread" ><c:out value="${breadcrumb.place}"/></span>
 	                   					</c:when>
 	                   					<c:otherwise>
-	                   						<span class="linkBread" ><a href="${breadcrumb.href}" >${breadcrumb.place}</a></span>
+	                   						<span class="linkBread" ><a href="${breadcrumb.href}" ><c:out value="${breadcrumb.place}"/></a></span>
 	                   					</c:otherwise>
 	                   				</c:choose>
 	                   			</s:iterator>
