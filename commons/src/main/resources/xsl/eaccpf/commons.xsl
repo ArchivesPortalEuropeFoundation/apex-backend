@@ -441,9 +441,6 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/>
-										<!-- <xsl:call-template name="relationType">
-											<xsl:with-param name="current" select="current()"/>
-										</xsl:call-template> -->
 									</xsl:otherwise>	
 								</xsl:choose>
 								<xsl:call-template name="relationType">
@@ -463,9 +460,6 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/>
-										<!-- <xsl:call-template name="relationType">
-											<xsl:with-param name="current" select="current()/parent::node()"/>
-										</xsl:call-template> -->
 									</xsl:otherwise>	
 								</xsl:choose>
 								<xsl:call-template name="relationType">
@@ -485,9 +479,6 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/>
-										<!-- <xsl:call-template name="relationType">
-											<xsl:with-param name="current" select="current()/parent::node()"/>
-										</xsl:call-template> -->
 									</xsl:otherwise>	
 								</xsl:choose>
 								<xsl:call-template name="relationType">
@@ -510,9 +501,6 @@
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:apply-templates select="." mode="other"/>
-											<!-- <xsl:call-template name="relationType">
-												<xsl:with-param name="current" select="current()/parent::node()"/>
-											</xsl:call-template> -->
 										</xsl:otherwise>	
 									</xsl:choose>
 									<xsl:call-template name="relationType">
@@ -535,9 +523,6 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:apply-templates select="." mode="other"/>
-								<!-- <xsl:call-template name="relationType">
-									<xsl:with-param name="current" select="current()/parent::node()"/>
-								</xsl:call-template> -->
 							</xsl:otherwise>	
 						</xsl:choose>
 							<xsl:call-template name="relationType">
@@ -554,9 +539,6 @@
 		<xsl:param name="link"/>
 	   	<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
 			<a href="{$link}" target="_blank"><xsl:apply-templates select="current()" mode="other"/></a>
-			<xsl:call-template name="relationType">
-			   	 <xsl:with-param name="current" select="current()/parent::node()"/>
-			</xsl:call-template>
 		</xsl:if>
 		<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
 			<xsl:choose>
@@ -656,9 +638,6 @@
 					</a>
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:call-template name="relationType">
-				<xsl:with-param name="current" select="current()"/>
-			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
 
