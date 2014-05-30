@@ -5,13 +5,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.opensymphony.xwork2.ActionSupport;
+public abstract class AbstractParser  {
 
-public abstract class AbstractParser extends ActionSupport {
-	/**
-	 * Serializable.
-	 */
-	private static final long serialVersionUID = 8139023272088479058L;
 
 	public static final String APENET_EAD = "urn:isbn:1-931666-22-9";
 	public static final String XLINK = "http://www.w3.org/1999/xlink";
@@ -70,7 +65,7 @@ public abstract class AbstractParser extends ActionSupport {
 		
 	}
 
-    protected void writeEAD(XMLStreamWriter xmlWriter) throws XMLStreamException {
+    protected final void writeEAD(XMLStreamWriter xmlWriter) throws XMLStreamException {
 		if (xmlWriter != null) {
 			xmlWriter.writeStartElement(EAD_ELEMENT.getPrefix(), EAD_ELEMENT.getLocalPart(), EAD_ELEMENT.getNamespaceURI());
 			xmlWriter.writeDefaultNamespace(APENET_EAD);

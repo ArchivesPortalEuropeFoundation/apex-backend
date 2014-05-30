@@ -24,9 +24,9 @@ import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
+import eu.apenet.dashboard.services.ead.publish.EadSolrPublisher;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.publish.PublishData;
-import eu.apenet.dashboard.services.ead.publish.EadSolrPublisher;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
@@ -36,10 +36,7 @@ import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class XmlEadParser extends AbstractParser {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8880198006458289413L;
+
 	private static Logger LOG = Logger.getLogger(XmlEadParser.class);
 	public static final String UTF_8 = "utf-8";
 	public static final QName EAD = new QName(APENET_EAD, "ead");

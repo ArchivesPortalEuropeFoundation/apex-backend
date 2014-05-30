@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.codehaus.stax2.XMLInputFactory2;
-import org.codehaus.stax2.XMLOutputFactory2;
-import org.codehaus.stax2.XMLStreamReader2;
-import org.codehaus.stax2.XMLStreamWriter2;
 
 /**
  * User: Yoann Moranville
@@ -26,12 +26,12 @@ public class EadCreator extends AbstractParser {
     private static final QName ARCHDESC_ELEMENT = new QName(APENET_EAD, "archdesc");
     private static final Logger LOG = Logger.getLogger(EadCreator.class);
 
-    private XMLStreamWriter2 xmlWriter;
-    private XMLInputFactory2 inputFactory;
+    private XMLStreamWriter xmlWriter;
+    private XMLInputFactory inputFactory;
 
     public EadCreator(OutputStream outputStream) throws XMLStreamException {
-        xmlWriter = (XMLStreamWriter2) ((XMLOutputFactory2)XMLOutputFactory2.newInstance()).createXMLStreamWriter(outputStream, UTF8);
-        inputFactory = ((XMLInputFactory2)XMLInputFactory2.newInstance());
+        xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, UTF8);
+        inputFactory = XMLInputFactory.newInstance();
     }
 
     public void writeEadContent(String xml) throws IOException, XMLStreamException {
@@ -40,7 +40,7 @@ public class EadCreator extends AbstractParser {
 
     public void writeEadContent(String xml, String level) throws IOException, XMLStreamException {
 //        LOG.info("XML: " + xml);
-        XMLStreamReader2 xmlReader = (XMLStreamReader2) inputFactory.createXMLStreamReader(IOUtils.toInputStream(xml, UTF8), UTF8);
+        XMLStreamReader xmlReader = inputFactory.createXMLStreamReader(IOUtils.toInputStream(xml, UTF8), UTF8);
 
         for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
             if (event == XMLStreamConstants.START_ELEMENT) {

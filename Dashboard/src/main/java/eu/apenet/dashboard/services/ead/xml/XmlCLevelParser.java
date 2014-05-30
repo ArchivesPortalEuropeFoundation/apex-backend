@@ -24,10 +24,7 @@ import eu.apenet.persistence.vo.Ead;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class XmlCLevelParser extends AbstractParser {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7619535186694781932L;
+
 	public static final QName CLEVEL = new QName(APENET_EAD, "c");
 	private static final QName UNITTITLE = new QName(APENET_EAD, "unittitle");
 	private static final QName UNITID = new QName(APENET_EAD, "unitid");
