@@ -18,10 +18,14 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.util.TextProviderHelper;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.codehaus.stax2.XMLStreamWriter2;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import eu.apenet.dashboard.actions.ajax.EditEadAction;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
@@ -40,7 +44,7 @@ public class EditParser extends AbstractParser {
     /**
 	 * Serializable.
 	 */
-	private static final long serialVersionUID = -8781964452841026355L;
+
 	private static final Logger LOG = Logger.getLogger(EditParser.class);
     public final QName C_ELEMENT = new QName(APENET_EAD, "c");
     public final QName EAD_ELEMENT = new QName(APENET_EAD, "ead");
@@ -1051,5 +1055,9 @@ public class EditParser extends AbstractParser {
 				this.getFormValues().remove(langcodeValue);
 			}
 		}
+    }
+    private String getText(String code){
+		ValueStack valueStack = ActionContext.getContext().getValueStack();
+		return TextProviderHelper.getText(code, code, valueStack);
     }
 }
