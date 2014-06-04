@@ -1,11 +1,16 @@
 var globalRefresh_interval, globalIndex, globalRefresh;
 
-function initContentManager() {
+function initContentManager(xmlTypeId) {
+	selectSelected(xmlTypeId);
     clearFilesFromSession();
 	initSearchOptions();
 	initSubpage();
-
 }
+
+function selectSelected(xmlTypeId){
+	$('#newSearchForm_xmlTypeId' + xmlTypeId).attr('checked', true);
+}
+
 function initSearchOptions() {
 	$(".typeRadio").click(function(event) {
 		 hideOrShowSelectAllFAsWindow();
@@ -27,6 +32,7 @@ function initSearchOptions() {
 		performNewSearch();
 	});
 }
+
 function initSubpage() {
 	$(".actions input").click(
 			function(event) {
@@ -78,7 +84,7 @@ function initSubpage() {
 		addFewFiles(ids);
 	});
 	//----------------------------------------------------------
-	
+
 	count();
 }
 
@@ -86,10 +92,12 @@ function select_all()
 {
 	$("#selectAll").click();
 }
+
 function select_none()
 {
 	$("#selectNone").click();
 }
+
 function enable_features(){
 }
 
@@ -204,7 +212,6 @@ function performNewSearch() {
 				initSubpage();
 				document.getElementById("ead-results-container")
 						.scrollIntoView(true);
-
 			});
 }
 function getUpdateCurrentSearchResultsForm() {

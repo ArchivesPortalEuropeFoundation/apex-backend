@@ -316,7 +316,7 @@
     }
     .contextMenu {
         position: absolute;
-        width: 440px;
+        width: auto;
         z-index: 99999;
         border: solid 1px #CCC;
         background: #EEE;
@@ -338,7 +338,8 @@
     .contextMenu a {
         color: #333;
         text-decoration: none;
-        display: block;
+        display: inline-block;
+/*         display: inline-block; */
         line-height: 20px;
         height: 20px;
         background-position: 6px center;
