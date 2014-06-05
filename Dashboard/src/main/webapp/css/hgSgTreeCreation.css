@@ -37,7 +37,6 @@
 .contextMenu a {
 	color: #333;
 	text-decoration: none;
-/* 	display: block; */
 	display: inline-block;
 	line-height: 20px;
 	height: 20px;

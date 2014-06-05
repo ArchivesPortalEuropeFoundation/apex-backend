@@ -27,9 +27,6 @@
 				<tr>
 					<th><s:text name="content.message.type" />:</th>
 					<td rowspan="4">
-					
-<%-- 						<s:radio list="typeList" theme="simple" cssClass="typeRadio" name="xmlTypeId" /> --%>
-						
 						<s:iterator value="typeList">
 							<input id="newSearchForm_xmlTypeId<s:property value="key" />" class="typeRadio" type="radio" value="<s:property value="key"/>" name="xmlTypeId">
 							<label for="newSearchForm_xmlTypeId<s:property value="key" />"><s:property value="value"/></label>
@@ -46,7 +43,6 @@
 				</tr>
 				<tr>
 					<th></th>
-					<!-- <td> </td> -->
 					<th><s:text name="content.message.validated" />:</th>
 					<td><s:checkboxlist list="validatedStatusList" name="validatedStatus" /></td>
 					<th><s:text name="content.message.queue" />:</th>
@@ -54,7 +50,6 @@
 				</tr>
 				<tr>
 					<th></th>
-					<!-- <td> </td> -->
 					<th><s:text name="content.message.published" />:</th>
 					<td><s:checkboxlist list="publishedStatusList" name="publishedStatus" /></td>
 					<th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
@@ -63,7 +58,6 @@
 				</tr>
 				<tr>
 					<th></th>
-					<!-- <td> </td> -->
 					<td colspan="5"><s:textfield name="searchTerms" />
 						<s:select cssClass="small left"	list="searchTermsFieldList" name="searchTermsField" />
 						<input type="submit" id="searchButton" value="<s:text name="content.message.search" />" class="mainButton"/>

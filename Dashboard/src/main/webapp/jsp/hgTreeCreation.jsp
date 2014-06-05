@@ -339,7 +339,6 @@
         color: #333;
         text-decoration: none;
         display: inline-block;
-/*         display: inline-block; */
         line-height: 20px;
         height: 20px;
         background-position: 6px center;
