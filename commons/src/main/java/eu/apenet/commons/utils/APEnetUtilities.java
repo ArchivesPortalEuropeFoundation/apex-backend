@@ -33,6 +33,7 @@ public class APEnetUtilities {
 	private static Map<String, Locale> iso3ToIso2LanguageCodesMap;
 	static {
 		iso2ToIso3LanguageCodesMap = new TreeMap<String, String>();
+		iso3ToIso2LanguageCodesMap = new TreeMap<String, Locale>();
 		String[] iso2Languages = Locale.getISOLanguages();
 		for (String iso2Language : iso2Languages) {
 			Locale locale = new Locale(iso2Language);
