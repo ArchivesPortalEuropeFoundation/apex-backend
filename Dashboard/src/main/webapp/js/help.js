@@ -30,8 +30,8 @@ function printCount(listId){
     var nb = 0;
     
     $.each(listId, function(index, value) {
-        nb++;
         if($("#check_" + value).length > 0){
+            nb++;
             if(!$("#check_" + value).is(":checked")){
                 $("#check_" + value).attr('checked','checked');
             }
