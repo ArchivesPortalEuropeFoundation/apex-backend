@@ -189,7 +189,61 @@
 							    </div>
 					        </div>
 					    </xsl:if>
-				     </xsl:for-each>	   
+				    	<xsl:if test="./eac:address/eac:addressLine[@localType='street']/text()">
+					    	<xsl:call-template name="commonChild">
+					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='street']"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   			<xsl:with-param name="posParent" select="''"/>
+		    					<xsl:with-param name="posChild" select="$posChild"/>
+					    		<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.street'"/>
+					    	</xsl:call-template>
+						</xsl:if>
+						<xsl:if test="./eac:address/eac:addressLine[@localType='postalcode']/text()">
+				    		<xsl:call-template name="commonChild">
+					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='postalcode']"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   			<xsl:with-param name="posParent" select="''"/>
+		    					<xsl:with-param name="posChild" select="$posChild"/>
+				    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.postalcode'"/>
+			    			</xsl:call-template>
+					    </xsl:if>
+					    <xsl:if test="./eac:address/eac:addressLine[@localType='localentity']/text()">
+				    		<xsl:call-template name="commonChild">
+					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='localentity']"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   			<xsl:with-param name="posParent" select="''"/>
+		    					<xsl:with-param name="posChild" select="$posChild"/>
+				    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.localentity'"/>
+				    		</xsl:call-template>
+						</xsl:if>
+						<xsl:if test="./eac:address/eac:addressLine[@localType='secondem']/text()">
+				    		<xsl:call-template name="commonChild">
+					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='secondem']"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   			<xsl:with-param name="posParent" select="''"/>
+		    					<xsl:with-param name="posChild" select="$posChild"/>
+				    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.secondem'"/>
+				    		</xsl:call-template>
+						</xsl:if>
+						<xsl:if test="./eac:address/eac:addressLine[@localType='firstdem']/text()">
+				    		<xsl:call-template name="commonChild">
+					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='firstdem']"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   			<xsl:with-param name="posParent" select="''"/>
+		    					<xsl:with-param name="posChild" select="$posChild"/>
+				    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.firstdem'"/>
+				    		</xsl:call-template>
+						</xsl:if>
+						<xsl:if test="./eac:address/eac:addressLine[@localType='other']/text()">
+				    		<xsl:call-template name="commonChild">
+					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='other']"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   			<xsl:with-param name="posParent" select="''"/>
+		    					<xsl:with-param name="posChild" select="$posChild"/>
+				    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.other'"/>
+				    		</xsl:call-template>
+						</xsl:if>
+				     </xsl:for-each>
 				</xsl:if>
 			<!-- localDescription -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription">
