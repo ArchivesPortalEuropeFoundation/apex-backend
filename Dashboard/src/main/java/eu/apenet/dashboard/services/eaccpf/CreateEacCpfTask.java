@@ -22,6 +22,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.UpFile;
+import java.util.LinkedList;
 
 public class CreateEacCpfTask extends AbstractEacCpfTask {
 
@@ -105,7 +106,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
     private String builderTitle(String path) {
         String title = "";
         StringBuilder builderTitle = new StringBuilder();
-        Map<String, String> titleMap = new HashMap<String, String>();
+        LinkedList<String[]> titleElements = new LinkedList<String[]>();
         try {
 
         	String result = ExistingFilesChecker.extractAttributeFromXML(path, "nameEntry/part", "localType", true, true);
@@ -114,50 +115,45 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         		title = ExistingFilesChecker.extractAttributeFromXML(path, "nameEntry/part", null, true, true);
         	} else{
         		// the title is formed by "surname, firstname patronymic"
-                titleMap = searchForAllElementTitle(path, "nameEntry/part");
+                titleElements = searchForAllElementTitle(path, "nameEntry/part");
         	}
 
             //List the elements if the titleMap is not empty
-            if (titleMap != null && !titleMap.isEmpty()) {
-                Iterator<?> it = titleMap.entrySet().iterator();
-                String surname = "";
-                String firstname = "";
-                String patronymic = "";
-                while (it.hasNext()) {
-                    Map.Entry<String, String> e = (Map.Entry) it.next();
-                    if (e.getKey().equals("surname")) {
-                        surname = titleMap.get(e.getKey());
+            if (titleElements != null && !titleElements.isEmpty()) {
+                StringBuilder surname = new StringBuilder();
+                StringBuilder firstname = new StringBuilder();
+                StringBuilder patronymic = new StringBuilder();
+                for (String[] titleElement : titleElements) {
+                    if (titleElement[0].equals("surname")) {
+                        if(surname.length() != 0){
+                            surname.append(" ");
+                        }
+                        surname.append(titleElement[1]);
                     }
-                    if (e.getKey().equals("firstname")) {
-                        firstname = titleMap.get(e.getKey());
+                    if (titleElement[0].equals("firstname")) {
+                        if(firstname.length() != 0){
+                            firstname.append(" ");
+                        }
+                        firstname.append(titleElement[1]);
                     }
-                    if (e.getKey().equals("patronymic")) {
-                        patronymic = titleMap.get(e.getKey());
+                    if (titleElement[0].equals("patronymic")) {
+                        if(patronymic.length() != 0){
+                            patronymic.append(" ");
+                        }
+                        patronymic.append(titleElement[1]);
                     }
                 }
                 // build the title
-                if (!surname.isEmpty()) {
-                    builderTitle.append(surname);
-                    if (!firstname.isEmpty()) {
-                        builderTitle.append(", ");
-                        builderTitle.append(firstname);
-                        if (!patronymic.isEmpty()) {
-                            builderTitle.append(" ");
-                            builderTitle.append(patronymic);
-                        }
-                    } else if (!patronymic.isEmpty()) {
-                        builderTitle.append(" ");
-                        builderTitle.append(patronymic);
-                    }
-                } else if (!firstname.isEmpty()) {
-                    builderTitle.append(firstname);
-                    if (!patronymic.isEmpty()) {
-                        builderTitle.append(" ");
-                        builderTitle.append(patronymic);
-                    }
-                } else if (!patronymic.isEmpty()) {
-                    builderTitle.append(patronymic);
-                } else {
+                builderTitle.append(surname);
+                if (builderTitle.length() != 0) {
+                    builderTitle.append(", ");
+                }
+                builderTitle.append(firstname);
+                if (builderTitle.length() != 0) {
+                    builderTitle.append(" ");
+                }
+                builderTitle.append(patronymic);
+                if (builderTitle.length() == 0) {
                     builderTitle.append(" ");
                 }
                 title = builderTitle.toString();
@@ -199,7 +195,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
      *
      * @return all the values of the element
      */
-    public Map<String, String> searchForAllElementTitle(String path, String element) {
+    private LinkedList<String[]> searchForAllElementTitle(String path, String element) {
         final String CONVERTED_FLAG = "Converted_apeEAC-CPF_version_";
         XMLStreamReader input = null;
         InputStream sfile = null;
@@ -209,7 +205,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
         xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
 
-        Map<String, String> titleMap = new HashMap<String, String>();
+        LinkedList<String[]> titleElements = new LinkedList<String[]>();
 
         try {
             sfile = new FileInputStream(path);
@@ -217,19 +213,19 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 
             boolean abort = false;
             boolean addText = false;
-            String importantData = "";
-            String localTypeValue = "";
             String[] pathElements = element.split("/");
+            String localType = "";
+            String elementContent = "";
 
             logger.debug("Checking file, looking for element " + element + ", path begins with " + pathElements[0]);
             while (!abort && input.hasNext()) {
-                switch (input.next()) {
+            switch (input.next()) {
                     case XMLEvent.START_ELEMENT:
                         if (input.getLocalName().equalsIgnoreCase(pathElements[(pathElements.length - 1)])) {
                             for (int i = 0; i < input.getAttributeCount(); i++) {
                                 if (input.getAttributeLocalName(i).equals("localType") && (input.getAttributeValue(i).equals("surname")
                                         || (input.getAttributeValue(i).equals("firstname")) || (input.getAttributeValue(i).equals("patronymic")))) {
-                                    localTypeValue = input.getAttributeValue(i);
+                                    localType = input.getAttributeValue(i);
                                     addText = true;
                                 }
                             }
@@ -237,14 +233,16 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                         break;
                     case XMLEvent.CHARACTERS:
                         if (addText) {
-                            importantData = input.getText();
-                            if (importantData.startsWith(CONVERTED_FLAG)) {
+                            elementContent = input.getText();
+                            if (elementContent.startsWith(CONVERTED_FLAG)) {
                                 logger.debug("Returning true");
-                                titleMap.put("true", "true");
-                                return titleMap;
+                                String[] trueArray = {"true", "true"};
+                                titleElements.add(trueArray);
+                                return titleElements;
                             } else {
                                 logger.debug("Adding " + input.getText());
-                                titleMap.put(localTypeValue, importantData);
+                                String[] titleElement = {localType, elementContent};
+                                titleElements.add(titleElement);
                             }
                             addText = false;
                         }
@@ -267,10 +265,11 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
             }
         }
 
-        if (titleMap.isEmpty()) {
+        if (titleElements.isEmpty()) {
             logger.debug("Returning error");
-            titleMap.put("error", "error");
+            String[] errorArray = {"error", "error"};
+            titleElements.add(errorArray);
         }
-        return titleMap;
+        return titleElements;
     }
 }

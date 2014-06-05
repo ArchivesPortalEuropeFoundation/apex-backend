@@ -187,12 +187,21 @@ public class StoreEacCpfAction extends EacCpfAction {
                         StringBuilder patronymic = new StringBuilder();
                         for (Part part : parts) {
                             if (part.getLocalType().equals("surname")) {
+                                if(surname.length() != 0){
+                                    surname.append(" ");
+                                }
                                 surname.append(part.getContent());
                             }
                             if (part.getLocalType().equals("firstname")) {
+                                if(firstname.length() != 0){
+                                    firstname.append(" ");
+                                }
                                 firstname.append(part.getContent());
                             }
                             if (part.getLocalType().equals("patronymic")) {
+                                if(patronymic.length() != 0){
+                                    patronymic.append(" ");
+                                }
                                 patronymic.append(part.getContent());
                             }
                         }
