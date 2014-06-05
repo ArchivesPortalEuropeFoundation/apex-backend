@@ -50,6 +50,10 @@ body {
 	text-align:left;
 	padding-top:8px;
 }
+pre.outline{
+	font-size:8pt;
+	font-family: Arial,sans-serif;
+}
 #eacCpfDisplayPortlet .subrow{
 	margin-left:40px;
 }

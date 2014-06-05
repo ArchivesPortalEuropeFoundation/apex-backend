@@ -1224,6 +1224,13 @@ function init(){
 					$(this).addClass("hidden");
 				}
 			});
+		}else if ($(this).find('pre').length > 3){
+			$(this).find('.displayLinkShowMore').removeClass("hidden");
+			$(this).find('pre').each(function(index){
+				if(index > 2){
+					$(this).addClass("hidden");
+				}
+			});
 		}else{
 			$(this).find('.displayLinkShowMore').addClass("hidden");
 		}
