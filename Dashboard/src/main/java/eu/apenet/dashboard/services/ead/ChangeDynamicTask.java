@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
+import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;

@@ -30,7 +30,7 @@ import eu.apenet.dashboard.manual.EditParser;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.dashboard.services.ead.xml.ReconstructEadFile;
-import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
+import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.persistence.dao.HgSgFaRelationDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;

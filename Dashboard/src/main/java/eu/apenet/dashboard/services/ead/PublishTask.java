@@ -6,7 +6,8 @@ import java.util.Properties;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.services.ead.database.DatabaseEadPublisher;
-import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
+import eu.apenet.dashboard.services.ead.xml.stream.DatabaseXmlEadParser;
+import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
@@ -39,7 +40,7 @@ public class PublishTask extends AbstractEadTask {
 					solrTime = XmlEadParser.parseEadAndPublish(ead);
 				} else {
 					message = "database";
-					solrTime = DatabaseEadPublisher.publish(ead);
+					solrTime = DatabaseXmlEadParser.publish(ead);
 				}
 
 				logSolrAction(ead, message, solrTime, System.currentTimeMillis() - (startTime + solrTime));
