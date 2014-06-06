@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.Properties;
 
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-
 import org.apache.commons.io.FileUtils;
 
 import com.ctc.wstx.exc.WstxParsingException;
@@ -15,7 +13,6 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.utils.XMLUtils;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
-import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
