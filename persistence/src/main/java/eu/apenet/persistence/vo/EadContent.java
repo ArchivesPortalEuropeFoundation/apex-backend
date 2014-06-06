@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 
 @Entity
@@ -44,11 +43,6 @@ public class EadContent implements Serializable{
 	private String eadid;
 	private String unittitle;
 	private String xml;
-	private boolean visible;
-	@Column(name = "display_intro")
-	private boolean displayIntro;
-	@Column(name = "display_did")
-	private boolean displayDid;
 
 	public Ead getEad(){
 		if (findingAid != null){
@@ -141,24 +135,6 @@ public class EadContent implements Serializable{
 	}
 	public void setHgId(Integer hgId) {
 		this.hgId = hgId;
-	}
-	public boolean isVisible() {
-		return visible;
-	}
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-	public boolean isDisplayIntro() {
-		return displayIntro;
-	}
-	public void setDisplayIntro(boolean displayIntro) {
-		this.displayIntro = displayIntro;
-	}
-	public boolean isDisplayDid() {
-		return displayDid;
-	}
-	public void setDisplayDid(boolean displayDid) {
-		this.displayDid = displayDid;
 	}
 
 }
