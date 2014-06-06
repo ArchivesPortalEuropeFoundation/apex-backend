@@ -203,6 +203,10 @@ public class CreateEacCpf {
             maintenanceEvent.getAgent().setContent("automatically created agent");
         }
 
+        EventDescription eventDescription = new EventDescription();
+        eventDescription.setContent("Converted_apeEAC-CPF_version_Dashboard");
+        maintenanceEvent.setEventDescription(eventDescription);
+
         // MaintenanceHistory
         control.getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
 
