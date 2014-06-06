@@ -48,7 +48,7 @@ public class XMLStreamWriterHolder {
 		}
 	}
 
-	protected void writeStartElement(XMLStreamReader xmlReader) throws XMLStreamException {
+	public void writeStartElement(XMLStreamReader xmlReader) throws XMLStreamException {
 		QName element = xmlReader.getName();
 		if (xmlWriter == null) {
 			LOGGER.error("Try to write element: "  + element.getPrefix() + ":" + element.getLocalPart() + ", but writer is already closed.");
@@ -62,19 +62,19 @@ public class XMLStreamWriterHolder {
 		}
 	}
 
-	protected void writeCharacters(XMLStreamReader xmlReader) throws XMLStreamException {
+	public void writeCharacters(XMLStreamReader xmlReader) throws XMLStreamException {
 		if (xmlWriter != null) {
 			xmlWriter.writeCharacters(xmlReader.getText());
 		}
 	}
 
-	protected void writeCData(XMLStreamReader xmlReader) throws XMLStreamException {
+	public void writeCData(XMLStreamReader xmlReader) throws XMLStreamException {
 		if (xmlWriter != null) {
 			xmlWriter.writeCData(xmlReader.getText());
 		}
 	}
 
-	protected void close() throws XMLStreamException {
+	public void close() throws XMLStreamException {
 		if (xmlWriter != null) {
 			while (numberOfOpenedElements > 0) {
 				closeElement();
