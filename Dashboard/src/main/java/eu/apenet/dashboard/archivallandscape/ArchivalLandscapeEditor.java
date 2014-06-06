@@ -464,7 +464,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					}
 				}
 				boolean rollback = false;
-				if(!ContentUtils.containsEads(ai)){
+				if(!ContentUtils.containsEads(ai) && !ContentUtils.containsEacs(ai)){
 					if(ai.isGroup()){
 						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
 						if(children!=null && children.size()>0){
@@ -496,7 +496,9 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					rollback = true;
 				}
 				if(!rollback){ // The final commits
-					JpaUtil.commitDatabaseTransaction();
+					if(!JpaUtil.noTransaction()){
+						JpaUtil.commitDatabaseTransaction();	
+					}
 					removePathsToBeDeleted();
 				}else{ //undo changes
 					JpaUtil.rollbackDatabaseTransaction();
@@ -739,7 +741,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		response.append(buildNode(actionName,actionValue));
 		actionName = "showDeleteAction";
-		if(archivalInstitution!=null && !ContentUtils.containsEads(archivalInstitution)){
+		if(archivalInstitution!=null && !ContentUtils.containsEads(archivalInstitution) && !ContentUtils.containsEacs(archivalInstitution)){
 			actionValue = "true";
 		}else{
 			actionValue = "false";

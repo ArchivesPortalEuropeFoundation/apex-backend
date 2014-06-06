@@ -34,6 +34,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
@@ -42,6 +43,7 @@ import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SentMailRegister;
@@ -372,6 +374,8 @@ public class ContentUtils {
 				DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
 				updateContainsSearchableItemsInNewAiGroups(ai);
 			} else {
+				boolean updated = false;
+				//ead part
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 				ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 				eadSearchOptions.setArchivalInstitionId(ai.getAiId());
@@ -385,6 +389,7 @@ public class ContentUtils {
 						eadSearchOptions.setContentClass(SourceGuide.class);
 						numberOfPublishedEads += eadDAO.countEads(eadSearchOptions);
 						if (numberOfPublishedEads == 1) {
+							updated = true;
 							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
 							ai.setContainSearchableItems(searchable);
 							ai.setContentLastModifiedDate(new Date());
@@ -397,11 +402,25 @@ public class ContentUtils {
 						}
 					}
 				}
+				if (!updated && numberOfPublishedEads <= 1) {
+					EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+					List<EacCpf> publishedEacs = eacCpfDAO.getAllEacCpfsPublishedByArchivalInstitutionId(ai.getAiId());
+					if(publishedEacs!=null && publishedEacs.size()>0){
+						LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
+						ai.setContainSearchableItems(searchable);
+						ai.setContentLastModifiedDate(new Date());
+						ArchivalInstitution parent = ai.getParent();
+						if (parent == null) {
+							DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
+						} else {
+							updateContainsSearchableItemsInNewAiGroups(ai);
+						}
+					}
+				}
 				if (numberOfPublishedEads != 1) {
 					ai.setContentLastModifiedDate(new Date());
 					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
 				}
-
 			}
 		} else {
 			ai.setContentLastModifiedDate(new Date());
@@ -589,5 +608,20 @@ public class ContentUtils {
 			}
 		}
 		return dropDownTable;
+	}
+
+	public static boolean containsEacs(ArchivalInstitution archivalInstitution) {
+		if (archivalInstitution.isGroup()) {
+			boolean hasEads = false;
+			Iterator<ArchivalInstitution> childIterator = archivalInstitution.getChildArchivalInstitutions().iterator();
+			while (!hasEads && childIterator.hasNext()) {
+				hasEads = hasEads || containsEacs(childIterator.next());
+			}
+			return hasEads;
+		} else {
+			EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
+//			return eacDAO.getAllEacCpfsPublishedByArchivalInstitutionId(archivalInstitution.getAiId()).size()>0;
+			return eacDAO.getAllEacCpfsByArchivalInstitutionId(archivalInstitution.getAiId()).size()>0;
+		}
 	}
 }

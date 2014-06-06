@@ -257,4 +257,24 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         criteria.setProjection(Projections.property("id"));
         return criteria.list();
     }
+
+	@Override
+	public List<EacCpf> getAllEacCpfsPublishedByArchivalInstitutionId(int aiId) {
+		Criteria criteria = getEacCpfCriteriaByArchivalInstitution(aiId);
+        criteria.add(Restrictions.eq("eac.published",true));
+        return criteria.list();
+	}
+
+	private Criteria getEacCpfCriteriaByArchivalInstitution(int aiId) {
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "eac");
+        criteria = criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        return criteria;
+	}
+
+	@Override
+	public List<EacCpf> getAllEacCpfsByArchivalInstitutionId(int aiId) {
+		Criteria criteria = getEacCpfCriteriaByArchivalInstitution(aiId);
+		return criteria.list();
+	}
 }

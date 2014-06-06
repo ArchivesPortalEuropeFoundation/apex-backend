@@ -943,7 +943,8 @@ public class ArchivalLandscape extends ActionSupport{
 				eadSearchOptions.setContentClass(SourceGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
-			if(!hasEads){
+			boolean hasEacs = ContentUtils.containsEacs(ai);
+			if(!hasEads && !hasEacs){
 				path = ai.getEagPath();
 				resultRemoveAI = cu.deleteArchivalInstitution(ai,true);
 				if(path!=null && path.length()>0){ //there are files to be removed
