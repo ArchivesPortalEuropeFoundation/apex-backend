@@ -74,7 +74,7 @@ public class QueueTask implements Runnable {
 					stopped = true;
 				}
 			}
-			if (!stopped && (System.currentTimeMillis() + INTERVAL) < endTime) {
+			if (!scheduler.isShutdown() && !stopped && (System.currentTimeMillis() + INTERVAL) < endTime) {
 				cleanUp();
 				try {
 					Thread.sleep(INTERVAL);
@@ -90,6 +90,8 @@ public class QueueTask implements Runnable {
 		if (!scheduler.isShutdown()) {
 			scheduler.schedule(new QueueTask(scheduler, duration, delay), delay.getMilliseconds(),
 					TimeUnit.MILLISECONDS);
+		}else {
+			LOGGER.info("Queue is going to terminate");
 		}
 	}
 
