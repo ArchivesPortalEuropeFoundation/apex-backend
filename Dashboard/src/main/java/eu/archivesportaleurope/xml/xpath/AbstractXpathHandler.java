@@ -120,7 +120,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	
 	@Override
 	public void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-		boolean pastMatch = match;
+		boolean pastMatch = xpathElementMatch;
 		int xpathPositionSize = xpathPosition.size();
 		int nextXpathPositionSize = xpathPositionSize -1;
 		
@@ -144,7 +144,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 		}else {
 			match = false;
 		}
-		if (pastMatch && !match){
+		if (pastMatch && !xpathElementMatch){
 			processExactEndElementMatch();
 		}
 	}

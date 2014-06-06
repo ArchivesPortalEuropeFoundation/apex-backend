@@ -3,11 +3,10 @@ package eu.archivesportaleurope.xml.xpath;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.stream.XMLStreamReader;
-
 import org.apache.commons.lang.StringUtils;
 
 public abstract class StringXpathHandler extends AbstractXpathHandler {
+	private static final String NO_SEPARATOR = "";
 	public static final String WHITE_SPACE = " ";
 	private List<String> result = new ArrayList<String>();
 
@@ -21,7 +20,7 @@ public abstract class StringXpathHandler extends AbstractXpathHandler {
 	protected static String removeUnusedCharacters(String input){
 		if (input != null){
 			String result = input.replaceAll("[\t ]+", " ");
-			result = result.replaceAll("[\n\r]+", "");
+			result = result.replaceAll("[\n\r]+", NO_SEPARATOR);
 			return result;
 		}else {
 			return null;
@@ -33,35 +32,39 @@ public abstract class StringXpathHandler extends AbstractXpathHandler {
 		return result;
 	}
 	public String getResultAsString(){
-		StringBuilder builder = new StringBuilder();
-		for (String item: result){
-			builder.append(item);
-		}
-		return builder.toString().trim();
+		return convertToString(0, NO_SEPARATOR);	
 	}
 
 	public String getResultAsStringWithWhitespace(){
-		StringBuilder builder = new StringBuilder();
-		for (String item: result){
-			builder.append(item + WHITE_SPACE);
-		}
-		return builder.toString().trim();
+		return convertToString(0, WHITE_SPACE);	
 	}
 	public String getFirstResult(){
 		if (result.size() > 0){
-			return result.get(0).trim();
+			return convertEmptyStringToNull(result.get(0));
 		}
 		return null;
 	}
 	
 	public String getOtherResultsAsStringWithWhitespace(){
-		StringBuilder builder = new StringBuilder();
-		for (int i = 1; i < result.size(); i++){
-			builder.append(result.get(i) + WHITE_SPACE);
-		}
-		return builder.toString().trim();
+		return convertToString(1, WHITE_SPACE);	
 	}
-	
+	private String convertToString(int start, String separator){
+		if (result.size() == 0){
+			return null;
+		}
+		StringBuilder builder = new StringBuilder();
+		for (int i = start; i < result.size(); i++){
+			builder.append(result.get(i) + separator);
+		}
+		return convertEmptyStringToNull(builder.toString());
+	}
+	private String convertEmptyStringToNull(String string){
+		if (StringUtils.isBlank(string)){
+			return null;
+		}else {
+			return string.trim();
+		}
+	}
 	@Override
 	protected void clear() {
 		result.clear();

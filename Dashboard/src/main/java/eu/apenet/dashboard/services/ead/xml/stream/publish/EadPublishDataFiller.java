@@ -7,6 +7,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
+import org.apache.commons.lang.StringUtils;
+
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
@@ -60,7 +62,7 @@ public class EadPublishDataFiller {
 			 * unitids
 			 */
 			unitidHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did", "unitid" });
-			unitidHandler.setOnlyFirst(true);
+			unitidHandler.setAllTextBelow(true);
 			unitidHandler.setAttribute("type", "call number", false);
 			otherUnitidHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
 					new String[] { "did", "unitid" });
@@ -187,7 +189,7 @@ public class EadPublishDataFiller {
 	}
 
 	public void fillData(EadPublishData publishData) {
-		publishData.setUnitid(unitidHandler.getResultAsString());
+		publishData.setUnitid(unitidHandler.getFirstResult());
 		publishData.setOtherUnitid(otherUnitidHandler.getResultAsStringWithWhitespace());
 		publishData.setFirstUnittitle(unittitleHandler.getFirstResult());
 		publishData.setScopecontent(scopecontentHandler.getResultAsStringWithWhitespace());
@@ -198,12 +200,21 @@ public class EadPublishDataFiller {
 		for (String roledao : daoRoleHandler.getResult()) {
 			publishData.getRoledao().add(roledao);
 		}
+		StringBuilder otherUnitid = new StringBuilder();
+		add(otherUnitid, unitidHandler.getOtherResultsAsStringWithWhitespace());
+		add(otherUnitid, otherUnitidHandler.getResultAsStringWithWhitespace());
+		publishData.setOtherUnitid(otherUnitid.toString().trim());
 		StringBuilder other = new StringBuilder();
-		other.append(unittitleHandler.getOtherResultsAsStringWithWhitespace());
-		other.append(StringXpathHandler.WHITE_SPACE + unitdateHandler.getOtherResultsAsStringWithWhitespace());
-		other.append(StringXpathHandler.WHITE_SPACE + didOtherHandler.getResultAsStringWithWhitespace());
-		other.append(StringXpathHandler.WHITE_SPACE + otherHandler.getResultAsStringWithWhitespace());
-		publishData.setOtherinfo(other.toString());
+		add(other, unittitleHandler.getOtherResultsAsStringWithWhitespace());
+		add(other, unitdateHandler.getOtherResultsAsStringWithWhitespace());
+		add(other, didOtherHandler.getResultAsStringWithWhitespace());
+		add(other, otherHandler.getResultAsStringWithWhitespace());
+		publishData.setOtherinfo(other.toString().trim());
 
+	}
+	private void add(StringBuilder other, String item){
+		if (StringUtils.isNotBlank(item)){
+			other.append(StringXpathHandler.WHITE_SPACE + item);
+		}
 	}
 }

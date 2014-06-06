@@ -12,7 +12,9 @@ public class TextXpathHandler extends StringXpathHandler {
 
 	@Override
 	protected void writeContent(String content) {
-		temp += removeUnusedCharacters(content);
+		if (StringUtils.isNotBlank(content)){
+			temp += removeUnusedCharacters(content);
+		}
 
 	}
 	@Override
