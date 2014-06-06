@@ -1171,20 +1171,23 @@ input.inputButtonSubmitAL{
     color: #808080;
     font-style: italic;
 }
-.harvestProfileSucceed {
+.harvestProfileSucceed, .queueStarted {
     color: green;
     font-weight: bold;
     text-transform: uppercase;
 }
-.harvestProfileWarnings {
+.harvestProfileWarnings  {
     color: green;
     font-weight: bold;
     text-transform: uppercase;
 }
-.harvestProfileErrors {
+.harvestProfileErrors, .queueStopped, .queueStopping {
     color: #FF0000;
     font-weight: bold;
     text-transform: uppercase;
+}
+.queueStopping {
+	background-color: yellow;
 }
 .fullWidth {
 	width: 100%;
