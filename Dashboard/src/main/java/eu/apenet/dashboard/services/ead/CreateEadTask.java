@@ -13,6 +13,7 @@ import com.ctc.wstx.exc.WstxParsingException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.commons.utils.XMLUtils;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -70,8 +71,8 @@ public class CreateEadTask extends AbstractEadTask {
 
 			newEad.setAiId(aiId);
 			newEad.setArchivalInstitution(archivalInstitution);
-			newEad.setEadid(eadid);
-			newEad.setTitle(title);
+			newEad.setEadid(XMLUtils.removeUnusedCharacters(eadid));
+			newEad.setTitle(XMLUtils.removeUnusedCharacters(title));
 			newEad.setConverted(isConverted);
 			newEad.setUploadDate(new Date());
 			// / STORING THE NEW FINDING AID IN THE FILE SYSTEM ///
