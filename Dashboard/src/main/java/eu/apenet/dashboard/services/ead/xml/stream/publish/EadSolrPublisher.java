@@ -20,6 +20,7 @@ import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.utils.XMLUtils;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -57,8 +58,8 @@ public class EadSolrPublisher {
 
 	public EadSolrPublisher(Ead ead) {
 		this.ead = ead;
-		eadidstring = ead.getEadid();
-		fond = ead.getTitle();
+		eadidstring = XMLUtils.removeUnusedCharacters(ead.getEadid());
+		fond = XMLUtils.removeUnusedCharacters(ead.getTitle());
 		xmlType = XmlType.getEadType(ead);
 		eadDao = DAOFactory.instance().getEadDAO();
 	}
