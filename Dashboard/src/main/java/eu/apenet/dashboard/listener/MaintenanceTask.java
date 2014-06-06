@@ -43,11 +43,11 @@ public class MaintenanceTask extends Thread {
 				eadSearchOptions.setQueuing(queuingStates);
 				try {
 					eadSearchOptions.setEadClass(HoldingsGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
+					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
 					eadSearchOptions.setEadClass(SourceGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
+					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
 					eadSearchOptions.setEadClass(FindingAid.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
+					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
 				}
