@@ -176,18 +176,12 @@ public class SolrPublisher {
 		// Obtain the archival institution.
 
 		numberOfDaos = extractGeneralData(doc, eadContent);
-		if (eadContent.isDisplayDid() || eadContent.isDisplayIntro()){
-			Node archdescNode = (Node) archdescExpression.evaluate(doc, XPathConstants.NODE);
-			parseCLevelOrArchdesc(archdescNode,publishData);
-		}
+		Node archdescNode = (Node) archdescExpression.evaluate(doc, XPathConstants.NODE);
+		parseCLevelOrArchdesc(archdescNode,publishData);
 		return numberOfDaos;
 	}
 
 	private long extractGeneralData(Document doc, EadContent eadContent) throws XPathExpressionException {
-		Boolean displayIntro = (Boolean) displayIntroExpression.evaluate(doc, XPathConstants.BOOLEAN);
-		eadContent.setDisplayIntro(displayIntro);
-		Boolean displayDid = (Boolean) displayDidExpression.evaluate(doc, XPathConstants.BOOLEAN);
-		eadContent.setDisplayDid(displayDid);
 		Node eadidNode = (Node) eadidExpression.evaluate(doc, XPathConstants.NODE);
 		eadidstring = (String) textBelowExpression.evaluate(eadidNode, XPathConstants.STRING);
 		if (StringUtils.isBlank(eadidstring)) {
