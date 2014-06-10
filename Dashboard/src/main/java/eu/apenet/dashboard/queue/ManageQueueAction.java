@@ -67,6 +67,9 @@ public class ManageQueueAction extends AbstractAction {
 		getServletRequest().setAttribute("disabledItems", convert(queueDAO.getDisabledItems()));
 		getServletRequest().setAttribute("itemsWithErrors", convert(queueDAO.getItemsWithErrors()));
 		getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
+		getServletRequest().setAttribute("queueStatus", QueueDaemon.getQueueStatus());
+		getServletRequest().setAttribute("queueStatusCss", QueueDaemon.getQueueStatusCss());
+		
 		getServletRequest().setAttribute("queueProcessing", QueueDaemon.isQueueProcessing());
 		getServletRequest().setAttribute("europeanaHarvestingStarted", EadService.isHarvestingStarted());
 		getServletRequest().setAttribute("dashboardHarvestingStarted", HarvesterDaemon.isHarvesterProcessing());
