@@ -15,7 +15,7 @@
 		</tr>
 		<tr>
 			<th><s:text name="admin.queuemanagement.queue.active" /></th>
-			<td>${queueActive}</td>
+			<td class="${queueStatusCss}">${queueStatus}</td>
 		</tr>
 		<tr>
 			<th><s:text name="admin.queuemanagement.queue.processing" /></th>
@@ -43,10 +43,10 @@
 				<s:submit key="admin.queuemanagement.queue.stop"
 					cssClass="mainButton" name="startButton" />
 			</c:when>
-			<c:otherwise>
+			<c:when test="${not queueActive and not queueProcessing}">
 				<s:submit key="admin.queuemanagement.queue.start"
 					cssClass="mainButton" name="startButton" />
-			</c:otherwise>
+			</c:when>
 		</c:choose>
 
 	</s:form>
