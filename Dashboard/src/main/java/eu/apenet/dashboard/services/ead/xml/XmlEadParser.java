@@ -63,8 +63,6 @@ public class XmlEadParser extends AbstractParser {
 	private static long parse(Ead ead, EadSolrPublisher solrPublisher) throws Exception {
 		int cOrderId = 0;
 		EadContent eadContent = new EadContent();
-        if (solrPublisher != null)
-			eadContent.setVisible(true);
 
 		FileInputStream fileInputStream = null;
 		List<LevelInfo> upperLevels = new ArrayList<LevelInfo>();
