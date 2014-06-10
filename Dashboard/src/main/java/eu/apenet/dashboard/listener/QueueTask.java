@@ -87,7 +87,7 @@ public class QueueTask implements Runnable {
                     stopped = true;
                 }
             }
-            if (!stopped && (System.currentTimeMillis() + INTERVAL) < endTime) {
+            if (!scheduler.isShutdown() &&  !stopped && (System.currentTimeMillis() + INTERVAL) < endTime) {
                 cleanUp();
                 try {
                     Thread.sleep(INTERVAL);
@@ -103,7 +103,9 @@ public class QueueTask implements Runnable {
         if (!scheduler.isShutdown()) {
             scheduler.schedule(new QueueTask(scheduler, duration, delay), delay.getMilliseconds(),
                     TimeUnit.MILLISECONDS);
-        }
+        }else {
+			LOGGER.info("Queue is going to terminate");
+		}
     }
 
     private static void cleanUp() {
@@ -137,13 +139,7 @@ public class QueueTask implements Runnable {
                     if (content != null) {
                         content.setQueuing(QueuingState.BUSY);
                         if (content instanceof Ead) {
-                            if (content instanceof FindingAid) {
-                                DAOFactory.instance().getFindingAidDAO().updateSimple((FindingAid) content);
-                            } else if (content instanceof HoldingsGuide) {
-                                DAOFactory.instance().getHoldingsGuideDAO().updateSimple((HoldingsGuide) content);
-                            } else if (content instanceof SourceGuide) {
-                                DAOFactory.instance().getEadDAO().updateSimple((SourceGuide) content);
-                            }
+                            DAOFactory.instance().getEadDAO().updateSimple((Ead) content);
                         } else if (content instanceof EacCpf) {
                             DAOFactory.instance().getEacCpfDAO().updateSimple((EacCpf) content);
                         }
