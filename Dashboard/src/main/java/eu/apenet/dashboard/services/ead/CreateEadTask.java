@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.Properties;
 
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-
 import org.apache.commons.io.FileUtils;
 
 import com.ctc.wstx.exc.WstxParsingException;
@@ -13,8 +11,8 @@ import com.ctc.wstx.exc.WstxParsingException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.commons.utils.XMLUtils;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
-import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
@@ -70,8 +68,8 @@ public class CreateEadTask extends AbstractEadTask {
 
 			newEad.setAiId(aiId);
 			newEad.setArchivalInstitution(archivalInstitution);
-			newEad.setEadid(eadid);
-			newEad.setTitle(title);
+			newEad.setEadid(XMLUtils.removeUnusedCharacters(eadid));
+			newEad.setTitle(XMLUtils.removeUnusedCharacters(title));
 			newEad.setConverted(isConverted);
 			newEad.setUploadDate(new Date());
 			// / STORING THE NEW FINDING AID IN THE FILE SYSTEM ///
