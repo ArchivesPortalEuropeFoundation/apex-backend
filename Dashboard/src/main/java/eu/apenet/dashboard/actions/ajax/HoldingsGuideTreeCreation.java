@@ -139,9 +139,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
 
     private EadContent createDummyEadContent() {
         EadContent eadContent = new EadContent();
-        eadContent.setDisplayDid(false);
-        eadContent.setDisplayIntro(false);
-        eadContent.setVisible(false);
         return eadContent;
     }
 
