@@ -262,7 +262,16 @@ public final class XMLUtils {
 
         return results;
 	}
-	
+	public static String removeUnusedCharacters(String input){
+		if (input != null){
+			String result = input.replaceAll("[\t ]+", " ");
+			result = result.replaceAll("[\n\r]+", "");
+			return result;
+		}else {
+			return null;
+		}
+		
+	}
 	
 }
 
