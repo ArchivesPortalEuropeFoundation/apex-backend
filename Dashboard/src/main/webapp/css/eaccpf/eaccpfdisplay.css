@@ -14,6 +14,8 @@ body {
 	background-image: none;
 	background-color: white;
 	color: #2A4862;
+	margin-right:10px;
+	margin-left:10px;
 }
 #eacCpfDisplayPortlet #printEacDetails {
     float: inherit;
