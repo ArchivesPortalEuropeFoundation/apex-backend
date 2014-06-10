@@ -17,7 +17,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
+import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.persistence.dao.EadDAO;
