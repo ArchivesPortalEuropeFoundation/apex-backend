@@ -32,7 +32,6 @@ public class DatabaseEadPublisher {
 		EadDatabaseSaver eadDatabaseSaver = new EadDatabaseSaver();
 		CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 		EadContent eadContent = ead.getEadContent();
-		eadContent.setVisible(true);
 		List<LevelInfo> upperLevels = new ArrayList<LevelInfo>();
 		ArchivalInstitution ai = ead.getArchivalInstitution();
 		Map<String, Object> fullHierarchy = new HashMap<String, Object>();
