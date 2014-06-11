@@ -30,9 +30,9 @@
 						<s:iterator value="typeList">
 							<input id="newSearchForm_xmlTypeId<s:property value="key" />" class="typeRadio" type="radio" value="<s:property value="key"/>" name="xmlTypeId">
 							<label for="newSearchForm_xmlTypeId<s:property value="key" />"><s:property value="value"/></label>
-							<br> 
-						</s:iterator> 
-						
+							<br>
+						</s:iterator>
+
 					</td>
 					<th><s:text name="content.message.converted" />:</th>
 					<td><s:checkboxlist list="convertedStatusList" name="convertedStatus" /></td>
@@ -52,9 +52,16 @@
 					<th></th>
 					<th><s:text name="content.message.published" />:</th>
 					<td><s:checkboxlist list="publishedStatusList" name="publishedStatus" /></td>
-					<th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
-					<td class="findingAidOptions"><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
-
+                                        <c:choose>
+                                            <c:when test="${xmlTypeId == '2'}">
+                                                <th class="findingAidOptions"></th>
+                                                <td class="findingAidOptions"></td>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
+                                                <td class="findingAidOptions"><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
+                                            </c:otherwise>
+                                        </c:choose>
 				</tr>
 				<tr>
 					<th></th>
