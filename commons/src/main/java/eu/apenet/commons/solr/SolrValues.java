@@ -19,6 +19,8 @@ public final class SolrValues {
 	public final static String DATE_TYPE_NO_DATE_SPECIFIED = "nodate";
 	public final static String DATE_TYPE_OTHER_DATE = "otherdate";
 	public final static String DATE_TYPE_NORMALIZED = "normal";
+	public static final String LEVEL_CLEVEL = "clevel";
+	public static final String LEVEL_ARCHDESC = "archdesc";
 	
 	public static String escapeSolrCharacters(String value){
 		if (StringUtils.isNotBlank(value)){
