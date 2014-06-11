@@ -48,8 +48,7 @@ import eu.apenet.persistence.vo.Warnings;
 
 public class SolrPublisher {
 
-	private static final String LEVEL_CLEVEL = "clevel";
-	private static final String LEVEL_ARCHDESC = "archdesc";
+
 	private static final String WHITE_SPACE = " ";
 	public static final String COLON = ":";
 	private static final Logger LOG = Logger.getLogger(SolrPublisher.class);
@@ -446,9 +445,9 @@ public class SolrPublisher {
 		add(doc1, SolrFields.SCOPECONTENT, scopecontent);
 		add(doc1, SolrFields.TITLE, title);
 		if (publishData.isArchdesc()){
-			add(doc1, SolrFields.LEVEL, LEVEL_ARCHDESC);
+			add(doc1, SolrFields.LEVEL, SolrValues.LEVEL_ARCHDESC);
 		}else {
-			add(doc1, SolrFields.LEVEL, LEVEL_CLEVEL);
+			add(doc1, SolrFields.LEVEL, SolrValues.LEVEL_CLEVEL);
 		}
 		add(doc1, SolrFields.START_DATE, sdate);
 		add(doc1, SolrFields.END_DATE, edate);
