@@ -255,7 +255,7 @@ public class CreateEacCpf {
             }
             if (parameters.containsKey(parameterName1 + tableCounter) || (String[]) parameters.get(parameterName1 + tableCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     entityId.setLocalType(parameterContent[0]);
                 }
             }
