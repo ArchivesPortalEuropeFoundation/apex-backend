@@ -79,7 +79,7 @@ public class RetrieveRepositoryCodeFromEacIdExtension extends ExtensionFunctionD
 		@Override
 		public SequenceIterator call(SequenceIterator[] arguments, XPathContext arg1)
 				throws XPathException {
-			if (arguments.length == 2) {
+			if (arguments!= null && arguments.length == 2) {
 				String firstArgValue = arguments[0].next().getStringValue();
 				String secondArgValue = arguments[1].next().getStringValue();
 				String value = "";

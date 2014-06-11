@@ -6,6 +6,7 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
+import eu.archivesportaleurope.util.ApeUtil;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -139,7 +140,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 						repositoryCode = ead.getArchivalInstitution().getRepositorycode();
 					}
 
-					value = "aicode/" + repositoryCode + "/type/" + type + "/id/" + ead.getEadid();
+					value = "aicode/" + repositoryCode + "/type/" + type + "/id/" + ApeUtil.encodeSpecialCharacters(ead.getEadid());
 				}
 
 				return SingletonIterator.makeIterator(new StringValue(value));

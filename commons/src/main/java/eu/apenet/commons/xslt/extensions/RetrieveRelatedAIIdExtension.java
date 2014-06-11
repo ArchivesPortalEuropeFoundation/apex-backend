@@ -83,7 +83,7 @@ public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
 		@Override
 		public SequenceIterator call(SequenceIterator[] arguments, XPathContext arg1)
 				throws XPathException {
-			if (arguments.length == 1) {
+			if (arguments!= null && arguments.length == 1) {
 				String firstArgValue = arguments[0].next().getStringValue();
 				String value = "";
 

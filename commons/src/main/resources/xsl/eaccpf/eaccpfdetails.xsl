@@ -197,12 +197,17 @@
 					    	</xsl:call-template>
 					       <!-- placeRole -->
 					       <xsl:if test="./eac:placeRole/text()">
-						       	<div class="row subrow">
+						        <div class="row subrow">
 								    <div class="leftcolumn">
 							   			<h2><xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/><xsl:text>:</xsl:text></h2>
 							   	    </div>
 							     	<div class="rightcolumn">
-							     		<xsl:apply-templates select="./eac:placeRole" mode="other"/>
+							     		<xsl:call-template name="multilanguageWithVocabularySource">
+			   								<xsl:with-param name="list" select="./eac:placeRole"/>
+							   				<xsl:with-param name="clazz" select="'placeRole_'"/>
+							   				<xsl:with-param name="posParent" select="$posParent"/>
+							   				<xsl:with-param name="posChild" select="$posChild"/>
+							   			</xsl:call-template>
 								    </div>
 						        </div>
 						    </xsl:if>
@@ -265,7 +270,7 @@
 					    		<xsl:call-template name="commonChild">
 						    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 						    		<xsl:with-param name="clazz" select="'descriptiveNotelocationPlace_'"/>					   			
-					   			<xsl:with-param name="posParent" select="$posParent"/>
+					   				<xsl:with-param name="posParent" select="$posParent"/>
 			    					<xsl:with-param name="posChild" select="$posChild"/>
 					    			<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 				    			</xsl:call-template>
@@ -277,7 +282,7 @@
 					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 					    		<xsl:with-param name="clazz" select="'descriptiveNotelocationPlaces_'"/>
 					   			<xsl:with-param name="posParent" select="$posParent"/>
-			    					<xsl:with-param name="posChild" select="''"/>
+			    				<xsl:with-param name="posChild" select="''"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 					    	 </xsl:call-template>
 				    	 </xsl:if>
@@ -331,11 +336,11 @@
 					</xsl:for-each>
 						<!-- descriptiveNote in localDescriptions -->
 					 	<xsl:call-template name="commonChild">
-			    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-			    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescriptions_'"/>
-			    		<xsl:with-param name="posParent" select="$posParent"/>
-			    		<xsl:with-param name="posChild" select="''"/>
-			    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
+				    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescriptions_'"/>
+				    		<xsl:with-param name="posParent" select="$posParent"/>
+				    		<xsl:with-param name="posChild" select="''"/>
+				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
 			    	 	</xsl:call-template>
 				</xsl:for-each>		
 		   </xsl:if>
@@ -591,24 +596,6 @@
 						</div>
 				</div>
 			</xsl:if> 
-			
-			
-				<!--descriptive note inside languageUsed -->
-<!-- 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language/text()">    -->
-<!-- 				<div class="row"> -->
-<!-- 						<div class="leftcolumn"> -->
-<!-- 					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/><xsl:text>:</xsl:text></h2> -->
-<!-- 					   	</div> -->
-<!-- 					   	<div class="rightcolumn"> -->
-<!-- 							<xsl:call-template name="multilanguage"> -->
-<!-- 					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language"/> -->
-<!-- 					   			<xsl:with-param name="clazz" select="'language'"/> -->
-<!-- 					   		</xsl:call-template> -->
-<!-- 						</div> -->
-<!-- 				</div> -->
-<!-- 			</xsl:if> -->
-			
-			
 			<!--descriptive note inside languagesUsed -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p/text()">   
 				<div class="row">
@@ -624,8 +611,6 @@
 						</div>
 				</div>
 			</xsl:if>
-			
-			
 			<!-- structureOrGenealogy -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy">
 				<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
@@ -880,8 +865,9 @@
 	    <xsl:param name="clazz"/>
 	    <xsl:param name="posParent"/>
 	    <xsl:param name="posChild"/>
-	    <xsl:param name="title"/> 
+	    <xsl:param name="title"/>
 		<xsl:if test="($list[@localType != 'foundation']/text() and $list[@localType != 'suppression']/text() and $list[@localType != 'birth']/text() and $list[@localType != 'death']/text()) or $list[not(@localType)]/text()">
+<!-- 		<xsl:if test="($list[@localType != 'foundation' and @localType != 'suppression' and @localType != 'birth' and @localType != 'death']/text()) or $list[not(@localType)]/text()"> -->
 			<div class="row subrow locationPlace">
 				 	<div class="leftcolumn">
 				   		<h2><xsl:value-of select="ape:resource($title)"/><xsl:text>:</xsl:text></h2>
@@ -1124,7 +1110,46 @@
 	    	</xsl:otherwise>
 	    </xsl:choose>
 	</xsl:template> 
-
+	
+	<!-- template vocabularySource -->
+	<xsl:template name="vocabularySource">
+		<xsl:param name="node"/>
+		<xsl:variable name="link" select="$node/@vocabularySource"/>
+		<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
+			<xsl:variable name="aiCodeEac" select="ape:aiFromEac($link, '')"/>
+			<xsl:variable name="aiCodeEad" select="ape:aiFromEad($link, '')"/>
+			<xsl:variable name="aiCodeEag" select="ape:checkAICode($link, '', 'true')" />
+			<xsl:choose>
+				<xsl:when test="$aiCodeEac != 'ERROR' and $aiCodeEac != ''">
+					<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCodeEac)" />
+					<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
+					<a href="{$eacUrlBase}/aicode/{$encodedAiCode}/type/ec/id/{$encodedlink}" target="_blank">
+						<xsl:apply-templates select="$node" mode="other"/>
+					</a>
+				</xsl:when>
+				<xsl:when test="$aiCodeEad != 'ERROR' and $aiCodeEad != ''">
+					<a href="{$eadUrl}/{$aiCodeEad}" target="_blank">
+						<xsl:apply-templates select="$node" mode="other"/>
+					</a>
+				</xsl:when>
+				<xsl:when test="$aiCodeEag != 'ERROR' and $aiCodeEag != ''">
+					<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCodeEag)" />
+					<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+						<xsl:apply-templates select="$node" mode="other"/>
+					</a>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="$node" mode="other"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if> 
+		<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
+			<a href="{$link}" target="_blank">
+				<xsl:apply-templates select="$node" mode="other"/>
+			</a>
+		</xsl:if>	
+	</xsl:template>	
+	
 	<!-- template for nodes with attribute @vocabularySource or not and several elements-->
 	<xsl:template name="multilanguageWithVocabularySource">
 		<xsl:param name="list"/>
@@ -1140,8 +1165,9 @@
 							<p>
 								<xsl:choose>
 									<xsl:when test="@vocabularySource">
-										<xsl:variable name="href" select="./@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+										</xsl:call-template>
 									</xsl:when>
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
@@ -1161,8 +1187,9 @@
 							<p>
 								<xsl:choose>
 									<xsl:when test="@vocabularySource">
-										<xsl:variable name="href" select="./@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+										</xsl:call-template>
 									</xsl:when>
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
@@ -1182,8 +1209,9 @@
 						 	  <p>
 								 <xsl:choose>
 									<xsl:when test="@vocabularySource">
-										<xsl:variable name="href" select="./@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+										</xsl:call-template>
 									</xsl:when>
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
@@ -1207,8 +1235,9 @@
 										<p>
 											<xsl:choose>
 												<xsl:when test="@vocabularySource">
-													<xsl:variable name="href" select="./@vocabularySource"/>
-													<a href="{$href}" target="_blank"><xsl:apply-templates select="$currentText" mode="other"/></a>
+												    <xsl:call-template name="vocabularySource">
+														<xsl:with-param name="node" select="."/>
+													</xsl:call-template>
 												</xsl:when>
 												<xsl:when test="name(current()) = 'citation'">
 													<xsl:call-template name="citationHref">
@@ -1239,8 +1268,9 @@
 				<xsl:for-each select="$list">
 					<xsl:choose>
 						<xsl:when test="@vocabularySource">
-							<xsl:variable name="href" select="./@vocabularySource"/>
-							<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+							<xsl:call-template name="vocabularySource">
+								<xsl:with-param name="node" select="."/>
+							</xsl:call-template>
 						</xsl:when>
 						<xsl:when test="name(current()) = 'citation'">
 							<xsl:call-template name="citationHref">
@@ -1299,9 +1329,10 @@
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
 							<xsl:if test="position() = 1">
 								<xsl:choose>
-									<xsl:when test="$list[@vocabularySource]">
-										<xsl:variable name="href" select="$list/@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+									<xsl:when test="@vocabularySource">
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/> 
@@ -1314,9 +1345,10 @@
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
 							<xsl:if test="position() = 1">
 								<xsl:choose>
-									<xsl:when test="$list[@vocabularySource]">
-										<xsl:variable name="href" select="$list/@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+									<xsl:when test="@vocabularySource">
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
 									 <xsl:apply-templates select="." mode="other"/> 
@@ -1326,12 +1358,13 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-						  	<xsl:for-each select="$list[not(@xml:lang)]"> 
+						  	<xsl:for-each select="$list[not(@xml:lang)]">
 							 	  <xsl:if test="position()=1"> 
 									 <xsl:choose>
-										<xsl:when test="$list[@vocabularySource]">
-											<xsl:variable name="href" select="$list/@vocabularySource"/>
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+										<xsl:when test="@vocabularySource">
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+										    </xsl:call-template>
 										</xsl:when>
 										<xsl:otherwise>
 										 <xsl:apply-templates select="." mode="other"/> 
@@ -1348,9 +1381,10 @@
 									<xsl:if test="$currentLang = $language.first">
 										<xsl:if test="position() = 1">
 											<xsl:choose>
-												<xsl:when test="$list[@vocabularySource]">
-													<xsl:variable name="href" select="$list/@vocabularySource"/>
-													<a href="{$href}" target="_blank"><xsl:apply-templates select="$currentText" mode="other"/></a>
+												<xsl:when test="@vocabularySource">
+													<xsl:call-template name="vocabularySource">
+														<xsl:with-param name="node" select="."/>
+										   		    </xsl:call-template>
 												</xsl:when>
 												<xsl:otherwise>
 												 <xsl:apply-templates select="$currentText" mode="other"/> 
@@ -1366,8 +1400,9 @@
 				<xsl:for-each select="$list">
 					<xsl:choose>
 						<xsl:when test="$list[@vocabularySource]">
-							<xsl:variable name="href" select="$list/@vocabularySource"/>
-							<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+							<xsl:call-template name="vocabularySource">
+								<xsl:with-param name="node" select="."/>
+				   		    </xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>
 						 <xsl:apply-templates select="." mode="other"/> 
@@ -1393,8 +1428,9 @@
 							<p>
 								<xsl:choose>
 									<xsl:when test="@vocabularySource">
-										<xsl:variable name="href" select="./@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+				   		   			    </xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/> 
@@ -1408,8 +1444,9 @@
 							<p>
 								<xsl:choose>
 									<xsl:when test="@vocabularySource">
-										<xsl:variable name="href" select="./@vocabularySource"/>
-										<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+				   		   			    </xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
 									 <xsl:apply-templates select="." mode="other"/> 
@@ -1423,8 +1460,9 @@
 							 	  <p>
 									 <xsl:choose>
 										<xsl:when test="@vocabularySource">
-											<xsl:variable name="href" select="./@vocabularySource"/>
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+				   		   			        </xsl:call-template>
 										</xsl:when>
 										<xsl:otherwise>
 										 <xsl:apply-templates select="." mode="other"/> 
@@ -1442,8 +1480,9 @@
 								<p>
 									<xsl:choose>
 										<xsl:when test="@vocabularySource">
-											<xsl:variable name="href" select="./@vocabularySource"/>
-											<a href="{$href}" target="_blank"><xsl:apply-templates select="$currentText" mode="other"/></a>
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+				   		   			        </xsl:call-template>
 										</xsl:when>
 										<xsl:otherwise>
 										 <xsl:apply-templates select="$currentText" mode="other"/> 
@@ -1465,15 +1504,20 @@
 			</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="$list[@vocabularySource]">
-						<xsl:variable name="href" select="$list/@vocabularySource"/>
-						<a href="{$href}" target="_blank"><xsl:apply-templates select="$list" mode="other"/></a>
-					</xsl:when>
-					<xsl:otherwise>
-					    <xsl:apply-templates select="$list" mode="other"/> 
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:for-each select="$list">
+					<p>
+						<xsl:choose>
+							<xsl:when test="@vocabularySource">
+								<xsl:call-template name="vocabularySource">
+									<xsl:with-param name="node" select="."/>
+			   			        </xsl:call-template>
+							</xsl:when>
+							<xsl:otherwise>
+							    <xsl:apply-templates select="." mode="other"/> 
+							</xsl:otherwise>
+						</xsl:choose>
+					</p>
+				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1497,9 +1541,6 @@
 			<xsl:call-template name="multilanguageDate">
 				<xsl:with-param name="list" select="eac:date"/>
 			</xsl:call-template>
-		<!--  	<xsl:if test="(eac:dateRange/eac:fromDate or eac:dateRange/eac:toDate) and eac:date/text()">
-				<xsl:text>, </xsl:text>
-			</xsl:if>-->
 			<xsl:if test="eac:dateRange/eac:fromDate or eac:dateRange/eac:toDate">
 				<xsl:call-template name="multilanguageDateRange">
 					<xsl:with-param name="list" select="eac:dateRange"/>	
