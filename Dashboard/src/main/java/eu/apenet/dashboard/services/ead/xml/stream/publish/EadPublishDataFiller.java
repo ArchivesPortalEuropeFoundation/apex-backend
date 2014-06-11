@@ -190,6 +190,7 @@ public class EadPublishDataFiller {
 
 	public void fillData(EadPublishData publishData) {
 		publishData.setUnitid(unitidHandler.getFirstResult());
+		publishData.setFirstOtherUnitid(otherUnitidHandler.getFirstResult());
 		publishData.setOtherUnitid(otherUnitidHandler.getResultAsStringWithWhitespace());
 		publishData.setFirstUnittitle(unittitleHandler.getFirstResult());
 		publishData.setScopecontent(scopecontentHandler.getResultAsStringWithWhitespace());

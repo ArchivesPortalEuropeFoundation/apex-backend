@@ -35,8 +35,6 @@ import eu.apenet.persistence.vo.Warnings;
 
 public class EadSolrPublisher {
 
-	private static final String LEVEL_CLEVEL = "clevel";
-	private static final String LEVEL_ARCHDESC = "archdesc";
 	private static final String WHITE_SPACE = " ";
 	public static final String COLON = ":";
 	private static final Logger LOG = Logger.getLogger(EadSolrPublisher.class);
@@ -86,7 +84,11 @@ public class EadSolrPublisher {
 		if (clevel){
 			attributeLevel = publishData.getLevel();
 		}else {
-			unitidfond = publishData.getUnitid();
+			if (StringUtils.isBlank(publishData.getUnitid())){
+				unitidfond = publishData.getFirstOtherUnitid();
+			}else {
+				unitidfond = publishData.getUnitid();
+			}
 			if (StringUtils.isNotBlank(unitidfond)) {
 				existunitid_archdesc = true;
 			}
@@ -288,9 +290,9 @@ public class EadSolrPublisher {
 		add(doc1, SolrFields.SCOPECONTENT, publishData.getScopecontent());
 		add(doc1, SolrFields.TITLE, publishData.getFirstUnittitle());
 		if (publishData.isArchdesc()){
-			add(doc1, SolrFields.LEVEL, LEVEL_ARCHDESC);
+			add(doc1, SolrFields.LEVEL, SolrValues.LEVEL_ARCHDESC);
 		}else {
-			add(doc1, SolrFields.LEVEL, LEVEL_CLEVEL);
+			add(doc1, SolrFields.LEVEL, SolrValues.LEVEL_CLEVEL);
 		}
 		add(doc1, SolrFields.START_DATE, sdate);
 		add(doc1, SolrFields.END_DATE, edate);

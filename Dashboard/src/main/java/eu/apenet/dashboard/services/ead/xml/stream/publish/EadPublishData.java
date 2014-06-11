@@ -8,6 +8,7 @@ import eu.apenet.dashboard.services.ead.publish.PublishData;
 public class EadPublishData extends PublishData {
 
 	private String unitid;
+	private String firstOtherUnitid;
 	private String otherUnitid;
 	private String firstUnittitle;
 	private String scopecontent;
@@ -91,6 +92,13 @@ public class EadPublishData extends PublishData {
 	}
 	public void setGlobalLanguage(String globalLanguage) {
 		this.globalLanguage = globalLanguage;
+	}
+	
+	public String getFirstOtherUnitid() {
+		return firstOtherUnitid;
+	}
+	public void setFirstOtherUnitid(String firstOtherUnitid) {
+		this.firstOtherUnitid = firstOtherUnitid;
 	}
 	@Override
 	public String toString() {
