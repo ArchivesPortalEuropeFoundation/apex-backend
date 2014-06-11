@@ -666,7 +666,7 @@ public class CreateEacCpf {
 
                 // .../functions/function/placeEntry
                 if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                     while (parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter)) {
+                    while (parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter)) {
                         PlaceEntry placeEntry = new PlaceEntry();
 
                         // .../placeEntry@countryCode
@@ -984,7 +984,7 @@ public class CreateEacCpf {
         parameterName7 = "_textCpfRelRespOrgPerson_";
         parameterName8 = "_textCpfRelRespOrgId_";
 
-        while ((parameters.containsKey(parameterName1 + relationCounter) || (String[]) parameters.get(parameterName1 + relationCounter) != null) && !((String[]) parameters.get(parameterName1 + relationCounter))[0].isEmpty()) {
+        while ((parameters.containsKey(parameterName5 + relationCounter) || (String[]) parameters.get(parameterName5 + relationCounter) != null) && !((String[]) parameters.get(parameterName5 + relationCounter))[0].isEmpty()) {
             CpfRelation cpfRelation = new CpfRelation();
             String language = null;
 
@@ -999,7 +999,7 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/cpfRelation@cpfRelationType
             if ((String[]) parameters.get(parameterName5 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName5 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     cpfRelation.setCpfRelationType(parameterContent[0]);
                 }
             }
@@ -1007,7 +1007,7 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/cpfRelation@xlink:href
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     cpfRelation.setHref(parameterContent[0]);
                 }
             }
@@ -1015,10 +1015,12 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/cpfRelation/descriptiveNote
             if ((String[]) parameters.get(parameterName6 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName6 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     DescriptiveNote descriptiveNote = new DescriptiveNote();
                     P p = new P();
-                    p.setLang(language);
+                    if (language != null && !language.isEmpty()) {
+                        p.setLang(language);
+                    }
                     p.setContent(parameterContent[0]);
                     descriptiveNote.getP().add(p);
                     cpfRelation.setDescriptiveNote(descriptiveNote);
@@ -1026,51 +1028,67 @@ public class CreateEacCpf {
             }
             // /eacCpf/cpfDescription/relations/cpfRelation/relationEntry[title]
             if (parameters.containsKey(parameterName1 + relationCounter) || (String[]) parameters.get(parameterName1 + relationCounter) != null) {
-                RelationEntry relationEntry = new RelationEntry();
-                relationEntry.setLang(language);
-                relationEntry.setLocalType("title");
                 parameterContent = (String[]) parameters.get(parameterName1 + relationCounter);
-                if (parameterContent.length == 1) {
-                    relationEntry.setContent(parameterContent[0]);
+                if (!parameterContent[0].isEmpty()) {
+                    RelationEntry relationEntry = new RelationEntry();
+                    if (language != null && !language.isEmpty()) {
+                        relationEntry.setLang(language);
+                    }
+                    relationEntry.setLocalType("title");
+                    if (parameterContent.length == 1) {
+                        relationEntry.setContent(parameterContent[0]);
+                    }
+                    cpfRelation.getRelationEntry().add(relationEntry);
                 }
-                cpfRelation.getRelationEntry().add(relationEntry);
             }
 
             // /eacCpf/cpfDescription/relations/cpfRelation/relationEntry[id]
             if (parameters.containsKey(parameterName3 + relationCounter) || (String[]) parameters.get(parameterName3 + relationCounter) != null) {
-                RelationEntry relationEntry = new RelationEntry();
-                relationEntry.setLang(language);
-                relationEntry.setLocalType("id");
                 parameterContent = (String[]) parameters.get(parameterName3 + relationCounter);
-                if (parameterContent.length == 1) {
-                    relationEntry.setContent(parameterContent[0]);
+                if (!parameterContent[0].isEmpty()) {
+                    RelationEntry relationEntry = new RelationEntry();
+                    if (language != null && !language.isEmpty()) {
+                        relationEntry.setLang(language);
+                    }
+                    relationEntry.setLocalType("id");
+                    if (parameterContent.length == 1) {
+                        relationEntry.setContent(parameterContent[0]);
+                    }
+                    cpfRelation.getRelationEntry().add(relationEntry);
                 }
-                cpfRelation.getRelationEntry().add(relationEntry);
             }
 
             // /eacCpf/cpfDescription/relations/cpfRelation/relationEntry[agencyName] + /eacCpf/cpfDescription/relations/cpfRelation/relationEntry[agencyCode]
             while (parameters.containsKey("cpfRelationsTable_" + relationCounter + parameterName7 + organisationCounter) || (String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName7 + organisationCounter) != null
                     || parameters.containsKey("cpfRelationsTable_" + relationCounter + parameterName8 + organisationCounter) || (String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
                 if ((String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName7 + organisationCounter) != null) {
-                    RelationEntry relationEntry = new RelationEntry();
-                    relationEntry.setLang(language);
-                    relationEntry.setLocalType("agencyName");
                     parameterContent = (String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName7 + organisationCounter);
-                    if (parameterContent.length == 1) {
-                        relationEntry.setContent(parameterContent[0]);
+                    if (!parameterContent[0].isEmpty()) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        if (language != null && !language.isEmpty()) {
+                            relationEntry.setLang(language);
+                        }
+                        relationEntry.setLocalType("agencyName");
+                        if (parameterContent.length == 1) {
+                            relationEntry.setContent(parameterContent[0]);
+                        }
+                        cpfRelation.getRelationEntry().add(relationEntry);
                     }
-                    cpfRelation.getRelationEntry().add(relationEntry);
                 }
 
                 if ((String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
-                    RelationEntry relationEntry = new RelationEntry();
-                    relationEntry.setLang(language);
-                    relationEntry.setLocalType("agencyCode");
                     parameterContent = (String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName8 + organisationCounter);
-                    if (parameterContent.length == 1) {
-                        relationEntry.setContent(parameterContent[0]);
+                    if (!parameterContent[0].isEmpty()) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        if (language != null && !language.isEmpty()) {
+                            relationEntry.setLang(language);
+                        }
+                        relationEntry.setLocalType("agencyCode");
+                        if (parameterContent.length == 1) {
+                            relationEntry.setContent(parameterContent[0]);
+                        }
+                        cpfRelation.getRelationEntry().add(relationEntry);
                     }
-                    cpfRelation.getRelationEntry().add(relationEntry);
                 }
                 organisationCounter++;
             }
@@ -1092,7 +1110,7 @@ public class CreateEacCpf {
         parameterName7 = "_textResRelRespOrgPerson_";
         parameterName8 = "_textResRelRespOrgId_";
 
-        while ((parameters.containsKey(parameterName1 + relationCounter) || (String[]) parameters.get(parameterName1 + relationCounter) != null) && !((String[]) parameters.get(parameterName1 + relationCounter))[0].isEmpty()) {
+        while ((parameters.containsKey(parameterName5 + relationCounter) || (String[]) parameters.get(parameterName5 + relationCounter) != null) && !((String[]) parameters.get(parameterName5 + relationCounter))[0].isEmpty()) {
             ResourceRelation resRelation = new ResourceRelation();
             String language = null;
 
@@ -1107,7 +1125,7 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/resourceRelation@resourceRelationType
             if ((String[]) parameters.get(parameterName5 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName5 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     resRelation.setResourceRelationType(parameterContent[0]);
                 }
             }
@@ -1115,7 +1133,7 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/resourceRelation@xlink:href
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     resRelation.setHref(parameterContent[0]);
                 }
             }
@@ -1123,10 +1141,12 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/resourceRelation/descriptiveNote
             if ((String[]) parameters.get(parameterName6 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName6 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     DescriptiveNote descriptiveNote = new DescriptiveNote();
                     P p = new P();
-                    p.setLang(language);
+                    if (language != null && !language.isEmpty()) {
+                        p.setLang(language);
+                    }
                     p.setContent(parameterContent[0]);
                     descriptiveNote.getP().add(p);
                     resRelation.setDescriptiveNote(descriptiveNote);
@@ -1134,51 +1154,67 @@ public class CreateEacCpf {
             }
             // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry[title]
             if (parameters.containsKey(parameterName1 + relationCounter) || (String[]) parameters.get(parameterName1 + relationCounter) != null) {
-                RelationEntry relationEntry = new RelationEntry();
-                relationEntry.setLang(language);
-                relationEntry.setLocalType("title");
                 parameterContent = (String[]) parameters.get(parameterName1 + relationCounter);
-                if (parameterContent.length == 1) {
-                    relationEntry.setContent(parameterContent[0]);
+                if (!parameterContent[0].isEmpty()) {
+                    RelationEntry relationEntry = new RelationEntry();
+                    if (language != null && !language.isEmpty()) {
+                        relationEntry.setLang(language);
+                    }
+                    relationEntry.setLocalType("title");
+                    if (parameterContent.length == 1) {
+                        relationEntry.setContent(parameterContent[0]);
+                    }
+                    resRelation.getRelationEntry().add(relationEntry);
                 }
-                resRelation.getRelationEntry().add(relationEntry);
             }
 
             // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry[id]
             if (parameters.containsKey(parameterName3 + relationCounter) || (String[]) parameters.get(parameterName3 + relationCounter) != null) {
-                RelationEntry relationEntry = new RelationEntry();
-                relationEntry.setLang(language);
-                relationEntry.setLocalType("id");
                 parameterContent = (String[]) parameters.get(parameterName3 + relationCounter);
-                if (parameterContent.length == 1) {
-                    relationEntry.setContent(parameterContent[0]);
+                if (!parameterContent[0].isEmpty()) {
+                    RelationEntry relationEntry = new RelationEntry();
+                    if (language != null && !language.isEmpty()) {
+                        relationEntry.setLang(language);
+                    }
+                    relationEntry.setLocalType("id");
+                    if (parameterContent.length == 1) {
+                        relationEntry.setContent(parameterContent[0]);
+                    }
+                    resRelation.getRelationEntry().add(relationEntry);
                 }
-                resRelation.getRelationEntry().add(relationEntry);
             }
 
             // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry[agencyName] + /eacCpf/cpfDescription/relations/resourceRelation/relationEntry[agencyCode]
             while (parameters.containsKey("resRelationsTable_" + relationCounter + parameterName7 + organisationCounter) || (String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName7 + organisationCounter) != null
                     || parameters.containsKey("resRelationsTable_" + relationCounter + parameterName8 + organisationCounter) || (String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
                 if ((String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName7 + organisationCounter) != null) {
-                    RelationEntry relationEntry = new RelationEntry();
-                    relationEntry.setLang(language);
-                    relationEntry.setLocalType("agencyName");
                     parameterContent = (String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName7 + organisationCounter);
-                    if (parameterContent.length == 1) {
-                        relationEntry.setContent(parameterContent[0]);
+                    if (!parameterContent[0].isEmpty()) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        if (language != null && !language.isEmpty()) {
+                            relationEntry.setLang(language);
+                        }
+                        relationEntry.setLocalType("agencyName");
+                        if (parameterContent.length == 1) {
+                            relationEntry.setContent(parameterContent[0]);
+                        }
+                        resRelation.getRelationEntry().add(relationEntry);
                     }
-                    resRelation.getRelationEntry().add(relationEntry);
                 }
 
                 if ((String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
-                    RelationEntry relationEntry = new RelationEntry();
-                    relationEntry.setLang(language);
-                    relationEntry.setLocalType("agencyCode");
                     parameterContent = (String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName8 + organisationCounter);
-                    if (parameterContent.length == 1) {
-                        relationEntry.setContent(parameterContent[0]);
+                    if (!parameterContent[0].isEmpty()) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        if (language != null && !language.isEmpty()) {
+                            relationEntry.setLang(language);
+                        }
+                        relationEntry.setLocalType("agencyCode");
+                        if (parameterContent.length == 1) {
+                            relationEntry.setContent(parameterContent[0]);
+                        }
+                        resRelation.getRelationEntry().add(relationEntry);
                     }
-                    resRelation.getRelationEntry().add(relationEntry);
                 }
                 organisationCounter++;
             }
@@ -1200,7 +1236,7 @@ public class CreateEacCpf {
         parameterName7 = "_textFncRelRespOrgPerson_";
         parameterName8 = "_textFncRelRespOrgId_";
 
-        while ((parameters.containsKey(parameterName1 + relationCounter) || (String[]) parameters.get(parameterName1 + relationCounter) != null) && !((String[]) parameters.get(parameterName1 + relationCounter))[0].isEmpty()) {
+        while ((parameters.containsKey(parameterName5 + relationCounter) || (String[]) parameters.get(parameterName5 + relationCounter) != null) && !((String[]) parameters.get(parameterName5 + relationCounter))[0].isEmpty()) {
             FunctionRelation fncRelation = new FunctionRelation();
             String language = null;
 
@@ -1215,7 +1251,7 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/functionRelation@functionRelationType
             if ((String[]) parameters.get(parameterName5 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName5 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     fncRelation.setFunctionRelationType(parameterContent[0]);
                 }
             }
@@ -1223,7 +1259,7 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/functionRelation@xlink:href
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     fncRelation.setHref(parameterContent[0]);
                 }
             }
@@ -1231,10 +1267,12 @@ public class CreateEacCpf {
             // /eacCpf/cpfDescription/relations/functionRelation/descriptiveNote
             if ((String[]) parameters.get(parameterName6 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName6 + relationCounter);
-                if (parameterContent.length == 1) {
+                if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
                     DescriptiveNote descriptiveNote = new DescriptiveNote();
                     P p = new P();
-                    p.setLang(language);
+                    if (language != null && !language.isEmpty()) {
+                        p.setLang(language);
+                    }
                     p.setContent(parameterContent[0]);
                     descriptiveNote.getP().add(p);
                     fncRelation.setDescriptiveNote(descriptiveNote);
@@ -1242,51 +1280,67 @@ public class CreateEacCpf {
             }
             // /eacCpf/cpfDescription/relations/functionRelation/relationEntry[title]
             if (parameters.containsKey(parameterName1 + relationCounter) || (String[]) parameters.get(parameterName1 + relationCounter) != null) {
-                RelationEntry relationEntry = new RelationEntry();
-                relationEntry.setLang(language);
-                relationEntry.setLocalType("title");
                 parameterContent = (String[]) parameters.get(parameterName1 + relationCounter);
-                if (parameterContent.length == 1) {
-                    relationEntry.setContent(parameterContent[0]);
+                if (!parameterContent[0].isEmpty()) {
+                    RelationEntry relationEntry = new RelationEntry();
+                    if (language != null && !language.isEmpty()) {
+                        relationEntry.setLang(language);
+                    }
+                    relationEntry.setLocalType("title");
+                    if (parameterContent.length == 1) {
+                        relationEntry.setContent(parameterContent[0]);
+                    }
+                    fncRelation.getRelationEntry().add(relationEntry);
                 }
-                fncRelation.getRelationEntry().add(relationEntry);
             }
 
             // /eacCpf/cpfDescription/relations/functionRelation/relationEntry[id]
             if (parameters.containsKey(parameterName3 + relationCounter) || (String[]) parameters.get(parameterName3 + relationCounter) != null) {
-                RelationEntry relationEntry = new RelationEntry();
-                relationEntry.setLang(language);
-                relationEntry.setLocalType("id");
                 parameterContent = (String[]) parameters.get(parameterName3 + relationCounter);
-                if (parameterContent.length == 1) {
-                    relationEntry.setContent(parameterContent[0]);
+                if (!parameterContent[0].isEmpty()) {
+                    RelationEntry relationEntry = new RelationEntry();
+                    if (language != null && !language.isEmpty()) {
+                        relationEntry.setLang(language);
+                    }
+                    relationEntry.setLocalType("id");
+                    if (parameterContent.length == 1) {
+                        relationEntry.setContent(parameterContent[0]);
+                    }
+                    fncRelation.getRelationEntry().add(relationEntry);
                 }
-                fncRelation.getRelationEntry().add(relationEntry);
             }
 
             // /eacCpf/cpfDescription/relations/functionRelation/relationEntry[agencyName] + /eacCpf/cpfDescription/relations/functionRelation/relationEntry[agencyCode]
             while (parameters.containsKey("fncRelationsTable_" + relationCounter + parameterName7 + organisationCounter) || (String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName7 + organisationCounter) != null
                     || parameters.containsKey("fncRelationsTable_" + relationCounter + parameterName8 + organisationCounter) || (String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
                 if ((String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName7 + organisationCounter) != null) {
-                    RelationEntry relationEntry = new RelationEntry();
-                    relationEntry.setLang(language);
-                    relationEntry.setLocalType("agencyName");
                     parameterContent = (String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName7 + organisationCounter);
-                    if (parameterContent.length == 1) {
-                        relationEntry.setContent(parameterContent[0]);
+                    if (!parameterContent[0].isEmpty()) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        if (language != null && !language.isEmpty()) {
+                            relationEntry.setLang(language);
+                        }
+                        relationEntry.setLocalType("agencyName");
+                        if (parameterContent.length == 1) {
+                            relationEntry.setContent(parameterContent[0]);
+                        }
+                        fncRelation.getRelationEntry().add(relationEntry);
                     }
-                    fncRelation.getRelationEntry().add(relationEntry);
                 }
 
                 if ((String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
-                    RelationEntry relationEntry = new RelationEntry();
-                    relationEntry.setLang(language);
-                    relationEntry.setLocalType("agencyCode");
                     parameterContent = (String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName8 + organisationCounter);
-                    if (parameterContent.length == 1) {
-                        relationEntry.setContent(parameterContent[0]);
+                    if (!parameterContent[0].isEmpty()) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        if (language != null && !language.isEmpty()) {
+                            relationEntry.setLang(language);
+                        }
+                        relationEntry.setLocalType("agencyCode");
+                        if (parameterContent.length == 1) {
+                            relationEntry.setContent(parameterContent[0]);
+                        }
+                        fncRelation.getRelationEntry().add(relationEntry);
                     }
-                    fncRelation.getRelationEntry().add(relationEntry);
                 }
                 organisationCounter++;
             }
