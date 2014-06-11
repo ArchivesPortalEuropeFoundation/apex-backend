@@ -37,22 +37,22 @@
                 </option>
                 <option value="publish">
                     <s:text name="content.message.publish" />
-                </option>
+                </option><%--
                 <option value="displayEseConvert">
                     <s:text name="content.message.convert.ese" />
                 </option>
                 <option value="deliverToEuropeana">
                     <s:text name="content.message.deliver.europeana" />
-                </option>
+                </option>--%>
                 <option value="unpublish">
                     <s:text name="content.message.unpublish" />
-                </option>
+                </option><%--
                 <option value="deleteFromEuropeana">
                     <s:text name="content.message.delete.europeana" />
                 </option>
                 <option value="deleteEseEdm">
                     <s:text name="content.message.delete.ese" />
-                </option>
+                </option>--%>
                 <option value="deleteFromQueue">
                     <s:text name="content.message.delete.queue" />
                 </option>
@@ -147,11 +147,11 @@
                 </div>
                 </th>
                 <th id="thRelations"><s:text name="content.message.relations" /></th>
-                <th id="thEdm"><s:text name="content.message.eseedm" />
-<%--                <div class="arrows">
+<%--                <th id="thEdm"><s:text name="content.message.eseedm" />
+                <div class="arrows">
                     <a class="order" href="javascript:changeOrder('convertedToEseEdm','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('convertedToEseEdm','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>--%>
+                </div>
                 </th>
                 <th id="thEuropeana">
                     <s:text name="content.message.europeana" />
@@ -159,7 +159,7 @@
                     <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
-                </th>
+                </th>--%>
                 <th id="thQueue"><s:text name="content.message.queue" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
@@ -181,8 +181,8 @@
                         <td id="tdValidated_${eacCpfResult.id}" class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
                         <td id="tdPublished_${eacCpfResult.id}" class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
                         <td id="tdRelations_${eacCpfResult.id}"><apenet:resource>${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}</apenet:resource></td>
-                        <td id="tdEdm_${eacCpfResult.id}" class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
-                        <td id="tdEuropeana_${eacCpfResult.id}" class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>
+<%--                        <td id="tdEdm_${eacCpfResult.id}" class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
+                        <td id="tdEuropeana_${eacCpfResult.id}" class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>--%>
                         <td id="tdQueue_${eacCpfResult.id}" class="${eacCpfResult.queueCssClass}">
                             <c:if test="${eacCpfResult.queueReady or eacCpfResult.queueProcessing or eacCpfResult.queueError}">
                                 <c:if test="${eacCpfResult.queueError}">
@@ -294,9 +294,9 @@
                     <td>${results.totalConvertedFiles}</td>
                     <td>${results.totalValidatedFiles}</td>
                     <td>${results.totalPublishedUnits}</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;</td><%--
                     <td>${results.totalChos}</td>
-                    <td>${results.totalChosDeliveredToEuropeana}</td>
+                    <td>${results.totalChosDeliveredToEuropeana}</td>--%>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
