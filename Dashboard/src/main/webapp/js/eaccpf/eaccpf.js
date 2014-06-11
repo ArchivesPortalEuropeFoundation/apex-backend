@@ -231,7 +231,7 @@ function insertDateAfter(tableName, anchorId, incrCounter) {
     var newDate = $('<tr id="trDate_text_' + incrCounter + '">' +
             '<td>Date</td>' +
             '<td>' +
-            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onblur="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
+            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
             '<input type="checkbox" id="date_unknown_1" name="' + tableName + '_date_unknown_1_' + incrCounter + '" onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1">unknown</label>' +
             '</td>' +
             '<td></td><td></td>' +
@@ -250,12 +250,12 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter) {
     var newDateRange = $('<tr id="trDate_text_' + incrCounter + '">' +
             '<td>Date range from</td>' +
             '<td>' +
-            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onblur="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
+            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
             '<input type="checkbox" id="date_unknown_1" name="' + tableName + '_date_unknown_1_' + incrCounter + '" onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1">unknown</label>' +
             '</td>' +
             '<td>to</td>' +
             '<td>' +
-            '<input type="text" id="date_2" name="' + tableName + '_date_2_' + incrCounter + '" onblur="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
+            '<input type="text" id="date_2" name="' + tableName + '_date_2_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
             '<input type="checkbox" id="date_unknown_2" name="' + tableName + '_date_unknown_2_' + incrCounter + '" onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2">unknown</label>' +
             '</td>' +
             '</tr>' +

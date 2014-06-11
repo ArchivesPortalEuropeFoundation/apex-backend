@@ -49,13 +49,13 @@
                         <tr id="trDate_text_<s:property value="#status2.index + 1" />">
                             <td>Date<s:if test="#currentDateRow.dateContent2 != null"> range from</s:if></td>
                                 <td>
-                                    <input type="text" id="date_1" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_<s:property value="#status2.index + 1" />" value="<s:property value="#currentDateRow.dateContent1" />" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                                    <input type="text" id="date_1" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_<s:property value="#status2.index + 1" />" value="<s:property value="#currentDateRow.dateContent1" />" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if>onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
                                 <input type="checkbox" id="date_unknown_1" name="identityPersonName_<s:property value="#status.index + 1" />_date_unknown_1_<s:property value="#status2.index + 1" />" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1">unknown</label>
                                 </td>
                             <s:if test="#currentDateRow.dateContent2 != null or #currentDateRow.standardDate2 != null">
                                 <td>to</td>
                                 <td>
-                                    <input type="text" id="date_2" name="identityPersonName_<s:property value="#status.index + 1" />_date_2_<s:property value="#status2.index + 1" />" value="<s:property value="#currentDateRow.dateContent2" />" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                                    <input type="text" id="date_2" name="identityPersonName_<s:property value="#status.index + 1" />_date_2_<s:property value="#status2.index + 1" />" value="<s:property value="#currentDateRow.dateContent2" />" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if>onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
                                     <input type="checkbox" id="date_unknown_2" name="identityPersonName_<s:property value="#status.index + 1" />_date_unknown_2_<s:property value="#status2.index + 1" />" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2">unknown</label>
                                     </td>
                             </s:if>
@@ -196,13 +196,13 @@
                 <tr id="trDate_text_<s:property value="#status.index + 1" />">
                     <td>Date<s:if test="#current.dateContent2 != null"> range from</s:if></td>
                         <td>
-                            <input type="text" id="date_1" name="dateExistenceTable_date_1_<s:property value="#status.index + 1" />" value="<s:property value="#current.dateContent1" />" <s:if test="%{#current.standardDate1.year == 0000}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                            <input type="text" id="date_1" name="dateExistenceTable_date_1_<s:property value="#status.index + 1" />" value="<s:property value="#current.dateContent1" />" <s:if test="%{#current.standardDate1.year == 0000}">disabled="disabled" </s:if>onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
                         <input type="checkbox" id="date_unknown_1" name="dateExistenceTable_date_unknown_1_<s:property value="#status.index + 1" />" <s:if test="%{#current.standardDate1.year == 0000}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1">unknown</label>
                         </td>
                     <s:if test="#current.dateContent2 != null or #current.standardDate2 != null">
                         <td>to</td>
                         <td>
-                            <input type="text" id="date_2" name="dateExistenceTable_date_2_<s:property value="#status.index + 1" />" value="<s:property value="#current.dateContent2" />" <s:if test="%{#current.standardDate2.year == 2999}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                            <input type="text" id="date_2" name="dateExistenceTable_date_2_<s:property value="#status.index + 1" />" value="<s:property value="#current.dateContent2" />" <s:if test="%{#current.standardDate2.year == 2999}">disabled="disabled" </s:if>onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
                             <input type="checkbox" id="date_unknown_2" name="dateExistenceTable_date_unknown_2_<s:property value="#status.index + 1" />" <s:if test="%{#current.standardDate2.year == 2999}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2">unknown</label>
                             </td>
                     </s:if>
@@ -233,12 +233,12 @@
             <tr id="trDate_text_1">
                 <td>Date range from</td>
                 <td>
-                    <input type="text" id="date_1" name="dateExistenceTable_date_1_1" onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                    <input type="text" id="date_1" name="dateExistenceTable_date_1_1" onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
                     <input type="checkbox" id="date_unknown_1" name="dateExistenceTable_date_unknown_1_1" onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1">unknown</label>
                 </td>
                 <td>to</td>
                 <td>
-                    <input type="text" id="date_2" name="dateExistenceTable_date_2_1" onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                    <input type="text" id="date_2" name="dateExistenceTable_date_2_1" onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
                     <input type="checkbox" id="date_unknown_2" name="dateExistenceTable_date_unknown_2_1" onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2">unknown</label>
                 </td>
             </tr>
