@@ -38,19 +38,23 @@ public class EagXslt {
         
         return compiler.compile(xsltSource);
 	}
-    public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
+    public static void displayAiDetails(boolean preview, Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
 		String language = resourceBundleSource.getLocale().getLanguage();
 		String languageIso3 = "eng";
 		Lang lang = DAOFactory.instance().getLangDAO().getLangByIso2Name(language);
 		if (lang != null){
 			languageIso3 = lang.getIsoname().toLowerCase();
 		}
-		displayAiDetails(writer, xmlFile, resourceBundleSource, languageIso3, currentAIRepositorCode, requiredAIRepositorCode);
+		displayAiDetails(preview, writer, xmlFile, resourceBundleSource, languageIso3, currentAIRepositorCode, requiredAIRepositorCode);
     }
-    public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String language, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
+    public static void displayAiDetails(boolean preview, Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String language, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
 		if (xmlFile.exists()){
 	    	Source xmlSource = new StreamSource(xmlFile);
-	    	XsltExecutable executable = getXsltExecutable("xsl/eag/aidetails.xsl", resourceBundleSource, requiredAIRepositorCode);
+	    	String xslt = "xsl/eag/aidetails.xsl";
+	    	if (preview){
+	    		xslt = "xsl/eag/aidetails-preview.xsl";
+	    	}
+	    	XsltExecutable executable = getXsltExecutable(xslt, resourceBundleSource, requiredAIRepositorCode);
 	        XsltTransformer transformer = executable.load();
 	        transformer.setParameter(new QName("language.selected"), new XdmAtomicValue(language));
 	        transformer.setSource(xmlSource);
