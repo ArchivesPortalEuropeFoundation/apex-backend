@@ -1,7 +1,10 @@
 package eu.apenet.commons.xslt;
 
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -19,6 +22,7 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.commons.ResourceBundleSource;
 import eu.apenet.commons.solr.SolrField;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.xslt.extensions.CheckAgencyCodeExtension;
 import eu.apenet.commons.xslt.extensions.EadidCheckerExtension;
 import eu.apenet.commons.xslt.extensions.HighlighterExtension;
@@ -26,13 +30,10 @@ import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEacIdExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEadIdExtension;
 import eu.apenet.commons.xslt.extensions.SpecialCharactersEncoderExtension;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Lang;
 
 
 public final class EacXslt {
     private static final Logger LOG = Logger.getLogger(EacXslt.class);
-
     
 	private static XsltExecutable getXsltExecutable(String xslUrl, String searchTerms, List<SolrField> highlightFields,
 			ResourceBundleSource resourceBundleSource, Integer aiId, boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
@@ -62,11 +63,24 @@ public final class EacXslt {
     		List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource,String secondDisplayUrl,
     		Integer aiId,boolean isPreview, String solrStopwordsUrl, String aiCodeUrl, String eacUrlBase,
     		String eadUrl) throws SaxonApiException{
+    	
 		String language = resourceBundleSource.getLocale().getLanguage();
 		String languageIso3 = "eng";
-		Lang lang = DAOFactory.instance().getLangDAO().getLangByIso2Name(language);
-		if (lang != null){
-			languageIso3 = lang.getIsoname().toLowerCase();
+		Map<String, String> langMap = APEnetUtilities.getIso2ToIso3LanguageCodesMap();
+		
+		//recover the iso3 language in the Map
+		Iterator<Entry<String, String>> it = langMap.entrySet().iterator();
+		if (langMap != null && !langMap.isEmpty()){
+			boolean found =false;
+			while (it.hasNext() && !found) {
+				Map.Entry<String, String> e = (Map.Entry<String, String>)it.next();
+				if (e.getKey().equalsIgnoreCase(language)){
+					if (e.getValue()!=null && !e.getValue().isEmpty()){
+						languageIso3= e.getValue().toString();
+						found = true;
+					}
+				}
+			}
 		}
 		convertEacToHtml(xslUrl, writer, xmlSource, searchTerms, highlightFields, resourceBundleSource, languageIso3,
 				secondDisplayUrl, aiId, isPreview, solrStopwordsUrl, aiCodeUrl, eacUrlBase, eadUrl);

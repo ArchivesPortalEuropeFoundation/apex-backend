@@ -3,6 +3,9 @@ package eu.apenet.commons.xslt;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -19,10 +22,9 @@ import net.sf.saxon.s9api.XsltTransformer;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.ResourceBundleSource;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRelatedAIIdExtension;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Lang;
 
 public class EagXslt {
 	private static Logger LOGGER = Logger.getLogger(EagXslt.class);
@@ -41,9 +43,21 @@ public class EagXslt {
     public static void displayAiDetails(boolean preview, Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
 		String language = resourceBundleSource.getLocale().getLanguage();
 		String languageIso3 = "eng";
-		Lang lang = DAOFactory.instance().getLangDAO().getLangByIso2Name(language);
-		if (lang != null){
-			languageIso3 = lang.getIsoname().toLowerCase();
+		Map<String, String> langMap = APEnetUtilities.getIso2ToIso3LanguageCodesMap();
+		
+		//recover the iso3 language 
+		Iterator<Entry<String, String>> it = langMap.entrySet().iterator();
+		if (langMap != null && !langMap.isEmpty()){
+			boolean found =false;
+			while (it.hasNext() && !found) {
+				Map.Entry<String, String> e = (Map.Entry<String, String>)it.next();
+				if (e.getKey().equalsIgnoreCase(language)){
+					if (e.getValue()!=null && !e.getValue().isEmpty()){
+						languageIso3= e.getValue().toString();
+						found = true;
+					}
+				}
+			}
 		}
 		displayAiDetails(preview, writer, xmlFile, resourceBundleSource, languageIso3, currentAIRepositorCode, requiredAIRepositorCode);
     }
