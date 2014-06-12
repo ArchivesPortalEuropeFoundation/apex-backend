@@ -10,9 +10,9 @@
 	<xsl:param name="language.selected"/>
 	<xsl:variable name="language.default" select="'eng'"/>
 	<xsl:template match="/">
-		<h2 class="blockHeader">
+		<h1>
 			<xsl:value-of select="./eag:eag/eag:archguide/eag:identity/eag:autform"></xsl:value-of>
-		</h2>
+		</h1>
 
 		<!-- CONTACT -->
 		<!-- starts loop -->
@@ -20,7 +20,7 @@
 			<xsl:variable name="id" select="position()"/>
 			<div id="repository_{$id}">
 				<xsl:if test="count(current()/parent::node()/eag:repository)> 1">
-					<h3 class="repositoryName">
+					<h2 class="repositoryName">
 						<xsl:choose>
 							<xsl:when test="./eag:repositoryName">
 								<xsl:call-template name="multilanguageOnlyOne">
@@ -50,8 +50,9 @@
 							</xsl:choose>
 							<xsl:text>)</xsl:text>
 						</xsl:if>
-					</h3>
+					</h2>
 				</xsl:if>
+				<xsl:if test="$id = 1">
 				<div class="repositoryInfo">
 					<table class="aiSection contactDisplay">
 						<thead>
@@ -138,7 +139,7 @@
 							</xsl:if>
 						</tbody>
 					</table>
-									
+					<xsl:if test="eag:timetable/eag:opening/text() or eag:timetable/eag:closing/text()">				
 					<!-- ACCESS INFORMATION -->
 					<table class="aiSection accessDisplay">
 						<thead>
@@ -178,391 +179,15 @@
 								</tr>
 							</xsl:if>
 
-							<!-- directions and citations goes to template-->
-							<xsl:if test="eag:directions and eag:directions/text() or (eag:directions/eag:citation and eag:directions/eag:citation/@href and eag:directions/eag:citation/@href != '') ">
-								<xsl:call-template name="multilanguageWithChilds">
-									<xsl:with-param name="title">
-										<xsl:value-of select="ape:resource('eag2012.portal.directions')"/><xsl:text>:</xsl:text>
-									</xsl:with-param>
-									<xsl:with-param name="trClass" select="'longDisplay'"/>
-									<xsl:with-param name="list" select="eag:directions"/>
-								</xsl:call-template>
-							</xsl:if>
-
-
-							<!-- accessconditions only shown if there are values-->
-							<xsl:if test="eag:access">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.accessconditions')"/><xsl:text>:</xsl:text>
-									</td>
-									<td>
-										<xsl:choose>
-											<xsl:when test="eag:access[@question='yes']">
-												<xsl:value-of select="ape:resource('eag2012.portal.accesspublic')"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="ape:resource('eag2012.portal.accesspermission')"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- restaccess only shown if there are values-->
-							<xsl:if test="eag:access/eag:restaccess/text()">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.accessinformation')"/><xsl:text>:</xsl:text>
-										 
-									</td>
-									<td>
-									    
-										<xsl:call-template name="multilanguageRestaccess">
-											<xsl:with-param name="list" select="eag:access/eag:restaccess"></xsl:with-param>
-										</xsl:call-template>
-									</td>
-								</tr>
-							</xsl:if>
-
-						
-
-							<!-- accessibility text only shown if there are values-->
-							<xsl:if test="eag:accessibility/text()">
-								<tr title="repository">
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.facilitiesfordisabledpersons')"/><xsl:text>:</xsl:text>
-									</td>
-									<td>
-										<xsl:call-template name="multilanguageAccessibility">
-											<xsl:with-param name="list" select="eag:accessibility"></xsl:with-param>
-										</xsl:call-template>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- termsOfUse only shown if there are values-->
-							<xsl:if test="eag:access/eag:termsOfUse and eag:access/eag:termsOfUse/text()">
-								<xsl:call-template name="multilanguageTermsofuse">
-									<xsl:with-param name="title">
-										<xsl:value-of select="ape:resource('eag2012.portal.termsofuse')"/><xsl:text>:</xsl:text>
-									</xsl:with-param>
-									<xsl:with-param name="list" select="eag:access/eag:termsOfUse"/>
-									<xsl:with-param name="trClass" select="'longDisplay'"/>
-								</xsl:call-template>
-							</xsl:if>
-
-							<!-- readersTicket shown template-->
-							<xsl:if test="eag:services/eag:searchroom/eag:readersTicket">
-								<xsl:call-template name="multilanguageReadersTicket">
-									<xsl:with-param name="title">
-										<xsl:value-of select="ape:resource('eag2012.portal.readersticket')"/><xsl:text>:</xsl:text>
-									</xsl:with-param>
-									<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:readersTicket"/>
-								</xsl:call-template>
-							</xsl:if>
-
-							<!-- searchroom only shown if there are values-->
-							<xsl:if test="eag:services/eag:searchroom/eag:workPlaces/eag:num/text()">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.searchroom')"/><xsl:text>:</xsl:text>
-									</td>
-									<td>
-										<xsl:apply-templates select="eag:services/eag:searchroom/eag:workPlaces/eag:num"/>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- advancedOrders only shown if there are values-->
-							<xsl:if test="eag:services/eag:searchroom/eag:advancedOrders">
-								<xsl:call-template name="multilanguageAdvancedOrders">
-									<xsl:with-param name="title">
-										<xsl:value-of select="ape:resource('eag2012.portal.orderingdocuments')"/><xsl:text>:</xsl:text>
-									</xsl:with-param>
-									<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:advancedOrders"/>
-								</xsl:call-template>
-							</xsl:if>
-
-
-
-							<!-- internetAccess only shown if there are values-->
-							<xsl:if test="eag:services/eag:internetAccess">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.publicinternetAccess')"/><xsl:text>:</xsl:text>
-									</td>
-									<td>
-										<xsl:choose>
-											<xsl:when test="eag:services/eag:internetAccess[@question='yes']">
-												<xsl:value-of select="ape:resource('eag2012.portal.available')"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="ape:resource('eag2012.portal.notavailable')"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</td>
-								</tr>
-
-								<xsl:if test="eag:services/eag:internetAccess[@question='yes']/eag:descriptiveNote/eag:p/text()">
-									<tr>
-										<td class="header"></td>
-										<td>
-											<xsl:call-template name="multilanguageInternetaccess">
-												<xsl:with-param name="list" select="eag:services/eag:internetAccess[@question='yes']/eag:descriptiveNote/eag:p"/>
-											</xsl:call-template>
-										</td>
-									</tr>
-								</xsl:if>
-							</xsl:if>
-
-							<!-- library only shown if there are values-->
-							<xsl:if test="eag:services/eag:library and (eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text() != '' or eag:services/eag:library[@question='yes']/eag:serialpub/eag:num/text() != '')">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.library')"/><xsl:text>:</xsl:text>
-									</td>
-									<td>
-										<xsl:if test="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text()">
-											<xsl:apply-templates select="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num"/>
-										</xsl:if>
-										<xsl:if test="eag:services/eag:library[@question='yes']/eag:serialpub/eag:num/text()">
-											<xsl:if test="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text()">
-												<xsl:text>, </xsl:text>
-											</xsl:if>
-											<xsl:apply-templates select="eag:services/eag:library[@question='yes']/eag:serialpub/eag:num"/>
-										</xsl:if>
-										<xsl:if test="eag:services/eag:library[@question='no']">
-											<xsl:value-of select="ape:resource('eag2012.portal.nolibrary')"/>
-										</xsl:if>
-									</td>
-								</tr>
-
-							</xsl:if>
-
 						</tbody>
 					</table>
-
-					<xsl:if test="eag:holdings or eag:holdings/eag:descriptiveNote/eag:p/text() or eag:holdings/eag:extent/eag:num/text() or eag:holdings/eag:date/text() or (eag:holdings/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateRange/eag:toDate/text()) or eag:holdings/eag:dateSet or eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()) or eag:repositorhist/eag:descriptiveNote/eag:p/text() or eag:repositorfound/eag:date/text() or eag:repositorfound/eag:rule/text() or eag:repositorsup/eag:date/text() or eag:repositorsup/eag:rule/text() or eag:adminhierarchy/eag:adminunit/text() or eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text() or eag:buildinginfo/eag:repositorarea/eag:num/text() or eag:buildinginfo/eag:lengthshelf/eag:num/text()">
-						<table class="aiSection archivesDisplay">
-							<thead>
-								<tr>
-									<th colspan="2">
-										<xsl:value-of select="ape:resource('eag2012.portal.archivesandholdings')"/>
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								<!-- extent only shown if there are values-->
-								<xsl:if test="eag:holdings/eag:extent/eag:num/text()">
-									<tr>
-										<td class="header">
-											<xsl:value-of select="ape:resource('eag2012.portal.extentholdings')"/><xsl:text>:</xsl:text>
-										</td>
-										<td>
-											<xsl:apply-templates select="eag:holdings/eag:extent/eag:num"/>
-										</td>
-									</tr>
-								</xsl:if>
-	
-								<!-- dates of holdings only shown if there are values-->
-								<xsl:if test="eag:holdings/eag:date/text() or (eag:holdings/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateRange/eag:toDate/text()) or (eag:holdings/eag:dateSet and (eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text())))">
-									<tr>
-										<td class="header">
-											<xsl:value-of select="ape:resource('eag2012.portal.datesholdings')"/><xsl:text>:</xsl:text>
-										</td>
-										<td>
-											<!-- when there are only 1 dateSet -->
-											<xsl:if test="eag:holdings/eag:dateSet and ((eag:holdings/eag:dateSet/eag:dateRange and eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()) or (eag:holdings/eag:dateSet/eag:date and eag:holdings/eag:dateSet/eag:date/text()))">
-												<xsl:apply-templates select="eag:holdings/eag:dateSet"/>
-											</xsl:if>
-											<!-- when there are only 1 dateRange -->
-											<xsl:if test="eag:holdings/eag:dateRange and eag:holdings/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateRange/eag:toDate/text()">
-												<xsl:apply-templates select="eag:holdings/eag:dateRange"/>
-											</xsl:if>
-											<!-- when there are only 1 date -->
-											<xsl:if test="eag:holdings/eag:date and eag:holdings/eag:date/text()">
-												<xsl:apply-templates select="eag:holdings/eag:date"/>
-											</xsl:if>
-											
-										</td>
-									</tr>
-								</xsl:if>
-	
-							</tbody>
-						</table>
 					</xsl:if>
-					<!-- END LOOP -->
+
 				</div>
+				</xsl:if>
 			</div>
 		</xsl:for-each>
-		<div id="afterRepositories">
-		</div>
 
-		<table class="aiSection otherDisplay">
-			<thead>
-				<tr>
-					<th colspan="2">
-						<xsl:value-of select="ape:resource('eag2012.portal.other')"/>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-
-				<!-- relationEntry and links to related resources-->
-				<xsl:choose>
-					<xsl:when test="(./eag:eag/eag:relations/eag:resourceRelation/@href and ./eag:eag/eag:relations/eag:resourceRelation/@href != '') or (./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text() and ./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text() != '')">
-						<tr>
-							<td class="header">
-								<xsl:value-of select="ape:resource('eag2012.portal.relatedresource')"/>:
-							</td>
-							<td>
-								<xsl:call-template name="multilanguageWithLinkRelatedResources">
-									<xsl:with-param name="list" select="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry"></xsl:with-param>
-								</xsl:call-template>
-							</td>
-						</tr>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:if test="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text()">
-							<tr>
-								<td class="header">
-									<xsl:value-of select="ape:resource('eag2012.portal.relatedresource')"/>
-								</td>
-								<td>
-									<xsl:value-of select="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry"/>
-								</td>
-							</tr>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
-
-				<!-- associatedrepositories only shown if there are values-->
-				<xsl:choose>
-					<xsl:when test="(./eag:eag/eag:relations/eag:eagRelation/@href and ./eag:eag/eag:relations/eag:eagRelation/@href != '') or (./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text() and ./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text() != '')">
-						<tr>
-							<td class="header">
-								<xsl:value-of select="ape:resource('eag2012.portal.associatedrepositories')"/>:
-							</td>
-							<td>
-								<xsl:call-template name="multilanguageWithLink">
-									<xsl:with-param name="list" select="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry"></xsl:with-param>
-								</xsl:call-template>
-							</td>
-						</tr>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:if test="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text()">
-							<tr>
-								<td class="header">
-									<xsl:value-of select="ape:resource('eag2012.portal.associatedrepositories')"/>:
-								</td>
-								<td>
-									<xsl:value-of select="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry"/>
-								</td>
-							</tr>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
-
-
-
-				<!-- repositoryType only shown if there are values-->			
-				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() and (./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Business archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Church and religious archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'County/local authority archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Specialised non-governmental archives and archives of other cultural (heritage) institutions' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Media archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Municipal archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'National archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Private persons and family archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Regional archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Specialised government archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'University and research archives')">
-					<tr>
-						<td class="header">
-							<xsl:value-of select="ape:resource('eag2012.portal.typeofarchive')"/><xsl:text>:</xsl:text>
-						</td>
-						<td>
-							<!-- if there are one or more -->
-							<xsl:for-each select="./eag:eag/eag:archguide/eag:identity/eag:repositoryType">
-<!-- 								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
-								</xsl:if> --> 
-								<xsl:choose>
-									<xsl:when test="current()/text() = 'Business archives'">
-										<p>
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.businessArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Church and religious archives'">
-										<p>
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.churchArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'County/local authority archives'">
-										<p>
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.countyArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Specialised non-governmental archives and archives of other cultural (heritage) institutions'">
-										<p>
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.culturalArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Media archives'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.mediaArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Municipal archives'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.municipalArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'National archives'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.nationalArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.politicalArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Private persons and family archives'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.privateArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Regional archives'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.regionalArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'Specialised government archives'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.specialisedArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:when test="current()/text() = 'University and research archives'">
-										<p>	
-											<xsl:value-of select = "ape:resource('eag2012.options.institutionType.universityArchives')"/>
-										</p>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:text> </xsl:text>
-									</xsl:otherwise>
-								</xsl:choose>
-							 </xsl:for-each> 
-						</td>
-					</tr>
-				</xsl:if>
-
-				<!-- lastupdate only shown if there are values-->
-				<xsl:variable name="numberOfMaintenanceEvent" select="count(./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent)"/>
-				<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent[$numberOfMaintenanceEvent]/eag:eventDateTime/text()">
-					<tr>
-						<td class="header">
-							<xsl:value-of select="ape:resource('eag2012.portal.lastupdate')"/><xsl:text>:</xsl:text>
-						</td>
-						<td>
-							<xsl:value-of select="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent[$numberOfMaintenanceEvent]/eag:eventDateTime"/>
-						</td>
-					</tr>
-				</xsl:if>
-			</tbody>
-		</table>
 	</xsl:template>
 
 <!-- template for email-->
