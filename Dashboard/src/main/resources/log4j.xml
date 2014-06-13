@@ -48,7 +48,7 @@
 		<level value="info" />
 		<appender-ref ref="securityFile" /> 
 	</logger>
-	<logger name="eu.apenet.dashboard.services.ead.publish.SolrPublisher">
+	<logger name="eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher">
 		<level value="debug" />
 		<appender-ref ref="publish" /> 
 	</logger>	
