@@ -31,7 +31,11 @@ public class QueueDaemon {
 	public static synchronized void stop(){
 		clean();
 		if (isActive()){
-			scheduler.shutdown();
+			if (isQueueProcessing()){
+				scheduler.shutdown();
+			}else {
+				scheduler.shutdownNow();
+			}
 			LOGGER.info("Queue is going to shutdown...");
 		}
 	}
