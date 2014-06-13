@@ -1,7 +1,9 @@
 package eu.archivesportaleurope.xml.xpath;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -31,6 +33,10 @@ public abstract class StringXpathHandler extends AbstractXpathHandler {
 	public List<String> getResult() {
 		return result;
 	}
+	public Set<String> getResultSet() {
+		return new HashSet<String>(result);
+	}
+	
 	public String getResultAsString(){
 		return convertToString(0, NO_SEPARATOR);	
 	}
