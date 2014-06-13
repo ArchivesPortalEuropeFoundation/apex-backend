@@ -78,7 +78,7 @@
       </types>
   <fields>
       <field name="id" type="int" indexed="true" stored="true" required="true"/>
-	  <field name="name" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />      	
+	  <field name="name" type="text" indexed="true" stored="true" required="true" termVectors="true" termPositions="true" termOffsets="true" />      	
 	  <field name="otherNames" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="places" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
  	  <field name="repositories" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />	  
@@ -86,7 +86,7 @@
 	  <field name="other" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="country" type="string" indexed="true" stored="true" required="false"/>
 	  <field name="language" type="languageText" indexed="true" stored="true" required="false"/>
-
+	  <field name="repositoryTypeFacet" type="facetText" multiValued="true" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="namesort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
  	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>  
 	  <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="true"/>
