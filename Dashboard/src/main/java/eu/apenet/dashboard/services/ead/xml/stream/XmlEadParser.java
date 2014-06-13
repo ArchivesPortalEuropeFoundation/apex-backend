@@ -167,8 +167,10 @@ public class XmlEadParser extends AbstractParser {
 						}
 						xmlWriterHolder.writeStartElement(xmlReader);
 					}
-					add(fullXpathPosition, lastElement);
-					fullEadParser.processStartElement(fullXpathPosition, xmlReader);
+					if (!XmlCLevelParser.CLEVEL.equals(elementName)) {
+						add(fullXpathPosition, lastElement);
+						fullEadParser.processStartElement(fullXpathPosition, xmlReader);
+					}
 				} else if (event == XMLStreamConstants.END_ELEMENT) {
 					archDescParser.processEndElement(archdescXpathPosition, xmlReader);
 					fullEadParser.processEndElement(fullXpathPosition, xmlReader);
