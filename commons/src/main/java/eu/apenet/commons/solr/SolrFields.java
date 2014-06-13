@@ -78,7 +78,12 @@ public final class SolrFields {
 	public final static String REPOSITORY_CODE="repositoryCode";
 	public final static String DUPLICATE_UNITID = "duplicateUnitid";
 	public final static String EAG_NAME="name";
-	public final static String EAG_OTHER_NAMES = "names";
+	public final static String EAG_OTHER_NAMES = "otherNames";
+	public final static String EAG_REPOSITORIES = "repositories";
+	public final static String EAG_REPOSITORY_TYPE = "repositoryTypeFacet";
+	public final static String EAG_DESCRIPTION = "description";
+	public final static String EAG_OTHER = "other";
+	public final static String EAG_LANGUAGE = "language";
 }
 
 
