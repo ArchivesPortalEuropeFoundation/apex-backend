@@ -5,10 +5,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.apache.log4j.Logger;
-
 public class XMLStreamWriterHolder {
-	private static final Logger LOGGER = Logger.getLogger(XMLStreamWriterHolder.class);
 	private XMLStreamWriter xmlWriter;
 	private int numberOfOpenedElements = 0;
 
@@ -50,9 +47,7 @@ public class XMLStreamWriterHolder {
 
 	public void writeStartElement(XMLStreamReader xmlReader) throws XMLStreamException {
 		QName element = xmlReader.getName();
-		if (xmlWriter == null) {
-			LOGGER.error("Try to write element: "  + element.getPrefix() + ":" + element.getLocalPart() + ", but writer is already closed.");
-		} else {
+		if (xmlWriter != null) {
 			xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
 			for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
 				xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i),
