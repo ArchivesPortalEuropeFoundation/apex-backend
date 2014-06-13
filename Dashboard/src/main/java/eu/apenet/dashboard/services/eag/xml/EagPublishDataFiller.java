@@ -84,7 +84,10 @@ public class EagPublishDataFiller {
 		repositories.remove(archivalInstitution.getAiname());
 		publishData.setRepositories(repositories);
 		publishData.setRepositoryTypes(repositoryTypeHandler.getResultSet());
-		publishData.setDescription(locationHandler.getResultAsStringWithWhitespace() + StringXpathHandler.WHITE_SPACE + holdingsHandler.getResultAsStringWithWhitespace());
+		StringBuilder description = new StringBuilder();
+		add(description, locationHandler.getResultAsStringWithWhitespace());
+		add(description, holdingsHandler.getResultAsStringWithWhitespace());
+		publishData.setDescription(description.toString());
 		publishData.setOther(historyHandler.getResultAsStringWithWhitespace());
 		publishData.setLanguage(languageHandler.getResultAsStringWithWhitespace());
 	}
