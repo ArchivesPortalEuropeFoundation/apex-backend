@@ -139,15 +139,13 @@ public class XmlEadParser extends AbstractParser {
 							xmlWriterHolder.close();
 							eadContent.setTitleproper(ead.getTitle());
 							eadContent.setXml(stringWriter.toString());
+                        	EadPublishData publishData = new EadPublishData();
+                        	archDescParser.fillData(publishData, eadContent);
+                        	fullEadParser.fillData(publishData, eadContent);
 							JpaUtil.getEntityManager().persist(eadContent);
 							stringWriter.close();
-							stringWriter = null;
-							
+							stringWriter = null;					
                             if(solrPublisher != null){
-                            	EadPublishData publishData = new EadPublishData();
-                            	archDescParser.fillData(publishData, eadContent);
-                            	fullEadParser.fillData(publishData, eadContent);
-                    			publishData.setXml(eadContent.getXml());
                 				publishData.setId(ead.getId().longValue());
                 				publishData.setUpperLevelUnittitles(upperLevels);
                 				publishData.setFullHierarchy(fullHierarchy);
@@ -196,13 +194,12 @@ public class XmlEadParser extends AbstractParser {
 				xmlWriterHolder.close();
 				eadContent.setTitleproper(ead.getTitle());
 				eadContent.setXml(stringWriter.toString());
+            	EadPublishData publishData = new EadPublishData();
+            	archDescParser.fillData(publishData, eadContent);
+            	fullEadParser.fillData(publishData, eadContent);
 				JpaUtil.getEntityManager().persist(eadContent);
 				stringWriter = null;
                 if(solrPublisher != null){
-                	EadPublishData publishData = new EadPublishData();
-                	archDescParser.fillData(publishData, eadContent);
-                	fullEadParser.fillData(publishData, eadContent);
-        			publishData.setXml(eadContent.getXml());
     				publishData.setId(ead.getId().longValue());
     				publishData.setUpperLevelUnittitles(upperLevels);
     				publishData.setFullHierarchy(fullHierarchy);
