@@ -81,8 +81,8 @@ public class XmlEadParser extends AbstractParser {
 
         eadContent.setEadid(ead.getEadid());
         upperLevels.add(new LevelInfo(ead.getId()));
-        String initialFilePath = ead.getPathApenetead();
-        fileInputStream = getFileInputStream(ead.getPathApenetead());
+        String initialFilePath = ead.getPath();
+        fileInputStream = getFileInputStream(ead.getPath());
 
 
 		String eadid = eadContent.getEadid();
