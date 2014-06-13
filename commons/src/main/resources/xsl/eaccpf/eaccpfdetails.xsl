@@ -1043,73 +1043,138 @@
 		<xsl:variable name="firstName" select="$listName/eac:part[@localType='firstname']"/>
 		<xsl:variable name="surName" select="$listName/eac:part[@localType='surname']"/>
 		<xsl:variable name="patronymic" select="$listName/eac:part[@localType='patronymic']"/>
-	<!--  	<xsl:variable name="prefix" select="$listName/eac:part[@localType='prefix']"/>-->
-	    <xsl:choose>
-	    	<xsl:when test="$surName and $firstName and $patronymic">
-	    		<xsl:value-of select="$surName"/>
-	    		<xsl:text>, </xsl:text>
-	    		<xsl:value-of select="$firstName"/>
-	    		<xsl:text> </xsl:text>
-	    		<xsl:value-of select="$patronymic"/>
-	    		<xsl:if test="$isHeader = 'true'">
-	    			<!-- <input id="NameTitle" type="hidden" value="$surName, $firstName $patronymic"/> -->
-	    			<span id="nameTitle" hidden="">
-			    		<xsl:value-of select="$surName"/>
-			    		<xsl:text>, </xsl:text>
-			    		<xsl:value-of select="$firstName"/>
-			    		<xsl:text> </xsl:text>
-			    		<xsl:value-of select="$patronymic"/>
-	    			</span>
+	    <xsl:variable name="prefix" select="$listName/eac:part[@localType='prefix']"/>
+	    <xsl:variable name="suffix" select="$listName/eac:part[@localType='suffix']"/>
+		<xsl:variable name="alias" select="$listName/eac:part[@localType='alias']"/>
+		<xsl:variable name="title" select="$listName/eac:part[@localType='title']"/>
+		<xsl:variable name="birthname" select="$listName/eac:part[@localType='birthname']"/>
+		<xsl:variable name="legalform" select="$listName/eac:part[@localType='legalform']"/>
+		<xsl:variable name="corpname" select="$listName/eac:part[@localType='corpname']"/>
+		<xsl:variable name="famname" select="$listName/eac:part[@localType='famname']"/>
+		<xsl:variable name="persname" select="$listName/eac:part[@localType='persname']"/>
+	    <xsl:call-template name="nameEntry">
+	    	<xsl:with-param name="listName" select="$listName"/>
+	    	<xsl:with-param name="firstName" select="$firstName"/>
+	    	<xsl:with-param name="surName" select="$surName"/>
+	    	<xsl:with-param name="patronymic" select="$patronymic"/>
+	    	<xsl:with-param name="prefix" select="$prefix"/>
+	    	<xsl:with-param name="suffix" select="$suffix"/>
+	    	<xsl:with-param name="alias" select="$alias"/>
+	    	<xsl:with-param name="title" select="$title"/>
+	    	<xsl:with-param name="birthname" select="$birthname"/>
+	    	<xsl:with-param name="legalform" select="$legalform"/>
+	    	<xsl:with-param name="corpname" select="$corpname"/>
+	    	<xsl:with-param name="famname" select="$famname"/>
+	    	<xsl:with-param name="persname" select="$persname"/>
+	    </xsl:call-template>
+	    <xsl:if test="$isHeader = 'true'"> <!-- to display the alternative names -->
+  			<span id="nameTitle" hidden="">
+  				<xsl:call-template name="nameEntry">
+  					<xsl:with-param name="listName" select="$listName"/>
+			    	<xsl:with-param name="firstName" select="$firstName"/>
+			    	<xsl:with-param name="surName" select="$surName"/>
+			    	<xsl:with-param name="patronymic" select="$patronymic"/>
+			    	<xsl:with-param name="prefix" select="$prefix"/>
+			    	<xsl:with-param name="suffix" select="$suffix"/>
+			    	<xsl:with-param name="alias" select="$alias"/>
+			    	<xsl:with-param name="title" select="$title"/>
+			    	<xsl:with-param name="birthname" select="$birthname"/>
+			    	<xsl:with-param name="legalform" select="$legalform"/>
+			    	<xsl:with-param name="corpname" select="$corpname"/>
+			    	<xsl:with-param name="famname" select="$famname"/>
+			    	<xsl:with-param name="persname" select="$persname"/>
+  				</xsl:call-template>
+  			</span>
+  		</xsl:if>	
+	</xsl:template> 
+	
+	<!-- template nameEntry -->
+	<xsl:template name="nameEntry">
+		<xsl:param name="listName"/>
+    	<xsl:param name="firstName"/>
+    	<xsl:param name="surName"/>
+    	<xsl:param name="patronymic"/>
+    	<xsl:param name="prefix"/>
+    	<xsl:param name="suffix"/>
+    	<xsl:param name="alias"/>
+    	<xsl:param name="title"/>
+    	<xsl:param name="birthname"/>
+    	<xsl:param name="legalform"/>
+    	<xsl:param name="corpname"/>
+    	<xsl:param name="famname"/>
+    	<xsl:param name="persname"/>
+    	<xsl:choose>
+	    	<xsl:when test="not($corpname) and not($famname) and not($persname) and not($legalform)"> 
+	    		<xsl:if test="$surName">
+	    			<xsl:apply-templates select="$surName" mode="other"/>
+	    			<xsl:if test="$birthname">
+	    				<xsl:text> </xsl:text>
+	    			</xsl:if>
 	    		</xsl:if>
-	    	</xsl:when>
-	    	<xsl:when test="$surName and $firstName">
-	    		<xsl:value-of select="$surName"/>
-	    		<xsl:text>, </xsl:text>
-	    		<xsl:value-of select="$firstName"/>
-	    		<xsl:if test="$isHeader = 'true'">
-	    			<!-- <input id="NameTitle" type="hidden" value="surName, $firstName"/> -->
-	    			<span id="nameTitle" hidden="">
-			    		<xsl:value-of select="$surName"/>
-			    		<xsl:text>, </xsl:text>
-			    		<xsl:value-of select="$firstName"/>
-			    	</span>
+	    		<xsl:if test="$birthname">
+	    			<xsl:text>(</xsl:text>
+	    			<xsl:apply-templates select="$birthname" mode="other"/>
+	    			<xsl:text>)</xsl:text>
 	    		</xsl:if>
-	    	</xsl:when>
-	    	<xsl:when test="$surName and $patronymic">
-	    		<xsl:value-of select="$surName"/>
-	    		<xsl:text> </xsl:text>
-	    		<xsl:value-of select="$patronymic"/>
-	    		<xsl:if test="$isHeader = 'true'">
-	    			<!-- <input id="NameTitle" type="hidden" value="$surName $patronymic"/> -->
-	    			<span id="nameTitle" hidden="">
-			    		<xsl:value-of select="$surName"/>
-			    		<xsl:text> </xsl:text>
-			    		<xsl:value-of select="$patronymic"/>
-	    			</span>
+	    		<xsl:if test="$prefix">
+	    			<xsl:if test="$surName or $birthname">
+	    				<xsl:text>, </xsl:text>
+	    			</xsl:if>
+	    			<xsl:apply-templates select="$prefix" mode="other"/>
 	    		</xsl:if>
-	    	</xsl:when>
-	    	<xsl:when test="$firstName and $patronymic">
-	    		<xsl:value-of select="$firstName"/>
-	    		<xsl:text> </xsl:text>
-	    		<xsl:value-of select="$patronymic"/>
-	    		<xsl:if test="$isHeader = 'true'">
-	    			<!-- <input id="NameTitle" type="hidden" value="$firstName $patronymic"/> -->
-	    			<span id="nameTitle" hidden="">
-			    		<xsl:value-of select="$firstName"/>
-			    		<xsl:text> </xsl:text>
-			    		<xsl:value-of select="$patronymic"/>
-			    	</span>
+	    		<xsl:if test="$firstName">
+	    			<xsl:if test="$surName or $birthname or $prefix">
+	    				<xsl:text>, </xsl:text>
+	    			</xsl:if>
+	    			<xsl:apply-templates select="$firstName" mode="other"/>
+	    		</xsl:if>
+	    		<xsl:if test="$patronymic">
+	    			<xsl:choose>
+	    				<xsl:when test="$firstName">
+	    					<xsl:text> </xsl:text>
+	    				</xsl:when>
+	    				<xsl:otherwise>
+	    					<xsl:if test="$surName or $birthname or $prefix">
+			    				<xsl:text>, </xsl:text>
+			    			</xsl:if>
+	    				</xsl:otherwise>
+	    			</xsl:choose>
+	    			<xsl:apply-templates select="$patronymic" mode="other"/>
+	    		</xsl:if>
+	    		<xsl:if test="$suffix">
+	    			<xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic">
+	    				<xsl:text>, </xsl:text>
+	    			</xsl:if>
+	    			<xsl:apply-templates select="$suffix" mode="other"/>
+	    		</xsl:if>
+	    		<xsl:if test="$title">
+	    			<xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic or $suffix">
+	    				<xsl:text>, </xsl:text>
+	    			</xsl:if>
+	    			<xsl:apply-templates select="$title" mode="other"/>
 	    		</xsl:if>
 	    	</xsl:when>
 	    	<xsl:otherwise>
-	    		<xsl:value-of select="$listName/eac:part"/>
-	    		<xsl:if test="$isHeader = 'true'">
-	    			<!-- <input id="NameTitle" type="hidden" value="$listName/eac:part"/> -->
-	    			<span id="nameTitle" hidden=""><xsl:value-of select="$listName/eac:part"/></span>
-	    		</xsl:if>
+	    		<xsl:choose>
+	    			<xsl:when test="$corpname and $legalform">
+	    				<xsl:apply-templates select="$corpname" mode="other"/>
+	    				<xsl:text> </xsl:text>
+	    				<xsl:apply-templates select="$legalform" mode="other"/>
+	    			</xsl:when>
+	    			<xsl:otherwise>
+	    				<xsl:apply-templates select="$listName/eac:part[1]" mode="other"/>
+	    			</xsl:otherwise>
+	    		</xsl:choose>
 	    	</xsl:otherwise>
 	    </xsl:choose>
-	</xsl:template> 
+	    <xsl:if test="$alias">
+	    	<xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic or $suffix or $title or $corpname or $famname or $persname">
+   				<xsl:text> </xsl:text>
+   			</xsl:if>
+	   		<xsl:text>(</xsl:text><xsl:value-of select="ape:resource('eaccpf.portal.alias')"/><xsl:text>: </xsl:text>
+	   		<xsl:apply-templates select="$alias" mode="other"/><xsl:text>)</xsl:text>
+	    </xsl:if>
+	</xsl:template>
 	
 	<!-- template vocabularySource -->
 	<xsl:template name="vocabularySource">
