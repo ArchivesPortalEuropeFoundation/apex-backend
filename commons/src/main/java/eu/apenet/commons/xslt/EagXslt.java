@@ -41,23 +41,13 @@ public class EagXslt {
         return compiler.compile(xsltSource);
 	}
     public static void displayAiDetails(boolean preview, Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
-		String language = resourceBundleSource.getLocale().getLanguage();
+		String language = resourceBundleSource.getLocale().getLanguage().toLowerCase();
 		String languageIso3 = "eng";
 		Map<String, String> langMap = APEnetUtilities.getIso2ToIso3LanguageCodesMap();
 		
 		//recover the iso3 language 
-		Iterator<Entry<String, String>> it = langMap.entrySet().iterator();
-		if (langMap != null && !langMap.isEmpty()){
-			boolean found =false;
-			while (it.hasNext() && !found) {
-				Map.Entry<String, String> e = (Map.Entry<String, String>)it.next();
-				if (e.getKey().equalsIgnoreCase(language)){
-					if (e.getValue()!=null && !e.getValue().isEmpty()){
-						languageIso3= e.getValue().toString();
-						found = true;
-					}
-				}
-			}
+		if (langMap.get(language)!= null && !langMap.get(language).isEmpty()){
+			languageIso3 = langMap.get(language);
 		}
 		displayAiDetails(preview, writer, xmlFile, resourceBundleSource, languageIso3, currentAIRepositorCode, requiredAIRepositorCode);
     }
