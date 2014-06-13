@@ -25,8 +25,8 @@
 			<s:hidden name="orderByAscending" />
 			<table>
 				<tr>
-					<th><s:text name="content.message.type" />:</th>
-					<td rowspan="4">
+					<th class="contentThType" rowspan="2"><span><s:text name="content.message.type" />:</span></th>
+					<td class="nextContentThType" rowspan="4">
 						<s:iterator value="typeList">
 							<input id="newSearchForm_xmlTypeId<s:property value="key" />" class="typeRadio" type="radio" value="<s:property value="key"/>" name="xmlTypeId">
 							<label for="newSearchForm_xmlTypeId<s:property value="key" />"><s:property value="value"/></label>
@@ -42,7 +42,6 @@
 
 				</tr>
 				<tr>
-					<th></th>
 					<th><s:text name="content.message.validated" />:</th>
 					<td><s:checkboxlist list="validatedStatusList" name="validatedStatus" /></td>
 					<th><s:text name="content.message.queue" />:</th>

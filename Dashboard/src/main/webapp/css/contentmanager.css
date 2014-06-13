@@ -183,3 +183,25 @@
     padding-top:20px;
     padding-bottom:20px;
 }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	div.searchOptionsContent td.nextContentThType input{
+		top: -1.5px;
+		position: relative;
+	}
+}
+div.searchOptionsContent .typeRadio{
+	vertical-align: middle;
+	margin-bottom: 1px;
+}
+.contentThType{
+	padding-top: 5px;
+    vertical-align: text-top;
+}
+.nextContentThType{
+	padding-top: 5px;
+    vertical-align: text-top;
+    margin-right:15px;
+}
+.tdNextConverted{
+	margin-right:15px;
+}
