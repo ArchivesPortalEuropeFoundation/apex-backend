@@ -15,7 +15,8 @@ import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
-import eu.apenet.dashboard.services.eag.publish.EagSolrPublisher;
+import eu.apenet.dashboard.services.eag.xml.XmlEagParser;
+import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -175,9 +176,7 @@ public class ManageQueueAction extends AbstractAction {
 			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsWithRepositoryCode();
 			for (ArchivalInstitution archivalInstitution: archivalInstitutions){
 				LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
-				publisher = new EagSolrPublisher();
-				publisher.publish(archivalInstitution);
-				publisher.commitSolrDocuments();
+				XmlEagParser.parseEadAndPublish(archivalInstitution);
 			}
 		}catch(Exception e){
 			LOGGER.error(e.getMessage(), e);
