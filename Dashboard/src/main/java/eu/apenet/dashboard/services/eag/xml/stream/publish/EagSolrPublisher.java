@@ -36,12 +36,18 @@ public class EagSolrPublisher  extends AbstractSolrPublisher{
 		doc.addField(SolrFields.REPOSITORY_CODE, archivalInstitution.getRepositorycode());
 		doc.addField(SolrFields.EAG_NAME, archivalInstitution.getAiname());		
 		doc.addField(SolrFields.EAG_OTHER_NAMES, publishData.getOtherNames());		
+		doc.addField(SolrFields.EAG_PLACES, publishData.getPlaces());		
 		doc.addField(SolrFields.EAG_REPOSITORIES, publishData.getRepositories());	
 		doc.addField(SolrFields.EAG_REPOSITORY_TYPE, publishData.getRepositoryTypes());
 		add(doc, SolrFields.EAG_DESCRIPTION, publishData.getDescription());
 		add(doc, SolrFields.EAG_OTHER, publishData.getOther());	
 		add(doc, SolrFields.EAG_LANGUAGE, publishData.getLanguage());	
-		add(doc, SolrFields.COUNTRY, archivalInstitution.getCountry().getCname().replace(" ", "_") + COLON + SolrValues.TYPE_GROUP + COLON + archivalInstitution.getCountry().getId());
+		
+		doc.addField(SolrFields.EAG_AI_GROUPS, publishData.getAiGroups());
+		doc.addField(SolrFields.EAG_AI_GROUPS_FACET, publishData.getAiGroupFacets());
+		doc.addField(SolrFields.EAG_AI_GROUP_ID, publishData.getAiGroupIds());
+		doc.addField(SolrFields.EAG_COUNTRIES, publishData.getCountries());
+		add(doc, SolrFields.COUNTRY, archivalInstitution.getCountry().getEncodedCname() + COLON + SolrValues.TYPE_GROUP + COLON + archivalInstitution.getCountry().getId());
 		doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountry().getId());
 
 		addSolrDocument(doc);

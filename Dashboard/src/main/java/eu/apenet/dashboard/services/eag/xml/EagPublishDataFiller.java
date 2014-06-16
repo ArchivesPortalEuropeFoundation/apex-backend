@@ -1,9 +1,16 @@
 package eu.apenet.dashboard.services.eag.xml;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -11,6 +18,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 
+import eu.apenet.commons.solr.SolrValues;
+import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagPublishData;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
@@ -20,7 +29,7 @@ import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
 import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
 
 public class EagPublishDataFiller {
-	//private static final Logger LOGGER = Logger.getLogger(EadPublishDataFiller.class);
+	private static final String COUNTRY_PREFIX = "country.";
 	/*
 	 * unitids
 	 */
@@ -32,6 +41,31 @@ public class EagPublishDataFiller {
 	private StringXpathHandler locationHandler;
 	private AttributeXpathHandler languageHandler;
 	private List<XmlStreamHandler> eagHandlers = new ArrayList<XmlStreamHandler>();
+	private static Map<String, Set<String>> countryResourceBundles;
+	static {
+		countryResourceBundles = new HashMap<String, Set<String>>();
+		Map<String, ResourceBundle> resourceBundlesMap = getResourceBundles("i18n/ApplicationResources");
+		ResourceBundle enBundle = resourceBundlesMap.get("en");
+		Set<String> countryKeys =  new HashSet<String>();
+		Enumeration<String> keys = enBundle.getKeys();
+		while (keys.hasMoreElements()){
+			String key = keys.nextElement();
+			if (key.startsWith(COUNTRY_PREFIX)){
+				countryKeys.add(key);
+				countryResourceBundles.put(key, new HashSet<String>());
+			}
+		}
+		for (Map.Entry<String, ResourceBundle> entry: resourceBundlesMap.entrySet()){
+			ResourceBundle resourceBundle = entry.getValue();
+			for (String countryKey :countryKeys){
+				String value = resourceBundle.getString(countryKey);
+				if (StringUtils.isNotBlank(value)){
+					countryResourceBundles.get(countryKey).add(value);
+				}
+			}
+		}
+
+	}
 	public EagPublishDataFiller() {
 			/*
 			 * name
@@ -40,11 +74,13 @@ public class EagPublishDataFiller {
 		repositoryNameHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "repositoryName" }); 
 		repositoryTypeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","identity", "repositoryType"}); 
 		languageHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "control", "languageDeclarations", "languageDeclaration", "language" }, "languageCode");
-		historyHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "repositorhist" });
+		historyHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "repositorhist", "descriptiveNote" });
 		historyHandler.setAllTextBelow(true);
-		holdingsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "holdings" }); 
+		holdingsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "holdings", "descriptiveNote" }); 
 		holdingsHandler.setAllTextBelow(true);
-		locationHandler =  new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "location", "street | municipalityPostalcode | country" }); 
+		locationHandler =  new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "location" }); 
+		locationHandler.setAttribute("localType", "visitors address", false);
+		locationHandler.setAllTextBelow(true);
 		eagHandlers.add(otherNamesHandler);
 		eagHandlers.add(repositoryNameHandler);
 		eagHandlers.add(repositoryTypeHandler);
@@ -84,16 +120,53 @@ public class EagPublishDataFiller {
 		repositories.remove(archivalInstitution.getAiname());
 		publishData.setRepositories(repositories);
 		publishData.setRepositoryTypes(repositoryTypeHandler.getResultSet());
-		StringBuilder description = new StringBuilder();
-		add(description, locationHandler.getResultAsStringWithWhitespace());
-		add(description, holdingsHandler.getResultAsStringWithWhitespace());
-		publishData.setDescription(description.toString());
-		publishData.setOther(historyHandler.getResultAsStringWithWhitespace());
+		StringBuilder other = new StringBuilder();
+		add(other, holdingsHandler.getResultAsStringWithWhitespace());
+		add(other, historyHandler.getResultAsStringWithWhitespace());
+		publishData.setPlaces(locationHandler.getResult());
+		publishData.setOther(other.toString());
 		publishData.setLanguage(languageHandler.getResultAsStringWithWhitespace());
+	
+		ArchivalInstitution ai = archivalInstitution.getParent();
+		List<ArchivalInstitution> ais = new ArrayList<ArchivalInstitution>();
+		while (ai != null) {
+			ais.add(ai);
+			ai = ai.getParent();
+		}
+		for (int i = ais.size() - 1; i >= 0; i--) {
+			ArchivalInstitution currentAi = ais.get(i);
+			publishData.getAiGroups().add(currentAi.getAiname());
+			publishData.getAiGroupFacets().add(currentAi.getAiname() + AbstractSolrPublisher.COLON + SolrValues.TYPE_GROUP + AbstractSolrPublisher.COLON  + currentAi.getAiId());
+			publishData.getAiGroupIds().add(currentAi.getAiId());
+		}
+		Set<String> countries = countryResourceBundles.get(COUNTRY_PREFIX + archivalInstitution.getCountry().getEncodedCname().toLowerCase());
+		if (countries == null){
+			publishData.getCountries().add(archivalInstitution.getCountry().getCname());
+		}else {
+			publishData.setCountries(countries);
+		}
+		
 	}
 	private void add(StringBuilder other, String item){
 		if (StringUtils.isNotBlank(item)){
 			other.append(StringXpathHandler.WHITE_SPACE + item);
 		}
 	}
+	public static Map<String, ResourceBundle> getResourceBundles(String baseName) {
+
+		Map<String, ResourceBundle> resourceBundles = new HashMap<String, ResourceBundle>();
+
+		  for (String isoLanguage: Locale.getISOLanguages()) {
+		    try {
+		    	URL url = EagPublishDataFiller.class.getClassLoader().getResource(baseName + "_"+isoLanguage+".properties");
+		    	if (url != null){
+		    		resourceBundles.put(isoLanguage, ResourceBundle.getBundle(baseName, new Locale(isoLanguage)));
+		    	}
+		    } catch (MissingResourceException ex) {
+		      // ...
+		    }
+		  }
+
+		  return resourceBundles;
+		}
 }
