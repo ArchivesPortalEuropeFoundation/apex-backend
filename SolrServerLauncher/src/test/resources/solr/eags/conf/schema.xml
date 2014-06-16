@@ -80,7 +80,7 @@
       <field name="id" type="int" indexed="true" stored="true" required="true"/>
 	  <field name="name" type="text" indexed="true" stored="true" required="true" termVectors="true" termPositions="true" termOffsets="true" />      	
 	  <field name="otherNames" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-	  <field name="places" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+	  <field name="address" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
  	  <field name="repositories" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />	  
 	  <field name="description" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="other" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
@@ -103,7 +103,7 @@
   <solrQueryParser defaultOperator="AND"/> 
     <copyField source="name" dest="spell"/>
     <copyField source="otherNames" dest="spell"/>     
-	<copyField source="places" dest="spell"/>
+	<copyField source="address" dest="spell"/>
 	<copyField source="description" dest="spell"/>
 	<copyField source="other" dest="spell"/>
 	<copyField source="repositories" dest="spell"/>		
