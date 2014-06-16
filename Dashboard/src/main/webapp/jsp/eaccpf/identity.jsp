@@ -188,7 +188,7 @@
     <table id="addNameIdentifierButtonPanel" class="tablePadding">
         <tr>
             <td>
-                <input type="button" value="<s:property value="getText('eaccpf.identity.add.identifier')" />" id="addPersonIdButton" onclick="addPersonId('<s:property value="getText('eaccpf.identity.error.empty.name')" />');" />
+                <input type="button" value="<s:property value="getText('eaccpf.identity.add.identifier')" />" id="addPersonIdButton" onclick="addPersonId('<s:property value="getText('eaccpf.identity.error.empty.identifier')" />');" />
             </td>
         </tr>
     </table>
