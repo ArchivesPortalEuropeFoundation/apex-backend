@@ -11,8 +11,8 @@ public final class DisplayUtils {
 	private static final int MIN_SIZE = 10;
 	private static final String EM_END_REPLACED = "&lt;/em&gt;";
 	private static final String EM_START_REPLACED = "&lt;em&gt;";
-	private static final String EM_END = "</em>";
-	private static final String EM_START = "<em>";
+	public static final String EM_END = "</em>";
+	public static final String EM_START = "<em>";
 	private static final int EM_END_LENGTH = EM_END.length();
 	private static final int EM_START_LENGTH = EM_START.length();	
 	private static final String DOTS = "...";
