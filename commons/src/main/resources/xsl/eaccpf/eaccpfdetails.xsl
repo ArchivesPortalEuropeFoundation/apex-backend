@@ -1040,7 +1040,22 @@
 	<xsl:template name="compositeName">
 		<xsl:param name="listName"/>
 		<xsl:param name="isHeader"/>
-		<xsl:variable name="firstName" select="$listName/eac:part[@localType='firstname']"/>
+	    <xsl:call-template name="nameEntry">
+	    	<xsl:with-param name="listName" select="$listName"/>
+	    </xsl:call-template>
+	    <xsl:if test="$isHeader = 'true'"> <!-- to display the alternative names -->
+  			<span id="nameTitle" hidden="">
+  				<xsl:call-template name="nameEntry">
+  					<xsl:with-param name="listName" select="$listName"/>
+  				</xsl:call-template>
+  			</span>
+  		</xsl:if>	
+	</xsl:template> 
+	
+	<!-- template nameEntry -->
+	<xsl:template name="nameEntry">
+		<xsl:param name="listName"/>
+    	<xsl:variable name="firstName" select="$listName/eac:part[@localType='firstname']"/>
 		<xsl:variable name="surName" select="$listName/eac:part[@localType='surname']"/>
 		<xsl:variable name="patronymic" select="$listName/eac:part[@localType='patronymic']"/>
 	    <xsl:variable name="prefix" select="$listName/eac:part[@localType='prefix']"/>
@@ -1052,57 +1067,6 @@
 		<xsl:variable name="corpname" select="$listName/eac:part[@localType='corpname']"/>
 		<xsl:variable name="famname" select="$listName/eac:part[@localType='famname']"/>
 		<xsl:variable name="persname" select="$listName/eac:part[@localType='persname']"/>
-	    <xsl:call-template name="nameEntry">
-	    	<xsl:with-param name="listName" select="$listName"/>
-	    	<xsl:with-param name="firstName" select="$firstName"/>
-	    	<xsl:with-param name="surName" select="$surName"/>
-	    	<xsl:with-param name="patronymic" select="$patronymic"/>
-	    	<xsl:with-param name="prefix" select="$prefix"/>
-	    	<xsl:with-param name="suffix" select="$suffix"/>
-	    	<xsl:with-param name="alias" select="$alias"/>
-	    	<xsl:with-param name="title" select="$title"/>
-	    	<xsl:with-param name="birthname" select="$birthname"/>
-	    	<xsl:with-param name="legalform" select="$legalform"/>
-	    	<xsl:with-param name="corpname" select="$corpname"/>
-	    	<xsl:with-param name="famname" select="$famname"/>
-	    	<xsl:with-param name="persname" select="$persname"/>
-	    </xsl:call-template>
-	    <xsl:if test="$isHeader = 'true'"> <!-- to display the alternative names -->
-  			<span id="nameTitle" hidden="">
-  				<xsl:call-template name="nameEntry">
-  					<xsl:with-param name="listName" select="$listName"/>
-			    	<xsl:with-param name="firstName" select="$firstName"/>
-			    	<xsl:with-param name="surName" select="$surName"/>
-			    	<xsl:with-param name="patronymic" select="$patronymic"/>
-			    	<xsl:with-param name="prefix" select="$prefix"/>
-			    	<xsl:with-param name="suffix" select="$suffix"/>
-			    	<xsl:with-param name="alias" select="$alias"/>
-			    	<xsl:with-param name="title" select="$title"/>
-			    	<xsl:with-param name="birthname" select="$birthname"/>
-			    	<xsl:with-param name="legalform" select="$legalform"/>
-			    	<xsl:with-param name="corpname" select="$corpname"/>
-			    	<xsl:with-param name="famname" select="$famname"/>
-			    	<xsl:with-param name="persname" select="$persname"/>
-  				</xsl:call-template>
-  			</span>
-  		</xsl:if>	
-	</xsl:template> 
-	
-	<!-- template nameEntry -->
-	<xsl:template name="nameEntry">
-		<xsl:param name="listName"/>
-    	<xsl:param name="firstName"/>
-    	<xsl:param name="surName"/>
-    	<xsl:param name="patronymic"/>
-    	<xsl:param name="prefix"/>
-    	<xsl:param name="suffix"/>
-    	<xsl:param name="alias"/>
-    	<xsl:param name="title"/>
-    	<xsl:param name="birthname"/>
-    	<xsl:param name="legalform"/>
-    	<xsl:param name="corpname"/>
-    	<xsl:param name="famname"/>
-    	<xsl:param name="persname"/>
     	<xsl:choose>
 	    	<xsl:when test="not($corpname) and not($famname) and not($persname) and not($legalform)"> 
 	    		<xsl:if test="$surName">
