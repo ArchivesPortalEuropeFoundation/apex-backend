@@ -169,18 +169,24 @@ public class ManageQueueAction extends AbstractAction {
 	}
 
 	public String republishAllEagFiles(){
-		try {
+		
 			EagSolrPublisher publisher = new EagSolrPublisher();
-			publisher.deleteEverything();
+			try {
+				publisher.deleteEverything();
+			}catch(Exception e){
+				LOGGER.error(e.getMessage(), e);
+			}	
 			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsWithRepositoryCode();
 			for (ArchivalInstitution archivalInstitution: archivalInstitutions){
-				LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
+				try {
+				System.out.println("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
 				XmlEagParser.parseEadAndPublish(archivalInstitution);
+				}catch(Exception e){
+					LOGGER.error(e.getMessage(), e);
+				}	
 			}
-		}catch(Exception e){
-			LOGGER.error(e.getMessage(), e);
-		}	
+
 		return SUCCESS;
 	}
 	public String startStopQueue() {
