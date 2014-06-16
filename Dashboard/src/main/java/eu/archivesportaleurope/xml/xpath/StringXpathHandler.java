@@ -8,8 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 public abstract class StringXpathHandler extends AbstractXpathHandler {
-	private static final String NO_SEPARATOR = "";
-	public static final String WHITE_SPACE = " ";
+
 	private List<String> result = new ArrayList<String>();
 
 	
@@ -19,16 +18,7 @@ public abstract class StringXpathHandler extends AbstractXpathHandler {
 	}
 
 
-	protected static String removeUnusedCharacters(String input){
-		if (input != null){
-			String result = input.replaceAll("[\t ]+", " ");
-			result = result.replaceAll("[\n\r]+", NO_SEPARATOR);
-			return result;
-		}else {
-			return null;
-		}
-		
-	}
+
 
 	public List<String> getResult() {
 		return result;

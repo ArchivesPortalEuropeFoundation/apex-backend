@@ -1,5 +1,8 @@
 package eu.archivesportaleurope.xml.xpath;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;

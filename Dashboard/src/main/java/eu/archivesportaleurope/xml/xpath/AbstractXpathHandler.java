@@ -10,7 +10,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.commons.lang.StringUtils;
 
 public abstract class AbstractXpathHandler implements XmlStreamHandler {
-
+	protected static final String NO_SEPARATOR = "";
+	public static final String WHITE_SPACE = " ";
 	private XpathQuery xpathQuery;
 	private int position = 0;
 	private boolean xpathElementMatch = false;
@@ -110,6 +111,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 			boolean xpathLarger = xpathPositionSize > xpathQuery.getXpathQuerySize();
 			if (allTextBelow && xpathLarger && xpathElementMatch){
 				match = true;
+				processChildStartElementMatch(xmlReader);
 			}else {
 				match = false;
 			}
@@ -117,7 +119,22 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 		
 	}
 
-	
+	public void processChildStartElementMatch(XMLStreamReader xmlReader){
+		
+	}
+	public void processChildEndElementMatch(XMLStreamReader xmlReader){
+		
+	}
+	protected static String removeUnusedCharacters(String input){
+		if (input != null){
+			String result = input.replaceAll("[\t ]+", " ");
+			result = result.replaceAll("[\n\r]+", NO_SEPARATOR);
+			return result;
+		}else {
+			return null;
+		}
+		
+	}
 	@Override
 	public void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
 		boolean pastMatch = xpathElementMatch;
@@ -130,7 +147,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 			match = false;
 			
 		}else if (match && nextXpathPositionSize > xpathQuery.getXpathQuerySize()){
-			
+			processChildEndElementMatch(xmlReader);
 		}else if (nextXpathPositionSize == xpathQuery.getXpathQuerySize()){
 
 			/*
