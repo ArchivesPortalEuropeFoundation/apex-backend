@@ -36,7 +36,7 @@ public class EagSolrPublisher  extends AbstractSolrPublisher{
 		doc.addField(SolrFields.REPOSITORY_CODE, archivalInstitution.getRepositorycode());
 		doc.addField(SolrFields.EAG_NAME, archivalInstitution.getAiname());		
 		doc.addField(SolrFields.EAG_OTHER_NAMES, publishData.getOtherNames());		
-		doc.addField(SolrFields.EAG_PLACES, publishData.getPlaces());		
+		doc.addField(SolrFields.EAG_ADDRESS, publishData.getAddress());		
 		doc.addField(SolrFields.EAG_REPOSITORIES, publishData.getRepositories());	
 		doc.addField(SolrFields.EAG_REPOSITORY_TYPE, publishData.getRepositoryTypes());
 		add(doc, SolrFields.EAG_DESCRIPTION, publishData.getDescription());

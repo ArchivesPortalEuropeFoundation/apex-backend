@@ -8,7 +8,7 @@ import java.util.Set;
 public class EagPublishData{
 
 	private Set<String> countries = new HashSet<String>();
-	private List<String> places = new ArrayList<String>();
+	private List<String> address = new ArrayList<String>();
 	private List<String> aiGroups = new ArrayList<String>();
 	private List<String> aiGroupFacets = new ArrayList<String>();
 	private List<Integer> aiGroupIds = new ArrayList<Integer>();
@@ -99,13 +99,14 @@ public class EagPublishData{
 		this.aiGroupIds = aiGroupIds;
 	}
 
-	public List<String> getPlaces() {
-		return places;
+	public List<String> getAddress() {
+		return address;
 	}
 
-	public void setPlaces(List<String> places) {
-		this.places = places;
+	public void setAddress(List<String> address) {
+		this.address = address;
 	}
+
 
 
 

@@ -123,7 +123,7 @@ public class EagPublishDataFiller {
 		StringBuilder other = new StringBuilder();
 		add(other, holdingsHandler.getResultAsStringWithWhitespace());
 		add(other, historyHandler.getResultAsStringWithWhitespace());
-		publishData.setPlaces(locationHandler.getResult());
+		publishData.setAddress(locationHandler.getResult());
 		publishData.setOther(other.toString());
 		publishData.setLanguage(languageHandler.getResultAsStringWithWhitespace());
 	
