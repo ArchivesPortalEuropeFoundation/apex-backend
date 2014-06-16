@@ -4,7 +4,6 @@
  */
 package eu.apenet.dashboard.manual.eaccpf.actions;
 
-import com.opensymphony.xwork2.ActionSupport;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.manual.eaccpf.util.MapEntry;
 import java.util.TreeMap;
@@ -83,13 +82,13 @@ public abstract class EacCpfAction extends AbstractInstitutionAction {
         // Add empty list entry
         scriptList.put(EMPTY_KEY, EMPTY_VALUE);
 
-        scriptList.put("Arab", "Arabic");
-        scriptList.put("Armn", "Armenian");
-        scriptList.put("Cyrl", "Cyrilic");
-        scriptList.put("Geor", "Georgian");
-        scriptList.put("Grek", "Greek");
-        scriptList.put("Hebr", "Hebrew");
-        scriptList.put("Latn", "Latin");
+        scriptList.put("Arab", getText("eaccpf.commons.script.Arab"));
+        scriptList.put("Armn", getText("eaccpf.commons.script.Armn"));
+        scriptList.put("Cyrl", getText("eaccpf.commons.script.Cyrl"));
+        scriptList.put("Geor", getText("eaccpf.commons.script.Geor"));
+        scriptList.put("Grek", getText("eaccpf.commons.script.Grek"));
+        scriptList.put("Hebr", getText("eaccpf.commons.script.Hebr"));
+        scriptList.put("Latn", getText("eaccpf.commons.script.Latn"));
     }
 
     public Set<MapEntry> getLanguages() {

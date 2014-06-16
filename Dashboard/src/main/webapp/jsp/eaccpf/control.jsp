@@ -6,20 +6,20 @@
 <div id="controlTabContent">
     <table id="controlTable" class="tablePadding">
         <tr>
-            <td><label for="apeId">ID in the apeEAC-CPF database:</label></td>
+            <td><label for="apeId"><s:property value="getText('eaccpf.control.idintheapeeaccpf')" /></label></td>
             <s:if test="%{loader.recordId == ''}">
-                <td>value will be generated upon save</td>
+                <td><s:property value="getText('eaccpf.control.valuewillbegenerated')" /></td>
             </s:if>
             <s:else>
                 <td><input type="text" id="apeId" name="apeId" readonly="true" value="${loader.recordId}"/></td>
             </s:else>
         </tr>
         <tr>
-            <td><label for="responsiblePerson">Person/institution responsible for the description:</label></td>
+            <td><label for="responsiblePerson"><s:property value="getText('eaccpf.control.personinstitutionresponsiblefordescription')" /></label></td>
             <td><input type="text" id="responsiblePerson" name="responsiblePerson" readonly="true" value="${loader.controlResponsiblePerson}" /></td>
         </tr>
         <tr>
-            <td><label for="responsibleInstitution"><b>Identifier of institution responsible for the description:*</b></label></td>
+            <td><label for="responsibleInstitution"><b><s:property value="getText('eaccpf.control.identifierofinstitutionresponsible')" />*</b></label></td>
             <td><input type="text" id="responsibleInstitution" name="responsibleInstitution" readonly="true" value="${loader.agencyCode}" /></td>
         </tr>
     </table>
@@ -27,7 +27,7 @@
         <s:iterator var="current" value="loader.otherRecordIds" status="status">
             <table id="localId_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <td><label for="textLocalId_<s:property value="#status.index + 1" />">Local identifier within the institution database</label></td>
+                    <td><label for="textLocalId_<s:property value="#status.index + 1" />"><s:property value="getText('eaccpf.control.otherrecordidentifier')" /></label></td>
                     <td><input type="text" id="textLocalId_<s:property value="#status.index + 1" />" name="textLocalId_<s:property value="#status.index + 1" />" value="<s:property value="#current" />"/></td>
                 </tr>
             </table>
@@ -36,22 +36,22 @@
     <s:else>
         <table id="localId_1" class="tablePadding">
             <tr>
-                <td><label for="textLocalId_1">Local identifier within the institution database:</label></td>
+                <td><label for="textLocalId_1"><s:property value="getText('eaccpf.control.otherRecordIdentifier')" /></label></td>
                 <td><input type="text" id="textLocalId_1" name="textLocalId_1" /></td>
             </tr>
         </table>
     </s:else>
     <table id="addLocalIdButtonPanel" class="tablePadding">
         <tr>
-            <td><input type="button" value="Add local identifier" id="addLocalIdButton" onClick="addLocalId();" /></td>
+            <td><input type="button" value="<s:property value="getText('eaccpf.control.addlocalidentifier')" />" id="addLocalIdButton" onClick="addLocalId('<s:property value="getText('eaccpf.control.error.emptyfields')" />');" /></td>
         </tr>
     </table>
     <table id="usedLanguagesAndScripts" class="tablePadding">
         <tr>
-            <th colspan="4">Used languages and scripts for the description</th>
+            <th colspan="4"><s:property value="getText('eaccpf.control.usedlanguagesandscriptsfordescription')" /></th>
         </tr>
         <tr>
-            <td><b>Select a language:*</b></td>
+            <td><b><s:property value="getText('eaccpf.commons.select.language')" />*</b></td>
             <td>
                 <select id="controlLanguage" name="controlLanguage" >
                     <s:iterator value="languages" var="language">
@@ -59,7 +59,7 @@
                     </s:iterator>
                 </select>
             </td>
-            <td><b>Select a script:*</b></td>
+            <td><b><s:property value="getText('eaccpf.control.selectascript')" />*</b></td>
             <td>
                 <select id="controlScript" name="controlScript" >
                     <s:iterator value="scriptList" var="script">

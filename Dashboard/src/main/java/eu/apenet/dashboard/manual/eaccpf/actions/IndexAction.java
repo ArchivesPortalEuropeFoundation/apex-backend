@@ -26,9 +26,9 @@ public class IndexAction extends EacCpfAction {
     }
 
     private void setUpCpfTypeList() {
-        cpfTypeList.add(new MapEntry(PERSON, "a person"));
-        cpfTypeList.add(new MapEntry(CORPORATE_BODY, "a corporate body"));
-        cpfTypeList.add(new MapEntry(FAMILY, "a family"));
+        cpfTypeList.add(new MapEntry(PERSON, getText("eaccpf.commons.person")));
+        cpfTypeList.add(new MapEntry(CORPORATE_BODY, getText("eaccpf.commons.corporateBody")));
+        cpfTypeList.add(new MapEntry(FAMILY, getText("eaccpf.commons.family")));
     }
 
     public Set<MapEntry> getCpfTypeList() {

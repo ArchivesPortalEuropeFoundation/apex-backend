@@ -12,16 +12,16 @@
         <div id="eacCpfTabs" class="corner-all helper-clearfix">
             <ul id="eacCpfTabsContainer" class="eacCpfTabsContainer">
                 <li id="tab-identity">
-                    <a href="#tab-identity">Identity</a>
+                    <a href="#tab-identity"><s:property value="getText('eaccpf.tab.identity')" /></a>
                 </li>
                 <li id="tab-description">
-                    <a href="#tab-description">Description</a>
+                    <a href="#tab-description"><s:property value="getText('eaccpf.tab.description')" /></a>
                 </li>
                 <li id="tab-relations">
-                    <a href="#tab-relations">Relations</a>
+                    <a href="#tab-relations"><s:property value="getText('eaccpf.tab.relations')" /></a>
                 </li>
                 <li id="tab-control">
-                    <a href="#tab-control">Control</a>
+                    <a href="#tab-control"><s:property value="getText('eaccpf.tab.control')" /></a>
                 </li>
             </ul>
             <input type="hidden" id="currentTab" value="" />
@@ -51,10 +51,10 @@
         </div>
         <table id="formButtonPanel">
             <tr>
-                <td><input type="button" class="rightButton" id="buttonPreviousTab" value="Previous tab" onclick='loadPreviousTab($("#currentTab").attr("value"));' /></td>
-                <td><input type="button" id="buttonNextTab" value="Next tab" onclick='loadNextTab($("#currentTab").attr("value"));' /></td>
-                <td><input type="button" class="rightButton" id="buttonSaveEacCpf" value="Save and exit" onclick='clickSaveAction("yada", "chooseTypeError", "identityError", "descriptionError", "relationsError", "controlError", "some message");' /></td>
-                <td><input type="button" id="buttonExit" value="Exit form" onclick='clickExitAction();' /></td>
+                <td><input type="button" class="rightButton" id="buttonPreviousTab" value="<s:property value="getText('eaccpf.commons.previousTab')" />" onclick='loadPreviousTab($("#currentTab").attr("value"));' /></td>
+                <td><input type="button" id="buttonNextTab" value="<s:property value="getText('eaccpf.commons.nextTab')" />" onclick='loadNextTab($("#currentTab").attr("value"));' /></td>
+                <td><input type="button" class="rightButton" id="buttonSaveEacCpf" value="<s:property value="getText('eaccpf.commons.save')" />" onclick='clickSaveAction("<s:property value='getText("eaccpf.identity.error.empty.name.label")' />", "<s:property value='getText("eaccpf.identity.error.empty.date.label")' />", "<s:property value='getText("eaccpf.commons.error.empty.from.date")' />", "<s:property value='getText("eaccpf.commons.error.empty.to.date")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.cpf")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.relation")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.function")' />", "<s:property value='getText("eaccpf.control.error.emptylanguage.popup")' />", "<s:property value='getText("eaccpf.control.error.emptyscript.popup")' />");' /></td>
+                <td><input type="button" id="buttonExit" value="<s:property value="getText('eaccpf.commons.exit')" />" onclick='clickExitAction();' /></td>
             </tr>
         </table>
     </form>

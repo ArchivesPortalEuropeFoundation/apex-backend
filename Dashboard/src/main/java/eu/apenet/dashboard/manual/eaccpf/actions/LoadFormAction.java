@@ -20,10 +20,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
@@ -32,7 +29,6 @@ import java.util.TreeSet;
  */
 public class LoadFormAction extends EacCpfAction {
 
-    private Map<String, String> dateOrDateRange = new TreeMap<String, String>();
     private Set<MapEntry> countryList = new TreeSet<MapEntry>();
     private Set<MapEntry> formNameList = new LinkedHashSet<MapEntry>();
     private Set<MapEntry> componentNameList = new LinkedHashSet<MapEntry>();
@@ -76,14 +72,14 @@ public class LoadFormAction extends EacCpfAction {
             useMode = "new";
         }
         if (cpfType.equals(EacCpfAction.PERSON)) {
-            cpfTypeDescriptionText = "Description of a person";
-            cpfTypeIdentifierText = "Identifier of the person";
+            cpfTypeDescriptionText = getText("eaccpf.commons.type") + " " + getText("eaccpf.commons.person");
+            cpfTypeIdentifierText = getText("eaccpf.identity.identifier.person");
         } else if (cpfType.equals(EacCpfAction.CORPORATE_BODY)) {
-            cpfTypeDescriptionText = "Description of a corporate body";
-            cpfTypeIdentifierText = "Identifier of the corporate body";
+            cpfTypeDescriptionText = getText("eaccpf.commons.type") + getText("eaccpf.commons.corporateBody");
+            cpfTypeIdentifierText = getText("eaccpf.identity.identifier.corporateBody");
         } else if (cpfType.equals(EacCpfAction.FAMILY)) {
-            cpfTypeDescriptionText = "Description of a family";
-            cpfTypeIdentifierText = "Identifier of the family";
+            cpfTypeDescriptionText = getText("eaccpf.commons.type") + getText("eaccpf.commons.family");
+            cpfTypeIdentifierText = getText("eaccpf.identity.identifier.family");
         } else {
             cpfTypeDescriptionText = "";
             cpfTypeIdentifierText = "";
@@ -132,7 +128,6 @@ public class LoadFormAction extends EacCpfAction {
 
         setUpLanguages();
         setUpScriptList();
-        setUpDateOrDateRange();
         setUpCountryList();
         setUpFormOfNameList();
         setUpComponentNameList();
@@ -143,11 +138,6 @@ public class LoadFormAction extends EacCpfAction {
         setUpFncRelationTypeList();
 
         return SUCCESS;
-    }
-
-    protected void setUpDateOrDateRange() {
-        dateOrDateRange.put("date", "a single date");
-        dateOrDateRange.put("dateRange", "or a date range");
     }
 
     protected void setUpCountryList() {
@@ -163,41 +153,41 @@ public class LoadFormAction extends EacCpfAction {
 
     protected void setUpFormOfNameList() {
         formNameList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
-        formNameList.add(new MapEntry("authorized", "Authorized name"));
-        formNameList.add(new MapEntry("alternative", "Alternative name"));
-        formNameList.add(new MapEntry("preferred", "Preferred name"));
-        formNameList.add(new MapEntry("abbreviation", "Abbreviated name"));
-        formNameList.add(new MapEntry(OTHER, "Other"));
+        formNameList.add(new MapEntry("authorized", getText("eaccpf.identity.name.form.authorized")));
+        formNameList.add(new MapEntry("alternative", getText("eaccpf.identity.name.form.alternative")));
+        formNameList.add(new MapEntry("preferred", getText("eaccpf.identity.name.form.preferred")));
+        formNameList.add(new MapEntry("abbreviation", getText("eaccpf.identity.name.form.abbreviation")));
+        formNameList.add(new MapEntry(OTHER, getText("eaccpf.identity.name.form.other")));
     }
 
     protected void setUpComponentNameList() {
         if (cpfType.equals(CORPORATE_BODY)) {
-            componentNameList.add(new MapEntry("corpname", "Name of a corporate body"));
+            componentNameList.add(new MapEntry("corpname", getText("eaccpf.identity.name.component.corpname")));
         }
         if (cpfType.equals(FAMILY)) {
-            componentNameList.add(new MapEntry("famname", "Name of a family"));
+            componentNameList.add(new MapEntry("famname", getText("eaccpf.identity.name.component.family")));
         }
         if (cpfType.equals(PERSON)) {
-            componentNameList.add(new MapEntry("persname", "Name of a person"));
+            componentNameList.add(new MapEntry("persname", getText("eaccpf.identity.name.component.persname")));
         }
         if (cpfType.equals(PERSON) || cpfType.equals(FAMILY)) {
-            componentNameList.add(new MapEntry("surname", "Last name"));
+            componentNameList.add(new MapEntry("surname", getText("eaccpf.identity.name.component.surname")));
         }
         if (cpfType.equals(PERSON)) {
-            componentNameList.add(new MapEntry("firstname", "First name"));
-            componentNameList.add(new MapEntry("birthname", "Birth name"));
-            componentNameList.add(new MapEntry("title", "Academic title"));
+            componentNameList.add(new MapEntry("firstname", getText("eaccpf.identity.name.component.firstname")));
+            componentNameList.add(new MapEntry("birthname", getText("eaccpf.identity.name.component.birthname")));
+            componentNameList.add(new MapEntry("title", getText("eaccpf.identity.name.component.title")));
         }
         if (cpfType.equals(PERSON) || cpfType.equals(FAMILY)) {
-            componentNameList.add(new MapEntry("prefix", "Aristocratic title"));
+            componentNameList.add(new MapEntry("prefix", getText("eaccpf.identity.name.component.prefix")));
         }
-        componentNameList.add(new MapEntry("suffix", "Name suffix"));
-        componentNameList.add(new MapEntry("alias", "Alias"));
+        componentNameList.add(new MapEntry("suffix", getText("eaccpf.identity.name.component.suffix")));
+        componentNameList.add(new MapEntry("alias", getText("eaccpf.identity.name.component.alias")));
         if (cpfType.equals(PERSON)) {
-            componentNameList.add(new MapEntry("patronymic", "Patronymic"));
+            componentNameList.add(new MapEntry("patronymic", getText("eaccpf.identity.name.component.patronymic")));
         }
         if (cpfType.equals(CORPORATE_BODY)) {
-            componentNameList.add(new MapEntry("legalform", "Legal form of a corporate body"));
+            componentNameList.add(new MapEntry("legalform", getText("eaccpf.identity.name.component.legalform")));
         }
     }
 
@@ -206,75 +196,67 @@ public class LoadFormAction extends EacCpfAction {
         placeEntryList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
 
         if (cpfType.equals(PERSON)) {
-            placeEntryList.add(new MapEntry("birth", "Place of birth"));
+            placeEntryList.add(new MapEntry("birth", getText("eaccpf.description.combo.place.role.birth")));
         }
         if (cpfType.equals(CORPORATE_BODY)) {
-            placeEntryList.add(new MapEntry("foundation", "Place of foundation"));
+            placeEntryList.add(new MapEntry("foundation", getText("eaccpf.description.combo.place.role.foundation")));
         }
         if (cpfType.equals(PERSON) || cpfType.equals(FAMILY)) {
-            placeEntryList.add(new MapEntry("private-residence", "Private residence"));
+            placeEntryList.add(new MapEntry("private-residence", getText("eaccpf.description.combo.place.role.private-residence")));
         }
-        placeEntryList.add(new MapEntry("business-residence", "Business residence"));
+        placeEntryList.add(new MapEntry("business-residence", getText("eaccpf.description.combo.place.role.business-residence")));
         if (cpfType.equals(PERSON)) {
-            placeEntryList.add(new MapEntry("death", "Place of death"));
+            placeEntryList.add(new MapEntry("death", getText("eaccpf.description.combo.place.role.death")));
         }
         if (cpfType.equals(CORPORATE_BODY)) {
-            placeEntryList.add(new MapEntry("suppression", "Place of suppression"));
+            placeEntryList.add(new MapEntry("suppression", getText("eaccpf.description.combo.place.role.suppression")));
         }
-        placeEntryList.add(new MapEntry(OTHER, "Other"));
+        placeEntryList.add(new MapEntry(OTHER, getText("eaccpf.description.combo.place.role.other")));
     }
 
     protected void setUpAddressComponentTypeList() {
         // Add empty list entry
         addressComponentTypeList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
 
-        addressComponentTypeList.add(new MapEntry("firstdem", "Community/Region"));
-        addressComponentTypeList.add(new MapEntry("secondem", "County"));
-        addressComponentTypeList.add(new MapEntry("postalcode", "City & Postal code"));
-        addressComponentTypeList.add(new MapEntry("localentity", "District/Quarter"));
-        addressComponentTypeList.add(new MapEntry("street", "Street"));
-        addressComponentTypeList.add(new MapEntry(OTHER, "Other"));
+        addressComponentTypeList.add(new MapEntry("firstdem", getText("eaccpf.description.combo.address.component.firstdem")));
+        addressComponentTypeList.add(new MapEntry("secondem", getText("eaccpf.description.combo.address.component.secondem")));
+        addressComponentTypeList.add(new MapEntry("postalcode", getText("eaccpf.description.combo.address.component.postalcode")));
+        addressComponentTypeList.add(new MapEntry("localentity", getText("eaccpf.description.combo.address.component.localentity")));
+        addressComponentTypeList.add(new MapEntry("street", getText("eaccpf.description.combo.address.component.street")));
+        addressComponentTypeList.add(new MapEntry(OTHER, getText("eaccpf.description.combo.address.component.other")));
     }
 
     protected void setUpCpfRelationTypeList() {
         // Add empty list entry
         cpfRelationTypeList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
 
-        cpfRelationTypeList.add(new MapEntry("identity", "Identical with entity"));
-        cpfRelationTypeList.add(new MapEntry("hierarchical", "Hierarchical related"));
-        cpfRelationTypeList.add(new MapEntry("hierarchical-parent", "Hierarchical parent related"));
-        cpfRelationTypeList.add(new MapEntry("hierarchical-child", "Hierarchical child related"));
-        cpfRelationTypeList.add(new MapEntry("temporal", "Temporal related"));
-        cpfRelationTypeList.add(new MapEntry("temporal-earlier", "Temporal earlier related"));
-        cpfRelationTypeList.add(new MapEntry("temporal-later", "Temporal later related"));
-        cpfRelationTypeList.add(new MapEntry("family", "Family related"));
-        cpfRelationTypeList.add(new MapEntry("associative", "Associated"));
+        cpfRelationTypeList.add(new MapEntry("identity", getText("eaccpf.relations.cpf.relation.type.identity")));
+        cpfRelationTypeList.add(new MapEntry("hierarchical", getText("eaccpf.relations.cpf.relation.type.hierarchical")));
+        cpfRelationTypeList.add(new MapEntry("hierarchical-parent", getText("eaccpf.relations.cpf.relation.type.hierarchical-parent")));
+        cpfRelationTypeList.add(new MapEntry("hierarchical-child", getText("eaccpf.relations.cpf.relation.type.hierarchical-child")));
+        cpfRelationTypeList.add(new MapEntry("temporal", getText("eaccpf.relations.cpf.relation.type.temporal")));
+        cpfRelationTypeList.add(new MapEntry("temporal-earlier", getText("eaccpf.relations.cpf.relation.type.temporal-earlier")));
+        cpfRelationTypeList.add(new MapEntry("temporal-later", getText("eaccpf.relations.cpf.relation.type.temporal-later")));
+        cpfRelationTypeList.add(new MapEntry("family", getText("eaccpf.relations.cpf.relation.type.family")));
+        cpfRelationTypeList.add(new MapEntry("associative", getText("eaccpf.relations.cpf.relation.type.associative")));
     }
 
     protected void setUpResRelationTypeList() {
         // Add empty list entry
         resRelationTypeList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
 
-        resRelationTypeList.add(new MapEntry("creatorOf", "Creator of the resource"));
-        resRelationTypeList.add(new MapEntry("subjectOf", "Subject of the resource"));
-        resRelationTypeList.add(new MapEntry(OTHER, "Other"));
+        resRelationTypeList.add(new MapEntry("creatorOf", getText("eaccpf.relations.resource.relation.type.creatorOf")));
+        resRelationTypeList.add(new MapEntry("subjectOf", getText("eaccpf.relations.resource.relation.type.subjectOf")));
+        resRelationTypeList.add(new MapEntry(OTHER, getText("eaccpf.relations.resource.relation.type.other")));
     }
 
     protected void setUpFncRelationTypeList() {
         // Add empty list entry
         fncRelationTypeList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
 
-        fncRelationTypeList.add(new MapEntry("controls", "Controls the function"));
-        fncRelationTypeList.add(new MapEntry("owns", "Owns the function"));
-        fncRelationTypeList.add(new MapEntry("performs", "Performs the function"));
-    }
-
-    public Map<String, String> getDateOrDateRange() {
-        return dateOrDateRange;
-    }
-
-    public void setDateOrDateRange(Map<String, String> dateOrDateRange) {
-        this.dateOrDateRange = dateOrDateRange;
+        fncRelationTypeList.add(new MapEntry("controls", getText("eaccpf.relations.function.relation.type.controls")));
+        fncRelationTypeList.add(new MapEntry("owns", getText("eaccpf.relations.function.relation.type.owns")));
+        fncRelationTypeList.add(new MapEntry("performs", getText("eaccpf.relations.function.relation.type.performs")));
     }
 
     public Set<MapEntry> getCountryList() {
