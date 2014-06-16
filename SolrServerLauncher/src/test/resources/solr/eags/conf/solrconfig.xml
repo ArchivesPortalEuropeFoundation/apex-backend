@@ -131,13 +131,13 @@
 			<str name="echoParams">explicit</str>
 			<float name="tie">0.01</float>
 			<str name="qf">
-				name^2.5 otherNames^2 repositories^1.3 places^0.7 description^0.5 other^0.2
+				name^2.5 otherNames^2 repositories^1.3 places^0.7 description^0.5 other^0.2 countries^0.7 aiGroups^0.7
 			</str>
 			<str name="fl">
-				id,name,otherNames,repositories,places,repositoryCode
+				id,name,otherNames,repositories,places,repositoryCode,repositoryTypeFacet,countries,aiGroups,country
 			</str>
 			<str name="q.alt">*:*</str>
-			<str name="hl.fl">name otherNames repositories places description other</str>
+			<str name="hl.fl">name otherNames repositories places description other countries aiGroups</str>
 			<str name="hl.fragmenter">regex</str>
 			<str name="spellcheck.onlyMorePopular">true</str>
 			<str name="spellcheck.extendedResults">false</str>
