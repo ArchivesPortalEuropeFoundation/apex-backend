@@ -1,85 +1,99 @@
-function checkAndUpload(label){
-	if($("input:file#httpFile").val()){
-		if($("span#nothingSelected").length>0){
+/**
+ * Function to check if the user has selected a file.
+ *
+ * @param label Error message in case the user hasn't selected a file.
+ */
+function checkAndUpload(label) {
+	if ($("input:file#httpFile").val()) {
+		if ($("span#nothingSelected").length > 0) {
 			$("span#nothingSelected").parent().remove(); //div
 		}
 		$("form#uploadALForm").submit();
-	}else{
-		if(!($("span#nothingSelected").length>0)){
-			$("input:file#httpFile").parent().before("<div><span id=\"nothingSelected\">"+label+"</span></div>");
+	} else {
+		if (!($("span#nothingSelected").length>0)) {
+			$("input:file#httpFile").parent().before("<div><span id=\"nothingSelected\">" + label + "</span></div>");
 		}
-		$("input:file#httpFile").change(function (){
+		$("input:file#httpFile").change(function() {
 			var val = $("input:file#httpFile").val();
-			if(!val || val.length==0){
-				if(!($("span#nothingSelected").length>0)){
-					$("input:file#httpFile").parent().before("<div><span id=\"nothingSelected\">"+label+"</span></div>");
+			if (!val || val.length == 0){
+				if (!($("span#nothingSelected").length > 0)) {
+					$("input:file#httpFile").parent().before("<div><span id=\"nothingSelected\">" + label + "</span></div>");
 				}
-			}else{
+			} else {
 				$("span#nothingSelected").parent().remove();
 			}
-			
-	    });
+		});
 	}
 }
 
-function initReport(){
-	if ($("div#noChangesDiv").attr("id") == undefined) {
-		showComparableIdentifiers();
-		$('#contentReport').hide();
+/**
+ * Function to initialize the information Report.
+ */
+function initReport(selectMessage){
+	// Hide elements.
+	$("div#detailsDiv").hide();
+	$("div#divOverwriteIds").hide();
+	$("div#divKeepIds").hide();
 
-		//buttons triggers
-		// Trigger for button that enable the edition of identifiers.
-		$("div#buttonChangeIdentifiers").click(function(){
-			if ($('div#contentReport').is(':hidden')) {
-				$('div#contentReport').show();
-			}
-			hideComparableIdentifiers();
+	if ($("div#noChangesDiv").attr("id") == undefined) {
+		if($("div#reportMessage").attr("id") != undefined) {
+			$("div#divContinueUpload").hide();
+		} else {
+			$("div#divDisplayDetails").hide();
+		}
+
+		// Trigger for button that shows the details.
+		$("div#buttonDisplayDetails").click(function() {
+			// Hide elements.
+			$("div#reportMessage").hide();
+			$("div#informationMessage").hide();
+			$("div#divDisplayDetails").hide();
+			$("div#divCancelOverwrite").hide();
+
+			// Show elements.
+			$("div#detailsDiv").show();
+			$("div#divOverwriteIds").show();
+			$("div#divKeepIds").show();
+
+			// Put the view to the top.
 			$('html, body').stop().animate({
-		        'scrollTop': $("div#divDescription").offset().top + 30
+		        'scrollTop': $("div#detailsDiv").offset().top - 30
 		    }, 900, 'swing', function () {
-		    	//logAction("scroll moved to: ", $("div#divDescription").offset().top);
+		    	//logAction("scroll moved to: ", $("div#detailsDiv").offset().top - 30);
 		    });
 		});
 
-		// Trigger for button that recheck the changes in the identifies.
-		$("div#buttonRecheckIdentifiers").click(function() {
-			var context = $("input#contextPath").val();
-			$("#updatesPartForm").attr("action", context + "/ALRecheckIdentifiers.action");
-			$("#updatesPartForm").submit();
-		});
+		// Trigger for button that overwrites the identifiers.
+		$("div#buttonOverwriteIds").click(function() {
+			// Check if all the values are filled.
+			var filled = checkAllSelectsFilled();
+			if (filled) {
+				// Fill the lists with the selection of the user.
+				fillLists();
 
-		// Trigger for button that cancel the edition process.
-		$("div#buttonCancelEdition").click(function() {
-			$("#cancelEditionForm").submit();
-		});
-
-		// Trigger for minimize/maximize details of changes section.
-		$('div#divDescription').click(function(){
-			if (!$('img#imgExpandDetails').is(':hidden')) {
-				if($('div#contentReport').is(':hidden')){
-					$('div#contentReport').show('slow');
-					$('img#imgExpandDetails').attr("src","images/expand/menos.gif");
-					$('html, body').stop().animate({
-				        'scrollTop': $("div#divDescription").offset().top
-				    }, 900, 'swing', function () {
-				    	//logAction("scroll moved to: ", $("div#divDescription").offset().top);
-				    });
-				}else{
-					$('div#contentReport').hide('slow');
-					$('img#imgExpandDetails').attr("src","images/expand/mas.gif");
-					$('html, body').stop().animate({
-				        'scrollTop': $("div#bodyt").offset().top
-				    }, 900, 'swing', function () {
-				    	//logAction("scroll moved to: ", $("div#bodyt").offset().top);
-				    });
-				}
+				$("input#overwriteIDs").attr("value", "overwriteIds");
+				$("#updatesPartForm").submit();
+			} else {
+				alert(selectMessage);
 			}
 		});
 
-		// Add method when element change.
-		addOnchangeInput();
+		// Trigger for button that keeps the identifiers.
+		$("div#buttonKeepIds").click(function() {
+			// Check if all the values are filled.
+			var filled = checkAllSelectsFilled();
+			if (filled) {
+				// Fill the lists with the selection of the user.
+				fillLists();
+
+				$("input#overwriteIDs").attr("value", "keepIds");
+				$("#updatesPartForm").submit();
+			} else {
+				alert(selectMessage);
+			}
+		});
 	} else {
-		$("div#divChangeIdentifiers").hide();
+		$("div#divDisplayDetails").hide();
 	}
 
 	// Trigger for button that continue the upload process.
@@ -87,181 +101,121 @@ function initReport(){
 		$("#continueUploadForm").submit();
 	});
 
-	// Trigger for button that cancel the upload process.
+	// Trigger for button that cancels the upload process.
 	$("div#buttonCancelOverwrite").click(function() {
 		$("#cancelOverwriteForm").submit();
 	});
 }
 
-function showComparableIdentifiers(){
-	// Same name section.
-	$("div#institutionsWithSameNameNewDiv").removeClass("middleDiv");
-	$("div#institutionsWithSameNameNewDiv").addClass("fullDiv");
-	$("label[for^='newSameNameInstitution[']").each(function(){
-		$(this).parent().removeClass("fullDiv");
-		$(this).parent().addClass("middleDiv");
-	});
-	$("input[id^='newSameNameInstitution[']").each(function(){
-		$(this).attr("readonly");
-		$(this).attr("onfocus", "this.blur()");
-		$(this).addClass("readOnlyInput");
-		$(this).parent().removeClass("fullDiv");
-		$(this).parent().addClass("middleDiv");
-	});
-	$("div#institutionsWithSameNameOldDiv").hide();
+/**
+ * Function to check if all selects are filled.
+ */
+function checkAllSelectsFilled() {
+	var result = true;
 
-	// Same identifier section.
-	$("div#institutionsWithSameIdNewDiv").removeClass("middleDiv");
-	$("div#institutionsWithSameIdNewDiv").addClass("fullDiv");
-	$("label[for^='newSameIdentifierInstitution[']").each(function(){
-		$(this).parent().removeClass("fullDiv");
-		$(this).parent().addClass("middleDiv");
+	$("select[id^='selectNew']").each(function(){
+		if ($(this).val() == "---") {
+			result = false;
+		}
 	});
-	$("input[id^='newSameIdentifierInstitution[']").each(function(){
-		$(this).attr("readonly");
-		$(this).attr("onfocus", "this.blur()");
-		$(this).addClass("readOnlyInput");
-		$(this).parent().removeClass("fullDiv");
-		$(this).parent().addClass("middleDiv");
-	});
-	$("div#institutionsWithSameIdOldDiv").hide();
 
-	// Empty identifier section.
-	$("div#institutionsWithEmptyIdNewDiv").removeClass("middleDiv");
-	$("div#institutionsWithEmptyIdNewDiv").addClass("fullDiv");
-	$("label[for^='newEmptyIdentifierInstitution[']").each(function(){
-		$(this).parent().removeClass("fullDiv");
-		$(this).parent().addClass("middleDiv");
-	});
-	$("input[id^='newEmptyIdentifierInstitution[']").each(function(){
-		$(this).attr("readonly");
-		$(this).attr("onfocus", "this.blur()");
-		$(this).addClass("readOnlyInput");
-		$(this).parent().removeClass("fullDiv");
-		$(this).parent().addClass("middleDiv");
-	});
-	$("div#institutionsWithEmptyIdOldDiv").hide();
-
-	showRestDivs();
-}
-
-function hideComparableIdentifiers(){
-	// Same name section.
-	$("div#institutionsWithSameNameNewDiv").removeClass("fullDiv");
-	$("div#institutionsWithSameNameNewDiv").addClass("middleDiv");
-	$("label[for^='newSameNameInstitution[']").each(function(){
-		$(this).parent().removeClass("middleDiv");
-		$(this).parent().addClass("fullDiv");
-	});
-	$("input[id^='newSameNameInstitution[']").each(function(){
-		$(this).removeAttr("readonly");
-		$(this).removeAttr("onfocus");
-		$(this).removeClass("readOnlyInput");
-		$(this).parent().removeClass("middleDiv");
-		$(this).parent().addClass("fullDiv");
-	});
-	$("div#institutionsWithSameNameOldDiv").show();
-
-	// Same identifier section.
-	$("div#institutionsWithSameIdNewDiv").removeClass("fullDiv");
-	$("div#institutionsWithSameIdNewDiv").addClass("middleDiv");
-	$("label[for^='newSameIdentifierInstitution[']").each(function(){
-		$(this).parent().removeClass("middleDiv");
-		$(this).parent().addClass("fullDiv");
-	});
-	$("input[id^='newSameIdentifierInstitution[']").each(function(){
-		$(this).removeAttr("readonly");
-		$(this).removeAttr("onfocus");
-		$(this).removeClass("readOnlyInput");
-		$(this).parent().removeClass("middleDiv");
-		$(this).parent().addClass("fullDiv");
-	});
-	$("div#institutionsWithSameIdOldDiv").show();
-
-	// Empty identifier section.
-	$("div#institutionsWithEmptyIdNewDiv").removeClass("fullDiv");
-	$("div#institutionsWithEmptyIdNewDiv").addClass("middleDiv");
-	$("label[for^='newEmptyIdentifierInstitution[']").each(function(){
-		$(this).parent().removeClass("middleDiv");
-		$(this).parent().addClass("fullDiv");
-	});
-	$("input[id^='newEmptyIdentifierInstitution[']").each(function(){
-		$(this).removeAttr("readonly");
-		$(this).removeAttr("onfocus");
-		$(this).removeClass("readOnlyInput");
-		$(this).parent().removeClass("middleDiv");
-		$(this).parent().addClass("fullDiv");
-	});
-	$("div#institutionsWithEmptyIdOldDiv").show();
-
-	hideRestDivs();
-}
-
-function hideRestDivs(){
-	$("div#reportMessage").hide();
-	$("div#insertsPart").hide();
-	$("div#deletesPart").hide();
-	$("div#alupdatesMessage").hide();
-	$("div#updatedInstitutionsDiv div.alupdates").each(function(){
-		$(this).hide();
-	});
-	$("div#divChangeIdentifiers").hide();
-	$("div#divCancelOverwrite").hide();
-	$("div#divCancelEdition").removeClass("hidden");
-	$("div#divCancelEdition").show();
-
-	// Remove possibility expand.
-	$("img#imgExpandDetails").hide();
-	$("div#divDescription").removeClass("alDivShowHide");
-	$("div#divDescription").addClass("alDivSummary");
-}
-
-function showRestDivs(){
-	$("div#insertsPart").show();
-	$("div#deletesPart").show();
-	$("div#alupdatesMessage").show();
-	$("div#updatedInstitutionsDiv div.alupdates").each(function(){
-		$(this).show();
-	});
-	$("div#divChangeIdentifiers").show();
-	$("div#divCancelOverwrite").show();
-	$("div#divCancelEdition").hide();
+	return result;
 }
 
 /**
- * Function to add action "onchange" to those elements that should be editable.
+ * Main function to fill the lists with the selection of the user.
  */
-function addOnchangeInput() {
-	// Same name section.
-	$("input[id^='newSameNameInstitution[']").each(function(){
-		$(this).on('input', function() {
-			$("div#divRecheckIdentifiers").removeClass("hidden");
-			$("div#divRecheckIdentifiers").show();
-			$("div#divCancelEdition").removeClass("hidden");
-			$("div#divCancelEdition").show();
-			$("div#divContinueUpload").hide();
-		});
-	});
+function fillLists() {
+	// Constructs the list of elements to add.
+	addInternalIdentifiers();
 
-	// Same identifier section.
-	$("input[id^='newSameIdentifierInstitution[']").each(function(){
-		$(this).on('input', function() {
-			$("div#divRecheckIdentifiers").removeClass("hidden");
-			$("div#divRecheckIdentifiers").show();
-			$("div#divCancelEdition").removeClass("hidden");
-			$("div#divCancelEdition").show();
-			$("div#divContinueUpload").hide();
-		});
-	});
+	// Constructs the list of elements to delete.
+	deleteInternalIdentifiers();
 
-	// Empty identifier section.
-	$("input[id^='newEmptyIdentifierInstitution[']").each(function(){
-		$(this).on('input', function() {
-			$("div#divRecheckIdentifiers").removeClass("hidden");
-			$("div#divRecheckIdentifiers").show();
-			$("div#divCancelEdition").removeClass("hidden");
-			$("div#divCancelEdition").show();
-			$("div#divContinueUpload").hide();
-		});
+	// Construct the lists of old and new elements.
+	oldAndNewInternalIdentifiers();
+}
+
+/**
+ * Function to create the list of internal identifiers that should be added
+ * after select them in the selects.
+ */
+function addInternalIdentifiers() {
+	var count = 0;
+	$("input[id^='oldDuplicateNameInstitutionAdd']").each(function(){
+		var id = $(this).attr("id");
+		id = id.substring(id.indexOf("_"));
+		var internalId = $("#selectNew" + id).val();
+
+		$("input#overwriteIDs").before('<input id="addInstitutionsFromSelect[' + count + ']" type="hidden" value="' + internalId + '" name="addInstitutionsFromSelect[' + count + ']">');
+		count++;
+	});
+}
+
+/**
+ * Function to create the list of internal identifiers that should be deleted
+ * after select them in the selects.
+ */
+function deleteInternalIdentifiers() {
+	var count = 0;
+	$("select[id^='selectNew_']").each(function(){
+		if ($(this).val() == "delete") {
+			var id = $(this).attr("id");
+			id = id.substring(id.indexOf("_"));
+			var internalId = $("input#oldDuplicateNameInstitution" + id).val();
+
+			$("input#overwriteIDs").before('<input id="deleteInstitutionsFromSelect[' + count + ']" type="hidden" value="' + internalId + '" name="deleteInstitutionsFromSelect[' + count + ']">');
+			count++;
+		}
+	});
+}
+
+/**
+ * Function to create the lists of internal identifiers with the mapping
+ * between old and new ones after the user select them in the selects.
+ */
+function oldAndNewInternalIdentifiers() {
+	var count = 0;
+	$("input[id^='oldDuplicateNameInstitution_']").each(function(){
+		// Value of the old internal identifier.
+		var oldInternalId = $(this).val();
+
+		// Value of the new internal identifier.
+		var id = $(this).attr("id");
+		id = id.substring(id.indexOf("_"));
+		var newInternalId = $("#selectNew" + id).val();
+
+		if (newInternalId != "delete") {
+			// create element for the old institution.
+			$("input#overwriteIDs").before('<input id="oldInstitutionsFromSelect[' + count + ']" type="hidden" value="' + oldInternalId + '" name="oldInstitutionsFromSelect[' + count + ']">');
+
+			// Create element for the new institution.
+			$("input#overwriteIDs").before('<input id="newInstitutionsFromSelect[' + count + ']" type="hidden" value="' + newInternalId + '" name="newInstitutionsFromSelect[' + count + ']">');
+
+			count++;
+		}
+	});
+}
+
+/**
+ * Function invoked each time a selection is changed.
+ *
+ * @param select Select changed.
+ */
+function selectionChanged(select) {
+	// Identifier of the current select.
+	var currentId = select.attr("id");
+	// Value of the current select.
+	var currentValue = select.val();
+
+	// Recover the identifier of the selects to check.
+	var id = currentId.substring(0, currentId.lastIndexOf("_"));
+
+	$("select[id^='" + id + "']").each(function(){
+		if ($(this).attr("id") != currentId
+				&& $(this).val() == currentValue
+				&& currentValue != "delete")  {
+			$(this).val($("#" + $(this).attr("id") + " option:first").val())
+		}
 	});
 }

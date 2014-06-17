@@ -153,6 +153,18 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		return null;
 	}
 
+	public List<ArchivalInstitution> getArchivalInstitutionsByAiNameForCountryId(String InstitutionName, Integer countryId) {
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.add(Restrictions.eq("ainame", InstitutionName));
+		criteria.add(Restrictions.eq("countryId", countryId));
+		List<ArchivalInstitution> list = criteria.list();
+		if (list.size() > 0) {
+			return list;
+		}
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ArchivalInstitution> getArchivalInstitutionsByPartnerId(Integer pId) {

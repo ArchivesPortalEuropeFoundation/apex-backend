@@ -3,212 +3,97 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div>
 	<input type="hidden" id="contextPath" value="${pageContext.request.contextPath}">
-	<s:if test="%{newInstitutionsFile.size() > 0 || oldRelatedInstitutions.size() > 0 || oldSameIdentifierInstitutionsFile.size() > 0 || oldEmptyIdentifierInstitutionsFile.size() > 0 || updatedInstitutions.size() > 0 || institutionsToBeDeleted.size() > 0}">
-		<s:if test="%{oldRelatedInstitutions.size() > 0 || oldSameIdentifierInstitutionsFile.size() > 0 || oldEmptyIdentifierInstitutionsFile.size() > 0}">
+
+	<!-- Checks to display the changes report or non changes message. -->
+	<s:if test="%{newInstitutionsFile.size() > 0 || oldRelatedInstitutions.size() > 0 || nameSet.size() > 0 || oldEmptyIdentifierInstitutionsFile.size() > 0 || updatedInstitutions.size() > 0 || institutionsToBeDeleted.size() > 0 || oldDuplicateNameInstitutionsMap.size() > 0 || newDuplicateNameInstitutionsMap > 0}">
+		<!-- Checks to display the report. -->
+		<s:if test="%{nameSet.size() > 0}">
 			<div id="reportMessage">
+				<!-- Need decision title. -->
 				<div id="divSummary" class="alDivSummary">
 					<h1><s:property value="getText('al.message.elementNeedsAttention')" /></h1>
 				</div>
 
-				<div>&nbsp;</div>
-
-				<s:if test="%{oldRelatedInstitutions.size() > 0}">
+				<!-- Institutions with same name but different internal identifiers. -->
+				<s:if test="%{nameSet.size() > 0}">
 					<div id="messageSameName">
 						<div>&nbsp;</div>
+						<div>&nbsp;</div>
 						<s:property value="getText('al.message.firstLabelSummary')" />
-						<s:iterator value="oldRelatedInstitutions" var="sameName" status="status">
-							<b><s:property value="#sameName.ainame" /></b><s:if test="%{oldRelatedInstitutions.size() > (#status.index + 1)}">, </s:if>
+						<s:iterator value="nameSet" var="sameName" status="status">
+							<b><s:property value="#sameName" /></b><s:if test="%{nameSet.size() > (#status.index + 1)}">, </s:if>
 						</s:iterator>
 						<s:property value="getText('al.message.summarySameName')" />
-						<div>&nbsp;</div>
 					</div>
 				</s:if>
+			</div>
+		</s:if>
+		<!-- Display message for no decision is needed. -->
+		<s:if test="%{newInstitutionsFile.size() > 0 || oldEmptyIdentifierInstitutionsFile.size() > 0 || updatedInstitutions.size() > 0 || institutionsToBeDeleted.size() > 0}">
+			<div id="informationMessage">
+				<div>&nbsp;</div>
+				<div>&nbsp;</div>
+				<!-- Other changes title. -->
+				<div id="divInformation" class="alDivSummary">
+					<h1><s:property value="getText('al.message.elementInformation')" /></h1>
+				</div>
 
-				<s:if test="%{oldSameIdentifierInstitutionsFile.size() > 0}">
-					<div id="messageSameIdentifier">
-						<div>&nbsp;</div>
-						<s:property value="getText('al.message.firstLabelSummary')" />
-						<s:iterator value="oldSameIdentifierInstitutionsFile" var="sameIdentifier" status="status">
-							<b><s:property value="#sameIdentifier.ainame" /></b><s:if test="%{oldSameIdentifierInstitutionsFile.size() > (#status.index + 1)}">, </s:if>
-						</s:iterator>
-						<s:property value="getText('al.message.summarySameIdentifiers')" />
-						<div>&nbsp;</div>
-					</div>
-				</s:if>
-
+				<!-- Institutions without internal identifiers. -->
 				<s:if test="%{oldEmptyIdentifierInstitutionsFile.size() > 0}">
 					<div id="messageEmptyIdentifier">
+						<div>&nbsp;</div>
 						<div>&nbsp;</div>
 						<s:property value="getText('al.message.firstLabelSummary')" />
 						<s:iterator value="oldEmptyIdentifierInstitutionsFile" var="emptyIdentifier" status="status">
 							<b><s:property value="#emptyIdentifier.ainame" /></b><s:if test="%{oldEmptyIdentifierInstitutionsFile.size() > (#status.index + 1)}">, </s:if>
 						</s:iterator>
 						<s:property value="getText('al.message.summaryEmptyIdentifiers')" />
-						<div>&nbsp;</div>
 					</div>
 				</s:if>
 
-				<div>&nbsp;</div>
-				<div>&nbsp;</div>
+				<!-- Institutions that will be added to the system. -->
+				<s:if test="%{newInstitutionsFile.size() > 0}">
+					<div id="messageNewInstitutions">
+						<div>&nbsp;</div>
+						<div>&nbsp;</div>
+						<s:property value="getText('al.message.firstLabelSummary')" />
+						<s:iterator value="newInstitutionsFile" var="newInstitution" status="status">
+							<b><s:property value="#newInstitution.ainame" /></b><s:if test="%{newInstitutionsFile.size() > (#status.index + 1)}">, </s:if>
+						</s:iterator>
+						<s:property value="getText('al.message.summaryNewInstituions')" />
+					</div>
+				</s:if>
+
+				<!-- Institutions that will be deleted from the system. -->
+				<s:if test="%{updatedInstitutions.size() > 0}">
+					<div id="messageUpdateInstitutions">
+						<div>&nbsp;</div>
+						<div>&nbsp;</div>
+						<s:property value="getText('al.message.firstLabelSummary')" />
+						<s:iterator value="updatedInstitutions" var="updateInstitution" status="status">
+							<b><s:property value="#updateInstitution.ainame" /></b><s:if test="%{updatedInstitutions.size() > (#status.index + 1)}">, </s:if>
+						</s:iterator>
+						<s:property value="getText('al.message.summaryUpdatedInstituions')" />
+					</div>
+				</s:if>
+
+				<!-- Institutions that will be deleted from the system. -->
+				<s:if test="%{institutionsToBeDeleted.size() > 0}">
+					<div id="messageDeleteInstitution">
+						<div>&nbsp;</div>
+						<div>&nbsp;</div>
+						<s:property value="getText('al.message.firstLabelSummary')" />
+						<s:iterator value="institutionsToBeDeleted" var="deleteInstitution" status="status">
+							<b><s:property value="#deleteInstitution.ainame" /></b><s:if test="%{institutionsToBeDeleted.size() > (#status.index + 1)}">, </s:if>
+						</s:iterator>
+						<s:property value="getText('al.message.summaryDeletedInstituions')" />
+					</div>
+				</s:if>
 			</div>
 		</s:if>
-
-		<div id="report">
-			<div id="divDescription" class="alDivShowHide">
-				<h1><img id="imgExpandDetails" src="images/expand/mas.gif"/> <s:property value="getText('al.message.detail')" /></h1>
-			</div>
-
-			<div>&nbsp;</div>
-
-			<div id="contentReport">
-				<s:if test="%{newInstitutionsFile.size() > 0}">
-					<div id="insertsPart">
-						<div>
-							<h2><s:property value="getText('al.message.institutionstoinsert')" /></h2>
-						</div>
-						<div>&nbsp;</div>
-						<div>
-							<s:iterator value="newInstitutionsFile" var="institution" status="status">
-								<div class="keep_ai2">
-									<div class="middleDiv"><label for="insertInstitution_<s:property value="#status.index" />"><s:property value="#institution.ainame" /></label></div>
-									<div class="middleDiv"><input type="text" class="readOnlyInput" id="insertInstitution_<s:property value="#status.index" />" value="<s:property value="#institution.internalAlId" />" readonly onfocus="this.blur()" /></div>
-									<div>&nbsp;</div>
-								</div>
-							</s:iterator>
-						</div>
-					</div>
-				</s:if>
-				<s:if test="%{oldEmptyIdentifierInstitutionsFile.size()>0 || oldRelatedInstitutions.size()>0 || oldSameIdentifierInstitutionsFile.size()>0 }">
-					<form name="updatesPartForm" id="updatesPartForm" method="post">
-						<div id="updatesPart">
-							<s:if test="%{oldRelatedInstitutions.size() > 0}">
-								<div id="institutionsWithSameNameDiv">
-									<div>
-										<h2><s:property value="getText('al.message.institutionsdetectedwithsamename')" /></h2>
-									</div>
-									<div>&nbsp;</div>
-									<div id="institutionsWithSameNameOldDiv" class="middleDiv">
-										<s:iterator value="oldRelatedInstitutions" var="oldInstitution" status="status">
-											<div id="institutionChanged_<s:property value="#status.index"/>">
-												<div><label for="oldSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#oldInstitution.ainame" /></label></div>
-												<div><input type="text" class="readOnlyInput" id="oldSameNameInstitution[<s:property value="#status.index"/>]" name="oldSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#oldInstitution.internalAlId" />"  readonly onfocus="this.blur()" /></div>
-												<div>&nbsp;</div>
-											</div>
-										</s:iterator>
-									</div>
-									<div id="institutionsWithSameNameNewDiv" class="middleDiv">
-										<s:iterator value="newRelatedInstitutions" var="newInstitution" status="status">
-											<div id="institutionChanged<s:property value="#status.index"/>">
-												<div><label for="newSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#newInstitution.ainame" /></label></div>
-												<div><input type="text" class="readOnlyInput" id="newSameNameInstitution[<s:property value="#status.index"/>]" name="newSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#newInstitution.internalAlId" />" readonly onfocus="this.blur()" /></div>
-												<div>&nbsp;</div>
-											</div>
-										</s:iterator>
-									</div>
-								</div>
-							</s:if>
-	
-							<s:if test="%{oldSameIdentifierInstitutionsFile.size() > 0}">
-								<div id="institutionsWithSameIdDiv">
-									<div>
-										<h2><s:property value="getText('al.message.sameIdentifier')" /></h2>
-									</div>
-									<div>&nbsp;</div>
-									<div id="institutionsWithSameIdOldDiv" class="middleDiv">
-										<s:iterator value="oldSameIdentifierInstitutionsFile" var="oldSameIdentifier" status="status">
-											<div id="sameIdInstitutionChanged_<s:property value="#status.index"/>">
-												<div><label for="oldSameIdentifierInstitution[<s:property value="#status.index"/>]"><s:property value="#oldSameIdentifier.ainame" /></label></div>
-												<div>
-													<input type="text" class="readOnlyInput" id="oldSameIdentifierInstitution[<s:property value="#status.index"/>]" name="oldSameIdentifierInstitution[<s:property value="#status.index"/>]" value="<s:property value="#oldSameIdentifier.internalAlId" />" readonly onfocus="this.blur()" />
-													<input type="hidden" id="sameIdentifiersNamed[<s:property value="#status.index"/>]" name="sameIdentifiersNamed[<s:property value="#status.index"/>]" value="<s:property value="#oldSameIdentifier.ainame" />" />
-													</div>
-												<div>&nbsp;</div>
-											</div>
-										</s:iterator>
-									</div>
-									<div id="institutionsWithSameIdNewDiv" class="middleDiv">
-										<s:iterator value="newSameIdentifierInstitutionsFile" var="newSameIdentifier" status="status">
-											<div id="sameIdInstitutionChanged<s:property value="#status.index"/>">
-												<div><label for="newSameIdentifierInstitution[<s:property value="#status.index"/>]"><s:property value="#newSameIdentifier.ainame" /></label></div>
-												<div><input type="text" class="readOnlyInput" id="newSameIdentifierInstitution[<s:property value="#status.index"/>]" name="newSameIdentifierInstitution[<s:property value="#status.index"/>]" value="<s:property value="#newSameIdentifier.internalAlId" />" readonly onfocus="this.blur()" /></div>
-												<div>&nbsp;</div>
-											</div>
-										</s:iterator>
-									</div>
-								</div>
-							</s:if>
-	
-							<s:if test="%{oldEmptyIdentifierInstitutionsFile.size() > 0}">
-								<div id="institutionsWithEmptyIdDiv">
-									<div>
-										<h2><s:property value="getText('al.message.emptyIdentifier')" /></h2>
-									</div>
-									<div>&nbsp;</div>
-									<div id="institutionsWithEmptyIdOldDiv" class="middleDiv">
-										<s:iterator value="oldEmptyIdentifierInstitutionsFile" var="oldEmptyIdentifier" status="status">
-											<div id="emptyIdInstitutionChanged_<s:property value="#status.index"/>">
-												<div><label for="oldEmptyIdentifierInstitution[<s:property value="#status.index"/>]"><s:property value="#oldEmptyIdentifier.ainame" /></label></div>
-												<div>
-													<input type="text" class="readOnlyInput" id="oldEmptyIdentifierInstitution[<s:property value="#status.index"/>]" name="oldEmptyIdentifierInstitution[<s:property value="#status.index"/>]" value="<s:property value="#oldEmptyIdentifier.internalAlId" />" readonly onfocus="this.blur()" />
-													<input type="hidden" id="emptyIdentifiersNamed[<s:property value="#status.index"/>]" name="emptyIdentifiersNamed[<s:property value="#status.index"/>]" value="<s:property value="#oldEmptyIdentifier.ainame" />" />
-												</div>
-												<div>&nbsp;</div>
-											</div>
-										</s:iterator>
-									</div>
-									<div id="institutionsWithEmptyIdNewDiv" class="middleDiv">
-										<s:iterator value="newEmptyIdentifierInstitutionsFile" var="newEmptyIdentifier" status="status">
-											<div id="emptyIdInstitutionChanged<s:property value="#status.index"/>">
-												<div><label for="newEmptyIdentifierInstitution[<s:property value="#status.index"/>]"><s:property value="#newEmptyIdentifier.ainame" /></label></div>
-												<div><input type="text" class="readOnlyInput" id="newEmptyIdentifierInstitution[<s:property value="#status.index"/>]" name="newEmptyIdentifierInstitution[<s:property value="#status.index"/>]" value="<s:property value="#newEmptyIdentifier.internalAlId" />" readonly onfocus="this.blur()" /></div>
-												<div>&nbsp;</div>
-											</div>
-										</s:iterator>
-									</div>
-								</div>
-							</s:if>
-	
-						</div>
-					</form>
-				</s:if>
-				
-				<s:if test="%{updatedInstitutions.size() > 0}">
-					<div id="updatedInstitutionsDiv">
-						<div id="alupdatesMessage">
-							<h2><s:property value="getText('al.message.changedparent')" /></h2>
-							<div>&nbsp;</div>
-						</div>
-						<s:iterator value="updatedInstitutions" var="updated" status="status">
-							<div class="alupdates">
-								<div class="middleDiv"><label for="updatedInstitution_<s:property value="#status.index"/>"><s:property value="#updated.ainame" /></label></div>
-								<div class="middleDiv"><input type="text" class="readOnlyInput" id="updatedInstitution_<s:property value="#status.index"/>" value="<s:property value="#updated.internalAlId" />" readonly onfocus="this.blur()" /></div>
-								<div>&nbsp;</div>
-							</div>
-						</s:iterator>
-					</div>
-				</s:if>
-
-				<s:if test="%{institutionsToBeDeleted.size() > 0}">
-					<div id="deletesPart">
-						<div>
-							<div>
-								<h2><s:property value="getText('al.message.institutionstodelete')" /></h2>
-							</div>
-							<div>&nbsp;</div>
-							<s:iterator value="institutionsToBeDeleted" var="identifier" status="status">
-							<div class="aldeletes">
-								<div class="middleDiv"><label for="deleteInstitution_<s:property value="#status.index"/>"><s:property value="#identifier.ainame" /></label></div>
-								<div class="middleDiv"><input type="text" class="readOnlyInput" id="deleteInstitution_<s:property value="#status.index"/>" value="<s:property value="#identifier.internalAlId" />" readonly onfocus="this.blur()" /></div>
-								<div>&nbsp;</div>
-							</div>
-							</s:iterator>
-						</div>
-					</div>
-				</s:if>
-			</div>
-		</div>
 	</s:if>
 
+	<!-- Display the no changes report. -->
 	<s:else>
 		<div id="noChangesDiv">
 			<div>&nbsp;</div>
@@ -218,31 +103,205 @@
 		</div>
 	</s:else>
 
+	<!-- Div for show the differences between identifiers in DB and identifiers in file. -->
+	<div id="detailsDiv">
+		<div id="divDescription">
+			<h1><s:property value="getText('al.message.detail')" /></h1>
+		</div>
+
+		<div>&nbsp;</div>
+
+		<div id="contentReport">
+			<form name="updatesPartForm" id="updatesPartForm" action="ALContinueUpload.action" method="post">
+				<s:hidden id="overwriteIDs" name="overwriteIDs" value="continue"></s:hidden>
+
+				<div id="institutionsWithSameNameDiv">
+					<div>
+						<h2>
+							<s:property value="getText('al.message.institutionsdetectedwithsamename')" />
+						</h2>
+					</div>
+
+					<div>&nbsp;</div>
+
+					<!-- Div with the information of the identifiers in DB. -->
+					<div id="institutionsWithSameNameOldDiv" class="middleDiv">
+						<div id="currentlyIdsDiv">
+							<div>
+								<label><b><s:property value="getText('al.message.currentlyIdentifiers')" /></b></label>
+							</div>
+						</div>
+
+						<div>&nbsp;</div>
+
+						<s:iterator value="oldRelatedInstitutions" var="oldInstitution" status="status">
+							<div id="institutionChanged_<s:property value="#status.index"/>">
+								<div>
+									<label for="oldSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#oldInstitution.ainame" /></label>
+								</div>
+								<div>
+									<input type="text" class="readOnlyInput" id="oldSameNameInstitution[<s:property value="#status.index"/>]" name="oldSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#oldInstitution.internalAlId" />"  readonly onfocus="this.blur()" />
+								</div>
+
+								<div>&nbsp;</div>
+							</div>
+						</s:iterator>
+					</div>
+
+					<!-- Div with the information of the identifiers in file. -->
+					<div id="institutionsWithSameNameNewDiv" class="middleDiv">
+						<div id="newIdsDiv">
+							<div>
+								<label><b><s:property value="getText('al.message.identifiersInFile')" /></b></label>
+							</div>
+						</div>
+
+						<div>&nbsp;</div>
+
+						<s:iterator value="newRelatedInstitutions" var="newInstitution" status="status">
+							<div id="institutionChanged<s:property value="#status.index"/>">
+								<div>
+									<label for="newSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#newInstitution.ainame" /></label>
+								</div>
+								<div>
+									<input type="text" class="readOnlyInput" id="newSameNameInstitution[<s:property value="#status.index"/>]" name="newSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#newInstitution.internalAlId" />" readonly onfocus="this.blur()" />
+								</div>
+
+								<div>&nbsp;</div>
+							</div>
+						</s:iterator>
+					</div>
+				</div>
+
+				<div>&nbsp;</div>
+
+				<div id="institutionsWithDuplicateNameDiv">
+					<div>
+						<h2>
+							<s:property value="getText('al.message.institutionsdetectedwithduplicatednames')" />
+						</h2>
+					</div>
+
+					<div>&nbsp;</div>
+
+					<!-- Div with the information of the identifiers in DB. -->
+					<div id="institutionsWithDuplicateNameOldDiv" class="middleDiv">
+						<div id="currentlyIdsDiv">
+							<div>
+								<label><b><s:property value="getText('al.message.currentlyIdentifiers')" /></b></label>
+							</div>
+						</div>
+
+						<div>&nbsp;</div>
+
+						<s:iterator value="oldDuplicateNameInstitutionsMap" var="oldDuplicateInstitutionMap" status="status">
+							<s:iterator value="#oldDuplicateInstitutionMap.value" var="oldDuplicateInstitutionList" status="statusList">
+								<div id="institutionDuplicate_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>">
+									<s:if test="#oldDuplicateInstitutionList.ainame != 'delete' && #oldDuplicateInstitutionList.ainame != 'add'">
+										<label for="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#oldDuplicateInstitutionMap.key" /></label>
+									</s:if>
+									<s:else>
+										<label for="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#oldDuplicateInstitutionMap.key" /></label>
+									</s:else>
+								</div>
+								<div>
+									<s:if test="#oldDuplicateInstitutionList.ainame != 'delete' && #oldDuplicateInstitutionList.ainame != 'add'">
+										<input type="text" class="readOnlyInput" id="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" value="<s:property value="#oldDuplicateInstitutionList.internalAlId" />" readonly onfocus="this.blur()" />
+									</s:if>
+									<s:else>
+										<input type="text" class="whiteInput" style="border: 1px solid #FFFFFF;" id="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" value="<s:property value="getText('al.message.addInstitution')"/>" readonly onfocus="this.blur()" />
+									</s:else>
+								</div>
+
+								<div>&nbsp;</div>
+							</s:iterator>
+						</s:iterator>
+					</div>
+
+					<!-- Div with the information of the identifiers in file. -->
+					<div id="institutionsWithDuplicateNameNewDiv" class="middleDiv">
+						<div id="newIdsDiv">
+							<div>
+								<label><b><s:property value="getText('al.message.identifiersInFile')" /></b></label>
+							</div>
+						</div>
+
+						<div>&nbsp;</div>
+
+						<s:iterator value="newDuplicateNameInstitutionsMap" var="newDuplicateInstitutionMap" status="status">
+							<s:iterator value="#newDuplicateInstitutionMap.value" var="newDuplicateInstitutionList" status="statusList">
+								<div id="institutionDuplicate<s:property value="#status.index"/>_<s:property value="#statusList.index"/>">
+									<label for="selectNew_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#newDuplicateInstitutionMap.key" /></label>
+								</div>
+									<div>
+										<select class="alSelect" id="selectNew_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="selectNew[<s:property value="#status.index"/>][<s:property value="#statusList.index"/>]" onchange="selectionChanged($(this));">
+											<option value="---">---</option>
+											<s:iterator value="#newDuplicateInstitutionMap.value" var="newDuplicateInstitutionOption" status="statusOption">
+												<s:if test="#newDuplicateInstitutionOption.ainame != 'delete' && #newDuplicateInstitutionOption.ainame != 'add'">
+													<option value="<s:property value="#newDuplicateInstitutionOption.internalAlId"/>"><s:property value="#newDuplicateInstitutionOption.internalAlId" /></option>
+												</s:if>
+												<s:else>
+													<option value="delete"><s:property value="getText('al.message.deleteitem')"/></option>
+												</s:else>
+											</s:iterator>
+										</select>
+									</div>
+
+								<div>&nbsp;</div>
+							</s:iterator>
+						</s:iterator>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
 	<div>&nbsp;</div>
+
+	<!-- Div for the buttons. -->
 	<div id="actionsPart">
 		<table>
 			<tr>
-			<s:if test="%{oldEmptyIdentifierInstitutionsFile.size()>0 || oldRelatedInstitutions.size()>0 || oldSameIdentifierInstitutionsFile.size()>0 }">
+				<!-- Display details button. -->
 				<td>
-					<div id="divChangeIdentifiers">
-						<div id="buttonChangeIdentifiers" class="alDivAction" ><s:property value="getText('al.message.changeIdentifiers')" /></div>
-					</div>
-				</td>
-			</s:if>
-				<td>
-					<div id="divRecheckIdentifiers" class="hidden">
-						<div id="buttonRecheckIdentifiers" class="alDivAction" ><s:property value="getText('al.message.recheckIdentifiers')" /></div>
+					<div id="divDisplayDetails">
+						<div id="buttonDisplayDetails"  class="alDivAction" >
+							<s:property value="getText('al.message.displayDetails')" />
+						</div>
 					</div>
 				</td>
 
+				<!-- Overwrite identifiers button. -->
+				<td>
+					<div id="divOverwriteIds">
+						<div id="buttonOverwriteIds" class="alDivAction">
+							<s:property value="getText('al.message.overwriteIds')" />
+						</div>
+					</div>
+				</td>
+
+				<!-- Keep identifiers button. -->
+				<td>
+					<div id="divKeepIds">
+						<div id="buttonKeepIds" class="alDivAction">
+							<s:property value="getText('al.message.keepIds')" />
+						</div>
+					</div>
+				</td>
+
+				<!-- Continue the upload button. -->
 				<td>
 					<div id="divContinueUpload">
 						<form name="continueUploadForm" action="ALContinueUpload.action" id="continueUploadForm" method="post">
-							<div id="buttonContinueUpload" class="alDivAction" ><s:property value="getText('al.message.continue')" /></div>
+							<div id="buttonContinueUpload" class="alDivAction" >
+								<s:property value="getText('al.message.continue')" />
+								<s:hidden id="overwriteIDs" name="overwriteIDs" value="continue"></s:hidden>
+							</div>
 						</form>
 					</div>
 				</td>
 
+				<!-- Cancel the upload button. -->
 				<td>
 					<div id="divCancelOverwrite">
 						<form name="cancelOverwriteForm" action="ALCancelOverwrite.action" id="cancelOverwriteForm" method="post">
@@ -251,22 +310,15 @@
 						</form>
 					</div>
 				</td>
-
-				<td>
-					<div id="divCancelEdition" class="hidden">
-						<form name="cancelEditionForm" action="ALReport.action" id="cancelEditionForm" method="post">
-							<div id="buttonCancelEdition" class="alDivAction" ><s:property value="getText('al.message.cancel')" /></div>
-						</form>
-					</div>
-				</td>
 			</tr>
 		</table>
 	</div>
+
 	<div>&nbsp;</div>
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-			initReport();
+			initReport('<s:property value="getText(\'al.message.fillSelects\')" />');
 		});
 	</script>
 </div>

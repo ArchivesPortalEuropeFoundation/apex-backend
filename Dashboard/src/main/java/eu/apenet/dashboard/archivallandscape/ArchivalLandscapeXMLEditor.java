@@ -7,9 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -32,14 +30,26 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 	//changed identifiers
 	private List<String> oldSameNameInstitution;
 	private List<String> newSameNameInstitution;
-	//empty identifiers
-	private List<String> emptyIdentifiersNamed;
-	private List<String> newEmptyIdentifierInstitution;
-	//same identifiers, different name
-	private List<String> sameIdentifiersNamed;
-	private List<String> oldSameIdentifierInstitution;
-	private List<String> newSameIdentifierInstitution;
-	
+
+	/**
+	 * Empty constructor.
+	 */
+	public ArchivalLandscapeXMLEditor() {
+		super();
+	}
+
+	/**
+	 * Constructor with params.
+	 *
+	 * @param oldSameNameInstitution List of internal identifiers in database.
+	 * @param newSameNameInstitution List of internal identifiers in file.
+	 */
+	public ArchivalLandscapeXMLEditor(List<String> oldSameNameInstitution, List<String> newSameNameInstitution) {
+		super();
+		this.setOldSameNameInstitution(oldSameNameInstitution);
+		this.setNewSameNameInstitution(newSameNameInstitution);
+	}
+
 	/**
 	 * Action for change identifier
 	 * @return String.ACTION_RESULT
@@ -52,11 +62,21 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 		Collection<ArchivalInstitution> archivalInstitutionList = null;
 		if(valid){
 			String httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + TEMP_FILE_NAME;
-			httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
-				File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-				File.separatorChar + "AL"+ File.separatorChar + httpFileFileName);
-			ArchivalLandscapeManager archivalLandscapeManager = new ArchivalLandscapeManager();
-			archivalInstitutionList = archivalLandscapeManager.getInstitutionsByALFile(httpFile,false);
+
+			File repoFileDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
+					File.separatorChar + SecurityContext.get().getCountryIsoname().toUpperCase() + File.separatorChar);
+			try {
+				if(!repoFileDir.exists()){
+					repoFileDir.mkdirs();
+				}
+			} catch (Exception e) {
+				log.error("Error creating path: " + repoFileDir.getAbsolutePath());
+			}
+			if(repoFileDir.exists()){
+				httpFile = new File(repoFileDir.getAbsolutePath() + File.separatorChar + httpFileFileName);
+				ArchivalLandscapeManager archivalLandscapeManager = new ArchivalLandscapeManager();
+				archivalInstitutionList = archivalLandscapeManager.getInstitutionsByALFile(httpFile,false);
+			}
 		}
 		//altered identifiers part
 		if(this.oldSameNameInstitution!=null && this.newSameNameInstitution!=null){
@@ -64,39 +84,6 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 			if(valid && counter == this.newSameNameInstitution.size()){
 				for(int i=0;i<counter;i++){
 					archivalInstitutionList = changeXMLInstitutionByIdentifiers(this.oldSameNameInstitution.get(i),this.newSameNameInstitution.get(i),archivalInstitutionList); 
-				}
-			}
-		}
-		//empty identifiers part
-		if(this.emptyIdentifiersNamed!=null && this.newEmptyIdentifierInstitution!=null){
-			int counter = this.emptyIdentifiersNamed.size();
-			if(valid && counter == this.newEmptyIdentifierInstitution.size()){
-				for(int i=0;i<counter;i++){
-					String emptyIdentifierName = this.emptyIdentifiersNamed.get(i);
-					String emptyIdentifierValue = this.newEmptyIdentifierInstitution.get(i);
-					if(emptyIdentifierValue!=null && !emptyIdentifierValue.trim().isEmpty()){
-						archivalInstitutionList = changeXMLEmptyIdentifiedInstitutions(emptyIdentifierName,emptyIdentifierValue,archivalInstitutionList);
-					}
-				}
-			}
-		}
-		//same identifiers, different names
-		if(this.oldSameIdentifierInstitution!=null && this.newSameIdentifierInstitution!=null && this.sameIdentifiersNamed!=null){
-			int counter = this.oldSameIdentifierInstitution.size();
-			if(counter == this.newSameIdentifierInstitution.size() && counter == this.sameIdentifiersNamed.size()){
-				Map<String, List<ArchivalInstitution>> archivalInstitutions = ArchivalLandscapeUtils.getInstitutionsWithSameIdentifierFromArchivalInstitutionStructure(archivalInstitutionList);
-				if(archivalInstitutions!=null){
-					for(int i=0;i<counter;i++){
-						String sameName = this.sameIdentifiersNamed.get(i);
-						String oldSameIdentifier = this.oldSameIdentifierInstitution.get(i);
-						if(archivalInstitutions.containsKey(oldSameIdentifier)){
-							List<ArchivalInstitution> oldSameInstitutions = archivalInstitutions.get(oldSameIdentifier);
-							String newSameIdentifier = this.newSameIdentifierInstitution.get(i);
-							if(oldSameInstitutions!=null){
-								archivalInstitutionList = changeOldInstitutionIdentifierByNameAndIdentifier(oldSameInstitutions,archivalInstitutionList,sameName,newSameIdentifier);
-							}
-						}
-					}
 				}
 			}
 		}
@@ -111,39 +98,8 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 		}else{
 			removeTmpFile();
 		}
-		return state;
-	}
-	
-	private Collection<ArchivalInstitution> changeOldInstitutionIdentifierByNameAndIdentifier(Collection<ArchivalInstitution> oldSameInstitutions,Collection<ArchivalInstitution> archivalInstitutionList,String sameIdentifierName,String newSameIdentifier) {
-		ArchivalInstitution oldSameInstitution = null;
-		Iterator<ArchivalInstitution> oldSameInstitutionsIt = oldSameInstitutions.iterator();
-		while(oldSameInstitution==null && oldSameInstitutionsIt.hasNext()){
-			ArchivalInstitution target = oldSameInstitutionsIt.next();
-			if(sameIdentifierName.equals(target.getAiname())){ //found?
-				oldSameInstitution = target;
-			}
-		}
-		if(oldSameInstitution!=null){
-			//create new institution to be replaced with altered data
-			ArchivalInstitution newSameInstitution = new ArchivalInstitution();
-			newSameInstitution.setAiAlternativeNames(oldSameInstitution.getAiAlternativeNames());
-			newSameInstitution.setAiname(oldSameInstitution.getAiname());
-			newSameInstitution.setGroup(oldSameInstitution.isGroup());
-			newSameInstitution.setInternalAlId(newSameIdentifier);
-			archivalInstitutionList = ArchivalLandscapeUtils.replaceXMLInstitutionByInstitution(oldSameInstitution,newSameInstitution,archivalInstitutionList);
-		}
-		return archivalInstitutionList;
-	}
 
-	private Collection<ArchivalInstitution> changeXMLEmptyIdentifiedInstitutions(String emptyIdentifierNamed,String emptyIdentifierValue,Collection<ArchivalInstitution> archivalInstitutionList) {
-		ArchivalInstitution oldArchivalInstitution = ArchivalLandscapeUtils.getInstitutionByNameFromStructure(emptyIdentifierNamed,archivalInstitutionList);
-		ArchivalInstitution target = null;
-		if(oldArchivalInstitution!=null){
-			target = oldArchivalInstitution;
-			target.setInternalAlId(emptyIdentifierValue);
-			archivalInstitutionList = ArchivalLandscapeUtils.replaceAnInstitutionToArchivalInstitutionStructure(oldArchivalInstitution, target, archivalInstitutionList);
-		}
-		return archivalInstitutionList;
+		return state;
 	}
 	
 	/**
@@ -152,25 +108,26 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 	 */
 	private void removeTmpFile() {
 		String httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + TEMP_FILE_NAME;
-		File httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
+		File httpFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-			File.separatorChar + "AL"+ File.separatorChar + httpFileFileName);
+			File.separatorChar + httpFileFileName);
 		if(httpFile.exists()){
 			httpFile.delete();
 		}
 	}
+
 	/**
 	 * Creates a copy of original file to work with.
 	 */
 	public void copyXMLFileToTmp(){
 		String httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + "AL.xml";
 		String httpFileTempName = SecurityContext.get().getCountryIsoname().toUpperCase() + TEMP_FILE_NAME;
-		File httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
+		File httpFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-			File.separatorChar + "AL"+ File.separatorChar + httpFileFileName);
-		File httpTempFile =  new File(APEnetUtilities.getConfig().getRepoDirPath() + 
+			File.separatorChar + httpFileFileName);
+		File httpTempFile =  new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-			File.separatorChar + "AL"+ File.separatorChar + httpFileTempName);
+			File.separatorChar + httpFileTempName);
 		try {
 			FileUtils.copyFile(httpFile, httpTempFile);
 		} catch (IOException e) {
@@ -221,10 +178,10 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 		String httpFileTempName = SecurityContext.get().getCountryIsoname().toUpperCase() + TEMP_FILE_NAME;
 		File httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-			File.separatorChar + "AL"+ File.separatorChar + httpFileFileName);
+			File.separatorChar + httpFileFileName);
 		File httpTempFile =  new File(APEnetUtilities.getConfig().getRepoDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
-			File.separatorChar + "AL"+ File.separatorChar + httpFileTempName);
+			File.separatorChar + httpFileTempName);
 		try {
 			FileUtils.copyFile(httpTempFile,httpFile);
 			httpTempFile.delete();
@@ -241,9 +198,6 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 		return this.newSameNameInstitution;
 	}
 
-	public List<String> getEmptyIdentifiersNamed() {
-		return this.emptyIdentifiersNamed;
-	}
 
 	public void setOldSameNameInstitution(List<String> oldSameNameInstitution) {
 		this.oldSameNameInstitution = oldSameNameInstitution;
@@ -252,42 +206,4 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 	public void setNewSameNameInstitution(List<String> newSameNameInstitution) {
 		this.newSameNameInstitution = newSameNameInstitution;
 	}
-
-	public void setEmptyIdentifiersNamed(List<String> emptyIdentifiersNamed) {
-		this.emptyIdentifiersNamed = emptyIdentifiersNamed;
-	}
-
-	public List<String> getNewEmptyIdentifierInstitution() {
-		return this.newEmptyIdentifierInstitution;
-	}
-
-	public void setNewEmptyIdentifierInstitution(
-			List<String> newEmptyIdentifierInstitution) {
-		this.newEmptyIdentifierInstitution = newEmptyIdentifierInstitution;
-	}
-
-	public List<String> getSameIdentifiersNamed() {
-		return this.sameIdentifiersNamed;
-	}
-
-	public List<String> getOldSameIdentifierInstitution() {
-		return this.oldSameIdentifierInstitution;
-	}
-
-	public List<String> getNewSameIdentifierInstitution() {
-		return this.newSameIdentifierInstitution;
-	}
-
-	public void setSameIdentifiersNamed(List<String> sameIdentifiersNamed) {
-		this.sameIdentifiersNamed = sameIdentifiersNamed;
-	}
-
-	public void setOldSameIdentifierInstitution(List<String> oldSameIdentifierInstitution) {
-		this.oldSameIdentifierInstitution = oldSameIdentifierInstitution;
-	}
-
-	public void setNewSameIdentifierInstitution(List<String> newSameIdentifierInstitution) {
-		this.newSameIdentifierInstitution = newSameIdentifierInstitution;
-	}
-
 }

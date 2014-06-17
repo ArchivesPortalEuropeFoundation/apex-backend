@@ -21,6 +21,20 @@
 	border: 1px solid #999999;
 }
 
+.whiteInput {
+	background-color: #FFFFFF;
+	color: #333333;
+	cursor: default;
+	border: 1px solid #FFFFFF;
+}
+
+.whiteInput:focus {
+	background-color: #FFFFFF;
+	color: #333333;
+	cursor: default;
+	border: 1px solid #FFFFFF;
+}
+
 .alDivAction {
 	background-color: #E9F3FA;
 	border: 1px solid #00A0DF;
@@ -50,10 +64,9 @@
 	text-align: left;
 }
 
-.alDivShowHide {
-	color: #000000;
-	cursor: pointer;
-	font-size: 0.75em;
-	font-weight: bold;
-	text-align: left;
+.alSelect {
+	color: #333333;
+	border: 1px solid #999999;
+	height: 23px;
+	width: 300px;
 }

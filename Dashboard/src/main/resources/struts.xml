@@ -306,11 +306,6 @@
 
         </action>
 
-
-
-
-
-
         <!--Upload: Main page -->
         <action name="upload" class="eu.apenet.dashboard.manual.UploadContentAction">
             <interceptor-ref name="changeLanguageStack"/>
@@ -422,8 +417,8 @@
 			<result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
 			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
 		</action>
-		
-		<action name="ALContinueUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="ingestArchivalLandscapeXML">
+
+		<action name="ALContinueUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="checkIngestionMode">
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="redirectAction">
 				<param name="actionName">viewAL</param>
@@ -462,6 +457,7 @@
 		<action name="ALReport" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="reportAction">
 			<result name="input" type="tiles">ALReport</result>
 			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
+			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
 		</action>
 
 		<action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">
