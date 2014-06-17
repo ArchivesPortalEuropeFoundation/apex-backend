@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.manual.eag;
 
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7165,40 +7166,51 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
 		List<Country> countryList = countryDAO.getCountries(countryCode);
 		if (countryList != null && !countryList.isEmpty()) {
+			Country country = countryList.get(0);			
+			countryName = getText("country." + country.getCname().toLowerCase().replace(" ", "_"));
+		}
+		return countryName;
+			
+		//countryName =getCountryNameDAO(countryCode);
+		
+	}
+	
+	/***
+	 * waiting for the implementation of #988
+	 * @param countryCode 2 letter code for the country (ES, GB, DE ...)
+	 * @return the country name 
+	 */
+	@SuppressWarnings("unused")
+	private String getCountryNameDAO(String countryCode){
+		String countryName = "";
+		CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
+		List<Country> countryList = countryDAO.getCountries(countryCode);
+		if (countryList != null && !countryList.isEmpty()) {
 			Country country = countryList.get(0);
 			Set<CouAlternativeName> couAlternativeNameSet = country.getCouAlternativeNames();
 			//check if there is a valid list or a empty one
 			if(couAlternativeNameSet != null){
 				//Get the country name in the language of the country
 				LangDAO langDAO = DAOFactory.instance().getLangDAO();
-				Locale[] locale = Locale.getAvailableLocales();
-				Lang lang=null;
-
-				if (locale!=null){
-					List<Locale> localeList = new LinkedList<Locale>();
-					for (int i = 0; i < locale.length; i++) {
-						if(locale[i].getCountry().equalsIgnoreCase(countryCode)){
-							localeList.add(locale[i]);
-						}
-			        }
-					if(localeList!=null && !localeList.isEmpty()){
-						Iterator<Locale> localeIt = localeList.iterator();
-						boolean found = false;
-						while (!found && localeIt.hasNext()) {
-							Locale local = localeIt.next();
-							String langCode = local.getLanguage();
-
-							lang = langDAO.getLangByIso2Name(langCode);
-							if (lang!=null){
-								countryName = iterate(lang, couAlternativeNameSet);
-								if (countryName != null && !countryName.isEmpty()) {
-									found=true;
-								}
-							}
-						}
-					}
-				}
-
+	
+				//Get locale language
+				Lang lang = null;
+				Locale local = getLocale();
+				String langCode = local.getLanguage();
+				
+				
+				// TODO, if there isn't a default language,  #988
+				
+	//			if (getDefaultLang()!=null)
+	//				lang = getDefaultLang();
+	//			else
+					lang = langDAO.getLangByIso2Name(langCode);
+				
+				//Assign language if there exists in database
+				if (lang!=null)
+					countryName = iterate(lang, couAlternativeNameSet);
+				
+				//if there is not language in database assign default
 				if(countryName.isEmpty()){
 					lang = langDAO.getLangByIso2Name("EN");
 					countryName = iterate(lang, couAlternativeNameSet);
@@ -7227,4 +7239,5 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		}
 		return result;
 	}
+
 }
