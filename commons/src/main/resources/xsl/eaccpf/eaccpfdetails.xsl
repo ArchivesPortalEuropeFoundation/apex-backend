@@ -196,7 +196,7 @@
 					    	    <xsl:with-param name="title" select="'eaccpf.portal.location'"/> 
 					    	</xsl:call-template>
 					       <!-- placeRole -->
-					       <xsl:if test="./eac:placeRole/text()">
+					       <xsl:if test="./eac:placeRole/text() and ./eac:placeEntry/text()">
 						        <div class="row subrow">
 								    <div class="leftcolumn">
 							   			<h2><xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/><xsl:text>:</xsl:text></h2>
