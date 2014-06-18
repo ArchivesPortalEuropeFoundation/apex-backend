@@ -15,7 +15,7 @@
 			</div>
 			<ul id="eag2012TabsContainer">
 				<li id="tab-yourInstitution">
-					<a href="#tab-yourInstitution"><s:property value="getText('eag2012.tab.yourInstitution')" /></a> 
+					<a href="#tab-yourInstitution"><s:property value="getText('eag2012.tab.yourInstitution')" /></a>
 				</li>
 				<li id="tab-identity">
 					<a href="#tab-identity"><s:property value="getText('eag2012.tab.identity')" /></a>
@@ -71,7 +71,7 @@
 					var labelInstitution = '<s:property value="getText('eag2012.yourinstitution.institution')" />';
 					var labelRepository = '<s:property value="getText('eag2012.tab.extraRepository')" />';
 					loadRepositories(labelInstitution, labelRepository, numberOfRepos);
-					
+
 					//postal address - your institution tab and contact tab
 					var postalField1 = "<s:property value="loader.streetPostal"/>";
 					var postalField2 = "<s:property value="loader.municipalityPostalcodePostal"/>";
@@ -147,11 +147,11 @@
 			<tr>
 				<td>
 		  			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("eag2012.commons.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.success')" />','<s:property value="getText('eag2012.errors.errorYourInstitution')" />', '<s:property value="getText('eag2012.errors.errorIdentity')" />', '<s:property value="getText('eag2012.errors.errorContact')" />', '<s:property value="getText('eag2012.errors.errorAccessAndServices')" />', '<s:property value="getText('eag2012.errors.errorDesription')" />', '<s:property value="getText('eag2012.errors.errorControl')" />', '<s:property value="getText('eag2012.errors.errorRelations')" />', '<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />','<s:property value="getText('eag2012.errors.errorDeleteRepository')"/>', '<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>', '${loader.initialAutformEscaped}');" />
-		  			<input type="button" id="buttonExitEAG2012" value="<s:property value='getText("eag2012.commons.exit")' />" onclick="clickExitAction();" />
+		  			<input type="button" id="buttonExitEAG2012" value="<s:property value='getText("eag2012.commons.exit")' />" onclick="clickExitAction('<s:property value='getText("eag2012.commons.confirmExit")' />');" />
 	    		</td>
 	    	</tr>
 	    </table>
-	
+
 	</form>
 	<div id="divTempContainter" style="display:none;"></div>
 </div>
