@@ -21,7 +21,6 @@
         	<br>
         	<br>
         </s:if>
-
 		<s:if test="filesNotUploaded.size()>0" >
         	<div id="filesNotUploadedList">
         		<s:property value="getText('content.message.not.correctly.stored')" />        	
@@ -33,10 +32,11 @@
         		</select>
         	</div>
         </s:if>
-       	<s:if test="%{ai_id}">
-	        <s:form theme="simple" action="upload.action" id="returnFrm" method="post">
-	        	<s:hidden id="ai_id" name="ai_id" value="%{ai_id}" theme="simple" />
-	        	<s:submit key="dashboard.menu.uploadcontent" theme="simple" action="upload" />
-	        </s:form>
-        </s:if>
-        
+		<br>
+		<br>
+		<br>
+		<form id="content" method="get">
+			<input type="submit" id="content_continue_contentmanager" name="action:checkfilesuploaded" value="<s:property value="getText('content.continue.contentmanager')" />"/>
+		</form> 
+       	<br>
+		<br> 
