@@ -308,7 +308,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return buffer.toString();
 	}
 
-	private String changeGroup(Integer aiId,String internalParentId) {
+	private String changeGroup(Integer aiId,String internalParentId) throws Exception {
 		StringBuffer buffer = new StringBuffer();
 		// Store in data base the operation, the archival institutions
 		JpaUtil.beginDatabaseTransaction();
