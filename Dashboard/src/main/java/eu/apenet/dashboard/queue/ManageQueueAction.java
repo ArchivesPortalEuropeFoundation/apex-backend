@@ -180,7 +180,7 @@ public class ManageQueueAction extends AbstractAction {
 			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsWithRepositoryCode();
 			for (ArchivalInstitution archivalInstitution: archivalInstitutions){
 				try {
-				System.out.println("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
+				LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
 				XmlEagParser.parseAndPublish(archivalInstitution);
 				}catch(Exception e){
 					LOGGER.error(e.getMessage(), e);
