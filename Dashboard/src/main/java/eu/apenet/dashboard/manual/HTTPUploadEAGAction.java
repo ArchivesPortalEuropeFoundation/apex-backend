@@ -12,6 +12,7 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
+import eu.apenet.dashboard.services.eag.EagService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -308,6 +309,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 								String repositoryCode = eag.lookingForwardElementContent("/eag/control/recordId");
 								archivalInstitution.setRepositorycode(repositoryCode);
 								archivalInstitutionDao.store(archivalInstitution);
+								EagService.publish(archivalInstitution);
 							} else {
 			        	    	this.filesNotUploaded.add(filename);
 			                    addActionMessage(getText("label.eag.notStored"));
