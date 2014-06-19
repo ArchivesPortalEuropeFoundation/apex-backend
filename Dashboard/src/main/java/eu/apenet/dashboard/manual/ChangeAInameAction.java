@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,8 +24,8 @@ import org.w3c.dom.NodeList;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
+import eu.apenet.dashboard.services.eag.EagService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -257,7 +256,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				//Delete EAG_copy
 				ContentUtils.deleteFile(path_copyEAG);
 
-				JpaUtil.closeDatabaseSession();
+				EagService.publish(ai);
 				this.setAllok(true);
 
 				// Refresh institution in session.
