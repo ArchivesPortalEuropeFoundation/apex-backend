@@ -1256,8 +1256,9 @@ var clickIdentityAction = function(text, message) {
  *Functions related to second-display EAC-CPF
  **************************************************************************************/
 function init() {
-    eraseComma();
-    eraseNameTitle();
+	eraseComma();
+	eraseNameTitle();
+	eraseLocationPlace();
     $(".displayLinkShowLess").addClass("hidden");
     $('.displayLinkShowMore').addClass("hidden");
     $(".moreDisplay").each(function(index) {
@@ -1306,7 +1307,22 @@ function eraseNameTitle() {
     });
 }
 
+/**
+ * Function to delete the location if there is'nt nothing to show.
+ */
+function eraseLocationPlace(){
+	$("div#eaccpfcontent .locationPlace").each(function(){
+		var textRightColumn = $.trim($(this).find(".rightcolumn p").text());
+		if (textRightColumn == ''){
+			$(this).remove();
+		}
+	});
+}
+
 function initPrint() {
+	eraseComma();
+	eraseNameTitle();
+	eraseLocationPlace();
     try {
         $("body").css("cursor", "progress");
         $(".displayLinkShowMore").each(function() {
