@@ -21,6 +21,7 @@ import org.xml.sax.SAXParseException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.eag.EagService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
@@ -290,7 +291,7 @@ public class APEnetEAGDashboard{
 
 				log.info(SecurityContext.get() + "The EAG " + this.getEagPath()
 						+ " has been created and stored in repository");
-
+				EagService.publish(archivalInstitution);
 				value = "correct";
 			} catch (Exception e) {
 				value = "error_eagnotstored";
