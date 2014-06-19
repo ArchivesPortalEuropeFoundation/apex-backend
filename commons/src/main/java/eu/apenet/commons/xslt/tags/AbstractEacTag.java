@@ -28,9 +28,10 @@ import eu.apenet.commons.xslt.EacXslt;
  */
 public abstract class AbstractEacTag extends SimpleTagSupport {
 	public static final String EACCPFDETAILS_XSLT = "eaccpfdetails";
+	public static final String EACCPFDETAILS_PREVIEW_XSLT = "eaccpfdetailspreview";
 	private String xml;
 	private String searchTerms;
-	private String searchFieldsSelection;
+	private String searchFieldsSelectionId;
 	private String secondDisplayUrl;
 	private String aiId;
 	private String type;
@@ -38,7 +39,6 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	private String eacUrl;
 	private String repositoryCode;
 	private String eaccpfIdentifier;
-
 	// Variables for the relations.
 	private String aiCodeUrl;
 	private String eacUrlBase;
@@ -49,13 +49,14 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 
 	private final static Map<String, String> xsltUrls = new HashMap<String,String>();
 	static {
-		xsltUrls.put(EACCPFDETAILS_XSLT, "xsl/eaccpf/eaccpfdetails.xsl");	
+		xsltUrls.put(EACCPFDETAILS_XSLT, "xsl/eaccpf/eaccpfdetails.xsl");
+		xsltUrls.put(EACCPFDETAILS_PREVIEW_XSLT,"xsl/eaccpf/eaccpfdetails-preview.xsl");
 	}
 	
 	public final void doTag() throws JspException, IOException {
 		FileReader eacFile = new FileReader(APEnetUtilities.getApePortalAndDashboardConfig().getRepoDirPath() + this.getEacUrl());
 		Source xmlSource = new StreamSource(new StringReader(this.readFile(eacFile)));
-		List<SolrField> highlightFields = SolrField.getSolrFieldsByIdString(searchFieldsSelection);
+		List<SolrField> highlightFields = SolrField.getSolrFieldsByIdString(searchFieldsSelectionId);
 		if (highlightFields.size() == 0) {
 			highlightFields = DEFAULT_HIGHLIGHT_FIELDS;
 		}
@@ -114,12 +115,12 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 		this.searchTerms = searchTerms;
 	}
 
-	public String getSearchFieldsSelection() {
-		return searchFieldsSelection;
+	public String getSearchFieldsSelectionId() {
+		return searchFieldsSelectionId;
 	}
 
-	public void setSearchFieldsSelection(String searchFieldsSelection) {
-		this.searchFieldsSelection = searchFieldsSelection;
+	public void setSearchFieldsSelectionId(String searchFieldsSelectionId) {
+		this.searchFieldsSelectionId = searchFieldsSelectionId;
 	}
 
 	public String getSecondDisplayUrl() {
@@ -231,5 +232,5 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	public void setEadUrl(String eadUrl) {
 		this.eadUrl = eadUrl;
 	}
-
+	
 }

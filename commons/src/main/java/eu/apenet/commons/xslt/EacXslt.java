@@ -1,10 +1,8 @@
 package eu.apenet.commons.xslt;
 
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
