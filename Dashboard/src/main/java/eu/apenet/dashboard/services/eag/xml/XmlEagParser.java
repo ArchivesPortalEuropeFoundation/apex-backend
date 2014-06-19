@@ -47,7 +47,7 @@ public class XmlEagParser extends AbstractParser {
 	public static final String UTF_8 = "utf-8";
 
 
-    public static long parseEadAndPublish(ArchivalInstitution archivalInstitution) throws Exception {
+    public static long parseAndPublish(ArchivalInstitution archivalInstitution) throws Exception {
     	EagSolrPublisher solrPublisher = new EagSolrPublisher();
 
 		FileInputStream fileInputStream =  getFileInputStream(archivalInstitution.getEagPath());
