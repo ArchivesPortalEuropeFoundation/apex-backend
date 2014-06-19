@@ -1068,7 +1068,7 @@
 		<xsl:variable name="famname" select="$listName/eac:part[@localType='famname']"/>
 		<xsl:variable name="persname" select="$listName/eac:part[@localType='persname']"/>
     	<xsl:choose>
-	    	<xsl:when test="not($corpname) and not($famname) and not($persname) and not($legalform)"> 
+	    	<xsl:when test="not($corpname) and not($famname) and not($persname) and not($legalform) and not($listName/eac:part[not(@localType) or @localType=''])"> 
 	    		<xsl:if test="$surName">
 	    			<xsl:apply-templates select="$surName" mode="other"/>
 	    			<xsl:if test="$birthname">
