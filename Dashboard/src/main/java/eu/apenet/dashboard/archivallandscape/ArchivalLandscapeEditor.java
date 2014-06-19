@@ -23,6 +23,7 @@ import eu.apenet.commons.infraestructure.NavigationTree;
 import eu.apenet.commons.infraestructure.StrutsNavigationTree;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.eag.EagService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -375,6 +376,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		// The final commits
 		JpaUtil.commitDatabaseTransaction();
+		EagService.publish(archivalInstitutionTarget);
 		return buffer.toString();
 	}
 
