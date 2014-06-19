@@ -1,11 +1,11 @@
 package eu.apenet.dashboard.utils;
 
-import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.persistence.vo.*;
 import org.apache.log4j.Logger;
 
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.Ese;
+import eu.apenet.persistence.vo.FindingAid;
 
 /**
  * 
