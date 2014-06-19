@@ -84,6 +84,6 @@ public class EagSolrPublisher  extends AbstractSolrPublisher{
 		return EagSolrServerHolder.getInstance();
 	}
 	public long unpublish(ArchivalInstitution archivalInstitution) throws SolrServerException, IOException {
-		return getSolrServerHolder().deleteByQuery("(" + SolrFields.ID + ":" + archivalInstitution.getAiId()+ "\")");
+		return getSolrServerHolder().deleteByQuery("(" + SolrFields.ID + ":" + archivalInstitution.getAiId()+ ")");
 	}
 }
