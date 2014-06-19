@@ -3,6 +3,7 @@ package eu.apenet.dashboard.services.eag.xml.stream.publish;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class EagSolrPublisher  extends AbstractSolrPublisher{
 		doc.addField(SolrFields.EAG_OTHER_NAMES, publishData.getOtherNames());		
 		doc.addField(SolrFields.EAG_ADDRESS, publishData.getAddress());		
 		doc.addField(SolrFields.EAG_REPOSITORIES, publishData.getRepositories());	
-		doc.addField(SolrFields.EAG_REPOSITORY_TYPE, publishData.getRepositoryTypes());
+		doc.addField(SolrFields.EAG_REPOSITORY_TYPE, convertRepositoryTypes(publishData.getRepositoryTypes()));
 		add(doc, SolrFields.EAG_DESCRIPTION, publishData.getDescription());
 		add(doc, SolrFields.EAG_OTHER, publishData.getOther());	
 		add(doc, SolrFields.EAG_LANGUAGE, publishData.getLanguage());	
@@ -61,6 +62,39 @@ public class EagSolrPublisher  extends AbstractSolrPublisher{
 	}
 
 
+	private static Set<String> convertRepositoryTypes(Set<String> repositoryTypes){
+		Set<String> result = new HashSet<String>();
+		for(String repositoryType: repositoryTypes){
+			if ("Business archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_BUSINESS_ARCHIVES);
+			}else if ("Church and religious archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_CHURCH_ARCHIVES);
+			}else if ("County/local authority archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_COUNTY_ARCHIVES);
+			}else if ("Specialised non-governmental archives and archives of other cultural (heritage) institutions".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_CULTURAL_ARCHIVES);
+			}else if ("Media archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_MEDIA_ARCHIVES);
+			}else if ("Municipal archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_MUNICIPAL_ARCHIVES);
+			}else if ("National archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_NATIONAL_ARCHIVES);
+			}else if ("Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_POLITICAL_ARCHIVES);
+			}else if ("Private persons and family archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_PRIVATE_ARCHIVES);
+			}else if ("Regional archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_REGIONAL_ARCHIVES);
+			}else if ("Specialised government archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_SPECIALISED_ARCHIVES);
+			}else if ("University and research archives".equalsIgnoreCase(repositoryType)){
+				result.add(SolrValues.EAG_REPOSITORY_TYPE_UNIVERSITY_ARCHIVES);
+			}
+
+		}
+		return result;
+	}
+	
 	protected static Set<String> getTextsWithoutMultiplity(NodeList nodeList, boolean strip) {
 		Set<String> results = new LinkedHashSet<String>();
 		for (int i = 0; i < nodeList.getLength(); i++) {
