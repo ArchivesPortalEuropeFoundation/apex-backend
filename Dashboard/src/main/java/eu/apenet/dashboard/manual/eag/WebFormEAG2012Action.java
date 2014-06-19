@@ -1,6 +1,5 @@
 package eu.apenet.dashboard.manual.eag;
 
-import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +36,7 @@ import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
 import eu.apenet.dashboard.manual.eag.utils.EAG2012Loader;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.eag.EagService;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
@@ -51,7 +51,6 @@ import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import java.util.logging.Level;
 
 /**
  * Action used to manage and store the new EAG2012.
@@ -850,7 +849,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 			// Save XML.
 			try {
-				String path = basePath + eag.getControl().getRecordId().getValue().replaceAll("[^a-zA-Z0-9\\-\\.]", "_") + ".xml";
+				String path = basePath + APEnetUtilities.convertToFilename(eag.getControl().getRecordId().getValue()) + ".xml";
 
 				JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
 				Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -896,6 +895,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						archivalInstitution.setRepositorycode(eag2012.getRecordIdValue());
 						archivalInstitutionDao.store(archivalInstitution);
 						log.info("EAG2012 stored to "+path);
+						EagService.publish(archivalInstitution);
 					}else{
 						log.error("Could not be stored EAG2012 path, reason: null archival institution");
 					}
