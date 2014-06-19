@@ -108,35 +108,6 @@
 								</xsl:call-template>
 							
 							</xsl:if>
-
-							
-							<!-- roleofthearchive only shown if there are values-->
-							<xsl:if test="current()/eag:repositoryRole and current()/eag:repositoryRole/text() != ''  and (current()/eag:repositoryRole/text() = 'Branch' or current()/eag:repositoryRole/text() = 'Head quarter' or current()/eag:repositoryRole/text() = 'Interim archive')">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.roleofthearchive')"/><xsl:text>:</xsl:text>
-									</td>
-									<td>
-										<xsl:variable name="role" select="current()/eag:repositoryRole/text()"></xsl:variable>
-										<div>
-											<xsl:choose>
-												<xsl:when test="$role = 'Branch'">
-													<xsl:value-of select = "ape:resource('eag2012.options.role.branch')"/>
-												</xsl:when>
-												<xsl:when test="$role = 'Head quarter'">
-													<xsl:value-of select = "ape:resource('eag2012.options.role.headquarters')"/>
-												</xsl:when>
-												<xsl:when test="$role = 'Interim archive'">
-													<xsl:value-of select = "ape:resource('eag2012.options.role.interimArchive')"/>
-												</xsl:when>	
-												<xsl:otherwise>
-													<xsl:text></xsl:text>
-												</xsl:otherwise>
-											</xsl:choose>
-										</div>
-									</td>
-								</tr>
-							</xsl:if>
 						</tbody>
 					</table>
 					<xsl:if test="eag:timetable/eag:opening/text() or eag:timetable/eag:closing/text()">				
