@@ -923,16 +923,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 			} catch (JAXBException jaxbe) {
 				log.info(jaxbe.getMessage());
-			} catch (APEnetException e) {
-				log.error(e.getMessage(),e);
-			} catch (SAXException e) {
-				log.error(e.getMessage());
-			} catch (IOException e) {
-				log.error(e.getMessage(),e);
-                        // belonging to Windows file lock workaround (see above)
-                        // } catch (InterruptedException ex) {
-                        //    log.error(ex.getMessage(),ex);
-                        }
+			} catch (Exception e) {
+				log.error(APEnetUtilities.generateThrowableLog(e));
+			} 
 		}
 		String result = this.editWebFormEAG2012();
 
