@@ -181,7 +181,7 @@ public class ManageQueueAction extends AbstractAction {
 			for (ArchivalInstitution archivalInstitution: archivalInstitutions){
 				try {
 				System.out.println("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
-				XmlEagParser.parseEadAndPublish(archivalInstitution);
+				XmlEagParser.parseAndPublish(archivalInstitution);
 				}catch(Exception e){
 					LOGGER.error(e.getMessage(), e);
 				}	
