@@ -16,7 +16,7 @@ function hideAndShow(idPrefix, shown) {
         $('#buttonPreviousTab').hide();
     }
     if (shown == "tab-control") {
-        $('#buttonNextTab').hide();a
+        $('#buttonNextTab').hide();
     }
 }
 
