@@ -31,6 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.eag.EagService;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
@@ -263,7 +264,7 @@ public class ContentUtils {
 				for (AiAlternativeName aiAlternativeName : listToBeRemoved) {
 					aiAlternativeNameDAO.deleteSimple(aiAlternativeName);
 				}
-
+				EagService.unpublish(ai);
 				// 8. Finally delete the archival institution
 				LOGGER.debug("Deleting the registries in archival_institution entity related to the institution: "
 						+ ai.getAiId());
