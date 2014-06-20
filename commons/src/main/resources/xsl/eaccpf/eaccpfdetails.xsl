@@ -26,9 +26,9 @@
 		<xsl:variable name="entityType" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
 		<h1 class="blockHeader">
 		    <!-- nameEntry -->
-	      	<xsl:call-template name="multilanguageName">
-		       		 <xsl:with-param name="list" select="//eac:nameEntry"/>
-		    </xsl:call-template> 
+		      	<xsl:call-template name="multilanguageName">
+			       		 <xsl:with-param name="list" select="//eac:nameEntry"/>
+			    </xsl:call-template> 
 			<!-- dates -->
 			<xsl:if test="$existDates/eac:date/text() or $existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate or $existDates/eac:dateSet/eac:date/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate">
 				<xsl:text> (</xsl:text>
@@ -65,7 +65,8 @@
 		</h1>
 		<div id="details">	
 			<!-- Dates -->
-			<xsl:if test="$existDates/eac:dateRange/eac:fromDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text()">
+			<xsl:if test="$existDates/eac:dateRange/eac:fromDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']/text()
+			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']/text()">
 				<div class="row">
 						<div class="leftcolumn">
 							<h2>
@@ -90,7 +91,7 @@
 									</xsl:call-template>	
 							</xsl:if>
 							<xsl:if test="$entityType = 'person' or $entityType = 'family'">
-								<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']">
+								<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']/text()">
 							  		<xsl:text>, </xsl:text>
 							  		<xsl:call-template name="multilanguagePlaceEntry">
 							  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']"/>
@@ -98,7 +99,7 @@
 							    </xsl:if>
 							</xsl:if>
 							<xsl:if test="$entityType = 'corporateBody'">
-								<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']">
+								<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']/text()">
 							  		<xsl:text>, </xsl:text>
 							  		<xsl:call-template name="multilanguagePlaceEntry">
 							  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']"/>
@@ -108,7 +109,8 @@
 						</div>
 				</div>
 			</xsl:if>
-			<xsl:if test="$existDates/eac:dateRange/eac:toDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:toDate/text()">
+			<xsl:if test="$existDates/eac:dateRange/eac:toDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:toDate/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']/text()
+			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']/text()">
 					<div class="row">
 							<div class="leftcolumn">
 						   		<h2>
@@ -133,7 +135,7 @@
 									</xsl:call-template>		
 								</xsl:if>	
 							    <xsl:if test="$entityType = 'person' or $entityType = 'family'">
-									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']">
+									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']/text()">
 								  		<xsl:text>, </xsl:text>
 								  		<xsl:call-template name="multilanguagePlaceEntry">
 								  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']"/>
@@ -141,7 +143,7 @@
 								    </xsl:if>
 								</xsl:if>
 								<xsl:if test="$entityType = 'corporateBody'">
-									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']">
+									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']/text()">
 								  		<xsl:text>, </xsl:text>
 								  		<xsl:call-template name="multilanguagePlaceEntry">
 								  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']"/>
@@ -153,7 +155,7 @@
 			</xsl:if> 
 			<!-- alternative names -->
 			<xsl:if test="count(//eac:nameEntry) > 1">
-				<div class="row">
+				<div class="row" id="titleAlternativeName">
 					<div class="leftcolumn">
 				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.alternativeForms')"/><xsl:text>:</xsl:text></h2>
 				   	</div>
@@ -1627,6 +1629,9 @@
 	  	<xsl:choose>
         	<xsl:when test="$dateUnknow='unknown'">
         		<xsl:text>?</xsl:text>
+        	</xsl:when>
+        	<xsl:when test="$dateUnknow='' or not($dateUnknow)">
+        		<xsl:text>-</xsl:text>
         	</xsl:when>
         	<xsl:otherwise>
         		<xsl:apply-templates select="$dateUnknow" mode="other"/>
