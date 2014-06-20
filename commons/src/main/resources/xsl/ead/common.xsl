@@ -95,21 +95,18 @@
 							<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"/>
 									<xsl:choose>
 										<xsl:when test='$type eq "text" or $type eq "image" or $type eq "sound" or $type eq "video" or $type eq "3d"'>
-											<span class="icon_dao_type_{$type}" title="{$dao.title}">
-												<xsl:value-of select="$dao.title" />
-											</span>								
+											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/{$type}_big.gif"/>
+											<span><xsl:value-of select="$dao.title" /></span>
 										</xsl:when>
 										<xsl:otherwise>
-											<span class="icon_dao_type_unspecified" title="{$dao.title}">
-												<xsl:value-of select="$dao.title" />
-											</span>									
+											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif"/>
+											<span><xsl:value-of select="$dao.title" /></span>					
 										</xsl:otherwise>
 									</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<span class="icon_dao_type_unspecified" title="{$dao.title}">
-								<xsl:value-of select="$dao.title" />
-							</span>
+							<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif"/>
+							<span><xsl:value-of select="$dao.title" /></span>	
 						</xsl:otherwise>
 					</xsl:choose>
 				</a><xsl:text> </xsl:text>
@@ -737,22 +734,28 @@
 								<xsl:when test="./@xlink:role">
 									<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"></xsl:variable>
 									<xsl:choose>
-										<xsl:when test='$type eq "text" or $type eq "image" or $type eq "sound" or $type eq "video" or $type eq "3d"'>
-											<span class="icon_dao_type_{$type}" title="{$dao.title}">
-												<xsl:value-of select="$dao.title" />
-											</span>								
+										<xsl:when test="./@xlink:role">
+											<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"/>
+													<xsl:choose>
+														<xsl:when test='$type eq "text" or $type eq "image" or $type eq "sound" or $type eq "video" or $type eq "3d"'>
+															<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/{$type}_big.gif"/>
+															<span><xsl:value-of select="$dao.title" /></span>
+														</xsl:when>
+														<xsl:otherwise>
+															<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif"/>
+															<span><xsl:value-of select="$dao.title" /></span>					
+														</xsl:otherwise>
+													</xsl:choose>
 										</xsl:when>
 										<xsl:otherwise>
-											<span class="icon_dao_type_unspecified" title="{$dao.title}">
-												<xsl:value-of select="$dao.title" />
-											</span>									
+											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif"/>
+											<span><xsl:value-of select="$dao.title" /></span>	
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
-									<span class="icon_dao_type_unspecified" title="{$dao.title}">
-										<xsl:value-of select="$dao.title" />
-									</span>
+											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif"/>
+											<span><xsl:value-of select="$dao.title" /></span>	
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>
