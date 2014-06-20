@@ -58,18 +58,52 @@ public class ShowWarningsAction extends ActionSupport {
             EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO().findById(id, xmlType.getClazz());
             for (Warnings warnings : eacCpf.getWarningses()) {
                 if (warnings.getIswarning() == iswarning) {
-                    abstract_data = warnings.getAbstract_();
+                    abstract_data = this.scapeCharacters(warnings.getAbstract_());
                 }
             }
         } else {
             Ead ead = DAOFactory.instance().getEadDAO().findById(id, xmlType.getClazz());
             for (Warnings warnings : ead.getWarningses()) {
                 if (warnings.getIswarning() == iswarning) {
-                    abstract_data = warnings.getAbstract_();
+                    abstract_data = this.scapeCharacters(warnings.getAbstract_());
                 }
             }
         }
         return SUCCESS;
+    }
+
+    /**
+     * Method to escape the content to display in order to prevent script injection.
+     *
+     * @param abstractText Text that should be escaped.
+     * @return Escaped text.
+     */
+    private String scapeCharacters(String abstractText) {
+    	String fixedAbstract = "";
+    	String tempAbstract = abstractText;
+
+    	// Checks if exists text that could be escaped.
+    	while (tempAbstract.indexOf("'") != -1) {
+    		String temp = tempAbstract.substring(tempAbstract.indexOf("'") + 1);
+    		fixedAbstract += tempAbstract.substring(0, tempAbstract.indexOf("'") + 1);
+
+    		// Escape the text between char "'".
+    		if (temp.indexOf("'") != -1) {
+    			temp = temp.substring(0, temp.indexOf("'") + 1);
+    			temp = temp.replaceAll(">", "&#62;").replaceAll("<","&#60;");
+    		}
+
+    		fixedAbstract += temp;
+
+    		tempAbstract = tempAbstract.substring(tempAbstract.indexOf("'") + 1);
+    		if (tempAbstract.indexOf("'") != -1) {
+    			tempAbstract = tempAbstract.substring(tempAbstract.indexOf("'") + 1);
+    		}
+    	}
+
+    	fixedAbstract += tempAbstract;
+
+    	return fixedAbstract;
     }
 
 }
