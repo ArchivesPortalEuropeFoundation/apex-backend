@@ -17,7 +17,7 @@ public class EadTag extends AbstractEadTag {
 	}
 
 	@Override
-	protected boolean isPreview() {
+	protected boolean isDashboard() {
 		return true;
 	}
 
