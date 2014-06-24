@@ -56,7 +56,7 @@
 		<level value="debug" />
 		<appender-ref ref="publish" /> 
 	</logger>	
-	<logger name="eu.apenet.dashboard.services.eag.publish.EagSolrPublisher">
+	<logger name="eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher">
 		<level value="debug" />
 		<appender-ref ref="publish" /> 
 	</logger>	
