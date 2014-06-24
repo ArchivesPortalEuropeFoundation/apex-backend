@@ -492,13 +492,13 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 	// This method retrieves the number of archival institutions which have
 	// content indexed in the System
-	public Long countArchivalInstitutionsWithContentIndexed() {
+	public Long countArchivalInstitutionsWithEag() {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
 		List<Predicate> whereClause = new ArrayList<Predicate>();
 		whereClause.add(criteriaBuilder.equal(from.get("group"), false));
-		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));
+		whereClause.add(criteriaBuilder.isNotNull(from.get("eagPath")));
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		cq.select(criteriaBuilder.countDistinct(from));
 
