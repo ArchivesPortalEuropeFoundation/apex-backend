@@ -34,6 +34,7 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 	private String secondDisplayUrl;
 	private String aiId;
 	private String type;
+	private String preview;
 	private final static Logger LOG = Logger.getLogger(AbstractEadTag.class);
 	private static final List<SolrField> DEFAULT_HIGHLIGHT_FIELDS = SolrField.getDefaults();
 
@@ -60,8 +61,14 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 			if (xslLocation == null){
 				LOG.warn("EAD xsl type does not exist: " + getType());
 			}else {
+				String typeOfDisplay = "normal";
+				if ("true".equalsIgnoreCase(getPreview())){
+					typeOfDisplay = "preview";
+				}else if (CDETAILS_CHILD_XSLT.equalsIgnoreCase(getType())){
+					typeOfDisplay = "child";
+				}
 				EadXslt.convertEadToHtml(xslLocation, this.getJspContext().getOut(), xmlSource, searchTerms,
-					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(), getSolrStopwordsUrl());
+					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isDashboard(), getSolrStopwordsUrl(),typeOfDisplay);
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -73,7 +80,9 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 
 	protected abstract String getSolrStopwordsUrl();
 	
-	protected abstract boolean isPreview();
+	protected abstract boolean isDashboard();
+	
+
 
 	public String getXml() {
 		return xml;
@@ -121,6 +130,14 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getPreview() {
+		return preview;
+	}
+
+	public void setPreview(String preview) {
+		this.preview = preview;
 	}
 
 }
