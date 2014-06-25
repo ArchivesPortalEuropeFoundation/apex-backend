@@ -80,4 +80,9 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>			
 	</tag>		
+	<tag>
+		<name>environment</name>
+		<tag-class>eu.apenet.commons.view.jsp.EnvironmentTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>		
 </taglib>
