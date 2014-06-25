@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="1.0" xmlns:fn="http://www.w3.org/2005/xpath-functions"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns='http://www.w3.org/1999/xhtml' xmlns:eac="urn:isbn:1-931666-33-4"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions"
@@ -19,7 +19,7 @@
 	<xsl:include href="relatedNames.xsl"/>
 	<xsl:include href="archives.xsl"/>
 	<xsl:template match="text()" mode="other">
-		<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
+		<xsl:value-of select="fn:normalize-space(ape:highlight(., 'other'))" disable-output-escaping="yes" />
 	</xsl:template>
 	<xsl:template match="/">
 		<xsl:variable name="existDates" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates"/>
