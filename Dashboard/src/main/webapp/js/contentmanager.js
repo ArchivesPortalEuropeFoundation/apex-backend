@@ -12,6 +12,13 @@ function selectSelected(xmlTypeId){
 }
 
 function initSearchOptions() {
+	
+    if($('#newSearchForm_xmlTypeId0').is(':checked')) {
+    	$(".findingAidOptions").removeClass("hidden");
+    } else {
+    	$(".findingAidOptions").addClass("hidden");
+    }
+	
 	$(".typeRadio").click(function(event) {
 		 hideOrShowSelectAllFAsWindow();
 		if ($(this).val() == 0){

@@ -51,16 +51,16 @@
 					<th></th>
 					<th><s:text name="content.message.published" />:</th>
 					<td><s:checkboxlist list="publishedStatusList" name="publishedStatus" /></td>
-                                        <c:choose>
-                                            <c:when test="${xmlTypeId == '2'}">
-                                                <th class="findingAidOptions"></th>
-                                                <td class="findingAidOptions"></td>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
-                                                <td class="findingAidOptions"><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
-                                            </c:otherwise>
-                                        </c:choose>
+	                    <c:choose>
+	                        <c:when test="${xmlTypeId == '2'}">
+	                            <th class="findingAidOptions"></th>
+	                            <td class="findingAidOptions"></td>
+	                        </c:when>
+	                        <c:otherwise>
+	                            <th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
+	                            <td class="findingAidOptions"><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
+	                        </c:otherwise>
+	                    </c:choose>
 				</tr>
 				<tr>
 					<th></th>
@@ -85,17 +85,33 @@
 		<div id="ead-results-container">
 			<c:choose>
 				<c:when test="${results.totalNumberOfResults > 0 }">
-                                    <c:choose>
-                                        <c:when test="${xmlTypeId == '2'}">
-                                            <jsp:include page="contentmanager-eaccpf-results.jsp" />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <jsp:include page="contentmanager-results.jsp" />
-                                        </c:otherwise>
-                                    </c:choose>
+                    <c:choose>
+                        <c:when test="${xmlTypeId == '2'}">
+                            <jsp:include page="contentmanager-eaccpf-results.jsp" />
+                        </c:when>
+                        <c:otherwise>
+                            <jsp:include page="contentmanager-results.jsp" />
+                        </c:otherwise>
+                    </c:choose>
 				</c:when>
 				<c:otherwise>
-					<div id="noresults"><s:text name="content.message.noresults" /></div>
+					<c:choose>
+                        <c:when test="${xmlTypeId == '1'}">
+						<!-- no results page with HG creation -->
+							<div class="left">
+				                <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
+			            	</div>
+                            <div id="noresults">
+                            	<s:text name="content.message.noresults" />
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                        <!-- no results page with no HG creation link -->
+                            <div id="noresults">
+                            	<s:text name="content.message.noresults" />
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
 				</c:otherwise>
 			</c:choose>
 		</div>
