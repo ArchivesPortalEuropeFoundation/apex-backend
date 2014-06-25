@@ -101,9 +101,9 @@ public class ConvertTask extends AbstractEadTask {
 				int count = 0;
 				for (String xslWarningLine : xslWarningLines) {
 					if ((count++) % 2 == 0)
-						xslWarnings.append("<span class=\"colorwarning1\">");
+						xslWarnings.append("<span class=\"validation-warning\">");
 					else
-						xslWarnings.append("<span class=\"colorwarning2\">");
+						xslWarnings.append("<span class=\"validation-error\">");
 					xslWarnings.append(xslWarningLine).append("</span>").append("<br/>");
 				}
 

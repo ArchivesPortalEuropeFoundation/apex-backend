@@ -12,6 +12,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.io.FileUtils;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
 
@@ -79,18 +80,27 @@ public class ValidateTask extends AbstractEadTask {
 					}
 				}
 				/* End: Special for Spanish non UTF8 data */
-
+				boolean errors = false;
+				StringBuilder warn = new StringBuilder();
 				if (exceptions == null) {
-					exceptions = DocumentValidation.xmlValidation(new FileInputStream(file), schema);
+					try {
+						exceptions = DocumentValidation.xmlValidation(new FileInputStream(file), schema);
+					}catch (SAXException sax){
+						errors = true;
+						warn.append("<span class=\"validation-error\">");
+						warn.append(sax.getMessage()).append("</span>").append("<br />");
+						ead.setValidated(ValidatedState.FATAL_ERROR);
+					}
 				}
+
 				if (exceptions != null) {
-					StringBuilder warn = new StringBuilder();
+					errors = true;
 					int count = 0;
 					for (SAXParseException exception : exceptions) {
 						if ((count++) % 2 == 0) {
-							warn.append("<span class=\"colorwarning1\">");
+							warn.append("<span class=\"validation-warning\">");
 						} else {
-							warn.append("<span class=\"colorwarning2\">");
+							warn.append("<span class=\"validation-error\">");
 						}
 						warn.append("l.").append(exception.getLineNumber()).append(" c.")
 								.append(exception.getColumnNumber()).append(": ").append(exception.getMessage())
@@ -98,6 +108,10 @@ public class ValidateTask extends AbstractEadTask {
 					}
                     if(ead.isConverted())
                         ead.setValidated(ValidatedState.FATAL_ERROR);
+
+
+				}
+				if (errors){
 					boolean warningExists = false;
 					Set<Warnings> warningsFromEad = ead.getWarningses();
 					if (!warningsFromEad.isEmpty()) {
@@ -116,9 +130,8 @@ public class ValidateTask extends AbstractEadTask {
 						warnings.setIswarning(true);
 						warnings.setEad(ead);
 						ead.getWarningses().add(warnings);
-					}
-
-				} else {
+					}	
+				}else {
 					ead.setValidated(ValidatedState.VALIDATED);
 					Set<Warnings> warningsFromEad = ead.getWarningses();
 					if (!warningsFromEad.isEmpty()) {
