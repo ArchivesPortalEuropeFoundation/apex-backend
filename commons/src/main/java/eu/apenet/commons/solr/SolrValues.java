@@ -3,6 +3,7 @@ package eu.apenet.commons.solr;
 import org.apache.commons.lang.StringUtils;
 
 public final class SolrValues {
+
 	public static final String ESCAPING_CHARACTER = "\\\\";
 	public final static String HG_PREFIX = "H";
 	public final static String FA_PREFIX = "F";
@@ -23,7 +24,9 @@ public final class SolrValues {
 	public final static String DATE_TYPE_NORMALIZED_NO_ENDDATE = "noenddate";
 	public static final String LEVEL_CLEVEL = "clevel";
 	public static final String LEVEL_ARCHDESC = "archdesc";
-
+	public static final String ROLE_DAO_UNSPECIFIED = "UNSPECIFIED";
+	public static final String[] ROLE_DAOS_ALL = new String[] { "IMAGE", "TEXT", "SOUND", "VIDEO", "3D", ROLE_DAO_UNSPECIFIED};
+	
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_FAMILY = "family";
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_PERSON = "person";
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_CORPORATE_BODY = "corporatebody";
