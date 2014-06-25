@@ -467,11 +467,11 @@ text-align:  center;
 	text-align: center;
 }
 
-.colorwarning1 {
+.validation-warning {
 	color: #339933;
 }
 
-.colorwarning2 {
+.validation-error {
 	color: #900000;
 }
 
