@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.services.ead.xml.stream.publish;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
@@ -54,7 +56,8 @@ public class EadPublishDataFiller {
 	private List<XmlStreamHandler> archdescClevelHandlers = new ArrayList<XmlStreamHandler>();
 	private List<XmlStreamHandler> eadHandlers = new ArrayList<XmlStreamHandler>();
 	private boolean archDescCLevelParser = false;
-
+	private final static List<String> POSSIBLE_ROLE_DAO_VALUES = Arrays.asList(SolrValues.ROLE_DAOS_ALL);
+	
 	public EadPublishDataFiller(boolean archDescCLevelParser) {
 		this.archDescCLevelParser = archDescCLevelParser;
 		if (archDescCLevelParser) {
@@ -199,7 +202,10 @@ public class EadPublishDataFiller {
 		publishData.setNumberOfDaos(countDaoHandler.getCount());
 		publishData.setLangmaterial(langmaterialHander.getResultAsStringWithWhitespace());
 		for (String roledao : daoRoleHandler.getResult()) {
-			publishData.getRoledao().add(roledao);
+			String roledaoTemp = roledao.toUpperCase();
+			if (POSSIBLE_ROLE_DAO_VALUES.contains(roledaoTemp)){
+				publishData.getRoledao().add(roledaoTemp);
+			}
 		}
 		StringBuilder otherUnitid = new StringBuilder();
 		add(otherUnitid, unitidHandler.getOtherResultsAsStringWithWhitespace());
