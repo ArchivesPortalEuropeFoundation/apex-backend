@@ -801,7 +801,7 @@
 			</ul>
 			<xsl:if test="not($isPreview) and not($isChild)">
 			<div class="linkButton" id="moreDaosButton">
-				<a href="javascript:void(0)"><xsl:value-of select="ape:resource('eadcontent.dao.more')" /></a>
+				<a href="javascript:void(0)"><xsl:value-of select="ape:resource('eadcontent.dao.more')" /> (<span></span>)</a>
 			</div>
 			</xsl:if>
 		</div>
