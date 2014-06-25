@@ -63,9 +63,13 @@
 			</table> 
 		</s:form>
 	</div>
-	<c:if test="${harvestingStarted}">
-		<div id="harvestingStarted">
-			<s:text name="content.message.harvesting" />
+	<c:if test="${harvestingStarted or !queueActive}">
+		<div id="queueStopped">
+			<c:choose>
+				<c:when test="${harvestingStarted}"><s:text name="content.message.harvesting" /></c:when>
+				<c:when test="${!queueActive}"><s:text name="content.message.queue.stopped" /></c:when>
+			</c:choose>
+			
 		</div>
 	</c:if>
 	<div id="eads">
