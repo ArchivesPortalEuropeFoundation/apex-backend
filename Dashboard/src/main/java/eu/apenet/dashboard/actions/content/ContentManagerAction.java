@@ -1,17 +1,18 @@
 package eu.apenet.dashboard.actions.content;
 
-import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.content.eaccpf.EacCpfContentManagerResults;
+import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
+import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
-import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -325,7 +326,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
         getServletRequest().setAttribute("results", results);
         getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
-        
+        getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
         if (countResults>0)
         	return SUCCESS;
         else
