@@ -55,6 +55,7 @@
 	              			  <div id="logo"></div>
 	              			</a>
 	              			<div id="left-header"></div><div class="right-header"></div>
+	              			<div id="headerText"><dashboard:environment /></div>
               			   <!-- <div id="titledashboard"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></div> </div>-->
               			 </div>              
                    <div id="menubar" >
