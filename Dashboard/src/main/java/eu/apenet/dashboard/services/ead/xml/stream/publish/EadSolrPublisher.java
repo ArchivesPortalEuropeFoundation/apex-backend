@@ -319,7 +319,7 @@ public class EadSolrPublisher {
 		boolean dao = publishData.getNumberOfDaos() > 0;
 		doc1.addField(SolrFields.DAO, dao);
 		if (dao && publishData.getRoledao().size() == 0) {
-			doc1.addField(SolrFields.ROLEDAO, "UNSPECIFIED");
+			doc1.addField(SolrFields.ROLEDAO, SolrValues.ROLE_DAO_UNSPECIFIED);
 		} else if (dao) {
 			doc1.addField(SolrFields.ROLEDAO, publishData.getRoledao());
 		}
