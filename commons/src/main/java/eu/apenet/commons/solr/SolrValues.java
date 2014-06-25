@@ -21,6 +21,8 @@ public final class SolrValues {
 	public final static String DATE_TYPE_NORMALIZED = "normal";
 	public static final String LEVEL_CLEVEL = "clevel";
 	public static final String LEVEL_ARCHDESC = "archdesc";
+	public static final String ROLE_DAO_UNSPECIFIED = "UNSPECIFIED";
+	public static final String[] ROLE_DAOS_ALL = new String[] { "IMAGE", "TEXT", "SOUND", "VIDEO", "3D", ROLE_DAO_UNSPECIFIED};
 	
 	public static String escapeSolrCharacters(String value){
 		if (StringUtils.isNotBlank(value)){
