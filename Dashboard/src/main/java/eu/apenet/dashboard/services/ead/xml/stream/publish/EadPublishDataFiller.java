@@ -204,7 +204,7 @@ public class EadPublishDataFiller {
 		for (String roledao : daoRoleHandler.getResult()) {
 			String roledaoTemp = roledao.toUpperCase();
 			if (POSSIBLE_ROLE_DAO_VALUES.contains(roledaoTemp)){
-				publishData.getRoledao().add(roledao);
+				publishData.getRoledao().add(roledaoTemp);
 			}
 		}
 		StringBuilder otherUnitid = new StringBuilder();
