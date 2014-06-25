@@ -720,18 +720,19 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>		
-		<xsl:variable name="cssWidth" select="'200px'"/>
 		<xsl:variable name="thumbnailHref" select="'/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif'"/>
+		<xsl:variable name="thumbnail" select='ead:dao[@xlink:title="thumbnail"]' />
+		<xsl:variable name="numberOfThumbnails" select='count($thumbnail)' />
 		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.dao')" />
 		</h2>
 		<div class="ead-content">
-			<ul class="daolist">
-			</ul>
-			<ul class="daolist-orig">
+			<div class="daolistContainer">
+			<div class="daolist">
+			</div>
+			<div class="daolist-orig">
 			<xsl:for-each select='ead:dao[@xlink:title!="thumbnail" or not(@xlink:title)]' >
 				<xsl:variable name="linkPosition" select="position()" />
-				<xsl:variable name="thumbnail" select='parent::node()/ead:dao[@xlink:title="thumbnail"]' />
 				<xsl:variable name="href" select="./@xlink:href" />
 				<xsl:if test="number($maxNumber) eq 0 or $linkPosition &lt;= number($maxNumber)">
 					<xsl:variable name="dao.title">
@@ -749,7 +750,7 @@
 					<xsl:choose>
 						<xsl:when test="$thumbnail">
 							<xsl:choose>
-								<xsl:when test="count($thumbnail) >= $linkPosition">
+								<xsl:when test="$numberOfThumbnails >= $linkPosition">
 									<xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href" />
 								</xsl:when>
 								<xsl:otherwise>
@@ -786,25 +787,25 @@
 					</xsl:choose>
 					</xsl:variable>
 					<xsl:choose>
-						<xsl:when test="number($maxDisplayNumber) eq 0 or $linkPosition &lt;=  number($maxDisplayNumber)">
-						<li><a href="{$href}" target="_blank"><img width="{$cssWidth}" src="{$thumbnailHref}"/>
-							<span><xsl:value-of select="$dao.title" /></span></a></li>
+						<xsl:when test="number($maxDisplayNumber) eq 0 or $linkPosition &lt;= number($maxDisplayNumber)">
+						<div class="dao"><a href="{$href}" target="_blank"><img src="{$thumbnailHref}" alt="{$dao.title}" title="{$dao.title}"/>
+							<span><xsl:value-of select="$dao.title" /></span></a></div>
 						</xsl:when>
 						<xsl:otherwise>
-						<li class="hidden">
-							<a href="{$href}" target="_blank"><img width="{$cssWidth}" data-src="{$thumbnailHref}"/>
-							<span><xsl:value-of select="$dao.title" /></span></a></li>
+						<div class="dao">
+							<span><xsl:value-of select="ape:resource('eadcontent.dao.more.lowerlevel')" /></span></div>
 						</xsl:otherwise>
 					</xsl:choose>
 					</xsl:if>
+					
 			</xsl:for-each>
-			</ul>
+			</div>
 			<xsl:if test="not($isPreview) and not($isChild)">
 			<div class="linkButton" id="moreDaosButton">
 				<a href="javascript:void(0)"><xsl:value-of select="ape:resource('eadcontent.dao.more')" /> (<span></span>)</a>
 			</div>
 			</xsl:if>
-		</div>
+		</div></div>
 	</xsl:template>
 	<xsl:template name="origination">
 		<h2>
