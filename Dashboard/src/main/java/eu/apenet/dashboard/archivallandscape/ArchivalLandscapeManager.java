@@ -33,6 +33,7 @@ import org.xml.sax.SAXParseException;
 
 import com.ctc.wstx.exc.WstxLazyException;
 import com.ctc.wstx.exc.WstxUnexpectedCharException;
+import com.opensymphony.xwork2.Action;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -77,9 +78,18 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	// Error when an institution has duplicated identifiers.
 	private static final String ERROR_DUPLICATE_IDENTIFIERS = "errorDuplicateIdentifiers";
 	private static final String ERROR_NAMES_CHANGED = "changedNames";
-	// Error when the name of te institution hasn't language.
+	// Error when the name of the institution hasn't language.
 	private static final String ERROR_LANG = "errorLang";
 	private static final String INVALID = "invalid";
+
+	// Constants for type of XML ingest process.
+	private static final String PROCESS_CONTINUE = "continue";
+	private static final String PROCESS_KEEP = "keepIds";
+	private static final String PROCESS_OVERWRITE = "overwriteIds";
+
+	// Constants for the institutions with same name.
+	private static final String ADD = "add";
+	private static final String DELETE = "delete";
 
 	private List<ArchivalInstitution> totalInstitutions;
 	private Map<String,ArchivalInstitution> groupsInsertedIntoDDBB;
@@ -125,7 +135,24 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private List<ArchivalInstitution> newSameIdentifierInstitutionsFile; //new institutions with same identifier - it's used into jsp
 	private List<ArchivalInstitution> oldEmptyIdentifierInstitutionsFile; //old institutions with empty identifier - it's used into jsp
 	private List<ArchivalInstitution> newEmptyIdentifierInstitutionsFile; //new institutions with empty identifier - it's used into jsp
-	
+	private List<ArchivalInstitution> oldDuplicateNameInstitutions; //old institutions with duplicate name - it's used into jsp
+	private List<ArchivalInstitution> newDuplicateNameInstitutions; //new institutions with duplicate name - it's used into jsp
+	private Map<String, List<ArchivalInstitution>> oldDuplicateNameInstitutionsMap; //old institutions with duplicate name - it's used into jsp
+	private Map<String, List<ArchivalInstitution>> newDuplicateNameInstitutionsMap; //new institutions with duplicate name - it's used into jsp
+	private List<String> addInstitutionsFromSelect; // List of identifiers of institutions that should be added  - it's used into jsp
+	private List<String> deleteInstitutionsFromSelect; // List of identifiers of institutions that should be deleted  - it's used into jsp
+	private List<String> oldInstitutionsFromSelect; // List of identifiers of institutions in database  - it's used into jsp
+	private List<String> newInstitutionsFromSelect; // List of identifiers of institutions in file  - it's used into jsp
+
+	private Set<String> nameSet; // Set of same names - it's used into jsp
+
+	// Variable for overwrite identifiers.
+	private String overwriteIDs;
+
+	// List of elements which identifiers should be overwritten or maintained.
+	private List<String> oldSameNameInstitution;
+	private List<String> newSameNameInstitution;
+
 	public List<ArchivalInstitution> getUpdatedInstitutions() {
 		return this.updatedInstitutions;
 	}
@@ -175,6 +202,125 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return this.newEmptyIdentifierInstitutionsFile;
 	}
 	
+	/**
+	 * @return the oldDuplicateNameInstitutions
+	 */
+	public List<ArchivalInstitution> getOldDuplicateNameInstitutions() {
+		return this.oldDuplicateNameInstitutions;
+	}
+
+	/**
+	 * @param oldDuplicateNameInstitutions the oldDuplicateNameInstitutions to set
+	 */
+	public void setOldDuplicateNameInstitutions(
+			List<ArchivalInstitution> oldDuplicateNameInstitutions) {
+		this.oldDuplicateNameInstitutions = oldDuplicateNameInstitutions;
+	}
+
+	/**
+	 * @return the newDuplicateNameInstitutions
+	 */
+	public List<ArchivalInstitution> getNewDuplicateNameInstitutions() {
+		return this.newDuplicateNameInstitutions;
+	}
+
+	/**
+	 * @param newDuplicateNameInstitutions the newDuplicateNameInstitutions to set
+	 */
+	public void setNewDuplicateNameInstitutions(
+			List<ArchivalInstitution> newDuplicateNameInstitutions) {
+		this.newDuplicateNameInstitutions = newDuplicateNameInstitutions;
+	}
+	
+	/**
+	 * @return the oldDuplicateNameInstitutionsMap
+	 */
+	public Map<String, List<ArchivalInstitution>> getOldDuplicateNameInstitutionsMap() {
+		return this.oldDuplicateNameInstitutionsMap;
+	}
+
+	/**
+	 * @param oldDuplicateNameInstitutionsMap the oldDuplicateNameInstitutionsMap to set
+	 */
+	public void setOldDuplicateNameInstitutionsMap(
+			Map<String, List<ArchivalInstitution>> oldDuplicateNameInstitutionsMap) {
+		this.oldDuplicateNameInstitutionsMap = oldDuplicateNameInstitutionsMap;
+	}
+
+	/**
+	 * @return the newDuplicateNameInstitutionsMap
+	 */
+	public Map<String, List<ArchivalInstitution>> getNewDuplicateNameInstitutionsMap() {
+		return this.newDuplicateNameInstitutionsMap;
+	}
+
+	/**
+	 * @param newDuplicateNameInstitutionsMap the newDuplicateNameInstitutionsMap to set
+	 */
+	public void setNewDuplicateNameInstitutionsMap(
+			Map<String, List<ArchivalInstitution>> newDuplicateNameInstitutionsMap) {
+		this.newDuplicateNameInstitutionsMap = newDuplicateNameInstitutionsMap;
+	}
+
+	/**
+	 * @return the addInstitutionsFromSelect
+	 */
+	public List<String> getAddInstitutionsFromSelect() {
+		return this.addInstitutionsFromSelect;
+	}
+
+	/**
+	 * @param addInstitutionsFromSelect the addInstitutionsFromSelect to set
+	 */
+	public void setAddInstitutionsFromSelect(List<String> addInstitutionsFromSelect) {
+		this.addInstitutionsFromSelect = addInstitutionsFromSelect;
+	}
+
+	/**
+	 * @return the deleteInstitutionsFromSelect
+	 */
+	public List<String> getDeleteInstitutionsFromSelect() {
+		return this.deleteInstitutionsFromSelect;
+	}
+
+	/**
+	 * @param deleteInstitutionsFromSelect the deleteInstitutionsFromSelect to set
+	 */
+	public void setDeleteInstitutionsFromSelect(
+			List<String> deleteInstitutionsFromSelect) {
+		this.deleteInstitutionsFromSelect = deleteInstitutionsFromSelect;
+	}
+
+	public List<String> getOldInstitutionsFromSelect() {
+		return this.oldInstitutionsFromSelect;
+	}
+
+	public void setOldInstitutionsFromSelect(List<String> oldInstitutionsFromSelect) {
+		this.oldInstitutionsFromSelect = oldInstitutionsFromSelect;
+	}
+
+	public List<String> getNewInstitutionsFromSelect() {
+		return this.newInstitutionsFromSelect;
+	}
+
+	public void setNewInstitutionsFromSelect(List<String> newInstitutionsFromSelect) {
+		this.newInstitutionsFromSelect = newInstitutionsFromSelect;
+	}
+
+	/**
+	 * @return the nameSet
+	 */
+	public Set<String> getNameSet() {
+		return this.nameSet;
+	}
+
+	/**
+	 * @param nameSet the nameSet to set
+	 */
+	public void setNameSet(Set<String> nameSet) {
+		this.nameSet = nameSet;
+	}
+
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
 	}
@@ -254,6 +400,48 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	public void setInvalidChars(boolean invalidChars) {
 		this.invalidChars = invalidChars;
+	}
+
+	/**
+	 * @return the overwriteIDs
+	 */
+	public String getOverwriteIDs() {
+		return this.overwriteIDs;
+	}
+
+	/**
+	 * @param overwriteIDs the overwriteIDs to set
+	 */
+	public void setOverwriteIDs(String overwriteIDs) {
+		this.overwriteIDs = overwriteIDs;
+	}
+
+	/**
+	 * @return the oldSameNameInstitution
+	 */
+	public List<String> getOldSameNameInstitution() {
+		return this.oldSameNameInstitution;
+	}
+
+	/**
+	 * @param oldSameNameInstitution the oldSameNameInstitution to set
+	 */
+	public void setOldSameNameInstitution(List<String> oldSameNameInstitution) {
+		this.oldSameNameInstitution = oldSameNameInstitution;
+	}
+
+	/**
+	 * @return the newSameNameInstitution
+	 */
+	public List<String> getNewSameNameInstitution() {
+		return this.newSameNameInstitution;
+	}
+
+	/**
+	 * @param newSameNameInstitution the newSameNameInstitution to set
+	 */
+	public void setNewSameNameInstitution(List<String> newSameNameInstitution) {
+		this.newSameNameInstitution = newSameNameInstitution;
 	}
 
 	/**
@@ -427,12 +615,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	private void cleanMainFiles(){
 		if (httpFile != null){
+			String tempPath = this.httpFile.getAbsolutePath() + ".tmp";
+			File tempFile = new File(tempPath);
+
 			try {
-			File parentDirectory = httpFile.getParentFile();
-			ContentUtils.deleteFile(httpFile, false);
-			if (parentDirectory.list().length == 0){
-				ContentUtils.deleteFile(parentDirectory, false);
-			}
+				File parentDirectory = httpFile.getParentFile();
+				ContentUtils.deleteFile(httpFile, false);
+				ContentUtils.deleteFile(tempFile, false);
+				if (parentDirectory.list().length == 0){
+					ContentUtils.deleteFile(parentDirectory, false);
+				}
 			}catch (IOException e){}
 		}
 	}
@@ -569,9 +761,17 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return found;
 	}
+
 	/**
-	 * Action which displays the report from temporal file 
-	 * while it's not being uploaded.
+	 * Action which checks the uploaded file and displays the error messages or
+	 * the report while it's not being uploaded.
+	 *
+	 * The checks are as follow:
+	 *
+	 *     1. Checks if the file is a valid XML file.
+	 *     2. Checks if the file contains duplicate identifiers.
+	 *     3. Checks if the file contains changes in the institutions' names.
+	 * 
 	 * @return Struts.STATE
 	 */
 	public String reportAction(){
@@ -580,9 +780,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,false);
 		if(archivalInstitutions!=null){
-			if(!institutionNamesHaveChanged(archivalInstitutions)){
+			Boolean duplicateIds = ArchivalLandscape.checkIdentifiers(this.httpFile);
+			if (duplicateIds != null && !duplicateIds) {
+				this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
+				return ERROR_DUPLICATE_IDENTIFIERS;
+			} else if (!institutionNamesHaveChanged(archivalInstitutions)) {
 				return displayReport(archivalInstitutions);
-			}else{
+			} else {
 				return ERROR_NAMES_CHANGED;
 			}
 		}else if (this.isInvalidChars()) {
@@ -590,6 +794,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return ERROR;
 	}
+
 	/**
 	 * Compare, if possible identify an institution. 
 	 * When method is able to detect that exits two institutions with the same identifier, it 
@@ -868,7 +1073,196 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		this.institutionsToBeDeleted = cloneIngestedInstitutions;
 		this.institutionsToBeDeleted.removeAll(this.oldRelatedInstitutions);
 
+		// Checks if exists more than one institution/group with same name.
+		this.checkMultipleInstitutionsSameName(archivalInstitutions);
+
+		// Add the rest of institutions names to the set of names.
+		if (this.getNameSet() == null) {
+			this.setNameSet(new HashSet<String>());
+		}
+
+		if (this.getOldRelatedInstitutions() != null && !this.getOldRelatedInstitutions().isEmpty()) {
+			for (int i = 0; i < this.getOldRelatedInstitutions().size(); i++) {
+				this.getNameSet().add(this.getOldRelatedInstitutions().get(i).getAiname());
+			}
+		}
+
 		return INPUT;
+	}
+
+	/**
+	 * Method to check if the lists contains more than one institution or group
+	 * with same name. 
+	 *
+	 * @return Boolean result.
+	 */
+	private boolean checkMultipleInstitutionsSameName(Collection<ArchivalInstitution> archivalInstitutions) {
+		boolean result = false;
+		List<ArchivalInstitution> oldSameNameInstitutions = new ArrayList<ArchivalInstitution>();
+		List<ArchivalInstitution> newSameNameInstitutions = new ArrayList<ArchivalInstitution>();
+		// Set of repeated names.
+		if (this.getNameSet() == null) {
+			this.setNameSet(new HashSet<String>());
+		}
+
+		// Checks the institutions with same name in the list of database institutions.
+		Map<String, List<ArchivalInstitution>> oldRelatedSameNameInstitutions = null;
+		if (this.getOldRelatedInstitutions() != null) {
+			Collection<ArchivalInstitution> oldArchivalInstitutions = this.getOldRelatedInstitutions();
+			oldRelatedSameNameInstitutions = ArchivalLandscapeUtils.getInstitutionsWithSameNameFromArchivalInstitutionStructure(oldArchivalInstitutions);
+		}
+
+		if (oldRelatedSameNameInstitutions != null && !oldRelatedSameNameInstitutions.isEmpty()) {
+			Iterator<String> keysIt = oldRelatedSameNameInstitutions.keySet().iterator();
+			while (keysIt.hasNext()) {
+				String key = keysIt.next();
+				if (key != null && !key.isEmpty()) {
+					oldSameNameInstitutions.addAll(oldRelatedSameNameInstitutions.get(key));
+					this.getNameSet().add(key);
+					result = true;
+				}
+			}
+		}
+		this.setOldDuplicateNameInstitutions(oldSameNameInstitutions);
+
+		// Checks the institutions with same name in the list of file institutions.
+		Map<String, List<ArchivalInstitution>> newRelatedSameNameInstitutions = null;
+		if (this.getNewRelatedInstitutions() != null) {
+			Collection<ArchivalInstitution> newArchivalInstitutions = this.getNewRelatedInstitutions();
+			newRelatedSameNameInstitutions = ArchivalLandscapeUtils.getInstitutionsWithSameNameFromArchivalInstitutionStructure(newArchivalInstitutions);
+		}
+
+		if (newRelatedSameNameInstitutions != null && !newRelatedSameNameInstitutions.isEmpty()) {
+			Iterator<String> keysIt = newRelatedSameNameInstitutions.keySet().iterator();
+			while (keysIt.hasNext()) {
+				String key = keysIt.next();
+				if (key != null && !key.isEmpty()) {
+					newSameNameInstitutions.addAll(newRelatedSameNameInstitutions.get(key));
+					this.getNameSet().add(key);
+					result = true;
+				}
+			}
+		}
+		this.setNewDuplicateNameInstitutions(newSameNameInstitutions);
+
+		// Remove the institutions with same name from the lists.
+		// List of institutions in database.
+		this.setOldRelatedInstitutions(removeSameNameInstitutionsFromList(this.getOldRelatedInstitutions()));
+
+		// List of institutions in file.
+		this.setNewRelatedInstitutions(removeSameNameInstitutionsFromList(this.getNewRelatedInstitutions()));
+
+		// Recover the maps of institutions with same name.
+		if (this.aIDAO == null) {
+			this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+		}
+
+		Map<String, List<ArchivalInstitution>> oldArchivesMap = new HashMap<String, List<ArchivalInstitution>>();
+		Map<String, List<ArchivalInstitution>> newArchivesMap = new HashMap<String, List<ArchivalInstitution>>();
+		
+		Iterator<String> namesIt = this.getNameSet().iterator();
+		while (namesIt.hasNext()) {
+			String name = namesIt.next();
+		
+			oldArchivesMap.put(name, this.aIDAO.getArchivalInstitutionsByAiNameForCountryId(name, SecurityContext.get().getCountryId()));
+			newArchivesMap.put(name, ArchivalLandscapeUtils.getInstitutionsByNameFromStructure(name, archivalInstitutions));
+		}
+
+		// Set the global maps.
+		this.setOldDuplicateNameInstitutionsMap(oldArchivesMap);
+		this.setNewDuplicateNameInstitutionsMap(newArchivesMap);
+
+		// Check the lists in the maps.
+		if ((this.getOldDuplicateNameInstitutionsMap()!= null && this.getOldDuplicateNameInstitutionsMap().size() > 0)
+				|| (this.getNewDuplicateNameInstitutionsMap()!= null && this.getNewDuplicateNameInstitutionsMap().size() > 0)) {
+			this.checkSizeOfListsInMap();
+		}
+
+		return result;
+	}
+
+	/**
+	 * Method to clean the archives with same name in the list passed.  
+	 *
+	 * @param archives List of archives.
+	 *
+	 * @return List of archives without repeated names.
+	 */
+	private List<ArchivalInstitution> removeSameNameInstitutionsFromList(List<ArchivalInstitution> archives) {
+		if (this.getNameSet() != null && !this.getNameSet().isEmpty()
+				&& archives != null && !archives.isEmpty()) {
+			Iterator<String> nameIt = this.getNameSet().iterator();
+			while (nameIt.hasNext()) {
+				String name = nameIt.next();
+				List<ArchivalInstitution> temp = new ArrayList<ArchivalInstitution>();
+
+				for (int i = 0; i < archives.size(); i++) {
+					ArchivalInstitution archivalInstitution = archives.get(i);
+					if (archivalInstitution.getAiname().equals(name)) {
+						temp.add(archivalInstitution);
+					}
+				}
+
+				archives.removeAll(temp);
+			}
+		}
+
+		return archives;
+	}
+
+	/**
+	 * Method to checks the sizes of the lists, in the maps of institutions
+	 * with same name and add items if needed.
+	 *
+	 * The items added will be:
+	 *
+	 *    1.- If the size of the list from database is less than the size from
+	 *        the file, the value will be "Add".
+	 *    2.- If the size of the list from database is greater than the size
+	 *        from the file, the value will be "Delete".
+	 *
+	 * @return {@link Boolean}
+	 */
+	private boolean checkSizeOfListsInMap() {
+		boolean result = false;
+
+		// Recover the keySet.
+		Set<String> keySet = this.getOldDuplicateNameInstitutionsMap().keySet();
+		Iterator<String> keysIt = keySet.iterator();
+		while (keysIt.hasNext()) {
+			String key = keysIt.next();
+
+			// Recover the lists.
+			List<ArchivalInstitution> oldInstitutions = this.getOldDuplicateNameInstitutionsMap().get(key);
+			List<ArchivalInstitution> newInstitutions = this.getNewDuplicateNameInstitutionsMap().get(key);
+
+			int oldSize = oldInstitutions.size();
+			int newSize = newInstitutions.size();
+
+			if (oldSize > newSize) {
+				// Add values to the new list in order to delete the old ones.
+				for (int i = 0; i < (oldSize - newSize); i++) {
+					ArchivalInstitution archivalInstitution = new ArchivalInstitution();
+					archivalInstitution.setAiname(ArchivalLandscapeManager.DELETE);
+					newInstitutions.add(archivalInstitution);
+				}
+
+				// Add the new values to the map.
+				this.getNewDuplicateNameInstitutionsMap().put(key, newInstitutions);
+			} else if (oldSize < newSize) {
+				// Add values to the old list in order to add the new ones.
+				for (int i = 0; i < (newSize - oldSize); i++) {
+					ArchivalInstitution archivalInstitution = new ArchivalInstitution();
+					archivalInstitution.setAiname(ArchivalLandscapeManager.ADD);
+					oldInstitutions.add(archivalInstitution);
+				}
+
+				// Add the new values to the map.
+				this.getOldDuplicateNameInstitutionsMap().put(key, oldInstitutions);
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -894,6 +1288,62 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return found;
 	}
+
+	/**
+	 * Method to discriminate between the different types of ingest the XML.
+	 *
+	 *     1. "Continue", the XML file doesn't contains changes or only contains
+	 *        changes related to a reorder of the institutions inside the same
+	 *        group.
+	 *     2. "Keep", some of the internal identifiers in the database and in
+	 *        the file aren't the same, so the internal identifiers in database
+	 *        will be maintained.
+	 *     3. "Overwrite", some of the internal identifiers in the database and
+	 *        in the file aren't the same, so the internal identifiers in
+	 *        database will be overwritten with the identifiers in the file.
+	 *
+	 * @return Structs2-RESPONSE
+	 * @throws SAXException
+	 * @throws APEnetException
+	 */
+	public String checkIngestionMode() throws SAXException, APEnetException {
+		String state = ERROR;
+
+		if (this.getOverwriteIDs() != null) {
+			// Check if the process to perform.
+			if (this.getOverwriteIDs().equalsIgnoreCase(ArchivalLandscapeManager.PROCESS_CONTINUE)) {
+				// 1. "Continue", no changes or only reorder inside same group.
+				state = this.ingestArchivalLandscapeXML();
+			} else if (this.getOverwriteIDs().equalsIgnoreCase(ArchivalLandscapeManager.PROCESS_KEEP)) {
+				// 2. "Keep", maintain the identifiers in database.
+				// First of all, add the elements to the correct lists if needed.
+				this.parseUserSelections();
+
+				ArchivalLandscapeXMLEditor archivalLandscapeXMLEditor = new ArchivalLandscapeXMLEditor(this.getOldSameNameInstitution(), this.getNewSameNameInstitution());
+				state = archivalLandscapeXMLEditor.changeXMLIdentifier();
+				if (state == Action.SUCCESS) {
+					state = this.ingestArchivalLandscapeXML();
+				}
+			} else if (this.getOverwriteIDs().equalsIgnoreCase(ArchivalLandscapeManager.PROCESS_OVERWRITE)) {
+				// 3. "Overwrite", replace the identifiers in database with the ones in file.
+				// First of all, add the elements to the correct lists if needed.
+				this.parseUserSelections();
+
+				// Second, gets all the current ingested institutions into DDBB.
+				this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+				this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
+				ArchivalLandscapeDatabaseEditor archivalLandscapeDatabaseEditor = new ArchivalLandscapeDatabaseEditor(this.getOldSameNameInstitution(), this.getNewSameNameInstitution());
+				state = archivalLandscapeDatabaseEditor.changeDatabaseIdentifier(this.totalInstitutions);
+
+				if (state == Action.SUCCESS) {
+					state = this.ingestArchivalLandscapeXML();
+				}
+			} 
+		}
+
+		return state;
+	}
+
 	/**
 	 * Main function called to ingest all content.
 	 * 
@@ -906,7 +1356,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * @throws APEnetException 
 	 * @throws SAXException 
 	 */
-	public String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
+	private String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
 		String state = ERROR;
 		try {
 		
@@ -979,6 +1429,31 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 	//	return state;
 	}
+
+	/**
+	 * Method to add the selections of the user in the details view to the
+	 * correct lists.
+	 */
+	private void parseUserSelections() {
+
+		// Check the list of old institutions in database.
+		if (this.getOldInstitutionsFromSelect() != null
+				&& !this.getOldInstitutionsFromSelect().isEmpty()) {
+			for (int i = 0; i < this.getOldInstitutionsFromSelect().size(); i++) {
+				String interalId = this.getOldInstitutionsFromSelect().get(i);
+				this.getOldSameNameInstitution().add(interalId);
+			}
+		}
+
+		// Check the list of new institutions in file.
+		if (this.getNewInstitutionsFromSelect() != null
+				&& !this.getNewInstitutionsFromSelect().isEmpty()) {
+			for (int i = 0; i < this.getNewInstitutionsFromSelect().size(); i++) {
+				String interalId = this.getNewInstitutionsFromSelect().get(i);
+				this.getNewSameNameInstitution().add(interalId);
+			}
+		}
+	}
 	
 	private boolean institutionHasNewIdentifiers(Collection<ArchivalInstitution> newArchivalInstitutionStructure,List<String> ingestedIdentifiers) {
 		boolean state = false;
@@ -1025,7 +1500,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 					this.aIANDAO = DAOFactory.instance().getAiAlternativeNameDAO();
 					//first gets all the current ingested institutions into DDBB
-					this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
+					if (this.getOverwriteIDs() == null
+							|| !this.getOverwriteIDs().equalsIgnoreCase(ArchivalLandscapeManager.PROCESS_OVERWRITE)) {
+						this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
+					}
 					if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
 						log.debug("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
 						this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
@@ -1039,8 +1517,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							}
 							//when valid operation it's able to manage all ingested institutions/groups
 							this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
-							
-							this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
+
+							if (this.getOverwriteIDs() == null
+									|| !this.getOverwriteIDs().equalsIgnoreCase(ArchivalLandscapeManager.PROCESS_OVERWRITE)) {
+								this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
+							}
+
 							checkAndUpdateArchivalInstitutions(null,archivalInstitutions,useddbb); //new check
 							log.debug("Updated process has been finished successfull");
 							state = 3;

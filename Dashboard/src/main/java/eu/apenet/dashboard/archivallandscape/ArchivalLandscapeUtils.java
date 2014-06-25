@@ -24,7 +24,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
@@ -150,7 +149,7 @@ public class ArchivalLandscapeUtils {
 		}
 		return allRepeatedInstitutions;
 	}
-	
+
 	private static Map<String,List<ArchivalInstitution>> getInstitutionsWithSameIdentifierFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions,Map<String,List<ArchivalInstitution>> allRepeatedInstitutions){
 		if(allRepeatedInstitutions==null){
 			allRepeatedInstitutions = new HashMap<String,List<ArchivalInstitution>>();
@@ -186,7 +185,79 @@ public class ArchivalLandscapeUtils {
 		
 		return allRepeatedInstitutions;
 	}
-	
+
+	/**
+	 * Method to check and returns, the list of institutions that has the same
+	 * name in the collection passed.
+	 *
+	 * @param archivalInstitutions List of institutions and/or groups to check.
+	 * @return The list of related institutions.
+	 */
+	protected static Map<String,List<ArchivalInstitution>> getInstitutionsWithSameNameFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions) {
+		Map<String, List<ArchivalInstitution>> allRepeatedInstitutions = null;
+		Map<String, List<ArchivalInstitution>> allInstitutionsByName = getInstitutionsWithSameNameFromArchivalInstitutionStructure(archivalInstitutions, allRepeatedInstitutions);
+
+		if (allInstitutionsByName != null && allInstitutionsByName.size() > 0){
+			Set<String> keys = allInstitutionsByName.keySet();
+			allRepeatedInstitutions = new HashMap<String, List<ArchivalInstitution>>();
+			if (keys != null){
+				Iterator<String> itKeys = keys.iterator();
+				while (itKeys.hasNext()) {
+					String key = itKeys.next();
+					List<ArchivalInstitution> tempList = allInstitutionsByName.get(key);
+					if (tempList != null && tempList.size() > 1) {
+						allRepeatedInstitutions.put(key,tempList);
+					}
+				}
+			}
+		}
+
+		return allRepeatedInstitutions;
+	}
+
+	/**
+	 * Method to obtain the institutions listed under same name.
+	 *
+	 * @param archivalInstitutions List of institutions and/or groups to check.
+	 * @param allRepeatedInstitutions List of institutions and/or groups checked.
+	 *
+	 * @return Map of institutions with keys the same name.
+	 */
+	private static Map<String,List<ArchivalInstitution>> getInstitutionsWithSameNameFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions, Map<String,List<ArchivalInstitution>> allRepeatedInstitutions) {
+		if (allRepeatedInstitutions == null) {
+			allRepeatedInstitutions = new HashMap<String, List<ArchivalInstitution>>();
+		}
+
+		if (archivalInstitutions != null) {
+			Iterator<ArchivalInstitution> itArchivalInstitutions = archivalInstitutions.iterator();
+			while (itArchivalInstitutions.hasNext()) {
+				ArchivalInstitution archivalInstitution = itArchivalInstitutions.next();
+				List<ArchivalInstitution> tempList = null;
+				if (archivalInstitution.getAiname() != null) {
+					tempList = allRepeatedInstitutions.get(archivalInstitution.getAiname());
+
+					if (tempList == null) {
+						tempList = new ArrayList<ArchivalInstitution>();
+					}
+
+					tempList.add(archivalInstitution);
+					allRepeatedInstitutions.put(archivalInstitution.getAiname(), tempList);	
+				} else {
+					tempList = allRepeatedInstitutions.get(""); //empty identifier key
+
+					if (tempList == null){
+						tempList = new ArrayList<ArchivalInstitution>();
+					}
+
+					tempList.add(archivalInstitution);
+					allRepeatedInstitutions.put(archivalInstitution.getAiname(), tempList);
+				}
+			}
+		}
+
+		return allRepeatedInstitutions;
+	}
+
 	/**
 	 * Parse an archivalInstitution structure to a plain internal identifiers
 	 * @param archivalInstitutions
@@ -208,7 +279,7 @@ public class ArchivalLandscapeUtils {
 		}
 		return institutionsIdentifiers;
 	}
-	
+
 	public static ArchivalInstitution getInstitutionByNameFromStructure(String emptyIdentifierNamed,Collection<ArchivalInstitution> archivalInstitutionList) {
 		ArchivalInstitution target = null;
 		if(archivalInstitutionList!=null){
@@ -225,6 +296,72 @@ public class ArchivalLandscapeUtils {
 				}
 			}
 		}
+		return target;
+	}
+
+	/**
+	 * Recovers the list of institutions with same name from the collection
+	 * passed.
+	 *
+	 * @param institutionName Name of the institution to search.
+	 * @param archivalInstitutionList Collection of institutions in which the search will be performed.
+	 *
+	 * @return List of institutions with same name in the collection.
+	 */
+	public static List<ArchivalInstitution> getInstitutionsByNameFromStructure(String institutionName, Collection<ArchivalInstitution> archivalInstitutionList) {
+		List<ArchivalInstitution> target = new ArrayList<ArchivalInstitution>();
+
+		if (archivalInstitutionList != null) {
+			Iterator<ArchivalInstitution> itArchivalInstitution = archivalInstitutionList.iterator();
+
+			while (itArchivalInstitution.hasNext()) {
+				ArchivalInstitution tempInstitution = itArchivalInstitution.next();
+
+				if (tempInstitution.getAiname().equals(institutionName)) {
+					target.add(tempInstitution);
+				} else if (tempInstitution.isGroup()) {
+					List<ArchivalInstitution> children = tempInstitution.getChildArchivalInstitutions();
+
+					if (children != null && children.size() > 0) {
+						target.addAll(getInstitutionsByNameFromStructure(institutionName, children));
+					}
+				}
+			}
+		}
+
+		return target;
+	}
+
+	/**
+	 * Recovers the institution with the internal identifier from the
+	 * collection passed.
+	 *
+	 * @param internalIdentifier Internal identifier of the institution to search.
+	 * @param archivalInstitutionList Collection of institutions in which the search will be performed.
+	 *
+	 * @return Institutions with the internal identifier in the collection.
+	 */
+	public static ArchivalInstitution getInstitutionsByInternalIdentifierFromStructure(String internalIdentifier, Collection<ArchivalInstitution> archivalInstitutionList) {
+		ArchivalInstitution target = null;
+
+		if (archivalInstitutionList != null) {
+			Iterator<ArchivalInstitution> itArchivalInstitution = archivalInstitutionList.iterator();
+
+			while (target == null && itArchivalInstitution.hasNext()) {
+				ArchivalInstitution tempInstitution = itArchivalInstitution.next();
+
+				if (tempInstitution.getInternalAlId().equals(internalIdentifier)) {
+					target = tempInstitution;
+				} else if (tempInstitution.isGroup()) {
+					List<ArchivalInstitution> children = tempInstitution.getChildArchivalInstitutions();
+
+					if (children != null && children.size() > 0) {
+						target = getInstitutionsByInternalIdentifierFromStructure(internalIdentifier, children);
+					}
+				}
+			}
+		}
+
 		return target;
 	}
 	

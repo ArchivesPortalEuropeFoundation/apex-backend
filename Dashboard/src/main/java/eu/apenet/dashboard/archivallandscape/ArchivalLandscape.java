@@ -3,7 +3,6 @@ package eu.apenet.dashboard.archivallandscape;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -18,9 +17,6 @@ import java.util.concurrent.Semaphore;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -30,8 +26,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -41,7 +35,6 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.infraestructure.ArchivalLandscapeNode;
 import eu.apenet.dashboard.infraestructure.ArchivalLandscapeStructure;
 import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.utils.ChangeControl;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -67,8 +60,6 @@ public class ArchivalLandscape extends ActionSupport{
 	 * Serializable.
 	 */
 	private static final long serialVersionUID = 7141674075748597835L;
-	//private Integer partnerId; 
-    private String countryName;
     public List<String> Structure; //All structure in archival landscape for this partner
     public List<String> Archives; //Archival institutions for this partner    
 	private Country country;
@@ -97,31 +88,13 @@ public class ArchivalLandscape extends ActionSupport{
 		//Obtain partnerId from session.
 		SecurityContext securityContext = SecurityContext.get();
         this.country = DAOFactory.instance().getCountryDAO().findById(securityContext.getCountryId());
-        this.countryName = this.country.getCname().toLowerCase();
-    }
-	public ArchivalLandscape(Country country) {
-		
-		//Obtain partnerId from session.
-        this.country = country;
-        this.countryName = this.country.getCname().toLowerCase();
     }
      
-//    public Integer getPartnerId() {
-//        return partnerId;
-//    }
-//
-//	public void setPartnerId(Integer partnerId) {
-//		this.partnerId = partnerId;
-//	}
-
 	//Returns the ISO name of the country
 	public String getmyCountry() {
         return this.country.getIsoname();
     }
-	//Returns the name of the country
-	public String getmyCountryName() {
-        return this.country.getCname();
-    }
+
     public int getCountryId() {
         return this.country.getId();
     }
@@ -216,256 +189,6 @@ public class ArchivalLandscape extends ActionSupport{
 		
     	return path;
     }
-
-	//Read the file and check if it is well formed
-    public String read(File file, String typeProcess) {
-
-    	String result="";
-        int country = -1;
-        Boolean checkTranslation= true;
-        
-        try {
-            //Open the file
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            InputStream sfile = new FileInputStream(file);
-            if(sfile.available()<=0){
-            	sfile.close();
-            	log.error("There isn't information to be readed! - "+file.getName());
-            	return null;
-            }
-            Document doc = dBuilder.parse(sfile);
-            sfile.close();
-            doc.getDocumentElement().normalize();
-            log.info("The file " + file.getName() + " of the country " +this.countryName + " is being reading");
-
-            //Get country nodes
-            NodeList a = doc.getElementsByTagName("c");
-
-            for (int i = 0; i < a.getLength(); i++) {
-                NamedNodeMap attributes = a.item(i).getAttributes();
-                Node attribute = attributes.getNamedItem("level");
-                if ((attribute.getNodeValue().equals("fonds"))) {
-                    NodeList listDid = a.item(i).getChildNodes();
-                    for (int l = 0; l < listDid.getLength(); l++) {
-                        if (listDid.item(l).getNodeName() == "did") {
-                            NodeList listUnitTitle = listDid.item(l).getChildNodes();
-                          
-                            //Check if the 14 country name translations are included in the xml
-//                            if (checkTranslation(listUnitTitle)) //todo: Why do we care about this? Why do we need all country names?
-//                            	checkTranslation = true;
-                            
-                            	for (int j = 0; j < listUnitTitle.getLength(); j++) {
-                                if (listUnitTitle.item(j).getNodeName().equals("unittitle")) {
-                                    NamedNodeMap attributesUnitTitle = listUnitTitle.item(j).getAttributes();
-                                    Node attributeUnitTitle = attributesUnitTitle.getNamedItem("type");
-                                    if (attributeUnitTitle.getNodeValue().equals("eng")) {
-                                        if (listUnitTitle.item(j).getTextContent().toLowerCase().equals(countryName))
-                                            country = i; //The country node of the partner logged
-                                    }
-                                   
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-           
-            String pathCountry = this.getmyPath(this.getmyCountry());
-            
-          //The country is not in the AL
-    		if ((country == -1) || (!checkTranslation)){
-    			log.error("The file " + file.getName() + " of the country " +this.countryName + " does not have the country unittitle's");
-    			result = "ERROR";
-    		}
-    		else 
-    		{            	            
-    			if (!typeProcess.equals("upload"))
-    			{
-    				//If the xml of this country does not exist, create it     			
-		            File files = new File(pathCountry + this.getmyCountry() + "AL.xml");
-		        	if (!files.exists())
-		        	{
-		        		//Everything is OK. The node of this country is located
-		        		Document docCountry = createXML(a.item(country), doc, null);
-			            doc = docCountry;
-			            result="SUCCESS";
-		        	}
-    			}
-        	    result = "SUCCESS";    	         
-	        	//showTree(doc.getElementsByTagName("unittitle"),doc);
-	        	log.debug("The file " + file.getName() + " of the country " +this.countryName + " has been read");
-    		}
-
-        } catch (Exception e) {
-            log.error("The file " + file.getName() + " of the country " +this.countryName + " has not been read. " + e.getMessage());
-            result = "ERROR";
-        }
-        return result;
-    }
-
-
-    //Create the AL of the country from the node given in the parameter  
-	private Document createXML(Node item, Document doc, String path) {
-			
-		log.debug("Creating the archival landscape of the country " + this.getmyCountry() + "...");
-        try {
-            //Create document in which the new archival landscape will be
-            //DocumentBuilder docCountry2;
-            //docCountry2 = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        	DocumentBuilderFactory docCountry2;
-            docCountry2 = DocumentBuilderFactory.newInstance();
-            
-            docCountry2.setValidating(false);
-            docCountry2.setNamespaceAware(true);
-            docCountry2.setAttribute("http://apache.org/xml/features/validation/schema",false);
-            docCountry2.setAttribute("http://apache.org/xml/features/validation/schema-full-checking",false);
-            docCountry2.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage","http://www.w3.org/2001/XMLSchema");
-            docCountry2.setIgnoringElementContentWhitespace(true);            
-            
-            Document docNew = docCountry2.newDocumentBuilder().newDocument();
-            Result result;
-            Source source;
-            
-            //The element from the general AL to copy
-            Element nodetocopy = (Element) item;
-            nodetocopy = (Element) item;
-            Node finalItem = null;                        
-            
-            //Create general elements to copy in the archival landscape per country
-            Element eadheader=null;
-            Element archdesc=null;
-            Element archdesdid= null;
-            Element dsc=null;
-            
-            //Temporary nodes to copy the above ones
-            Node nodewherecopy2=null;
-            Node newnode=null;
-            Node newnode2=null;
-            Node newnode3=null;
-            
-            //Establish a root with the node ead and the node of the country
-
-            Element a = doc.getDocumentElement();
-            Element root = docNew.createElement(a.getNodeName());
-            
-            for (int i=0;i<a.getAttributes().getLength();i++)
-            {
-            	root.setAttribute(a.getAttributes().item(i).getNodeName(), a.getAttributes().item(i).getNodeValue());
-            }
-	        docNew.appendChild(root);
-	            
-	        NodeList eadchild = a.getChildNodes();
-	            for (int i= 0;i<eadchild.getLength();i++)	            	
-	            {
-	            	//If the user is using the template generated by dashboard with 'root' tag at the beginning
-	            	if (eadchild.item(i).getNodeName().equals("ead"))
-	            	{
-	            		eadchild = eadchild.item(i).getChildNodes();
-	            	}
-	            	if (eadchild.item(i).getNodeName().equals("eadheader"))
-	            		eadheader = (Element) eadchild.item(i);
-	            	else {
-	            		if (eadchild.item(i).getNodeName().equals("archdesc"))
-	            		{	
-	            			archdesc = (Element) eadchild.item(i);
-	            			NodeList archdeschild =  eadchild.item(i).getChildNodes();
-	            			for(int j= 0;j<archdeschild.getLength();j++)
-	            			{
-	            				if (archdeschild.item(j).getNodeName().equals("did"))
-	            					archdesdid = (Element) archdeschild.item(j);
-	            				else
-	            				{
-	            					if (archdeschild.item(j).getNodeName().equals("dsc"))
-	            						dsc = (Element) archdeschild.item(j);
-	            				}
-	            			}
-	            		}
-	            	}
-	            }    
-    	            
-	            //Import the nodes if they are filled in in the temporary ones
-	            //Put the nodes in the right order
-	            if (eadheader!= null)
-	            {
-	            	nodewherecopy2= docNew.importNode(eadheader,true);
-		            root.appendChild(nodewherecopy2);
-	            }
-	            if (archdesc != null)
-	            {
-	            	newnode = docNew.importNode(archdesc,false);
-	            	root.appendChild(newnode);
-	            }
-	            if (archdesdid!= null)
-	            {
-	            	newnode2= docNew.importNode(archdesdid,true);
-	            	newnode.appendChild(newnode2);
-	            }
-	            if (dsc!=null)
-	            {
-	            	newnode3 = docNew.importNode(dsc,false);
-	            	newnode.appendChild(newnode3);
-	            }
-	            if (nodetocopy!=null)
-	            {
-	            	finalItem = docNew.importNode(nodetocopy,true);
-	            	newnode3.appendChild(finalItem);
-	            }
-	            
-	            //Set the eadid to a generic one	            
-	            Node eadid = docNew.getElementsByTagName("eadid").item(0);
-	            if (eadid.getTextContent()== null || eadid.getTextContent().isEmpty())
-	            	eadid.setTextContent("AL-" + this.getmyCountry());
-	            
-	            //Set the countrycode within element eadid (Just in case is finally needed)
-	            /*if (eadid.hasAttributes())
-	            {
-	            	NamedNodeMap attributesEadid = eadid.getAttributes();
-                    Node attributeUnitTitle = attributesEadid.getNamedItem("countrycode");
-                    attributeUnitTitle.setTextContent(this.getmyCountry());
-	            }*/
-	            
-	            //Create the new file with the doc created 
-	            source = new DOMSource(docNew);
-	                        
-	        	String pathCountry = this.getmyPath(this.getmyCountry());	
-	            pathCountry = pathCountry + this.getmyCountry() + "AL.xml";
-	            result = new StreamResult(new java.io.File(pathCountry));
-	            
-	            //Write the XML
-	            Transformer transformer;
-	            try {
-	                transformer = TransformerFactory.newInstance().newTransformer();
-	                transformer.transform(source, result);
-	            } catch (Exception e) {
-	            	log.error("The archival landscape of the country " + this.getmyCountry() + " might not have the general mandatory elements. " + e.getMessage());
-	            }	        
-	       
-	            doc = docNew;
-	            log.debug("The archival landscape of the country " + this.getmyCountry() + "has been created");
-	            
-        } catch (ParserConfigurationException e1) {
-        	log.error("The archival landscape of the country " + this.getmyCountry() + " could not be created. " + e1.getMessage());
-        }
-        return doc;
-    }
-
-    public List<String> returnTree() {
-        return Structure;
-    }
-    
-
-	public List<ArchivalInstitution> showArchives() {
-		this.aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		SecurityContext securityContext = SecurityContext.get();
-		if (securityContext.isCountryManager()){
-			return this.aiDao.getArchivalInstitutionsByCountryIdForAL(securityContext.getCountryId(), true);
-		}else if (securityContext.isInstitutionManager()) {
-			return this.aiDao.getArchivalInstitutionsByPartnerId(securityContext.getPartnerId());
-		}
-		return new ArrayList<ArchivalInstitution>();
-		
-	}
 	
 	//Check if an institution has alternatives name in a node in archival landscape. 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -646,10 +369,10 @@ public class ArchivalLandscape extends ActionSupport{
 		return true;
 	}	
 
-	
 	private static String generateNewRandomIdentifier() {
 		return "A"+System.currentTimeMillis()+"-"+(new Float(+Math.random()*1000000).toString());
 	}
+
 	public static boolean isValidIdentifier(String identifier) {
 		if(identifier.length()>0){
 			char firstCharacter = identifier.charAt(0);
@@ -659,6 +382,7 @@ public class ArchivalLandscape extends ActionSupport{
 		}
 		return false;
 	}
+
 	//Store in the database the name of the NEW archival institutions uploaded and delete the ones removed
 	public String storeArchives(File file, boolean execute) {
 		
@@ -878,52 +602,6 @@ public class ArchivalLandscape extends ActionSupport{
 		}
 		return result;
 	}
-	
-	public void storeOperation(String op){
-		ChangeControl.logOperation(op);
-	}
-
-    //Check if the file has eadid
-	public Boolean checkEadid(File file){		
-    
-		Boolean bResult;
-        Source source;
-        Result result;
-		
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		try {
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Reader reader = new InputStreamReader(new FileInputStream(file),"UTF-8");
-			InputSource sfile = new InputSource(reader);
-	        Document doc = dBuilder.parse(sfile);
-	        doc.getDocumentElement().normalize();
-	        
-	        Node eadid = doc.getElementsByTagName("eadid").item(0);
-	        
-	        if (eadid != null) {
-		        if (eadid.getTextContent().isEmpty()) {
-		        	eadid.setTextContent("AL-" + this.getmyCountry());
-		            source = new DOMSource(doc);
-		        	String pathCountry = this.getmyPath(this.getmyCountry());	
-		            pathCountry = pathCountry + this.getmyCountry() + "AL.xml";
-		            result = new StreamResult(new File(pathCountry));
-
-		            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-	                transformer.transform(source, result);
-		        	
-	                bResult = true;
-		        } else
-		        	bResult = true;		        
-	        } else {
-                log.debug("The process could not find the eadid of the AL file: " + this.getmyCountry());
-	        	bResult = false;
-            }
-		} catch (Exception e) {
-			log.error("checkEadid: The addition of an EADID in the archival landscape of the country " + this.getmyCountry() + " has had errors. " + e.getMessage());
-			bResult = false;
-		}
-        return bResult;
-	}
 
 	protected static String deleteContent(ArchivalInstitution ai) {
 		String path = null;
@@ -943,6 +621,7 @@ public class ArchivalLandscape extends ActionSupport{
 				eadSearchOptions.setContentClass(SourceGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
+
 			boolean hasEacs = ContentUtils.containsEacs(ai);
 			if(!hasEads && !hasEacs){
 				path = ai.getEagPath();
@@ -967,5 +646,3 @@ public class ArchivalLandscape extends ActionSupport{
         return path;
 	}
 }
-
-
