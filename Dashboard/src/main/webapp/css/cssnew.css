@@ -1243,3 +1243,14 @@ td.actions input {
 #login label {
 	font-weight: bold;
 }
+
+#headerText{
+	margin-top: 35px;
+	font-weight: bold;
+	font-style: italic;
+	font-size:18pt;
+	color: black;
+	float:right;
+	opacity: 0.7; /* Firefox, Chrome, Safari, Opera, IE >= 9 (preview) */
+	filter:alpha(opacity=70); /* for <= IE 8 */
+}
