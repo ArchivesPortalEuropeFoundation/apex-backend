@@ -75,10 +75,10 @@ public class LoadFormAction extends EacCpfAction {
             cpfTypeDescriptionText = getText("eaccpf.commons.type") + " " + getText("eaccpf.commons.person");
             cpfTypeIdentifierText = getText("eaccpf.identity.identifier.person");
         } else if (cpfType.equals(EacCpfAction.CORPORATE_BODY)) {
-            cpfTypeDescriptionText = getText("eaccpf.commons.type") + getText("eaccpf.commons.corporateBody");
+            cpfTypeDescriptionText = getText("eaccpf.commons.type") + " " + getText("eaccpf.commons.corporateBody");
             cpfTypeIdentifierText = getText("eaccpf.identity.identifier.corporateBody");
         } else if (cpfType.equals(EacCpfAction.FAMILY)) {
-            cpfTypeDescriptionText = getText("eaccpf.commons.type") + getText("eaccpf.commons.family");
+            cpfTypeDescriptionText = getText("eaccpf.commons.type") + " " + getText("eaccpf.commons.family");
             cpfTypeIdentifierText = getText("eaccpf.identity.identifier.family");
         } else {
             cpfTypeDescriptionText = "";
@@ -165,7 +165,7 @@ public class LoadFormAction extends EacCpfAction {
             componentNameList.add(new MapEntry("corpname", getText("eaccpf.identity.name.component.corpname")));
         }
         if (cpfType.equals(FAMILY)) {
-            componentNameList.add(new MapEntry("famname", getText("eaccpf.identity.name.component.family")));
+            componentNameList.add(new MapEntry("famname", getText("eaccpf.identity.name.component.famname")));
         }
         if (cpfType.equals(PERSON)) {
             componentNameList.add(new MapEntry("persname", getText("eaccpf.identity.name.component.persname")));
