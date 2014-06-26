@@ -1808,7 +1808,9 @@ function loadRepositories(text1, text2, number) {
 			$("table[id^='yourInstitutionTable_']").hide();
 			$("table#"+localId).show();
 			//show/hide right tabs and content
-			if(localId.indexOf("_1")>-1){
+			
+			var pos=localId.substring(localId.indexOf("_1"));
+			if((localId.indexOf("_1")>-1) && (pos.length<3)){
 				$("ul#eag2012TabsContainer li a").each(function(){
 					var id = $(this).parent().attr("id");
 					if(id.indexOf("tab-yourInstitution")>-1){
@@ -2048,8 +2050,10 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 		}
 		$("table[id^='yourInstitutionTable_']").hide();
 		$("table#"+localId).show();
+		
 		//show/hide right tabs and content
-		if(localId.indexOf("_1")>-1){
+		var pos=localId.substring(localId.indexOf("_1"));	
+		if((localId.indexOf("_1")>-1) && (pos.length<3)){				
 			$("ul#eag2012TabsContainer li a").each(function(){
 				var id = $(this).parent().attr("id");
 				if(id.indexOf("tab-yourInstitution")>-1){
