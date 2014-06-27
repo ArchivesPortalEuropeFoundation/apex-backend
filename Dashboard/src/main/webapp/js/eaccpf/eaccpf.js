@@ -20,33 +20,33 @@ function hideAndShow(idPrefix, shown) {
     }
 }
 
-function loadPreviousTab(currentTab) {
-    if (currentTab == "tab-identity") {
+function loadPreviousTab() {
+	var id = $(".eacCpfCurrenttab").parent().attr("id");
 
-    } else if (currentTab == "tab-description") {
+    if (id == "tab-description") {
         $("ul#eacCpfTabsContainer a[href='#tab-identity']").trigger('click');
         $("#currentTab").attr("value", "tab-identity");
-    } else if (currentTab == "tab-relations") {
+    } else if (id == "tab-relations") {
         $("ul#eacCpfTabsContainer a[href='#tab-description']").trigger('click');
         $("#currentTab").attr("value", "tab-description");
-    } else if (currentTab == "tab-control") {
+    } else if (id == "tab-control") {
         $("ul#eacCpfTabsContainer a[href='#tab-relations']").trigger('click');
         $("#currentTab").attr("value", "tab-relations");
     }
 }
 
-function loadNextTab(currentTab) {
-    if (currentTab == "tab-identity") {
+function loadNextTab() {
+	var id = $(".eacCpfCurrenttab").parent().attr("id");
+
+    if (id == "tab-identity") {
         $("ul#eacCpfTabsContainer a[href='#tab-description']").trigger('click');
         $("#currentTab").attr("value", "tab-description");
-    } else if (currentTab == "tab-description") {
+    } else if (id == "tab-description") {
         $("ul#eacCpfTabsContainer a[href='#tab-relations']").trigger('click');
         $("#currentTab").attr("value", "tab-relations");
-    } else if (currentTab == "tab-relations") {
+    } else if (id == "tab-relations") {
         $("ul#eacCpfTabsContainer a[href='#tab-control']").trigger('click');
         $("#currentTab").attr("value", "tab-control");
-    } else if (currentTab == "tab-control") {
-
     }
 }
 
