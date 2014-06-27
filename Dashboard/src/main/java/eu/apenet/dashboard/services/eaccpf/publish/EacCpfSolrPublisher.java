@@ -218,18 +218,18 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 			eacCpfSolrObject.setDateDescription(dateDescription);
 			fromDate = (String) fromDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
 			toDate = (String) toDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
-			if ("0001".equals(fromDate)){
-				fromDate = null;
-				eacCpfSolrObject.setFromDateExist(false);
-			}else {
+//			if ("0001".equals(fromDate)){
+//				fromDate = null;
+//				eacCpfSolrObject.setFromDateExist(false);
+//			}else {
 				eacCpfSolrObject.setFromDateExist(true);
-			}
-			if ("2099".equals(toDate)){
-				toDate = null;
-				eacCpfSolrObject.setToDateExist(false);
-			}else {
+			//}
+//			if ("2099".equals(toDate)){
+//				toDate = null;
+//				eacCpfSolrObject.setToDateExist(false);
+//			}else {
 				eacCpfSolrObject.setToDateExist(true);
-			}
+			//}
 			if (toDate == null && fromDate != null){
 				toDate = fromDate;
 			}
@@ -276,9 +276,9 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 				add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
 			} else {
 				if (!eacCpfSolrObject.isToDateExist()){
-					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED_NO_ENDDATE);
+					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED_UNKNOWN_ENDDATE);
 				}else if (!eacCpfSolrObject.isFromDateExist()){
-					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED_NO_STARTDATE);
+					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED_UNKNOWN_STARTDATE);
 				}else {
 					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
 				}
