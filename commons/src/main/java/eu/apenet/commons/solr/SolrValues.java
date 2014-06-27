@@ -20,8 +20,9 @@ public final class SolrValues {
 	public final static String DATE_TYPE_NO_DATE_SPECIFIED = "nodate";
 	public final static String DATE_TYPE_OTHER_DATE = "otherdate";
 	public final static String DATE_TYPE_NORMALIZED = "normal";
-	public final static String DATE_TYPE_NORMALIZED_NO_STARTDATE = "nostartdate";
-	public final static String DATE_TYPE_NORMALIZED_NO_ENDDATE = "noenddate";
+	public final static String DATE_TYPE_NORMALIZED_UNKNOWN_STARTDATE = "unknownstartdate";
+	public final static String DATE_TYPE_NORMALIZED_UNKNOWN_ENDDATE = "unknownenddate";
+	public final static String DATE_TYPE_UNKNOWN_DATE = "unknowndate";
 	public static final String LEVEL_CLEVEL = "clevel";
 	public static final String LEVEL_ARCHDESC = "archdesc";
 	public static final String ROLE_DAO_UNSPECIFIED = "UNSPECIFIED";
