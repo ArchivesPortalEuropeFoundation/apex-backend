@@ -118,6 +118,7 @@
 	</xsl:template>
 
 	<xsl:template match="ead:extref" mode="otherfindingaids">
+		<div class="otherfindingaids">
 		<xsl:variable name="href" select="./@xlink:href" />
 		<xsl:variable name="prefix" select="$eadcontent.extref.prefix" />
 		<xsl:choose>
@@ -329,7 +330,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
-		</xsl:choose><xsl:text> </xsl:text>
+		</xsl:choose><xsl:text> </xsl:text></div>
 	</xsl:template>
 
 	<xsl:template match="ead:extref" mode="other notsearchable scopecontent">
