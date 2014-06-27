@@ -531,7 +531,7 @@ public class CreateEacCpf {
                             // .../places/place/address/addressLine@localType
                             if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName6 + rowCounter) != null) {
                                 parameterContent = (String[]) parameters.get("placeTable_" + tableCounter + parameterName6 + rowCounter);
-                                if (parameterContent.length == 1 && !parameterContent[0].equals("----")) {
+                                if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
                                     addressLine.setLocalType(parameterContent[0]);
                                 }
                             }
