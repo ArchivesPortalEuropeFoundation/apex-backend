@@ -700,7 +700,7 @@
 		<xsl:variable name="maxNumber">
 			<xsl:choose>
 				<xsl:when test="$isPreview">
-					<xsl:value-of select="number('1')"/>
+					<xsl:value-of select="number('2')"/>
 				</xsl:when>
 				<xsl:when test="$isChild">
 					<xsl:value-of select="number('6')"/>
