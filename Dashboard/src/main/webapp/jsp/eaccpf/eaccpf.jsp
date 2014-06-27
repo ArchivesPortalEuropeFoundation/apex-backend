@@ -23,6 +23,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery_1.4.2.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-ui-1.8.14.custom.min.js"></script>
 <script src='${pageContext.request.contextPath}/js/jquery/jquery.cookie.js' type='text/javascript'></script>
+<script src='${pageContext.request.contextPath}/js/eaccpf/eaccpf_common.js' type='text/javascript'></script>
 <script src='${pageContext.request.contextPath}/js/eaccpf/eaccpf.js' type='text/javascript'></script>
 <script src='${pageContext.request.contextPath}/js/browsers.js' type='text/javascript'></script>
 <link href='${pageContext.request.contextPath}/css/global.css' rel='stylesheet' type="text/css" /> 
