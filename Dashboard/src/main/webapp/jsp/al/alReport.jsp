@@ -115,143 +115,147 @@
 			<form name="updatesPartForm" id="updatesPartForm" action="ALContinueUpload.action" method="post">
 				<s:hidden id="overwriteIDs" name="overwriteIDs" value="continue"></s:hidden>
 
-				<div id="institutionsWithSameNameDiv">
-					<div>
-						<h2>
-							<s:property value="getText('al.message.institutionsdetectedwithsamename')" />
-						</h2>
-					</div>
-
-					<div>&nbsp;</div>
-
-					<!-- Div with the information of the identifiers in DB. -->
-					<div id="institutionsWithSameNameOldDiv" class="middleDiv">
-						<div id="currentlyIdsDiv">
-							<div>
-								<label><b><s:property value="getText('al.message.currentlyIdentifiers')" /></b></label>
-							</div>
+				<s:if test="%{oldRelatedInstitutions.size() > 0}">
+					<div id="institutionsWithSameNameDiv">
+						<div>
+							<h2>
+								<s:property value="getText('al.message.institutionsdetectedwithsamename')" />
+							</h2>
 						</div>
 
 						<div>&nbsp;</div>
 
-						<s:iterator value="oldRelatedInstitutions" var="oldInstitution" status="status">
-							<div id="institutionChanged_<s:property value="#status.index"/>">
+						<!-- Div with the information of the identifiers in DB. -->
+						<div id="institutionsWithSameNameOldDiv" class="middleDiv">
+							<div id="currentlyIdsDiv">
 								<div>
-									<label for="oldSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#oldInstitution.ainame" /></label>
+									<label><b><s:property value="getText('al.message.currentlyIdentifiers')" /></b></label>
 								</div>
-								<div>
-									<input type="text" class="readOnlyInput" id="oldSameNameInstitution[<s:property value="#status.index"/>]" name="oldSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#oldInstitution.internalAlId" />"  readonly onfocus="this.blur()" />
-								</div>
-
-								<div>&nbsp;</div>
 							</div>
-						</s:iterator>
-					</div>
 
-					<!-- Div with the information of the identifiers in file. -->
-					<div id="institutionsWithSameNameNewDiv" class="middleDiv">
-						<div id="newIdsDiv">
-							<div>
-								<label><b><s:property value="getText('al.message.identifiersInFile')" /></b></label>
-							</div>
-						</div>
+							<div>&nbsp;</div>
 
-						<div>&nbsp;</div>
-
-						<s:iterator value="newRelatedInstitutions" var="newInstitution" status="status">
-							<div id="institutionChanged<s:property value="#status.index"/>">
-								<div>
-									<label for="newSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#newInstitution.ainame" /></label>
-								</div>
-								<div>
-									<input type="text" class="readOnlyInput" id="newSameNameInstitution[<s:property value="#status.index"/>]" name="newSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#newInstitution.internalAlId" />" readonly onfocus="this.blur()" />
-								</div>
-
-								<div>&nbsp;</div>
-							</div>
-						</s:iterator>
-					</div>
-				</div>
-
-				<div>&nbsp;</div>
-
-				<div id="institutionsWithDuplicateNameDiv">
-					<div>
-						<h2>
-							<s:property value="getText('al.message.institutionsdetectedwithduplicatednames')" />
-						</h2>
-					</div>
-
-					<div>&nbsp;</div>
-
-					<!-- Div with the information of the identifiers in DB. -->
-					<div id="institutionsWithDuplicateNameOldDiv" class="middleDiv">
-						<div id="currentlyIdsDiv">
-							<div>
-								<label><b><s:property value="getText('al.message.currentlyIdentifiers')" /></b></label>
-							</div>
-						</div>
-
-						<div>&nbsp;</div>
-
-						<s:iterator value="oldDuplicateNameInstitutionsMap" var="oldDuplicateInstitutionMap" status="status">
-							<s:iterator value="#oldDuplicateInstitutionMap.value" var="oldDuplicateInstitutionList" status="statusList">
-								<div id="institutionDuplicate_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>">
-									<s:if test="#oldDuplicateInstitutionList.ainame != 'delete' && #oldDuplicateInstitutionList.ainame != 'add'">
-										<label for="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#oldDuplicateInstitutionMap.key" /></label>
-									</s:if>
-									<s:else>
-										<label for="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#oldDuplicateInstitutionMap.key" /></label>
-									</s:else>
-								</div>
-								<div>
-									<s:if test="#oldDuplicateInstitutionList.ainame != 'delete' && #oldDuplicateInstitutionList.ainame != 'add'">
-										<input type="text" class="readOnlyInput" id="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" value="<s:property value="#oldDuplicateInstitutionList.internalAlId" />" readonly onfocus="this.blur()" />
-									</s:if>
-									<s:else>
-										<input type="text" class="whiteInput" style="border: 1px solid #FFFFFF;" id="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" value="<s:property value="getText('al.message.addInstitution')"/>" readonly onfocus="this.blur()" />
-									</s:else>
-								</div>
-
-								<div>&nbsp;</div>
-							</s:iterator>
-						</s:iterator>
-					</div>
-
-					<!-- Div with the information of the identifiers in file. -->
-					<div id="institutionsWithDuplicateNameNewDiv" class="middleDiv">
-						<div id="newIdsDiv">
-							<div>
-								<label><b><s:property value="getText('al.message.identifiersInFile')" /></b></label>
-							</div>
-						</div>
-
-						<div>&nbsp;</div>
-
-						<s:iterator value="newDuplicateNameInstitutionsMap" var="newDuplicateInstitutionMap" status="status">
-							<s:iterator value="#newDuplicateInstitutionMap.value" var="newDuplicateInstitutionList" status="statusList">
-								<div id="institutionDuplicate<s:property value="#status.index"/>_<s:property value="#statusList.index"/>">
-									<label for="selectNew_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#newDuplicateInstitutionMap.key" /></label>
-								</div>
+							<s:iterator value="oldRelatedInstitutions" var="oldInstitution" status="status">
+								<div id="institutionChanged_<s:property value="#status.index"/>">
 									<div>
-										<select class="alSelect" id="selectNew_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="selectNew[<s:property value="#status.index"/>][<s:property value="#statusList.index"/>]" onchange="selectionChanged($(this));">
-											<option value="---">---</option>
-											<s:iterator value="#newDuplicateInstitutionMap.value" var="newDuplicateInstitutionOption" status="statusOption">
-												<s:if test="#newDuplicateInstitutionOption.ainame != 'delete' && #newDuplicateInstitutionOption.ainame != 'add'">
-													<option value="<s:property value="#newDuplicateInstitutionOption.internalAlId"/>"><s:property value="#newDuplicateInstitutionOption.internalAlId" /></option>
-												</s:if>
-												<s:else>
-													<option value="delete"><s:property value="getText('al.message.deleteitem')"/></option>
-												</s:else>
-											</s:iterator>
-										</select>
+										<label for="oldSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#oldInstitution.ainame" /></label>
+									</div>
+									<div>
+										<input type="text" class="readOnlyInput" id="oldSameNameInstitution[<s:property value="#status.index"/>]" name="oldSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#oldInstitution.internalAlId" />"  readonly onfocus="this.blur()" />
 									</div>
 
-								<div>&nbsp;</div>
+									<div>&nbsp;</div>
+								</div>
 							</s:iterator>
-						</s:iterator>
+						</div>
+
+						<!-- Div with the information of the identifiers in file. -->
+						<div id="institutionsWithSameNameNewDiv" class="middleDiv">
+							<div id="newIdsDiv">
+								<div>
+									<label><b><s:property value="getText('al.message.identifiersInFile')" /></b></label>
+								</div>
+							</div>
+
+							<div>&nbsp;</div>
+
+							<s:iterator value="newRelatedInstitutions" var="newInstitution" status="status">
+								<div id="institutionChanged<s:property value="#status.index"/>">
+									<div>
+										<label for="newSameNameInstitution[<s:property value="#status.index"/>]"><s:property value="#newInstitution.ainame" /></label>
+									</div>
+									<div>
+										<input type="text" class="readOnlyInput" id="newSameNameInstitution[<s:property value="#status.index"/>]" name="newSameNameInstitution[<s:property value="#status.index"/>]" value="<s:property value="#newInstitution.internalAlId" />" readonly onfocus="this.blur()" />
+									</div>
+
+									<div>&nbsp;</div>
+								</div>
+							</s:iterator>
+						</div>
 					</div>
-				</div>
+
+					<div>&nbsp;</div>
+				</s:if>
+
+				<s:if test="%{oldDuplicateNameInstitutionsMap.size() > 0}">
+					<div id="institutionsWithDuplicateNameDiv">
+						<div>
+							<h2>
+								<s:property value="getText('al.message.institutionsdetectedwithduplicatednames')" />
+							</h2>
+						</div>
+
+						<div>&nbsp;</div>
+
+						<!-- Div with the information of the identifiers in DB. -->
+						<div id="institutionsWithDuplicateNameOldDiv" class="middleDiv">
+							<div id="currentlyIdsDiv">
+								<div>
+									<label><b><s:property value="getText('al.message.currentlyIdentifiers')" /></b></label>
+								</div>
+							</div>
+
+							<div>&nbsp;</div>
+
+							<s:iterator value="oldDuplicateNameInstitutionsMap" var="oldDuplicateInstitutionMap" status="status">
+								<s:iterator value="#oldDuplicateInstitutionMap.value" var="oldDuplicateInstitutionList" status="statusList">
+									<div id="institutionDuplicate_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>">
+										<s:if test="#oldDuplicateInstitutionList.ainame != 'delete' && #oldDuplicateInstitutionList.ainame != 'add'">
+											<label for="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#oldDuplicateInstitutionMap.key" /></label>
+										</s:if>
+										<s:else>
+											<label for="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#oldDuplicateInstitutionMap.key" /></label>
+										</s:else>
+									</div>
+									<div>
+										<s:if test="#oldDuplicateInstitutionList.ainame != 'delete' && #oldDuplicateInstitutionList.ainame != 'add'">
+											<input type="text" class="readOnlyInput" id="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="oldDuplicateNameInstitution_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" value="<s:property value="#oldDuplicateInstitutionList.internalAlId" />" readonly onfocus="this.blur()" />
+										</s:if>
+										<s:else>
+											<input type="text" class="whiteInput" style="border: 1px solid #FFFFFF;" id="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="oldDuplicateNameInstitutionAdd_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" value="<s:property value="getText('al.message.addInstitution')"/>" readonly onfocus="this.blur()" />
+										</s:else>
+									</div>
+
+									<div>&nbsp;</div>
+								</s:iterator>
+							</s:iterator>
+						</div>
+
+						<!-- Div with the information of the identifiers in file. -->
+						<div id="institutionsWithDuplicateNameNewDiv" class="middleDiv">
+							<div id="newIdsDiv">
+								<div>
+									<label><b><s:property value="getText('al.message.identifiersInFile')" /></b></label>
+								</div>
+							</div>
+
+							<div>&nbsp;</div>
+
+							<s:iterator value="newDuplicateNameInstitutionsMap" var="newDuplicateInstitutionMap" status="status">
+								<s:iterator value="#newDuplicateInstitutionMap.value" var="newDuplicateInstitutionList" status="statusList">
+									<div id="institutionDuplicate<s:property value="#status.index"/>_<s:property value="#statusList.index"/>">
+										<label for="selectNew_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>"><s:property value="#newDuplicateInstitutionMap.key" /></label>
+									</div>
+										<div>
+											<select class="alSelect" id="selectNew_<s:property value="#status.index"/>_<s:property value="#statusList.index"/>" name="selectNew[<s:property value="#status.index"/>][<s:property value="#statusList.index"/>]" onchange="selectionChanged($(this));">
+												<option value="---">---</option>
+												<s:iterator value="#newDuplicateInstitutionMap.value" var="newDuplicateInstitutionOption" status="statusOption">
+													<s:if test="#newDuplicateInstitutionOption.ainame != 'delete' && #newDuplicateInstitutionOption.ainame != 'add'">
+														<option value="<s:property value="#newDuplicateInstitutionOption.internalAlId"/>"><s:property value="#newDuplicateInstitutionOption.internalAlId" /></option>
+													</s:if>
+													<s:else>
+														<option value="delete"><s:property value="getText('al.message.deleteitem')"/></option>
+													</s:else>
+												</s:iterator>
+											</select>
+										</div>
+
+									<div>&nbsp;</div>
+								</s:iterator>
+							</s:iterator>
+						</div>
+					</div>
+				</s:if>
 			</form>
 		</div>
 	</div>

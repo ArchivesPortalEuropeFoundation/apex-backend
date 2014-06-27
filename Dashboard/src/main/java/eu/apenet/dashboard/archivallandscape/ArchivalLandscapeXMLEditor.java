@@ -143,7 +143,8 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 		ArchivalInstitutionDAO aiDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution oldInstitution = aiDAO.getArchivalInstitutionByInternalAlId(oldSameNameInstitution,SecurityContext.get().getCountryId());
 		ArchivalInstitution targetInstitution = ArchivalLandscapeUtils.getInstitutionByNameFromStructure(oldInstitution.getAiname(), archivalInstitutionList);
-		targetInstitution.setInternalAlId(newSameNameInstitution);
+//		targetInstitution.setInternalAlId(newSameNameInstitution);
+		targetInstitution.setInternalAlId(oldSameNameInstitution);
 		archivalInstitutionList = ArchivalLandscapeUtils.replaceAnInstitutionToArchivalInstitutionStructure(oldInstitution,targetInstitution,archivalInstitutionList);
 		return archivalInstitutionList;
 	}
@@ -176,10 +177,10 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 	public void supplyTmpByOriginalXmlFile(){
 		String httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + FILE_NAME;
 		String httpFileTempName = SecurityContext.get().getCountryIsoname().toUpperCase() + TEMP_FILE_NAME;
-		File httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
+		File httpFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
 			File.separatorChar + httpFileFileName);
-		File httpTempFile =  new File(APEnetUtilities.getConfig().getRepoDirPath() + 
+		File httpTempFile =  new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
 			File.separatorChar + httpFileTempName);
 		try {
