@@ -101,7 +101,12 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				var jsonDataYourInstitution = clickYourInstitutionAction(text1,message);
 				if (!jsonDataYourInstitution) {
 					alert(error1);
-					$("#tab_yourInstitutionTable_1").trigger('click');
+					if($("#tab_yourInstitutionTable_1").length>0){
+						$("#tab_yourInstitutionTable_1").trigger('click');
+						$("#tab_yourInstitutionTable_1 a[href='#tab-yourInstitution']").trigger('click');
+					}else{
+						$("a[href='#tab-yourInstitution']").trigger('click');
+					}
 					exit = true;
 				}
 				break;
@@ -110,8 +115,12 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				var jsonDataIdentity = clickIdentityAction(text1);
 				if (!jsonDataIdentity) {
 					alert(error2);
-					$("#tab_yourInstitutionTable_1").trigger('click');
-					$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
+					if($("#tab_yourInstitutionTable_1").length>0){
+						$("#tab_yourInstitutionTable_1").trigger('click');
+						$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
+					}else{
+						$("a[href='#tab-identity']").trigger('click');
+					}
 					exit = true;
 				}
 				break;
@@ -162,8 +171,12 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				var jsonDataRelations = clickRelationsAction(text1,message);
 				if (!jsonDataRelations) {
 					alert(error7);
-					$("#tab_yourInstitutionTable_1").trigger('click');
-					$("#tab_yourInstitutionTable_1 a[href='#tab-relations']").trigger('click');
+					if($("#tab_yourInstitutionTable_1").length>0){
+						$("#tab_yourInstitutionTable_1").trigger('click');
+						$("#tab_yourInstitutionTable_1 a[href='#tab-relations']").trigger('click');
+					}else{
+						$("a[href='#tab-relations']").trigger('click');
+					}
 					exit = true;
 				}
 				break;
