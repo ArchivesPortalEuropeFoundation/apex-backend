@@ -1,6 +1,7 @@
 <%@ page import="eu.apenet.commons.types.XmlType" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<input type="hidden" id="contextPath" value="${pageContext.request.contextPath}">
 
 	<s:if test="existingNewXslFilesUploaded.size()>0 || existingNewXmlFilesUploaded.size()>0" >
        	<div id="existingNewXslFilesUploadedList">
@@ -43,13 +44,31 @@
 	        	<br>
 	        	<br>
 	        </s:if>
-	        <div>
-	        <s:submit key="label.accept" action="checkexistingfiles"/>&nbsp;
-	        <s:submit key="label.cancel" style="padding-top:0px;" action="cancelCheckexistingfiles"/>
-	        </div>
-		</s:form>        
+	        <s:token />
+		</s:form>     
+        <div>&nbsp;</div>
+        <div id="actions">
+   	        <input type="button" key="label.accept" value="<s:property value="getText('label.accept')"/>" id="checkexistingfiles_label_accept" onclick="disableButtons('accept');"/>&nbsp;
+	        <input type="button" key="label.cancel" value="<s:property value="getText('label.cancel')"/>" id="checkexistingfiles_label_cancel" style="padding-top:0px;" onclick="disableButtons('cancel');"/>
+        </div> 
 	</s:if>
 	<s:else>
 		<!-- Redirection to content.action. It is mapped in struts.xml, so it is not necessary to do anything here -->
 	</s:else>
 <div style="margin-bottom:30px;"></div>
+
+<script type="text/javascript">
+
+function disableButtons(action) {
+    $("#checkexistingfiles_label_accept").attr('disabled', 'disabled');
+    $("#checkexistingfiles_label_cancel").attr('disabled', 'disabled');
+    var context = $("#contextPath").val();
+
+    if (action == "accept")
+    	$("form#checkexistingfiles").attr("action", context + "/checkexistingfiles.action");
+    else
+    	$("form#checkexistingfiles").attr("action", context + "/cancelCheckexistingfiles.action");
+    
+	$("form#checkexistingfiles").submit();
+}
+</script>

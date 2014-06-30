@@ -173,7 +173,6 @@
 
         <!-- Checking Existing Files -->
         <action name="checkfilesuploaded" class="eu.apenet.dashboard.manual.ExistingFilesAction">
-            <!--todo:Discuss with Inteco about this DIRECT result -->
             <interceptor-ref name="changeLanguageStack"/>
             <result name="DIRECT" type="redirectAction">
                 <param name="actionName">contentmanager</param>
@@ -195,7 +194,10 @@
             <result name="success" type="tiles">checkuploadedfiles</result>
         </action>
 
-        <action name="checkexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="checkExistingFiles">
+        <action name="checkexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="checkExistingFiles">          
+            <interceptor-ref name="token"></interceptor-ref>
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+            
             <result name="success" type="tiles">checkuploadedfiles</result>
             <result name="contentmanager" type="redirectAction">
                 <param name="actionName">contentmanager</param>
