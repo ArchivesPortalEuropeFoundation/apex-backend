@@ -15,7 +15,7 @@ import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
-import eu.apenet.dashboard.services.eag.xml.XmlEagParser;
+import eu.apenet.dashboard.services.eag.xml.stream.XmlEagParser;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
