@@ -22,6 +22,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	private String attributeName;
 	private String attributeValue;
 	private boolean attributeValueNot = false;
+	private boolean relative = false;
 	public AbstractXpathHandler(String defaultNamespace, String[] xpathQueryArray){
 		xpathQuery = new XpathQuery(defaultNamespace, xpathQueryArray);
 	}
@@ -49,7 +50,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	}
 
 
-	private static void logXpathPosition(LinkedList<QName> xpathPosition, String message){
+	protected static void logXpathPosition(LinkedList<QName> xpathPosition, String message){
 		String xpathString = "";
 		for (QName xpath: xpathPosition){
 			xpathString +="/" + xpath.getLocalPart();
@@ -58,14 +59,54 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	}
 	
 	@Override
-	public void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
+	public final void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
 		if (match){
-			writeContent(xmlReader.getText());		
+			internalProcessCharacters(xmlReader);
 		}
 		
 	}
+	protected void internalProcessCharacters(XMLStreamReader xmlReader) throws Exception {
+		writeContent(xmlReader.getText());		
+	}
 	@Override
-	public void processStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
+	public final void processStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
+		if (relative){
+			LinkedList<QName> xpathPositionTemp = new LinkedList<QName>();
+			QName first = xpathQuery.xpathQueryList.getFirst();
+			boolean found = false;
+			for (QName xpathItem: xpathPosition){
+				if (found){
+					xpathPositionTemp.add(xpathItem);
+				}else if (first.equals(xpathItem)){
+					xpathPositionTemp.add(xpathItem);
+					found = true;
+				}
+			}
+			internalProcessStartElement(xpathPositionTemp,xmlReader);
+		}else {
+			internalProcessStartElement(xpathPosition,xmlReader);
+		}
+	}
+	@Override
+	public final void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
+		if (relative){
+			LinkedList<QName> xpathPositionTemp = new LinkedList<QName>();
+			QName first = xpathQuery.xpathQueryList.getFirst();
+			boolean found = false;
+			for (QName xpathItem: xpathPosition){
+				if (found){
+					xpathPositionTemp.add(xpathItem);
+				}else if (first.equals(xpathItem)){
+					xpathPositionTemp.add(xpathItem);
+					found = true;
+				}
+			}
+			internalProcessEndElement(xpathPositionTemp,xmlReader);
+		}else {
+			internalProcessEndElement(xpathPosition, xmlReader);
+		}
+	}
+	private void internalProcessStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
 		int xpathPositionSize = xpathPosition.size();
 		boolean equalXpathSize = xpathPositionSize == xpathQuery.getXpathQuerySize();
 		if (equalXpathSize){
@@ -109,20 +150,19 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 			}
 		}else {
 			boolean xpathLarger = xpathPositionSize > xpathQuery.getXpathQuerySize();
-			if (allTextBelow && xpathLarger && xpathElementMatch){
+			if (isAllTextBelow() && xpathLarger && xpathElementMatch){
 				match = true;
 				processChildStartElementMatch(xmlReader);
 			}else {
 				match = false;
 			}
 		}
-		
 	}
 
-	public void processChildStartElementMatch(XMLStreamReader xmlReader){
+	public void processChildStartElementMatch(XMLStreamReader xmlReader)throws Exception {
 		
 	}
-	public void processChildEndElementMatch(XMLStreamReader xmlReader){
+	public void processChildEndElementMatch(XMLStreamReader xmlReader)throws Exception {
 		
 	}
 	protected static String removeUnusedCharacters(String input){
@@ -135,8 +175,8 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 		}
 		
 	}
-	@Override
-	public void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
+
+	private void internalProcessEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
 		boolean pastMatch = xpathElementMatch;
 		int xpathPositionSize = xpathPosition.size();
 		int nextXpathPositionSize = xpathPositionSize -1;
@@ -145,7 +185,6 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 		if (equalXpathSize && xpathElementMatch){
 			xpathElementMatch = false;
 			match = false;
-			
 		}else if (match && nextXpathPositionSize > xpathQuery.getXpathQuerySize()){
 			processChildEndElementMatch(xmlReader);
 		}else if (nextXpathPositionSize == xpathQuery.getXpathQuerySize()){
@@ -158,6 +197,9 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 				newXPathPosition.add(xpathPosition.get(i));
 			}
 			match = xpathQuery.match(newXPathPosition);
+			if (match){
+				processChildEndElementMatch(xmlReader);
+			}
 		}else {
 			match = false;
 		}
@@ -234,4 +276,15 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 			return xpathQuerySize+1;
 		}
 	}
+
+	public void setRelative(boolean relative) {
+		this.relative = relative;
+	}
+
+
+
+	public boolean isAllTextBelow() {
+		return allTextBelow;
+	}
+	
 }
