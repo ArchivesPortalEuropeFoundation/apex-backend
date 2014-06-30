@@ -81,6 +81,7 @@ public class HighlighterExtension extends ExtensionFunctionDefinition {
 				String value = "";
 				if (firstArg != null) {
 					value = firstArg.getStringValue();
+					value = value.replaceAll(">", "&#62;").replaceAll("<","&#60;");
 					if (hasSearchTerms) {
 						SolrField highlightField = SolrField.getSolrField(arguments[1].next()
 								.getStringValue());
