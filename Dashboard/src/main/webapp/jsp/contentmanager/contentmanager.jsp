@@ -98,7 +98,7 @@
 					<c:choose>
                         <c:when test="${xmlTypeId == '1'}">
 						<!-- no results page with HG creation -->
-							<div class="left">
+							<div id="HGnoResults" class="left">
 				                <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
 			            	</div>
                             <div id="noresults">
