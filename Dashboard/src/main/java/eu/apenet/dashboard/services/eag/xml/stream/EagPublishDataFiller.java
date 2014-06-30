@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.services.eag.xml;
+package eu.apenet.dashboard.services.eag.xml.stream;
 
 import java.net.URL;
 import java.util.ArrayList;

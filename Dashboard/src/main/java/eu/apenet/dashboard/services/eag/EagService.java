@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
-import eu.apenet.dashboard.services.eag.xml.XmlEagParser;
+import eu.apenet.dashboard.services.eag.xml.stream.XmlEagParser;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 

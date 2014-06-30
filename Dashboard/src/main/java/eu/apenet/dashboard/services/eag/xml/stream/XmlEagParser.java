@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.services.eag.xml;
+package eu.apenet.dashboard.services.eag.xml.stream;
 
 import java.io.File;
 import java.io.FileInputStream;
