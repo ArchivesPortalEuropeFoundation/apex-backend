@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:if test="${xmlTypeId == '1'}">
-    <div class="left">
+    <div id="HGnoResults" class="left">
         <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
     </div>
 </c:if>
