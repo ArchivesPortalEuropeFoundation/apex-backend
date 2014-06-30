@@ -3,42 +3,21 @@ package eu.apenet.dashboard.services.eag.xml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.log4j.Logger;
 
-import eu.apenet.commons.solr.SolrFields;
-import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.services.ead.publish.EADCounts;
-import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
-import eu.apenet.dashboard.services.ead.xml.XMLStreamWriterHolder;
-import eu.apenet.dashboard.services.ead.xml.stream.XmlCLevelParser;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishDataFiller;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagPublishData;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.SourceGuide;
 
 
 public class XmlEagParser extends AbstractParser {
@@ -87,11 +66,7 @@ public class XmlEagParser extends AbstractParser {
 			}
 			throw de;
 		}
-		if (solrPublisher != null) {
-			return solrPublisher.getSolrTime();
-		}else {
-			return 0;
-		}
+		return solrPublisher.getSolrTime();
 	}
 
 	private static FileInputStream getFileInputStream(String path) throws FileNotFoundException, XMLStreamException {
