@@ -8,7 +8,7 @@ package eu.apenet.dashboard.services.eaccpf;
 import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.dashboard.services.eaccpf.publish.EacCpfSolrPublisher;
+import eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfSolrPublisher;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
