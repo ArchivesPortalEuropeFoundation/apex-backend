@@ -13,8 +13,7 @@ public class EacCpfPublishData {
 	private String dateDescription;
 	private String fromDate;
 	private String toDate;
-	private boolean fromDateExist;
-	private boolean toDateExist;
+	private String dateType;
 	private Set<String> entityIds;
 	private String recordId;
 	private String other;
@@ -130,21 +129,14 @@ public class EacCpfPublishData {
 		return recordId;
 	}
 
-	public boolean isFromDateExist() {
-		return fromDateExist;
+	public String getDateType() {
+		return dateType;
 	}
 
-	public boolean isToDateExist() {
-		return toDateExist;
+	public void setDateType(String dateType) {
+		this.dateType = dateType;
 	}
 
-	public void setFromDateExist(boolean fromDateExist) {
-		this.fromDateExist = fromDateExist;
-	}
-
-	public void setToDateExist(boolean toDateExist) {
-		this.toDateExist = toDateExist;
-	}
 
 
 }
