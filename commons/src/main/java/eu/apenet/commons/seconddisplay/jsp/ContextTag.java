@@ -29,25 +29,25 @@ public class ContextTag extends SimpleTagSupport{
 				CLevel parent = currentCLevel.getParent();
 				
 				while (parent != null ){
-					hierarchy.add(parent.getUnittitle());
+					hierarchy.add(this.escapeChars(parent.getUnittitle()));
 					parent = parent.getParent();
 				}
 				eadContent = currentCLevel.getEadContent();
-				hierarchy.add(eadContent.getUnittitle());
+				hierarchy.add(this.escapeChars(eadContent.getUnittitle()));
 			}else if (this.eadContent != null){
 				eadContent = (EadContent) this.eadContent;
 			}
 			
 			if (!"true".equals(onlyArchives)){
-				hierarchy.add(eadContent.getTitleproper());
+				hierarchy.add(this.escapeChars(eadContent.getTitleproper()));
 			}
 			if (eadContent != null){
 				ArchivalInstitution ai  = eadContent.getEad().getArchivalInstitution();
 				while (ai != null){
-					hierarchy.add(ai.getAiname());
+					hierarchy.add(this.escapeChars(ai.getAiname()));
 					ai = ai.getParent();
 				}
-				hierarchy.add((String) country);
+				hierarchy.add(this.escapeChars((String) country));
 				int numberOfWhitespaces = 0;
 				for (int i = hierarchy.size() -1; i >=0;i--){
 					//result.append("<span class=\"contextHierarchyItem\">");
@@ -66,6 +66,15 @@ public class ContextTag extends SimpleTagSupport{
 		}
 	}
 
+	/**
+	 * Method to escape the chars '<' and '>', in order to prevent JS execution.
+	 *
+	 * @param str The string to be escaped.
+	 * @return The escaped string.
+	 */
+	private String escapeChars(String str) {
+		return str.replaceAll(">", "&#62;").replaceAll("<","&#60;");
+	}
 
 
 	public Object getClevel() {
