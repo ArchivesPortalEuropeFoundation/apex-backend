@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dpt.utils.ead2edm.DigitalObjectCounter;
 import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.ead2edm.XMLUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
@@ -81,7 +82,8 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                     File edmOutputFile = EdmFileUtils.getFile(outputEDMDir, edmOutputFilename);
                     edmOutputFile.getParentFile().mkdirs();
                     edmConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, edmOutputFile);
-                    int numberOfRecords = XMLUtil.analyzeESEXML(edmOutputFile);
+                    DigitalObjectCounter digitalObjectCounter = XMLUtil.analyzeESEXML(edmOutputFile);
+                    int numberOfRecords = digitalObjectCounter.getNumberOfProvidedCHO();
 
                     boolean update = false;
                     if (numberOfRecords > 1) {
@@ -124,6 +126,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                                 edmOutputFilename));
                         ese.setOaiIdentifier(oaiIdentifier);
                         ese.setNumberOfRecords(numberOfRecords);
+                        ese.setNumberOfWebResource(digitalObjectCounter.getNumberOfWebResource());
                         ese.setFindingAid(findingAid);
                         ArchivalInstitution ai = findingAid.getArchivalInstitution();
                         ese.setEseState(eseState);
@@ -135,6 +138,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                             eseDao.store(ese);
                         }
                         findingAid.setTotalNumberOfChos(new Long(numberOfRecords));
+                        findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfWebResource()));
                         findingAid.setEuropeana(EuropeanaState.CONVERTED);
                     } else {
                         edmOutputFile.delete();

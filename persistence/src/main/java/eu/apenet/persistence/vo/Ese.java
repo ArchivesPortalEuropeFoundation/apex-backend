@@ -43,6 +43,9 @@ public class Ese implements java.io.Serializable {
 	@Column(name="number_of_records")
 	private Integer numberOfRecords;
 
+    @Column(name="number_of_web_resource")
+    private Integer numberOfWebResource;
+
 	@Column(name="oai_identifier")
 	private String oaiIdentifier;
 
@@ -183,4 +186,11 @@ public class Ese implements java.io.Serializable {
 		return oaiIdentifier;
 	}
 
+    public Integer getNumberOfWebResource() {
+        return numberOfWebResource;
+    }
+
+    public void setNumberOfWebResource(Integer numberOfWebResource) {
+        this.numberOfWebResource = numberOfWebResource;
+    }
 }

@@ -55,6 +55,8 @@ public class FindingAid extends Ead {
 	private ArchivalInstitution archivalInstitution;
 	@Column(name = "ai_id", updatable = false, insertable = false)
 	private Integer aiId;
+    @Column(name = "total_number_of_web_resource_edm")
+	private Long totalNumberOfWebResourceEdm = 0l;
 	private Long totalNumberOfChos = 0l;
 	private Long totalNumberOfDaos = 0l;
 	private Long totalNumberOfUnits = 0l;
@@ -265,5 +267,12 @@ public class FindingAid extends Ead {
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
-    
+
+    public Long getTotalNumberOfWebResourceEdm() {
+        return totalNumberOfWebResourceEdm;
+    }
+
+    public void setTotalNumberOfWebResourceEdm(Long totalNumberOfWebResourceEdm) {
+        this.totalNumberOfWebResourceEdm = totalNumberOfWebResourceEdm;
+    }
 }

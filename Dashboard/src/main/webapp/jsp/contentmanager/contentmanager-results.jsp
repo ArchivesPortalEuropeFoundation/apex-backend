@@ -237,9 +237,9 @@
 						<c:choose>
 							<c:when test="${results.findingAid}">
                                 <td id="tdHoldings_${eadResult.id}">${eadResult.holdingsGuideTitle}</td>
-                                <td id="tdEdm_${eadResult.id}" class="${eadResult.eseEdmCssClass}"><c:choose>
+                                <td id="tdEdm_${eadResult.id}" class="${eadResult.eseEdmCssClass}" title="<s:text name='content.message.edm.tooltip' />"><c:choose>
                                         <c:when
-                                            test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfChos > 0}">${eadResult.totalNumberOfChos}</c:when>
+                                            test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfChos > 0}">${eadResult.totalNumberOfChos} / ${eadResult.totalNumberOfWebResourceEdm}</c:when>
                                         <c:otherwise>
                                             <apenet:resource>${eadResult.eseEdmText}</apenet:resource>
                                         </c:otherwise>
