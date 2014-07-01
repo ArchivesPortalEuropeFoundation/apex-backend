@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 import eu.apenet.commons.solr.AbstractSolrServerHolder;
 
 public abstract class AbstractSolrPublisher {
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final static Logger LOGGER = Logger.getLogger(AbstractSolrPublisher.class);
 	protected static final String WHITE_SPACE = " ";
 	public static final String COLON = ":";
 	private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
@@ -42,39 +42,41 @@ public abstract class AbstractSolrPublisher {
 	}
 
 
-	protected String obtainDate(String onedate, boolean isStartDate) {
-		String year = null;
-		String month = null;
-		String day = null;
-		try {
-			if (onedate.contains("-")) {
-				String[] list = onedate.split("-");
-				if (list.length >= 1) {
-					year = list[0];
-				}
-				if (list.length >= 2) {
-					month = list[1];
-				}
-				if (list.length >= 3) {
-					day = list[2];
-					if (day != null && day.contains("T")){
-						day = day.substring(0,day.indexOf("T"));
+	public static String obtainDate(String onedate, boolean isStartDate) {
+		if (StringUtils.isNotBlank(onedate)){
+			String year = null;
+			String month = null;
+			String day = null;
+			try {
+				if (onedate.contains("-")) {
+					String[] list = onedate.split("-");
+					if (list.length >= 1) {
+						year = list[0];
+					}
+					if (list.length >= 2) {
+						month = list[1];
+					}
+					if (list.length >= 3) {
+						day = list[2];
+						if (day != null && day.contains("T")){
+							day = day.substring(0,day.indexOf("T"));
+						}
+					}
+				} else {
+					if (onedate.length() >= 4) {
+						year = onedate.substring(0, 4);
+					}
+					if (onedate.length() >= 6) {
+						month = onedate.substring(4, 6);
+					}
+					if (onedate.length() >= 8) {
+						day = onedate.substring(6, 8);
 					}
 				}
-			} else {
-				if (onedate.length() >= 4) {
-					year = onedate.substring(0, 4);
-				}
-				if (onedate.length() >= 6) {
-					month = onedate.substring(4, 6);
-				}
-				if (onedate.length() >= 8) {
-					day = onedate.substring(6, 8);
-				}
+				return obtainDate(year, month, day, isStartDate);
+			} catch (Exception ex) {
+				LOGGER.error("Error trying to obtain Date in Indexer: " + ex.getMessage());
 			}
-			return obtainDate(year, month, day, isStartDate);
-		} catch (Exception ex) {
-			logger.error("Error trying to obtain Date in Indexer: " + ex.getMessage());
 		}
 		return null;
 	}
@@ -140,14 +142,14 @@ public abstract class AbstractSolrPublisher {
 			solrTime += getSolrServerHolder().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
 			numberOfPublishedItems += MAX_NUMBER_OF_PENDING_DOCS;
-			logger.debug(getKey() + " #published: " + numberOfPublishedItems);
+			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems);
 		}
 	}
 	public void commitSolrDocuments() throws SolrServerException{
 		if (docs.size() > 0) {
 			solrTime += getSolrServerHolder().add(docs);
 			numberOfPublishedItems += docs.size();
-			logger.debug(getKey() + " #published: " + numberOfPublishedItems );
+			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems );
 			docs = new ArrayList<SolrInputDocument>();
 		}
 	}
