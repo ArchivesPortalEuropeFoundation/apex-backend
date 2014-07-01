@@ -628,11 +628,9 @@
 						<div class="leftcolumn">
 					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
-					   	<div class="rightcolumn moreDisplay" id="structureOrGenealogy">
+					   	<div class="rightcolumn">
 					   		<xsl:call-template name="multilanguageOutline">
 					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level"/>
-					   		  	<xsl:with-param name="clazz" select="'structureOrGenealogy'"/>
-					   		  	<xsl:with-param name="count" select="1"/>  <!-- count the number of white spaces to display in the tree -->
 					   		</xsl:call-template>
 						</div>
 					</div>
@@ -659,11 +657,9 @@
 						<div class="leftcolumn">
 					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.generalContext')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
-					   	<div class="rightcolumn moreDisplay" id="structureOrGenealogy">
+					   	<div class="rightcolumn">
 					   		<xsl:call-template name="multilanguageOutline">
 					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:outline/eac:level"/>
-					   		  	<xsl:with-param name="clazz" select="'generalContext'"/>
-					   		  	<xsl:with-param name="count" select="1"/> 
 					   		</xsl:call-template>
 						</div>
 					</div>
@@ -2101,12 +2097,49 @@
 	<!-- template for outline -->
 	<xsl:template name="multilanguageOutline">
 		<xsl:param name="list"/><!-- outline/level -->
-		<xsl:param name="clazz"/>
-		<xsl:param name="count"/>
 		<xsl:choose>
+		    <!-- selected language -->
 			<xsl:when test="$list/descendant-or-self::node()/eac:item[@xml:lang = $language.selected] and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.selected]/text() and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.selected]/text() != ''">
+				<xsl:call-template name="multilanguageOutlineRecursive">
+					<xsl:with-param name="list" select="$list"/>
+					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
+					<xsl:with-param name="language" select="$language.selected"/>
+				</xsl:call-template>
+			</xsl:when> 
+			<!-- default language (english) -->
+			<xsl:when test="$list/descendant-or-self::node()/eac:item[@xml:lang = $language.default] and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.default]/text() and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.default]/text() != ''">
+				<xsl:call-template name="multilanguageOutlineRecursive">
+					<xsl:with-param name="list" select="$list"/>
+					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
+					<xsl:with-param name="language" select="$language.default"/>
+				</xsl:call-template>
+			</xsl:when>
+			<!-- not lang -->
+			<xsl:when test="$list/descendant-or-self::node()/eac:item[not(@xml:lang)] and $list/descendant-or-self::node()/eac:item[not(@xml:lang)]/text() and $list/descendant-or-self::node()/eac:item[not(@xml:lang)]/text() != ''">
+				<xsl:call-template name="multilanguageOutlineRecursive">
+					<xsl:with-param name="list" select="$list"/>
+					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
+					<xsl:with-param name="language" select="'notLang'"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise> <!-- First language -->
+				<xsl:variable name="language.first" select="$list[1]/eac:item/@xml:lang"/>
+				<xsl:call-template name="multilanguageOutlineRecursive">
+					<xsl:with-param name="list" select="$list"/>
+					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
+					<xsl:with-param name="language" select="$language.first"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>	
+	</xsl:template>
+	
+	<!-- template for outline recursive -->
+	<xsl:template name="multilanguageOutlineRecursive">
+		<xsl:param name="list"/>
+		<xsl:param name="count"/>
+		<xsl:param name="language"/>
 			 <xsl:for-each select="$list">
-					<xsl:if test="./descendant-or-self::node()/eac:item[@xml:lang = $language.selected]">
+				 	<xsl:if test="./descendant-or-self::node()/eac:item[@xml:lang = $language] or ($language='notLang' and ./descendant-or-self::node()/eac:item[not(@xml:lang)])"> 
 						<pre class="outline">
 							<xsl:if test="name(./parent::node()) != 'outline'">
 								<xsl:call-template name="repeat">
@@ -2114,21 +2147,17 @@
 								</xsl:call-template>
 							</xsl:if>
 							<xsl:text>* </xsl:text>
-							<xsl:apply-templates select="./eac:item" mode="other"/>
+						 	<xsl:apply-templates select="./eac:item" mode="other"/> 
 						</pre>
 					</xsl:if>
 					<xsl:for-each select="./eac:level">
-								<xsl:call-template name="multilanguageOutline">
-									<xsl:with-param name="list" select="."/>
-									<xsl:with-param name="clazz" select="$clazz"/>
-									<xsl:with-param name="count" select="$count+1"/>
-								</xsl:call-template>
+						<xsl:call-template name="multilanguageOutlineRecursive">
+							<xsl:with-param name="list" select="."/>
+							<xsl:with-param name="count" select="$count+1"/>
+							<xsl:with-param name="language" select="$language"/>
+						</xsl:call-template>
 					</xsl:for-each> 
 				</xsl:for-each> 
-			</xsl:when>
-			<!-- TODO: other when to detect the language of the browser -->
-			<xsl:otherwise/>
-		</xsl:choose>
 	</xsl:template>
 	
 	<!-- template to tabulate the elements outline -->
