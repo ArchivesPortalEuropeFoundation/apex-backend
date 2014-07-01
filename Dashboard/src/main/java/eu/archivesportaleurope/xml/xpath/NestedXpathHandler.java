@@ -34,9 +34,6 @@ public class NestedXpathHandler extends AbstractXpathHandler {
 		}
 	}
 
-
-
-
 	@Override
 	public void processChildEndElementMatch(XMLStreamReader xmlReader)  throws Exception {
 		for (XmlStreamHandler handler: handlers){
@@ -46,13 +43,6 @@ public class NestedXpathHandler extends AbstractXpathHandler {
 			xpathPosition.removeLast();
 
 	}
-
-
-
-
-
-
-
 
 	@Override
 	protected void processExactStartElementMatch(XMLStreamReader xmlReader) {
