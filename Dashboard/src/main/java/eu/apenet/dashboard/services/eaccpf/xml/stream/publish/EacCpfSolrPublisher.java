@@ -44,8 +44,6 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 	public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
 
 	private final static XPath XPATH = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
-	private static XPathExpression nameExpression;
-	private static XPathExpression nameParallelExpression;
 
 	private static XPathExpression cpfDescriptionExpression;
 	private static XPathExpression descriptionExpression;
@@ -57,30 +55,16 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 	private static XPathExpression toDateNormalExpression;
 
 
-	
-
-	private static XPathExpression descriptiveNoteExpression;
 
 
-
-
-
-	private static XPathExpression alternativeSetExpression;
-
-	private static XPathExpression relationsExpression;
-	private static XPathExpression otherPlaceEntryExpression;
-	private static XPathExpression otherRelationEntryExpression;	
-	private static XPathExpression otherComponentEntryExpression;
 
 	private String recordId;
 	static {
 		try {
 			XPATH.setNamespaceContext(new EacCpfNamespaceContext());
 			cpfDescriptionExpression =  XPATH.compile("/eac:eac-cpf/eac:cpfDescription");
-			nameExpression = XPATH.compile("./eac:identity/eac:nameEntry/eac:part");
-			nameParallelExpression = XPATH.compile("./eac:identity/eac:nameEntryParallel/eac:nameEntry/eac:part");
+
 			descriptionExpression = XPATH.compile("./eac:description");
-			relationsExpression = XPATH.compile("./eac:relations");
 			fromDateExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:fromDate");
 			toDateExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:toDate");
 			oneDateExpression = XPATH.compile("./eac:existDates/eac:date");
@@ -89,15 +73,6 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 			toDateNormalExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:toDate/@standardDate");
 
 
-			//descriptiveNoteExpression = XPATH.compile("//eac:descriptiveNote//text()");
-
-
-
-			otherPlaceEntryExpression = XPATH.compile("//eac:placeEntry");
-			
-			otherRelationEntryExpression = XPATH.compile("//eac:relationEntry");
-			otherComponentEntryExpression = XPATH.compile("//eac:componentEntry");
-			alternativeSetExpression = XPATH.compile("./eac:alternativeSet");
 
 
 		} catch (XPathExpressionException e) {
@@ -105,13 +80,6 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 		}
 	}
 
-	private StringBuilder getContent(List<XPathExpression> expressions, Node baseNode) throws XPathExpressionException{
-		StringBuilder stringBuilder = new StringBuilder();
-		for (XPathExpression expression: expressions){
-			stringBuilder.append(getText((NodeList)expression.evaluate(baseNode, XPathConstants.NODESET))+ WHITE_SPACE);
-		}
-		return stringBuilder;
-	}
 	
 	public void publish(EacCpf eacCpf) throws Exception{
 		File file = new File (APEnetUtilities.getDashboardConfig().getRepoDirPath() + eacCpf.getPath());
@@ -130,25 +98,8 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 	}
 	private void parseCpfDescription(EacCpfSolrObject eacCpfSolrObject, Node cpfDescriptionNode) throws XPathExpressionException{
 		Node descriptionNode = (Node) descriptionExpression.evaluate(cpfDescriptionNode, XPathConstants.NODE);
-		NodeList nameNodeList = (NodeList) nameExpression.evaluate(cpfDescriptionNode, XPathConstants.NODESET);
-		eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList, true));
-		if (eacCpfSolrObject.getNames().size() ==0){
-			nameNodeList = (NodeList) nameParallelExpression.evaluate(cpfDescriptionNode, XPathConstants.NODESET);
-			eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList, true));
-		}
 
-		Node relationsNode = (Node) relationsExpression.evaluate(cpfDescriptionNode, XPathConstants.NODE);
-		List<XPathExpression> otherExpressions = new ArrayList<XPathExpression>();
-		otherExpressions.add(descriptiveNoteExpression);
-		otherExpressions.add(otherPlaceEntryExpression);
-		otherExpressions.add(otherRelationEntryExpression);
-		StringBuilder other = getContent(otherExpressions, relationsNode);
-		otherExpressions.clear();
-		Node alternativeSetNode = (Node) alternativeSetExpression.evaluate(cpfDescriptionNode, XPathConstants.NODE);
-		otherExpressions.add(descriptiveNoteExpression);
-		otherExpressions.add(otherComponentEntryExpression);
-		other.append(getContent(otherExpressions, alternativeSetNode));
-		eacCpfSolrObject.setOther(other.toString());
+
 		String oneDate = removeUnusedCharacters((String) oneDateExpression.evaluate(descriptionNode, XPathConstants.STRING));
 		String oneDateNormal = removeUnusedCharacters((String) oneDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING));
 		if (StringUtils.isBlank(oneDate) && StringUtils.isBlank(oneDateNormal)){
@@ -207,7 +158,7 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 		add(doc,SolrFields.EAC_CPF_RECORD_ID, eacCpf.getIdentifier());
 		addLowerCase(doc,SolrFields.EAC_CPF_FACET_ENTITY_TYPE, eacCpfPublishData.getEntityType());
 		doc.addField(SolrFields.EAC_CPF_ENTITY_ID, eacCpfPublishData.getEntityIds());
-//		doc.addField(SolrFields.EAC_CPF_NAMES, eacCpfPublishData.getNames());
+		doc.addField(SolrFields.EAC_CPF_NAMES, eacCpfPublishData.getNames());
 		doc.addField(SolrFields.EAC_CPF_PLACES, eacCpfPublishData.getPlaces());
 		doc.addField(SolrFields.EAC_CPF_OCCUPATION,eacCpfPublishData.getOccupations());
 		doc.addField(SolrFields.EAC_CPF_FACET_FUNCTION, eacCpfPublishData.getFunctions());
@@ -238,7 +189,7 @@ public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 
 		add(doc, SolrFields.AI, archivalInstitution.getAiname() + COLON + archivalInstitution.getAiId());
 		doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
-//		add(doc, SolrFields.OTHER,eacCpfPublishData.getOther());
+		add(doc, SolrFields.OTHER,eacCpfPublishData.getOther());
 		doc.addField(SolrFields.REPOSITORY_CODE, archivalInstitution.getRepositorycode());
 		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS, eacCpfPublishData.getNumberOfArchivalMaterialRelations());
 		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_NAME_RELATIONS, eacCpfPublishData.getNumberOfNameRelations());

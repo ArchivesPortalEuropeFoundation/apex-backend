@@ -34,14 +34,17 @@ public class EacCpfPublishDataFiller {
 	private AttributeXpathHandler languageHandler;
 	private TextXpathHandler entityTypeHandler;
 	private TextXpathHandler entityIdHandler;
+
+	private TextXpathHandler namesHandler;
+	private TextXpathHandler namesParallelHandler;
+	private NestedXpathHandler identityHandler;
+	/*
+	 * description
+	 */
 	private TextXpathHandler placesHandler;
 	private TextXpathHandler functionsHandler;
 	private TextXpathHandler mandatesHandler;
 	private TextXpathHandler occupationsHandler;
-
-	/*
-	 * description
-	 */
 	private TextXpathHandler bioghistHandler;
 	private TextXpathHandler generalContextHandler;
 	private TextXpathHandler structureOrGenealogyHandler;
@@ -55,11 +58,25 @@ public class EacCpfPublishDataFiller {
 	
 	private TextXpathHandler descriptionDescriptiveNoteHandler;
 	private NestedXpathHandler descriptionHandler;
+	/*
+	 * relations
+	 */
 	private NestedXpathHandler relationsHandler;
-	
+
 	private CountXpathHandler countArchivalMaterialRelationsHandler;
 	private CountXpathHandler countNameRelationsHandler;
 	private AttributeXpathHandler institutionsRelationsHandler;
+	
+	private TextXpathHandler relationsPlaceEntryHandler;
+	private TextXpathHandler relationsRelationEntryHandler;
+	private TextXpathHandler relationsDescriptiveNoteHandler;
+
+	/*
+	 * alternativeSet
+	 */
+	private NestedXpathHandler alternativeSetHandler;	
+	private TextXpathHandler alternativeSetDescriptiveNoteHandler;	
+	private TextXpathHandler alternativeSetComponentEntryHandler;	
 
 	private List<XmlStreamHandler> eacCpfHandlers = new ArrayList<XmlStreamHandler>();
 
@@ -69,10 +86,14 @@ public class EacCpfPublishDataFiller {
 		 */
 		languageHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "eac-cpf",
 				"control", "languageDeclaration", "language" }, "languageCode");
-		entityTypeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "eac-cpf",
-				"cpfDescription", "identity", "entityType" });
-		entityIdHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "eac-cpf",
-				"cpfDescription", "identity", "entityId" });
+		identityHandler  = new NestedXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"eac-cpf",
+				"cpfDescription", "identity"});
+		entityTypeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "entityType" });
+		entityIdHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "entityId" });
+		
+		namesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "nameEntry", "part" }, true);
+		namesParallelHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {  "nameEntryParallel",  "nameEntry", "part" }, true);
+	
 		placesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "places", "place", "placeEntry" });
 		occupationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "occupations", "occupation", "term" });
 		mandatesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "mandates", "mandate", "term" });
@@ -105,17 +126,32 @@ public class EacCpfPublishDataFiller {
 		countArchivalMaterialRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation"});
 		countNameRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});
 		countNameRelationsHandler.setAttribute("cpfRelationType", "identity", true);
-		institutionsRelationsHandler =  new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation", "relationEntry"},"agencyCode");
-//		private CountXpathHandler countNameRelationsHandler;
-//		private TextXpathHandler institutionsRelationsHandler;	
-//		countArchivalMaterialRelationsExpression = XPATH.compile("count(//eac:resourceRelation)");
-//		countNameRelationsExpression = XPATH.compile("count(//eac:cpfRelation[not(@cpfRelationType='identity')])");
-//		institutionsRelationsExpression = XPATH.compile("//eac:resourceRelation/eac:relationEntry[@localType='agencyCode']");
+		institutionsRelationsHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation", "relationEntry"},"agencyCode");
+
+		relationsDescriptiveNoteHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"descriptiveNote", "p"}, true);
+		relationsDescriptiveNoteHandler.setAllTextBelow(true);
+		relationsDescriptiveNoteHandler.setRelative(true);
 		
+		relationsPlaceEntryHandler   = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"placeEntry"});
+		relationsPlaceEntryHandler.setRelative(true);
 		
+		relationsRelationEntryHandler   = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"relationEntry"});
+		relationsRelationEntryHandler.setRelative(true);
+
+		alternativeSetHandler  = new NestedXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"eac-cpf",
+				"cpfDescription", "alternativeSet"});
+		alternativeSetDescriptiveNoteHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"descriptiveNote", "p"}, true);
+		alternativeSetDescriptiveNoteHandler.setAllTextBelow(true);
+		alternativeSetDescriptiveNoteHandler.setRelative(true);
+		
+		alternativeSetComponentEntryHandler   = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"setComponent", "componentEntry"});
+		
+
 		eacCpfHandlers.add(languageHandler);
-		eacCpfHandlers.add(entityTypeHandler);
-		eacCpfHandlers.add(entityIdHandler);
+		identityHandler.getHandlers().add(entityTypeHandler);
+		identityHandler.getHandlers().add(entityIdHandler);
+		identityHandler.getHandlers().add(namesHandler);
+		identityHandler.getHandlers().add(namesParallelHandler);
 		descriptionHandler.getHandlers().add(placesHandler);
 		descriptionHandler.getHandlers().add(occupationsHandler);
 
@@ -136,8 +172,17 @@ public class EacCpfPublishDataFiller {
 		
 		relationsHandler.getHandlers().add(countArchivalMaterialRelationsHandler);
 		relationsHandler.getHandlers().add(countNameRelationsHandler);
+		relationsHandler.getHandlers().add(institutionsRelationsHandler);
+		relationsHandler.getHandlers().add(relationsDescriptiveNoteHandler);
+		relationsHandler.getHandlers().add(relationsPlaceEntryHandler);
+		relationsHandler.getHandlers().add(relationsRelationEntryHandler);
+		
+		alternativeSetHandler.getHandlers().add(alternativeSetDescriptiveNoteHandler);
+		alternativeSetHandler.getHandlers().add(alternativeSetComponentEntryHandler);
 		eacCpfHandlers.add(descriptionHandler);
 		eacCpfHandlers.add(relationsHandler);
+		eacCpfHandlers.add(alternativeSetHandler);
+		eacCpfHandlers.add(identityHandler);
 		
 
 
@@ -168,6 +213,11 @@ public class EacCpfPublishDataFiller {
 		publishData.setEntityType(entityTypeHandler.getFirstResult());
 		publishData.setLanguage(languageHandler.getResultAsString());
 		publishData.setEntityIds(entityIdHandler.getResultSet());
+		publishData.setNames(namesHandler.getResultSet());
+		if (publishData.getNames().size() == 0){
+			publishData.setNames(namesParallelHandler.getResultSet());
+		}
+		
 		publishData.setPlaces(strip(placesHandler.getResultSet()));
 		publishData.setFunctions(strip(functionsHandler.getResultSet()));
 		publishData.setOccupations(strip(occupationsHandler.getResultSet()));
@@ -185,6 +235,13 @@ public class EacCpfPublishDataFiller {
 		add(description, placeAddressLineHandler.getResultAsStringWithWhitespace());		
 		add(description, descriptionDescriptiveNoteHandler.getResultAsStringWithWhitespace());
 		publishData.setDescription(description.toString());
+		StringBuilder other = new StringBuilder();
+		add(other, relationsDescriptiveNoteHandler.getResultAsStringWithWhitespace());
+		add(other, relationsPlaceEntryHandler.getResultAsStringWithWhitespace());
+		add(other, relationsRelationEntryHandler.getResultAsStringWithWhitespace());
+		add(other, alternativeSetDescriptiveNoteHandler.getResultAsStringWithWhitespace());
+		add(other, alternativeSetComponentEntryHandler.getResultAsStringWithWhitespace());		
+		publishData.setOther(other.toString());
 		publishData.setNumberOfArchivalMaterialRelations(countArchivalMaterialRelationsHandler.getCount());
 		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
 		publishData.setNumberOfInstitutionsRelations(institutionsRelationsHandler.getResultSet().size());
