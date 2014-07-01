@@ -17,6 +17,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 
+import eu.apenet.commons.solr.SolrValues;
+import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfPublishData;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
@@ -28,6 +30,9 @@ import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
 import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
 
 public class EacCpfPublishDataFiller {
+	private static final String DATE_UNKNOWN_START = "unknownStart";
+	private static final String DATE_UNKNOWN_END = "unknownEnd";
+	private static final String DATE_UNKNOWN = "unknown";
 	/*
 	 * unitids
 	 */
@@ -38,6 +43,17 @@ public class EacCpfPublishDataFiller {
 	private TextXpathHandler namesHandler;
 	private TextXpathHandler namesParallelHandler;
 	private NestedXpathHandler identityHandler;
+	/*
+	 * dates
+	 */
+	private TextXpathHandler fromDateHandler;
+	private TextXpathHandler toDateHandler;
+	private TextXpathHandler oneDateHandler;
+	private AttributeXpathHandler oneDateNormalHandler;
+	private AttributeXpathHandler fromDateNormalHandler;
+	private AttributeXpathHandler toDateNormalHandler;
+	private AttributeXpathHandler dateRangeLocalTypeHandler;
+	private AttributeXpathHandler oneDateLocalTypeHandler;
 	/*
 	 * description
 	 */
@@ -98,7 +114,20 @@ public class EacCpfPublishDataFiller {
 		occupationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "occupations", "occupation", "term" });
 		mandatesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "mandates", "mandate", "term" });
 		functionsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "functions", "function", "term" });
+		/*
+		 * dates
+		 */
+		fromDateHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "dateRange", "fromDate" });
+		toDateHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "dateRange", "toDate" });
+		oneDateHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "date" });
+
+		fromDateNormalHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "dateRange", "fromDate" }, "standardDate");
+		toDateNormalHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "dateRange", "toDate" }, "standardDate");
+		oneDateNormalHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "date" }, "standardDate");
 		
+		dateRangeLocalTypeHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "dateRange" }, "localType");
+		oneDateLocalTypeHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "existDates", "date" }, "localType");
+
 		/*
 		 * description
 		 */
@@ -152,6 +181,21 @@ public class EacCpfPublishDataFiller {
 		identityHandler.getHandlers().add(entityIdHandler);
 		identityHandler.getHandlers().add(namesHandler);
 		identityHandler.getHandlers().add(namesParallelHandler);
+		/*
+		 * dates
+		 */
+		/*
+		 * dates
+		 */
+		descriptionHandler.getHandlers().add(fromDateHandler);
+		descriptionHandler.getHandlers().add(toDateHandler);
+		descriptionHandler.getHandlers().add(oneDateHandler);
+		descriptionHandler.getHandlers().add(fromDateNormalHandler);
+		descriptionHandler.getHandlers().add(toDateNormalHandler);
+		descriptionHandler.getHandlers().add(oneDateNormalHandler);
+		descriptionHandler.getHandlers().add(dateRangeLocalTypeHandler);
+		descriptionHandler.getHandlers().add(oneDateLocalTypeHandler);		
+		
 		descriptionHandler.getHandlers().add(placesHandler);
 		descriptionHandler.getHandlers().add(occupationsHandler);
 
@@ -245,6 +289,80 @@ public class EacCpfPublishDataFiller {
 		publishData.setNumberOfArchivalMaterialRelations(countArchivalMaterialRelationsHandler.getCount());
 		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
 		publishData.setNumberOfInstitutionsRelations(institutionsRelationsHandler.getResultSet().size());
+		
+		/*
+		 * dates
+		 */
+		String oneDate = oneDateHandler.getFirstResult();
+		String oneDateNormal = oneDateNormalHandler.getFirstResult();
+		String dateLocalType = oneDateLocalTypeHandler.getFirstResult();
+		if (StringUtils.isBlank(oneDate) && StringUtils.isBlank(oneDateNormal)){
+			String fromDate = fromDateHandler.getFirstResult();
+			String toDate = toDateHandler.getFirstResult();
+			String fromDateNormal = fromDateNormalHandler.getFirstResult();
+			String toDateNormal = toDateNormalHandler.getFirstResult();
+			dateLocalType = dateRangeLocalTypeHandler.getFirstResult();
+			if (StringUtils.isBlank(fromDate) && StringUtils.isBlank(toDate) &&  StringUtils.isBlank(fromDateNormal) 
+					&& StringUtils.isBlank(toDateNormal) && StringUtils.isBlank(dateLocalType)){
+				publishData.setDateType(SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
+			}else {
+				String dateDescription = null;
+				if (StringUtils.isNotBlank(fromDate)){
+					dateDescription = fromDate;
+				}
+				if (StringUtils.isNotBlank(toDate)){
+					if (dateDescription == null){
+						dateDescription = toDate;
+					}else {
+						dateDescription += " - " + toDate;
+					}
+				}
+				publishData.setDateDescription(dateDescription);
+				fromDateNormal = AbstractSolrPublisher.obtainDate(fromDateNormal, true);
+				toDateNormal = AbstractSolrPublisher.obtainDate(toDateNormal, false);
+				if (StringUtils.isBlank(fromDateNormal) && StringUtils.isBlank(toDateNormal)){
+					if (StringUtils.isNotBlank(dateLocalType) && dateLocalType.startsWith(DATE_UNKNOWN)){
+						publishData.setDateType(SolrValues.DATE_TYPE_UNKNOWN_DATE);
+					}else {
+						publishData.setDateType(SolrValues.DATE_TYPE_OTHER_DATE);
+					}
+				}else {
+					if (StringUtils.isNotBlank(fromDateNormal) && StringUtils.isNotBlank(toDateNormal)){
+						publishData.setFromDate(AbstractSolrPublisher.obtainDate(fromDateNormal, true));
+						publishData.setToDate(AbstractSolrPublisher.obtainDate(toDateNormal, false));		
+						publishData.setDateType(SolrValues.DATE_TYPE_NORMALIZED);
+					}else if (StringUtils.isNotBlank(fromDateNormal)){
+						publishData.setFromDate(AbstractSolrPublisher.obtainDate(fromDateNormal, true));
+						publishData.setDateType(SolrValues.DATE_TYPE_NORMALIZED_UNKNOWN_STARTDATE);
+					}else {
+						publishData.setToDate(AbstractSolrPublisher.obtainDate(toDateNormal, false));
+						publishData.setDateType(SolrValues.DATE_TYPE_NORMALIZED_UNKNOWN_ENDDATE);
+					}
+				}
+			}
+		}else {
+			publishData.setDateDescription(oneDate);
+			if (StringUtils.isBlank(oneDateNormal)){
+				if (StringUtils.isNotBlank(dateLocalType) && dateLocalType.startsWith(DATE_UNKNOWN)){
+					publishData.setDateType(SolrValues.DATE_TYPE_UNKNOWN_DATE);
+				}else {
+					publishData.setDateType(SolrValues.DATE_TYPE_OTHER_DATE);
+				}
+			}else {
+				if (DATE_UNKNOWN_START.equals(dateLocalType)){
+					publishData.setDateType(SolrValues.DATE_TYPE_NORMALIZED_UNKNOWN_STARTDATE);
+					publishData.setToDate(AbstractSolrPublisher.obtainDate(oneDateNormal, false));	
+				}else if (DATE_UNKNOWN_END.equals(dateLocalType)){
+					publishData.setDateType(SolrValues.DATE_TYPE_NORMALIZED_UNKNOWN_ENDDATE);
+					publishData.setFromDate(AbstractSolrPublisher.obtainDate(oneDateNormal, true));
+				}else {
+					publishData.setFromDate(AbstractSolrPublisher.obtainDate(oneDateNormal, true));
+					publishData.setToDate(AbstractSolrPublisher.obtainDate(oneDateNormal, false));			
+					publishData.setDateType(SolrValues.DATE_TYPE_NORMALIZED);
+				}
+			}
+
+		}
 	}
 
 	protected static Set<String> strip(Set<String> source) {
