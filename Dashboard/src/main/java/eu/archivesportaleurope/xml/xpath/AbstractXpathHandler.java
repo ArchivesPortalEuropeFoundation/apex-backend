@@ -72,7 +72,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	public final void processStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
 		if (relative){
 			LinkedList<QName> xpathPositionTemp = new LinkedList<QName>();
-			QName first = xpathQuery.xpathQueryList.getFirst();
+			QName first = xpathQuery.getFirst();
 			boolean found = false;
 			for (QName xpathItem: xpathPosition){
 				if (found){
@@ -91,7 +91,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	public final void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
 		if (relative){
 			LinkedList<QName> xpathPositionTemp = new LinkedList<QName>();
-			QName first = xpathQuery.xpathQueryList.getFirst();
+			QName first = xpathQuery.getFirst();
 			boolean found = false;
 			for (QName xpathItem: xpathPosition){
 				if (found){
@@ -244,6 +244,13 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 				}
 			}
 			this.xpathQuerySize = this.xpathQueryList.size();
+		}
+		protected QName getFirst(){
+			if (xpathQueryList.size() > 0){
+				return xpathQueryList.getFirst();
+			}else {
+				return lastElement.get(0);
+			}
 		}
 
 		protected boolean match(LinkedList<QName> xpathPosition){
