@@ -25,8 +25,8 @@
 		<xsl:variable name="entityType" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
 		<h1 class="titleproper">
 		    <!-- nameEntry -->
-	      	<xsl:call-template name="multilanguageName">
-		       		 <xsl:with-param name="list" select="//eac:nameEntry"/>
+	      	<xsl:call-template name="namePriorisation">
+	      		<xsl:with-param name="list" select="//eac:nameEntry"/>
 		    </xsl:call-template> 
 			<!-- dates -->
 			<xsl:if test="$existDates/eac:date/text() or $existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate or $existDates/eac:dateSet/eac:date/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate">
@@ -951,6 +951,68 @@
 				</div> 
 			</div>
 		</xsl:if>
+	</xsl:template>
+
+	<!-- Template for select the correct name to display as title based in the
+		 value of the attribute "@localType". -->
+	<xsl:template name="namePriorisation">
+		<xsl:param name="list"/>
+
+		<xsl:choose>
+			<xsl:when test="count($list) > 1">
+				<!-- Checks the attribute "@localType". -->
+				<xsl:choose>
+					<!-- localType = preferred -->
+					<xsl:when test="$list[@localType = 'preferred']">
+						<xsl:call-template name="multilanguageName">
+							<xsl:with-param name="list" select="$list[@localType = 'preferred']"/>
+						</xsl:call-template> 
+					</xsl:when>
+					<!-- localType = authorized -->
+					<xsl:when test="$list[@localType = 'authorized']">
+						<xsl:call-template name="multilanguageName">
+							<xsl:with-param name="list" select="$list[@localType = 'authorized']"/>
+						</xsl:call-template> 
+					</xsl:when>
+					<!-- not @localType -->
+					<xsl:when test="$list[not(@localType)]">
+						<xsl:call-template name="multilanguageName">
+							<xsl:with-param name="list" select="$list[not(@localType)]"/>
+						</xsl:call-template> 
+					</xsl:when>
+					<!-- localType = alternative -->
+					<xsl:when test="$list[@localType = 'alternative']">
+						<xsl:call-template name="multilanguageName">
+							<xsl:with-param name="list" select="$list[@localType = 'alternative']"/>
+						</xsl:call-template> 
+					</xsl:when>
+					<!-- localType = abbreviation -->
+					<xsl:when test="$list[@localType = 'abbreviation']">
+						<xsl:call-template name="multilanguageName">
+							<xsl:with-param name="list" select="$list[@localType = 'abbreviation']"/>
+						</xsl:call-template> 
+					</xsl:when>
+					<!-- localType = other -->
+					<xsl:when test="$list[@localType = 'other']">
+						<xsl:call-template name="multilanguageName">
+							<xsl:with-param name="list" select="$list[@localType = 'other']"/>
+						</xsl:call-template> 
+					</xsl:when>
+					<!-- In any other case checks the whole list. -->
+					<xsl:otherwise>
+						<xsl:call-template name="multilanguageName">
+							<xsl:with-param name="list" select="$list"/>
+						</xsl:call-template> 
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<xsl:call-template name="multilanguageName">
+					<xsl:with-param name="list" select="$list"/>
+				</xsl:call-template> 
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- template for language nameEntry -->
