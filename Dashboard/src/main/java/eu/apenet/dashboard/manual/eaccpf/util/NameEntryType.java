@@ -68,9 +68,6 @@ public class NameEntryType {
         if (nameEntry.getLocalType() != null && !nameEntry.getLocalType().isEmpty()) {
             this.setForm(nameEntry.getLocalType());
         }
-        if (nameEntry.getLang() != null && !nameEntry.getLang().isEmpty()) {
-            this.setLanguage(nameEntry.getLang());
-        }
         if (nameEntry.getPart() != null && nameEntry.getPart().get(0) != null
                 && nameEntry.getPart().get(0).getLocalType() != null
                 && !nameEntry.getPart().get(0).getLocalType().isEmpty()) {
@@ -113,9 +110,6 @@ public class NameEntryType {
     public NameEntryType fillDataWith(NameEntry nameEntry, NameEntryParallel nameEntryParallel) {
         if (nameEntry.getLocalType() != null && !nameEntry.getLocalType().isEmpty()) {
             this.setForm(nameEntry.getLocalType());
-        }
-        if (nameEntry.getLang() != null && !nameEntry.getLang().isEmpty()) {
-            this.setLanguage(nameEntry.getLang());
         }
         if (nameEntry.getPart() != null && nameEntry.getPart().get(0) != null
                 && nameEntry.getPart().get(0).getLocalType() != null
