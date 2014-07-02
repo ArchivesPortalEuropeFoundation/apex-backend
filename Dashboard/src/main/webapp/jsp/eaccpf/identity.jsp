@@ -89,8 +89,8 @@
                 </s:if>
                 <tr>
                     <td><s:property value="getText('eaccpf.identity.dates.use')" /></td>
-                    <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" /></td>
+                    <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" /></td>
                         <s:if test="%{#current.dates.size() > 0}">
                         <td><input type="hidden" id="identityPersonName_<s:property value="#status.index + 1" />_rows" name="identityPersonName_<s:property value="#status.index + 1" />_rows" value="<s:property value="#current.dates.size()" />" /></td>
                         </s:if>
@@ -143,8 +143,8 @@
             </tr>
             <tr>
                 <td><label><s:property value="getText('eaccpf.identity.dates.use')" /></label></td>
-                <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" /></td>
+                <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" /></td>
                 <td><input type="hidden" id="identityPersonName_1_rows" name="identityPersonName_1_rows" value="0" /></td>
                 <td></td>
             </tr>
@@ -221,8 +221,25 @@
                         <td></td>
                     </s:else>
                 </tr>
+                <tr id="trDate_radio_<s:property value="#status.index + 1" />">
+                    <td>
+                        <s:property value="getText('eaccpf.commons.date.type')"/>
+                    </td>
+                    <td>
+                        <input type="radio" name="dateExistenceTable_date_1_radio_<s:property value="#status.index + 1" />" value="known" checked="checked" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.date.known')"/>&nbsp;
+                        <input type="radio" name="dateExistenceTable_date_1_radio_<s:property value="#status.index + 1" />" value="unknown" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.unknown.date')"/>&nbsp;
+                    </td>
+                    <td>
+                        <s:property value="getText('eaccpf.commons.date.type')"/>
+                    </td>
+                    <td>
+                        <input type="radio" name="dateExistenceTable_date_2_radio_<s:property value="#status.index + 1" />" value="known" checked="checked" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.date.known')"/>&nbsp;
+                        <input type="radio" name="dateExistenceTable_date_2_radio_<s:property value="#status.index + 1" />" value="unknown" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.unknown.date')"/>&nbsp;
+                        <input type="radio" name="dateExistenceTable_date_2_radio_<s:property value="#status.index + 1" />" value="open" onchange="toggleDateTextfields($(this));"><s:property value="openLabel"/>
+                    </td>
+                </tr>
                 <tr id="trDate_iso_<s:property value="#status.index + 1" />">
-                    <td>(ISO date<s:if test="#current.standardDate2 != null">s</s:if>; optional)</td>
+                    <td><s:property value="getText('eaccpf.commons.iso.date')" /></td>
                     <td><input type="text" title="YYYY" id="date_1_Year" name="dateExistenceTable_date_1_Year_<s:property value="#status.index + 1" />" size="4" maxlength="4" <s:if test="%{#current.standardDate1.year == 0000}">disabled="disabled" </s:if> value="<s:property value="#current.standardDate1.year" />" /> &ndash;
                         <input type="text" title="MM" id="date_1_Month" name="dateExistenceTable_date_1_Month_<s:property value="#status.index + 1" />" size="2" maxlength="2" <s:if test="%{#current.standardDate1.year == 0000}">disabled="disabled" </s:if> <s:if test="%{#current.standardDate1.month != 0}">value="<s:property value="#current.standardDate1.month" />"</s:if> /> &ndash;
                         <input type="text" title="DD" id="date_1_Day" name="dateExistenceTable_date_1_Day_<s:property value="#status.index + 1" />" size="2" maxlength="2" <s:if test="%{#current.standardDate1.year == 0000}">disabled="disabled" </s:if> <s:if test="%{#current.standardDate1.day != 0}">value="<s:property value="#current.standardDate1.day" />"</s:if> /></td>
@@ -244,12 +261,27 @@
                 <td><s:property value="getText('eaccpf.commons.from.date')" /></td>
                 <td>
                     <input type="text" id="date_1" name="dateExistenceTable_date_1_1" onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
-                    <input type="checkbox" id="date_unknown_1" name="dateExistenceTable_date_unknown_1_1" onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1"><s:property value="getText('eaccpf.commons.unknown.date')" /></label>
                 </td>
                 <td><s:property value="getText('eaccpf.commons.to.date')" /></td>
                 <td>
                     <input type="text" id="date_2" name="dateExistenceTable_date_2_1" onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
-                    <input type="checkbox" id="date_unknown_2" name="dateExistenceTable_date_unknown_2_1" onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2"><s:property value="getText('eaccpf.commons.unknown.date')" /></label>
+                </td>
+            </tr>
+            <tr id="trDate_radio_1">
+                <td>
+                    <s:property value="getText('eaccpf.commons.date.type')"/>
+                </td>
+                <td>
+                    <input type="radio" name="dateExistenceTable_date_1_radio_1" value="known" checked="checked" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.date.known')"/>&nbsp;
+                    <input type="radio" name="dateExistenceTable_date_1_radio_1" value="unknown" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.unknown.date')"/>&nbsp;
+                </td>
+                <td>
+                    <s:property value="getText('eaccpf.commons.date.type')"/>
+                </td>
+                <td>
+                    <input type="radio" name="dateExistenceTable_date_2_radio_1" value="known" checked="checked" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.date.known')"/>&nbsp;
+                    <input type="radio" name="dateExistenceTable_date_2_radio_1" value="unknown" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.unknown.date')"/>&nbsp;
+                    <input type="radio" name="dateExistenceTable_date_2_radio_1" value="open" onchange="toggleDateTextfields($(this));"><s:property value="openLabel"/>
                 </td>
             </tr>
             <tr id="trDate_iso_1">
@@ -270,8 +302,8 @@
     </table>
     <table id="dateExistenceButtonPanel" class="tablePadding">
         <tr>
-            <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addExistDate" onclick="addDateOrDateRangeExistence(this.id, '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addExistDateRange" onclick="addDateOrDateRangeExistence(this.id, '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" /></td>
+            <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addExistDate" onclick="addDateOrDateRangeExistence(this.id, '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addExistDateRange" onclick="addDateOrDateRangeExistence(this.id, '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />')" /></td>
                 <s:if test="%{loader.existDates.size() > 0}">
                 <td><input type="hidden" id="dateExistenceTable_rows" name="dateExistenceTable_rows" value="<s:property value="loader.existDates.size()" />" /></td>
                 </s:if>

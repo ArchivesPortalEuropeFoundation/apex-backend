@@ -47,6 +47,7 @@ public class LoadFormAction extends EacCpfAction {
     private String useMode;
     private String defaultLanguage;
     private String defaultScript;
+    private String openLabel;
 
     private static final String OTHER = "other";
 
@@ -74,15 +75,19 @@ public class LoadFormAction extends EacCpfAction {
         if (cpfType.equals(EacCpfAction.PERSON)) {
             cpfTypeDescriptionText = getText("eaccpf.commons.type") + " " + getText("eaccpf.commons.person");
             cpfTypeIdentifierText = getText("eaccpf.identity.identifier.person");
+            openLabel = getText("eaccpf.commons.date.open.person");
         } else if (cpfType.equals(EacCpfAction.CORPORATE_BODY)) {
             cpfTypeDescriptionText = getText("eaccpf.commons.type") + " " + getText("eaccpf.commons.corporateBody");
             cpfTypeIdentifierText = getText("eaccpf.identity.identifier.corporateBody");
+            openLabel = getText("eaccpf.commons.date.open.corpfam");
         } else if (cpfType.equals(EacCpfAction.FAMILY)) {
             cpfTypeDescriptionText = getText("eaccpf.commons.type") + " " + getText("eaccpf.commons.family");
             cpfTypeIdentifierText = getText("eaccpf.identity.identifier.family");
+            openLabel = getText("eaccpf.commons.date.open.corpfam");
         } else {
             cpfTypeDescriptionText = "";
             cpfTypeIdentifierText = "";
+            openLabel = "";
         }
         if (this.loader.getIdentifiers() == null) {
             this.loader.setIdentifiers(new ArrayList<IdentifierType>());
@@ -389,5 +394,9 @@ public class LoadFormAction extends EacCpfAction {
 
     public String getCpfTypeIdentifierText() {
         return cpfTypeIdentifierText;
+    }
+
+    public String getOpenLabel() {
+        return openLabel;
     }
 }
