@@ -53,11 +53,13 @@ function clickExitAction(){
 }
 
 function navigateToCurrentRepoTab(href){
-	var errorFieldText = $(".fieldRequired");
+	var errorFieldText = $(".fieldRequired :not(#textContactCountyOfTheInstitution)");
 	var parent = errorFieldText.parent();
-	var counter = 10;
-	while(parent.prop("tagName").toUpperCase()!='TABLE' && counter>0){
+	var counter = 50;
+	var seekId = parent.attr("id");
+	while(counter>0 && ((parent.prop("tagName").toUpperCase()!='TABLE') || (seekId && seekId!="undefined" && seekId.indexOf('contactTableVisitorsAddress_')>-1/* || seekId.indexOf('accessAndServicesTable_')>-1*/))){
 		parent = parent.parent();
+		seekId = parent.attr("id");
 		counter--;
 	}
 	var id = parent.attr("id");
@@ -67,7 +69,8 @@ function navigateToCurrentRepoTab(href){
 	}
 	if(repoTab>0){
 		$("#tab_yourInstitutionTable_"+repoTab).trigger('click');
-		$("#tab_yourInstitutionTable_"+repoTab+" a[href='"+href+"']").trigger('click');
+//		$("#tab_yourInstitutionTable_"+repoTab+" a[href='"+href+"']").trigger('click');
+		$("a[href='"+href+"']").trigger('click');
 	}else{
 		$("#tab_yourInstitutionTable_1 a[href='"+href+"']").trigger('click');
 	}
@@ -814,8 +817,8 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 	});
 	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
-		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution",
-				"textContactCountryOfTheInstitution");
+		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution"
+				);
 
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			if(jsonData.substring(jsonData.length-1)!=','){
