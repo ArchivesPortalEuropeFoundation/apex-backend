@@ -1652,19 +1652,51 @@
 	</xsl:template>
 
 	<!-- Template for toDate or fromDate to detect the unknow value-->
-	<xsl:template name="dateUnknow">
+	<xsl:template name="dateUnknow"> 
+		<!-- dateUnknow gets fromDate or toDate -->
 		<xsl:param name="dateUnknow"/>
 	  	<xsl:choose>
-        	<xsl:when test="$dateUnknow='unknown'">
-        		<xsl:text>?</xsl:text>
+	  		<!-- when it is void or it does not exist -->
+	  		<xsl:when test="$dateUnknow='' or not($dateUnknow)">
+        		<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
         	</xsl:when>
-        	<xsl:when test="$dateUnknow='' or not($dateUnknow)">
-        		<xsl:text>-</xsl:text>
-        	</xsl:when>
+        	<xsl:when test="$dateUnknow/parent::node()[@localType='open'] and $dateUnknow/text() = 'open'">
+			</xsl:when>
+        	<!-- unknownStart, unknownEnd and both -->
         	<xsl:otherwise>
-        		<xsl:apply-templates select="$dateUnknow" mode="other"/>
+        		<xsl:choose>
+		        	<xsl:when test="name($dateUnknow) = 'fromDate'">
+		        		<xsl:choose>
+							<xsl:when test="$dateUnknow/parent::node()[@localType='unknown' or @localType='unknownStart']">
+		        				<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+							</xsl:when>
+							<xsl:when test="$dateUnknow/parent::node()[@localType='open'] and $dateUnknow/text() = 'open'">
+		        				<xsl:text> </xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="$dateUnknow" mode="other"/> 
+							</xsl:otherwise>
+						</xsl:choose>	
+		        	</xsl:when>
+	        		<xsl:when test="name($dateUnknow) = 'toDate'">
+		        		<xsl:choose>
+							<xsl:when test="$dateUnknow/parent::node()[@localType='unknown' or @localType='unknownEnd']">
+	        					<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+							</xsl:when>
+							<xsl:when test="$dateUnknow/parent::node()[@localType='open'] and $dateUnknow/text() = 'open'">
+		        				<xsl:text> </xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="$dateUnknow" mode="other"/> 
+							</xsl:otherwise>
+						</xsl:choose>
+        			</xsl:when>
+					<xsl:otherwise>
+	        			<xsl:apply-templates select="$dateUnknow" mode="other"/>
+		        	</xsl:otherwise>
+	        	</xsl:choose>
         	</xsl:otherwise>
-        </xsl:choose> 
+		</xsl:choose> 
 	</xsl:template>
 
 	<!-- template for dateSet -->
@@ -1690,8 +1722,17 @@
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
 							<xsl:if test="current()/text()">
-							    <xsl:apply-templates select="." mode="other"/> 
-							    <xsl:if test="position() != last()">
+		    			       	<xsl:choose>
+									<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+										<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+									</xsl:when>
+									<xsl:when test="current()[@localType='open']">
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/> 
+									</xsl:otherwise>
+								</xsl:choose>
+							    <xsl:if test="position() != last() and current()[not(@localType ='open')]">
 									<xsl:text>, </xsl:text>
 								</xsl:if>
 							</xsl:if>
@@ -1700,8 +1741,17 @@
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
 							<xsl:if test="current()/text()">
-							    <xsl:apply-templates select="." mode="other"/> 
-							    <xsl:if test="position() != last()">
+   		    			       	<xsl:choose>
+									<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+										<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+									</xsl:when>
+									<xsl:when test="current()[@localType='open']">
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/> 
+									</xsl:otherwise>
+								</xsl:choose>
+							    <xsl:if test="position() != last() and current()[not(@localType ='open')]">
 									<xsl:text>, </xsl:text>
 								</xsl:if>
 							</xsl:if>
@@ -1710,8 +1760,17 @@
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
 						  	<xsl:for-each select="$list[not(@xml:lang)]"> 
 								<xsl:if test="current()/text()">
-								    <xsl:apply-templates select="." mode="other"/> 
-								    <xsl:if test="position() != last()">
+	   		    			       	<xsl:choose>
+										<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+											<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+										</xsl:when>
+										<xsl:when test="current()[@localType='open']">
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+								    <xsl:if test="position() != last() and current()[not(@localType ='open')]">
 										<xsl:text>, </xsl:text>
 									</xsl:if>
 							    </xsl:if>
@@ -1723,8 +1782,17 @@
 							<xsl:if test="current()/text()">
 								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 								<xsl:if test="$currentLang = $language.first">
-								    <xsl:apply-templates select="." mode="other"/> 
-								    <xsl:if test="position() != last()">
+    		    			       	<xsl:choose>
+										<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+											<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+										</xsl:when>
+										<xsl:when test="current()[@localType='open']">
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+								    <xsl:if test="position() != last() and current()[not(@localType ='open')]">
 										<xsl:text>, </xsl:text>
 									</xsl:if>
 								</xsl:if>			
@@ -1735,7 +1803,16 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="$list">
-					<xsl:apply-templates select="." mode="other"/> 
+			       	<xsl:choose>
+						<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+							<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+						</xsl:when>
+						<xsl:when test="current()[@localType='open']">
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="." mode="other"/> 
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -1911,29 +1988,51 @@
 	<!--template fromDate toDate-->
 	<xsl:template name="fromToDate">
 		<xsl:param name="dateRange"/>
-		<xsl:choose>
-			<xsl:when test="$dateRange/eac:fromDate/text()='unknown'">
-				<xsl:text>?</xsl:text>
+		
+       	<xsl:choose>
+			<xsl:when test="$dateRange[@localType='unknown' or @localType='unknownStart']">
+				<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+			</xsl:when>
+			<xsl:when test="$dateRange[@localType='open'] and $dateRange/eac:fromDate/text() = 'open'">
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="$dateRange/eac:fromDate" mode="other"/>
-		    </xsl:otherwise>
+				<xsl:apply-templates select="$dateRange/eac:fromDate" mode="other"/> 
+			</xsl:otherwise>
 		</xsl:choose>
+
 		<xsl:choose>
-			<xsl:when test="string(number(substring($dateRange/eac:toDate,1,2)))!='NaN' or ($dateRange/eac:toDate/text() = 'unknown' and $dateRange/eac:fromDate/text() !='unknown')
-			                or not($dateRange/eac:toDate) or not($dateRange/eac:fromDate)">
+			<xsl:when test="string(number(substring($dateRange/eac:toDate,1,2)))!='NaN'
+							or $dateRange[@localType='unknownEnd']
+			                or not($dateRange/eac:toDate) 
+			                or not($dateRange/eac:fromDate)
+			                or $dateRange[@localType='open'] 
+			                or $dateRange/eac:fromDate/text() = 'open'">
 				<xsl:text> - </xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$dateRange[@localType='unknown']">
+					</xsl:when>
+					<xsl:when test="$dateRange[@localType='open'] and $dateRange/eac:fromDate/text() = 'open'">
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text> </xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+
 		<xsl:choose>	
-			<xsl:when test="$dateRange/eac:toDate/text()='unknown' and $dateRange/eac:fromDate/text() != 'unknown'">
-				<xsl:text>?</xsl:text>
+			<xsl:when test="$dateRange[@localType='unknownEnd']">
+				<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+			</xsl:when>
+			<xsl:when test="$dateRange[@localType='open'] and $dateRange/eac:toDate/text() = 'open'">
 			</xsl:when>
 		    <xsl:otherwise>
-		    	<xsl:if test="$dateRange/eac:toDate/text()!='unknown'"> 
+		    	<xsl:if  test="$dateRange[@localType='unknownStart' or @localType=''] or $dateRange[not(@localType)]"> 
+		    		<xsl:apply-templates select="$dateRange/eac:toDate" mode="other"/> 
+		   		</xsl:if>
+		   		<xsl:if  test="$dateRange[@localType='open'] and $dateRange/eac:fromDate/text() = 'open'"> 
 		    		<xsl:apply-templates select="$dateRange/eac:toDate" mode="other"/> 
 		   		</xsl:if>
 		    </xsl:otherwise>
@@ -1949,10 +2048,19 @@
 	        <xsl:apply-templates mode="other"/>
 			<xsl:for-each select="eac:date">
 				<xsl:if test="current()/text()">
-					<xsl:if test="position() != last()">
+					<xsl:if test="position() != last() and current()[not(@localType ='open')]">
 						<xsl:text>, </xsl:text>
 					</xsl:if>
-					<xsl:apply-templates select="current()" mode="other"/>
+			       	<xsl:choose>
+						<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+							<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+						</xsl:when>
+						<xsl:when test="current()[@localType='open']">
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="current()" mode="other"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:if>
