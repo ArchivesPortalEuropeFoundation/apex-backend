@@ -13,6 +13,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import eu.archivesportaleurope.harvester.oaipmh.portugal.database.DBUtil;
+import eu.archivesportaleurope.harvester.oaipmh.portugal.objects.Node;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -156,7 +157,7 @@ public class HarvesterConverter extends AbstractParser {
 //                            FileUtils.deleteDirectory(outputFileDir);
                         if(fileIterator.hasNext()) {
                             File file = fileIterator.next();
-                            LOG.info("Examining next file: " + (++currentSize + 1) + "/" + fullSize + " - " + "Name of file: " + file.getName());
+                            LOG.debug("Examining next file: " + (++currentSize + 1) + "/" + fullSize + " - " + "Name of file: " + file.getName());
                             xmlReader = inputFactory.createXMLStreamReader(file);
                         }
                     }
@@ -165,7 +166,7 @@ public class HarvesterConverter extends AbstractParser {
                         findingAidXmlWriter2.writeCharacters(xmlReader.getText());
                 } else if (event == XMLStreamConstants.END_DOCUMENT){
                     if(fileIterator.hasNext()) {
-                        LOG.info("Examined file: " + (++currentSize) + "/" + fullSize);
+                        LOG.debug("Examined file: " + (++currentSize) + "/" + fullSize);
                         xmlReader = inputFactory.createXMLStreamReader(fileIterator.next());
                     }
                 }
@@ -181,49 +182,75 @@ public class HarvesterConverter extends AbstractParser {
         }
     }
 
-    public int dbToEad(String mainagencycode) throws Exception {
+    public int dbToEadNew(String mainagencycode) throws Exception {
         final int MAX_ELEMENTS = 1000;
         LOG.info("Starting Database conversion into EAD files");
         EadContent eadContent = dbUtil.retrieveEadContentByEadid("OAI_SET");
-
         int from = 0;
 
-        List<CLevel> cLevels = dbUtil.retrieveNextClevels(eadContent.getEcId(), from, MAX_ELEMENTS);
-        Map<String, String> idsWithTypes = new HashMap<String, String>();
-        Map<String, Long> idsWithUnitids = new HashMap<String, Long>();
-        while(cLevels.size() != 0) {
-            from += MAX_ELEMENTS;
-            for(CLevel cLevel : cLevels) {
-                idsWithTypes.put(cLevel.getUnitid(), cLevel.getLevel());
-                idsWithUnitids.put(cLevel.getUnitid(), cLevel.getClId());
+        List<CLevel> cLevelsFonds = dbUtil.retrieveAllFonds(eadContent.getEcId());
+
+        LinkedHashMap<String, Long> idsWithUnitids;
+        LOG.info("Size of cLevelsFonds: " + cLevelsFonds.size());
+        for(CLevel cLevel : cLevelsFonds) {
+            LOG.info("====");
+            idsWithUnitids = new LinkedHashMap<String, Long>();
+            //Create ONE FA per fonds!!!
+            List<CLevel> childrenOfFonds = dbUtil.retrieveChildrenOfFonds(cLevel.getUnitid());
+            LOG.info("Size of childrenOfFonds: " + childrenOfFonds.size());
+            for(CLevel child : childrenOfFonds) {
+                idsWithUnitids.put(child.getUnitid(), child.getClId());
             }
-            cLevels = dbUtil.retrieveNextClevels(eadContent.getEcId(), from, MAX_ELEMENTS);
+            dbToEad(cLevel.getUnitid(), eadContent, idsWithUnitids, mainagencycode);
         }
-        return dbToEad(eadContent, idsWithTypes, idsWithUnitids, mainagencycode);
+        LOG.info("====");
+        return cLevelsFonds.size();
     }
 
-    public int dbToEad(EadContent eadContent, Map<String, String> idsWithTypes, Map<String, Long> idsWithUnitids, String mainagencycode) throws Exception {
-        LOG.info("idsWithType map size: " + idsWithTypes.size());
-        idsWithTypes = sortHashMapByKey(idsWithTypes);
-        LOG.info("idsWithType map size after sorting: " + idsWithTypes.size());
-//        printList_simple(idsWithTypes);
-        Map<String, List<String>> organizedIds = createOrganizedMapOfId(idsWithTypes);
-        LOG.info("organizedIds map size: " + organizedIds.size());
-        LOG.info("idsWithType map size after sorting: " + idsWithTypes.size());
+//    public int dbToEad(String mainagencycode) throws Exception {
+//        final int MAX_ELEMENTS = 1000;
+//        LOG.info("Starting Database conversion into EAD files");
+//        EadContent eadContent = dbUtil.retrieveEadContentByEadid("OAI_SET");
+//
+//        int from = 0;
+//
+//        List<CLevel> cLevels = dbUtil.retrieveNextClevels(eadContent.getEcId(), from, MAX_ELEMENTS);
+//        Map<String, String> idsWithTypes = new HashMap<String, String>();
+//        Map<String, Long> idsWithUnitids = new HashMap<String, Long>();
+//        while(cLevels.size() != 0) {
+//            from += MAX_ELEMENTS;
+//            for(CLevel cLevel : cLevels) {
+//                idsWithTypes.put(cLevel.getUnitid(), cLevel.getLevel());
+//                idsWithUnitids.put(cLevel.getUnitid(), cLevel.getClId());
+//            }
+//            cLevels = dbUtil.retrieveNextClevels(eadContent.getEcId(), from, MAX_ELEMENTS);
+//        }
+//        return dbToEad(eadContent, idsWithTypes, idsWithUnitids, mainagencycode);
+//    }
+
+    public int dbToEad(String fondsUnitid, EadContent eadContent, LinkedHashMap<String, Long> unitidsWithId, String mainagencycode) throws Exception {
+//        printList_simple(unitidsWithId);
+        unitidsWithId = sortHashMapByKey(unitidsWithId);
+//        LOG.info("idsWithType map size after sorting: " + unitidsWithLevel.size());
+//        printList_simple(unitidsWithId);
+//        Map<String, List<String>> organizedIds = createOrganizedMapOfId(unitidsWithLevel);
+//        LOG.info("organizedIds map size: " + organizedIds.size());
+//        LOG.info("idsWithType map size after sorting: " + unitidsWithLevel.size());
 //        printList(organizedIds);
         try {
-            return createHierarchyAndEadFile(organizedIds, idsWithUnitids, eadContent, mainagencycode);
+            return createHierarchyAndEadFile(fondsUnitid, unitidsWithId, eadContent, mainagencycode);
         } catch (Exception e){
             LOG.error("ERROR", e); //To do
             throw e;
         }
     }
 
-    public Map<String, String> sortHashMapByKey(Map<String, String> passedMap) {
-        List<String> mapKeys = new ArrayList<String>(passedMap.keySet());
-        Collections.sort(mapKeys, String.CASE_INSENSITIVE_ORDER);
+    public static LinkedHashMap<String, Long> sortHashMapByKey(LinkedHashMap<String, Long> passedMap) {
+        LinkedList<String> mapKeys = new LinkedList<String>(passedMap.keySet());
+//        Collections.sort(mapKeys, String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(mapKeys, new MyComparator());
 
-        Map<String, String> sortedMap = new LinkedHashMap<String, String>(mapKeys.size());
+        LinkedHashMap<String, Long> sortedMap = new LinkedHashMap<String, Long>(mapKeys.size());
 
         for(String orderedKey : mapKeys)
             sortedMap.put(orderedKey, passedMap.get(orderedKey));
@@ -278,10 +305,12 @@ public class HarvesterConverter extends AbstractParser {
         LOG.info("There will be " + listFas.size() + " FAs to create!");
 
         for(String id : idsWithTypes.keySet()){
+            LOG.info("id:" + id + ", listFas null:" + (listFas.get(id) == null));
             if(listFas.get(id) != null && listFas.get(id).size() != 0)
                 break;
             String smallId = id;
             while(listFas.get(smallId) == null && !smallId.equals("")){
+
                 int i;
                 if((i = smallId.lastIndexOf("/")) == -1)
                     break;
@@ -306,7 +335,7 @@ public class HarvesterConverter extends AbstractParser {
             EadCreator eadCreator = new EadCreator(outputStream);
             eadCreator.writeEadContent(eadContent.getXml());
 
-            List<CLevel> cLevels = dbUtil.retrieveAllClevelsOrdered(eadContent.getEcId());
+            List<CLevel> cLevels = dbUtil.retrieveAllParentClevelsOrdered(eadContent.getEcId());
             for(CLevel cLevel : cLevels){
                 eadCreator.writeEadContent(cLevel.getXml(), cLevel.getLevel());
                 writeChildren(cLevel.getClId(), eadCreator);
@@ -363,16 +392,16 @@ public class HarvesterConverter extends AbstractParser {
         }
     }
 
-    public int createHierarchyAndEadFile(Map<String, List<String>> map, Map<String, Long> idsWithTypes, EadContent eadContent, String mainagencycode) throws Exception {
-        int fullSize = map.size();
-        int currentSize = 0;
-        for(String key : map.keySet()){
+    public int createHierarchyAndEadFile(/*Map<String, List<String>> map, */String fondsUnitid, Map<String, Long> idsWithTypes, EadContent eadContent, String mainagencycode) throws Exception {
+//        int fullSize = map.size();
+//        int currentSize = 0;
+//        for(String key : map.keySet()){
             try {
-                LOG.info("Create hierarchy for key: " + key + ", " + (++currentSize) + "/" + fullSize);
-                CLevel oldCLevel = removeClevel(key, eadContent.getEcId());
+                LOG.info("Create hierarchy for key: " + fondsUnitid);
+                CLevel oldCLevel = removeClevel(fondsUnitid, eadContent.getEcId());
                 EadContent newEadContent = createEadContent(oldCLevel, mainagencycode);
 
-                List<String> unitids = map.get(key);
+                List<String> unitids = new ArrayList<String>(idsWithTypes.keySet());
 
                 for(String id : unitids) {
                     //Update clId (idsWithTypes.get(id)) from oldEcId (eadContent.getEcId()) to newEcId (newEadContent.getEcId())
@@ -382,7 +411,7 @@ public class HarvesterConverter extends AbstractParser {
 
                 LOG.info("Size of the map with current key: " + unitids.size());
                 Node root = new Node(null, newEadContent.getEadid());
-                loopGoesInTree(root, unitids/*, 0*/);
+                loopGoesInTree(root, unitids, 0);
                 createLevelsInDB(root, -1, newEadContent.getEcId(), eadContent.getEcId());
 
                 LOG.info("Create EAD file for EadContent id: " + newEadContent.getEcId());
@@ -392,29 +421,31 @@ public class HarvesterConverter extends AbstractParser {
                 LOG.error("Error", e);
                 throw e;
             }
-        }
+//        }
         try {
             dbUtil.deleteEadContentById(eadContent.getEcId());
         } catch (Exception e){
             LOG.error("Error", e);
             throw e;
         }
-        return fullSize;
+        return 0;
     }
 
-    private void loopGoesInTree(Node node, List<String> cLevelUnitids/*, int start*/){
-        for(int i = 0/*start*/; i < cLevelUnitids.size(); i++){
+    public static void loopGoesInTree(Node node, List<String> cLevelUnitids, int start){
+        for(int i = start; i < cLevelUnitids.size(); i++) {
             String unitid = cLevelUnitids.get(i);
-            if(unitid.length() == node.getId().length() || unitid.equals(node.getId()))
-                break;
+//            if(unitid.length() == node.getId().length() || unitid.equals(node.getId()))
+//                break;
             String smallId = unitid.replace(node.getId() + "/", "");
             if(!smallId.contains("/")){
                 Node child = new Node(node, unitid);
                 node.addChild(child);
-                cLevelUnitids.remove(i);
-                i--;
+//                cLevelUnitids.remove(i);
+//                i--;
+//                if(i < 0)
+//                    i = 0;
                 if(i < cLevelUnitids.size() && i >= 0)
-                    loopGoesInTree(child, cLevelUnitids/*, i*/);
+                    loopGoesInTree(child, cLevelUnitids, start);
             }
         }
     }
@@ -440,60 +471,103 @@ public class HarvesterConverter extends AbstractParser {
         }
     }
 
-    public static void printList_simple(Map<String, String> map){
+    public static void printList_simple(Map<String, Long> map){
         StringBuilder buffer = new StringBuilder();
         buffer.append("Start...");
         buffer.append("\n");
         for(String key : map.keySet()){
-            buffer.append("KEY: ").append(key).append(", LEVEL: ").append(map.get(key));
+            buffer.append("KEY: ").append(key).append(", ID: ").append(map.get(key));
             buffer.append("\n");
         }
         buffer.append("Finish...");
         try {
             FileUtils.writeStringToFile(new File("/tmp/list_ids_simple.txt"), buffer.toString());
+//            LOG.info(buffer.toString());
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public class Node {
-        public String id;
-        public List<Node> children;
-        public Node parent;
+    public static class MyComparator implements Comparator<String> {
+        public MyComparator(){}
 
-        public Node(Node parent, String id){
-            this.parent = parent;
-            this.id = id;
-            this.children = null;
-        }
+        @Override
+        public int compare(String o1, String o2) {
 
-        public String getId() {
-            return id;
-        }
-        public void setId(String id) {
-            this.id = id;
-        }
+            String[] o1Split = o1.split("/");
+            String[] o2Split = o2.split("/");
+            int lengthSmaller = (o1Split.length >= o2Split.length ? o2Split.length : o1Split.length);
 
-        public void setChildren(List<Node> children){
-            this.children = children;
-        }
-        public List<Node> getChildren(){
-            if(children == null)
-                return new LinkedList<Node>();
-            return children;
-        }
+            for(int i = 0; i < lengthSmaller; i++) {
+                String part1 = o1Split[i];
+                String part2 = o2Split[i];
 
-        public void addChild(Node child){
-            if(children == null)
-                children = new LinkedList<Node>();
-            children.add(child);
-        }
 
-        public Node getParent() {
-            return parent;
-        }
-        public void setParent(Node parent) {
-            this.parent = parent;
+                if (part1.matches("[0-9]+") && part2.matches("[0-9]+")) {
+                    Integer integer1 = Integer.valueOf(part1);
+                    Integer integer2 = Integer.valueOf(part2);
+                    if(!integer1.equals(integer2)) {
+                        return integer1.compareTo(integer2);
+                    }
+                } else if (part1.matches("[a-zA-Z]+") && part2.matches("[a-zA-Z]+")) {
+                    if(!part1.equals(part2)) {
+                        return o1.compareTo(o2);
+                    }
+//                } else {
+//                    if(o1.split("/").length > o2.split("/").length) {
+//                        return 1;
+//                    } else if(o1.split("/").length < o2.split("/").length) {
+//                        return -1;
+//                    } else {
+//                        String lastPart1 = o1.substring(o1.lastIndexOf("/") + 1);
+//                        String lastPart2 = o2.substring(o2.lastIndexOf("/") + 1);
+//                        if (lastPart1.matches("[0-9]+") && lastPart2.matches("[0-9]+")) {
+//                            Integer integer1 = Integer.valueOf(lastPart1);
+//                            Integer integer2 = Integer.valueOf(lastPart2);
+//                            return integer1.compareTo(integer2);
+//                        } else if (lastPart1.matches("[a-zA-Z]+") && lastPart2.matches("[a-zA-Z]+")) {
+//                            return lastPart1.compareTo(lastPart2);
+//                        } else {
+//                            return o1.compareTo(o2);
+//                        }
+//                    }
+                }
+
+            }
+
+            if(o1Split.length > o2Split.length) {
+                return 1;
+            } else if(o1Split.length < o2Split.length) {
+                return -1;
+            } else {
+                return 0;
+            }
+
+//            if (o1.matches("[0-9]+") && o2.matches("[0-9]+")) {
+//                Integer integer1 = Integer.valueOf(o1);
+//                Integer integer2 = Integer.valueOf(o2);
+//                return integer1.compareTo(integer2);
+//            } else if (o1.matches("[a-zA-Z]+") && o2.matches("[a-zA-Z]+")) {
+//                return o1.compareTo(o2);
+//            } else {
+//                if(o1.split("/").length > o2.split("/").length) {
+//                    return 1;
+//                } else if(o1.split("/").length < o2.split("/").length) {
+//                    return -1;
+//                } else {
+//                    String lastPart1 = o1.substring(o1.lastIndexOf("/") + 1);
+//                    String lastPart2 = o2.substring(o2.lastIndexOf("/") + 1);
+//                    if (lastPart1.matches("[0-9]+") && lastPart2.matches("[0-9]+")) {
+//                        Integer integer1 = Integer.valueOf(lastPart1);
+//                        Integer integer2 = Integer.valueOf(lastPart2);
+//                        return integer1.compareTo(integer2);
+//                    } else if (lastPart1.matches("[a-zA-Z]+") && lastPart2.matches("[a-zA-Z]+")) {
+//                        return lastPart1.compareTo(lastPart2);
+//                    } else {
+//                        return o1.compareTo(o2);
+//                    }
+//                }
+//            }
         }
     }
 }

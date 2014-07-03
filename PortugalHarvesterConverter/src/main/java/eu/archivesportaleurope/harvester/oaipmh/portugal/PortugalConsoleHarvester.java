@@ -17,7 +17,7 @@ import eu.archivesportaleurope.harvester.oaipmh.ConsoleHarvester;
 public class PortugalConsoleHarvester extends ConsoleHarvester{
     private final static Logger LOG = Logger.getLogger(PortugalConsoleHarvester.class);
 
-    
+
     public PortugalConsoleHarvester(File dataDir, Properties properties) {
 		super(dataDir, properties);
 	}
@@ -26,9 +26,11 @@ public class PortugalConsoleHarvester extends ConsoleHarvester{
 	public void start() {
 		super.start();
         String set = getSet();
+//        String set = "AMCTC";
 
         //2. Use the DC files to import in DB
-        File resultDir = getDataDir(getDataDir());
+        File resultDir = getOutputDir();
+//        File resultDir = getDataDir(getDataDir());
         if(resultDir.getName().equals("DONE")) {
             resultDir = resultDir.getParentFile();
         }
@@ -36,11 +38,16 @@ public class PortugalConsoleHarvester extends ConsoleHarvester{
         if(delete.exists())
             delete.delete();
 
+        long start = System.currentTimeMillis();
         HarvesterConverter converter = new HarvesterConverter(resultDir);
         try {
             converter.dublinCoreToEad();
-            int size = converter.dbToEad("PT-" + set);
+            int size = converter.dbToEadNew("PT-" + set);
             LOG.info(size + " EADs were created!");
+            long end = System.currentTimeMillis();
+            LOG.info("===============================================");
+            super.calcHMS(end, start);
+            LOG.info("===============================================");
         } catch (Exception e) {
             LOG.error("Error...", e);
             throw new RuntimeException(e);
