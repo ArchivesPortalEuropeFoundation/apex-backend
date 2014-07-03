@@ -181,8 +181,23 @@ public class DBUtil {
             return null;
         }
     }
-    public List<CLevel> retrieveAllClevelsOrdered(long ecId) throws SQLException {
-        String query = "SELECT * FROM c_level WHERE ec_id = " + ecId + " ORDER BY unitid";
+    public List<CLevel> retrieveAllParentClevelsOrdered(long ecId) throws SQLException {
+        String query = "SELECT * FROM c_level WHERE ec_id = " + ecId + " AND parent_cl_id IS NULL ORDER BY unitid";
+        ResultSet resultSet = launchSelectQuery(query);
+        try {
+            List<CLevel> cLevels = new ArrayList<CLevel>();
+            while(resultSet.next()) {
+                CLevel cLevel = retrieveCLevelFromResultSet(resultSet);
+                cLevels.add(cLevel);
+            }
+            return cLevels;
+        } catch (SQLException e) {
+            LOG.error("Error, returns null", e);
+            return null;
+        }
+    }
+    public List<CLevel> retrieveAllClevelsOrderedWithParent(long ecId, long parent_cl_id) throws SQLException {
+        String query = "SELECT * FROM c_level WHERE ec_id = " + ecId + " AND parent_cl_id = " + parent_cl_id + " ORDER BY unitid";
         ResultSet resultSet = launchSelectQuery(query);
         try {
             List<CLevel> cLevels = new ArrayList<CLevel>();
@@ -210,6 +225,38 @@ public class DBUtil {
 
     public List<CLevel> retrieveAllChildren(long parentId) throws SQLException {
         String query = "SELECT * FROM c_level WHERE parent_cl_id = " + parentId;
+        ResultSet resultSet = launchSelectQuery(query);
+        try {
+            List<CLevel> cLevels = new ArrayList<CLevel>();
+            while(resultSet.next()) {
+                CLevel cLevel = retrieveCLevelFromResultSet(resultSet);
+                cLevels.add(cLevel);
+            }
+            return cLevels;
+        } catch (SQLException e) {
+            LOG.error("Error, returns null", e);
+            return null;
+        }
+    }
+
+    public List<CLevel> retrieveAllFonds(long ecId) throws SQLException {
+        String query = "SELECT * FROM c_level WHERE ec_id = " + ecId + " AND level = 'fonds'";
+        ResultSet resultSet = launchSelectQuery(query);
+        try {
+            List<CLevel> cLevels = new ArrayList<CLevel>();
+            while(resultSet.next()) {
+                CLevel cLevel = retrieveCLevelFromResultSet(resultSet);
+                cLevels.add(cLevel);
+            }
+            return cLevels;
+        } catch (SQLException e) {
+            LOG.error("Error, returns null", e);
+            return null;
+        }
+    }
+
+    public List<CLevel> retrieveChildrenOfFonds(String unitidParent) throws SQLException {
+        String query = "SELECT * FROM c_level WHERE unitid LIKE '" + unitidParent + "/%' ORDER BY unitid";
         ResultSet resultSet = launchSelectQuery(query);
         try {
             List<CLevel> cLevels = new ArrayList<CLevel>();

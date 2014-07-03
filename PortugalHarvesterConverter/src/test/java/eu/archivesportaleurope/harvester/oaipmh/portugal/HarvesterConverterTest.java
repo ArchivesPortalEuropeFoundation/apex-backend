@@ -1,0 +1,120 @@
+package eu.archivesportaleurope.harvester.oaipmh.portugal;
+
+import eu.archivesportaleurope.harvester.oaipmh.portugal.objects.Node;
+import junit.framework.Assert;
+import org.junit.Test;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+
+public class HarvesterConverterTest {
+
+    @Test
+    public void test() {
+        LinkedHashMap<String, Long> map = new LinkedHashMap<String, Long>();
+//        map.put("PT/ADLRA/NOT/CNPGR", 1490L);
+        map.put("PT/ADLRA/NOT/CNPGR/1", 1491L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/1", 1492L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/10", 1501L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/100", 1591L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/101", 1592L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/102", 1593L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/103", 1594L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/104", 1595L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/105", 1596L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/106", 1597L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/107", 1598L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/108", 1599L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/109", 1600L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/11", 1502L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/110", 1601L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/111", 1602L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/112", 1603L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/113", 1604L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/114", 1605L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/115", 1606L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/116", 1607L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/117", 1608L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/118", 1609L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/119", 1610L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/12", 1503L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/120", 1611L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/121/1", 1612L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/121", 1612L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/122", 1613L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/2", 10992L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/123", 1614L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/124", 1615L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/125", 1616L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/126", 1617L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/127", 1618L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/128", 1619L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/129", 1620L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/13", 1504L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/130", 1621L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/131", 1622L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/132", 1623L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/133", 1624L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/134", 1625L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/135", 1626L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/136", 1627L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/137", 1628L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/138", 1629L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/139", 1630L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/14", 1505L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/140", 1631L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/141", 1632L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/142", 1633L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/143", 1634L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/144", 1635L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/145", 1636L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/146", 1637L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/147", 1638L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/148", 1639L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/149", 1640L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/15", 1506L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/150", 1641L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/151", 1642L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/152", 1643L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/153", 1644L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/154", 1645L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/155", 1646L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/156", 1647L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/157", 1648L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/158", 1649L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/159", 1650L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/16", 1507L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/160", 1651L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/161", 1652L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/162", 1653L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/197", 1688L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/198", 1689L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/199", 1690L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/20", 1511L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/200", 1691L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/201", 1692L);
+        map.put("PT/ADLRA/NOT/CNPGR/2/27", 1692L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/202", 1693L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/203", 1694L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/204", 1695L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/205", 1696L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/206", 1697L);
+        map.put("PT/ADLRA/NOT/CNPGR/2", 1697L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/207", 1698L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/208", 1699L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/209", 1700L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/21", 1512L);
+        map.put("PT/ADLRA/NOT/CNPGR/1/210", 1701L);
+
+        map = HarvesterConverter.sortHashMapByKey(map);
+        HarvesterConverter.printList_simple(map);
+
+        LinkedList<String> list = new LinkedList<String>(map.keySet());
+        Node root = new Node(null, "PT/ADLRA/NOT/CNPGR");
+        HarvesterConverter.loopGoesInTree(root, list, 0);
+        System.out.println(root);
+        System.out.println("Size map: " + map.size());
+        System.out.println("Size node: " + root.sizeWithoutRoot());
+        Assert.assertEquals(map.size(), root.sizeWithoutRoot());
+    }
+}

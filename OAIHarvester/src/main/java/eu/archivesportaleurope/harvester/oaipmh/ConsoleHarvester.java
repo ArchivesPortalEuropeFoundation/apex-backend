@@ -28,12 +28,13 @@ public class ConsoleHarvester {
 	protected static final String BASE_DIR_PARAMETER = "baseDir";
 	protected static final String CONF_FILE_PARAMETER = "confFile";
 	private static final String YES = "Yes";
-	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
+	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD, EDM or DC files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
 	private static final String HARVEST_METHOD_LIST_RECORDS = "Harvest by verb ListRecords";
 	private static final String HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD = "Harvest by verb ListIdentifiers/GetRecord (fail safe)";
 	private Logger logger;
 	private File dataDir;
+	private File outputDir;
 	private String baseUrl;
 	private String metadataFormat;
 	private String set;
@@ -211,7 +212,7 @@ public class ConsoleHarvester {
 			}
 			File baseUrlDataDir = new File(dataDir, convertToFilename(minimizeBaseUrlDataDir(baseUrl)));
 			File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
-			File outputDir = null;
+			outputDir = null;
 			if (set == null){
 				outputDir = metaDataFormatDataDir;
 			}else {
@@ -297,7 +298,7 @@ public class ConsoleHarvester {
 	       String[] splitted = temp.split("/");
 	       return splitted[0];
 	}
-	private void calcHMS(long stopTime, long startTime) {
+	protected void calcHMS(long stopTime, long startTime) {
 		int hours, minutes, seconds;
 		int timeInSeconds = (int) ((stopTime - startTime) / 1000);
 		hours = timeInSeconds / 3600;
@@ -460,5 +461,8 @@ public class ConsoleHarvester {
 	protected File getDataDir() {
 		return dataDir;
 	}
-    
+
+    public File getOutputDir() {
+        return outputDir;
+    }
 }
