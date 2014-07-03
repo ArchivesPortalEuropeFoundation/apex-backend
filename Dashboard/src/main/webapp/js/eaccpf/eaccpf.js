@@ -121,22 +121,22 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
         alertEmptyFields(nameMissing);
         return;
     }
-    var date1 = $("table#dateExistenceTable tr#trDate_text_1 input#date_1").attr("value");
-    var date2 = $("table#dateExistenceTable tr#trDate_text_1 input#date_2").attr("value");
-    if (date1 == null || date1 == "") {
-        if (date2 == "") {
-            alertEmptyFields(dateMissing);
-            return;
-        } else {
-            alertEmptyFields(startDateMissing);
-            return;
-        }
-    } else {
-        if (date2 == "") {
-            alertEmptyFields(endDateMissing);
-            return;
-        }
-    }
+    //var date1 = $("table#dateExistenceTable tr#trDate_text_1 input#date_1").attr("value");
+    //var date2 = $("table#dateExistenceTable tr#trDate_text_1 input#date_2").attr("value");
+    //if (date1 == null || date1 == "") {
+    //    if (date2 == "") {
+    //        alertEmptyFields(dateMissing);
+    //        return;
+    //    } else {
+    //        alertEmptyFields(startDateMissing);
+    //        return;
+    //    }
+    //} else {
+    //    if (date2 == "") {
+    //        alertEmptyFields(endDateMissing);
+    //        return;
+    //    }
+    //}
     return "ok";
 };
 
@@ -298,12 +298,12 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
 }
 
 
-function dateRowNotEmpty(table, row) {
-    var testYear1 = $("table#" + table + " " + row + " input#date_1").attr("value");
-    var testYear1Checked = $("table#" + table + " input[type='radio']:checked").val();
-    if ($("table#" + table + " " + row + " input#date_2").length != 0) {
-        var testYear2 = $("table#" + table + " " + row + " input#date_2").attr("value");
-        var testYear2Checked = $("table#" + table + " input[type='radio']:checked").val();
+function dateRowNotEmpty(table, counter) {
+    var testYear1 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_1").attr("value");
+    var testYear1Checked = $("table#" + table + " tr#trDate_radio_" + counter + " input[type='radio']:checked").val();
+    if ($("table#" + table + " tr#trDate_text_" + counter + " input#date_2").length != 0) {
+        var testYear2 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_2").attr("value");
+        var testYear2Checked = $("table#" + table + " tr#trDate_radio_" + counter+ " input[type='radio']:checked").val();
     } else {
         var testYear2 = null;
     }
@@ -312,7 +312,7 @@ function dateRowNotEmpty(table, row) {
             return false;
         else
             return true;
-    } else if ((testYear2 == "" && testYear1 == "") && testYear1Checked == "known" && testYear2Checked == "known") {
+    } else if (testYear2 == "" && testYear1 == "" && testYear1Checked == "known" && testYear2Checked == "known") {
         return false;
     } else
         return true;
@@ -467,7 +467,7 @@ function addDateOrDateRangeName(buttonClicked, tableName, dateLabel, fromDateLab
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trNameForm", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -486,7 +486,7 @@ function addDateOrDateRangeName(buttonClicked, tableName, dateLabel, fromDateLab
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trNameForm", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -589,7 +589,7 @@ function addDateOrDateRangeExistence(buttonClicked, dateLabel, fromDateLabel, to
         if (counter == 0) {
             insertDateAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty("dateExistenceTable", "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty("dateExistenceTable", counter)) {
                 insertDateAfter("dateExistenceTable", "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -608,7 +608,7 @@ function addDateOrDateRangeExistence(buttonClicked, dateLabel, fromDateLabel, to
         if (counter == 0) {
             insertDateRangeAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty("dateExistenceTable", "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty("dateExistenceTable", counter)) {
                 insertDateRangeAfter("dateExistenceTable", "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -660,7 +660,7 @@ function addDateOrDateRangePlace(buttonClicked, tableName, dateLabel, fromDateLa
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trPlaceRole", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -679,7 +679,7 @@ function addDateOrDateRangePlace(buttonClicked, tableName, dateLabel, fromDateLa
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trPlaceRole", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -785,7 +785,7 @@ function addDateOrDateRangeFunction(buttonClicked, tableName, dateLabel, fromDat
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trPlaceFunctionButton", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -804,7 +804,7 @@ function addDateOrDateRangeFunction(buttonClicked, tableName, dateLabel, fromDat
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trPlaceFunctionButton", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -911,7 +911,7 @@ function addDateOrDateRangeOccupation(buttonClicked, tableName, dateLabel, fromD
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trPlaceOccupationButton", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
@@ -930,7 +930,7 @@ function addDateOrDateRangeOccupation(buttonClicked, tableName, dateLabel, fromD
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trPlaceOccupationButton", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
         } else {
-            if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
+            if (dateRowNotEmpty(tableName, counter)) {
                 insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
             } else {
                 if (counter == 1) {
