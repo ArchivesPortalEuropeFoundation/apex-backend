@@ -93,7 +93,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                 //update ddbb entry
                 EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
                 ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId());
-                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), "eac_" + archivalInstitution.getRepositorycode());
+                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), archivalInstitution.getRepositorycode());
                 storedEacEntry.setTitle(getTitleFromFile(eac));
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
