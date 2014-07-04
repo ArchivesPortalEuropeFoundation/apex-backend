@@ -37,7 +37,7 @@
 </script>
 </head>
 <body>
-	<div id="wrapper">
+	<div id="wrapper" class="wrapperEaccpfDisplay">
 		<div id="browser"></div>
 		<div id="header">
 			<a href="#" onclick="redirect('${locale}')"><div id="logo"></div></a>
