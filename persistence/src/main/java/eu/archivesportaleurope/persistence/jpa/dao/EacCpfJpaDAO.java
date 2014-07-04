@@ -29,15 +29,6 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     private final Logger log = Logger.getLogger(EacCpfJpaDAO.class);
 
     @Override
-    public boolean existEacCpf(String identifier) {
-        TypedQuery<EacCpf> query = getEntityManager().createQuery(
-                "SELECT id FROM EacCpf eacCpf WHERE eacCpf.identifier = :identifier ", EacCpf.class);
-        query.setParameter("identifier", ApeUtil.decodeSpecialCharacters(identifier));
-        query.setMaxResults(1);
-        return query.getResultList().size() > 0;
-    }
-
-    @Override
     public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier) {
         Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -54,7 +45,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     @Override
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier) {
         TypedQuery<EacCpf> query = getEntityManager().createQuery(
-                "SELECT id FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);
+                "SELECT eacCpf FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);
         query.setParameter("identifier", ApeUtil.decodeSpecialCharacters(identifier));
         query.setParameter("aiId", aiId);
         query.setMaxResults(1);
