@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
@@ -105,39 +107,14 @@ public class CreateEacCpf {
         eacCpf.setCpfDescription(cpfDescription);
     }
 
-    public EacCpf getEacCpf() {
+    public EacCpf getJaxbEacCpf() {
         return eacCpf;
     }
-
+    public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
+        return newEac;
+    }
     private Control fillControl() {
         Control control = new Control();
-
-        // eac-cpf/control/recordId
-        if (control.getRecordId() == null) {
-            control.setRecordId(new RecordId());
-        }
-        if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
-            String[] content = (String[]) parameters.get("apeId");
-            if (content.length == 1) {
-                control.getRecordId().setValue(content[0]);
-            }
-        } else {
-            UploadMethod uploadMethod = new UploadMethod();
-            uploadMethod.setMethod(UploadMethod.HTTP);
-            uploadMethod.setId(3);
-            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-            String tempIdentifier = archivalInstitution.getRepositorycode();
-            newEac.setUploadDate(new java.util.Date());
-            newEac.setIdentifier(tempIdentifier);
-            newEac.setUploadMethod(uploadMethod);
-            newEac.setArchivalInstitution(archivalInstitution);
-            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
-            newEac.setTitle("temporary title");
-            newEac = eacCpfDAO.store(newEac);
-
-            control.getRecordId().setValue(Integer.toString(newEac.getId()));
-        }
-
         // eacCpf/control/otherRecordId
         int counter = 1;
         String parameterName = "textLocalId_";
@@ -151,6 +128,42 @@ public class CreateEacCpf {
             control.getOtherRecordId().add(otherRecordId);
             counter++;
         }
+        // eac-cpf/control/recordId
+        if (control.getRecordId() == null) {
+            control.setRecordId(new RecordId());
+        }
+        if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
+            String[] content = (String[]) parameters.get("apeId");
+            if (content.length == 1) {
+                control.getRecordId().setValue(content[0]);
+            }
+        } else {
+            newEac.setUploadDate(new java.util.Date());
+            UploadMethod uploadMethod = new UploadMethod();
+            uploadMethod.setMethod(UploadMethod.HTTP);
+            uploadMethod.setId(3);
+            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+            String otherRecordId = control.getOtherRecordId().get(0).getContent();
+            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
+            	
+            if (noRecordIdAvailable){
+                String id = System.currentTimeMillis() +"";
+                id = id.substring(0,id.length()-4);
+                newEac.setIdentifier(id);
+            }else {
+            	 newEac.setIdentifier(otherRecordId);
+            	 
+            }
+            control.getRecordId().setValue(newEac.getIdentifier());
+            newEac.setUploadMethod(uploadMethod);
+            newEac.setArchivalInstitution(archivalInstitution);
+            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
+            newEac.setTitle("temporary title");
+            newEac = eacCpfDAO.store(newEac);
+
+        }
+
+
 
         // eacCpf/control/maintenanceStatus
         if (control.getMaintenanceStatus() == null) {

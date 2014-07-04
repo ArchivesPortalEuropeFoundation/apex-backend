@@ -48,8 +48,8 @@ public class StoreEacCpfAction extends EacCpfAction {
                 + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
 
         CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId());
-        EacCpf eac = creator.getEacCpf();
-        String filename = eac.getControl().getRecordId().getValue() + ".xml";
+        EacCpf eac = creator.getJaxbEacCpf();
+        String filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier()) + ".xml";
 
         // Save XML.
         try {
@@ -92,16 +92,10 @@ public class StoreEacCpfAction extends EacCpfAction {
 
                 //update ddbb entry
                 EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId());
-                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), archivalInstitution.getRepositorycode());
+                eu.apenet.persistence.vo.EacCpf storedEacEntry = creator.getDatabaseEacCpf();
                 storedEacEntry.setTitle(getTitleFromFile(eac));
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
-                UploadMethod uploadMethod = new UploadMethod();
-                uploadMethod.setMethod(UploadMethod.HTTP);
-                uploadMethod.setId(3);
-                storedEacEntry.setUploadMethod(uploadMethod);
-                storedEacEntry.setIdentifier(eac.getControl().getRecordId().getValue());
                 storedEacEntry.setValidated(ValidatedState.VALIDATED);
                 eacCpfDAO.update(storedEacEntry);
             } else {
