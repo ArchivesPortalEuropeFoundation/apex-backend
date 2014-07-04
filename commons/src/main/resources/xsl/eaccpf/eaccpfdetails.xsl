@@ -1106,27 +1106,47 @@
     	<xsl:choose>
 	    	<xsl:when test="not($corpname) and not($famname) and not($persname) and not($legalform) and not($listName/eac:part[not(@localType) or @localType=''])"> 
 	    		<xsl:if test="$surName">
-	    			<xsl:apply-templates select="$surName" mode="other"/>
+	    		<xsl:for-each select="$surName">
+	    			<xsl:apply-templates select="." mode="other"/>
+	    			<xsl:if test="position()!=last()">
+	    				<xsl:text> </xsl:text>
+	    			</xsl:if>
+	    		</xsl:for-each>	
 	    			<xsl:if test="$birthname">
 	    				<xsl:text> </xsl:text>
 	    			</xsl:if>
 	    		</xsl:if>
 	    		<xsl:if test="$birthname">
 	    			<xsl:text>(</xsl:text>
-	    			<xsl:apply-templates select="$birthname" mode="other"/>
+	    		    <xsl:for-each select="$birthname"> 	
+	    				<xsl:apply-templates select="." mode="other"/>
+	    				<xsl:if test="position()!=last()">
+	    					<xsl:text> </xsl:text>
+	    				</xsl:if>
+	    		  	</xsl:for-each>	  
 	    			<xsl:text>)</xsl:text>
 	    		</xsl:if>
 	    		<xsl:if test="$prefix">
 	    			<xsl:if test="$surName or $birthname">
 	    				<xsl:text>, </xsl:text>
 	    			</xsl:if>
-	    			<xsl:apply-templates select="$prefix" mode="other"/>
+	    			<xsl:for-each select="$prefix"> 	
+	    				<xsl:apply-templates select="." mode="other"/>
+	    				<xsl:if test="position()!=last()">
+	    					<xsl:text> </xsl:text>
+	    			    </xsl:if>
+	    			</xsl:for-each>	  
 	    		</xsl:if>
 	    		<xsl:if test="$firstName">
 	    			<xsl:if test="$surName or $birthname or $prefix">
 	    				<xsl:text>, </xsl:text>
 	    			</xsl:if>
-	    			<xsl:apply-templates select="$firstName" mode="other"/>
+	    			<xsl:for-each select="$firstName"> 	
+	    				<xsl:apply-templates select="." mode="other"/>
+	    				<xsl:if test="position()!=last()">
+	    					<xsl:text> </xsl:text>
+	    			    </xsl:if>
+	    			</xsl:for-each>	
 	    		</xsl:if>
 	    		<xsl:if test="$patronymic">
 	    			<xsl:choose>
@@ -1139,19 +1159,34 @@
 			    			</xsl:if>
 	    				</xsl:otherwise>
 	    			</xsl:choose>
-	    			<xsl:apply-templates select="$patronymic" mode="other"/>
+	    			<xsl:for-each select="$patronymic"> 	
+	    				<xsl:apply-templates select="." mode="other"/>
+	    				<xsl:if test="position()!=last()">
+	    					<xsl:text> </xsl:text>
+	    			    </xsl:if>
+	    			</xsl:for-each>	
 	    		</xsl:if>
 	    		<xsl:if test="$suffix">
 	    			<xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic">
 	    				<xsl:text>, </xsl:text>
 	    			</xsl:if>
-	    			<xsl:apply-templates select="$suffix" mode="other"/>
+	    			<xsl:for-each select="$suffix"> 	
+	    				<xsl:apply-templates select="." mode="other"/>
+	    				<xsl:if test="position()!=last()">
+	    					<xsl:text> </xsl:text>
+	    			    </xsl:if>
+	    			</xsl:for-each>	
 	    		</xsl:if>
 	    		<xsl:if test="$title">
 	    			<xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic or $suffix">
 	    				<xsl:text>, </xsl:text>
 	    			</xsl:if>
-	    			<xsl:apply-templates select="$title" mode="other"/>
+	    			<xsl:for-each select="$title"> 	
+	    				<xsl:apply-templates select="." mode="other"/>
+	    				<xsl:if test="position()!=last()">
+	    					<xsl:text> </xsl:text>
+	    			    </xsl:if>
+	    			</xsl:for-each>	
 	    		</xsl:if>
 	    	</xsl:when>
 	    	<xsl:otherwise>
@@ -1169,10 +1204,16 @@
 	    </xsl:choose>
 	    <xsl:if test="$alias">
 	    	<xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic or $suffix or $title or $corpname or $famname or $persname">
-   				<xsl:text> </xsl:text>
+   				<xsl:text> </xsl:text> 
    			</xsl:if>
 	   		<xsl:text>(</xsl:text><xsl:value-of select="ape:resource('eaccpf.portal.alias')"/><xsl:text>: </xsl:text>
-	   		<xsl:apply-templates select="$alias" mode="other"/><xsl:text>)</xsl:text>
+	   		<xsl:for-each select="$alias"> 	
+   				<xsl:apply-templates select="." mode="other"/>
+   				<xsl:if test="position()!=last()">
+   					<xsl:text> </xsl:text>
+   			    </xsl:if>
+   			</xsl:for-each>	
+	   		<xsl:text>)</xsl:text>
 	    </xsl:if>
 	</xsl:template>
 	
