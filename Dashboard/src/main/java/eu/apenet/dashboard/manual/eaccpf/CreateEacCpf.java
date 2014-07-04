@@ -4,19 +4,74 @@
  */
 package eu.apenet.dashboard.manual.eaccpf;
 
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
-import eu.apenet.dpt.utils.eaccpf.*;
+import eu.apenet.dpt.utils.eaccpf.Abbreviation;
+import eu.apenet.dpt.utils.eaccpf.Address;
+import eu.apenet.dpt.utils.eaccpf.AddressLine;
+import eu.apenet.dpt.utils.eaccpf.AgencyCode;
+import eu.apenet.dpt.utils.eaccpf.AgencyName;
+import eu.apenet.dpt.utils.eaccpf.Agent;
+import eu.apenet.dpt.utils.eaccpf.AgentType;
+import eu.apenet.dpt.utils.eaccpf.BiogHist;
+import eu.apenet.dpt.utils.eaccpf.Citation;
+import eu.apenet.dpt.utils.eaccpf.Control;
+import eu.apenet.dpt.utils.eaccpf.ConventionDeclaration;
+import eu.apenet.dpt.utils.eaccpf.CpfDescription;
+import eu.apenet.dpt.utils.eaccpf.CpfRelation;
+import eu.apenet.dpt.utils.eaccpf.Date;
+import eu.apenet.dpt.utils.eaccpf.DateRange;
+import eu.apenet.dpt.utils.eaccpf.DateSet;
+import eu.apenet.dpt.utils.eaccpf.Description;
+import eu.apenet.dpt.utils.eaccpf.DescriptiveNote;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.eaccpf.EntityId;
+import eu.apenet.dpt.utils.eaccpf.EntityType;
+import eu.apenet.dpt.utils.eaccpf.EventDateTime;
+import eu.apenet.dpt.utils.eaccpf.EventDescription;
+import eu.apenet.dpt.utils.eaccpf.EventType;
+import eu.apenet.dpt.utils.eaccpf.ExistDates;
+import eu.apenet.dpt.utils.eaccpf.FromDate;
+import eu.apenet.dpt.utils.eaccpf.Function;
+import eu.apenet.dpt.utils.eaccpf.FunctionRelation;
+import eu.apenet.dpt.utils.eaccpf.Functions;
+import eu.apenet.dpt.utils.eaccpf.Identity;
+import eu.apenet.dpt.utils.eaccpf.Language;
+import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceEvent;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceHistory;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceStatus;
+import eu.apenet.dpt.utils.eaccpf.Occupation;
+import eu.apenet.dpt.utils.eaccpf.Occupations;
+import eu.apenet.dpt.utils.eaccpf.OtherRecordId;
+import eu.apenet.dpt.utils.eaccpf.P;
+import eu.apenet.dpt.utils.eaccpf.Part;
+import eu.apenet.dpt.utils.eaccpf.Place;
+import eu.apenet.dpt.utils.eaccpf.PlaceEntry;
+import eu.apenet.dpt.utils.eaccpf.Places;
+import eu.apenet.dpt.utils.eaccpf.PublicationStatus;
+import eu.apenet.dpt.utils.eaccpf.RecordId;
+import eu.apenet.dpt.utils.eaccpf.RelationEntry;
+import eu.apenet.dpt.utils.eaccpf.Relations;
+import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
+import eu.apenet.dpt.utils.eaccpf.Script;
+import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
+import eu.apenet.dpt.utils.eaccpf.Term;
+import eu.apenet.dpt.utils.eaccpf.ToDate;
+import eu.apenet.dpt.utils.eaccpf.UseDates;
+import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -71,7 +126,7 @@ public class CreateEacCpf {
             uploadMethod.setMethod(UploadMethod.HTTP);
             uploadMethod.setId(3);
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-            String tempIdentifier = "eac_" + archivalInstitution.getRepositorycode();
+            String tempIdentifier = archivalInstitution.getRepositorycode();
             newEac.setUploadDate(new java.util.Date());
             newEac.setIdentifier(tempIdentifier);
             newEac.setUploadMethod(uploadMethod);
@@ -80,7 +135,7 @@ public class CreateEacCpf {
             newEac.setTitle("temporary title");
             newEac = eacCpfDAO.store(newEac);
 
-            control.getRecordId().setValue("eac_" + Integer.toString(newEac.getId()));
+            control.getRecordId().setValue(Integer.toString(newEac.getId()));
         }
 
         // eacCpf/control/otherRecordId
@@ -211,7 +266,7 @@ public class CreateEacCpf {
         }
 
         EventDescription eventDescription = new EventDescription();
-        eventDescription.setContent("Converted_apeEAC-CPF_version_Dashboard");
+        eventDescription.setContent(TransformationTool.getFullEACCPFVersion());
         maintenanceEvent.setEventDescription(eventDescription);
 
         // MaintenanceHistory
