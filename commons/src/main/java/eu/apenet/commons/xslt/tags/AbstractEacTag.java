@@ -1,6 +1,7 @@
 package eu.apenet.commons.xslt.tags;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -53,30 +54,38 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 		xsltUrls.put(EACCPFDETAILS_PREVIEW_XSLT,"xsl/eaccpf/eaccpfdetails-preview.xsl");
 	}
 	
-	public final void doTag() throws JspException, IOException {
-		FileReader eacFile = new FileReader(APEnetUtilities.getApePortalAndDashboardConfig().getRepoDirPath() + this.getEacUrl());
-		Source xmlSource = new StreamSource(new StringReader(this.readFile(eacFile)));
-		List<SolrField> highlightFields = SolrField.getSolrFieldsByIdString(searchFieldsSelectionId);
-		if (highlightFields.size() == 0) {
-			highlightFields = DEFAULT_HIGHLIGHT_FIELDS;
-		}
+	public final void doTag() throws JspException, IOException {		
 		try {
-			Integer aiIdInt = null;
-			if (StringUtils.isNotBlank(aiId)) {
-				aiIdInt = Integer.parseInt(aiId);
-			}
-			String xslLocation = xsltUrls.get(getType());
-			if (xslLocation == null){
-				LOG.warn("EAC-CPF xsl type does not exist: " + getType());
+			File file= new File(APEnetUtilities.getApePortalAndDashboardConfig().getRepoDirPath() + this.getEacUrl());
+			if (file.exists()){
+				FileReader eacFile = new FileReader(file);
+				Source xmlSource = new StreamSource(new StringReader(this.readFile(eacFile)));
+				List<SolrField> highlightFields = SolrField.getSolrFieldsByIdString(searchFieldsSelectionId);
+				if (highlightFields.size() == 0) {
+					highlightFields = DEFAULT_HIGHLIGHT_FIELDS;
+				}
+
+				Integer aiIdInt = null;
+				if (StringUtils.isNotBlank(aiId)) {
+					aiIdInt = Integer.parseInt(aiId);
+				}
+				String xslLocation = xsltUrls.get(getType());
+				if (xslLocation == null){
+					LOG.warn("EAC-CPF xsl type does not exist: " + getType());
+				}else {
+					EacXslt.convertEacToHtml(xslLocation, this.getJspContext().getOut(), xmlSource, searchTerms,
+							highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(),
+							getSolrStopwordsUrl(), this.getAiCodeUrl(), this.getEacUrlBase(), this.getEadUrl());
+				}
 			}else {
-				EacXslt.convertEacToHtml(xslLocation, this.getJspContext().getOut(), xmlSource, searchTerms,
-					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(),
-					getSolrStopwordsUrl(), this.getAiCodeUrl(), this.getEacUrlBase(), this.getEadUrl());
+				try {
+					LOG.error("No file: " + file.getCanonicalPath());
+				} catch (IOException e) {
+				}
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 		}
-
 	}
 
 	private String readFile(FileReader file) throws IOException {
