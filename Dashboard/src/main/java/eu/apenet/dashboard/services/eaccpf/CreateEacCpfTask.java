@@ -81,8 +81,8 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
             File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
 
             //Windows file lock workaround; uncomment if necessary
-            System.gc();
-            Thread.sleep(2000);
+            //System.gc();
+            //Thread.sleep(2000);
 
             if (srcFile.exists()) {
                 FileUtils.forceDelete(srcFile);
