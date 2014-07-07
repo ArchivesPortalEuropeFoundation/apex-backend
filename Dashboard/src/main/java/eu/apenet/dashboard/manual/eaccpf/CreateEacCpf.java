@@ -86,6 +86,7 @@ public class CreateEacCpf {
     private eu.apenet.persistence.vo.EacCpf newEac = new eu.apenet.persistence.vo.EacCpf();
     private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
     private int aiId;
+    private int eacCpfId;
     //possible values for date types
     private final String KNOWN = "known";
     private final String UNKNOWN = "unknown";
@@ -96,9 +97,11 @@ public class CreateEacCpf {
     //global StringBuilder for date format
     StringBuilder standardDate = new StringBuilder();
 
-    public CreateEacCpf(HttpServletRequest request, int aiId) {
+    public CreateEacCpf(HttpServletRequest request, int aiId, int eacCpfId) {
         this.parameters = request.getParameterMap();
         this.aiId = aiId;
+        this.eacCpfId = eacCpfId;
+        newEac = getDatabaseEacCpf();
 
         Control control = fillControl();
         CpfDescription cpfDescription = fillCpfDescription();
@@ -111,7 +114,11 @@ public class CreateEacCpf {
         return eacCpf;
     }
     public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
-        return newEac;
+    	if (this.eacCpfId > 0) {
+    		newEac = eacCpfDAO.findById(this.eacCpfId);
+    	}
+
+		return newEac;
     }
     private Control fillControl() {
         Control control = new Control();

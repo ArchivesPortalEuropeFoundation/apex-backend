@@ -1074,8 +1074,18 @@
         </action>
 
         <action name="storeEacCpf" class="eu.apenet.dashboard.manual.eaccpf.actions.StoreEacCpfAction">
-            <result name="success" type="redirectAction">
+        	<!-- TODO: issue 1223, for complete the reload when save first needed the edit
+        		 of an apeEAC-CPF will be implemented -->
+<!--             <result name="success" type="tiles">editEacCpf</result> -->
+            <result name="success" type="stream">
+				<param name="inputName">outputStream</param>
+				<param name="contentType">application/json</param>
+			</result>
+            <result name="exitContentManager" type="redirectAction">
                 <param name="actionName">contentmanager</param>
+            </result>
+            <result name="exitDashboardHome" type="redirectAction">
+                <param name="actionName">dashboardHome</param>
             </result>
         </action>
 		<action name="downloadLogFile" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction" method="download">
