@@ -9,13 +9,18 @@ body {
 	font-size: 8pt;
 	font-family: Arial, sans-serif;
 }
-
+.wrapperEaccpfDisplay{
+	margin:10px;
+}
+#eacCpfDisplayPortlet #footer{
+	padding-bottom:10px;
+}
 #eacCpfDisplayPortlet {
 	background-image: none;
 	background-color: white;
 	color: #2A4862;
-	margin-right:10px;
-	margin-left:10px;
+/*	margin-right:10px;
+	margin-left:10px;*/
 }
 #eacCpfDisplayPortlet #printEacDetails {
     float: inherit;
