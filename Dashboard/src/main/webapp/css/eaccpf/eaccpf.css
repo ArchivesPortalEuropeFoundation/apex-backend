@@ -332,3 +332,9 @@ hr.tablePadding {
 .area{
     display:none;
 }
+
+.spanEacSave {
+	text-align: center; 
+	color: green;
+    font-weight: bold;
+}
