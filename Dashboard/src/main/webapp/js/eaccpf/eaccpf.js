@@ -165,22 +165,22 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
         alertEmptyFields(nameMissing);
         return;
     }
-    //var date1 = $("table#dateExistenceTable tr#trDate_text_1 input#date_1").attr("value");
-    //var date2 = $("table#dateExistenceTable tr#trDate_text_1 input#date_2").attr("value");
-    //if (date1 == null || date1 == "") {
-    //    if (date2 == "") {
-    //        alertEmptyFields(dateMissing);
-    //        return;
-    //    } else {
-    //        alertEmptyFields(startDateMissing);
-    //        return;
-    //    }
-    //} else {
-    //    if (date2 == "") {
-    //        alertEmptyFields(endDateMissing);
-    //        return;
-    //    }
-    //}
+    var date1 = $("table#dateExistenceTable tr#trDate_text_1 input#date_1").attr("value");
+    var date2 = $("table#dateExistenceTable tr#trDate_text_1 input#date_2").attr("value");
+    if (date1 == null || date1 == "") {
+        if (date2 == "") {
+            alertEmptyFields(dateMissing);
+            return;
+        } else {
+            alertEmptyFields(startDateMissing);
+            return;
+        }
+    } else {
+        if (date2 == "") {
+            alertEmptyFields(endDateMissing);
+            return;
+        }
+    }
     return "ok";
 };
 
