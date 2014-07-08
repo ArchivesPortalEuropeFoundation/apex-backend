@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,8 +37,8 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
@@ -75,7 +74,6 @@ public class ArchivalLandscape extends ActionSupport{
 	private List<ArchivalInstitution> archivalInstitutionsParentChanged= new ArrayList<ArchivalInstitution>();
 	private List<SentMailRegister> sentMailRegisterList = new ArrayList<SentMailRegister>();
 
-	static Semaphore sem = new Semaphore(1,true) ;
     
 	public int j = 0;
 
