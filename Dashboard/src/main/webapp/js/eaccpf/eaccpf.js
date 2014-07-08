@@ -166,9 +166,11 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
         return;
     }
     var date1 = $("table#dateExistenceTable tr#trDate_text_1 input#date_1").attr("value");
+    var date1Checked = $("table#dateExistenceTable tr#trDate_radio_1 input[name^='dateExistenceTable_date_1_']:checked").val();
     var date2 = $("table#dateExistenceTable tr#trDate_text_1 input#date_2").attr("value");
-    if (date1 == null || date1 == "") {
-        if (date2 == "") {
+    var date2Checked = $("table#dateExistenceTable tr#trDate_radio_1 input[name^='dateExistenceTable_date_2_']:checked").val();
+    if ((date1 == null || date1 == "") && date1Checked == "known") {
+        if (date2 == "" && date2Checked == "known") {
             alertEmptyFields(dateMissing);
             return;
         } else {
@@ -176,7 +178,7 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
             return;
         }
     } else {
-        if (date2 == "") {
+        if (date2 == "" && date2Checked == "known") {
             alertEmptyFields(endDateMissing);
             return;
         }
@@ -344,10 +346,10 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
 
 function dateRowNotEmpty(table, counter) {
     var testYear1 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_1").attr("value");
-    var testYear1Checked = $("table#" + table + " tr#trDate_radio_" + counter + " input[type='radio']:checked").val();
+    var testYear1Checked = $("table#" + table + " tr#trDate_radio_" + counter + " input[name^='" + table + "_date_1_']:checked").val();
     if ($("table#" + table + " tr#trDate_text_" + counter + " input#date_2").length != 0) {
         var testYear2 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_2").attr("value");
-        var testYear2Checked = $("table#" + table + " tr#trDate_radio_" + counter+ " input[type='radio']:checked").val();
+        var testYear2Checked = $("table#" + table + " tr#trDate_radio_" + counter+ " input[name^='" + table + "_date_2_']:checked").val();
     } else {
         var testYear2 = null;
     }
@@ -472,6 +474,12 @@ function toggleDateTextfields(radiobutton) {
             $(this).removeAttr("disabled");
         });
     }
+}
+
+function validateIsoDates() {
+    //1. add trailing zero if necessary
+    //2. check date for general validity
+    //3. check date range for temporal order, i.e. no ranges like 1985-1983
 }
 
 /**************************************
