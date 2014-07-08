@@ -1,11 +1,31 @@
 package eu.apenet.dashboard.manual.eaccpf.actions;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eaccpf.CreateEacCpf;
-import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.Part;
 import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
@@ -13,43 +33,124 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.ValidatedState;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  *
  * @author papp
  */
 public class StoreEacCpfAction extends EacCpfAction {
+	/**
+	 * Serializable.
+	 */
+	private static final long serialVersionUID = -2496853052970461291L;
+	// Log.
+	private final static Logger LOG = Logger.getLogger(StoreEacCpfAction.class);
+
+	// Constants for the results.
+	private static final String EXIT_CONTENT_MANAGER = "exitContentManager";
+	private static final String EXIT_DASHBOARD_HOME = "exitDashboardHome";
+
+	// Constants for the possible return pages.
+	private static final String RETURN_CONTENT_MANAGER = "contentmanager";
+//	private static final String RETURN_DASHBOARD_HOME = "dashboardHome";
+
+	// Constants for the possible actions.
+	private static final String EXIT = "exit";
+	private static final String SAVE = "save";
+	private static final String SAVE_EXIT = "save_exit";
+
+	// Constants for encoding.
+	private static final String UTF8 = "UTF-8";
 
     private List<String> warnings_ead = new ArrayList<String>();
 
+    // Variable for the ids of the file and the eac dao.
+    private String fileId;
+    private String eacDaoId;
+
+    // Variable for the desired actions.
+    private String returnPage;
+    private String saveOrExit;
+
     @Override
     public String execute() throws Exception {
-        Logger log = Logger.getLogger(StoreEacCpfAction.class);
+    	String result = ERROR;
+    	// Checks the selected  option.
+    	if (StoreEacCpfAction.SAVE.equalsIgnoreCase(this.getSaveOrExit())) {
+    		// TODO: issue 1223, for complete the reload when save first needed the edit
+    		// of an apeEAC-CPF will be implemented.
+    		// Save the contents.
+//    		result = storeApeEacCpf();
+
+    		// Define the params for the response.
+    		getServletRequest().setCharacterEncoding(UTF8);
+			getServletResponse().setCharacterEncoding(UTF8);
+			getServletResponse().setContentType("application/json");
+			Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
+
+    		// Save the contents.
+    		result = storeApeEacCpf();
+
+    		StringBuilder buffer = new StringBuilder();
+    		if (result.equalsIgnoreCase(SUCCESS)) {
+    			buffer.append("{\"fileId\":\"" + this.getFileId() + "\",");
+    			buffer.append("\"eacDaoId\":\"" + this.getEacDaoId() + "\"}");
+    		} else {
+    			buffer.append("{\"error\":\"" + getText("content.message.error") + "\"}");
+    		}
+
+    		writer.write(buffer.toString());
+
+    		try{
+				if (writer != null) {
+					writer.flush();
+					writer.close();
+				}
+			}catch(IOException e){
+				LOG.error(e.getMessage(), e);
+			}
+    	} else if (StoreEacCpfAction.EXIT.equalsIgnoreCase(this.getSaveOrExit())) {
+    		// Checks the return page.
+    		if (StoreEacCpfAction.RETURN_CONTENT_MANAGER.equalsIgnoreCase(this.getReturnPage())) {
+    			result = StoreEacCpfAction.EXIT_CONTENT_MANAGER;
+    		} else {
+    			result = StoreEacCpfAction.EXIT_DASHBOARD_HOME;
+    		}
+    	} else if (StoreEacCpfAction.SAVE_EXIT.equalsIgnoreCase(this.getSaveOrExit())) {
+    		// Save the contents.
+    		result = storeApeEacCpf();
+
+    		// Checks the return page.
+    		if (result.equalsIgnoreCase(SUCCESS)
+    				&& StoreEacCpfAction.RETURN_CONTENT_MANAGER.equalsIgnoreCase(this.getReturnPage())) {
+    			result = StoreEacCpfAction.EXIT_CONTENT_MANAGER;
+    		} else if (result.equalsIgnoreCase(SUCCESS)) {
+    			result = StoreEacCpfAction.EXIT_DASHBOARD_HOME;
+    		}
+    	}
+
+    	return result;
+    }
+
+    private String storeApeEacCpf() throws Exception {
         String countryCode = new ArchivalLandscape().getmyCountry();
         String basePath = APEnetUtilities.FILESEPARATOR + countryCode + APEnetUtilities.FILESEPARATOR
                 + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
 
-        CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId());
+        CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId(), Integer.parseInt(this.getEacDaoId()));
         EacCpf eac = creator.getEacCpf();
-        String filename = eac.getControl().getRecordId().getValue() + ".xml";
+//        String filename = eac.getControl().getRecordId().getValue() + ".xml";
+
+        String filename = "";
+        if (this.getFileId() == null || this.getFileId().isEmpty()) {
+        	filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier());
+        	this.setFileId(filename);
+        } else {
+        	filename = this.getFileId();
+        }
+    	filename = filename + ".xml";
 
         // Save XML.
         try {
@@ -68,9 +169,9 @@ public class StoreEacCpfAction extends EacCpfAction {
             jaxbMarshaller.marshal(eac, eacCpfTempFile);
 
             // It is necessary to validate the file against apeEAC-CPF schema.
-            log.debug("Beginning EAC-CPF validation");
+            LOG.debug("Beginning EAC-CPF validation");
             if (validateFile(eacCpfTempFile)) {
-                log.info("EAC-CPF file is valid");
+            	LOG.info("EAC-CPF file is valid");
 
                 // Move temp file to final file.
                 File eacCpfFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
@@ -78,7 +179,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                     try {
                         FileUtils.forceDelete(eacCpfFinalFile);
                     } catch (IOException e) {
-                        log.error(e.getMessage(), e);
+                    	LOG.error(e.getMessage(), e);
                     }
                 }
                 FileUtils.moveFile(eacCpfTempFile, eacCpfFinalFile);
@@ -86,14 +187,24 @@ public class StoreEacCpfAction extends EacCpfAction {
                     try {
                         FileUtils.forceDelete(eacCpfTempFile);
                     } catch (IOException e) {
-                        log.error(e.getMessage(), e);
+                    	LOG.error(e.getMessage(), e);
                     }
                 }
 
                 //update ddbb entry
                 EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId());
-                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), "eac_" + archivalInstitution.getRepositorycode());
+//                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId());
+//                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), "eac_" + archivalInstitution.getRepositorycode());
+                eu.apenet.persistence.vo.EacCpf storedEacEntry = null;
+
+                if (this.getEacDaoId() != null
+                		&& !this.getEacDaoId().isEmpty()
+                		&& Integer.valueOf(this.getEacDaoId()) > 0) {
+//                	storedEacEntry = eacCpfDAO.findById(Integer.parseInt(this.getEacDaoId()));
+                	storedEacEntry = eacCpfDAO.findById(Integer.valueOf(this.getEacDaoId()));
+                } else {
+                	storedEacEntry = creator.getDatabaseEacCpf();
+                }
                 storedEacEntry.setTitle(getTitleFromFile(eac));
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
@@ -104,11 +215,13 @@ public class StoreEacCpfAction extends EacCpfAction {
                 storedEacEntry.setIdentifier(eac.getControl().getRecordId().getValue());
                 storedEacEntry.setValidated(ValidatedState.VALIDATED);
                 eacCpfDAO.update(storedEacEntry);
+
+                this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
             } else {
-                log.warn("The file " + filename + " is not valid");
+            	LOG.warn("The file " + filename + " is not valid");
                 for (int i = 0; i < warnings_ead.size(); i++) {
                     String warning = warnings_ead.get(i).replace("<br/>", "");
-                    log.debug(warning);
+                    LOG.debug(warning);
                     ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning, false, this);
                     if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
                         String currentError = parseEag2012Errors.errorsValidation();
@@ -121,11 +234,11 @@ public class StoreEacCpfAction extends EacCpfAction {
                 }
             }
         } catch (JAXBException jaxbe) {
-            log.error(jaxbe.getMessage(), jaxbe);
+        	LOG.error(jaxbe.getMessage(), jaxbe);
         } catch (APEnetException e) {
-            log.error(e.getMessage(), e);
+        	LOG.error(e.getMessage(), e);
         } catch (SAXException e) {
-            log.error(e.getMessage());
+        	LOG.error(e.getMessage());
         }
 
         return SUCCESS;
@@ -227,4 +340,60 @@ public class StoreEacCpfAction extends EacCpfAction {
         }
         return title;
     }
+
+	/**
+	 * @return the fileId
+	 */
+	public String getFileId() {
+		return this.fileId;
+	}
+
+	/**
+	 * @param fileId the fileId to set
+	 */
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
+
+	/**
+	 * @return the eacDaoId
+	 */
+	public String getEacDaoId() {
+		return this.eacDaoId;
+	}
+
+	/**
+	 * @param eacDaoId the eacDaoId to set
+	 */
+	public void setEacDaoId(String eacDaoId) {
+		this.eacDaoId = eacDaoId;
+	}
+
+	/**
+	 * @return the returnPage
+	 */
+	public String getReturnPage() {
+		return this.returnPage;
+	}
+
+	/**
+	 * @param returnPage the returnPage to set
+	 */
+	public void setReturnPage(String returnPage) {
+		this.returnPage = returnPage;
+	}
+
+	/**
+	 * @return the saveOrExit
+	 */
+	public String getSaveOrExit() {
+		return this.saveOrExit;
+	}
+
+	/**
+	 * @param saveOrExit the saveOrExit to set
+	 */
+	public void setSaveOrExit(String saveOrExit) {
+		this.saveOrExit = saveOrExit;
+	}
 }

@@ -9,6 +9,10 @@
     </div>
     <%--<p><s:debug/></p>--%>
     <form id="webformEacCpf" name="webformEacCpf" method="POST" action="storeEacCpf.action">
+    	<s:hidden id="saveOrExit" name="saveOrExit" value="save"></s:hidden>
+    	<s:hidden id="returnPage" name="returnPage" value=""></s:hidden>
+    	<s:hidden id="fileId" name="fileId"></s:hidden>
+    	<s:hidden id="eacDaoId" name="eacDaoId" value="0"></s:hidden>
         <div id="eacCpfTabs" class="corner-all helper-clearfix">
             <ul id="eacCpfTabsContainer" class="eacCpfTabsContainer">
                 <li id="tab-identity">
@@ -53,8 +57,8 @@
             <tr>
                 <td><input type="button" class="rightButton" id="buttonPreviousTab" value="<s:property value="getText('eaccpf.commons.previousTab')" />" onclick='loadPreviousTab();' /></td>
                 <td><input type="button" id="buttonNextTab" value="<s:property value="getText('eaccpf.commons.nextTab')" />" onclick='loadNextTab();' /></td>
-                <td><input type="button" class="rightButton" id="buttonSaveEacCpf" value="<s:property value="getText('eaccpf.commons.save')" />" onclick='clickSaveAction("<s:property value='getText("eaccpf.identity.error.empty.name.label")' />", "<s:property value='getText("eaccpf.identity.error.empty.date.label")' />", "<s:property value='getText("eaccpf.commons.error.empty.from.date")' />", "<s:property value='getText("eaccpf.commons.error.empty.to.date")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.cpf")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.resource")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.function")' />", "<s:property value='getText("eaccpf.control.error.emptylanguage.popup")' />", "<s:property value='getText("eaccpf.control.error.emptyscript.popup")' />");' /></td>
-                <td><input type="button" id="buttonExit" value="<s:property value="getText('eaccpf.commons.exit')" />" onclick='clickExitAction();' /></td>
+                <td><input type="button" class="rightButton" id="buttonSaveEacCpf" value="<s:property value="getText('eaccpf.commons.save')" />" onclick='clickSaveAction("true", "<s:property value='getText("eaccpf.identity.error.empty.name.label")' />", "<s:property value='getText("eaccpf.identity.error.empty.date.label")' />", "<s:property value='getText("eaccpf.commons.error.empty.from.date")' />", "<s:property value='getText("eaccpf.commons.error.empty.to.date")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.cpf")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.resource")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.function")' />", "<s:property value='getText("eaccpf.control.error.emptylanguage.popup")' />", "<s:property value='getText("eaccpf.control.error.emptyscript.popup")' />");' /></td>
+                <td><input type="button" id="buttonExit" value="<s:property value="getText('eaccpf.commons.exit')" />" onclick='clickExitAction("<s:property value='getText("eaccpf.commons.exitConfirm")' />", "<s:property value='getText("eaccpf.identity.error.empty.name.label")' />", "<s:property value='getText("eaccpf.identity.error.empty.date.label")' />", "<s:property value='getText("eaccpf.commons.error.empty.from.date")' />", "<s:property value='getText("eaccpf.commons.error.empty.to.date")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.cpf")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.resource")' />", "<s:property value='getText("eaccpf.relations.error.typemissing.function")' />", "<s:property value='getText("eaccpf.control.error.emptylanguage.popup")' />", "<s:property value='getText("eaccpf.control.error.emptyscript.popup")' />");' /></td>
             </tr>
         </table>
     </form>

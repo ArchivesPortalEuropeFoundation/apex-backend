@@ -77,7 +77,7 @@ function clickGoAction() {
  * Save button function, checks mandatory fields
  * before submitting the form
  **************************************/
-function clickSaveAction(nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing) {
+function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing) {
 // Check fill mandatory fields in tab "your institution".
     var identityValidation = checkIdentityTab(nameMissing, dateMissing, startDateMissing, endDateMissing);
     if (identityValidation !== "ok") {
@@ -91,20 +91,64 @@ function clickSaveAction(nameMissing, dateMissing, startDateMissing, endDateMiss
     if (controlValidation !== "ok") {
         return;
     }
-    $('#webformEacCpf').submit();
+
+    if (onlySave) {
+    	// TODO: issue 1223, for complete the reload when save first needed the edit
+		// of an apeEAC-CPF will be implemented
+//    	$("input#saveOrExit").attr("value", "save");
+
+    	// Try to save without refresh the page.
+    	$.post("storeEacCpf.action", $('#webformEacCpf').serialize(), function(d) {
+    		if (d.fileId) {
+    			$("input#fileId").attr("value", d.fileId);
+    		}
+    		if (d.eacDaoId) {
+    			$("input#eacDaoId").attr("value", d.eacDaoId);
+    		}
+    		if (d.error) {
+    			alert(d.error);
+    		}
+    	});
+    } else {
+    	$("input#saveOrExit").attr("value", "save_exit");
+        $('#webformEacCpf').submit();
+    }
 }
 
 /**************************************
- * Exit button function, leaves the form without
- * saving the contents
+ * Exit button function for Start tab, leaves
+ * the form without saving the contents
  **************************************/
-function clickExitAction() {
+function clickExitActionStartPage() {
     var useMode = $('input[name=useMode]').val();
     if (useMode == "load") {
         location.href = "contentmanager.action";
     } else {
         location.href = "dashboardHome.action";
     }
+}
+
+/**************************************
+ * Exit button function, ask the user to save
+ * the contents or leaves the form without
+ * saving them
+ **************************************/
+function clickExitAction(question, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing) {
+	// Checks the return page on exit.
+	var useMode = $('input[name=useMode]').val();
+	if (useMode == "load") {
+		$("input#returnPage").attr("value", "contentmanager");
+	} else {
+		$("input#returnPage").attr("value", "dashboardHome");
+	}
+
+	// Ask user for the action.
+	if (confirm(question)) {
+		clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
+	} else {
+		$("input#saveOrExit").attr("value", "exit");
+		$('#webformEacCpf').submit();
+	}
 }
 
 /**************************************

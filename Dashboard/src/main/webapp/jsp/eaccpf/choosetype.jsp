@@ -30,7 +30,7 @@
                 <td></td>
                 <td></td>
                 <td><input type="button" class="rightButton" id="buttonGo" value="<s:property value="getText('eaccpf.start.go')" />" onclick='clickGoAction()' /></td>
-                <td><input type="button" id="buttonExit" value="<s:property value="getText('eaccpf.commons.exit')" />" onclick='clickExitAction();' /></td>
+                <td><input type="button" id="buttonExit" value="<s:property value="getText('eaccpf.commons.exit')" />" onclick='clickExitActionStartPage();' /></td>
             </tr>
         </table>
         <input type="hidden" id="currentTr" value="" />
