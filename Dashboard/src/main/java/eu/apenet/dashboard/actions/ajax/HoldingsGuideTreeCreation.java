@@ -78,7 +78,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         try {
             Writer writer = openOutputWriter();
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
-            String eadid = "HG_" + archivalInstitution.getRepositorycode() + "_"+System.currentTimeMillis();
+            String eadid = "HG_" +System.currentTimeMillis();
             eadid = eadid.substring(0,eadid.length()-4);
             CLevelTreeNode levelTreeNode = createCLevelTreeNode();
             StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode, eadid);
@@ -97,7 +97,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP);
             	holdingsGuide.setUploadMethod(uploadMethod);
             	String startPath = CreateEadTask.getPath(XmlType.EAD_HG, archivalInstitution);
-            	holdingsGuide.setPathApenetead(startPath+ APEnetUtilities.convertToFilename(eadid)+ ".xml");
+            	holdingsGuide.setPath(startPath+ APEnetUtilities.convertToFilename(eadid)+ ".xml");
             	holdingsGuide = DAOFactory.instance().getEadDAO().store(holdingsGuide);
                 eadContent = createDummyEadContent();
                 eadContent.setHgId(holdingsGuide.getId());
@@ -266,7 +266,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         writer.writeEndElement();
         qName = new QName(AbstractParser.APENET_EAD, "item");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        writer.writeCharacters(TransformationTool.getFullVersion());
+        writer.writeCharacters(TransformationTool.getFullEADVersion());
         writer.writeEndElement();
         writer.writeEndElement();
         writer.writeEndElement();
