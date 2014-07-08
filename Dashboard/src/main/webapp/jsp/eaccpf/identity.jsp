@@ -287,15 +287,15 @@
             <tr id="trDate_iso_1">
                 <td><s:property value="getText('eaccpf.commons.iso.date')" /></td>
                 <td>
-                    <input type="text" title="YYYY" id="date_1_Year" name="dateExistenceTable_date_1_Year_1" size="4" maxlength="4" /> &ndash;
-                    <input type="text" title="MM" id="date_1_Month" name="dateExistenceTable_date_1_Month_1" size="2" maxlength="2" /> &ndash;
-                    <input type="text" title="DD" id="date_1_Day" name="dateExistenceTable_date_1_Day_1" size="2" maxlength="2" />
+                    <input type="text" title="YYYY" id="date_1_Year" name="dateExistenceTable_date_1_Year_1" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash;
+                    <input type="text" title="MM" id="date_1_Month" name="dateExistenceTable_date_1_Month_1" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash;
+                    <input type="text" title="DD" id="date_1_Day" name="dateExistenceTable_date_1_Day_1" size="2" maxlength="2" onchange="validateIsoDates($(this));" />
                 </td>
                 <td></td>
                 <td>
-                    <input type="text" title="YYYY" id="date_2_Year" name="dateExistenceTable_date_2_Year_1" size="4" maxlength="4" /> &ndash;
-                    <input type="text" title="MM" id="date_2_Month" name="dateExistenceTable_date_2_Month_1" size="2" maxlength="2" /> &ndash;
-                    <input type="text" title="DD" id="date_2_Day" name="dateExistenceTable_date_2_Day_1" size="2" maxlength="2" />
+                    <input type="text" title="YYYY" id="date_2_Year" name="dateExistenceTable_date_2_Year_1" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash;
+                    <input type="text" title="MM" id="date_2_Month" name="dateExistenceTable_date_2_Month_1" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash;
+                    <input type="text" title="DD" id="date_2_Day" name="dateExistenceTable_date_2_Day_1" size="2" maxlength="2" onchange="validateIsoDates($(this));" />
                 </td>
             </tr>
         </s:else>

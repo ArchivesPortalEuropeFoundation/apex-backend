@@ -93,8 +93,8 @@ function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, e
     }
 
     if (onlySave) {
-    	// TODO: issue 1223, for complete the reload when save first needed the edit
-		// of an apeEAC-CPF will be implemented
+        // TODO: issue 1223, for complete the reload when save first needed the edit
+        // of an apeEAC-CPF will be implemented
 //    	$("input#saveOrExit").attr("value", "save");
 
     	// Try to save without refresh the page.
@@ -118,7 +118,7 @@ function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, e
     		}
     	});
     } else {
-    	$("input#saveOrExit").attr("value", "save_exit");
+        $("input#saveOrExit").attr("value", "save_exit");
         $('#webformEacCpf').submit();
     }
 }
@@ -142,21 +142,21 @@ function clickExitActionStartPage() {
  * saving them
  **************************************/
 function clickExitAction(question, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing) {
-	// Checks the return page on exit.
-	var useMode = $('input[name=useMode]').val();
-	if (useMode == "load") {
-		$("input#returnPage").attr("value", "contentmanager");
-	} else {
-		$("input#returnPage").attr("value", "dashboardHome");
-	}
+    // Checks the return page on exit.
+    var useMode = $('input[name=useMode]').val();
+    if (useMode == "load") {
+        $("input#returnPage").attr("value", "contentmanager");
+    } else {
+        $("input#returnPage").attr("value", "dashboardHome");
+    }
 
-	// Ask user for the action.
-	if (confirm(question)) {
-		clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
-	} else {
-		$("input#saveOrExit").attr("value", "exit");
-		$('#webformEacCpf').submit();
-	}
+    // Ask user for the action.
+    if (confirm(question)) {
+        clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
+    } else {
+        $("input#saveOrExit").attr("value", "exit");
+        $('#webformEacCpf').submit();
+    }
 }
 
 /**************************************
@@ -357,7 +357,7 @@ function dateRowNotEmpty(table, counter) {
     var testYear1Checked = $("table#" + table + " tr#trDate_radio_" + counter + " input[name^='" + table + "_date_1_']:checked").val();
     if ($("table#" + table + " tr#trDate_text_" + counter + " input#date_2").length != 0) {
         var testYear2 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_2").attr("value");
-        var testYear2Checked = $("table#" + table + " tr#trDate_radio_" + counter+ " input[name^='" + table + "_date_2_']:checked").val();
+        var testYear2Checked = $("table#" + table + " tr#trDate_radio_" + counter + " input[name^='" + table + "_date_2_']:checked").val();
     } else {
         var testYear2 = null;
     }
@@ -449,7 +449,7 @@ function parseDateToISO(content, table, row, date) {
 }
 
 function addTrailingZero(value) {
-    if (value < 10 && !(/^0/).test(value)) {
+    if (value > 0 && value < 10 && !(/^0/).test(value)) {
         return "0" + value;
     } else
         return value;
@@ -484,9 +484,35 @@ function toggleDateTextfields(radiobutton) {
     }
 }
 
-function validateIsoDates() {
-    //1. add trailing zero if necessary
+function validateIsoDates(textfield) {
+    var id = $(textfield).attr("id");
+    var idParts = id.split("_");
+    var name = $(textfield).attr("name");
+    var nameParts = name.split("_");
+    var tableName = $(textfield).parent().parent().parent().parent().attr("id");
+    var counter = nameParts[nameParts.length - 1];
+
+    //1. add trailing zero for month and day fields if necessary
+    if (idParts[2] == "Month" || idParts[2] == "Day") {
+        var value = $(textfield).attr("value");
+        $(textfield).attr("value", addTrailingZero(value));
+    }
+
     //2. check date for general validity
+    var year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Year").attr("value");
+    var month = 1;
+    var day = 1;
+    if($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Day").attr("value") != ""){
+        day = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Day").attr("value");
+    }
+    if($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Month").attr("value") != ""){
+        month = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Month").attr("value");
+    }
+    var date = new Date(year, month - 1, day);
+    if(date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)){
+        alert(year + "-" + month + "-" + day + " is not a valid date!");
+    }
+
     //3. check date range for temporal order, i.e. no ranges like 1985-1983
 }
 
