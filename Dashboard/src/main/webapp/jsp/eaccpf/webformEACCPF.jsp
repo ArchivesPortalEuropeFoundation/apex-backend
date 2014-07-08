@@ -7,6 +7,7 @@
     <div id="validationEacCpfErrorsDiv">
         <s:actionmessage id="validationEacCpfErrors" />
     </div>
+    <div id="spanMessage" class="spanEacSave" style="display: none;"></div>
     <%--<p><s:debug/></p>--%>
     <form id="webformEacCpf" name="webformEacCpf" method="POST" action="storeEacCpf.action">
     	<s:hidden id="saveOrExit" name="saveOrExit" value="save"></s:hidden>

@@ -95,7 +95,9 @@ public class StoreEacCpfAction extends EacCpfAction {
     		StringBuilder buffer = new StringBuilder();
     		if (result.equalsIgnoreCase(SUCCESS)) {
     			buffer.append("{\"fileId\":\"" + this.getFileId() + "\",");
-    			buffer.append("\"eacDaoId\":\"" + this.getEacDaoId() + "\"}");
+    			buffer.append("\"eacDaoId\":\"" + this.getEacDaoId() + "\",");
+    			buffer.append("\"resultMessage\":\"" + getText("eaccpf.info.eaccorrectlycreated") + "\"}");
+    			
     		} else {
     			buffer.append("{\"error\":\"" + getText("content.message.error") + "\"}");
     		}
