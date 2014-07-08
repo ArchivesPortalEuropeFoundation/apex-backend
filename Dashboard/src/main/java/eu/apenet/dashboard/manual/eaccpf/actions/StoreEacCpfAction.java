@@ -33,7 +33,6 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.ValidatedState;
 
 /**
@@ -140,9 +139,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                 + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
 
         CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId(), Integer.parseInt(this.getEacDaoId()));
-        EacCpf eac = creator.getEacCpf();
-//        String filename = eac.getControl().getRecordId().getValue() + ".xml";
-
+        EacCpf eac = creator.getJaxbEacCpf();
         String filename = "";
         if (this.getFileId() == null || this.getFileId().isEmpty()) {
         	filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier());
@@ -193,8 +190,6 @@ public class StoreEacCpfAction extends EacCpfAction {
 
                 //update ddbb entry
                 EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-//                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId());
-//                eu.apenet.persistence.vo.EacCpf storedEacEntry = eacCpfDAO.getEacCpfByIdentifier(archivalInstitution.getRepositorycode(), "eac_" + archivalInstitution.getRepositorycode());
                 eu.apenet.persistence.vo.EacCpf storedEacEntry = null;
 
                 if (this.getEacDaoId() != null
@@ -208,11 +203,6 @@ public class StoreEacCpfAction extends EacCpfAction {
                 storedEacEntry.setTitle(getTitleFromFile(eac));
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
-                UploadMethod uploadMethod = new UploadMethod();
-                uploadMethod.setMethod(UploadMethod.HTTP);
-                uploadMethod.setId(3);
-                storedEacEntry.setUploadMethod(uploadMethod);
-                storedEacEntry.setIdentifier(eac.getControl().getRecordId().getValue());
                 storedEacEntry.setValidated(ValidatedState.VALIDATED);
                 eacCpfDAO.update(storedEacEntry);
 

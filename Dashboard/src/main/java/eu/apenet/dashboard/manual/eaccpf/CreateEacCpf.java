@@ -4,18 +4,76 @@
  */
 package eu.apenet.dashboard.manual.eaccpf;
 
-import eu.apenet.commons.types.XmlType;
-import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
-import eu.apenet.dpt.utils.eaccpf.*;
-import eu.apenet.persistence.dao.EacCpfDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.UploadMethod;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
+import eu.apenet.commons.types.XmlType;
+import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
+import eu.apenet.dpt.utils.eaccpf.Abbreviation;
+import eu.apenet.dpt.utils.eaccpf.Address;
+import eu.apenet.dpt.utils.eaccpf.AddressLine;
+import eu.apenet.dpt.utils.eaccpf.AgencyCode;
+import eu.apenet.dpt.utils.eaccpf.AgencyName;
+import eu.apenet.dpt.utils.eaccpf.Agent;
+import eu.apenet.dpt.utils.eaccpf.AgentType;
+import eu.apenet.dpt.utils.eaccpf.BiogHist;
+import eu.apenet.dpt.utils.eaccpf.Citation;
+import eu.apenet.dpt.utils.eaccpf.Control;
+import eu.apenet.dpt.utils.eaccpf.ConventionDeclaration;
+import eu.apenet.dpt.utils.eaccpf.CpfDescription;
+import eu.apenet.dpt.utils.eaccpf.CpfRelation;
+import eu.apenet.dpt.utils.eaccpf.Date;
+import eu.apenet.dpt.utils.eaccpf.DateRange;
+import eu.apenet.dpt.utils.eaccpf.DateSet;
+import eu.apenet.dpt.utils.eaccpf.Description;
+import eu.apenet.dpt.utils.eaccpf.DescriptiveNote;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.eaccpf.EntityId;
+import eu.apenet.dpt.utils.eaccpf.EntityType;
+import eu.apenet.dpt.utils.eaccpf.EventDateTime;
+import eu.apenet.dpt.utils.eaccpf.EventDescription;
+import eu.apenet.dpt.utils.eaccpf.EventType;
+import eu.apenet.dpt.utils.eaccpf.ExistDates;
+import eu.apenet.dpt.utils.eaccpf.FromDate;
+import eu.apenet.dpt.utils.eaccpf.Function;
+import eu.apenet.dpt.utils.eaccpf.FunctionRelation;
+import eu.apenet.dpt.utils.eaccpf.Functions;
+import eu.apenet.dpt.utils.eaccpf.Identity;
+import eu.apenet.dpt.utils.eaccpf.Language;
+import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceEvent;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceHistory;
+import eu.apenet.dpt.utils.eaccpf.MaintenanceStatus;
+import eu.apenet.dpt.utils.eaccpf.Occupation;
+import eu.apenet.dpt.utils.eaccpf.Occupations;
+import eu.apenet.dpt.utils.eaccpf.OtherRecordId;
+import eu.apenet.dpt.utils.eaccpf.P;
+import eu.apenet.dpt.utils.eaccpf.Part;
+import eu.apenet.dpt.utils.eaccpf.Place;
+import eu.apenet.dpt.utils.eaccpf.PlaceEntry;
+import eu.apenet.dpt.utils.eaccpf.Places;
+import eu.apenet.dpt.utils.eaccpf.PublicationStatus;
+import eu.apenet.dpt.utils.eaccpf.RecordId;
+import eu.apenet.dpt.utils.eaccpf.RelationEntry;
+import eu.apenet.dpt.utils.eaccpf.Relations;
+import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
+import eu.apenet.dpt.utils.eaccpf.Script;
+import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
+import eu.apenet.dpt.utils.eaccpf.Term;
+import eu.apenet.dpt.utils.eaccpf.ToDate;
+import eu.apenet.dpt.utils.eaccpf.UseDates;
+import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.UploadMethod;
 
 /**
  *
@@ -29,6 +87,12 @@ public class CreateEacCpf {
     private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
     private int aiId;
     private int eacCpfId;
+    //possible values for date types
+    private final String KNOWN = "known";
+    private final String UNKNOWN = "unknown";
+    private final String UNKNOWN_START = "unknownStart";
+    private final String UNKNOWN_END = "unknownEnd";
+    private final String OPEN = "open";
 
     //global StringBuilder for date format
     StringBuilder standardDate = new StringBuilder();
@@ -46,10 +110,9 @@ public class CreateEacCpf {
         eacCpf.setCpfDescription(cpfDescription);
     }
 
-    public EacCpf getEacCpf() {
+    public EacCpf getJaxbEacCpf() {
         return eacCpf;
     }
-
     public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
     	if (this.eacCpfId > 0) {
     		newEac = eacCpfDAO.findById(this.eacCpfId);
@@ -59,33 +122,6 @@ public class CreateEacCpf {
     }
     private Control fillControl() {
         Control control = new Control();
-
-        // eac-cpf/control/recordId
-        if (control.getRecordId() == null) {
-            control.setRecordId(new RecordId());
-        }
-        if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
-            String[] content = (String[]) parameters.get("apeId");
-            if (content.length == 1) {
-                control.getRecordId().setValue(content[0]);
-            }
-        } else {
-            UploadMethod uploadMethod = new UploadMethod();
-            uploadMethod.setMethod(UploadMethod.HTTP);
-            uploadMethod.setId(3);
-            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-            String tempIdentifier = "eac_" + archivalInstitution.getRepositorycode();
-            newEac.setUploadDate(new java.util.Date());
-            newEac.setIdentifier(tempIdentifier);
-            newEac.setUploadMethod(uploadMethod);
-            newEac.setArchivalInstitution(archivalInstitution);
-            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
-            newEac.setTitle("temporary title");
-            newEac = eacCpfDAO.store(newEac);
-
-            control.getRecordId().setValue("eac_" + Integer.toString(newEac.getId()));
-        }
-
         // eacCpf/control/otherRecordId
         int counter = 1;
         String parameterName = "textLocalId_";
@@ -99,6 +135,42 @@ public class CreateEacCpf {
             control.getOtherRecordId().add(otherRecordId);
             counter++;
         }
+        // eac-cpf/control/recordId
+        if (control.getRecordId() == null) {
+            control.setRecordId(new RecordId());
+        }
+        if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
+            String[] content = (String[]) parameters.get("apeId");
+            if (content.length == 1) {
+                control.getRecordId().setValue(content[0]);
+            }
+        } else {
+            newEac.setUploadDate(new java.util.Date());
+            UploadMethod uploadMethod = new UploadMethod();
+            uploadMethod.setMethod(UploadMethod.HTTP);
+            uploadMethod.setId(3);
+            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+            String otherRecordId = control.getOtherRecordId().get(0).getContent();
+            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
+            	
+            if (noRecordIdAvailable){
+                String id = System.currentTimeMillis() +"";
+                id = id.substring(0,id.length()-4);
+                newEac.setIdentifier(id);
+            }else {
+            	 newEac.setIdentifier(otherRecordId);
+            	 
+            }
+            control.getRecordId().setValue(newEac.getIdentifier());
+            newEac.setUploadMethod(uploadMethod);
+            newEac.setArchivalInstitution(archivalInstitution);
+            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
+            newEac.setTitle("temporary title");
+            newEac = eacCpfDAO.store(newEac);
+
+        }
+
+
 
         // eacCpf/control/maintenanceStatus
         if (control.getMaintenanceStatus() == null) {
@@ -214,7 +286,7 @@ public class CreateEacCpf {
         }
 
         EventDescription eventDescription = new EventDescription();
-        eventDescription.setContent("Converted_apeEAC-CPF_version_Dashboard");
+        eventDescription.setContent(TransformationTool.getFullEACCPFVersion());
         maintenanceEvent.setEventDescription(eventDescription);
 
         // MaintenanceHistory
@@ -327,38 +399,41 @@ public class CreateEacCpf {
             rowCounter = 1;
             actualDateRows = Integer.parseInt(((String[]) parameters.get("identityPersonName_" + tableCounter + "_rows"))[0]);
 
-            // If there are any dates
+            //collect all date rows from the form in a DateSet as preprocessing step
             if (actualDateRows > 0) {
-                UseDates useDates = new UseDates();
-                //create a date set for 2 or more date rows, single elements for one date row
-                if (actualDateRows > 1) {
-                    DateSet dateSet = new DateSet();
-                    while (parameters.containsKey("identityPersonName_" + tableCounter + "_date_1_Year_" + rowCounter) || (String[]) parameters.get("identityPersonName_" + tableCounter + "_date_1_Year_" + rowCounter) != null || parameters.containsKey("identityPersonName_" + tableCounter + "_date_unknown_1_" + rowCounter)) {
-                        //if the rows has two dates, we need a date range, otherwise a simple date will cut it
-                        if (parameters.containsKey("identityPersonName_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("identityPersonName_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
-                            DateRange dateRange = createDateRange("identityPersonName_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(dateRange);
-                        } else {
-                            //Apply same procedure as above to single date
-                            Date date = createDate("identityPersonName_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(date);
-                        }
-                        rowCounter++;
-                    }
-                    useDates.setDateSet(dateSet);
-                } else if (actualDateRows == 1) {
-                    //if the rows has two dates, we need a date range, otherwise a simple date will cut it
-                    if (parameters.containsKey("identityPersonName_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("identityPersonName_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
+                DateSet dateSet = new DateSet();
+                while (parameters.containsKey("identityPersonName_" + tableCounter + "_date_1_radio_" + rowCounter)) {
+                    //if the rows have two dates, we need a date range, otherwise a simple date will cut it
+                    if (parameters.containsKey("identityPersonName_" + tableCounter + "_date_2_radio_" + rowCounter)) {
                         DateRange dateRange = createDateRange("identityPersonName_" + tableCounter, rowCounter);
-                        useDates.setDateRange(dateRange);
+                        dateSet.getDateOrDateRange().add(dateRange);
                     } else {
                         //Apply same procedure as above to single date
                         Date date = createDate("identityPersonName_" + tableCounter, rowCounter);
-                        useDates.setDate(date);
+                        dateSet.getDateOrDateRange().add(date);
                     }
+                    rowCounter++;
                 }
-                nameEntry.setUseDates(useDates);
+
+                //filter all empty rows
+                dateSet = hasData(dateSet);
+
+                //add respective elements according to number of non-empty rows
+                if (!dateSet.getDateOrDateRange().isEmpty()) {
+                    UseDates useDates = new UseDates();
+                    if (dateSet.getDateOrDateRange().size() == 1) {
+                        if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                            useDates.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                        } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                            useDates.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                        }
+                    } else {
+                        useDates.setDateSet(dateSet);
+                    }
+                    nameEntry.setUseDates(useDates);
+                }
             }
+
             //collect all name entries in one list for check if <nameEntryParallel> is required or not
             nameEntries.add(nameEntry);
             tableCounter++;
@@ -440,30 +515,33 @@ public class CreateEacCpf {
 
         // If there are any dates
         if (actualDateRows > 0) {
-            //create a date set for 2 or more date rows, single elements for one date row
-            if (actualDateRows > 1) {
-                DateSet dateSet = new DateSet();
-                while (parameters.containsKey("dateExistenceTable_date_1_Year_" + rowCounter) || (String[]) parameters.get("dateExistenceTable_date_1_Year_" + rowCounter) != null || parameters.containsKey("dateExistenceTable_date_unknown_1_" + rowCounter)) {
-                    //if the rows has two dates, we need a date range, otherwise a simple date will cut it
-                    if (parameters.containsKey("dateExistenceTable_date_2_Year_" + rowCounter) || parameters.containsKey("dateExistenceTable_date_unknown_2_" + rowCounter)) {
-                        DateRange dateRange = createDateRange("dateExistenceTable", rowCounter);
-                        dateSet.getDateOrDateRange().add(dateRange);
-                    } else {
-                        //Apply same procedure as above to single date
-                        Date date = createDate("dateExistenceTable", rowCounter);
-                        dateSet.getDateOrDateRange().add(date);
-                    }
-                    rowCounter++;
-                }
-                existDates.setDateSet(dateSet);
-            } else if (actualDateRows == 1) {
-                if (parameters.containsKey("dateExistenceTable_date_2_Year_1") || parameters.containsKey("dateExistenceTable_date_unknown_2_1")) {
-                    DateRange dateRange = createDateRange("dateExistenceTable", 1);
-                    existDates.setDateRange(dateRange);
+            DateSet dateSet = new DateSet();
+            while (parameters.containsKey("dateExistenceTable_date_1_radio_" + rowCounter)) {
+                //if the rows have two dates, we need a date range, otherwise a simple date will cut it
+                if (parameters.containsKey("dateExistenceTable_date_2_radio_" + rowCounter)) {
+                    DateRange dateRange = createDateRange("dateExistenceTable", rowCounter);
+                    dateSet.getDateOrDateRange().add(dateRange);
                 } else {
                     //Apply same procedure as above to single date
                     Date date = createDate("dateExistenceTable", rowCounter);
-                    existDates.setDate(date);
+                    dateSet.getDateOrDateRange().add(date);
+                }
+                rowCounter++;
+            }
+
+            //filter all empty rows
+            dateSet = hasData(dateSet);
+
+            //add respective elements according to number of non-empty rows
+            if (!dateSet.getDateOrDateRange().isEmpty()) {
+                if (dateSet.getDateOrDateRange().size() == 1) {
+                    if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                        existDates.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                    } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                        existDates.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                    }
+                } else {
+                    existDates.setDateSet(dateSet);
                 }
             }
         }
@@ -575,31 +653,32 @@ public class CreateEacCpf {
 
                 // If there are any dates
                 if (actualDateRows > 0) {
-                    //create a date set for 2 or more date rows, single elements for one date row
-                    if (actualDateRows > 1) {
-                        DateSet dateSet = new DateSet();
-                        while (parameters.containsKey("placeTable_" + tableCounter + "_date_1_Year_" + rowCounter) || (String[]) parameters.get("placeTable_" + tableCounter + "_date_1_Year_" + rowCounter) != null || parameters.containsKey("placeTable_" + tableCounter + "_date_unknown_1_" + rowCounter)) {
-                            //if the rows has two dates, we need a date range, otherwise a simple date will cut it
-                            if (parameters.containsKey("placeTable_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("placeTable_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
-                                DateRange dateRange = createDateRange("placeTable_" + tableCounter, rowCounter);
-                                dateSet.getDateOrDateRange().add(dateRange);
-                            } else {
-                                //Apply same procedure as above to single date
-                                Date date = createDate("placeTable_" + tableCounter, rowCounter);
-                                dateSet.getDateOrDateRange().add(date);
-                            }
-                            rowCounter++;
-                        }
-                        place.setDateSet(dateSet);
-                    } else if (actualDateRows == 1) {
+                    DateSet dateSet = new DateSet();
+                    while (parameters.containsKey("placeTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
                         //if the rows have two dates, we need a date range, otherwise a simple date will cut it
-                        if (parameters.containsKey("placeTable_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("placeTable_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
+                        if (parameters.containsKey("placeTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
                             DateRange dateRange = createDateRange("placeTable_" + tableCounter, rowCounter);
-                            place.setDateRange(dateRange);
+                            dateSet.getDateOrDateRange().add(dateRange);
                         } else {
                             //Apply same procedure as above to single date
                             Date date = createDate("placeTable_" + tableCounter, rowCounter);
-                            place.setDate(date);
+                            dateSet.getDateOrDateRange().add(date);
+                        }
+                        rowCounter++;
+                    }
+                    //filter all empty rows
+                    dateSet = hasData(dateSet);
+
+                    //add respective elements according to number of non-empty rows
+                    if (!dateSet.getDateOrDateRange().isEmpty()) {
+                        if (dateSet.getDateOrDateRange().size() == 1) {
+                            if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                                place.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                            } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                                place.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                            }
+                        } else {
+                            place.setDateSet(dateSet);
                         }
                     }
                 }
@@ -711,31 +790,32 @@ public class CreateEacCpf {
 
                 // If there are any dates
                 if (actualDateRows > 0) {
-                    //create a date set for 2 or more date rows, single elements for one date row
-                    if (actualDateRows > 1) {
-                        DateSet dateSet = new DateSet();
-                        while (parameters.containsKey("functionTable_" + tableCounter + "_date_1_Year_" + rowCounter) || (String[]) parameters.get("functionTable_" + tableCounter + "_date_1_Year_" + rowCounter) != null || parameters.containsKey("functionTable_" + tableCounter + "_date_unknown_1_" + rowCounter)) {
-                            //if the rows has two dates, we need a date range, otherwise a simple date will cut it
-                            if (parameters.containsKey("functionTable_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("functionTable_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
-                                DateRange dateRange = createDateRange("functionTable_" + tableCounter, rowCounter);
-                                dateSet.getDateOrDateRange().add(dateRange);
-                            } else {
-                                //Apply same procedure as above to single date
-                                Date date = createDate("functionTable_" + tableCounter, rowCounter);
-                                dateSet.getDateOrDateRange().add(date);
-                            }
-                            rowCounter++;
-                        }
-                        function.setDateSet(dateSet);
-                    } else if (actualDateRows == 1) {
+                    DateSet dateSet = new DateSet();
+                    while (parameters.containsKey("functionTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
                         //if the rows have two dates, we need a date range, otherwise a simple date will cut it
-                        if (parameters.containsKey("functionTable_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("functionTable_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
+                        if (parameters.containsKey("functionTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
                             DateRange dateRange = createDateRange("functionTable_" + tableCounter, rowCounter);
-                            function.setDateRange(dateRange);
+                            dateSet.getDateOrDateRange().add(dateRange);
                         } else {
                             //Apply same procedure as above to single date
                             Date date = createDate("functionTable_" + tableCounter, rowCounter);
-                            function.setDate(date);
+                            dateSet.getDateOrDateRange().add(date);
+                        }
+                        rowCounter++;
+                    }
+                    //filter all empty rows
+                    dateSet = hasData(dateSet);
+
+                    //add respective elements according to number of non-empty rows
+                    if (!dateSet.getDateOrDateRange().isEmpty()) {
+                        if (dateSet.getDateOrDateRange().size() == 1) {
+                            if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                                function.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                            } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                                function.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                            }
+                        } else {
+                            function.setDateSet(dateSet);
                         }
                     }
                 }
@@ -848,31 +928,32 @@ public class CreateEacCpf {
 
                 // If there are any dates
                 if (actualDateRows > 0) {
-                    //create a date set for 2 or more date rows, single elements for one date row
-                    if (actualDateRows > 1) {
-                        DateSet dateSet = new DateSet();
-                        while (parameters.containsKey("occupationTable_" + tableCounter + "_date_1_Year_" + rowCounter) || (String[]) parameters.get("occupationTable_" + tableCounter + "_date_1_Year_" + rowCounter) != null || parameters.containsKey("occupationTable_" + tableCounter + "_date_unknown_1_" + rowCounter)) {
-                            //if the rows has two dates, we need a date range, otherwise a simple date will cut it
-                            if (parameters.containsKey("occupationTable_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("occupationTable_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
-                                DateRange dateRange = createDateRange("occupationTable_" + tableCounter, rowCounter);
-                                dateSet.getDateOrDateRange().add(dateRange);
-                            } else {
-                                //Apply same procedure as above to single date
-                                Date date = createDate("occupationTable_" + tableCounter, rowCounter);
-                                dateSet.getDateOrDateRange().add(date);
-                            }
-                            rowCounter++;
-                        }
-                        occupation.setDateSet(dateSet);
-                    } else if (actualDateRows == 1) {
-                        //if the rows has two dates, we need a date range, otherwise a simple date will cut it
-                        if (parameters.containsKey("occupationTable_" + tableCounter + "_date_2_Year_" + rowCounter) || parameters.containsKey("occupationTable_" + tableCounter + "_date_unknown_2_" + rowCounter)) {
+                    DateSet dateSet = new DateSet();
+                    while (parameters.containsKey("occupationTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
+                        //if the rows have two dates, we need a date range, otherwise a simple date will cut it
+                        if (parameters.containsKey("occupationTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
                             DateRange dateRange = createDateRange("occupationTable_" + tableCounter, rowCounter);
-                            occupation.setDateRange(dateRange);
+                            dateSet.getDateOrDateRange().add(dateRange);
                         } else {
                             //Apply same procedure as above to single date
                             Date date = createDate("occupationTable_" + tableCounter, rowCounter);
-                            occupation.setDate(date);
+                            dateSet.getDateOrDateRange().add(date);
+                        }
+                        rowCounter++;
+                    }
+                    //filter all empty rows
+                    dateSet = hasData(dateSet);
+
+                    //add respective elements according to number of non-empty rows
+                    if (!dateSet.getDateOrDateRange().isEmpty()) {
+                        if (dateSet.getDateOrDateRange().size() == 1) {
+                            if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                                occupation.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                            } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                                occupation.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                            }
+                        } else {
+                            occupation.setDateSet(dateSet);
                         }
                     }
                 }
@@ -1368,19 +1449,33 @@ public class CreateEacCpf {
         String date1month = tableName + "_date_1_Month_";
         String date1day = tableName + "_date_1_Day_";
         String date1text = tableName + "_date_1_";
-        String date1unknown = tableName + "_date_unknown_1_";
+        String date1radio = tableName + "_date_1_radio_";
         String date2year = tableName + "_date_2_Year_";
         String date2month = tableName + "_date_2_Month_";
         String date2day = tableName + "_date_2_Day_";
         String date2text = tableName + "_date_2_";
-        String date2unknown = tableName + "_date_unknown_2_";
+        String date2radio = tableName + "_date_2_radio_";
 
         //clear StringBuilder first
         standardDate.delete(0, standardDate.length());
 
         DateRange dateRange = new DateRange();
-        FromDate fromDate = new FromDate();
-        if (!parameters.containsKey(date1unknown + rowCounter)) {
+
+        //set localType if any of the dates is not known in any way
+        if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(OPEN)) {
+            dateRange.setLocalType(OPEN);
+        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN) && ((String[]) parameters.get(date2radio + rowCounter))[0].equals(UNKNOWN)) {
+            dateRange.setLocalType(UNKNOWN);
+        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN) && ((String[]) parameters.get(date2radio + rowCounter))[0].equals(KNOWN)) {
+            dateRange.setLocalType(UNKNOWN_START);
+        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(KNOWN) && ((String[]) parameters.get(date2radio + rowCounter))[0].equals(UNKNOWN)) {
+            dateRange.setLocalType(UNKNOWN_END);
+        }
+
+        //add fromDate if known
+        if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date1year + rowCounter))[0].isEmpty()) {
+            FromDate fromDate = new FromDate();
+            //when date is known, fill in the values, else set localType to unknown or open date
             //retrieve year
             standardDate.append(((String[]) parameters.get(date1year + rowCounter))[0]);
             //if available, retrieve month
@@ -1396,17 +1491,15 @@ public class CreateEacCpf {
             //set element values
             fromDate.setStandardDate(standardDate.toString());
             fromDate.setContent(((String[]) parameters.get(date1text + rowCounter))[0]);
-        } else {
-            fromDate.setStandardDate("0001");
-            fromDate.setContent("unknown");
-        }
-        dateRange.setFromDate(fromDate);
-        //delete StringBuilder contents
-        standardDate.delete(0, standardDate.length());
 
-        //Apply same procedure for ToDate
-        ToDate toDate = new ToDate();
-        if (!parameters.containsKey(date2unknown + rowCounter)) {
+            dateRange.setFromDate(fromDate);
+            //delete StringBuilder contents
+            standardDate.delete(0, standardDate.length());
+        }
+
+        //add toDate if known; same procedure as with fromDate
+        if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date2year + rowCounter))[0].isEmpty()) {
+            ToDate toDate = new ToDate();
             standardDate.append(((String[]) parameters.get(date2year + rowCounter))[0]);
             if (!((String[]) parameters.get(date2month + rowCounter))[0].isEmpty()) {
                 standardDate.append("-");
@@ -1418,11 +1511,8 @@ public class CreateEacCpf {
             }
             toDate.setStandardDate(standardDate.toString());
             toDate.setContent(((String[]) parameters.get(date2text + rowCounter))[0]);
-        } else {
-            toDate.setStandardDate("2099");
-            toDate.setContent("unknown");
+            dateRange.setToDate(toDate);
         }
-        dateRange.setToDate(toDate);
 
         return dateRange;
     }
@@ -1432,13 +1522,20 @@ public class CreateEacCpf {
         String date1month = tableName + "_date_1_Month_";
         String date1day = tableName + "_date_1_Day_";
         String date1text = tableName + "_date_1_";
-        String date1unknown = tableName + "_date_unknown_1_";
+        String date1radio = tableName + "_date_1_radio_";
 
         //clear StringBuilder first
         standardDate.delete(0, standardDate.length());
 
         Date date = new Date();
-        if (!parameters.containsKey(date1unknown + rowCounter)) {
+
+        //set localType attribute for unknown dates
+        if (!((String[]) parameters.get(date1radio + rowCounter))[0].equals(KNOWN)) {
+            date.setLocalType(((String[]) parameters.get(date1radio + rowCounter))[0]);
+        }
+
+        //when date is known, fill in the values
+        if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date1year + rowCounter))[0].isEmpty()) {
             //retrieve year
             standardDate.append(((String[]) parameters.get(date1year + rowCounter))[0]);
             //if available, retrieve month
@@ -1454,10 +1551,42 @@ public class CreateEacCpf {
             //set element values
             date.setStandardDate(standardDate.toString());
             date.setContent(((String[]) parameters.get(date1text + rowCounter))[0]);
-        } else {
-            date.setStandardDate("0001");
-            date.setContent("unknown");
         }
         return date;
+    }
+
+    private DateSet hasData(DateSet dateSet) {
+        DateSet result = new DateSet();
+        for (Object object : dateSet.getDateOrDateRange()) {
+            if (object instanceof DateRange) {
+                if (hasData((DateRange) object)) {
+                    result.getDateOrDateRange().add(object);
+                    //dateSet.getDateOrDateRange().remove(object);
+                }
+            }
+            if (object instanceof Date) {
+                if (hasData((Date) object)) {
+                    result.getDateOrDateRange().add(object);
+                    //dateSet.getDateOrDateRange().remove(object);
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean hasData(DateRange dateRange) {
+        if (dateRange.getLocalType() == null || dateRange.getLocalType().isEmpty()) {
+            return dateRange.getFromDate() != null || dateRange.getToDate() != null;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean hasData(Date date) {
+        if (date.getLocalType() == null || date.getLocalType().isEmpty()) {
+            return date.getContent() != null && !date.getContent().isEmpty();
+        } else {
+            return true;
+        }
     }
 }

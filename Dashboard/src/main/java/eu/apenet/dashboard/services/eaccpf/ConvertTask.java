@@ -38,7 +38,7 @@ public class ConvertTask extends AbstractEacCpfTask {
             String xslFileName = "default-apeEAC-CPF.xsl";
             ArchivalInstitution archivalInstitution = eacCpf.getArchivalInstitution();
             String mainagencycode = archivalInstitution.getRepositorycode();
-            String recordId = "eac_" + mainagencycode + "_" + eacCpf.getIdentifier() + "";
+            String recordId = eacCpf.getIdentifier() + "";
             Map<String, String> parameters = getConversionProperties(properties);
 
             if (mainagencycode != null) {
