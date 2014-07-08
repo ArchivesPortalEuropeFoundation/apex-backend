@@ -4,7 +4,6 @@ import java.util.List;
 
 public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
 
-    public boolean existEacCpf(String identifier);
 
     public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier);
 
