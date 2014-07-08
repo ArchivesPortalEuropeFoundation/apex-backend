@@ -95,17 +95,17 @@
 							<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"/>
 									<xsl:choose>
 										<xsl:when test='$type eq "text" or $type eq "image" or $type eq "sound" or $type eq "video" or $type eq "3d"'>
-											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/{$type}_big.gif"/>
+											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/normal/{$type}.png"/>
 											<span><xsl:value-of select="$dao.title" /></span>
 										</xsl:when>
 										<xsl:otherwise>
-											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif"/>
+											<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/normal/unspecified.png"/>
 											<span><xsl:value-of select="$dao.title" /></span>					
 										</xsl:otherwise>
 									</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif"/>
+							<img width="200px" src="/Portal-theme/images/ape/icons/dao_types/normal/unspecified.png"/>
 							<span><xsl:value-of select="$dao.title" /></span>	
 						</xsl:otherwise>
 					</xsl:choose>
@@ -768,20 +768,20 @@
 											<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"/>
 													<xsl:choose>
 														<xsl:when test='$type eq "text" or $type eq "image" or $type eq "sound" or $type eq "video" or $type eq "3d"'>
-															<xsl:value-of select="concat('/Portal-theme/images/ape/icons/dao_types/',$type,'_big.gif')"/>
+															<xsl:value-of select="concat('/Portal-theme/images/ape/icons/dao_types/normal/',$type,'.png')"/>
 														</xsl:when>
 														<xsl:otherwise>
-															<xsl:value-of select="'/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif'"/>			
+															<xsl:value-of select="'/Portal-theme/images/ape/icons/dao_types/normal/unspecified.png'"/>			
 														</xsl:otherwise>
 													</xsl:choose>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="'/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif'"/>
+											<xsl:value-of select="'/Portal-theme/images/ape/icons/dao_types/normal/unspecified.png'"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="'/Portal-theme/images/ape/icons/dao_types/unspecified_big.gif'"/>
+									<xsl:value-of select="'/Portal-theme/images/ape/icons/dao_types/normal/unspecified.png'"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>
