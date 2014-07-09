@@ -336,5 +336,6 @@ hr.tablePadding {
 .spanEacSave {
 	text-align: center; 
 	color: green;
-    font-weight: bold;
+	font-weight: bold;
+	padding-top: 5px;
 }
