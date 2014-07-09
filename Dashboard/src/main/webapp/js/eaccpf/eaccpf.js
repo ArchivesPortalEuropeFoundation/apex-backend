@@ -22,7 +22,6 @@ function hideAndShow(idPrefix, shown) {
 
 function loadPreviousTab() {
     var id = $(".eacCpfCurrenttab").parent().attr("id");
-
     if (id == "tab-description") {
         $("ul#eacCpfTabsContainer a[href='#tab-identity']").trigger('click');
         $("#currentTab").attr("value", "tab-identity");
@@ -37,7 +36,6 @@ function loadPreviousTab() {
 
 function loadNextTab() {
     var id = $(".eacCpfCurrenttab").parent().attr("id");
-
     if (id == "tab-identity") {
         $("ul#eacCpfTabsContainer a[href='#tab-description']").trigger('click');
         $("#currentTab").attr("value", "tab-description");
@@ -93,30 +91,30 @@ function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, e
     }
 
     if (onlySave) {
-        // TODO: issue 1223, for complete the reload when save first needed the edit
-        // of an apeEAC-CPF will be implemented
+// TODO: issue 1223, for complete the reload when save first needed the edit
+// of an apeEAC-CPF will be implemented
 //    	$("input#saveOrExit").attr("value", "save");
 
-    	// Try to save without refresh the page.
-    	$.post("storeEacCpf.action", $('#webformEacCpf').serialize(), function(d) {
-    		if (d.fileId) {
-    			$("input#fileId").attr("value", d.fileId);
-    		}
-    		if (d.eacDaoId) {
-    			$("input#eacDaoId").attr("value", d.eacDaoId);
-    		}
-    		if (d.resultMessage) {
-    			$("ul#eacCpfTabsContainer a[href='#tab-identity']").trigger('click');
-    			$("div#spanMessage").html("<span>" + d.resultMessage + "</span>")
-				$("div#spanMessage").fadeIn("slow");
-    			$(document).bind('keyup mousedown', function(){
-    				$("div#spanMessage").fadeOut("slow");
-				});
-    		}
-    		if (d.error) {
-    			alert(d.error);
-    		}
-    	});
+// Try to save without refresh the page.
+        $.post("storeEacCpf.action", $('#webformEacCpf').serialize(), function(d) {
+            if (d.fileId) {
+                $("input#fileId").attr("value", d.fileId);
+            }
+            if (d.eacDaoId) {
+                $("input#eacDaoId").attr("value", d.eacDaoId);
+            }
+            if (d.resultMessage) {
+                $("ul#eacCpfTabsContainer a[href='#tab-identity']").trigger('click');
+                $("div#spanMessage").html("<span>" + d.resultMessage + "</span>")
+                $("div#spanMessage").fadeIn("slow");
+                $(document).bind('keyup mousedown', function() {
+                    $("div#spanMessage").fadeOut("slow");
+                });
+            }
+            if (d.error) {
+                alert(d.error);
+            }
+        });
     } else {
         $("input#saveOrExit").attr("value", "save_exit");
         $('#webformEacCpf').submit();
@@ -142,7 +140,7 @@ function clickExitActionStartPage() {
  * saving them
  **************************************/
 function clickExitAction(question, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing) {
-    // Checks the return page on exit.
+// Checks the return page on exit.
     var useMode = $('input[name=useMode]').val();
     if (useMode == "load") {
         $("input#returnPage").attr("value", "contentmanager");
@@ -150,7 +148,7 @@ function clickExitAction(question, nameMissing, dateMissing, startDateMissing, e
         $("input#returnPage").attr("value", "dashboardHome");
     }
 
-    // Ask user for the action.
+// Ask user for the action.
     if (confirm(question)) {
         clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
     } else {
@@ -193,12 +191,10 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
     }
     return "ok";
 };
-
 var checkRelationsTab = function(cpfTypeMissing, resourceTypeMissing, functionTypeMissing) {
     var cpfCounter = $("table[id^='cpfRelationsTable_']").length;
     var resCounter = $("table[id^='resRelationsTable_']").length;
     var fncCounter = $("table[id^='fncRelationsTable_']").length;
-
     var cpfResult = checkForEmptyRelationContent("cpf", cpfCounter);
     if (cpfResult != "ok") {
         alertEmptyFields(cpfTypeMissing);
@@ -216,7 +212,6 @@ var checkRelationsTab = function(cpfTypeMissing, resourceTypeMissing, functionTy
     }
     return "ok";
 };
-
 var checkForEmptyRelationContent = function(abb, counterValue) {
     for (i = 1; i <= counterValue; i++) {
         var text = "";
@@ -233,7 +228,6 @@ var checkForEmptyRelationContent = function(abb, counterValue) {
     }
     return "ok";
 };
-
 var checkControlTab = function(languageMissing, scriptMissing) {
     var language = $("table#usedLanguagesAndScripts select#controlLanguage").attr("value");
     var script = $("table#usedLanguagesAndScripts select#controlScript").attr("value");
@@ -247,7 +241,6 @@ var checkControlTab = function(languageMissing, scriptMissing) {
     }
     return "ok";
 };
-
 function checkWebpages(target, message) {
     var checkFails = false;
     var value = target.val();
@@ -302,9 +295,9 @@ function insertDateAfter(tableName, anchorId, incrCounter, dateLabel, dateTypeLa
             '</tr>' +
             '<tr id="trDate_iso_' + incrCounter + '">' +
             '<td>' + isoLabel + '</td>' +
-            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" /></td>' +
+            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash; ' +
+            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash; ' +
+            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /></td>' +
             '<td></td><td></td>' +
             '</tr>');
     $("table#" + tableName + " " + anchorId).after(newDate);
@@ -340,13 +333,13 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
             '</tr>' +
             '<tr id="trDate_iso_' + incrCounter + '">' +
             '<td>' + isoLabel + '</td>' +
-            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" /></td>' +
+            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash; ' +
+            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash; ' +
+            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /></td>' +
             '<td></td>' +
-            '<td><input type="text" title="YYYY" id="date_2_Year" name="' + tableName + '_date_2_Year_' + incrCounter + '" size="4" maxlength="4" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_2_Month" name="' + tableName + '_date_2_Month_' + incrCounter + '" size="2" maxlength="2" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_2_Day" name="' + tableName + '_date_2_Day_' + incrCounter + '" size="2" maxlength="2" /></td>' +
+            '<td><input type="text" title="YYYY" id="date_2_Year" name="' + tableName + '_date_2_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash; ' +
+            '<input type="text" title="MM" id="date_2_Month" name="' + tableName + '_date_2_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash; ' +
+            '<input type="text" title="DD" id="date_2_Day" name="' + tableName + '_date_2_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /></td>' +
             '</tr>');
     $("table#" + tableName + " " + anchorId).after(newDateRange);
 }
@@ -397,7 +390,7 @@ function parseDateToISO(content, table, row, date) {
 
     var result;
     if (PATTERN_ISO.test(content) == true) {
-        //We need a second check for YYYYMMDD and YYYYMMDD/YYYYMMDD which passes above
+//We need a second check for YYYYMMDD and YYYYMMDD/YYYYMMDD which passes above
         var PATTERN_SECONDCHECK = /([0-9]{8})/;
         if (!PATTERN_SECONDCHECK.test(content) == true) {
             result = PATTERN_ISO.exec(content);
@@ -491,29 +484,78 @@ function validateIsoDates(textfield) {
     var nameParts = name.split("_");
     var tableName = $(textfield).parent().parent().parent().parent().attr("id");
     var counter = nameParts[nameParts.length - 1];
-
     //1. add trailing zero for month and day fields if necessary
     if (idParts[2] == "Month" || idParts[2] == "Day") {
         var value = $(textfield).attr("value");
         $(textfield).attr("value", addTrailingZero(value));
     }
 
-    //2. check date for general validity
-    var year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Year").attr("value");
+//2. check date for general validity
+    var year = 1;
     var month = 1;
     var day = 1;
-    if($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Day").attr("value") != ""){
+    if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Day").attr("value") != "") {
         day = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Day").attr("value");
     }
-    if($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Month").attr("value") != ""){
+    if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Month").attr("value") != "") {
         month = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Month").attr("value");
     }
+    if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Year").attr("value") != "") {
+        year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Year").attr("value");
+    }
     var date = new Date(year, month - 1, day);
-    if(date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)){
+    if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
         alert(year + "-" + month + "-" + day + " is not a valid date!");
+        return;
     }
 
-    //3. check date range for temporal order, i.e. no ranges like 1985-1983
+//3. check date range for temporal order, i.e. no ranges like 1985-1983
+    var date1;
+    var date2;
+
+    if (idParts[1] == 2) {
+        if (year == 1) {
+            date2 = new Date(9999, 0, 1)
+        } else {
+            date2 = date;
+        }
+        year = -9999;
+        month = 1;
+        day = 1;
+        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Day").attr("value") != "") {
+            day = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Day").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Month").attr("value") != "") {
+            month = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Month").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Year").attr("value") != "") {
+            year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Year").attr("value");
+        }
+        date1 = new Date(year, month - 1, day);
+    }
+    if (idParts[1] == 1 && ($("table#" + tableName + " tr#trDate_text_" + counter + " td input#date_2_text").attr("value") != "" || $("table#" + tableName + " tr#trDate_radio_" + counter + " input[name^='" + tableName + "_date_2_']:checked").val() != "known")) {
+        if (year == 1) {
+            date1 = new Date(-9999, 0, 1)
+        } else {
+            date1 = date;
+        }
+        year = 9999;
+        month = 1;
+        day = 1;
+        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Day").attr("value") != "") {
+            day = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Day").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Month").attr("value") != "") {
+            month = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Month").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Year").attr("value") != "") {
+            year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Year").attr("value");
+        }
+        date2 = new Date(year, month - 1, day);
+    }
+    if (date1 > date2) {
+        alert("A start date of a date range is later than the end date!");
+    }
 }
 
 /**************************************
@@ -602,7 +644,6 @@ function addNameForm(text1, defaultLanguage) {
     clone = "<table id='" + ("identityPersonName_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='identityPersonName_" + counter + "']").after(clone);
     $('<hr />').insertAfter($("table[id^='identityPersonName_" + counter + "']"));
-
     // delete superfluous name part rows
     var idCounter = $("table#identityPersonName_" + (counter + 1) + " tr[id^='trNamePart_']").length;
     if (idCounter > 1) {
@@ -610,7 +651,7 @@ function addNameForm(text1, defaultLanguage) {
             $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_" + i).remove();
         }
     }
-    //Remove superfluous date rows
+//Remove superfluous date rows
     var idCounter = $("table#identityPersonName_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
         idCounter = idCounter / 2;
@@ -619,7 +660,7 @@ function addNameForm(text1, defaultLanguage) {
             $("table#identityPersonName_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-    //Set correct names
+//Set correct names
     $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 input#textPersonName").removeAttr("name");
     $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 input#textPersonName").attr("name", "identityPersonName_" + (counter + 1) + "_part_1");
     $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityNameLanguage").removeAttr("name");
@@ -632,7 +673,6 @@ function addNameForm(text1, defaultLanguage) {
     $("table#identityPersonName_" + (counter + 1) + " input#identityPersonName_" + counter + "_rows").attr("name", "identityPersonName_" + (counter + 1) + "_rows");
     $("table#identityPersonName_" + (counter + 1) + " input[name^='identityPersonName_" + (counter + 1) + "_rows']").removeAttr("id");
     $("table#identityPersonName_" + (counter + 1) + " input[name^='identityPersonName_" + (counter + 1) + "_rows']").attr("id", "identityPersonName_" + (counter + 1) + "_rows");
-
     // Reset parameters
     $("table#identityPersonName_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
@@ -803,7 +843,7 @@ function addPlace(defaultLanguage, placeMissing) {
             $("table#placeTable_" + (counter + 1) + " tr#trAddressComponent_" + i).remove();
         }
     }
-    // delete superfluous date rows
+// delete superfluous date rows
     idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
         idCounter = idCounter / 2;
@@ -812,7 +852,7 @@ function addPlace(defaultLanguage, placeMissing) {
             $("table#placeTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-    // Reset parameters
+// Reset parameters
     $("table#placeTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name"); //remove old name
@@ -928,7 +968,7 @@ function addFunction(defaultLanguage, functionMissing) {
             $("table#functionTable_" + (counter + 1) + " tr#trPlaceFunction_" + i).remove();
         }
     }
-    // delete superfluous date rows
+// delete superfluous date rows
     idCounter = $("table#functionTable_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
         idCounter = idCounter / 2;
@@ -937,7 +977,7 @@ function addFunction(defaultLanguage, functionMissing) {
             $("table#functionTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-    // Reset parameters
+// Reset parameters
     $("table#functionTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name");
@@ -1054,7 +1094,7 @@ function addOccupation(defaultLanguage, occupationMissing) {
             $("table#occupationTable_" + (counter + 1) + " tr#trPlaceOccupation_" + i).remove();
         }
     }
-    // delete superfluous date rows
+// delete superfluous date rows
     idCounter = $("table#occupationTable_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
         idCounter = idCounter / 2;
@@ -1063,7 +1103,7 @@ function addOccupation(defaultLanguage, occupationMissing) {
             $("table#occupationTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-    // Reset parameters
+// Reset parameters
     $("table#occupationTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name");
@@ -1410,7 +1450,6 @@ function init() {
             $(this).find('.displayLinkShowMore').addClass("hidden");
         }
     });
-
 }
 function initPrint() {
     eraseData();
@@ -1434,7 +1473,6 @@ function initPrint() {
         $("body").css("cursor", "default");
     }
     $("body").css("cursor", "default");
-
 }
 function printEacDetails(url) {
     try {
@@ -1453,7 +1491,7 @@ function printEacDetails(url) {
 function makeRelationsCollapsible() {
     $('#relations .boxtitle').each(function(index) {
         $(this).click(function() {
-            //var expanded = false;
+//var expanded = false;
             if ($(this).find(".collapsibleIcon").hasClass("expanded")) {
                 $(this).find(".collapsibleIcon").removeClass("expanded").addClass("collapsed");
                 $(this).parent().find('ul').addClass("hidden");
@@ -1463,7 +1501,6 @@ function makeRelationsCollapsible() {
             } else {
                 $(this).find(".collapsibleIcon").removeClass("collapsed").addClass("expanded");
                 $(this).parent().find('ul').removeClass("hidden");
-
                 if ($(this).parent().find('li').length > 3) {
                     $(this).parent().find('.whitespace').removeClass("hidden");
                     $(this).parent().find('.displayLinkShowMore').removeClass("hidden");
