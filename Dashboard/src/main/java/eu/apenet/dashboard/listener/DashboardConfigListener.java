@@ -1,5 +1,7 @@
 package eu.apenet.dashboard.listener;
 
+import java.util.Locale;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -29,6 +31,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	@Override
 	public void contextInitializedInternal(ServletContext servletContext) {
 		try {
+			Locale.setDefault(Locale.UK);
 			DashboardConfig apeConfig = new DashboardConfig();
 			init(servletContext, apeConfig);
 			apeConfig.finalizeConfigPhase();
