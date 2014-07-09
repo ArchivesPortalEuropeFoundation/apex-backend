@@ -78,7 +78,12 @@
             <result name="input" type="tiles">webFormEAG2012WithMenu</result>
             <result name="input2" type="tiles">webFormEAG2012WithoutCreate</result>
             <result name="success" type="tiles">webFormEAG2012</result>
-            <result name="successCreated" type="tiles">eagsuccesscreated</result>
+            <result name="successCreated" type="tiles">webFormEAG2012WithMenu</result> <!-- eagsuccesscreated -->
+            
+            <result name="saveAndExit" type="redirectAction">
+                <param name="actionName">removeInvalidEAG2012</param>
+            </result>
+            
         </action>
 
         <action name="removeInvalidEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="removeInvalidEAG2012">
