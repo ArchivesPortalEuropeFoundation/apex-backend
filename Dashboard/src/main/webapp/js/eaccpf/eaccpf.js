@@ -439,6 +439,10 @@ function parseDateToISO(content, table, row, date) {
         $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", addTrailingZero(result[4]));
         $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", addTrailingZero(result[5]));
     }
+
+    validateIsoDates($("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year"));
+    validateIsoDates($("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month"));
+    validateIsoDates($("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day"));
 }
 
 function addTrailingZero(value) {
