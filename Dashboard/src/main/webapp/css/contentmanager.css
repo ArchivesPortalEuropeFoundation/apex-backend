@@ -111,6 +111,10 @@
 #contentmanager #content_div_table td.actions input {
 	font-size: 11px;
 }
+#contentmanager #content_div_table table {
+	width:100%;
+}
+
 
 #contentmanager  #batchBlock {
 	clear: both;
