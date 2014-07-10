@@ -440,9 +440,8 @@ function parseDateToISO(content, table, row, date) {
         $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", addTrailingZero(result[5]));
     }
 
-    validateIsoDates($("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year"));
-    validateIsoDates($("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month"));
-    validateIsoDates($("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day"));
+    // validate changed content for plausibility
+    checkIsoDateRow(table, counterRow[2], counterDate[1]);
 }
 
 function addTrailingZero(value) {
@@ -488,24 +487,28 @@ function validateIsoDates(textfield) {
     var nameParts = name.split("_");
     var tableName = $(textfield).parent().parent().parent().parent().attr("id");
     var counter = nameParts[nameParts.length - 1];
-    //1. add trailing zero for month and day fields if necessary
+    // add trailing zero for month and day fields if necessary
     if (idParts[2] == "Month" || idParts[2] == "Day") {
         var value = $(textfield).attr("value");
         $(textfield).attr("value", addTrailingZero(value));
     }
+    // check ISO date field set and, if available, date range for plausibility
+    checkIsoDateRow(tableName, counter, idParts[1]);
+}
 
-//2. check date for general validity
+function checkIsoDateRow(tableName, rowCounter, dateCounter){
+//1. check date for general validity
     var year = 1;
     var month = 1;
     var day = 1;
-    if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Day").attr("value") != "") {
-        day = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Day").attr("value");
+    if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value") != "") {
+        day = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value");
     }
-    if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Month").attr("value") != "") {
-        month = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Month").attr("value");
+    if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value") != "") {
+        month = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value");
     }
-    if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Year").attr("value") != "") {
-        year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_" + idParts[1] + "_Year").attr("value");
+    if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value") != "") {
+        year = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value");
     }
     var date = new Date(year, month - 1, day);
     if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
@@ -513,11 +516,11 @@ function validateIsoDates(textfield) {
         return;
     }
 
-//3. check date range for temporal order, i.e. no ranges like 1985-1983
+//2. check date range for temporal order, i.e. no ranges like 1985-1983
     var date1;
     var date2;
 
-    if (idParts[1] == 2) {
+    if (dateCounter == 2) {
         if (year == 1) {
             date2 = new Date(9999, 0, 1)
         } else {
@@ -526,18 +529,18 @@ function validateIsoDates(textfield) {
         year = -9999;
         month = 1;
         day = 1;
-        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Day").attr("value") != "") {
-            day = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Day").attr("value");
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_1_Day").attr("value") != "") {
+            day = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_1_Day").attr("value");
         }
-        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Month").attr("value") != "") {
-            month = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Month").attr("value");
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_1_Month").attr("value") != "") {
+            month = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_1_Month").attr("value");
         }
-        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Year").attr("value") != "") {
-            year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_1_Year").attr("value");
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_1_Year").attr("value") != "") {
+            year = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_1_Year").attr("value");
         }
         date1 = new Date(year, month - 1, day);
     }
-    if (idParts[1] == 1 && ($("table#" + tableName + " tr#trDate_text_" + counter + " td input#date_2_text").attr("value") != "" || $("table#" + tableName + " tr#trDate_radio_" + counter + " input[name^='" + tableName + "_date_2_']:checked").val() != "known")) {
+    if (dateCounter == 1 && ($("table#" + tableName + " tr#trDate_text_" + rowCounter + " td input#date_2_text").attr("value") != "" || $("table#" + tableName + " tr#trDate_radio_" + rowCounter + " input[name^='" + tableName + "_date_2_']:checked").val() != "known")) {
         if (year == 1) {
             date1 = new Date(-9999, 0, 1)
         } else {
@@ -546,14 +549,14 @@ function validateIsoDates(textfield) {
         year = 9999;
         month = 1;
         day = 1;
-        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Day").attr("value") != "") {
-            day = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Day").attr("value");
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_2_Day").attr("value") != "") {
+            day = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_2_Day").attr("value");
         }
-        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Month").attr("value") != "") {
-            month = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Month").attr("value");
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_2_Month").attr("value") != "") {
+            month = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_2_Month").attr("value");
         }
-        if ($("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Year").attr("value") != "") {
-            year = $("table#" + tableName + " tr#trDate_iso_" + counter + " td input#date_2_Year").attr("value");
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_2_Year").attr("value") != "") {
+            year = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_2_Year").attr("value");
         }
         date2 = new Date(year, month - 1, day);
     }
