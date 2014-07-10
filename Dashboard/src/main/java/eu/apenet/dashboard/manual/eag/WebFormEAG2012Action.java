@@ -941,7 +941,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		String result = this.editWebFormEAG2012();
 
 		if (!existEag && result.equals(INPUT)) {
-			addActionMessage(this.getText("eag2012.info.eagcorrectlycreated"));
 			result = "successCreated";
 		}
 
