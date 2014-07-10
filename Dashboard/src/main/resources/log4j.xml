@@ -52,11 +52,15 @@
 		<level value="debug" />
 		<appender-ref ref="publish" /> 
 	</logger>	
-	<logger name="eu.apenet.dashboard.services.eaccpf.publish.EacCpfSolrPublisher">
+	<logger name="eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfSolrPublisher">
 		<level value="debug" />
 		<appender-ref ref="publish" /> 
 	</logger>	
 	<logger name="eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher">
+		<level value="debug" />
+		<appender-ref ref="publish" /> 
+	</logger>	
+	<logger name="eu.apenet.dashboard.services.AbstractSolrPublisher">
 		<level value="debug" />
 		<appender-ref ref="publish" /> 
 	</logger>	
