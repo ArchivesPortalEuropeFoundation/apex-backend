@@ -47,10 +47,10 @@ function hideAndShow(idPrefix,shown){
 	}
 }
 
-function clickExitAction(strSaveMsg,form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName){
+function clickExitAction(strSaveMsg,form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, errorspecialcharacter){
 	
 	if (confirm(strSaveMsg)) 
-		clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, true);
+		clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, true, errorspecialcharacter);
 	else 
 		location.href="removeInvalidEAG2012.action";
 	
@@ -81,7 +81,7 @@ function navigateToCurrentRepoTab(href){
 	}
 }
 
-function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, saveOrExit) {
+function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, saveOrExit, errorspecialcharacter) {
 	//first check in which tab are the user, validate current tab and next the others
 	var selectedHref = "";
 	var tabsToCheck = new Array();
@@ -119,18 +119,42 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				}
 				break;
 			case "#tab-identity":
-				// Check fill mandatory fields in tab "identity".
-				var jsonDataIdentity = clickIdentityAction(text1);
-				if (!jsonDataIdentity) {
-					alert(error2);
-					if($("#tab_yourInstitutionTable_1").length>0){
-						$("#tab_yourInstitutionTable_1").trigger('click');
-						$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
-					}else{
-						$("a[href='#tab-identity']").trigger('click');
+				//Check if the values autform have special characters
+				var errorTab = checkAutformIdentity();
+				if (errorTab == 0){
+					// Check fill mandatory fields in tab "identity".
+					var jsonDataIdentity = clickIdentityAction(text1);
+					if (!jsonDataIdentity) {
+						alert(error2);
+						if($("#tab_yourInstitutionTable_1").length>0){
+							$("#tab_yourInstitutionTable_1").trigger('click');
+							$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
+						}else{
+							$("a[href='#tab-identity']").trigger('click');
+						}
+						exit = true;
 					}
-					exit = true;
-				}
+		        } else{
+		        	alert(errorspecialcharacter);
+		        	if (errorTab ==1){
+		        		if($("#tab_yourInstitutionTable_1").length>0){
+							$("#tab_yourInstitutionTable_1").trigger('click');
+							$("#tab_yourInstitutionTable_1 a[href='#tab-yourInstitution']").trigger('click');
+						}else{
+							$("a[href='#tab-yourInstitution']").trigger('click');
+						}
+		        		exit = true;
+		        	}
+		        	if (errorTab > 1){
+		        		if($("#tab_yourInstitutionTable_1").length>0){
+							$("#tab_yourInstitutionTable_1").trigger('click');
+							$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
+						}else{
+							$("a[href='#tab-identity']").trigger('click');
+						}
+						exit = true;
+		        	}
+		        }	
 				break;
 			case "#tab-contact":
 				// Check fill mandatory fields in tab "contact".
@@ -207,8 +231,11 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 		"'relations':" + jsonDataRelations + "}";
 
 		if (saveOrExit)
-			$('#webformeag2012').append('<input type="hidden" id="saveOrExit" name="saveOrExit" value="saveAndExit">');
-				
+			$('#webformeag2012 input#saveOrExit').val("saveAndExit");
+		else {
+			$('#webformeag2012 input#saveOrExit').val("save");
+		}
+
 		$('#webformeag2012').append('<textarea name="form" style="display: none;">'+jsonData+'</textarea>');
 		$('#webformeag2012').submit();
 	}
@@ -2462,7 +2489,7 @@ function addFurtherEmailsOfTheInstitution(text1){
 	$(clone).after(clone2);
 }
 
-function addAnotherFormOfTheAuthorizedName(text1){
+function addAnotherFormOfTheAuthorizedName(text1, text2){
 	var counter = $("table[id^='identityTableNameOfTheInstitution_']").length;
 
 	var nameOfInstitution = $("table#identityTableNameOfTheInstitution_"+counter+" textarea#textNameOfTheInstitution").attr("value");
@@ -2471,7 +2498,6 @@ function addAnotherFormOfTheAuthorizedName(text1){
 		alertEmptyFields(text1);
 		return;
 	}
-
 	var clone = $("table[id^='identityTableNameOfTheInstitution_"+counter+"']").clone();
 	clone = "<table id='"+("identityTableNameOfTheInstitution_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 	$("table[id^='identityTableNameOfTheInstitution_"+counter+"']").after(clone);
@@ -2487,6 +2513,10 @@ function addAnotherFormOfTheAuthorizedName(text1){
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution td#tdNameOfTheInstitution").find("span").remove();
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution select#noti_languageList").removeAttr("disabled");
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution td#tdNameOfTheInstitutionLanguage").find("span").remove();
+
+	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution textarea#textNameOfTheInstitution").on("input", function() {
+		checkName(text2,  $(this));
+	});
 }
 
 function addParallelNameOfTheInstitution(text1){
@@ -5084,3 +5114,62 @@ function selectTypeOfInstitutionOptionsIntoIdTab(){
 		}
 	});
 }
+
+/**
+ * This function remove the special characters <, >, % when the user put them in the institution's name
+ */
+function checkName(text, id){
+	var name = $(id).val();
+	var indexPercentage = name.indexOf("\%");
+	var indexLessThan = name.indexOf("\<");
+	var indexGreaterThan = name.indexOf("\>");
+	var showAlert = true;
+	while (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1){
+		if (showAlert) {
+			alert(text);
+			showAlert = false;
+		}
+		name =  name.replace("\%",'');
+		name =  name.replace("\<",'');
+		name =  name.replace("\>",'');
+		$(id).attr("value",name);
+		indexPercentage =  name.indexOf("\%");
+		indexLessThan =  name.indexOf("\<");
+		indexGreaterThan =  name.indexOf("\>");
+	}
+	nameOfInstitutionChanged(text, name);
+}
+/**
+ * Check if in some autform's values put special character 
+ * @param text
+ */
+function checkAutforms(text){
+	
+	$("textarea#textYINameOfTheInstitution").on("input", function() {
+		checkName(text,  $(this));
+	});
+	$("table[id^='identityTableNameOfTheInstitution_']").each(function(){
+		var id = $(this).attr("id");
+		$("table#" + id + " textarea#textNameOfTheInstitution").on("input", function(){
+			checkName(text, $(this));
+		});
+	});
+}
+function checkAutformIdentity(){
+	var errorTab = 0;
+	var found= false;
+	$("table[id^='identityTableNameOfTheInstitution_']").each(function(index){
+		if(!found){
+			var id = $(this).attr("id");
+			var autform = $("table#" + id + " textarea#textNameOfTheInstitution").val();
+			var indexPercentage = autform .indexOf("\%");
+			var indexLessThan = autform .indexOf("\<");
+			var indexGreaterThan = autform .indexOf("\>");
+			if (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1){
+			    errorTab = index+1;
+			    found=true;
+		    } 
+		}
+	});
+	return errorTab;
+}	

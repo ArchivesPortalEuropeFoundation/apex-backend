@@ -75,6 +75,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private static final String ERROR_IDENTIFIERS = "errorIdentifier";
 	private static final String ERROR_COUNTRY = "errorCountry";
 	private static final String ERROR_INVALID_CHARS = "errorInvalidChars";
+	private static final String ERROR_SPECIAL_CHARACTERS = "errorSpecialCharacters";
 	// Error when an institution has duplicated identifiers.
 	private static final String ERROR_DUPLICATE_IDENTIFIERS = "errorDuplicateIdentifiers";
 	private static final String ERROR_NAMES_CHANGED = "changedNames";
@@ -117,7 +118,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private Set<String> institutionsWithContentNotPublished;
 
 	private List<String> errors;
-
+	
+    //Set for the institutions with special characters
+	private Set<String> institutionsWithSpecialCharacters;
+	
 	// Set for the duplicate identifiers.
 	private Set<String> duplicateIdentifiers;
 
@@ -402,6 +406,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		this.invalidChars = invalidChars;
 	}
 
+	public Set<String> getInstitutionsWithSpecialCharacters() {
+		return institutionsWithSpecialCharacters;
+	}
+
+	public void setInstitutionsWithSpecialCharacters(
+			Set<String> institutionsWithSpecialCharacters) {
+		this.institutionsWithSpecialCharacters = institutionsWithSpecialCharacters;
+	}
+	
 	/**
 	 * @return the overwriteIDs
 	 */
@@ -780,8 +793,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,false);
 		if(archivalInstitutions!=null){
+			Boolean specialCharacters = ArchivalLandscapeUtils.checkSpecialCharacter(archivalInstitutions);
 			Boolean duplicateIds = ArchivalLandscape.checkIdentifiers(this.httpFile);
-			if (duplicateIds != null && !duplicateIds) {
+			if (specialCharacters != null && specialCharacters){
+				this.setInstitutionsWithSpecialCharacters(ArchivalLandscapeUtils.getInstitutionsWithSpecialCharacters());
+				return ERROR_SPECIAL_CHARACTERS;
+			}else if (duplicateIds != null && !duplicateIds) {
 				this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
 				return ERROR_DUPLICATE_IDENTIFIERS;
 			} else if (!institutionNamesHaveChanged(archivalInstitutions)) {
@@ -817,7 +834,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				ArchivalInstitution archivalInstitutionsComparable = itArchivalStructure.next();
 				if(archivalInstitutionsComparable.getInternalAlId().equals(targetInstitution.getInternalAlId()) && !archivalInstitutionsComparable.isGroup()){
 					found = true;
-					if(!archivalInstitutionsComparable.getAiname().equals(targetInstitution.getAiname())){
+					if(archivalInstitutionsComparable.getAiname() != null
+							&& !archivalInstitutionsComparable.getAiname().equals(targetInstitution.getAiname())){
 						state = false;
 					}
 				}
@@ -2628,5 +2646,4 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return ERROR;
 	}
-
 } 

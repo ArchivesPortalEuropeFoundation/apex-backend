@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,22 +14,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.dpt.utils.util.XsltChecker;
-import eu.apenet.persistence.vo.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
-
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.manual.eag.Eag2012;
-import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.utils.ZipManager;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -36,9 +25,27 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.opensymphony.xwork2.ActionSupport;
+
+import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.manual.eag.Eag2012;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
-import java.util.Properties;
+import eu.apenet.dashboard.utils.ZipManager;
+import eu.apenet.dpt.utils.util.XsltChecker;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.AiAlternativeName;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.Ingestionprofile;
+import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.UploadMethod;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  *
@@ -363,6 +370,13 @@ public abstract class ManualUploader {
                         // Check if any of the "<autform>" values is the same as the institution name.
                         String institutionName = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(archivalInstitutionId).getAiname();
                         List<String> autformValueList = eag.lookingForwardAllElementContent("/eag/archguide/identity/autform");
+                        //Check if there are "<autform>" values with special characters
+                        boolean specialCharacters = checkSpecialCharacter(autformValueList);
+                        if (specialCharacters){
+                        	this.filesNotUploaded.add(fileName);
+                            return "error_eaginstitutionnamespecialcharacter";
+                        }
+                        
                         boolean exists = false;
                         for (int i = 0; !exists && i < autformValueList.size(); i++) {
                             if (institutionName.equalsIgnoreCase(autformValueList.get(i))) {
@@ -532,8 +546,23 @@ public abstract class ManualUploader {
         }
         return result;
     }
+    
+    /**
+	 * Check special characters in the institution's name and alternative's name
+	 * @param archivalInstitutions
+	 * @return true if there are specials characters and false in other case
+	 */
+    private boolean checkSpecialCharacter(List<String> autformValueList) {
+		// TODO Auto-generated method stub
+    	 for (int i = 0; i < autformValueList.size(); i++) {
+             if (autformValueList.get(i).contains("<") || autformValueList.get(i).contains(">") || autformValueList.get(i).contains("%")) {
+                return true;
+             }
+         }
+		return false;
+	}
 
-    //Jara: Overwrite a file of Archival Landscape. The existing file is renamed to name_old.
+	//Jara: Overwrite a file of Archival Landscape. The existing file is renamed to name_old.
     public String overWriteFile(File file, String fileName, String pathFile, boolean execute) {
 
         String result;

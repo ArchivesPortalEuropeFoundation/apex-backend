@@ -8,6 +8,7 @@
 		<s:actionmessage id="validationEAG2012Errors" />
 	</div>
 	<form id="webformeag2012" name="webformeag2012" method="POST" action="storeEAG2012.action">
+		<input type="hidden" id="saveOrExit" name="saveOrExit" value="save">
 		<div id="eag2012Tabs" class="corner-all helper-clearfix">
 			<a id="repositories"></a>
 			<div id="eag2012tabs_institution" style="float:left;width:100%;">
@@ -111,6 +112,17 @@
 						var message = "<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);
 					});
+					var  textSpecialCharacters = '<s:property value="getText('error.specialCharacters')" escape="false" />';
+			//		$("textarea#textYINameOfTheInstitution").on("input", function() {
+			//			checkName(textSpecialCharacters,  $(this));
+			//		});
+					checkAutforms(textSpecialCharacters);
+				//	$("table[id^='identityTableNameOfTheInstitution_']").each(function(){
+				//		var id = $(this).attr("id");
+				//		$("table#" + id + " textarea#textNameOfTheInstitution").on("input", function(){
+				//			checkName(textSpecialCharacters, $(this));
+				//		});
+				//	});
 				});
 			</script>
 			<div id="container">
@@ -147,9 +159,9 @@
 			<tr>
 				<td>
 		  			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("eag2012.commons.save")' />" class="rightButton" 
-		  				onclick="clickSaveAction(this.form, '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.success')" />','<s:property value="getText('eag2012.errors.errorYourInstitution')" />', '<s:property value="getText('eag2012.errors.errorIdentity')" />', '<s:property value="getText('eag2012.errors.errorContact')" />', '<s:property value="getText('eag2012.errors.errorAccessAndServices')" />', '<s:property value="getText('eag2012.errors.errorDesription')" />', '<s:property value="getText('eag2012.errors.errorControl')" />', '<s:property value="getText('eag2012.errors.errorRelations')" />', '<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />','<s:property value="getText('eag2012.errors.errorDeleteRepository')"/>', '<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>', '${loader.initialAutformEscaped}');" />
+		  				onclick="clickSaveAction(this.form, '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.success')" />','<s:property value="getText('eag2012.errors.errorYourInstitution')" />', '<s:property value="getText('eag2012.errors.errorIdentity')" />', '<s:property value="getText('eag2012.errors.errorContact')" />', '<s:property value="getText('eag2012.errors.errorAccessAndServices')" />', '<s:property value="getText('eag2012.errors.errorDesription')" />', '<s:property value="getText('eag2012.errors.errorControl')" />', '<s:property value="getText('eag2012.errors.errorRelations')" />', '<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />','<s:property value="getText('eag2012.errors.errorDeleteRepository')"/>', '<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>', '${loader.initialAutformEscaped}', false, '<s:property value="getText('eag2012.errors.errorspecialCharacters')" escape="false" />');" />
 		  			<input type="button" id="buttonExitEAG2012" value="<s:property value='getText("eag2012.commons.exit")' />"
-			  			onclick="clickExitAction('<s:property value='getText("eaccpf.commons.exitConfirm")' />', this.form, '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.success')" />','<s:property value="getText('eag2012.errors.errorYourInstitution')" />', '<s:property value="getText('eag2012.errors.errorIdentity')" />', '<s:property value="getText('eag2012.errors.errorContact')" />', '<s:property value="getText('eag2012.errors.errorAccessAndServices')" />', '<s:property value="getText('eag2012.errors.errorDesription')" />', '<s:property value="getText('eag2012.errors.errorControl')" />', '<s:property value="getText('eag2012.errors.errorRelations')" />', '<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />','<s:property value="getText('eag2012.errors.errorDeleteRepository')"/>', '<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>', '${loader.initialAutformEscaped}');" />
+			  			onclick="clickExitAction('<s:property value='getText("eaccpf.commons.exitConfirm")' />', this.form, '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.success')" />','<s:property value="getText('eag2012.errors.errorYourInstitution')" />', '<s:property value="getText('eag2012.errors.errorIdentity')" />', '<s:property value="getText('eag2012.errors.errorContact')" />', '<s:property value="getText('eag2012.errors.errorAccessAndServices')" />', '<s:property value="getText('eag2012.errors.errorDesription')" />', '<s:property value="getText('eag2012.errors.errorControl')" />', '<s:property value="getText('eag2012.errors.errorRelations')" />', '<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />','<s:property value="getText('eag2012.errors.errorDeleteRepository')"/>', '<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>', '${loader.initialAutformEscaped}', '<s:property value="getText('eag2012.errors.errorspecialCharacters')" escape="false" />');" />
 	    		</td>
 	    	</tr>
 	    </table>
