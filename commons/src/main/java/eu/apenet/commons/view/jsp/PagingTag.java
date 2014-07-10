@@ -31,6 +31,8 @@ public class PagingTag extends AbstractPagingTag {
 	private String pageNumberId;
 	
 	private String liferayFriendlyUrl;
+	
+	private Object maxNumberOfItems; 
 
 	protected String getPageLast() {
 		return PAGE_LAST;
@@ -84,10 +86,12 @@ public class PagingTag extends AbstractPagingTag {
 	}
 
 	protected StringBuilder buildPagination() {
+		Long maxNumberOfItems = toLong(this.getMaxNumberOfItems());
 		long numberOfItems = toLong(this.getNumberOfItems());
 		int pageNumber = toInteger(this.getPageNumber());
 		int pageSize = toInteger(this.getPageSize());
 		int numberOfPages = (int) Math.ceil((double) numberOfItems / (double) pageSize);
+		boolean fullPagination = maxNumberOfItems == null || (maxNumberOfItems != null &&  numberOfItems <= maxNumberOfItems);
 		if (pageNumber > numberOfPages) {
 			pageNumber = numberOfPages;
 		} else if (pageNumber < FIRST_PAGE) {
@@ -96,10 +100,14 @@ public class PagingTag extends AbstractPagingTag {
 		StringBuilder description = new StringBuilder();
 		description.append(UL_START_TAG);
 		if (pageNumber == FIRST_PAGE || numberOfPages == 0) {
-			addListItem(description, getPageFirst());
+			if (fullPagination){
+				addListItem(description, getPageFirst());
+			}
 			addListItem(description, getPagePrevious());
 		} else {
-			addListItemWithLink(description, getPageFirst(), FIRST_PAGE);
+			if (fullPagination){
+				addListItemWithLink(description, getPageFirst(), FIRST_PAGE);
+			}
 			addListItemWithLink(description, getPagePrevious(), pageNumber - 1);
 		}
 		description.append(" ");
@@ -134,7 +142,9 @@ public class PagingTag extends AbstractPagingTag {
 		addActiveListItem(description, pageNumber);
 		if (pageNumber == numberOfPages) {
 			addListItem(description, getPageNext());
-			addListItem(description, getPageLast());
+			if (fullPagination){
+				addListItem(description, getPageLast());
+			}
 
 		} else {
 			for (int i  = pageNumber+1; i <= lastVisiblePage; i++){
@@ -144,7 +154,9 @@ public class PagingTag extends AbstractPagingTag {
 //				addListItem(description, "... ");
 //			}
 			addListItemWithLink(description, getPageNext(), pageNumber + 1);
-			addListItemWithLink(description, getPageLast(), numberOfPages);
+			if (fullPagination){
+				addListItemWithLink(description, getPageLast(), numberOfPages);
+			}
 		}
 		description.append(UL_END_TAG);
 		return description;
@@ -177,5 +189,15 @@ public class PagingTag extends AbstractPagingTag {
 		builder.append(value);
 		builder.append("</li>");
 	}
+
+	public Object getMaxNumberOfItems() {
+		return maxNumberOfItems;
+	}
+
+	public void setMaxNumberOfItems(Object maxNumberOfItems) {
+		this.maxNumberOfItems = maxNumberOfItems;
+	}
+	
+	
 
 }
