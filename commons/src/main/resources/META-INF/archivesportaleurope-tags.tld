@@ -69,7 +69,12 @@
 		<attribute>
 			<name>liferayFriendlyUrl</name>
 			<required>false</required>
-		</attribute>			
+		</attribute>
+		<attribute>
+			<name>maxNumberOfItems</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>					
 	</tag>		
 	<tag>
 		<name>context</name>
