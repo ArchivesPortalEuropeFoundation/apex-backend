@@ -704,6 +704,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	private boolean newEag;
 
+	// Constant to decide id only save or save and exit.
+	private String saveOrExit;
+
 	public Boolean isNewEag(){
 		return this.newEag;
 	}
@@ -718,6 +721,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	public String getForm(){
 		return this.form;
+	}
+
+	public String getSaveOrExit() {
+		return this.saveOrExit;
+	}
+
+	public void setSaveOrExit(String saveOrExit) {
+		this.saveOrExit = saveOrExit;
 	}
 
 	public String editWebFormEAG2012(){
@@ -930,8 +941,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		String result = this.editWebFormEAG2012();
 
 		if (!existEag && result.equals(INPUT)) {
-			addActionMessage(this.getText("eag2012.info.eagcorrectlycreated"));
 			result = "successCreated";
+		}
+
+		if ((result.equals(INPUT) || result.equals("successCreated")) &&
+			(this.getSaveOrExit() != null && this.getSaveOrExit().equalsIgnoreCase("saveAndExit"))) {
+			result="saveAndExit";
 		}
 
 		return result;

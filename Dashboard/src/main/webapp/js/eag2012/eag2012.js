@@ -47,10 +47,15 @@ function hideAndShow(idPrefix,shown){
 	}
 }
 
-function clickExitAction(){
-	//exit the form without save
-	location.href="removeInvalidEAG2012.action";
+function clickExitAction(strSaveMsg,form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName){
+	
+	if (confirm(strSaveMsg)) 
+		clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, true);
+	else 
+		location.href="removeInvalidEAG2012.action";
+	
 }
+
 
 function navigateToCurrentRepoTab(href){
 	var errorFieldText = $(".fieldRequired");
@@ -73,7 +78,7 @@ function navigateToCurrentRepoTab(href){
 	}
 }
 
-function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName) {
+function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, saveOrExit) {
 	//first check in which tab are the user, validate current tab and next the others
 	var selectedHref = "";
 	var tabsToCheck = new Array();
@@ -198,6 +203,9 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 		"'control':" + jsonDataControl + "," +
 		"'relations':" + jsonDataRelations + "}";
 
+		if (saveOrExit)
+			$('#webformeag2012').append('<input type="hidden" id="saveOrExit" name="saveOrExit" value="saveAndExit">');
+				
 		$('#webformeag2012').append('<textarea name="form" style="display: none;">'+jsonData+'</textarea>');
 		$('#webformeag2012').submit();
 	}
