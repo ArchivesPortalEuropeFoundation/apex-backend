@@ -86,12 +86,7 @@ public class DataHarvester {
 		File errorsDirectory = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + "/oai_errors");
 		errorsDirectory.mkdirs();
 		outputDirectory.mkdirs();
-		OaiPmhParser oaiPmhParser = null;
-		if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
-			oaiPmhParser = new OaiPmhParser(outputDirectory);
-		} else {
-			oaiPmhParser = new OaiPmhParser(outputDirectory, MAX_NUMBER_HARVESTED_FILES_FOR_TEST);
-		}
+		OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
 
 		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
@@ -107,7 +102,12 @@ public class DataHarvester {
 			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
 
 			oaiPmhHttpClient = new OaiPmhHttpClient();
-			HarvestObject harvestObject = new HarvestObject(archivalInstitutionOaiPmhId);
+			HarvestObject harvestObject = null;
+			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
+				harvestObject = new HarvestObject(archivalInstitutionOaiPmhId, null);
+			} else {
+				harvestObject = new HarvestObject(archivalInstitutionOaiPmhId, MAX_NUMBER_HARVESTED_FILES_FOR_TEST);
+			}
 			HarvesterDaemon.setHarvestObject(harvestObject);
 			if (archivalInstitutionOaiPmh.isHarvestMethodListByIdentifiers()){
 				OaiPmhHarvester.harvestByListIdentifiers(harvestObject, baseURL, from, until, metadataPrefix, setSpec,
