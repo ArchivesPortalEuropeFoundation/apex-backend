@@ -5,22 +5,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
+import org.apache.struts2.util.ServletContextAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.security.SecurityContext;
-import javax.servlet.ServletContext;
-import org.apache.struts2.util.ServletContextAware;
 
 public abstract class AbstractAction extends ActionSupport  implements Preparable, ServletRequestAware, ServletResponseAware, ServletContextAware{
 	/**
@@ -89,7 +89,7 @@ public abstract class AbstractAction extends ActionSupport  implements Preparabl
 	 * Method to delete temporary EAG 2012 files.
 	 */
 	protected String removeInvalidEAG(final Integer aiId) {
-		String alCountry = new ArchivalLandscape().getmyCountry();
+		String alCountry = new ArchivalLandscapeUtils().getmyCountry();
 		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
 				aiId + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
 		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;

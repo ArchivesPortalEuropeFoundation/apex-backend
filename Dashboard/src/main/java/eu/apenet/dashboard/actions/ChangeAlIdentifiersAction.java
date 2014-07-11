@@ -9,7 +9,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
 import eu.apenet.dashboard.Breadcrumb;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.archivallandscape.ChangeAlIdentifiers;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -137,7 +137,7 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 					{
 						addActionMessage(getText("al.message.changeIdentifier.alreadyUsed"));
 						result= INPUT;
-					}else if(ArchivalLandscape.isValidIdentifier(this.getIdentifier()))
+					}else if(ArchivalLandscapeUtils.isValidIdentifier(this.getIdentifier()))
 					{
 						String ddbbChanged = cAlId.changeIdentifierinDDBB(ai, this.getIdentifier());
 						if (!ddbbChanged.equals("success"))

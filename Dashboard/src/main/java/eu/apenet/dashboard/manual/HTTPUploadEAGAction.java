@@ -9,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
 import eu.apenet.dashboard.services.eag.EagService;
@@ -92,7 +92,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     @Override
     public String execute(){
     	//ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		String alCountry = new ArchivalLandscape().getmyCountry();
+		String alCountry = new ArchivalLandscapeUtils().getmyCountry();
 		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
 				this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
 		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;

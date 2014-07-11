@@ -32,7 +32,7 @@ public class ChangeIdentifierInDDBBAction extends AbstractInstitutionAction{
 				ai=aiDao.findAll();
 				for(int i=0;i<ai.size();i++){
 					String identifier=ai.get(i).getInternalAlId();
-					if (identifier!=null && !ArchivalLandscape.isValidIdentifier(identifier)){
+					if (identifier!=null && !ArchivalLandscapeUtils.isValidIdentifier(identifier)){
 						if (identifier.length()>0 && identifier.length()<99){
 							identifier="A"+identifier;
 						}else{

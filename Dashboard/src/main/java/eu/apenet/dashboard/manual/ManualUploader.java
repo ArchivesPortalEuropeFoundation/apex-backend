@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
@@ -307,7 +307,7 @@ public abstract class ManualUploader {
         } else if (uploadType.equals("AL")) { //Upload Archival Landscape
             try {
                 if ((contentType.equals("xml"))) {
-                    ArchivalLandscape a = new ArchivalLandscape();
+                	ArchivalLandscapeUtils a = new ArchivalLandscapeUtils();
                     path = a.getmyPath(a.getmyCountry());
                     //Create a temporary file
                     fullFileName = path + a.getmyCountry() + "AL.xml"; //fileName
@@ -394,7 +394,7 @@ public abstract class ManualUploader {
                         boolean changed = false;
                         if (recordIdValue != null && recordIdValue.endsWith(MAGIC_KEY)) {
                             //replace value with a consecutive unique value
-                            ArchivalLandscape archivalLandscape = new ArchivalLandscape();
+                        	ArchivalLandscapeUtils archivalLandscape = new ArchivalLandscapeUtils();
                             int zeroes = 11 - archivalInstitutionId.toString().length();
                             String newRecordIdValue = archivalLandscape.getmyCountry() + "-";
                             for (int x = 0; x < zeroes; x++) {
@@ -566,7 +566,7 @@ public abstract class ManualUploader {
     public String overWriteFile(File file, String fileName, String pathFile, boolean execute) {
 
         String result;
-        ArchivalLandscape a = new ArchivalLandscape();
+        ArchivalLandscapeUtils a = new ArchivalLandscapeUtils();
         String fullFileName = "";
         String tmpDirectory = pathFile + "temp" + APEnetUtilities.FILESEPARATOR;
         File[] files = new File(pathFile).listFiles();

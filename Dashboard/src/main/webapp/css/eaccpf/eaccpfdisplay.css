@@ -159,3 +159,150 @@ pre.outline{
 	font-weight: bold;
 	font-style: normal;
 }
+
+@media print {
+	#eacCpfDisplayPortlet {
+		margin-right:0px;
+		margin-left:0px;
+	}
+
+	#eacCpfDisplayPortlet h1 {
+		width':'98%
+	}
+
+	#eacCpfDisplayPortlet #details {
+    	width':'98%
+	}
+
+	#eacCpfDisplayPortletPrint #relations {
+		float:none;
+		clear:both;
+		padding-top:20px;
+		width:98%;
+	}
+	
+	#eacCpfDisplayPortletPrint a {
+		pointer-events:none;
+		cursor:default;
+	}
+
+}
+
+/*
+#eacCpfDisplayPortletPrint #footer{
+	padding-bottom:10px;
+}
+
+#eacCpfDisplayPortletPrint {
+	background-image: none;
+	background-color: white;
+	color: #2A4862;
+	margin-right:0px;
+	margin-left:0px;
+}
+
+#eacCpfDisplayPortletPrint #printEacDetails {
+    float: inherit;
+    margin-left: 240px;
+}
+
+#eacCpfDisplayPortletPrint #details{
+    width:98%;
+	float:left;
+}
+
+#eacCpfDisplayPortletPrint h1 {
+	border-bottom: 1px solid #79B7E7;
+    color: #2A4862;
+    font-size: 130%;
+    font-weight: bold;
+    margin: 0.3em 0;
+    text-align: left;
+    width:98%;
+}
+
+#eacCpfDisplayPortletPrint h1 span#entityType{
+	color:#83736A;
+	font-weight:normal;
+}
+
+#eacCpfDisplayPortletPrint h2.otherInformation{
+	color:#83736A;
+	border-bottom:1px solid #83736A;
+	padding-top:20px;
+	text-align:left;
+}
+
+#eacCpfDisplayPortletPrint h2.title{
+	border-bottom: none;
+	font-size:9pt;
+	font-weight:bold;
+	text-transform: uppercase;
+	text-align:left;
+	padding-top:8px;
+}
+
+#eacCpfDisplayPortletPrint .subrow{
+	margin-left:40px;
+}
+
+#eacCpfDisplayPortletPrint .grey {
+	color:#83736A;
+}
+
+#eacCpfDisplayPortletPrint .row {
+	display:block;
+	font-size:8pt;
+	overflow:auto;
+}
+
+#eacCpfDisplayPortletPrint .leftcolumn {
+	float:left;
+	overflow-y: auto;
+	margin-top:9px;
+}
+
+#eacCpfDisplayPortletPrint .rightcolumn {
+	text-align:left;
+	margin-left:180px;
+	margin-top:9px;
+}
+
+#eacCpfDisplayPortletPrint #language{
+	float:none;
+}
+
+#eacCpfDisplayPortletPrint #relations{
+	font-size:8pt;
+	text-align:left;
+	float:none;
+	clear:both;
+	padding-top:20px;
+	width:98%;
+}
+
+#eacCpfDisplayPortletPrint .box .boxtitle{
+	height:12px;
+	cursor:pointer;
+}
+
+#eacCpfDisplayPortletPrint #eaccpfcontent em{
+	font-size: 110%;
+	padding-left:2px;
+	padding-right:2px;
+}
+
+#eacCpfDisplayPortletPrint .defaultlayout {
+	text-align: center;
+}
+
+#eacCpfDisplayPortletPrint em {
+	font-weight: bold;
+	font-style: normal;
+}
+
+#eacCpfDisplayPortletPrint a {
+	pointer-events:none;
+	cursor:default;
+}
+*/

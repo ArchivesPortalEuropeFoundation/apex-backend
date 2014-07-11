@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.APEnetEAGDashboard;
 import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
 import eu.apenet.dashboard.manual.eag.utils.EAG2012Loader;
@@ -686,7 +686,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 * @return CC
 	 */
 	public String getCountryCode(){
-		return new ArchivalLandscape().getmyCountry();
+		return new ArchivalLandscapeUtils().getmyCountry();
 	}
 
 	/**

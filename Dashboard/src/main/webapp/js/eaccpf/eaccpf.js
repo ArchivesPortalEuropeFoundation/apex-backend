@@ -1468,12 +1468,16 @@ function initPrint() {
         $(".displayLinkShowLess").each(function() {
             $(this).remove();
         });
-        $('#eacCpfDisplayPortlet h1').css({'width': '100%'});
-        $("#eacCpfDisplayPortlet #details").css({'width': '100%'});
-        $("#eacCpfDisplayPortlet #relations").css({'float': 'none', 'clear': 'both', 'padding-top': '20px', 'width': '100%'});
-        $('#eacCpfDisplayPortlet a').each(function() {
-            $(this).css({'pointer-events': 'none', 'cursor': 'default'});
-        });
+//        $('#eacCpfDisplayPortlet h1').css({'width': '100%'});
+//        $("#eacCpfDisplayPortlet #details").css({'width': '100%'});
+//        $("#eacCpfDisplayPortlet #relations").css({'float': 'none', 'clear': 'both', 'padding-top': '20px', 'width': '100%'});
+//        $('#eacCpfDisplayPortlet a').each(function() {
+//            $(this).css({'pointer-events': 'none', 'cursor': 'default'});
+//        });
+
+//        $('#eacCpfDisplayPortlet').attr("id", "eacCpfDisplayPortletPrint");
+
+
         self.print();
     }
     catch (e) {

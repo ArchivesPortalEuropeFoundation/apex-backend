@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.infraestructure;
+package eu.apenet.dashboard.archivallandscape;
 
 import java.util.HashMap;
 import java.util.Map;
