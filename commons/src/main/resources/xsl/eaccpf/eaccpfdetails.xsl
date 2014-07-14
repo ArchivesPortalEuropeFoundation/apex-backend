@@ -623,77 +623,57 @@
 				</div>
 			</xsl:if>
 			<!-- structureOrGenealogy -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy">
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level/eac:item/text()">
 				<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
-			    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level/eac:item/text()"> 
-			     	<div class="row subrow">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn moreDisplay" id="structureOrGenealogy">
-					   		<xsl:call-template name="multilanguageOutline">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level"/>
-					   		</xsl:call-template>
-					   		<div class="linkMore">
-								<a class="displayLinkShowMore linkShow" href="javascript:showMore('structureOrGenealogy', 'pre');">
-									<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
-								</a>
-								<a class="displayLinkShowLess linkShow" href="javascript:showLess('structureOrGenealogy', 'pre');">
-									<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
-								</a>
-							</div>
-						</div>
-					</div>
-			    </xsl:if>
-			    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p/text()">
-			    	<div class="row subrow">
-							<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
-						   	</div>
-						   	<div class="rightcolumn">
-								<xsl:call-template name="multilanguage">
-						   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p"/>
-						   			<xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>
-						   		</xsl:call-template>
-							</div>
-					</div>
-			    </xsl:if>
+				<xsl:variable name="firstchild" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/*[1]"/>
+			  	<xsl:if test="name($firstchild)='outline'">
+					   <xsl:call-template name="outline">
+					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
+					   	 <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>	
+					  	 <xsl:with-param name="title" select="'eaccpf.portal.structureOrGenealogy'"/> 	
+					   </xsl:call-template>
+					   <xsl:call-template name="p">
+					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
+					  	 <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
+					   </xsl:call-template>
+				</xsl:if>
+				<xsl:if test="name($firstchild)='p'">    
+					    <xsl:call-template name="p">
+					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
+					   	  <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
+					    </xsl:call-template>
+					   <xsl:call-template name="outline">
+					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
+					   	  <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>	
+					  	  <xsl:with-param name="title" select="'eaccpf.portal.structureOrGenealogy'"/> 	
+					   </xsl:call-template>
+				</xsl:if>
 			</xsl:if> 
 			<!-- generalContext -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext">
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:outline/eac:level/eac:item/text()">
 			  	<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.generalContext')"/></h2> 
-			  	<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:outline/eac:level/eac:item/text()">
-			  		<div class="row subrow">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.generalContext')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn moreDisplay" id="generalContext">
-					   		<xsl:call-template name="multilanguageOutline">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:outline/eac:level"/>
-					   		</xsl:call-template>
-					   		<div class="linkMore">
-								<a class="displayLinkShowMore linkShow" href="javascript:showMore('generalContext', 'pre');">
-									<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
-								</a>
-								<a class="displayLinkShowLess linkShow" href="javascript:showLess('generalContext', 'pre');">
-									<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
-								</a>
-							</div>
-						</div>
-					</div>
-			  	</xsl:if>
-				<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p/text()">
-					<div class="row subrow">
-							<div class="leftcolumn">
-						   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
-						   	</div>
-						   	<div class="rightcolumn">
-								<xsl:call-template name="multilanguage">
-						   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p"/>
-						   			<xsl:with-param name="clazz" select="'generalContextNote'"/>
-						   		</xsl:call-template>
-							</div>
-					</div>
+				<xsl:variable name="firstchild" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/*[1]"/>
+			  	<xsl:if test="name($firstchild)='outline'">
+					   <xsl:call-template name="outline">
+					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
+					   	 <xsl:with-param name="clazz" select="'generalContext'"/>	
+					  	 <xsl:with-param name="title" select="'eaccpf.portal.generalContext'"/> 
+					   </xsl:call-template>
+					   <xsl:call-template name="p">
+					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
+					  	 <xsl:with-param name="clazz" select="'generalContextNote'"/>	
+					   </xsl:call-template>
+				</xsl:if>
+				<xsl:if test="name($firstchild)='p'">    
+					    <xsl:call-template name="p">
+					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
+					   	  <xsl:with-param name="clazz" select="'generalContextNote'"/>	
+					    </xsl:call-template>
+					   <xsl:call-template name="outline">
+					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
+					   	  <xsl:with-param name="clazz" select="'generalContext'"/>	
+					  	  <xsl:with-param name="title" select="'eaccpf.portal.generalContext'"/>	
+					   </xsl:call-template>
 				</xsl:if>
 			</xsl:if> 
 			<!-- biogHist p --> 
@@ -2450,7 +2430,53 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!-- template for outline -->
+	<!--template for outline -->
+	<xsl:template name="outline">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+		<xsl:param name="title"/>
+		<xsl:if test="$list/eac:outline/eac:level/eac:item/text()"> 
+		   	<div class="row subrow">
+				<div class="leftcolumn">
+			   		<h2><xsl:value-of select="ape:resource($title)"/><xsl:text>:</xsl:text></h2>
+			   	</div>
+			   	<div class="rightcolumn moreDisplay" id="{$clazz}">
+			   		<xsl:call-template name="multilanguageOutline">
+			   			<xsl:with-param name="list" select="$list/eac:outline/eac:level"/>
+			   		</xsl:call-template>
+			   		<div class="linkMore">
+						<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'pre');">
+							<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
+						</a>
+						<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'pre');">
+							<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
+						</a>
+					</div>
+				</div>
+		  </div>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- template for <p> in structureOrGenealogy or generalContext-->
+	<xsl:template name="p">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+		<xsl:if test="$list/eac:p/text()">
+	    	<div class="row subrow">
+					<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguage">
+				   			<xsl:with-param name="list" select="$list/eac:p"/>
+				   			<xsl:with-param name="clazz" select="$clazz"/>
+				   		</xsl:call-template>
+					</div>
+			</div>
+	    </xsl:if>
+	</xsl:template>
+	
+	<!-- template for multilanguage outline -->
 	<xsl:template name="multilanguageOutline">
 		<xsl:param name="list"/><!-- outline/level -->
 		<xsl:choose>
