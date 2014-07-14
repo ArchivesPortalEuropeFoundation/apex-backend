@@ -159,7 +159,7 @@
 				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.alternativeForms')"/><xsl:text>:</xsl:text></h2>
 				   	</div>
 				   	<div class="rightcolumn">
-				   			<xsl:call-template name="alternativeName">
+				   			<xsl:call-template name="alternativeNamePriorisation">
 				   				<xsl:with-param name="list" select="//eac:nameEntry"/>
 				   				<xsl:with-param name="clazz" select="'alternativeName'"/>
 				   			</xsl:call-template>  
@@ -820,21 +820,84 @@
 			</div>
 	</div>
 	</xsl:template>
+
+	<!-- Template for select the correct order to display the alternative names
+		 based in the value of the attribute "@localType". -->
+	<xsl:template name="alternativeNamePriorisation">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+
+		<div id="{$clazz}" class= "moreDisplay">
+			<xsl:choose>
+				<xsl:when test="count($list) > 1">
+					<!-- Checks the attribute "@localType". -->
+					<!-- localType = preferred -->
+					<xsl:if test="$list[@localType = 'preferred']">
+						<xsl:call-template name="alternativeName">
+							<xsl:with-param name="list" select="$list[@localType = 'preferred']"/>
+						</xsl:call-template> 
+					</xsl:if>
+					<!-- localType = authorized -->
+					<xsl:if test="$list[@localType = 'authorized']">
+						<xsl:call-template name="alternativeName">
+							<xsl:with-param name="list" select="$list[@localType = 'authorized']"/>
+						</xsl:call-template> 
+					</xsl:if>
+					<!-- not @localType -->
+					<xsl:if test="$list[not(@localType)]">
+						<xsl:call-template name="alternativeName">
+							<xsl:with-param name="list" select="$list[not(@localType)]"/>
+						</xsl:call-template> 
+					</xsl:if>
+					<!-- localType = alternative -->
+					<xsl:if test="$list[@localType = 'alternative']">
+						<xsl:call-template name="alternativeName">
+							<xsl:with-param name="list" select="$list[@localType = 'alternative']"/>
+						</xsl:call-template> 
+					</xsl:if>
+					<!-- localType = abbreviation -->
+					<xsl:if test="$list[@localType = 'abbreviation']">
+						<xsl:call-template name="alternativeName">
+							<xsl:with-param name="list" select="$list[@localType = 'abbreviation']"/>
+						</xsl:call-template> 
+					</xsl:if>
+					<!-- localType = other -->
+					<xsl:if test="$list[@localType = 'other']">
+						<xsl:call-template name="alternativeName">
+							<xsl:with-param name="list" select="$list[@localType = 'other']"/>
+						</xsl:call-template> 
+					</xsl:if>
+					<!-- In any other case checks the whole list. -->
+					<xsl:if test="$list[not(@localType = 'preferred') and not(@localType = 'authorized') and not(@localType = 'alternative') and not(@localType = 'abbreviation') and not(@localType = 'other') and @localType]">
+<!-- 					<xsl:if test="$list[not(@localType = 'preferred') and not(@localType = 'authorized') and not(@localType != 'alternative') and not(@localType = 'abbreviation') and not(@localType = 'other')] and $list[@localType]"> -->
+<!-- 					<xsl:if test="$list[@localType != 'preferred' and @localType != 'authorized' and @localType != 'alternative' and @localType != 'abbreviation' and @localType != 'other'] and $list[not(@localType)]"> -->
+						<xsl:call-template name="alternativeName">
+							<xsl:with-param name="list" select="$list[not(@localType = 'preferred') and not(@localType = 'authorized') and not(@localType = 'alternative') and not(@localType = 'abbreviation') and not(@localType = 'other') and @localType]"/>
+						</xsl:call-template> 
+					</xsl:if>
+				</xsl:when>
+
+				<xsl:otherwise>
+					<xsl:call-template name="alternativeName">
+						<xsl:with-param name="list" select="$list"/>
+					</xsl:call-template> 
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+	</xsl:template>
 	
 	<!-- Template for alternative forms of name -->
 	<xsl:template name="alternativeName">
 		<xsl:param name="list"/>
-		<xsl:param name="clazz"/>
-		<div id="{$clazz}" class= "moreDisplay">
-			<xsl:for-each select="$list">
-				<p>
-					<xsl:call-template name="compositeName">
-						<xsl:with-param name="listName" select="current()"/>
-						<xsl:with-param name="isHeader" select="'false'"/>
-					</xsl:call-template> 
-			    </p>
-			</xsl:for-each>
-		</div>
+
+		<xsl:for-each select="$list">
+			<p>
+				<xsl:call-template name="compositeName">
+					<xsl:with-param name="listName" select="current()"/>
+					<xsl:with-param name="isHeader" select="'false'"/>
+				</xsl:call-template> 
+		    </p>
+		</xsl:for-each>
 	</xsl:template>
 	<!-- template places -->
 	<xsl:template name="places">
