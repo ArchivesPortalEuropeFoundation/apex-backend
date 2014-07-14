@@ -66,9 +66,29 @@ public class ArchivalLandscapeUtils {
 	protected static final String FONDS = "fonds";
 	protected static final String SERIES = "series";
 	protected static final String FILE = "file";
-	
+	protected static final String UNITTITLE = "unittitle";
 	private static Logger log = Logger.getLogger(ArchivalLandscapeUtils.class);
 	
+	 //Set for the institutions with special characters
+	private static Set<String> institutionsWithSpecialCharacters;
+		
+	public static Set<String> getInstitutionsWithSpecialCharacters() {
+		return institutionsWithSpecialCharacters;
+	}
+
+	public static void setInstitutionsWithSpecialCharacters(
+			Set<String> institutionsWithSpecialCharacters) {
+		ArchivalLandscapeUtils.institutionsWithSpecialCharacters = institutionsWithSpecialCharacters;
+	}
+	
+	public static void addInstitutionsWithSpecialCharacters(String institutionsWithSpecialCharacters) {
+		if (ArchivalLandscapeUtils.getInstitutionsWithSpecialCharacters() == null) {
+			ArchivalLandscapeUtils.institutionsWithSpecialCharacters = new LinkedHashSet<String>();
+		}
+
+		ArchivalLandscapeUtils.getInstitutionsWithSpecialCharacters().add(institutionsWithSpecialCharacters);
+	}
+
 	protected static boolean checkIfTwoInstitutionsHasTheSameParents(ArchivalInstitution ingestedInstitution,ArchivalInstitution archivalInstitution) {
 		boolean state = false;
 		if(ingestedInstitution!=null && archivalInstitution!=null 
@@ -1075,4 +1095,39 @@ public class ArchivalLandscapeUtils {
 		return eadNode;
 	}
 	
+	/**
+	 * Check special characters in the institution's name and alternative's name
+	 * @param archivalInstitutions
+	 * @return true if there are specials characters and false in other case
+	 */
+	public static Boolean checkSpecialCharacter(Collection<ArchivalInstitution> archivalInstitutions) {
+		archivalInstitutions = ArchivalLandscapeUtils.parseCollectionToPlainList(archivalInstitutions); //parse to list
+		Iterator<ArchivalInstitution> itListInstitutions = archivalInstitutions.iterator();
+		ArchivalLandscapeUtils.setInstitutionsWithSpecialCharacters(null);
+		while(itListInstitutions.hasNext()){
+			ArchivalInstitution targetInstitution = itListInstitutions.next();
+			if (targetInstitution.getAiname()!=null && (targetInstitution.getAiname().contains("<") 
+				|| targetInstitution.getAiname().contains(">") || targetInstitution.getAiname().contains("%"))){
+				ArchivalLandscapeUtils.addInstitutionsWithSpecialCharacters(targetInstitution.getAiname());
+			}else{
+				Set<AiAlternativeName> aiAlternativeNames = targetInstitution.getAiAlternativeNames();
+				Iterator<AiAlternativeName> itAlternativeNames = aiAlternativeNames.iterator();
+				boolean found = false; 
+				while(!found && itAlternativeNames.hasNext()){
+					AiAlternativeName alternativeName = itAlternativeNames.next();
+					if (alternativeName.getAiAName().contains("<") || alternativeName.getAiAName().contains(">")
+						|| alternativeName.getAiAName().contains("%")){
+						
+						ArchivalLandscapeUtils.addInstitutionsWithSpecialCharacters(targetInstitution.getAiname());
+						found = true;
+					}
+			    }
+			}
+		}
+		if (ArchivalLandscapeUtils.institutionsWithSpecialCharacters != null
+				&& !ArchivalLandscapeUtils.institutionsWithSpecialCharacters.isEmpty()) {
+			return true;
+		}	
+		return false;
+	}
 }

@@ -7,7 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script type="text/javascript">
 	$(document).ready(function(){
-		loadUpPart("${pageContext.request.contextPath}","<s:property value="getText('viewAL.tree')" />","${countryId}");
+		loadUpPart("${pageContext.request.contextPath}","<s:property value="getText('viewAL.tree')" />","${countryId}", "<s:property value="getText('error.specialCharacters')" escape="false" />");
 	});
 </script>
 <div id="informationDiv"></div>
@@ -60,7 +60,7 @@
 		
 		<div id="alternativesNamesDiv" class="filterContainer">
 			<div id="showLanguagesDiv" onclick="getAlternativeNames();" class="divAction"><s:property value="getText('al.message.showalternativenames')" /></div>
-			<div id="editDiv" onclick="editAlternativeNames();" class="divAction"><s:property value="getText('al.message.edittarget')" /></div>
+			<div id="editDiv" onclick="editAlternativeNames('<s:property value="getText('error.specialCharacters')" escape="false" />');" class="divAction"><s:property value="getText('al.message.edittarget')" /></div>
 		</div>
 		
 		<div id="editLanguagesDiv" class="filterContainer">

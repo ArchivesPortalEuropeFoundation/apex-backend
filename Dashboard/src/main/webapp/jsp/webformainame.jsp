@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>	
+<script type="text/javascript">
+	$(document).ready(function(){
+		var textSpecialCharacters = '<s:property value="getText('error.specialCharacters')" escape="false" />'; 
+		$("input#changeainame_newname").on("input", function() {
+			checkName(textSpecialCharacters);
+		});
 
+	});
+</script>	
 <div id="eagwebform" align="center">
 	<p><span style="font-weight: bold;font-size:large;"><s:property value="getText('label.ai.changeainame.title')" /></span><br/><br/></p>
 

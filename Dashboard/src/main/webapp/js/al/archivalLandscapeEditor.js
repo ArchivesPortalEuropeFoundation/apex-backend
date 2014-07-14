@@ -1,4 +1,4 @@
-function loadUpPart(context,titleDT,countryId){
+function loadUpPart(context,titleDT,countryId, text){
 //	$.post("getALTree.action",{},function(e){
 //		alert(e);
 //	});
@@ -27,7 +27,7 @@ function loadUpPart(context,titleDT,countryId){
    				node.activate(true);
    				hideAll();
    				$("#divForm").show();
-				loadDownPart(node);
+				loadDownPart(node, text);
 				cleanInformation();
    			},
 			onDeactivate: function(node) {
@@ -38,13 +38,13 @@ function loadUpPart(context,titleDT,countryId){
 				node.select(select);
 				hideAll();
    				$("#divForm").show();
-				loadDownPart(node);
+				loadDownPart(node, text);
 				cleanInformation();
 			}
 		});
 	});	
 }
-function editAlternativeNames(){
+function editAlternativeNames(text){
 	$("#editDiv").hide();
 	$("#editLanguagesDiv").show();
 	$("#selectedLangTranslations option").each(function(){
@@ -71,6 +71,10 @@ function editAlternativeNames(){
 		if ($(this).val() == lang) {
 			$(this).attr("selected", "selected");
 		}
+	});
+
+	$("input#target").on("input", function() {
+		checkName(text, $(this));
 	});
 
 	checkPossibleAlternativeNamesActions($("select#alternativeNames").val());
@@ -133,7 +137,7 @@ function alternativeNameSelected(){
 	}
 }
 
-function loadDownPart(node){
+function loadDownPart(node, text){
 	node.activate(true); // in this way current node is stored to be returned on $.dynatree("getTree").getActiveNode();
 	createColorboxForProcessing();
 	$.post("getALActions.action",{nodeKey:node.data.key},function(e){
@@ -143,6 +147,9 @@ function loadDownPart(node){
 		$.each(e,function(key,value){
 			if(value.enableAddToList=="true"){
 				$("#filterSelectContainer").show();
+				$("input#textAL").on("input", function() {
+					checkName(text, $(this));
+				});
 			}else if(value.showAlternatives=="true"){
 				$("#alternativesNamesDiv").show();
 				$("#showLanguagesDiv").show();
@@ -217,6 +224,30 @@ function appendNode(){
 				hideAll();
 			}
 		});
+	}
+}
+
+/**
+ * This function remove the special characters <, >, % when the user put them in the institution's name or alternative's name
+ */
+function checkName(text, id){
+	var name = $(id).val();
+	var indexPercentage = name.indexOf("\%");
+	var indexLessThan = name.indexOf("\<");
+	var indexGreaterThan = name.indexOf("\>");
+	var showAlert = true;
+	while (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1){
+		if (showAlert) {
+			alert(text);
+			showAlert = false;
+		}
+		name =  name.replace("\%",'');
+		name =  name.replace("\<",'');
+		name =  name.replace("\>",'');
+		$(id).attr("value",name);
+		indexPercentage =  name.indexOf("\%");
+		indexLessThan =  name.indexOf("\<");
+		indexGreaterThan =  name.indexOf("\>");
 	}
 }
 

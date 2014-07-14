@@ -210,6 +210,11 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
                     addActionMessage(getText("eag2012.commons.errorOnChangeNameOfInstitution"));
         	    	result = ERROR;
+        	    } else if (result.equals("error_eaginstitutionnamespecialcharacter")){
+        	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
+        	    	addActionMessage(getText("label.eag.uploadingerror.eagspecialcharacters"));
+        	    	result = "specialcharacters";
+        	    	 
         	    }
         	}
         	else {

@@ -1,6 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
-
+<%-- <script type="text/javascript">
+	$(document).ready(function(){
+		var  text = '<s:property value="getText('error.specialCharacters')" escape="false" />';
+	//	checkAutforms(textSpecialCharacters);
+		$("table#identityTableNameOfTheInstitution_").each(function(){
+			var id = $(this).attr("id");
+			$(id + " tr#trNameOfTheInstitution textarea#textNameOfTheInstitution").on("input", function(){
+				checkName(text, $(this));
+			});
+		});
+	});
+</script>	 --%>	
 <div id="headerContainer">
 </div>
 
@@ -100,7 +111,7 @@
 	<table id="identityButtonAddNames" class="tablePadding">
 		<tr>
 			<td colspan="3">
-				<input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("eag2012.identity.addAnotherForm")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
+				<input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("eag2012.identity.addAnotherForm")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('eag2012.commons.pleaseFillData')" />', '<s:property value="getText('error.specialCharacters')" escape="false" />');"/>
 			</td>
 			<td>
 			</td>

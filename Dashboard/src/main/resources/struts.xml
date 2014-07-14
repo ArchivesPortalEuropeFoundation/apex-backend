@@ -121,12 +121,14 @@
             <result name="error" type="tiles">uploadeagerrorswithtempeag</result>
             <result name="input" type="tiles">httpuploadeagwithtempeag</result>
             <result name="input2" type="tiles">uploadeagoldwithtempeag</result>
+            <result name="specialcharacters" type="tiles">uploadeagerrorspecialcharacterwithtempeag</result>
         </action>
         <action name="eaghttpupload" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="httpUpload">
             <result name="success" type="tiles">index</result>
             <result name="error" type="tiles">uploadeagerrors</result>
             <result name="input" type="tiles">httpuploadeag</result>
             <result name="input2" type="tiles">uploadeagold</result>
+            <result name="specialcharacters" type="tiles">uploadeagerrorspecialcharacter</result>
         </action>
         <action name="eagoldhttpupload" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="parseEag02ToEAG2012">
             <result name="success" type="redirectAction">
@@ -150,6 +152,7 @@
             <result name="error" type="tiles">uploadeagerrorswithmenu</result>
             <result name="input" type="tiles">httpuploadeagwithmenu</result>
             <result name="input2" type="tiles">uploadeagold</result>
+            <result name="specialcharacters" type="tiles">uploadeagerrorspecialcharacterwithmenu</result>
         </action>
 
         <action name="eagcorrectlyuploaded" class="eu.apenet.dashboard.manual.DashboardRedirectionAction">
@@ -477,6 +480,7 @@
 			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
 			<result name="changedNames" type="tiles">uploaderroralinvalidnames</result>
 			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
+			<result name="errorSpecialCharacters" type="tiles">uploaderroralspecialchar</result>
 		</action>
 
 		<action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">
