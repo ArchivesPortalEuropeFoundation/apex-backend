@@ -26,6 +26,7 @@ import eu.archivesportaleurope.xml.xpath.AttributeXpathHandler;
 import eu.archivesportaleurope.xml.xpath.CountXpathHandler;
 import eu.archivesportaleurope.xml.xpath.NestedXpathHandler;
 import eu.archivesportaleurope.xml.xpath.StringXpathHandler;
+import eu.archivesportaleurope.xml.xpath.TextMapXpathHandler;
 import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
 import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
 
@@ -40,8 +41,8 @@ public class EacCpfPublishDataFiller {
 	private TextXpathHandler entityTypeHandler;
 	private TextXpathHandler entityIdHandler;
 
-	private TextXpathHandler namesHandler;
-	private TextXpathHandler namesParallelHandler;
+	private TextMapXpathHandler namesHandler;
+	private TextMapXpathHandler namesParallelHandler;
 	private NestedXpathHandler identityHandler;
 	/*
 	 * dates
@@ -107,10 +108,8 @@ public class EacCpfPublishDataFiller {
 		entityTypeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "entityType" });
 		entityIdHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "entityId" });
 		
-		namesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "nameEntry" }, true);
-		namesHandler.setAllTextBelow(true);
-		namesParallelHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {  "nameEntryParallel",  "nameEntry" }, true);
-		namesParallelHandler.setAllTextBelow(true);
+		namesHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "nameEntry" });
+		namesParallelHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {  "nameEntryParallel",  "nameEntry" });
 		
 		placesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "places", "place", "placeEntry" });
 		occupationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "occupations", "occupation", "term" });
@@ -259,9 +258,9 @@ public class EacCpfPublishDataFiller {
 		publishData.setEntityType(entityTypeHandler.getFirstResult());
 		publishData.setLanguage(languageHandler.getResultAsString());
 		publishData.setEntityIds(entityIdHandler.getResultSet());
-		publishData.setNames(namesHandler.getResultSet());
+		publishData.setNames(namesHandler.getResultSet("part"));
 		if (publishData.getNames().size() == 0){
-			publishData.setNames(namesParallelHandler.getResultSet());
+			publishData.setNames(namesParallelHandler.getResultSet("part"));
 		}
 		
 		publishData.setPlaces(strip(placesHandler.getResultSet()));
