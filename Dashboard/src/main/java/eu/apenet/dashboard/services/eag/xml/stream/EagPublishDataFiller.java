@@ -126,7 +126,7 @@ public class EagPublishDataFiller {
 		StringBuilder other = new StringBuilder();
 		add(other, holdingsHandler.getResultAsStringWithWhitespace());
 		add(other, historyHandler.getResultAsStringWithWhitespace());
-		String address = locationHandler.getResults().get("street") + ", " + locationHandler.getResults().get("municipalityPostalcode");
+		String address = locationHandler.getResultAsStringWithWhitespace("street") + ", " + locationHandler.getResultAsStringWithWhitespace("municipalityPostalcode");
 		publishData.getAddress().add(address);
 		publishData.setOther(other.toString());
 		publishData.setLanguage(languageHandler.getResultAsStringWithWhitespace());
