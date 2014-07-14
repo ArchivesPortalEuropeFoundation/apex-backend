@@ -9,28 +9,38 @@ body {
 	font-size: 8pt;
 	font-family: Arial, sans-serif;
 }
+
 .wrapperEaccpfDisplay{
 	margin:10px;
 }
-#eacCpfDisplayPortlet #footer{
+
+#eacCpfDisplayPortlet #footer,
+#eacCpfPintPreviewPortlet #footer {
 	padding-bottom:10px;
 }
-#eacCpfDisplayPortlet {
+
+#eacCpfDisplayPortlet,
+#eacCpfPintPreviewPortlet {
 	background-image: none;
 	background-color: white;
 	color: #2A4862;
 /*	margin-right:10px;
 	margin-left:10px;*/
 }
+
 #eacCpfDisplayPortlet #printEacDetails {
     float: inherit;
     margin-left: 240px;
 }
-#eacCpfDisplayPortlet #details{
+
+#eacCpfDisplayPortlet #details,
+#eacCpfPintPreviewPortlet #details {
 	width:70%;
 	float:left;
 }
-#eacCpfDisplayPortlet h1 {
+
+#eacCpfDisplayPortlet h1,
+#eacCpfPintPreviewPortlet h1 {
 	border-bottom: 1px solid #79B7E7;
     color: #2A4862;
     font-size: 130%;
@@ -39,17 +49,23 @@ body {
     text-align: left;
     width:70%;	
 }
-#eacCpfDisplayPortlet h1 span#entityType{
+
+#eacCpfDisplayPortlet h1 span#entityType,
+#eacCpfPintPreviewPortlet h1 span#entityType {
 	color:#83736A;
 	font-weight:normal;
 }
-#eacCpfDisplayPortlet h2.otherInformation{
+
+#eacCpfDisplayPortlet h2.otherInformation,
+#eacCpfPintPreviewPortlet h2.otherInformation {
 	color:#83736A;
 	border-bottom:1px solid #83736A;
 	padding-top:20px;
 	text-align:left;
 }
-#eacCpfDisplayPortlet h2.title{
+
+#eacCpfDisplayPortlet h2.title,
+#eacCpfPintPreviewPortlet h2.title {
 	border-bottom: none;
 	font-size:9pt;
 	font-weight:bold;
@@ -57,76 +73,113 @@ body {
 	text-align:left;
 	padding-top:8px;
 }
+
 pre.outline{
 	font-size:8pt;
 	font-family: Arial,sans-serif;
 	white-space: pre-wrap;
 }
-#eacCpfDisplayPortlet .subrow{
+
+#eacCpfDisplayPortlet .subrow,
+#eacCpfPintPreviewPortlet .subrow {
 	margin-left:40px;
 }
-#eaccpfcontent .leftcolumn h2{
+
+#eaccpfcontent .leftcolumn h2,
+#eacCpfPintPreviewPortlet .leftcolumn h2 {
 	border-bottom: none;
 	font-size:8pt;
 	font-weight:bold;
 }
-#eacCpfDisplayPortlet .grey {
+
+#eacCpfPintPreviewPortlet a {
+	pointer-events:none;
+	cursor:default;
+}
+
+#eacCpfDisplayPortlet .grey,
+#eacCpfPintPreviewPortlet .grey {
 	color:#83736A;
 }
-#eacCpfDisplayPortlet .row {
+
+#eacCpfDisplayPortlet .row,
+#eacCpfPintPreviewPortlet .row {
 	display:block;
 	font-size:8pt;
     overflow:hidden;
 }
 
-#eacCpfDisplayPortlet .leftcolumn {
+#eacCpfDisplayPortlet .leftcolumn,
+#eacCpfPintPreviewPortlet .leftcolumn {
 	float:left;
 	overflow-y: auto;
 	margin-top:9px;
 }
-#eacCpfDisplayPortlet .rightcolumn {
+
+#eacCpfDisplayPortlet .rightcolumn,
+#eacCpfPintPreviewPortlet .rightcolumn {
 	/*text-align:auto;*/
 	text-align:left;
 	margin-left:180px;
 	margin-top:9px;
 }
+
 /*#eacCpfDisplayPortlet .leftSide {
  clear:both;
  margin-left:0px;
 }*/
-#eacCpfDisplayPortlet #language{
+
+#eacCpfDisplayPortlet #language,
+#eacCpfPintPreviewPortlet #language {
 	float:none;
 }
-#eacCpfDisplayPortlet #relations{
+
+#eacCpfDisplayPortlet #relations {
 	float:right;
 	width:260px;
 	font-size:8pt;
 	text-align:left;
 }
-#eacCpfDisplayPortlet .box .boxtitle{
+
+#eacCpfPintPreviewPortlet #relations {	
+	float:none;
+	clear:both;
+	padding-top:20px;
+	width:100%;
+	font-size:8pt;
+	text-align:left;
+}
+
+#eacCpfDisplayPortlet .box .boxtitle,
+#eacCpfPintPreviewPortlet .box .boxtitle {
 	height:12px;
 	cursor:pointer;
 }
+
 #relations .collapsibleIcon {
     display: inline-block;
     height: 10px;
     width: 10px;
 }
+
 .expanded {
     background-image: url("../../images/expand/arrow-down.gif");
     background-position: left center;
     background-repeat: no-repeat;
 }
+
 .collapsed {
     background-image: url("../../images/expand/arrow-right.gif");
     background-position: left center;
     background-repeat: no-repeat;
 }
+
 #relations ul {
     list-style-type: none;
     margin: 0;
     padding: 0 0 0 5px;
 }
+
 .displayLinkShowMore:link, .displayLinkShowLess:link{
  color:#2A4862;	
 }
@@ -135,6 +188,7 @@ pre.outline{
 	color: #C65400;
 	text-decoration:underline;
 }
+
 .linkMore{
 	float:right;
 	padding-top:5px;
@@ -142,22 +196,26 @@ pre.outline{
 
 @media screen {
 	
-	#eacCpfDisplayPortlet #eaccpfcontent em{
+	#eacCpfDisplayPortlet #eaccpfcontent em,
+	#eacCpfPintPreviewPortlet #eaccpfcontent em {
 		background-color: #afdefc;
 	}	
 }
 
-#eacCpfDisplayPortlet #eaccpfcontent em{
+#eacCpfDisplayPortlet #eaccpfcontent em,
+#eacCpfPintPreviewPortlet #eaccpfcontent em {
 	font-size: 110%;
 	padding-left:2px;
 	padding-right:2px;
 }
 
-#eacCpfDisplayPortlet .defaultlayout {
+#eacCpfDisplayPortlet .defaultlayout,
+#eacCpfPintPreviewPortlet .defaultlayout {
 	text-align: center;
 }
 
-#eacCpfDisplayPortlet em {
+#eacCpfDisplayPortlet em,
+#eacCpfPintPreviewPortlet em {
 	font-weight: bold;
 	font-style: normal;
 }
