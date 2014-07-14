@@ -259,6 +259,15 @@
 				    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.firstdem'"/>
 				    		</xsl:call-template>
 						</xsl:if>
+						<xsl:if test="./eac:address/eac:addressLine[@localType='country']/text()">
+				    		<xsl:call-template name="commonChild">
+					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='country']"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   			<xsl:with-param name="posParent" select="$posParent"/>
+		    					<xsl:with-param name="posChild" select="$posChild"/>
+				    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.country'"/>
+				    		</xsl:call-template>
+						</xsl:if>
 						<xsl:if test="./eac:address/eac:addressLine[@localType='other']/text()">
 				    		<xsl:call-template name="commonChild">
 					   			<xsl:with-param name="list" select="./eac:address/eac:addressLine[@localType='other']"/>
