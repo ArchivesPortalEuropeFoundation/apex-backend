@@ -7,8 +7,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueueAction;
@@ -32,38 +34,40 @@ public class MaintenanceTask extends Thread {
 
 		LOGGER.info("Start maintenance mode");
 		try {
-			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
-			eadSearchOptions.setPageSize(MAX_AMOUNT);
+			ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+			contentSearchOptions.setPageSize(MAX_AMOUNT);
 			if (REPUBLISH_ALL.equals(APEnetUtilities.getDashboardConfig().getMaintenanceAction())) {
 				LOGGER.info("Execute command: " + REPUBLISH_ALL);
-				eadSearchOptions.setPublished(true);
+				contentSearchOptions.setPublished(true);
 				List<QueuingState> queuingStates = new ArrayList<QueuingState>();
 				queuingStates.add(QueuingState.NO);
 				queuingStates.add(QueuingState.ERROR);
-				eadSearchOptions.setQueuing(queuingStates);
+				contentSearchOptions.setQueuing(queuingStates);
 				try {
-					eadSearchOptions.setContentClass(HoldingsGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
-					eadSearchOptions.setContentClass(SourceGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
-					eadSearchOptions.setContentClass(FindingAid.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
+					contentSearchOptions.setContentClass(HoldingsGuide.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.REPUBLISH);
+					contentSearchOptions.setContentClass(SourceGuide.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.REPUBLISH);
+					contentSearchOptions.setContentClass(FindingAid.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.REPUBLISH);
+					contentSearchOptions.setContentClass(EacCpf.class);
+					EacCpfService.updateEverything(contentSearchOptions, QueueAction.REPUBLISH);	
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
 				}
 
 			} else if (REPUBLISH_HG_SG.equals(APEnetUtilities.getDashboardConfig().getMaintenanceAction())) {
 				LOGGER.info("Execute command: " + REPUBLISH_HG_SG);
-				eadSearchOptions.setPublished(true);
+				contentSearchOptions.setPublished(true);
 				List<QueuingState> queuingStates = new ArrayList<QueuingState>();
 				queuingStates.add(QueuingState.NO);
 				queuingStates.add(QueuingState.ERROR);
-				eadSearchOptions.setQueuing(queuingStates);
+				contentSearchOptions.setQueuing(queuingStates);
 				try {
-					eadSearchOptions.setContentClass(HoldingsGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
-					eadSearchOptions.setContentClass(SourceGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
+					contentSearchOptions.setContentClass(HoldingsGuide.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.REPUBLISH);
+					contentSearchOptions.setContentClass(SourceGuide.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.REPUBLISH);
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
 				}
@@ -73,14 +77,16 @@ public class MaintenanceTask extends Thread {
 				List<QueuingState> queuingStates = new ArrayList<QueuingState>();
 				queuingStates.add(QueuingState.NO);
 				queuingStates.add(QueuingState.ERROR);
-				eadSearchOptions.setQueuing(queuingStates);
+				contentSearchOptions.setQueuing(queuingStates);
 				try {
-					eadSearchOptions.setContentClass(HoldingsGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.DELETE);
-					eadSearchOptions.setContentClass(SourceGuide.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.DELETE);
-					eadSearchOptions.setContentClass(FindingAid.class);
-					EadService.updateEverything(eadSearchOptions, QueueAction.DELETE);
+					contentSearchOptions.setContentClass(HoldingsGuide.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.DELETE);
+					contentSearchOptions.setContentClass(SourceGuide.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.DELETE);
+					contentSearchOptions.setContentClass(FindingAid.class);
+					EadService.updateEverything(contentSearchOptions, QueueAction.DELETE);
+					contentSearchOptions.setContentClass(EacCpf.class);
+					EacCpfService.updateEverything(contentSearchOptions, QueueAction.DELETE);					
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
 				}
