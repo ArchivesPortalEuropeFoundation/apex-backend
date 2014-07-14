@@ -1,6 +1,8 @@
 package eu.archivesportaleurope.xml.xpath;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -293,5 +295,27 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	public boolean isAllTextBelow() {
 		return allTextBelow;
 	}
-	
+	protected String convertToString(Collection<String> results, int start, String separator){
+		if (results.size() == 0){
+			return null;
+		}
+		StringBuilder builder = new StringBuilder();
+		int i = 0;
+		Iterator<String> iterator = results.iterator();
+		while (iterator.hasNext()){
+			String result = iterator.next();
+			if (i >= start){
+				builder.append(result + separator);
+			}
+			i++;
+		}
+		return convertEmptyStringToNull(builder.toString());
+	}
+	protected String convertEmptyStringToNull(String string){
+		if (StringUtils.isBlank(string)){
+			return null;
+		}else {
+			return string.trim();
+		}
+	}
 }
