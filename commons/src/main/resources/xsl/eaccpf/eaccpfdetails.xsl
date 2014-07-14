@@ -1197,7 +1197,7 @@
 	    	<xsl:with-param name="listName" select="$listName"/>
 	    </xsl:call-template>
 	    <xsl:if test="$isHeader = 'true'"> <!-- to display the alternative names -->
-  			<span id="nameTitle" hidden="">
+  			<span id="nameTitle" class="hidden">
   				<xsl:call-template name="nameEntry">
   					<xsl:with-param name="listName" select="$listName"/>
   				</xsl:call-template>
