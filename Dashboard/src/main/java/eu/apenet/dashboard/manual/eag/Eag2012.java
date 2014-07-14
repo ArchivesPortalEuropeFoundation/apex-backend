@@ -21,7 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.APEnetEAGDashboard;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -2203,7 +2203,7 @@ public class Eag2012 {
 		String otherRepositorId = null;
 		if(archivalInstitutionId>0){
 			int zeroes = 11-archivalInstitutionId.toString().length();
-			String countryCode = new ArchivalLandscape().getmyCountry()+"-";
+			String countryCode = new ArchivalLandscapeUtils().getmyCountry()+"-";
 			otherRepositorId = countryCode;
 	    	for(int x=0;x<zeroes;x++){
 	    		otherRepositorId+="0";
@@ -2230,7 +2230,7 @@ public class Eag2012 {
 	 * @return boolean
 	 */
 	private static boolean isWrongRepositorId(String repositorId){
-		String isoCountry = new ArchivalLandscape().getmyCountry();
+		String isoCountry = new ArchivalLandscapeUtils().getmyCountry();
 		if(repositorId.length()==14 && repositorId.substring(0,2).toLowerCase().equals(isoCountry) && StringUtils.isNumeric(repositorId.substring(3))){
 			//TODO could be helpful store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
 			ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();

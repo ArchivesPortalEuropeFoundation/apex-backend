@@ -484,7 +484,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 								&& !ai.getChildArchivalInstitutions().isEmpty()) {
 							this.deleteAIChild(ai);
 						} else {
-							String path = ArchivalLandscape.deleteContent(ai);
+							String path = ArchivalLandscapeUtils.deleteContent(ai);
 							if(path!=null){
 								if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
 								this.pathsToBeDeleted.add(path);
@@ -552,7 +552,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			}
 			
 		}
-		String path = ArchivalLandscape.deleteContent(ai);
+		String path = ArchivalLandscapeUtils.deleteContent(ai);
 		if(path!=null){
 			if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
 			this.pathsToBeDeleted.add(path);

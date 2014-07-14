@@ -794,12 +794,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,false);
 		if(archivalInstitutions!=null){
 			Boolean specialCharacters = ArchivalLandscapeUtils.checkSpecialCharacter(archivalInstitutions);
-			Boolean duplicateIds = ArchivalLandscape.checkIdentifiers(this.httpFile);
+			Boolean duplicateIds = ArchivalLandscapeUtils.checkIdentifiers(this.httpFile);
 			if (specialCharacters != null && specialCharacters){
 				this.setInstitutionsWithSpecialCharacters(ArchivalLandscapeUtils.getInstitutionsWithSpecialCharacters());
 				return ERROR_SPECIAL_CHARACTERS;
 			}else if (duplicateIds != null && !duplicateIds) {
-				this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
+				this.setDuplicateIdentifiers(ArchivalLandscapeUtils.getDuplicateIdentifiers());
 				return ERROR_DUPLICATE_IDENTIFIERS;
 			} else if (!institutionNamesHaveChanged(archivalInstitutions)) {
 				return displayReport(archivalInstitutions);
@@ -1381,7 +1381,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			if (this.httpFile == null) {
 				this.fillMainFiles();
 			}
-			Boolean firstState = ArchivalLandscape.checkIdentifiers(this.httpFile);
+			Boolean firstState = ArchivalLandscapeUtils.checkIdentifiers(this.httpFile);
 			
 			if (firstState==null){
 				validateUploadedAL(this.httpFile);
@@ -1391,7 +1391,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					addActionMessage(it.next());
 				}
 			} else if (!firstState) {
-				this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
+				this.setDuplicateIdentifiers(ArchivalLandscapeUtils.getDuplicateIdentifiers());
 				return ERROR_DUPLICATE_IDENTIFIERS;
 			} else{
 				String countryCode = ArchivalLandscapeUtils.getXMLEadidCountrycode(this.httpFile);
@@ -1662,7 +1662,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 				}
 				String oldPath = targetToBeDeleted.getEagPath();
-				String path = ArchivalLandscape.deleteContent(targetToBeDeleted);
+				String path = ArchivalLandscapeUtils.deleteContent(targetToBeDeleted);
 				if(path!=null || oldPath==null){
 					//this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
 					this.deletedInstitutions.add(targetToBeDeleted);
@@ -1896,7 +1896,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 				}
 				String oldPath = targetToBeDeleted.getEagPath();
-				String path = ArchivalLandscape.deleteContent(targetToBeDeleted);
+				String path = ArchivalLandscapeUtils.deleteContent(targetToBeDeleted);
 				if(path!=null || oldPath==null){
 					if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
 					this.pathsToBeDeleted.add(path);
@@ -2159,7 +2159,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			}
 		}
 		String oldPath = possibleDeletedInstitution.getEagPath();
-		String path = ArchivalLandscape.deleteContent(possibleDeletedInstitution);
+		String path = ArchivalLandscapeUtils.deleteContent(possibleDeletedInstitution);
 		if(path!=null || oldPath==null){
 			if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
 			this.pathsToBeDeleted.add(path);

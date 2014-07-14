@@ -13,9 +13,8 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dpt.utils.eag2012.Autform;
 import eu.apenet.dpt.utils.eag2012.Citation;
@@ -370,7 +369,7 @@ public class EAG2012Loader{
 		fillIntitialAutformEscaped();
 		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId());
 		String path = archivalInstitution.getEagPath();
-		String alCountry = new ArchivalLandscape().getmyCountry();
+		String alCountry = new ArchivalLandscapeUtils().getmyCountry();
 		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
 				this.getId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
 		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
@@ -494,7 +493,7 @@ public class EAG2012Loader{
 	* @return CC 
 	*/
 	public String getInitialCountryCode() {
-		return new ArchivalLandscape().getmyCountry();
+		return new ArchivalLandscapeUtils().getmyCountry();
 	}
 	public String getRecordId() {
 		return this.recordId;
@@ -6422,7 +6421,7 @@ public class EAG2012Loader{
 		if (this.eag == null
 				|| (this.eag.getControl() == null && this.eag.getArchguide() == null
 				&& this.eag.getRelations() == null)) {
-			this.setCountryCode(new ArchivalLandscape().getmyCountry());
+			this.setCountryCode(new ArchivalLandscapeUtils().getmyCountry());
 			this.setRecordId(Eag2012.generatesISOCode(this.getId()));
 			return false;
 		}
@@ -6473,7 +6472,7 @@ public class EAG2012Loader{
 				&& !this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode().isEmpty()) {
 			this.setCountryCode(this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
 		} else {
-			this.setCountryCode(new ArchivalLandscape().getmyCountry());
+			this.setCountryCode(new ArchivalLandscapeUtils().getmyCountry());
 		}
 
 		// Identifier of the institution.

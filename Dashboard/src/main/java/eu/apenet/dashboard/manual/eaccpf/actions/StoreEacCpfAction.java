@@ -22,7 +22,7 @@ import org.xml.sax.SAXParseException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.eaccpf.CreateEacCpf;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
@@ -136,7 +136,7 @@ public class StoreEacCpfAction extends EacCpfAction {
     }
 
     private String storeApeEacCpf() throws Exception {
-        String countryCode = new ArchivalLandscape().getmyCountry();
+        String countryCode = new ArchivalLandscapeUtils().getmyCountry();
         String basePath = APEnetUtilities.FILESEPARATOR + countryCode + APEnetUtilities.FILESEPARATOR
                 + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
 

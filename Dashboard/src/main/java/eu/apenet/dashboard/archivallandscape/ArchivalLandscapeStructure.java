@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.infraestructure;
+package eu.apenet.dashboard.archivallandscape;
 
 import java.util.HashMap;
 
@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 
 /**
  * @author Jara Alvarez
