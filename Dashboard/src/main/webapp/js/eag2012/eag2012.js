@@ -62,15 +62,41 @@ function navigateToCurrentRepoTab(href){
 	var parent = errorFieldText.parent();
 	var counter = 50;
 	var seekId = parent.attr("id");
-	while(counter>0 && ((parent.prop("tagName").toUpperCase()!='TABLE') || (seekId && seekId!="undefined" && seekId.indexOf('contactTableVisitorsAddress_')>-1/* || seekId.indexOf('accessAndServicesTable_')>-1*/))){
+	while(counter>0 && ((typeof(parent)!=="undefined" && typeof(parent.prop)!=="undefined" && typeof(parent.prop("tagName"))!="undefined" && parent.prop("tagName").toUpperCase()!='TABLE') || (typeof(seekId)!=="undefined" && seekId.indexOf('contactTableVisitorsAddress_')>-1))){
 		parent = parent.parent();
 		seekId = parent.attr("id");
 		counter--;
 	}
 	var id = parent.attr("id");
 	var repoTab = 0;
-	if(id.lastIndexOf("_")+1){
+	if(typeof(id)!=="undefined" && id.lastIndexOf("_")+1){
 		repoTab = id.substring(id.lastIndexOf("_")+1);
+	}else{
+		if($("[id$='_required']").length>0){
+			var targetTabFound = "";
+			if($("table[id^='contactTable_'] .fieldRequired").length>0){
+				$("table[id^='contactTable_']").each(function(){
+					if(targetTabFound=="" && $(this).find("p.fieldRequired").length>0){
+						targetTabFound = $(this).attr("id");
+						repoTab = targetTabFound.substring(targetTabFound.lastIndexOf("_")+1);
+					}
+				});
+			}else if($("table[id^='accessAndServicesTable_'] .fieldRequired").length>0){
+				$("table[id^='accessAndServicesTable_']").each(function(){
+					if(targetTabFound=="" && $(this).find("p.fieldRequired").length>0){
+						targetTabFound = $(this).attr("id");
+						repoTab = targetTabFound.substring(targetTabFound.lastIndexOf("_")+1);
+					}
+				});
+			}else if($("table[id^='descriptionTable_'] .fieldRequired").length>0){
+				$("table[id^='descriptionTable_']").each(function(){
+					if(targetTabFound=="" && $(this).find("p.fieldRequired").length>0){
+						targetTabFound = $(this).attr("id");
+						repoTab = targetTabFound.substring(targetTabFound.lastIndexOf("_")+1);
+					}
+				});
+			}
+		}
 	}
 	if(repoTab>0){
 		$("#tab_yourInstitutionTable_"+repoTab).trigger('click');
@@ -852,8 +878,8 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 	});
 	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
-		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution"
-				);
+		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution", 
+				"textContactCountryOfTheInstitution");
 
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			if(jsonData.substring(jsonData.length-1)!=','){
@@ -877,7 +903,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 				// Check fill mandatory fields.
 				if ($.trim($(this).attr("value")) != '' && j == 0) {
 					var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
-					if (position != -1) {
+					if (position != -1 && !$(this).is(':disabled')) {
 						contactVAMandatoryElements.splice(position, 1);
 					}
 				}
