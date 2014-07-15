@@ -82,7 +82,7 @@ public class EacCpfPublishDataFiller {
 
 	private CountXpathHandler countArchivalMaterialRelationsHandler;
 	private CountXpathHandler countNameRelationsHandler;
-	private AttributeXpathHandler institutionsRelationsHandler;
+	private TextXpathHandler institutionsRelationsHandler;
 	
 	private TextXpathHandler relationsPlaceEntryHandler;
 	private TextXpathHandler relationsRelationEntryHandler;
@@ -156,8 +156,8 @@ public class EacCpfPublishDataFiller {
 		countArchivalMaterialRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation"});
 		countNameRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});
 		countNameRelationsHandler.setAttribute("cpfRelationType", "identity", true);
-		institutionsRelationsHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation", "relationEntry"},"agencyCode");
-
+		institutionsRelationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation", "relationEntry"});
+		institutionsRelationsHandler.setAttribute("localType", "agencyCode", false);
 		relationsDescriptiveNoteHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"descriptiveNote", "p"}, true);
 		relationsDescriptiveNoteHandler.setAllTextBelow(true);
 		relationsDescriptiveNoteHandler.setRelative(true);
