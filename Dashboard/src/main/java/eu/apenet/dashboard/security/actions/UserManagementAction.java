@@ -35,7 +35,7 @@ public class UserManagementAction extends AbstractAction {
 	@Override
 	public String execute(){
 		UserDAO partnerDAO = DAOFactory.instance().getUserDAO();
-		List<Country> countries = DAOFactory.instance().getCountryDAO().findAll();
+		List<Country> countries = DAOFactory.instance().getCountryDAO().getCountriesOrderByName();
 		List<CountryAndManager> countryAndManagers = new ArrayList<CountryAndManager>();
 		for (Country country: countries){
 			
