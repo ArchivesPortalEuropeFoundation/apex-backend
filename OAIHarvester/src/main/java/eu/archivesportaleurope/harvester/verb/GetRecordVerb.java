@@ -28,11 +28,6 @@ public class GetRecordVerb extends AbstractListVerb {
 	
 
 	@Override
-	protected boolean maxNumberOfRecordsExceed(int numberOfRecords) {
-		return false;
-	}
-
-	@Override
 	public ResultInfo harvest(HarvestObject harvestObject){
 		throw new UnsupportedOperationException();
 	}

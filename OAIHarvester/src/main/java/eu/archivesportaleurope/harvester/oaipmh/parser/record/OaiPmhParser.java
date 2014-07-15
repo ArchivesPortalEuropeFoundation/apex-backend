@@ -16,21 +16,17 @@ import eu.archivesportaleurope.harvester.util.StreamUtil;
 
 public class OaiPmhParser extends AbstractOaiPmhParser {
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.LOGGER_STRING);
-	private Integer maxNumberOfRecords;
-	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRecords) {
-		super(outputDirectory);
-		this.maxNumberOfRecords = maxNumberOfRecords;
-	}
+
 	public OaiPmhParser(File outputDirectory) {
 		super(outputDirectory);
 	}
-	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
+	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
 		XMLStreamReader xmlStreamReader = StreamUtil.getXMLStreamReader(inputStream);
 		OaiPmhRecordParser oaiPmhRecordParser = new OaiPmhRecordParser(getOutputDirectory());
 		ResultInfo resultInfo = new ResultInfo();
 		QName lastElement = null;
 		boolean noRecordsMatch = false;
-		for (int event = xmlStreamReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlStreamReader
+		for (int event = xmlStreamReader.next(); event != XMLStreamConstants.END_DOCUMENT && !harvestObject.maxNumberOfRecordsExceed(); event = xmlStreamReader
 				.next()) {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlStreamReader.getName();
@@ -73,9 +69,7 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 		xmlStreamReader.close();
 		return resultInfo;
 	}
-	public Integer getMaxNumberOfRecords() {
-		return maxNumberOfRecords;
-	}
+
 	public void addOrUpdateRecord(HarvestObject harvestObject, OaiPmhRecord record){
 		if (!harvestObject.isGetRecordPhase()){
 			harvestObject.increaseNumberOfRecords();

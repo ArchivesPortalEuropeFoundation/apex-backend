@@ -112,8 +112,7 @@ public class OaiPmhHarvester {
 			GetRecordVerb getRecordVerb = new GetRecordVerb(oaiPmhHttpClient, baseURL, metadataPrefix, oaiPmhParser, errorDir);
 			int numberOfErrors = 0;
 			List<OaiPmhRecord> records = harvestObject.getRecords();
-			while (records.size() > 0 && numberOfErrors <= MAX_NUMBER_OF_ERRORS){
-				
+			while (records.size() > 0 && numberOfErrors <= MAX_NUMBER_OF_ERRORS && !harvestObject.maxNumberOfRecordsExceed()){
 				try {
 					OaiPmhRecord record = records.get(0);
 					if (record.isDropped() || record.isDeleted()){
@@ -122,18 +121,21 @@ public class OaiPmhHarvester {
 							harvestObject.addWarnings("Record " + record + " is deleted in OAI-PMH repository. Please delete it manually in the dashboard");
 						}
 					}else {
-						harvestObject.increaseNumberOfGetRecords();
-						harvestObject.increaseNumberOfRequests();
-						harvestObject.setLatestRecordId(record.getIdentifier());
+
 						ResultInfo getRecordInfo = getRecordVerb.harvest(harvestObject, record.getIdentifier());
-						LOGGER.info("("+harvestObject.getNumberOfRecords()+"," + harvestObject.getNumberOfGetRecords() +"): GR: " + record );
-						List<String> errors = getRecordInfo.getErrors();
-						if (errors != null && errors.size() > 0) {
-							logErrors(harvestObject, getRecordInfo);
-							numberOfErrors++;
-						}
-						if (harvestObject.isStopHarvesting()){
-							throw new HarvesterInterruptionException(getRecordInfo.getRequestUrl(), logSuffix);
+						if (getRecordInfo != null){
+							harvestObject.increaseNumberOfGetRecords();
+							harvestObject.increaseNumberOfRequests();
+							harvestObject.setLatestRecordId(record.getIdentifier());
+							LOGGER.info("("+harvestObject.getNumberOfRecords()+"," + harvestObject.getNumberOfGetRecords() +"): GR: " + record );
+							List<String> errors = getRecordInfo.getErrors();
+							if (errors != null && errors.size() > 0) {
+								logErrors(harvestObject, getRecordInfo);
+								numberOfErrors++;
+							}
+							if (harvestObject.isStopHarvesting()){
+								throw new HarvesterInterruptionException(getRecordInfo.getRequestUrl(), logSuffix);
+							}
 						}
 					}
 

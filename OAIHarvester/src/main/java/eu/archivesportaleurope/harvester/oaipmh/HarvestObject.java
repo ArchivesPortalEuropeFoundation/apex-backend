@@ -21,12 +21,16 @@ public class HarvestObject {
     private Date latestChangeDate;
     private boolean getRecordPhase = false;
     private String notParsableResponses;
+    private Integer maxNumberOfRecords = null;
     private List<OaiPmhRecord> records = new ArrayList<OaiPmhRecord>();
+
     public HarvestObject(){
-    	
     }
-    public HarvestObject(Long id){
+    
+    
+    public HarvestObject(Long id, Integer maxNumberOfRecords){
     	this.id = id;
+    	this.maxNumberOfRecords = maxNumberOfRecords;
     }
     
     public Long getId() {
@@ -38,7 +42,18 @@ public class HarvestObject {
 		this.id = id;
 	}
 
-
+	public boolean maxNumberOfRecordsExceed(){
+		if (maxNumberOfRecords == null){
+			return false;
+		}else {
+			if (getRecordPhase){
+				return numberOfGetRecords >= maxNumberOfRecords;
+			}else {
+				return numberOfRecords >= maxNumberOfRecords;
+			}
+		}
+	}
+	
 	public String getHarvestingDetails() {
 		return harvestingDetails;
 	}
@@ -216,8 +231,7 @@ public class HarvestObject {
     }
 
 	public HarvestObject copy(){
-		HarvestObject object = new HarvestObject();
-		object.setId(id);
+		HarvestObject object = new HarvestObject(id, maxNumberOfRecords);
 		object.setLatestRecordId(latestRecordId);
 		object.setNumberOfRecords(numberOfRecords);
 		object.setNumberOfRequests(numberOfRequests);

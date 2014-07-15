@@ -15,7 +15,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
-import eu.archivesportaleurope.harvester.oaipmh.parser.record.DebugOaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
@@ -49,26 +48,18 @@ public abstract class AbstractListVerb {
 			untilCalendar = DatatypeConverter.parseDateTime(until +"T23:59:59.999Z");
 		}
 	}
-	protected boolean maxNumberOfRecordsExceed(int numberOfRecords){
-		return oaiPmhParser.getMaxNumberOfRecords() != null && numberOfRecords >= oaiPmhParser.getMaxNumberOfRecords();
-	}
+
 	
 	public ResultInfo harvest(HarvestObject harvestObject)
 			throws Exception {
-		int numberOfRecords = 0;
-		if (oaiPmhParser instanceof DebugOaiPmhParser){
-			numberOfRecords = harvestObject.getNumberOfRequests();
-		}else {
-			numberOfRecords = harvestObject.getNumberOfRecords();
-		}
-		if (maxNumberOfRecordsExceed(numberOfRecords)){
+		if (harvestObject.maxNumberOfRecordsExceed()){
 			return null;
 		}
 		String requestURL = getRequestURL();
 		CloseableHttpResponse closeableHttpResponse = client.get(requestURL);
 		try {
 			InputStream response = client.getResponseInputStream(closeableHttpResponse);
-			ResultInfo resultInfo =  oaiPmhParser.parse(harvestObject, response, numberOfRecords, fromCalendar, untilCalendar);
+			ResultInfo resultInfo =  oaiPmhParser.parse(harvestObject, response, fromCalendar, untilCalendar);
 			resultInfo.setRequestUrl(requestURL);
 			resumptionToken = resultInfo.getNewResumptionToken();
 			return resultInfo;

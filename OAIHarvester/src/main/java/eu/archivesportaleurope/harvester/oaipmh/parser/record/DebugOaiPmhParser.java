@@ -21,9 +21,9 @@ public class DebugOaiPmhParser extends OaiPmhParser {
 	}
 
 	@Override
-	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
+	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
 		XMLStreamReader xmlStreamReader = StreamUtil.getXMLStreamReader(inputStream);
-		File file = new File(getOutputDirectory(),"oai-pmh-request-" + numberOfRequests+".xml");
+		File file = new File(getOutputDirectory(),"oai-pmh-request-" + harvestObject.getNumberOfRequests()+".xml");
 		if (file.exists()){
 			file.delete();
 		}
