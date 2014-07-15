@@ -1,41 +1,38 @@
 package eu.apenet.dashboard.services.eaccpf;
 
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.exceptions.APEnetRuntimeException;
-import eu.apenet.commons.types.XmlType;
-import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.persistence.dao.EacCpfDAO;
-
-import eu.apenet.persistence.dao.QueueItemDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.EacCpf;
-import eu.apenet.persistence.vo.QueueAction;
-import eu.apenet.persistence.vo.QueueItem;
-import eu.apenet.persistence.vo.QueuingState;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
-
+import eu.apenet.persistence.vo.QueueAction;
+import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
 public class EacCpfService {
 
@@ -43,6 +40,34 @@ public class EacCpfService {
     private static final String CURRENT_LANGUAGE_KEY = "currentLanguage";
     // private static final long NOT_USED_TIME = 60 * 60 * 24 * 7;
 
+	public static void updateEverything(ContentSearchOptions eadSearchOptions, QueueAction queueAction) throws IOException {
+		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+		long itemsLeft = eacCpfDAO.countEacCpfs(eadSearchOptions);
+		LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
+		while (itemsLeft > 0) {
+			JpaUtil.beginDatabaseTransaction();
+			List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(eadSearchOptions);
+			int size = 0;
+			while ((size = eacCpfs.size()) > 0) {
+				EacCpf eacCpf = eacCpfs.get(size - 1);
+				QueueItem queueItem = fillQueueItem(eacCpf, queueAction, null, 1);
+				eacCpf.setQueuing(QueuingState.READY);
+				if (queueAction.isPublishAction()) {
+					eacCpf.setPublished(false);
+				}
+				eacCpfDAO.updateSimple(eacCpf);
+				eacCpfs.remove(size - 1);
+				indexqueueDao.updateSimple(queueItem);
+			}
+			JpaUtil.commitDatabaseTransaction();
+			itemsLeft = eacCpfDAO.countEacCpfs(eadSearchOptions);
+			LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
+
+		}
+
+	}
+    
     public static boolean convertValidatePublish(Integer id, Properties properties, String currentLanguage) throws IOException {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
