@@ -10,17 +10,15 @@ body {
 	font-family: Arial, sans-serif;
 }
 
-.wrapperEaccpfDisplay{
+.wrapperEaccpfDisplay {
 	margin:10px;
 }
 
-#eacCpfDisplayPortlet #footer,
-#eacCpfPintPreviewPortlet #footer {
+#eacCpfDisplayPortlet #footer {
 	padding-bottom:10px;
 }
 
-#eacCpfDisplayPortlet,
-#eacCpfPintPreviewPortlet {
+#eacCpfDisplayPortlet {
 	background-image: none;
 	background-color: white;
 	color: #2A4862;
@@ -33,14 +31,16 @@ body {
     margin-left: 240px;
 }
 
-#eacCpfDisplayPortlet #details,
-#eacCpfPintPreviewPortlet #details {
+#eacCpfDisplayPortlet #details {
 	width:70%;
 	float:left;
 }
 
-#eacCpfDisplayPortlet h1,
-#eacCpfPintPreviewPortlet h1 {
+#eacCpfDisplayPortlet #printPreview #details {
+	width:100%;
+}
+
+#eacCpfDisplayPortlet h1 {
 	border-bottom: 1px solid #79B7E7;
     color: #2A4862;
     font-size: 130%;
@@ -50,22 +50,23 @@ body {
     width:70%;	
 }
 
-#eacCpfDisplayPortlet h1 span#entityType,
-#eacCpfPintPreviewPortlet h1 span#entityType {
+#eacCpfDisplayPortlet #printPreview h1 {
+    width:100%;	
+}
+
+#eacCpfDisplayPortlet h1 span#entityType {
 	color:#83736A;
 	font-weight:normal;
 }
 
-#eacCpfDisplayPortlet h2.otherInformation,
-#eacCpfPintPreviewPortlet h2.otherInformation {
+#eacCpfDisplayPortlet h2.otherInformation {
 	color:#83736A;
 	border-bottom:1px solid #83736A;
 	padding-top:20px;
 	text-align:left;
 }
 
-#eacCpfDisplayPortlet h2.title,
-#eacCpfPintPreviewPortlet h2.title {
+#eacCpfDisplayPortlet h2.title {
 	border-bottom: none;
 	font-size:9pt;
 	font-weight:bold;
@@ -74,50 +75,44 @@ body {
 	padding-top:8px;
 }
 
-pre.outline{
+pre.outline {
 	font-size:8pt;
 	font-family: Arial,sans-serif;
 	white-space: pre-wrap;
 }
 
-#eacCpfDisplayPortlet .subrow,
-#eacCpfPintPreviewPortlet .subrow {
+#eacCpfDisplayPortlet .subrow {
 	margin-left:40px;
 }
 
-#eaccpfcontent .leftcolumn h2,
-#eacCpfPintPreviewPortlet .leftcolumn h2 {
+#eaccpfcontent .leftcolumn h2 {
 	border-bottom: none;
 	font-size:8pt;
 	font-weight:bold;
 }
 
-#eacCpfPintPreviewPortlet a {
+#eacCpfDisplayPortlet #printPreview a {
 	pointer-events:none;
 	cursor:default;
 }
 
-#eacCpfDisplayPortlet .grey,
-#eacCpfPintPreviewPortlet .grey {
+#eacCpfDisplayPortlet .grey {
 	color:#83736A;
 }
 
-#eacCpfDisplayPortlet .row,
-#eacCpfPintPreviewPortlet .row {
+#eacCpfDisplayPortlet .row {
 	display:block;
 	font-size:8pt;
     overflow:hidden;
 }
 
-#eacCpfDisplayPortlet .leftcolumn,
-#eacCpfPintPreviewPortlet .leftcolumn {
+#eacCpfDisplayPortlet .leftcolumn {
 	float:left;
 	overflow-y: auto;
 	margin-top:9px;
 }
 
-#eacCpfDisplayPortlet .rightcolumn,
-#eacCpfPintPreviewPortlet .rightcolumn {
+#eacCpfDisplayPortlet .rightcolumn {
 	/*text-align:auto;*/
 	text-align:left;
 	margin-left:180px;
@@ -129,8 +124,7 @@ pre.outline{
  margin-left:0px;
 }*/
 
-#eacCpfDisplayPortlet #language,
-#eacCpfPintPreviewPortlet #language {
+#eacCpfDisplayPortlet #language {
 	float:none;
 }
 
@@ -141,17 +135,14 @@ pre.outline{
 	text-align:left;
 }
 
-#eacCpfPintPreviewPortlet #relations {	
+#eacCpfDisplayPortlet #printPreview #relations {	
 	float:none;
 	clear:both;
 	padding-top:20px;
 	width:100%;
-	font-size:8pt;
-	text-align:left;
 }
 
-#eacCpfDisplayPortlet .box .boxtitle,
-#eacCpfPintPreviewPortlet .box .boxtitle {
+#eacCpfDisplayPortlet .box .boxtitle {
 	height:12px;
 	cursor:pointer;
 }
@@ -180,42 +171,38 @@ pre.outline{
     padding: 0 0 0 5px;
 }
 
-.displayLinkShowMore:link, .displayLinkShowLess:link{
+.displayLinkShowMore:link, .displayLinkShowLess:link {
  color:#2A4862;	
 }
 
-.linkShow:link{
+.linkShow:link {
 	color: #C65400;
 	text-decoration:underline;
 }
 
-.linkMore{
+.linkMore {
 	float:right;
 	padding-top:5px;
 }
 
 @media screen {
 	
-	#eacCpfDisplayPortlet #eaccpfcontent em,
-	#eacCpfPintPreviewPortlet #eaccpfcontent em {
+	#eacCpfDisplayPortlet #eaccpfcontent em {
 		background-color: #afdefc;
 	}	
 }
 
-#eacCpfDisplayPortlet #eaccpfcontent em,
-#eacCpfPintPreviewPortlet #eaccpfcontent em {
+#eacCpfDisplayPortlet #eaccpfcontent em {
 	font-size: 110%;
 	padding-left:2px;
 	padding-right:2px;
 }
 
-#eacCpfDisplayPortlet .defaultlayout,
-#eacCpfPintPreviewPortlet .defaultlayout {
+#eacCpfDisplayPortlet .defaultlayout {
 	text-align: center;
 }
 
-#eacCpfDisplayPortlet em,
-#eacCpfPintPreviewPortlet em {
+#eacCpfDisplayPortlet em {
 	font-weight: bold;
 	font-style: normal;
 }

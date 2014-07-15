@@ -33,10 +33,12 @@
 			<div class="right-header"></div>
 		</div>
 		<div>&nbsp;</div>
-		<div id="eacCpfPintPreviewPortlet">
-		 	<div id="eaccpfcontent">
-			    <dashboard:eac type="eaccpfdetails" eacUrl="${eac.path}" repositoryCode="${repositoryCode}" eaccpfIdentifier="${eaccpfIdentifier}" />
-	   		</div>
+		<div id="eacCpfDisplayPortlet">
+			<div id="printPreview">
+			 	<div id="eaccpfcontent">
+				    <dashboard:eac type="eaccpfdetails" eacUrl="${eac.path}" repositoryCode="${repositoryCode}" eaccpfIdentifier="${eaccpfIdentifier}" />
+		   		</div>
+		   	</div>
 	   </div> 
 	</div>
 </body>
