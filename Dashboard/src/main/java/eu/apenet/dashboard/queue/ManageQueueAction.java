@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
@@ -74,6 +75,7 @@ public class ManageQueueAction extends AbstractAction {
 		getServletRequest().setAttribute("queueProcessing", QueueDaemon.isQueueProcessing());
 		getServletRequest().setAttribute("europeanaHarvestingStarted", EadService.isHarvestingStarted());
 		getServletRequest().setAttribute("dashboardHarvestingStarted", HarvesterDaemon.isHarvesterProcessing());
+		getServletRequest().setAttribute("maintenanceMode", APEnetUtilities.getDashboardConfig().isMaintenanceMode());
 		getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
 		Date endDateTime = DAOFactory.instance().getResumptionTokenDAO().getPossibleEndDateTime();
 		if (endDateTime != null)
@@ -187,6 +189,14 @@ public class ManageQueueAction extends AbstractAction {
 				}	
 			}
 
+		return SUCCESS;
+	}
+	public String changeMaintenanceMode(){
+		if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
+			APEnetUtilities.getDashboardConfig().setMaintenanceMode(false);
+		}else {
+			APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
+		}
 		return SUCCESS;
 	}
 	public String startStopQueue() {
