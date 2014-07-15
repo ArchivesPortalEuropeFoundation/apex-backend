@@ -50,6 +50,18 @@
 		</c:choose>
 
 	</s:form>
+	<s:form action="changeMaintenanceMode" method="post">
+		<s:actionerror />
+		<c:choose>
+			<c:when test="${maintenanceMode}">
+				<s:submit value="Stop maintenance mode" />
+			</c:when>
+			<c:otherwise>
+				<s:submit value="Start maintenance mode" />
+			</c:otherwise>
+		</c:choose>
+
+	</s:form>	
 	<s:form action="deleteAllQueueItemsWithErrors" theme="simple" method="post">
 		<s:submit value="Delete all errors from the Queue"></s:submit>
 	</s:form>
