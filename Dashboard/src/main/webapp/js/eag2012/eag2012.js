@@ -58,21 +58,50 @@ function clickExitAction(strSaveMsg,form, text1, text2, error1, error2, error3, 
 
 
 function navigateToCurrentRepoTab(href){
-	var errorFieldText = $(".fieldRequired");
+	var errorFieldText = $(".fieldRequired :not(#textContactCountyOfTheInstitution)");
 	var parent = errorFieldText.parent();
-	var counter = 10;
-	while(parent.prop("tagName").toUpperCase()!='TABLE' && counter>0){
+	var counter = 50;
+	var seekId = parent.attr("id");
+	while(counter>0 && ((typeof(parent)!=="undefined" && typeof(parent.prop)!=="undefined" && typeof(parent.prop("tagName"))!="undefined" && parent.prop("tagName").toUpperCase()!='TABLE') || (typeof(seekId)!=="undefined" && seekId.indexOf('contactTableVisitorsAddress_')>-1))){
 		parent = parent.parent();
+		seekId = parent.attr("id");
 		counter--;
 	}
 	var id = parent.attr("id");
 	var repoTab = 0;
-	if(id.lastIndexOf("_")+1){
+	if(typeof(id)!=="undefined" && id.lastIndexOf("_")+1){
 		repoTab = id.substring(id.lastIndexOf("_")+1);
+	}else{
+		if($("[id$='_required']").length>0){
+			var targetTabFound = "";
+			if($("table[id^='contactTable_'] .fieldRequired").length>0){
+				$("table[id^='contactTable_']").each(function(){
+					if(targetTabFound=="" && $(this).find("p.fieldRequired").length>0){
+						targetTabFound = $(this).attr("id");
+						repoTab = targetTabFound.substring(targetTabFound.lastIndexOf("_")+1);
+					}
+				});
+			}else if($("table[id^='accessAndServicesTable_'] .fieldRequired").length>0){
+				$("table[id^='accessAndServicesTable_']").each(function(){
+					if(targetTabFound=="" && $(this).find("p.fieldRequired").length>0){
+						targetTabFound = $(this).attr("id");
+						repoTab = targetTabFound.substring(targetTabFound.lastIndexOf("_")+1);
+					}
+				});
+			}else if($("table[id^='descriptionTable_'] .fieldRequired").length>0){
+				$("table[id^='descriptionTable_']").each(function(){
+					if(targetTabFound=="" && $(this).find("p.fieldRequired").length>0){
+						targetTabFound = $(this).attr("id");
+						repoTab = targetTabFound.substring(targetTabFound.lastIndexOf("_")+1);
+					}
+				});
+			}
+		}
 	}
 	if(repoTab>0){
 		$("#tab_yourInstitutionTable_"+repoTab).trigger('click');
-		$("#tab_yourInstitutionTable_"+repoTab+" a[href='"+href+"']").trigger('click');
+//		$("#tab_yourInstitutionTable_"+repoTab+" a[href='"+href+"']").trigger('click');
+		$("a[href='"+href+"']").trigger('click');
 	}else{
 		$("#tab_yourInstitutionTable_1 a[href='"+href+"']").trigger('click');
 	}
@@ -849,8 +878,8 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 	});
 	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
-		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution",
-				"textContactCountryOfTheInstitution");
+		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution" 
+				);
 
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			if(jsonData.substring(jsonData.length-1)!=','){
@@ -874,7 +903,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 				// Check fill mandatory fields.
 				if ($.trim($(this).attr("value")) != '' && j == 0) {
 					var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
-					if (position != -1) {
+					if (position != -1 || $(this).is(':disabled')) {
 						contactVAMandatoryElements.splice(position, 1);
 					}
 				}
@@ -896,9 +925,12 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 				}
 
 				// Check fill mandatory fields.
+				if("textContactCountryOfTheInstitution"==$(this).attr("id") && !$(this).is(':disabled')){
+					contactVAMandatoryElements.push("textContactCountryOfTheInstitution");
+				}
 				if ($.trim($(this).attr("value")) != '' && j == 0) {
 					var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
-					if (position != -1) {
+					if (position != -1 || $(this).is(':disabled')) {
 						contactVAMandatoryElements.splice(position, 1);
 					}
 				}
@@ -924,6 +956,11 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			}
 		});
 		if(contactVAMandatoryElements.length>0 && j == 0){
+			$.each(contactVAMandatoryElements,function(key,element){
+				if(!$("#"+visitorsAddress[j]+" #"+element).is(":disabled")){
+					contactVAMandatoryElements.splice(key, 1);
+				}
+			});
 			validationArray.push(visitorsAddress[j],contactVAMandatoryElements);
 		}
 		jsonData += "}";
