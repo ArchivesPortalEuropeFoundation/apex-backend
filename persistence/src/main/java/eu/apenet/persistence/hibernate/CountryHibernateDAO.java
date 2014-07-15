@@ -12,19 +12,12 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 
 import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
 
 public class CountryHibernateDAO extends AbstractHibernateDAO<Country, Integer> implements CountryDAO
 {
@@ -56,44 +49,16 @@ private final Logger log = Logger.getLogger(getClass());
 		return results;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Country> getCountriesWithContentIndexedOrderByCName() {
-		long startTime = System.currentTimeMillis();
+	@Override
+	public List<Country> getCountriesOrderByName() {
 		List<Country> results = new ArrayList<Country>();
 		
 		Criteria criteria = getSession().createCriteria(Country.class);
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.addOrder(Order.asc("cname"));
-			
-				DetachedCriteria subQuery2 = DetachedCriteria.forClass(ArchivalInstitution.class,"archivalInstitution");
-				subQuery2.setProjection(Property.forName("archivalInstitution.countryId"));
-				Disjunction disjunction = Restrictions.disjunction();
-				
-					DetachedCriteria subQuery3 = DetachedCriteria.forClass(FindingAid.class,"findingAid");
-					subQuery3.setProjection(Property.forName("findingAid.archivalInstitution.aiId"));
-					subQuery3.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-					subQuery3.add(Restrictions.eq("findingAid.published", true));
-					
-				disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery3));
-
-					DetachedCriteria subQuery4 = DetachedCriteria.forClass(HoldingsGuide.class,"holdingsGuide");
-					subQuery4.setProjection(Property.forName("holdingsGuide.archivalInstitution.aiId"));
-					subQuery4.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-					subQuery4.add(Restrictions.eq("holdingsGuide.published", true));
-				
-				disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery4));
-
-
-				subQuery2.add(disjunction);
-			criteria.add(Subqueries.propertyIn("id", subQuery2));
-		results = criteria.list();
-		
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-		return results;
+		return criteria.list();
 	}
+
 	
 	
 	@SuppressWarnings("unchecked")
