@@ -878,8 +878,8 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 	});
 	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
-		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution", 
-				"textContactCountryOfTheInstitution");
+		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution" 
+				);
 
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			if(jsonData.substring(jsonData.length-1)!=','){
@@ -903,7 +903,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 				// Check fill mandatory fields.
 				if ($.trim($(this).attr("value")) != '' && j == 0) {
 					var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
-					if (position != -1 && !$(this).is(':disabled')) {
+					if (position != -1 || $(this).is(':disabled')) {
 						contactVAMandatoryElements.splice(position, 1);
 					}
 				}
@@ -925,9 +925,12 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 				}
 
 				// Check fill mandatory fields.
+				if("textContactCountryOfTheInstitution"==$(this).attr("id") && !$(this).is(':disabled')){
+					contactVAMandatoryElements.push("textContactCountryOfTheInstitution");
+				}
 				if ($.trim($(this).attr("value")) != '' && j == 0) {
 					var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
-					if (position != -1) {
+					if (position != -1 || $(this).is(':disabled')) {
 						contactVAMandatoryElements.splice(position, 1);
 					}
 				}
@@ -953,6 +956,11 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			}
 		});
 		if(contactVAMandatoryElements.length>0 && j == 0){
+			$.each(contactVAMandatoryElements,function(key,element){
+				if(!$("#"+visitorsAddress[j]+" #"+element).is(":disabled")){
+					contactVAMandatoryElements.splice(key, 1);
+				}
+			});
 			validationArray.push(visitorsAddress[j],contactVAMandatoryElements);
 		}
 		jsonData += "}";
