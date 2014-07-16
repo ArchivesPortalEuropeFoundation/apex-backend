@@ -71,11 +71,12 @@ class ValidateTask extends AbstractEacCpfTask {
                         simpleUtf8Conversion(
                                 APEnetUtilities.getDashboardConfig().getRepoDirPath() + eacCpf.getPath(),
                                 archivalInstitution.getAiId());
-                        exceptions = null;
                         logger.trace("File converted to UTF-8, we try to validate like it would normally.");
+                        exceptions = null;
                     } catch (Exception ex) {
                         exceptions.add(new SAXParseException("File could not be converted to UTF-8 using before.xsl",
                                 new LocatorImpl()));
+                        logger.error("Could not convert using before-eaccpf.xsl");
                     }
                 } finally {
                     if (reader != null) {
@@ -159,12 +160,11 @@ class ValidateTask extends AbstractEacCpfTask {
         try {
             File file = new File(filePath);
             String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
-                    + APEnetUtilities.FILESEPARATOR + "before.xsl";
+                    + APEnetUtilities.FILESEPARATOR + "before-eaccpf.xsl";
 
             InputStream in = new FileInputStream(file);
-            File outputfile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath()
-                    + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "converted_"
-                    + file.getName());
+            File outputfile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() +
+                    APEnetUtilities.FILESEPARATOR + "converted_" + file.getName());
             TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)),
                     null, true, true, null, true, null);
             in.close();
