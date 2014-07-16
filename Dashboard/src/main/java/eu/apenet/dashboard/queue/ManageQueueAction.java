@@ -105,7 +105,7 @@ public class ManageQueueAction extends AbstractAction {
 					Properties preferences = EadService.readProperties(queueItem.getPreferences());
 					IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction
 							.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
-					displayItem.setAction(displayItem.getAction() + "("
+					displayItem.setAction(displayItem.getAction() + " ("
 							+ getText(ingestionprofileDefaultUploadAction.getResourceName()) + ")");
 				}
 			} catch (Exception e) {
