@@ -72,7 +72,7 @@ public class ConvertTask extends AbstractEacCpfTask {
                     FileUtils.forceMkdir(outputpath);
                 }
                 String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
-                        + APEnetUtilities.FILESEPARATOR + "system" + APEnetUtilities.FILESEPARATOR + xslFileName;
+                        + APEnetUtilities.FILESEPARATOR + xslFileName;
                 in = new FileInputStream(file);
                 outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
                 xslMessages = TransformationTool.createTransformation(in, outputfile,
