@@ -454,14 +454,16 @@ function addTrailingZero(value) {
 function toggleDateTextfields(radiobutton) {
     var counterDate = $(radiobutton).attr("name").split('_');
     var tableName = $(radiobutton).parent().parent().parent().parent().attr("id");
-    if ($(radiobutton).val() == "unknown" || $(radiobutton).val() == "open") {
-        $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 3]).attr("value", "");
+    if ($(radiobutton).val() == "unknown") {
+        $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 3]).attr("value", "unknown");
         $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 3]).attr("disabled", "disabled");
-        if ($(radiobutton).attr("id") == "date_unknown_1") {
-            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_1_Year').attr("value", "");
-        } else if ($(radiobutton).attr("id") == "date_unknown_2") {
-            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_2_Year').attr("value", "");
-        }
+        $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input[id^="date_' + counterDate[counterDate.length - 3] + '_"]').each(function() {
+            $(this).attr("value", "");
+            $(this).attr("disabled", "disabled");
+        });
+    } else if ($(radiobutton).val() == "open") {
+        $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 3]).attr("value", "open");
+        $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 3]).attr("disabled", "disabled");
         $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input[id^="date_' + counterDate[counterDate.length - 3] + '_"]').each(function() {
             $(this).attr("value", "");
             $(this).attr("disabled", "disabled");
@@ -469,11 +471,6 @@ function toggleDateTextfields(radiobutton) {
     } else {
         $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 3]).attr("value", "");
         $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 3]).removeAttr("disabled");
-        if ($(radiobutton).attr("id") == "date_unknown_1") {
-            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_1_Year').attr("value", "");
-        } else if ($(radiobutton).attr("id") == "date_unknown_2") {
-            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_2_Year').attr("value", "");
-        }
         $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input[id^="date_' + counterDate[counterDate.length - 3] + '_"]').each(function() {
             $(this).removeAttr("disabled");
         });
