@@ -46,6 +46,10 @@
 		</div>
 		<div>&nbsp;</div>
 		<div id="eacCpfDisplayPortlet">
+			<h3 id="contextInformation">
+				${localizedCountryName}
+				&gt; <a href="${aiCodeUrl}/${archivalInstitution.encodedRepositorycode}">${archivalInstitution.ainame}</a>
+			</h3>
 			<div id="printEacDetails">
 				<a href="javascript:printEacDetails('${printEacDetailsUrl}')">
 					<img  id="printEacDetails" align="right" src="${pageContext.request.contextPath}/images/print-icon.png" alt="print" title="<s:text name="label.print" />" />
