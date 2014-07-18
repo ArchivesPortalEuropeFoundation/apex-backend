@@ -683,58 +683,13 @@
 					   </xsl:call-template>
 				</xsl:if>
 			</xsl:if> 
-			<!-- biogHist p --> 
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:p/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2>
-					   			<xsl:if test="$entityType='corporateBody'">
-					   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
-					   			</xsl:if>
-					   			<xsl:if test="$entityType='person' or $entityType='family'">
-					   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
-					   			</xsl:if>
-					   			<xsl:text>:</xsl:text>
-					   		</h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:p"/>
-					   			<xsl:with-param name="clazz" select="'biogist'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist">   
+				<xsl:call-template name="bioHistMultilanguage">
+					<xsl:with-param name="bioHist" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist"></xsl:with-param>
+					<xsl:with-param name="entityType" select="$entityType"></xsl:with-param>
+				</xsl:call-template>
 			</xsl:if>
-			<!-- biogHist citation --> 
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:citation/text()">   
-				<div class="row">
-					<div class="leftcolumn">
-				   		<h2>
-				   			<xsl:if test="$entityType='corporateBody'">
-				   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
-				   			</xsl:if>
-				   			<xsl:if test="$entityType='person' or $entityType='family'">
-				   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
-				   			</xsl:if>
-				   			<xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist"> 
-							<xsl:variable name="posParent" select="position()"/>
-							<xsl:for-each select="./eac:citation">
-								<xsl:variable name="posChild" select="position()"/>								
-								<p>
-									<xsl:call-template name="citationHref">
-							   			<xsl:with-param name="link" select="./@xlink:href"/>
-										<xsl:with-param name="title" select="./text()"/>
-									</xsl:call-template>
-								</p>
-						     </xsl:for-each>
-					    </xsl:for-each> 	
-					</div>
-				</div>
-			</xsl:if>
+			
 			<!-- provided by -->
 			<xsl:if test="./eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName/text()">
 				<div class="row">
@@ -829,7 +784,123 @@
 			</div>
 	</div>
 	</xsl:template>
-
+	
+	<xsl:template name="bioHistMultilanguage" >
+		<xsl:param name="bioHist"></xsl:param>
+		<xsl:param name="entityType"></xsl:param>
+		
+		<!-- bioHist section title -->
+		<xsl:if test="$bioHist/eac:p/text() or $bioHist/eac:citation/text() or $bioHist/eac:chronList/eac:chronItem">
+			<h2 id="chronListTitle" class="title row" ><xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/></h2>
+		</xsl:if>
+		<!-- biogHist p --> 
+		<xsl:if test="$bioHist/eac:p/text()">   
+			<div class="row">
+				<div class="leftcolumn">
+			   		<h2 class="subrow">
+			   			<xsl:if test="$entityType='corporateBody'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
+			   			</xsl:if>
+			   			<xsl:if test="$entityType='person' or $entityType='family'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
+			   			</xsl:if>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			   	<div class="rightcolumn">
+					<xsl:call-template name="multilanguage">
+			   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:p"/>
+			   			<xsl:with-param name="clazz" select="'biogist'"/>
+			   		</xsl:call-template>
+				</div>
+			</div>
+		</xsl:if>
+		<!-- biogHist citation --> 
+		<xsl:if test="$bioHist/eac:citation/text()">   
+			<div class="row">
+				<div class="leftcolumn">
+			   		<h2 class="subrow">
+			   			<xsl:if test="$entityType='corporateBody'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
+			   			</xsl:if>
+			   			<xsl:if test="$entityType='person' or $entityType='family'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
+			   			</xsl:if>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			   	<div class="rightcolumn">
+					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist"> 
+						<xsl:variable name="posParent" select="position()"/>
+						<xsl:for-each select="./eac:citation">
+							<xsl:variable name="posChild" select="position()"/>								
+							<p>
+								<xsl:call-template name="citationHref">
+						   			<xsl:with-param name="link" select="./@xlink:href"/>
+									<xsl:with-param name="title" select="./text()"/>
+								</xsl:call-template>
+							</p>
+					     </xsl:for-each>
+				    </xsl:for-each> 	
+				</div>
+			</div>
+		</xsl:if>
+		<!-- biogHist chronList -->
+		<xsl:if test="$bioHist/eac:chronList/eac:chronItem">
+			<xsl:call-template name="chronListMultilanguage">
+				<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:chronList"></xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="chronListMultilanguage">
+		<xsl:param name="list"></xsl:param>
+		<xsl:if test="$list/eac:chronItem or $list/eac:placeEntry or $list/eac:event">
+			<xsl:for-each select="$list" >
+				<div class="blockPlural">
+				<xsl:for-each select="./eac:chronItem" >
+					<div class="blockSingular">
+					    <xsl:if test="./eac:date or ./eac:dateRange or ./eac:dateSet">
+					    <div id="chronListItemContent" >
+							<xsl:call-template name="commonDates">
+					    		<xsl:with-param name="date" select="./eac:date"/>
+					    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+					    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					    	</xsl:call-template>
+					    </div>
+					    </xsl:if>
+						<xsl:if test="./eac:placeEntry">
+						<div id="chronListItemContent" class="row">
+							<div class="leftcolumn">
+						   		<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.description.place')"/></h2>
+						   	</div> 
+						    <div class="rightcolumn"> 
+								<xsl:call-template name="multilanguagePlaceEntry">
+						  			<xsl:with-param name="list" select="./eac:placeEntry"/>
+						  		</xsl:call-template>
+					  		</div>
+					  	</div>		
+						</xsl:if>
+						<xsl:if test="./eac:event">
+							<div id="chronListItemContent" class="row">
+								<div class="leftcolumn">
+							   		<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.event')"/></h2>
+							   	</div> 
+							    <div class="rightcolumn"> 
+									<xsl:call-template name="multilanguageNoP"> <!-- multilanguageEvent -->
+							  			<xsl:with-param name="list" select="./eac:event"/>
+							  			<xsl:with-param name="clazz" select="'language'"/>
+							  		</xsl:call-template>
+						  		</div>
+					  		</div>
+						</xsl:if>
+					</div>
+				</xsl:for-each>
+				</div>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+	
 	<!-- Template for select the correct order to display the alternative names
 		 based in the value of the attribute "@localType". -->
 	<xsl:template name="alternativeNamePriorisation">
