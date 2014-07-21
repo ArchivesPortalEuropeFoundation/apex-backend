@@ -17,6 +17,7 @@ public class DateType {
     private SimpleDate standardDate2;
     private String dateContent1;
     private String dateContent2;
+    private String localType;
 
     public DateType(SimpleDate date1) {
         this.standardDate1 = date1;
@@ -58,6 +59,14 @@ public class DateType {
 
     public void setDateContent2(String dateContent2) {
         this.dateContent2 = dateContent2;
+    }
+
+    public String getLocalType() {
+        return localType;
+    }
+
+    public void setLocalType(String localType) {
+        this.localType = localType;
     }
 
     public DateType fillDataWith(Date date) {

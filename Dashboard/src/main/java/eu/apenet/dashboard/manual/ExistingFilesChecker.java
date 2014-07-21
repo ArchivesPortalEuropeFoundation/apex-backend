@@ -292,8 +292,8 @@ public class ExistingFilesChecker {
                             File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
                             if (file.exists()) {
                                 //Windows file lock workaround; uncomment if necessary
-                                //System.gc();
-                                //Thread.sleep(2000);
+                                System.gc();
+                                Thread.sleep(2000);
                                 FileUtils.forceDelete(file);
                             }
 
@@ -305,8 +305,8 @@ public class ExistingFilesChecker {
                         } catch (IOException ex) {
                             LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
                         // belonging to Windows file lock workaround (see above)
-//                        } catch (InterruptedException ex) {
-//                            LOG.error(ex);
+                        } catch (InterruptedException ex) {
+                            LOG.error(ex);
                         }
                     }
                     result = STATUS_ERROR;
@@ -398,8 +398,8 @@ public class ExistingFilesChecker {
                     File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
                     if (file.exists()) {
                         //Windows file lock workaround; uncomment if necessary
-                        //System.gc();
-                        //Thread.sleep(2000);
+                        System.gc();
+                        Thread.sleep(2000);
                         FileUtils.forceDelete(file);
                     }
 
@@ -411,8 +411,8 @@ public class ExistingFilesChecker {
                 } catch (IOException ex) {
                     LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
                         // belonging to Windows file lock workaround (see above)
-//                } catch (InterruptedException ex) {
-//                    LOG.error(ex);
+                } catch (InterruptedException ex) {
+                    LOG.error(ex);
                 }
             }
             result = STATUS_ERROR;

@@ -22,7 +22,10 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.UpFile;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class CreateEacCpfTask extends AbstractEacCpfTask {
 
@@ -78,8 +81,8 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
             File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
 
             //Windows file lock workaround; uncomment if necessary
-            System.gc();
-            Thread.sleep(2000);
+            //System.gc();
+            //Thread.sleep(2000);
 
             if (srcFile.exists()) {
                 FileUtils.forceDelete(srcFile);
@@ -104,65 +107,78 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
      * @return the title
      */
     private String builderTitle(String path) {
-        String title = "";
         StringBuilder builderTitle = new StringBuilder();
-        LinkedList<String[]> titleElements = new LinkedList<String[]>();
-        try {
 
-        	String result = ExistingFilesChecker.extractAttributeFromXML(path, "nameEntry/part", "localType", true, true);
-        	if (result.equalsIgnoreCase("corpname") || (result.equalsIgnoreCase("persname")) || result.equalsIgnoreCase("famname") || result.equalsIgnoreCase("error")) {
-        		//the title is the first occurrence of the element nameEntry/part
-        		title = ExistingFilesChecker.extractAttributeFromXML(path, "nameEntry/part", null, true, true);
-        	} else{
-        		// the title is formed by "surname, firstname patronymic"
-                titleElements = searchForAllElementTitle(path, "nameEntry/part");
-        	}
+        //titleElements collects all <nameEntry> with their paths
+        LinkedList<NameEntry> titleElements = searchForAllTitleElements(path, "nameEntry/part");
 
-            //List the elements if the titleMap is not empty
-            if (titleElements != null && !titleElements.isEmpty()) {
+        //if the list is populated, sort it by priority and process the first entry
+        if (titleElements != null && !titleElements.isEmpty()) {
+            Collections.sort(titleElements, new NameEntryComp());
+
+            //Since the list is sorted prior to use, its first element should almost always return a value from which a
+            //title can be built without problems. If this however should not be the case, for example if the file uses
+            //other values than the six possibilities for apeEAC-CPF, an error message will be displayed in the title column
+            if (!titleElements.getFirst().getLocalType().equals(NameEntryLocalType.UNKNOWN)) {
+                LinkedList<Part> titleEntryParts = titleElements.getFirst().getParts();
+
+                //StringBuilder objects for single parts of the name, if needed
                 StringBuilder surname = new StringBuilder();
                 StringBuilder firstname = new StringBuilder();
                 StringBuilder patronymic = new StringBuilder();
-                for (String[] titleElement : titleElements) {
-                    if (titleElement[0].equals("surname")) {
-                        if(surname.length() != 0){
+
+                //if there is only a persname/famname/corpname, directly attach it to the main StringBuilder, otherwise use the partial builders and build title from them
+                for (Part part : titleEntryParts) {
+                    if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
+                        builderTitle.append(part.getContent());
+                    }
+                    if (part.getLocalType().equals("surname")) {
+                        if (surname.length() != 0) {
                             surname.append(" ");
                         }
-                        surname.append(titleElement[1]);
+                        surname.append(part.getContent());
                     }
-                    if (titleElement[0].equals("firstname")) {
-                        if(firstname.length() != 0){
+                    if (part.getLocalType().equals("firstname")) {
+                        if (firstname.length() != 0) {
                             firstname.append(" ");
                         }
-                        firstname.append(titleElement[1]);
+                        firstname.append(part.getContent());
                     }
-                    if (titleElement[0].equals("patronymic")) {
-                        if(patronymic.length() != 0){
+                    if (part.getLocalType().equals("patronymic")) {
+                        if (patronymic.length() != 0) {
                             patronymic.append(" ");
                         }
-                        patronymic.append(titleElement[1]);
+                        patronymic.append(part.getContent());
                     }
                 }
-                // build the title
-                builderTitle.append(surname);
-                if (builderTitle.length() != 0) {
-                    builderTitle.append(", ");
-                }
-                builderTitle.append(firstname);
-                if (builderTitle.length() != 0) {
-                    builderTitle.append(" ");
-                }
-                builderTitle.append(patronymic);
-                if (builderTitle.length() == 0) {
-                    builderTitle.append(" ");
-                }
-                title = builderTitle.toString();
-            }
 
-        } catch (WstxParsingException e) {
-            title = "";
+                // if the builder is empty, build the title from the parts
+                if (builderTitle.length() == 0) {
+                    builderTitle.append(surname);
+                    if (builderTitle.length() != 0) {
+                        builderTitle.append(", ");
+                    }
+                    builderTitle.append(firstname);
+                    if (builderTitle.length() != 0) {
+                        builderTitle.append(" ");
+                    }
+                    builderTitle.append(patronymic);
+                    if (builderTitle.length() == 0) {
+                        builderTitle.append(" ");
+                    }
+                }
+                //output of the title
+                if (builderTitle.length() != 0) {
+                    return builderTitle.toString();
+                } else {
+                    return "ERROR: Cannot build title from ineligible part";
+                }
+            } else {
+                return "ERROR: Cannot build title from unknown nameEntry/@localtype";
+            }
+        } else {
+            return "ERROR: No title";
         }
-        return title;
     }
 
     @Override
@@ -195,7 +211,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
      *
      * @return all the values of the element
      */
-    private LinkedList<String[]> searchForAllElementTitle(String path, String element) {
+    private LinkedList<NameEntry> searchForAllTitleElements(String path, String element) {
         final String CONVERTED_FLAG = "Converted_apeEAC-CPF_version_";
         XMLStreamReader input = null;
         InputStream sfile = null;
@@ -205,52 +221,77 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
         xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
 
-        LinkedList<String[]> titleElements = new LinkedList<String[]>();
+        LinkedList<NameEntry> nameEntries = new LinkedList<NameEntry>();
 
         try {
             sfile = new FileInputStream(path);
             input = (XMLStreamReader) xmlif.createXMLStreamReader(sfile);
 
-            boolean abort = false;
             boolean addText = false;
             String[] pathElements = element.split("/");
-            String localType = "";
-            String elementContent = "";
+            Stack<NameEntry> nameEntryStack = new Stack<NameEntry>();
+            Stack<Part> partStack = new Stack<Part>();
 
             logger.debug("Checking file, looking for element " + element + ", path begins with " + pathElements[0]);
-            while (!abort && input.hasNext()) {
-            switch (input.next()) {
+            while (input.hasNext()) {
+                switch (input.next()) {
                     case XMLEvent.START_ELEMENT:
-                        if (input.getLocalName().equalsIgnoreCase(pathElements[(pathElements.length - 1)])) {
+                        if (input.getLocalName().equalsIgnoreCase(pathElements[0])) {
+                            NameEntry nameEntry = new NameEntry();
                             for (int i = 0; i < input.getAttributeCount(); i++) {
-                                if (input.getAttributeLocalName(i).equals("localType") && (input.getAttributeValue(i).equals("surname")
-                                        || (input.getAttributeValue(i).equals("firstname")) || (input.getAttributeValue(i).equals("patronymic")))) {
-                                    localType = input.getAttributeValue(i);
+                                if (input.getAttributeLocalName(i).equals("localType")) {
+                                    if (input.getAttributeValue(i).equals("authorized")
+                                            || (input.getAttributeValue(i).equals("alternative"))
+                                            || (input.getAttributeValue(i).equals("abbreviation"))
+                                            || (input.getAttributeValue(i).equals("other"))
+                                            || (input.getAttributeValue(i).equals("preferred"))) {
+                                        nameEntry.setLocalType(input.getAttributeValue(i));
+                                    } else if (!input.getAttributeValue(i).isEmpty()) {
+                                        nameEntry.setLocalType("unknownValue");
+                                    }
+                                }
+                            }
+                            nameEntryStack.push(nameEntry);
+                        }
+                        if (input.getLocalName().equalsIgnoreCase(pathElements[(pathElements.length - 1)])) {
+                            Part part = new Part();
+                            for (int i = 0; i < input.getAttributeCount(); i++) {
+                                if (input.getAttributeLocalName(i).equals("localType")) {
+                                    if (input.getAttributeValue(i).equals("persname")
+                                            || (input.getAttributeValue(i).equals("corpname"))
+                                            || (input.getAttributeValue(i).equals("famname"))
+                                            || (input.getAttributeValue(i).equals("surname"))
+                                            || (input.getAttributeValue(i).equals("firstname"))
+                                            || (input.getAttributeValue(i).equals("patronymic"))) {
+                                        part.setLocalType(input.getAttributeValue(i));
+                                    } else if (!input.getAttributeValue(i).isEmpty()) {
+                                        part.setLocalType("unknownValue");
+                                    }
                                     addText = true;
                                 }
                             }
+                            partStack.push(part);
                         }
                         break;
                     case XMLEvent.CHARACTERS:
                         if (addText) {
-                            elementContent = input.getText();
-                            if (elementContent.startsWith(CONVERTED_FLAG)) {
-                                logger.debug("Returning true");
-                                String[] trueArray = {"true", "true"};
-                                titleElements.add(trueArray);
-                                return titleElements;
+                            if (input.getText().startsWith(CONVERTED_FLAG)) {
                             } else {
                                 logger.debug("Adding " + input.getText());
-                                String[] titleElement = {localType, elementContent};
-                                titleElements.add(titleElement);
+                                Part part = partStack.peek();
+                                part.setContent(input.getText());
                             }
                             addText = false;
                         }
                         break;
                     case XMLEvent.END_ELEMENT:
-                    	if (input.getLocalName().equalsIgnoreCase(pathElements[0])){  //if it's nameEntry final
-                    		abort = true;
-                    	}
+                        if (input.getLocalName().equalsIgnoreCase(pathElements[0])) {  //if it's nameEntry final
+                            NameEntry nameEntry = nameEntryStack.peek();
+                            nameEntry.getParts().addAll(partStack);
+                            partStack.clear();
+                            nameEntries.add(nameEntry);
+                            nameEntryStack.pop();
+                        }
                         break;
                 }
             }
@@ -265,11 +306,114 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
             }
         }
 
-        if (titleElements.isEmpty()) {
-            logger.debug("Returning error");
-            String[] errorArray = {"error", "error"};
-            titleElements.add(errorArray);
+        if (nameEntries.isEmpty()) {
+            logger.debug("no name entries available; adding element with content \"error\"");
+            NameEntry nameEntry = new NameEntry();
+            LinkedList<Part> error = new LinkedList<Part>();
+            Part part = new Part();
+            part.setLocalType("error");
+            part.setContent("error");
+            error.add(part);
+            nameEntry.setParts(error);
+            nameEntries.add(nameEntry);
         }
-        return titleElements;
+        return nameEntries;
+    }
+
+    private class NameEntry {
+
+        private NameEntryLocalType localType;
+        private LinkedList<Part> parts;
+
+        public NameEntry() {
+            this.localType = NameEntryLocalType.EMPTY;
+            this.parts = new LinkedList<Part>();
+        }
+
+        public String getLocalType() {
+            return localType.toString();
+        }
+
+        public void setLocalType(String localType) {
+            this.localType = NameEntryLocalType.getNameEntryLocalType(localType);
+        }
+
+        public LinkedList<Part> getParts() {
+            return parts;
+        }
+
+        public void setParts(LinkedList<Part> parts) {
+            this.parts = parts;
+        }
+
+        public NameEntryLocalType getLocalTypeEnumValue() {
+            return localType;
+        }
+    }
+
+    private class Part {
+
+        private String localType;
+        private String content;
+
+        public Part() {
+            this.localType = "";
+            this.content = "";
+        }
+
+        public String getLocalType() {
+            return localType;
+        }
+
+        public void setLocalType(String localType) {
+            this.localType = localType;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
+
+    private enum NameEntryLocalType {
+
+        PREFERRED("preferred"),
+        AUTHORIZED("authorized"),
+        EMPTY(""),
+        ALTERNATIVE("alternative"),
+        ABBREVIATION("abbreviation"),
+        OTHER("other"),
+        UNKNOWN("unknown");
+
+        private String value;
+
+        private NameEntryLocalType(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public static NameEntryLocalType getNameEntryLocalType(String value) {
+            for (NameEntryLocalType nameEntryLocalType : NameEntryLocalType.values()) {
+                if (nameEntryLocalType.toString().equals(value)) {
+                    return nameEntryLocalType;
+                }
+            }
+            return UNKNOWN;
+        }
+    }
+
+    private class NameEntryComp implements Comparator<NameEntry> {
+
+        @Override
+        public int compare(NameEntry o1, NameEntry o2) {
+            return o1.getLocalTypeEnumValue().compareTo(o2.getLocalTypeEnumValue());
+        }
     }
 }

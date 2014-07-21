@@ -36,6 +36,9 @@ import org.apache.log4j.Logger;
 
 import eu.archivesportaleurope.harvester.oaipmh.auth.JCIFSNTLMSchemeFactory;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import org.apache.http.HttpHost;
 
 public class OaiPmhHttpClient {
 	private static final int TIMEOUT = 300000;
@@ -43,11 +46,13 @@ public class OaiPmhHttpClient {
 	private CloseableHttpClient httpClient;
 	private HttpClientContext context;
 	public OaiPmhHttpClient (){
+            HttpHost proxy = new HttpHost("10.6.34.8", 3128);
 		RequestConfig defaultRequestConfig = RequestConfig.custom()
 			    .setSocketTimeout(TIMEOUT)
 			    .setConnectTimeout(TIMEOUT)
 			    .setConnectionRequestTimeout(TIMEOUT)
 			    .setStaleConnectionCheckEnabled(true)
+                            .setProxy(proxy)
 			    .build();
 		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(defaultRequestConfig).useSystemProperties().build();
 	}
