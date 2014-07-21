@@ -66,6 +66,7 @@
 		</h1>
 		<div id="details">	
 			<!-- Dates -->
+			<!-- dateRange fromDate -->
 			<xsl:if test="$existDates/eac:dateRange/eac:fromDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']/text()
 			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']/text()">
 				<div class="row">
@@ -110,8 +111,12 @@
 						</div>
 				</div>
 			</xsl:if>
-			<xsl:if test="$existDates/eac:dateRange/eac:toDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:toDate/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']/text()
-			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']/text()">
+			<!-- dateRange toDate -->
+			<xsl:if test="($existDates/eac:dateRange/eac:toDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:toDate/text()
+						  or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']/text()
+			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']/text())
+						  and ($existDates/eac:dateRange[1][@localType!='open'] or $existDates/eac:dateSet/eac:dateRange[1][@localType!='open']
+						  	or $existDates/eac:dateRange[1][not(@localType)] or $existDates/eac:dateSet/eac:dateRange[1][not(@localType)])">
 					<div class="row">
 							<div class="leftcolumn">
 						   		<h2>
@@ -153,7 +158,42 @@
 								</xsl:if>
 							</div>
 					</div>
-			</xsl:if> 
+			</xsl:if>
+			<!-- Date -->
+			<xsl:if test="($existDates/eac:date/text() or $existDates/eac:dateSet/eac:date/text())
+						and (not($existDates/eac:dateRange/eac:fromDate/text()) and not($existDates/eac:dateSet/eac:dateRange/eac:fromDate/text()) and not($existDates/eac:dateRange/eac:toDate/text()) and not($existDates/eac:dateSet/eac:dateRange/eac:toDate/text()))">
+					<div class="row">
+							<div class="leftcolumn">
+						   		<h2>
+									<xsl:value-of select="ape:resource('eaccpf.portal.date')"/>
+						   			<xsl:text>:</xsl:text>
+						   		</h2>
+						   	</div>
+						   	<div class="rightcolumn">
+						   		<xsl:if test="$existDates/eac:date/text()">
+									<xsl:apply-templates select="$existDates/eac:date"/>
+								</xsl:if>
+						   		<xsl:if test="$existDates/eac:dateSet/eac:date/text()">
+									<xsl:apply-templates select="$existDates/eac:dateSet/eac:date[1]"/>
+								</xsl:if>
+							</div>
+					</div>
+			</xsl:if>
+			<!-- descriptiveNote of the existDates element. -->
+			<xsl:if test="$existDates/eac:descriptiveNote/eac:p/text()">   
+				<div class="row">
+						<div class="leftcolumn">
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
+					   	</div>
+					   	<div class="rightcolumn">
+							<xsl:call-template name="multilanguage">
+					   			<xsl:with-param name="list" select="$existDates/eac:descriptiveNote/eac:p"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   		</xsl:call-template>
+						</div>
+				</div>
+			</xsl:if>
+
 			<!-- alternative names -->
 			<xsl:if test="count(//eac:nameEntry) > 1">
 				<div class="row" id="titleAlternativeName">
@@ -2232,12 +2272,14 @@
 		</xsl:choose>
 
 		<xsl:choose>
-			<xsl:when test="$dateRange/eac:toDate
-							or $dateRange[@localType='unknownEnd']
-			                or not($dateRange/eac:toDate) 
-			                or not($dateRange/eac:fromDate)
-			                or $dateRange[@localType='open'] 
-			                or $dateRange/eac:fromDate/text() = 'open'">
+			<xsl:when test="($dateRange[@localType!='unknown']
+							or $dateRange[not(@localType)])
+							and ($dateRange/eac:toDate
+								or $dateRange[@localType='unknownEnd']
+				                or not($dateRange/eac:toDate) 
+				                or not($dateRange/eac:fromDate)
+				                or $dateRange[@localType='open'] 
+				                or $dateRange/eac:fromDate/text() = 'open')">
 				<xsl:text> - </xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
@@ -2273,27 +2315,19 @@
 	<!-- template for date -->
 	<xsl:template match="eac:date">
 		<xsl:if test="./text()">
-			<xsl:if test="position() != 1">
+			<xsl:if test="position() != last() and current()[not(@localType ='open')]">
 				<xsl:text>, </xsl:text>
 			</xsl:if>
-	        <xsl:apply-templates mode="other"/>
-			<xsl:for-each select="eac:date">
-				<xsl:if test="current()/text()">
-					<xsl:if test="position() != last() and current()[not(@localType ='open')]">
-						<xsl:text>, </xsl:text>
-					</xsl:if>
-			       	<xsl:choose>
-						<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
-							<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
-						</xsl:when>
-						<xsl:when test="current()[@localType='open']">
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="current()" mode="other"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:if>
-			</xsl:for-each>
+			<xsl:choose>
+				<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+					<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+				</xsl:when>
+				<xsl:when test="current()[@localType='open']">
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates mode="other"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:if>
 	</xsl:template>
 	

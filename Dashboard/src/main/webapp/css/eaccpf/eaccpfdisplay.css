@@ -51,11 +51,11 @@ body {
     color: #2A4862;
     font-size: 130%;
     font-weight: bold;
-    margin: 0.3em 0;
+/*    margin: 0.3em 0;*/
     text-align: center;
     width:69%;
-    display:inline-block;
-    margin-top:7px;
+/*    display:inline-block;*/
+    margin-top:40px;
     margin-bottom:15px;	
 }
 #eacCpfDisplayPortlet h3#contextInformation {
@@ -98,6 +98,13 @@ pre.outline {
 	font-size:8pt;
 	font-family: Arial,sans-serif;
 	white-space: pre-wrap;
+	line-height: 1.8em;
+	margin-bottom: 0.5em;
+}
+
+p {
+	line-height: 1.8em;
+	margin-bottom: 0.5em;
 }
 
 #eacCpfDisplayPortlet h2.subrow {
@@ -189,7 +196,7 @@ pre.outline {
     padding: 0 0 0 5px;
 }
 #relations li {
-	padding-bottom:2px;
+	padding-bottom:5px;
 }
 .linkShow:link {
 	color: #C65400;
