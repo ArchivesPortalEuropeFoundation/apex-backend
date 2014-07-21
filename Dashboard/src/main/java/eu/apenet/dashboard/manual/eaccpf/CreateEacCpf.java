@@ -1588,7 +1588,7 @@ public class CreateEacCpf {
 
     private boolean hasData(DateRange dateRange) {
         if (dateRange.getLocalType() == null || dateRange.getLocalType().isEmpty()) {
-            return dateRange.getFromDate() != null || dateRange.getToDate() != null;
+            return dateRange.getFromDate().getContent() != null && dateRange.getToDate().getContent() != null ;
         } else {
             return true;
         }

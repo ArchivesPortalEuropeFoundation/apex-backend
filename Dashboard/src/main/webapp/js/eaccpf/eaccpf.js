@@ -81,6 +81,10 @@ function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, e
     if (identityValidation !== "ok") {
         return;
     }
+    var descriptionValidation = checkDescriptionTab();
+    if (descriptionValidation !== "ok") {
+        return;
+    }
     var relationValidation = checkRelationsTab(cpfTypeMissing, resourceTypeMissing, functionTypeMissing);
     if (relationValidation !== "ok") {
         return;
@@ -166,11 +170,14 @@ function deleteChecks() {
 }
 
 var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endDateMissing) {
+    //check if at least one name was added
     var personName = $("table#identityPersonName_1 input#textPersonName").attr("value");
     if (personName == null || personName == "") {
         alertEmptyFields(nameMissing);
         return;
     }
+
+    //check if at least one existDates entry exists
     var date1 = $("table#dateExistenceTable tr#trDate_text_1 input#date_1").attr("value");
     var date1Checked = $("table#dateExistenceTable tr#trDate_radio_1 input[name^='dateExistenceTable_date_1_']:checked").val();
     var date2 = $("table#dateExistenceTable tr#trDate_text_1 input#date_2").attr("value");
@@ -189,8 +196,123 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
             return;
         }
     }
+
+    //check any ISO date rows in identity tab for validity one more time
+    var checkResult = "ok";
+    var tableCounter = $("table[id^='identityPersonName_']").length;
+    var rowCounter;
+    var dateCounter;
+    //check name dates
+    if (tableCounter > 0) {
+        for (var tc = 1; tc <= tableCounter; tc++) {
+            rowCounter = $("table#identityPersonName_" + tc + " tr[id^='trDate_text_']").length;
+            if (rowCounter > 0) {
+                for (var rc = 1; rc <= rowCounter; rc++) {
+                    if (dateRowNotEmpty("identityPersonName_" + tc, rc)) {
+                        dateCounter = $("table#identityPersonName_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
+                        for (var dc = 1; dc <= dateCounter; dc++) {
+                            checkResult = checkIsoDateRow("identityPersonName_" + tc, rc, dc);
+                            if (checkResult != "ok") {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //check existence dates
+    rowCounter = $("table#dateExistenceTable tr[id^='trDate_text_']").length;
+    if (rowCounter > 0) {
+        for (var rc = 1; rc <= rowCounter; rc++) {
+            if (dateRowNotEmpty("dateExistenceTable", rc)) {
+                dateCounter = $("table#dateExistenceTable tr#trDate_text_" + rc + " input[id^='date_']").length;
+                for (var dc = 1; dc <= dateCounter; dc++) {
+                    checkResult = checkIsoDateRow("dateExistenceTable", rc, dc);
+                    if (checkResult != "ok") {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    //return "ok" if everything is valid
     return "ok";
 };
+
+var checkDescriptionTab = function() {
+    //check any ISO date rows in description tab for validity one more time
+    var checkResult = "ok";
+    var tableCounter = $("table[id^='placeTable_']").length;
+    var rowCounter;
+    var dateCounter;
+    //check place dates
+    if (tableCounter > 0) {
+        for (var tc = 1; tc <= tableCounter; tc++) {
+            rowCounter = $("table#placeTable_" + tc + " tr[id^='trDate_text_']").length;
+            if (rowCounter > 0) {
+                for (var rc = 1; rc <= rowCounter; rc++) {
+                    if (dateRowNotEmpty("placeTable_" + tc, rc)) {
+                        dateCounter = $("table#placeTable_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
+                        for (var dc = 1; dc <= dateCounter; dc++) {
+                            checkResult = checkIsoDateRow("placeTable_" + tc, rc, dc);
+                            if (checkResult != "ok") {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //check function dates
+    var tableCounter = $("table[id^='functionTable_']").length;
+    if (tableCounter > 0) {
+        for (var tc = 1; tc <= tableCounter; tc++) {
+            rowCounter = $("table#functionTable_" + tc + " tr[id^='trDate_text_']").length;
+            if (rowCounter > 0) {
+                for (var rc = 1; rc <= rowCounter; rc++) {
+                    if (dateRowNotEmpty("functionTable_" + tc, rc)) {
+                        dateCounter = $("table#functionTable_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
+                        for (var dc = 1; dc <= dateCounter; dc++) {
+                            checkResult = checkIsoDateRow("functionTable_" + tc, rc, dc);
+                            if (checkResult != "ok") {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //check occupation dates
+    var tableCounter = $("table[id^='occupationTable_']").length;
+    if (tableCounter > 0) {
+        for (var tc = 1; tc <= tableCounter; tc++) {
+            rowCounter = $("table#occupationTable_" + tc + " tr[id^='trDate_text_']").length;
+            if (rowCounter > 0) {
+                for (var rc = 1; rc <= rowCounter; rc++) {
+                    if (dateRowNotEmpty("occupationTable_" + tc, rc)) {
+                        dateCounter = $("table#occupationTable_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
+                        for (var dc = 1; dc <= dateCounter; dc++) {
+                            checkResult = checkIsoDateRow("occupationTable_" + tc, rc, dc);
+                            if (checkResult != "ok") {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //return "ok" if everything is valid
+    return "ok";
+}
+
 var checkRelationsTab = function(cpfTypeMissing, resourceTypeMissing, functionTypeMissing) {
     var cpfCounter = $("table[id^='cpfRelationsTable_']").length;
     var resCounter = $("table[id^='resRelationsTable_']").length;
@@ -212,6 +334,7 @@ var checkRelationsTab = function(cpfTypeMissing, resourceTypeMissing, functionTy
     }
     return "ok";
 };
+
 var checkForEmptyRelationContent = function(abb, counterValue) {
     for (i = 1; i <= counterValue; i++) {
         var text = "";
@@ -228,6 +351,7 @@ var checkForEmptyRelationContent = function(abb, counterValue) {
     }
     return "ok";
 };
+
 var checkControlTab = function(languageMissing, scriptMissing) {
     var language = $("table#usedLanguagesAndScripts select#controlLanguage").attr("value");
     var script = $("table#usedLanguagesAndScripts select#controlScript").attr("value");
@@ -241,6 +365,7 @@ var checkControlTab = function(languageMissing, scriptMissing) {
     }
     return "ok";
 };
+
 function checkWebpages(target, message) {
     var checkFails = false;
     var value = target.val();
@@ -493,24 +618,26 @@ function validateIsoDates(textfield) {
     checkIsoDateRow(tableName, counter, idParts[1]);
 }
 
-function checkIsoDateRow(tableName, rowCounter, dateCounter){
+var checkIsoDateRow = function(tableName, rowCounter, dateCounter) {
 //1. check date for general validity
     var year = 1;
     var month = 1;
     var day = 1;
-    if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value") != "") {
-        day = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value");
-    }
-    if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value") != "") {
-        month = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value");
-    }
-    if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value") != "") {
-        year = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value");
-    }
-    var date = new Date(year, month - 1, day);
-    if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
-        alert(year + "-" + month + "-" + day + " is not a valid date!");
-        return;
+    if ($("table#" + tableName + " tr#trDate_radio_" + rowCounter + " input[name^='" + tableName + "_date_" + dateCounter + "_']:checked").val() == "known") {
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value") != "") {
+            day = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value") != "") {
+            month = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value") != "") {
+            year = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value");
+        }
+        var date = new Date(year, month - 1, day);
+        if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
+            alert(year + "-" + month + "-" + day + " is not a valid date");
+            return;
+        }
     }
 
 //2. check date range for temporal order, i.e. no ranges like 1985-1983
@@ -558,9 +685,11 @@ function checkIsoDateRow(tableName, rowCounter, dateCounter){
         date2 = new Date(year, month - 1, day);
     }
     if (date1 > date2) {
-        alert("A start date of a date range is later than the end date!");
+        alert("The entered start date of a date range is later than the end date. Please enter a valid start date.");
+        return;
     }
-}
+    return "ok";
+};
 
 /**************************************
  * Identity tab functions
@@ -592,6 +721,7 @@ function addPartName(tableName, nameMissing) {
         $(this).attr("name", tableName + "_comp_" + (counter + 1));
     });
 }
+;
 
 function addDateOrDateRangeName(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
