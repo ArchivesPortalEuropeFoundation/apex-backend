@@ -15,7 +15,9 @@ body {
 }
 
 #eacCpfDisplayPortlet #footer {
-	padding-bottom:10px;
+	padding-bottom:25px;
+	float:left;
+	width:100%;
 }
 
 #eacCpfDisplayPortlet {
@@ -27,13 +29,18 @@ body {
 }
 
 #eacCpfDisplayPortlet #printEacDetails {
-    float: inherit;
+    float: right;;
     margin-left: 240px;
+    padding-bottom:5px;
+    padding-top:7px;
 }
 
 #eacCpfDisplayPortlet #details {
-	width:70%;
-	float:left;
+/*	width:70%;*/
+    width:69%;
+    margin-right:18px;
+    float:left;
+    text-align:left;
 }
 
 #eacCpfDisplayPortlet #printPreview #details {
@@ -41,15 +48,22 @@ body {
 }
 
 #eacCpfDisplayPortlet h1 {
-	border-bottom: 1px solid #79B7E7;
     color: #2A4862;
     font-size: 130%;
     font-weight: bold;
     margin: 0.3em 0;
-    text-align: left;
-    width:70%;	
+    text-align: center;
+    width:69%;
+    display:inline-block;
+    margin-top:7px;
+    margin-bottom:15px;	
 }
-
+#eacCpfDisplayPortlet h3#contextInformation {
+	padding-top:0px;
+	margin-top:0px;
+	border-bottom: 1px solid #79B7E7;
+	text-align:left;
+}
 #eacCpfDisplayPortlet #printPreview h1 {
     width:100%;	
 }
@@ -73,16 +87,22 @@ body {
 	text-transform: uppercase;
 	text-align:left;
 	padding-top:8px;
+	float:left;
 }
-
+#eacCpfDisplayPortlet .blockPlural, #eacCpfDisplayPortlet .blockSingular{
+	padding-bottom:8px;
+	width:100%;
+	float:left;
+}
 pre.outline {
 	font-size:8pt;
 	font-family: Arial,sans-serif;
 	white-space: pre-wrap;
 }
 
-#eacCpfDisplayPortlet .subrow {
+#eacCpfDisplayPortlet h2.subrow {
 	margin-left:40px;
+	word-wrap: break-word;
 }
 
 #eaccpfcontent .leftcolumn h2 {
@@ -104,25 +124,22 @@ pre.outline {
 	display:block;
 	font-size:8pt;
     overflow:hidden;
+    width:100%;
+	float:left;
 }
 
 #eacCpfDisplayPortlet .leftcolumn {
 	float:left;
-	overflow-y: auto;
+	/*overflow-y: auto;*/
 	margin-top:9px;
+	width:23%;
 }
 
 #eacCpfDisplayPortlet .rightcolumn {
-	/*text-align:auto;*/
-	text-align:left;
-	margin-left:180px;
+	float:right;
+    width:75%;
 	margin-top:9px;
 }
-
-/*#eacCpfDisplayPortlet .leftSide {
- clear:both;
- margin-left:0px;
-}*/
 
 #eacCpfDisplayPortlet #language {
 	float:none;
@@ -130,7 +147,8 @@ pre.outline {
 
 #eacCpfDisplayPortlet #relations {
 	float:right;
-	width:260px;
+/*	width:260px;*/
+    width:29%;
 	font-size:8pt;
 	text-align:left;
 }
@@ -170,11 +188,9 @@ pre.outline {
     margin: 0;
     padding: 0 0 0 5px;
 }
-
-.displayLinkShowMore:link, .displayLinkShowLess:link {
- color:#2A4862;	
+#relations li {
+	padding-bottom:2px;
 }
-
 .linkShow:link {
 	color: #C65400;
 	text-decoration:underline;

@@ -211,6 +211,10 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 			request.setAttribute("archivalInstitution", archivalInstitution);
 			request.setAttribute("eaccpfIdentifier", eaccpf.getIdentifier());
 			request.setAttribute("repositoryCode",eaccpf.getArchivalInstitution().getRepositorycode());
+			CouAlternativeNameDAO couAlternativeDAO = DAOFactory.instance().getCouAlternativeNameDAO();
+			String language = getLocale().getLanguage();
+			request.setAttribute("localizedCountryName",
+					couAlternativeDAO.getLocalizedCountry(eaccpf.getArchivalInstitution().getCountry().getIsoname(), language));
 			Locale locale = getLocale();
 			if (locale == null) {
 				request.setAttribute("locale", "en");

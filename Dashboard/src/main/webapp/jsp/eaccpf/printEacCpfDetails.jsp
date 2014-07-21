@@ -35,6 +35,10 @@
 		<div>&nbsp;</div>
 		<div id="eacCpfDisplayPortlet">
 			<div id="printPreview">
+				<h3 id="contextInformation">
+					${localizedCountryName}
+					&gt; <a href="${aiCodeUrl}/${archivalInstitution.encodedRepositorycode}">${archivalInstitution.ainame}</a>
+				</h3>
 			 	<div id="eaccpfcontent">
 				    <dashboard:eac type="eaccpfdetails" eacUrl="${eac.path}" repositoryCode="${repositoryCode}" eaccpfIdentifier="${eaccpfIdentifier}" />
 		   		</div>
