@@ -46,30 +46,11 @@
                 <tr>
                     <th colspan="4"><s:property value="getText('eaccpf.relations.organisation')" /></th>
                 </tr>
-                <s:if test="%{#current.agencyNames.size() > 0}">
-                    <s:iterator var="currentName" value="#current.agencyNames" status="status2">
-                        <s:iterator var="currentId" value="#current.agencyCodes" status="status3">
-                            <s:if test="%{#status2.index == #status3.index}">
-                                <tr id="trCpfRelationRespOrg_<s:property value="#status2.index + 1" />">
-                                    <td><label><s:property value="getText('eaccpf.relations.name')" /></label></td>
-                                    <td><input type="text" id="textCpfRelRespOrgPerson" name="cpfRelationsTable_<s:property value="#status.index + 1" />_textCpfRelRespOrgPerson_<s:property value="#status2.index + 1" />" value="<s:property value="#currentName" />" /></td>
-                                    <td><label><s:property value="getText('eaccpf.relations.identifier')" /></label></td>
-                                    <td><input type="text" id="textCpfRelRespOrgId" name="cpfRelationsTable_<s:property value="#status.index + 1" />_textCpfRelRespOrgId_<s:property value="#status3.index + 1" />"  value="<s:property value="#currentId" />"/></td>
-                                </tr>
-                            </s:if>
-                        </s:iterator>
-                    </s:iterator>
-                </s:if>
-                <s:else>
-                    <tr id="trCpfRelationRespOrg_1">
+                <tr id="trCpfRelationRespOrg_1">
                         <td><label><s:property value="getText('eaccpf.relations.name')" /></label></td>
                         <td><input type="text" id="textCpfRelRespOrgPerson" name="cpfRelationsTable_1_textCpfRelRespOrgPerson_1" /></td>
                         <td><label><s:property value="getText('eaccpf.relations.identifier')" /></label></td>
                         <td><input type="text" id="textCpfRelRespOrgId" name="cpfRelationsTable_1_textCpfRelRespOrgId_1" /></td>
-                    </tr>
-                </s:else>
-                <tr>
-                    <td colspan="4"><input type="button" value="<s:property value="getText('eaccpf.relations.add.further.organisation')" />" id="addCpfRelRespOrgButton" onClick="addCpfRelRespOrg($(this).parent().parent().parent().parent(), '<s:property value="getText('eaccpf.relations.error.organisation.popup')" />');" /></td>
                 </tr>
             </table>
         </s:iterator>
@@ -119,9 +100,6 @@
                 <td><input type="text" id="textCpfRelRespOrgPerson" name="cpfRelationsTable_1_textCpfRelRespOrgPerson_1" /></td>
                 <td><label><s:property value="getText('eaccpf.relations.identifier')" /></label></td>
                 <td><input type="text" id="textCpfRelRespOrgId" name="cpfRelationsTable_1_textCpfRelRespOrgId_1" /></td>
-            </tr>
-            <tr>
-                <td colspan="4"><input type="button" value="<s:property value="getText('eaccpf.relations.add.further.organisation')" />" id="addCpfRelRespOrgButton" onClick="addCpfRelRespOrg($(this).parent().parent().parent().parent(), '<s:property value="getText('eaccpf.relations.error.organisation.popup')" />');" /></td>
             </tr>
         </table>
     </s:else>
@@ -194,9 +172,6 @@
                         <td><input type="text" id="textResRelRespOrgId" name="resRelationsTable_1_textResRelRespOrgId_1" /></td>
                     </tr>
                 </s:else>
-                <tr>
-                    <td colspan="4"><input type="button" value="<s:property value="getText('eaccpf.relations.add.further.organisation')" />" id="addResRelRespOrgButton" onClick="addResRelRespOrg($(this).parent().parent().parent().parent(), '<s:property value="getText('eaccpf.relations.error.organisation.popup')" />');" /></td>
-                </tr>
             </table>
         </s:iterator>
     </s:if>
@@ -245,9 +220,6 @@
                 <td><input type="text" id="textResRelRespOrgPerson" name="resRelationsTable_1_textResRelRespOrgPerson_1" /></td>
                 <td><label><s:property value="getText('eaccpf.relations.identifier')" /></label></td>
                 <td><input type="text" id="textResRelRespOrgId" name="resRelationsTable_1_textResRelRespOrgId_1" /></td>
-            </tr>
-            <tr>
-                <td colspan="4"><input type="button" value="<s:property value="getText('eaccpf.relations.add.further.organisation')" />" id="addResRelRespOrgButton" onClick="addResRelRespOrg($(this).parent().parent().parent().parent());" /></td>
             </tr>
         </table>
     </s:else>
@@ -320,9 +292,6 @@
                         <td><input type="text" id="textFncRelRespOrgId" name="fncRelationsTable_1_textFncRelRespOrgId_1" /></td>
                     </tr>
                 </s:else>
-                <tr>
-                    <td colspan="4"><input type="button" value="<s:property value="getText('eaccpf.relations.add.further.organisation')" />" id="addFncRelRespOrgButton" onClick="addFncRelRespOrg($(this).parent().parent().parent().parent(), '<s:property value="getText('eaccpf.relations.error.organisation.popup')" />');" /></td>
-                </tr>
             </table>
         </s:iterator>
     </s:if>
@@ -371,9 +340,6 @@
                 <td><input type="text" id="textFncRelRespOrgPerson" name="fncRelationsTable_1_textFncRelRespOrgPerson_1" /></td>
                 <td><label><s:property value="getText('eaccpf.relations.identifier')" /></label></td>
                 <td><input type="text" id="textFncRelRespOrgId" name="fncRelationsTable_1_textFncRelRespOrgId_1" /></td>
-            </tr>
-            <tr>
-                <td colspan="4"><input type="button" value="<s:property value="getText('eaccpf.relations.add.further.organisation')" />" id="addFncRelRespOrgButton" onClick="addFncRelRespOrg($(this).parent().parent().parent().parent());" /></td>
             </tr>
         </table>
     </s:else>
