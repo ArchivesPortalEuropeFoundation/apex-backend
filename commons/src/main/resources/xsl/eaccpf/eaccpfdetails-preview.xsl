@@ -705,14 +705,22 @@
 			</xsl:if>
 			<!-- structureOrGenealogy -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level/eac:item/text()">
-				<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
+				    <xsl:if test="$entityType='person'">
+				    	<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/></h2>
+					</xsl:if>
+					<xsl:if test="$entityType='corporateBody'">
+						<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.structure')"/></h2>
+					</xsl:if>
+					<xsl:if test="$entityType='family'">
+						<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
+				   </xsl:if>
 				<xsl:variable name="firstchild" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/*[1]"/>
 			  	<xsl:if test="name($firstchild)='outline'">
-					   <xsl:call-template name="outline">
+					   <xsl:call-template name="outlineStructure">
 					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
 					   	 <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>	
-					  	 <xsl:with-param name="title" select="'eaccpf.portal.structureOrGenealogy'"/> 	
-					   </xsl:call-template>
+					   	 <xsl:with-param name="entityType" select="$entityType"/>	
+					   </xsl:call-template> 
 					   <xsl:call-template name="p">
 					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
 					  	 <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
@@ -723,11 +731,11 @@
 					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
 					   	  <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
 					    </xsl:call-template>
-					   <xsl:call-template name="outline">
-					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
-					   	  <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>	
-					  	  <xsl:with-param name="title" select="'eaccpf.portal.structureOrGenealogy'"/> 	
-					   </xsl:call-template>
+					   <xsl:call-template name="outlineStructure">
+					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
+					   	 <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>
+					   	 <xsl:with-param name="entityType" select="$entityType"/>
+					   </xsl:call-template> 
 				</xsl:if>
 			</xsl:if> 
 			<!-- generalContext -->
@@ -1529,22 +1537,24 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="$list">
-					<xsl:choose>
-						<xsl:when test="@vocabularySource">
-							<xsl:call-template name="vocabularySource">
-								<xsl:with-param name="node" select="."/>
-							</xsl:call-template>
-						</xsl:when>
-						<xsl:when test="name(current()) = 'citation'">
-							<xsl:call-template name="citationHref">
-								<xsl:with-param name="link" select="./@xlink:href"/>
-								<xsl:with-param name="title" select="./text()"/>
-							</xsl:call-template>
-						</xsl:when>
-						<xsl:otherwise>
-						 	<xsl:apply-templates select="." mode="other"/> 
-						</xsl:otherwise>
-					</xsl:choose>
+					<p>
+						<xsl:choose>
+							<xsl:when test="@vocabularySource">
+								<xsl:call-template name="vocabularySource">
+									<xsl:with-param name="node" select="."/>
+								</xsl:call-template>
+							</xsl:when>
+							<xsl:when test="name(current()) = 'citation'">
+								<xsl:call-template name="citationHref">
+									<xsl:with-param name="link" select="./@xlink:href"/>
+									<xsl:with-param name="title" select="./text()"/>
+								</xsl:call-template>
+							</xsl:when>
+							<xsl:otherwise>
+							 	<xsl:apply-templates select="." mode="other"/> 
+							</xsl:otherwise>
+						</xsl:choose>
+					</p>
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -2457,6 +2467,41 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<!--template for outline in structureOrGenealogy-->
+	<xsl:template name="outlineStructure">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+		<xsl:param name="entityType"/>
+		<xsl:if test="$list/eac:outline/eac:level/eac:item/text()"> 
+		   	<div class="row">
+				<div class="leftcolumn">
+					<xsl:if test="$entityType='person'">
+				    	<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/></h2>
+					</xsl:if>
+					<xsl:if test="$entityType='corporateBody'">
+						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structure')"/></h2>
+					</xsl:if>
+					<xsl:if test="$entityType='family'">
+						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
+				   </xsl:if>
+			   	</div>
+			   	<div class="rightcolumn moreDisplay" id="{$clazz}">
+			   		<xsl:call-template name="multilanguageOutline">
+			   			<xsl:with-param name="list" select="$list/eac:outline/eac:level"/>
+			   		</xsl:call-template>
+			   		<div class="linkMore">
+						<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'pre');">
+							<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
+						</a>
+						<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'pre');">
+							<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
+						</a>
+					</div>
+				</div>
+		  </div>
+		</xsl:if>
+	</xsl:template>
+	
 	<!--template for outline -->
 	<xsl:template name="outline">
 		<xsl:param name="list"/>
@@ -2503,7 +2548,6 @@
 			<xsl:when test="$list/descendant-or-self::node()/eac:item[@xml:lang = $language.selected] and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.selected]/text() and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.selected]/text() != ''">
 				<xsl:call-template name="multilanguageOutlineRecursive">
 					<xsl:with-param name="list" select="$list"/>
-					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
 					<xsl:with-param name="language" select="$language.selected"/>
 				</xsl:call-template>
 			</xsl:when> 
@@ -2511,7 +2555,6 @@
 			<xsl:when test="$list/descendant-or-self::node()/eac:item[@xml:lang = $language.default] and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.default]/text() and $list/descendant-or-self::node()/eac:item[@xml:lang = $language.default]/text() != ''">
 				<xsl:call-template name="multilanguageOutlineRecursive">
 					<xsl:with-param name="list" select="$list"/>
-					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
 					<xsl:with-param name="language" select="$language.default"/>
 				</xsl:call-template>
 			</xsl:when>
@@ -2519,7 +2562,6 @@
 			<xsl:when test="$list/descendant-or-self::node()/eac:item[not(@xml:lang)] and $list/descendant-or-self::node()/eac:item[not(@xml:lang)]/text() and $list/descendant-or-self::node()/eac:item[not(@xml:lang)]/text() != ''">
 				<xsl:call-template name="multilanguageOutlineRecursive">
 					<xsl:with-param name="list" select="$list"/>
-					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
 					<xsl:with-param name="language" select="'notLang'"/>
 				</xsl:call-template>
 			</xsl:when>
@@ -2527,7 +2569,6 @@
 				<xsl:variable name="language.first" select="$list[1]/eac:item/@xml:lang"/>
 				<xsl:call-template name="multilanguageOutlineRecursive">
 					<xsl:with-param name="list" select="$list"/>
-					<xsl:with-param name="count" select="1"/> <!-- count the number of white spaces to display in the tree -->
 					<xsl:with-param name="language" select="$language.first"/>
 				</xsl:call-template>
 			</xsl:otherwise>
@@ -2537,38 +2578,32 @@
 	<!-- template for outline recursive -->
 	<xsl:template name="multilanguageOutlineRecursive">
 		<xsl:param name="list"/>
-		<xsl:param name="count"/>
 		<xsl:param name="language"/>
+	    <ul class="level">
 			 <xsl:for-each select="$list">
 				 	<xsl:if test="./descendant-or-self::node()/eac:item[@xml:lang = $language] or ($language='notLang' and ./descendant-or-self::node()/eac:item[not(@xml:lang)])"> 
-						<pre class="outline">
-							<xsl:if test="name(./parent::node()) != 'outline'">
-								<xsl:call-template name="repeat">
-									<xsl:with-param name="count" select="$count"/>
-								</xsl:call-template>
-							</xsl:if>
-							<xsl:text>* </xsl:text>
-						 	<xsl:apply-templates select="./eac:item" mode="other"/> 
-						</pre>
+						<xsl:choose>
+							<xsl:when test="name(./parent::node()) != 'outline'">
+							   <ul class="level">
+							      <li class="item">
+							        <xsl:apply-templates select="./eac:item" mode="other"/> 
+							      </li>
+								</ul>
+							</xsl:when>
+							<xsl:otherwise>
+								<li class="item">
+								 	<xsl:apply-templates select="./eac:item" mode="other"/> 
+							 	</li>
+						 	</xsl:otherwise>
+						</xsl:choose>
 					</xsl:if>
 					<xsl:for-each select="./eac:level">
 						<xsl:call-template name="multilanguageOutlineRecursive">
 							<xsl:with-param name="list" select="."/>
-							<xsl:with-param name="count" select="$count+1"/>
 							<xsl:with-param name="language" select="$language"/>
 						</xsl:call-template>
 					</xsl:for-each> 
 				</xsl:for-each> 
-	</xsl:template>
-	
-	<!-- template to tabulate the elements outline -->
-	<xsl:template name="repeat">
-	  <xsl:param name="count" />
-	  <xsl:text>  </xsl:text>
-	  <xsl:if test="$count &gt; 1">
-	    <xsl:call-template name="repeat"> 
-	      <xsl:with-param name="count" select="$count - 1" />
-	    </xsl:call-template>
-	  </xsl:if>
+ 		</ul>
 	</xsl:template>
 </xsl:stylesheet>
