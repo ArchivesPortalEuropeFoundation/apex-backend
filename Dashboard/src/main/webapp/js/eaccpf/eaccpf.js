@@ -1365,29 +1365,6 @@ function addCpfRelation(defaultLanguage, relationMissing) {
     }
 }
 
-function addCpfRelRespOrg(table, organisationMissing) {
-    var id = $(table).attr("id");
-    var counter = $("table#" + id + " tr[id^='trCpfRelationRespOrg_']").length;
-    var respOrgName = $("table#" + id + " tr#trCpfRelationRespOrg_" + counter + " td input#textCpfRelRespOrgPerson").attr("value");
-    var respOrgId = $("table#" + id + " tr#trCpfRelationRespOrg_" + counter + " td input#textCpfRelRespOrgId").attr("value");
-    if (respOrgName == null || respOrgName == "" || respOrgId == null || respOrgId == "") {
-        alertEmptyFields(organisationMissing);
-        return;
-    }
-
-    var clone = $("table#" + id + " tr[id^='trCpfRelationRespOrg_" + counter + "']").clone();
-    clone = "<tr id='" + ("trCpfRelationRespOrg_" + (counter + 1)) + "'>" + clone.html() + "</tr>";
-    $("table#" + id + " tr[id^='trCpfRelationRespOrg_" + counter + "']").after(clone);
-    // Delete old names and reset parameters
-    $("table#" + id + " tr#trCpfRelationRespOrg_" + (counter + 1) + " input[type='text']").each(function() {
-        $(this).removeAttr("name");
-        $(this).val(""); // Clean all input_text.
-    });
-    // Set new names
-    $("table#" + id + " tr#trCpfRelationRespOrg_" + (counter + 1) + " input#textCpfRelRespOrgPerson").attr("name", id + "_textCpfRelRespOrgPerson_" + (counter + 1));
-    $("table#" + id + " tr#trCpfRelationRespOrg_" + (counter + 1) + " input#textCpfRelRespOrgId").attr("name", id + "_textCpfRelRespOrgId_" + (counter + 1));
-}
-
 function addResRelation(defaultLanguage, relationMissing) {
     var counter = $("table[id^='resRelationsTable_']").length;
     var relation = $("table#resRelationsTable_" + counter + " input#textResRelationName").attr("value");
@@ -1434,29 +1411,6 @@ function addResRelation(defaultLanguage, relationMissing) {
     }
 }
 
-function addResRelRespOrg(table, organisationMissing) {
-    var id = $(table).attr("id");
-    var counter = $("table#" + id + " tr[id^='trResRelationRespOrg_']").length;
-    var respOrgName = $("table#" + id + " tr#trResRelationRespOrg_" + counter + " td input#textResRelRespOrgPerson").attr("value");
-    var respOrgId = $("table#" + id + " tr#trResRelationRespOrg_" + counter + " td input#textResRelRespOrgId").attr("value");
-    if (respOrgName == null || respOrgName == "" || respOrgId == null || respOrgId == "") {
-        alertEmptyFields(organisationMissing);
-        return;
-    }
-
-    var clone = $("table#" + id + " tr[id^='trResRelationRespOrg_" + counter + "']").clone();
-    clone = "<tr id='" + ("trResRelationRespOrg_" + (counter + 1)) + "'>" + clone.html() + "</tr>";
-    $("table#" + id + " tr[id^='trResRelationRespOrg_" + counter + "']").after(clone);
-    // Delete old names and reset parameters
-    $("table#" + id + " tr#trResRelationRespOrg_" + (counter + 1) + " input[type='text']").each(function() {
-        $(this).removeAttr("name");
-        $(this).val(""); // Clean all input_text.
-    });
-    // Set new names
-    $("table#" + id + " tr#trResRelationRespOrg_" + (counter + 1) + " input#textResRelRespOrgPerson").attr("name", id + "_textResRelRespOrgPerson_" + (counter + 1));
-    $("table#" + id + " tr#trResRelationRespOrg_" + (counter + 1) + " input#textResRelRespOrgId").attr("name", id + "_textResRelRespOrgId_" + (counter + 1));
-}
-
 function addFncRelation(defaultLanguage, relationMissing) {
     var counter = $("table[id^='fncRelationsTable_']").length;
     var relation = $("table#fncRelationsTable_" + counter + " input#textFncRelationName").attr("value");
@@ -1501,29 +1455,6 @@ function addFncRelation(defaultLanguage, relationMissing) {
     if (defaultLanguage != null) {
         $("table#fncRelationsTable_" + (counter + 1) + " select#fncRelationLanguage").attr("value", defaultLanguage);
     }
-}
-
-function addFncRelRespOrg(table, organisationMissing) {
-    var id = $(table).attr("id");
-    var counter = $("table#" + id + " tr[id^='trFncRelationRespOrg_']").length;
-    var respOrgName = $("table#" + id + " tr#trFncRelationRespOrg_" + counter + " td input#textFncRelRespOrgPerson").attr("value");
-    var respOrgId = $("table#" + id + " tr#trFncRelationRespOrg_" + counter + " td input#textFncRelRespOrgId").attr("value");
-    if (respOrgName == null || respOrgName == "" || respOrgId == null || respOrgId == "") {
-        alertEmptyFields(organisationMissing);
-        return;
-    }
-
-    var clone = $("table#" + id + " tr[id^='trFncRelationRespOrg_" + counter + "']").clone();
-    clone = "<tr id='" + ("trFncRelationRespOrg_" + (counter + 1)) + "'>" + clone.html() + "</tr>";
-    $("table#" + id + " tr[id^='trFncRelationRespOrg_" + counter + "']").after(clone);
-    // Delete old names and reset parameters
-    $("table#" + id + " tr#trFncRelationRespOrg_" + (counter + 1) + " input[type='text']").each(function() {
-        $(this).removeAttr("name");
-        $(this).val(""); // Clean all input_text.
-    });
-    // Set new names
-    $("table#" + id + " tr#trFncRelationRespOrg_" + (counter + 1) + " input#textFncRelRespOrgPerson").attr("name", id + "_textFncRelRespOrgPerson_" + (counter + 1));
-    $("table#" + id + " tr#trFncRelationRespOrg_" + (counter + 1) + " input#textFncRelRespOrgId").attr("name", id + "_textFncRelRespOrgId_" + (counter + 1));
 }
 
 /**************************************
