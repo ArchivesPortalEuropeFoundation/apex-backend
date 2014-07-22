@@ -223,6 +223,7 @@ public class LoadFormAction extends EacCpfAction {
         // Add empty list entry
         addressComponentTypeList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
 
+        addressComponentTypeList.add(new MapEntry("country", getText("eaccpf.description.combo.address.component.country")));
         addressComponentTypeList.add(new MapEntry("firstdem", getText("eaccpf.description.combo.address.component.firstdem")));
         addressComponentTypeList.add(new MapEntry("secondem", getText("eaccpf.description.combo.address.component.secondem")));
         addressComponentTypeList.add(new MapEntry("postalcode", getText("eaccpf.description.combo.address.component.postalcode")));
