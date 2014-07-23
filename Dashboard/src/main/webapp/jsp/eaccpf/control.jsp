@@ -16,11 +16,11 @@
         </tr>
         <tr>
             <td><label for="responsiblePerson"><s:property value="getText('eaccpf.control.personinstitutionresponsiblefordescription')" /></label></td>
-            <td><input type="text" id="responsiblePerson" name="responsiblePerson" readonly="true" value="${loader.controlResponsiblePerson}" /></td>
+            <td><input type="text" id="responsiblePerson" name="responsiblePerson" disabled="disabled" value="${loader.controlResponsiblePerson}" /></td>
         </tr>
         <tr>
             <td><label for="responsibleInstitution"><b><s:property value="getText('eaccpf.control.identifierofinstitutionresponsible')" />*</b></label></td>
-            <td><input type="text" id="responsibleInstitution" name="responsibleInstitution" readonly="true" value="${loader.agencyCode}" /></td>
+            <td><input type="text" id="responsibleInstitution" name="responsibleInstitution" disabled="disabled" value="${loader.agencyCode}" /></td>
         </tr>
     </table>
     <s:if test="%{loader.otherRecordIds.size() > 0}">
