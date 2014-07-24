@@ -813,40 +813,69 @@
 			<xsl:value-of select="ape:resource('eadcontent.origination')" />
 		</h2>
 	   	<div class="ead-content"> 
-			<xsl:if test="ead:origination[@label='pre']">
+		   <xsl:if test="ead:origination[@label='pre']">
 				<br/>
 				<b><xsl:value-of select="ape:resource('eadcontent.origination.pre')" />:</b>
-				<xsl:for-each select="ead:origination[@label='pre']">
-					<xsl:apply-templates  mode="other"/>
-				</xsl:for-each>
-			</xsl:if>
+				<br/> 
+				<xsl:for-each select="ead:origination[@label='pre']"> 
+					<p>	
+						 <xsl:for-each select="child::node()">
+							 <xsl:value-of select="fn:normalize-space(ape:highlight(., 'other'))" disable-output-escaping="yes"/>
+						 	 <xsl:text> </xsl:text>  
+						</xsl:for-each>
+					</p>
+			  	</xsl:for-each>
+		    </xsl:if>
 			<xsl:if test="ead:origination[@label='final']">
 				<br/>
 				<b><xsl:value-of select="ape:resource('eadcontent.origination.final')" />:</b>
+				<br/>
 				<xsl:for-each select="ead:origination[@label='final']">
-					<xsl:apply-templates  mode="other"/>
+				   <p>	
+						 <xsl:for-each select="child::node()">
+							 <xsl:value-of select="fn:normalize-space(ape:highlight(., 'other'))" disable-output-escaping="yes"/>
+						 	 <xsl:text> </xsl:text>  
+						</xsl:for-each>
+					</p>
 				</xsl:for-each>
 			</xsl:if>
 			<xsl:if test="ead:origination[@label='organisational unit']">
 				<br/>
 				<b><xsl:value-of select="ape:resource('eadcontent.origination.orgunit')" />:</b>
+				<br/>
 				<xsl:for-each select="ead:origination[@label='organisational unit']">
-					<xsl:apply-templates  mode="other"/>
+					<p>	
+						 <xsl:for-each select="child::node()">
+							 <xsl:value-of select="fn:normalize-space(ape:highlight(., 'other'))" disable-output-escaping="yes"/>
+						 	 <xsl:text> </xsl:text>  
+						</xsl:for-each>
+					</p>
 				</xsl:for-each>
 			</xsl:if>
 			<xsl:if test="ead:origination[@label!='pre'] and ead:origination[@label!='final'] and ead:origination[@label!='organisational unit']">
 				<xsl:for-each select="ead:origination">
 					<xsl:if test="./@label!='pre' and ./@label!='final' and ./@label!='organisational unit'">
 						<br/>
-						<b><xsl:value-of select="./@label" /></b>
-						<xsl:apply-templates mode="other"/>
+						<b><xsl:value-of select="./@label" />:</b>
+						<br/>
+						<p>	
+							 <xsl:for-each select="child::node()">
+								 <xsl:value-of select="fn:normalize-space(ape:highlight(., 'other'))" disable-output-escaping="yes"/>
+							 	 <xsl:text> </xsl:text>  
+							</xsl:for-each>
+						</p>
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:if>
             <xsl:if test="ead:origination[not(@label)]">
-				<xsl:if test="ead:origination[@label]"><br/></xsl:if>
+					<br/>
                 	<xsl:for-each select="ead:origination[not(@label)]">
-               			<xsl:apply-templates mode="other"/>
+	               		<p>	
+							 <xsl:for-each select="child::node()">
+								 <xsl:value-of select="fn:normalize-space(ape:highlight(., 'other'))" disable-output-escaping="yes"/>
+							 	 <xsl:text> </xsl:text>  
+							</xsl:for-each>
+						</p>
                   	</xsl:for-each>
             </xsl:if>
 	   	</div>
