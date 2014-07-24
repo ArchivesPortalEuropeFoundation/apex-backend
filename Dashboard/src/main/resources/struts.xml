@@ -568,9 +568,12 @@
         </action>
 
         <action name="edit" class="eu.apenet.dashboard.actions.EditAction">
-            <result name="input" type="tiles">edit</result>
+            <result name="input" type="redirectAction">
+                <param name="actionName">view</param>
+            </result>
             <result name="success" type="tiles">success</result>
             <result name="error" type="tiles">error</result>
+            <result name="error_admin" type="tiles">indexAdmin</result>
             <result name="cancel" type="redirectAction">
                 <param name="actionName">index</param>
             </result>

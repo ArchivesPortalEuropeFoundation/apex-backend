@@ -93,6 +93,10 @@ public class EditAction extends AbstractAction {
 					}
 					else{
 						addActionMessage(getText("oldpassword.notEquals"));
+						SecurityContext securityContext = SecurityContext.get();
+						if (securityContext!=null && securityContext.isAdmin()) {
+							return "error_admin";
+						}
 						return ERROR;
 					}
 				} else {
@@ -102,6 +106,10 @@ public class EditAction extends AbstractAction {
 					}
 					else{
 						addActionMessage(getText("oldpassword.notEquals"));
+						SecurityContext securityContext = SecurityContext.get();
+						if (securityContext!=null && securityContext.isAdmin()) {
+							return "error_admin";
+						}
 						return ERROR;
 					}
 				}
