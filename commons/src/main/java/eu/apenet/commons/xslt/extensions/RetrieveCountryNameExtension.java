@@ -1,6 +1,5 @@
 package eu.apenet.commons.xslt.extensions;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -13,6 +12,7 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
+import eu.apenet.commons.utils.APEnetUtilities;
 
 public class RetrieveCountryNameExtension extends ExtensionFunctionDefinition {
 	/**
@@ -94,13 +94,7 @@ public class RetrieveCountryNameExtension extends ExtensionFunctionDefinition {
 						&& countryCode != null && !countryCode.isEmpty()) {
 
 					// Checks the language.
-					String[] languages = Locale.getISOLanguages();
-					Map<String, Locale> localeMap = new HashMap<String, Locale>(languages.length);
-					for (String language : languages) {
-					    Locale locale = new Locale(language);
-					    localeMap.put(locale.getISO3Language(), locale);
-					}
-
+					Map<String, Locale> localeMap = APEnetUtilities.getIso3ToIso2LanguageCodesMap();
 					Locale language = localeMap.get(lang);
 					if (language == null) {
 						language = Locale.ENGLISH;
