@@ -890,6 +890,61 @@ function addDateOrDateRangeExistence(buttonClicked, dateLabel, fromDateLabel, to
  * Description tab functions
  **************************************/
 
+function togglePlaceFields(nameTf) {
+    var tableName = $(nameTf).parent().parent().parent().parent().attr("id");
+    var addrCompCounter = $("table#" + tableName + " tr[id^='trAddressComponent_']").length;
+    var dateCounter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
+
+    if ($(nameTf).val() == "") {
+        $('table#' + tableName + ' input#linkPlaceVocab').attr("disabled", "disabled");
+        $('table#' + tableName + ' select#placeCountry').attr("disabled", "disabled");
+        for (var i = 1; i <= addrCompCounter; i++) {
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' input#addressDetails').attr("disabled", "disabled");
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' select#addressComponent').attr("disabled", "disabled");
+        }
+        $('table#' + tableName + ' input#addAddressComponentButton').attr("disabled", "disabled");
+        $('table#' + tableName + ' tr#trPlaceRole select#placeRole_1').attr("disabled", "disabled");
+        for (var i = 1; i <= dateCounter; i++) {
+            $('table#' + tableName + ' tr#trDate_text_' + i + ' input[type="text"]').each(function() {
+                $(this).attr("disabled", "disabled");
+            });
+            $('table#' + tableName + ' tr#trDate_radio_' + i + ' input[type="radio"]').each(function() {
+                $(this).attr("disabled", "disabled");
+            });
+            $('table#' + tableName + ' tr#trDate_iso_' + i + ' input[type="text"]').each(function() {
+                $(this).attr("disabled", "disabled");
+            });
+        }
+        $('table#' + tableName + ' input#addPlaceDate').attr("disabled", "disabled");
+        $('table#' + tableName + ' input#addPlaceDateRange').attr("disabled", "disabled");
+    } else {
+        $('table#' + tableName + ' input#linkPlaceVocab').removeAttr("disabled");
+        $('table#' + tableName + ' select#placeCountry').removeAttr("disabled");
+        for (var i = 1; i <= addrCompCounter; i++) {
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' input#addressDetails').removeAttr("disabled");
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' select#addressComponent').removeAttr("disabled");
+        }
+        $('table#' + tableName + ' input#addAddressComponentButton').removeAttr("disabled");
+        $('table#' + tableName + ' tr#trPlaceRole select#placeRole_1').removeAttr("disabled");
+        for (var i = 1; i <= dateCounter; i++) {
+            var elementCounter = $('table#' + tableName + ' tr#trDate_radio_' + i + ' input[id="date_"]').length;
+            $('table#' + tableName + ' tr#trDate_radio_' + i + ' input[type="radio"]').each(function() {
+                $(this).removeAttr("disabled");
+            });
+            for (var j = 1; j <= elementCounter; j++) {
+                if ($('table#' + tableName + ' tr#trDate_radio_' + i + ' input[name="' + tableName + '_date_' + j + '_radio_' + i + '"]:checked').val() == "known") {
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j).removeAttr("disabled");
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j + '_Year').removeAttr("disabled");
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j + '_Month').removeAttr("disabled");
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j + '_Day').removeAttr("disabled");
+                }
+            }
+        }
+        $('table#' + tableName + ' input#addPlaceDate').removeAttr("disabled");
+        $('table#' + tableName + ' input#addPlaceDateRange').removeAttr("disabled");
+    }
+}
+
 function addAddressComponent(tableName, componentMissing) {
     var counter = $("table#" + tableName + " tr[id^='trAddressComponent_']").length;
     var component = $("table#" + tableName + " tr#trAddressComponent_" + counter + " input#addressDetails").attr("value");
@@ -965,28 +1020,47 @@ function addPlace(defaultLanguage, placeMissing) {
         return;
     }
 
+    //counting var for determining the total number of elements; initialized for value replication of date radiobuttons
+    var idCounter = $("table#placeTable_" + counter + " tr[id^='trDate_text_']").length;
+
+    //collecting of radiobutton values in array
+    var dateRadioValues = new Array();
+    if (idCounter > 0) {
+        for (var i = 1; i <= idCounter; i++) {
+            var elementCounter = $("table#placeTable_" + counter + " tr#trDate_text_" + i + " input[id^='date_']").length;
+            for (var j = 1; j <= elementCounter; j++) {
+                var dateRadioValue = new Array();
+                dateRadioValue.push(i);
+                dateRadioValue.push("placeTable_" + counter + "_date_" + j + "_radio_" + i);
+                dateRadioValue.push($("table#placeTable_" + counter + " tr#trDate_radio_" + i + " input[name=placeTable_" + counter + "_date_" + j + "_radio_" + i + "]:checked").val());
+                dateRadioValues.push(dateRadioValue);
+            }
+        }
+    }
+
     var clone = $("table[id^='placeTable_" + counter + "']").clone();
     clone = "<table id='" + ("placeTable_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='placeTable_" + counter + "']").after(clone);
     // rename header of clone
     $("table#placeTable_" + (counter + 1) + " th#thPlaceTableHeader").html("Place " + (counter + 1));
     // delete superfluous address component rows
-    var idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trAddressComponent_']").length;
+    idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trAddressComponent_']").length;
     if (idCounter > 1) {
         for (var i = idCounter; i > 1; i--) {
             $("table#placeTable_" + (counter + 1) + " tr#trAddressComponent_" + i).remove();
         }
     }
-// delete superfluous date rows
-    idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trDate_']").length;
+    //delete superfluous date rows in clone
+    idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trDate_text_']").length;
     if (idCounter > 0) {
-        idCounter = idCounter / 2;
-        for (var i = idCounter; i > 0; i--) {
+        for (var i = idCounter; i >= 0; i--) {
             $("table#placeTable_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#placeTable_" + (counter + 1) + " tr#trDate_radio_" + i).remove();
             $("table#placeTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-// Reset parameters
+
+    // Reset parameters
     $("table#placeTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name"); //remove old name
@@ -1003,6 +1077,15 @@ function addPlace(defaultLanguage, placeMissing) {
     $("table#placeTable_" + (counter + 1) + " input#addressDetails").attr("name", "placeTable_" + (counter + 1) + "_addressDetails_1");
     $("table#placeTable_" + (counter + 1) + " select#addressComponent").attr("name", "placeTable_" + (counter + 1) + "_addressComponent_1");
     $("table#placeTable_" + (counter + 1) + " input#placeRole").attr("name", "placeRole_" + (counter + 1));
+    // Set elements as inactive
+    $("table#placeTable_" + (counter + 1) + " input#linkPlaceVocab").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " select#placeCountry").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addressDetails").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " select#addressComponent").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#placeRole").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addAddressComponentButton").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addPlaceDate").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addPlaceDateRange").attr("disabled", "disabled");
     // Set correct params to hidden counter
     $("table#placeTable_" + (counter + 1) + " input[type='hidden']").removeAttr("id");
     $("table#placeTable_" + (counter + 1) + " input[type='hidden']").removeAttr("name");
@@ -1012,6 +1095,10 @@ function addPlace(defaultLanguage, placeMissing) {
     // If default language given, set language field to this value
     if (defaultLanguage != null) {
         $("table#placeTable_" + (counter + 1) + " select#placeLanguage").attr("value", defaultLanguage);
+    }
+    // Finally, set correct values for original radio buttons once again
+    for (var i = 0; i < dateRadioValues.length; i++){
+        $("table#placeTable_" + counter + " tr#trDate_radio_" + dateRadioValues[i][0] + " input[name=" + dateRadioValues[i][1] + "][value=" + dateRadioValues[i][2] + "]").attr('checked', 'checked');
     }
 }
 

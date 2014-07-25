@@ -152,7 +152,7 @@
             </tr>
             <tr>
                 <td><label for="place"><s:property value="getText('eaccpf.description.place')" /></label></td>
-                <td><input type="text" id="place" name="place_1" /></td>
+                <td><input type="text" id="place" name="place_1" oninput="togglePlaceFields($(this));" /></td>
                 <td><label for="placeLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
                 <td>
                     <select id="placeLanguage" name="placeLanguage_1" >
@@ -164,13 +164,13 @@
             </tr>
             <tr>
                 <td><label for="linkPlaceVocab"><s:property value="getText('eaccpf.description.linkvocabularyplaces')" /></label></td>
-                <td><input type="text" id="linkPlaceVocab" name="linkPlaceVocab_1" /></td>
+                <td><input type="text" id="linkPlaceVocab" name="linkPlaceVocab_1" disabled="disabled" /></td>
                 <td colspan="2"></td>
             </tr>
             <tr>
                 <td><label for="placeCountry"><s:property value="getText('eaccpf.description.country')" /></label></td>
                 <td>
-                    <select id="placeCountry" name="placeCountry_1" >
+                    <select id="placeCountry" name="placeCountry_1" disabled="disabled">
                         <s:iterator value="countryList" var="list">
                             <option value='<s:property value="#list.key"/>'><s:property value="#list.value"/></option>
                         </s:iterator>
@@ -180,10 +180,10 @@
             </tr>
             <tr id="trAddressComponent_1">
                 <td><label for="addressDetails"><s:property value="getText('eaccpf.description.addressdetails')" /></label></td>
-                <td><input type="text" id="addressDetails" name="placeTable_1_addressDetails_1" /></td>
+                <td><input type="text" id="addressDetails" name="placeTable_1_addressDetails_1"  disabled="disabled"/></td>
                 <td><label for="addressComponent"><s:property value="getText('eaccpf.description.component')" /></label></td>
                 <td>
-                    <select id="addressComponent" name="placeTable_1_addressComponent_1" >
+                    <select id="addressComponent" name="placeTable_1_addressComponent_1" disabled="disabled">
                         <s:iterator value="addressComponentTypeList" var="list">
                             <option value='<s:property value="#list.key"/>'><s:property value="#list.value"/></option>
                         </s:iterator>
@@ -191,13 +191,13 @@
                 </td>
             </tr>
             <tr>
-                <td><input type="button" value="<s:property value="getText('eaccpf.description.button.addaddressdetails')" />" id="addAddressComponentButton" onclick="addAddressComponent($(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.error.empty.place')" />');" /></td>
+                <td><input type="button" value="<s:property value="getText('eaccpf.description.button.addaddressdetails')" />" id="addAddressComponentButton" onclick="addAddressComponent($(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.error.empty.place')" />');" disabled="disabled" /></td>
                 <td colspan="3"></td>
             </tr>
             <tr id="trPlaceRole">
                 <td><label for="placeRole_1"><s:property value="getText('eaccpf.description.roleplace')" /></label></td>
                 <td>
-                    <select id="placeRole_1" name="placeRole_1">
+                    <select id="placeRole_1" name="placeRole_1" disabled="disabled">
                         <s:iterator value="placeEntryList" var="list">
                             <option value='<s:property value="#list.key"/>'><s:property value="#list.value"/></option>
                         </s:iterator>
@@ -207,8 +207,8 @@
             </tr>
             <tr>
                 <td><label><s:property value="getText('eaccpf.description.adddatesofusefortheplace')" /></label></td>
-                <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addPlaceDate" onclick="addDateOrDateRangePlace(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addPlaceDateRange" onclick="addDateOrDateRangePlace(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />')" /></td>
+                <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addPlaceDate" onclick="addDateOrDateRangePlace(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />')" disabled="disabled"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addPlaceDateRange" onclick="addDateOrDateRangePlace(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />')" disabled="disabled"/></td>
                     <s:if test="%{#current.dates.size() > 0}">
                     <td><input type="hidden" id="placeTable_1_rows" name="placeTable_1_rows" value="<s:property value="#current.dates.size()" />" /></td>
                     </s:if>
