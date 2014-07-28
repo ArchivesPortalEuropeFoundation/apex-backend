@@ -983,8 +983,9 @@
 							<xsl:variable name="posChild" select="position()"/>								
 							<p>
 								<xsl:call-template name="citationHref">
-						   			<xsl:with-param name="link" select="./@xlink:href"/>
-									<xsl:with-param name="title" select="./text()"/>
+									<xsl:with-param name="link" select="./@xlink:href"/>
+									<xsl:with-param name="title" select="./@xlink:title" />
+									<xsl:with-param name="content" select="./text()"/>
 								</xsl:call-template>
 							</p>
 					     </xsl:for-each>
@@ -1681,7 +1682,8 @@
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
 											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./text()"/>
+											<xsl:with-param name="title" select="./@xlink:title" />
+											<xsl:with-param name="content" select="./text()"/>
 										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
@@ -1703,7 +1705,8 @@
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
 											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./text()"/>
+											<xsl:with-param name="title" select="./@xlink:title" />
+											<xsl:with-param name="content" select="./text()"/>
 										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
@@ -1725,7 +1728,8 @@
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
 											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./text()"/>
+											<xsl:with-param name="title" select="./@xlink:title" />
+											<xsl:with-param name="content" select="./text()"/>
 										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
@@ -1751,7 +1755,8 @@
 												<xsl:when test="name(current()) = 'citation'">
 													<xsl:call-template name="citationHref">
 														<xsl:with-param name="link" select="./@xlink:href"/>
-														<xsl:with-param name="title" select="./text()"/>
+														<xsl:with-param name="title" select="./@xlink:title" />
+														<xsl:with-param name="content" select="./text()"/>
 													</xsl:call-template>
 												</xsl:when>
 												<xsl:otherwise>
@@ -1785,7 +1790,8 @@
 							<xsl:when test="name(current()) = 'citation'">
 								<xsl:call-template name="citationHref">
 									<xsl:with-param name="link" select="./@xlink:href"/>
-									<xsl:with-param name="title" select="./text()"/>
+									<xsl:with-param name="title" select="./@xlink:title" />
+									<xsl:with-param name="content" select="./text()"/>
 								</xsl:call-template>
 							</xsl:when>
 							<xsl:otherwise>
@@ -1802,11 +1808,15 @@
 	<xsl:template name="citationHref">
 		<xsl:param name="link"/>
 		<xsl:param name="title"/>
+		<xsl:param name="content"/>
 		<xsl:choose>
 			<!--link ok -->
 			<xsl:when test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
 				<a href="{$link}" target="_blank">
 				<xsl:choose>
+					<xsl:when test="$content != '' ">
+						<xsl:value-of select="$content"/>
+					</xsl:when>
 					<xsl:when test="$title != ''">
 						<xsl:value-of select="$title"/>
 					</xsl:when>
