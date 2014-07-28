@@ -13,6 +13,8 @@
 	<xsl:param name="eacUrlBase"/>
 	<xsl:param name="eadUrl"/>
 	<xsl:variable name="language.default" select="'eng'"/>
+	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
+	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
 	<xsl:include href="commons.xsl"/>
 	<xsl:include href="alternativeDescriptions.xsl"/>
 	<xsl:include href="archivalMaterials.xsl"/>
@@ -225,7 +227,7 @@
 			
 			<!-- location -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
-				<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.description.place')"/></h2>
+				<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.description.place'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places"> 
 					<div class="blockPlural">		
 						<xsl:variable name="posParent" select="position()"/>
@@ -387,7 +389,7 @@
 
 			<!-- localDescription -->
 			<xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription) and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:descriptiveNote/eac:p/text()!= '')">
-			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.localDescription')"/></h2>
+			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.localDescription'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions"> 
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/>
@@ -449,7 +451,7 @@
 		   </xsl:if>
 		   <!-- legalStatus -->
 		   <xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus) and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:descriptiveNote/eac:p/text()!= '')">
-			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.legalStatus')"/></h2>
+			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.legalStatus'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses">
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/> 
@@ -511,7 +513,7 @@
 		   </xsl:if>
 		   <!-- function -->
 		   <xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function) and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:descriptiveNote/eac:p/text()!= '')">
-			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.function')"/></h2>
+			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.function'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions">
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/> 
@@ -573,7 +575,7 @@
 		    </xsl:if>
 		    <!-- occupation -->
 		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation  and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:descriptiveNote/eac:p/text()!= '')">
-			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.occupation')"/></h2>
+			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.occupation'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations"> 
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/> 
@@ -635,7 +637,7 @@
 		    </xsl:if>
 		    <!--mandates-->
 		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:descriptiveNote/eac:p/text()!= '' )">
-			    <h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.mandate')"/></h2>
+			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.mandate'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates">
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/>  
@@ -741,13 +743,13 @@
 			<!-- structureOrGenealogy -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level/eac:item/text()">
 				    <xsl:if test="$entityType='person'">
-				    	<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/></h2>
+				    	<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.genealogy'), $smallcase, $uppercase)"/></h2>
 					</xsl:if>
 					<xsl:if test="$entityType='corporateBody'">
-						<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.structure')"/></h2>
+						<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.structure'), $smallcase, $uppercase)"/></h2>
 					</xsl:if>
 					<xsl:if test="$entityType='family'">
-						<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
+						<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.structureOrGenealogy'), $smallcase, $uppercase)"/></h2>
 				   </xsl:if>
 				<xsl:variable name="firstchild" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/*[1]"/>
 			  	<xsl:if test="name($firstchild)='outline'">
@@ -775,7 +777,7 @@
 			</xsl:if> 
 			<!-- generalContext -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:outline/eac:level/eac:item/text()">
-			  	<h2 class="title"><xsl:value-of select="ape:resource('eaccpf.portal.generalContext')"/></h2> 
+			  	<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.generalContext'), $smallcase, $uppercase)"/></h2> 
 				<xsl:variable name="firstchild" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/*[1]"/>
 			  	<xsl:if test="name($firstchild)='outline'">
 					   <xsl:call-template name="outline">
@@ -938,7 +940,7 @@
 		
 		<!-- bioHist section title -->
 		<xsl:if test="$bioHist/eac:p/text() or $bioHist/eac:citation/text() or $bioHist/eac:chronList/eac:chronItem">
-			<h2 id="chronListTitle" class="title row" ><xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/></h2>
+			<h2 id="chronListTitle" class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.biogHist'), $smallcase, $uppercase)"/></h2>
 		</xsl:if>
 		<!-- biogHist p --> 
 		<xsl:if test="$bioHist/eac:p/text()">   
