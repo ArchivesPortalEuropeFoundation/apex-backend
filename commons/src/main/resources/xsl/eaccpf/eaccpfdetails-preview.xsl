@@ -896,8 +896,10 @@
 							<xsl:variable name="posChild" select="position()"/>								
 							<p>
 								<xsl:call-template name="citationHref">
-						   			<xsl:with-param name="link" select="./@xlink:href"/>
-									<xsl:with-param name="title" select="./text()"/>
+									<xsl:with-param name="link" select="./@xlink:href"/>
+									<xsl:with-param name="title" select="./@xlink:title" />
+									<xsl:with-param name="content" select="./text()"/>
+									<xsl:with-param name="section" select="current()"/>
 								</xsl:call-template>
 							</p>
 					     </xsl:for-each>
@@ -1585,7 +1587,9 @@
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
 											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./text()"/>
+											<xsl:with-param name="title" select="./@xlink:title" />
+											<xsl:with-param name="content" select="./text()"/>
+											<xsl:with-param name="section" select="$list"/>
 										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
@@ -1607,7 +1611,9 @@
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
 											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./text()"/>
+											<xsl:with-param name="title" select="./@xlink:title" />
+											<xsl:with-param name="content" select="./text()"/>
+											<xsl:with-param name="section" select="$list"/>
 										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
@@ -1629,7 +1635,9 @@
 									<xsl:when test="name(current()) = 'citation'">
 										<xsl:call-template name="citationHref">
 											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./text()"/>
+											<xsl:with-param name="title" select="./@xlink:title" />
+											<xsl:with-param name="content" select="./text()"/>
+											<xsl:with-param name="section" select="$list"/>
 										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
@@ -1655,7 +1663,9 @@
 												<xsl:when test="name(current()) = 'citation'">
 													<xsl:call-template name="citationHref">
 														<xsl:with-param name="link" select="./@xlink:href"/>
-														<xsl:with-param name="title" select="./text()"/>
+														<xsl:with-param name="title" select="./@xlink:title" />
+														<xsl:with-param name="content" select="./text()"/>
+														<xsl:with-param name="section" select="$list"/>
 													</xsl:call-template>
 												</xsl:when>
 												<xsl:otherwise>
@@ -1681,7 +1691,9 @@
 							<xsl:when test="name(current()) = 'citation'">
 								<xsl:call-template name="citationHref">
 									<xsl:with-param name="link" select="./@xlink:href"/>
-									<xsl:with-param name="title" select="./text()"/>
+									<xsl:with-param name="title" select="./@xlink:title" />
+									<xsl:with-param name="content" select="./text()"/>
+									<xsl:with-param name="section" select="$list"/>
 								</xsl:call-template>
 							</xsl:when>
 							<xsl:otherwise>
@@ -1694,26 +1706,101 @@
 		</xsl:choose>
 	</xsl:template>
 
-		<!-- template for citation with/without @href -->
-	<xsl:template name="citationHref">
-		<xsl:param name="link"/>
+	<xsl:template name="citationHrefTitle">
+		<xsl:param name="content"/>
+		<xsl:param name="section" />
 		<xsl:param name="title"/>
+		<xsl:variable name="name" select="name($section/parent::node())"/>
 		<xsl:choose>
-			<!--link ok -->
-			<xsl:when test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-				<a href="{$link}" target="_blank">
+			<xsl:when test="$content != '' ">
+				<xsl:value-of select="$content"/>
+			</xsl:when>
+			<xsl:when test="$title != ''">
+				<xsl:value-of select="$title"/>
+			</xsl:when>
+			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="$title != ''">
-						<xsl:value-of select="$title"/>
+					<xsl:when test="$name = 'biogHist'">
+						<xsl:variable name="entityType" select="/eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
+						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
+						<xsl:text> </xsl:text>
+						<xsl:if test="$entityType='corporateBody'">
+			   				<xsl:value-of select="translate(ape:resource('eaccpf.portal.historicalNote'), $uppercase, $smallcase)"/>
+			   			</xsl:if>
+			   			<xsl:if test="$entityType='person' or $entityType='family'">
+			   				<xsl:value-of select="translate(ape:resource('eaccpf.portal.biogHist'), $uppercase, $smallcase)"/>
+			   			</xsl:if>
+					</xsl:when>
+					<xsl:when test="$name = 'address'">
+						<xsl:choose>
+			    			<xsl:when test="$section/parent::node()[@localType='visitors address']">
+			    				<xsl:value-of select="translate(ape:resource('eaccpf.portal.place.address.visitors'), $uppercase, $smallcase)"/>
+			    			</xsl:when>
+			    			<xsl:when test="$section/parent::node()[@localType='postal address']">
+					    		<xsl:value-of select="translate(ape:resource('eaccpf.portal.place.address.postal'), $uppercase, $smallcase)"/>
+			    			</xsl:when>
+			    			<xsl:otherwise>
+					    		<xsl:value-of select="translate(ape:resource('eaccpf.portal.place.address'), $uppercase, $smallcase)"/>
+			    			</xsl:otherwise>
+			    		</xsl:choose>
+					</xsl:when>
+					<xsl:when test="$name = 'place'">
+						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="translate(ape:resource('eaccpf.description.place'), $uppercase, $smallcase)"/>
+					</xsl:when>
+					<xsl:when test="$name = 'function'">
+						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="translate(ape:resource('eaccpf.portal.function'), $uppercase, $smallcase)"/>
+					</xsl:when>
+					<xsl:when test="$name = 'occupation'">
+						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="translate(ape:resource('eaccpf.portal.occupation'), $uppercase, $smallcase)"/>
+					</xsl:when>
+					<xsl:when test="$name = 'mandates'">
+						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="translate(ape:resource('eaccpf.portal.mandate'), $uppercase, $smallcase)"/>
+					</xsl:when>
+					<xsl:when test="$name = 'legalStatus'">
+						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="translate(ape:resource('eaccpf.portal.legalStatus'), $uppercase, $smallcase)"/>
+					</xsl:when>
+					<xsl:when test="$name = 'localDescription'">
+						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
+						<xsl:text> </xsl:text>
+	    				<xsl:value-of select="translate(ape:resource('eaccpf.portal.localDescription'), $uppercase, $smallcase)" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
 					</xsl:otherwise>
 				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- template for citation with/without @href -->
+	<xsl:template name="citationHref">
+		<xsl:param name="link"/>
+		<xsl:param name="title"/>
+		<xsl:param name="content"/>
+		<xsl:param name="section" />
+		<xsl:choose>
+			<!--link ok -->
+			<xsl:when test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
+				<a href="{$link}" target="_blank">
+					<xsl:call-template name="citationHrefTitle">
+						<xsl:with-param name="content" select="$content" />
+						<xsl:with-param name="section" select="$section" />
+						<xsl:with-param name="title" select="$title" />
+					</xsl:call-template>
 				</a>
 			</xsl:when>
 			<!-- internal links -->
-			<xsl:when test="not(starts-with($link, 'http')) and 
+			<xsl:when test="$link != '' and not(starts-with($link, 'http')) and 
 							not(starts-with($link, 'https')) and 
 							not(starts-with($link, 'ftp')) and 
 							not(starts-with($link, 'www'))">
@@ -1746,14 +1833,11 @@
 			</xsl:when>
 			<!--link ko -->
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="$title != ''">
-						<xsl:value-of select="$title"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:call-template name="citationHrefTitle">
+					<xsl:with-param name="content" select="$content" />
+					<xsl:with-param name="section" select="$section" />
+					<xsl:with-param name="title" select="$title" />
+				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
