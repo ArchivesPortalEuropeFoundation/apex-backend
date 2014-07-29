@@ -157,20 +157,19 @@ public class CreateEacCpf extends EacCpfAction {
             uploadMethod.setMethod(UploadMethod.HTTP);
             uploadMethod.setId(3);
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-            String otherRecordId = "";
-            if(control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()){
-                otherRecordId = control.getOtherRecordId().get(0).getContent();
-            }
-            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
+//            String otherRecordId = "";
+//            if(control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()){
+//                otherRecordId = control.getOtherRecordId().get(0).getContent();
+//            }
+//            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
 
-            if (noRecordIdAvailable) {
+//            if (noRecordIdAvailable) {
                 String id = System.currentTimeMillis() + "";
                 id = id.substring(0, id.length() - 4);
                 newEac.setIdentifier(id);
-            } else {
-                newEac.setIdentifier(otherRecordId);
-
-            }
+//            } else {
+//                newEac.setIdentifier(otherRecordId);
+//            }
             control.getRecordId().setValue(newEac.getIdentifier());
             newEac.setUploadMethod(uploadMethod);
             newEac.setArchivalInstitution(archivalInstitution);
