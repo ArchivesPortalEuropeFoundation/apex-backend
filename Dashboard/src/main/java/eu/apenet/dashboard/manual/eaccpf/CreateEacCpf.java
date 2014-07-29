@@ -291,7 +291,7 @@ public class CreateEacCpf extends EacCpfAction {
         }
 
         EventDescription eventDescription = new EventDescription();
-        eventDescription.setContent(TransformationTool.getFullEACCPFVersion());
+        eventDescription.setContent("Created_with_apeEAC-CPF_form");
         maintenanceEvent.setEventDescription(eventDescription);
 
         // MaintenanceHistory
