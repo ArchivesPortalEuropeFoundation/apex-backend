@@ -43,11 +43,6 @@ public abstract class Ead  extends AbstractContent{
 		return getPathApenetead();
 	}
 	@Override
-	public void setPath(String pathApenetead) {
-		setPath(pathApenetead);
-		
-	}
-	@Override
 	public String getIdentifier() {
 		return getEadid();
 	}

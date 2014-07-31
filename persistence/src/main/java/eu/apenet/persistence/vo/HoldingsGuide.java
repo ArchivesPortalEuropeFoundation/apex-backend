@@ -230,6 +230,8 @@ public class HoldingsGuide extends Ead {
 		this.publishDate = publishDate;
 	}
 
-
-
+	@Override
+	public void setPath(String path) {
+		this.pathApenetead = path;
+	}
 }

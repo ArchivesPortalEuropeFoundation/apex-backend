@@ -275,4 +275,9 @@ public class FindingAid extends Ead {
     public void setTotalNumberOfWebResourceEdm(Long totalNumberOfWebResourceEdm) {
         this.totalNumberOfWebResourceEdm = totalNumberOfWebResourceEdm;
     }
+
+	@Override
+	public void setPath(String path) {
+		this.pathApenetead = path;
+	}
 }
