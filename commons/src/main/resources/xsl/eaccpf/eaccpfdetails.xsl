@@ -1825,65 +1825,7 @@
 				<xsl:value-of select="$title"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="$name = 'biogHist'">
-						<xsl:variable name="entityType" select="/eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-						<xsl:text> </xsl:text>
-						<xsl:if test="$entityType='corporateBody'">
-			   				<xsl:value-of select="translate(ape:resource('eaccpf.portal.historicalNote'), $uppercase, $smallcase)"/>
-			   			</xsl:if>
-			   			<xsl:if test="$entityType='person' or $entityType='family'">
-			   				<xsl:value-of select="translate(ape:resource('eaccpf.portal.biogHist'), $uppercase, $smallcase)"/>
-			   			</xsl:if>
-					</xsl:when>
-					<xsl:when test="$name = 'address'">
-						<xsl:choose>
-			    			<xsl:when test="$section/parent::node()[@localType='visitors address']">
-			    				<xsl:value-of select="translate(ape:resource('eaccpf.portal.place.address.visitors'), $uppercase, $smallcase)"/>
-			    			</xsl:when>
-			    			<xsl:when test="$section/parent::node()[@localType='postal address']">
-					    		<xsl:value-of select="translate(ape:resource('eaccpf.portal.place.address.postal'), $uppercase, $smallcase)"/>
-			    			</xsl:when>
-			    			<xsl:otherwise>
-					    		<xsl:value-of select="translate(ape:resource('eaccpf.portal.place.address'), $uppercase, $smallcase)"/>
-			    			</xsl:otherwise>
-			    		</xsl:choose>
-					</xsl:when>
-					<xsl:when test="$name = 'place'">
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="translate(ape:resource('eaccpf.description.place'), $uppercase, $smallcase)"/>
-					</xsl:when>
-					<xsl:when test="$name = 'function'">
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="translate(ape:resource('eaccpf.portal.function'), $uppercase, $smallcase)"/>
-					</xsl:when>
-					<xsl:when test="$name = 'occupation'">
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="translate(ape:resource('eaccpf.portal.occupation'), $uppercase, $smallcase)"/>
-					</xsl:when>
-					<xsl:when test="$name = 'mandates'">
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="translate(ape:resource('eaccpf.portal.mandate'), $uppercase, $smallcase)"/>
-					</xsl:when>
-					<xsl:when test="$name = 'legalStatus'">
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="translate(ape:resource('eaccpf.portal.legalStatus'), $uppercase, $smallcase)"/>
-					</xsl:when>
-					<xsl:when test="$name = 'localDescription'">
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-						<xsl:text> </xsl:text>
-	    				<xsl:value-of select="translate(ape:resource('eaccpf.portal.localDescription'), $uppercase, $smallcase)" />
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
