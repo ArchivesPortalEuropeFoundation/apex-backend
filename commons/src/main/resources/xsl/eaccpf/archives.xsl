@@ -127,6 +127,67 @@
 							</xsl:if>
 					 	</xsl:for-each> 
 					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+					 	<xsl:for-each select="$list[@xml:lang = $lang.navigator]"> 
+						   <xsl:if test="position()=1">
+								<xsl:choose>
+									<xsl:when test="./parent::node()/eac:relationEntry[@localType='agencyCode'] and ./parent::node()/eac:relationEntry[@localType='agencyName']">
+										<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
+										<xsl:variable name="aiName" select="./parent::node()/eac:relationEntry[@localType='agencyName']"/>
+								  		<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
+											<a href="{$href}" target="_blank">
+												<xsl:value-of select="$aiName"/>
+											</a>
+								  		</xsl:if>
+								  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
+											<xsl:variable name="aiCode" select="ape:checkAICode($href, '', 'true')" />
+											<xsl:choose>
+												<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
+													<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+													<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+														<xsl:value-of select="$aiName"/>
+													</a>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="$aiName"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:if>
+									</xsl:when>
+									<xsl:when test="./parent::node()/eac:relationEntry[@localType='agencyCode']">
+										<xsl:variable name="href" select="./parent::node()/eac:relationEntry[@localType='agencyCode']"/>
+								  		<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
+											<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+								  		</xsl:if>
+								  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
+											<xsl:variable name="aiCode" select="ape:checkAICode($href, '', 'true')" />
+											<xsl:variable name="aiName" select="ape:checkAICode($href, '', 'false')" />
+											<xsl:choose>
+												<xsl:when test="$aiCode != 'ERROR' and $aiCode != '' and $aiName != 'ERROR' and $aiName != ''">
+													<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+													<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+														<xsl:value-of select="$aiName"/>
+													</a>
+												</xsl:when>
+												<xsl:when test="$aiCode != 'ERROR' and $aiCode != '' ">
+													<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+													<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+														<xsl:apply-templates select="." mode="other"/>
+													</a>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:apply-templates select="." mode="other"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:if>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/>
+									</xsl:otherwise>	
+								</xsl:choose>
+							</xsl:if>
+					 	</xsl:for-each> 
+					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
 							<xsl:if test="position()=1">

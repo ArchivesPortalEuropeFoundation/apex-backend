@@ -44,6 +44,7 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	private String aiCodeUrl;
 	private String eacUrlBase;
 	private String eadUrl;
+	private String langNavigator;
 
 	private final static Logger LOG = Logger.getLogger(AbstractEacTag.class);
 	private static final List<SolrField> DEFAULT_HIGHLIGHT_FIELDS = SolrField.getDefaults();
@@ -75,7 +76,7 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 				}else {
 					EacXslt.convertEacToHtml(xslLocation, this.getJspContext().getOut(), xmlSource, searchTerms,
 							highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(),
-							getSolrStopwordsUrl(), this.getAiCodeUrl(), this.getEacUrlBase(), this.getEadUrl());
+							getSolrStopwordsUrl(), this.getAiCodeUrl(), this.getEacUrlBase(), this.getEadUrl(), this.getLangNavigator());
 				}
 			}else {
 				try {
@@ -122,6 +123,14 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 
 	public void setSearchTerms(String searchTerms) {
 		this.searchTerms = searchTerms;
+	}
+	
+	public String getLangNavigator(){
+		return this.langNavigator;
+	}
+	
+	public void setLangNavigator(String langNavigator) {
+		this.langNavigator = langNavigator;
 	}
 
 	public String getSearchFieldsSelectionId() {

@@ -112,6 +112,10 @@
 			<name>searchTerms</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>langNavigator</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>		
 	<tag>
 		<name>environment</name>

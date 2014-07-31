@@ -221,6 +221,11 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 			} else {
 				request.setAttribute("locale", locale.getLanguage());
 			}
+			
+			//navigator's lang
+			String langNavigator = request.getHeader("Accept-Language").substring(0, 2);	
+			request.setAttribute("langNavigator", langNavigator);
+			
 		  return "success-eaccpf";
 		  
 		} catch (Exception e) {

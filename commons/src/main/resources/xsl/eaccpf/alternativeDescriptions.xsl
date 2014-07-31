@@ -190,6 +190,90 @@
 								<xsl:with-param name="list" select="$list/parent::node()/eac:componentEntry[@localType='agencyName' or @localType='agencyCode']"/>
 							</xsl:call-template> 
 					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+						 	 	<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
+					 	 	<xsl:choose>
+					 	 		<xsl:when test="$list/parent::node()/@xlink:href">
+					 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
+										<a href="{$link}" target="_blank">
+											<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+												<xsl:if test="position() > 1">
+													<xsl:text>. </xsl:text>
+												</xsl:if>
+												<xsl:apply-templates select="." mode="other"/>
+										 	</xsl:for-each>
+										</a>
+							 	   </xsl:if>
+							 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
+											<xsl:choose>
+												<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
+												<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
+										  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
+										  			<xsl:variable name="aiCode" select="ape:aiFromEac($link, $href)"/>
+													<xsl:choose>
+														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
+															<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+															<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
+															<a href="{$eacUrlBase}/aicode/{$encodedAiCode}/type/ec/id/{$encodedlink}" target="_blank">
+																<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+																	<xsl:if test="position() > 1">
+																		<xsl:text>. </xsl:text>
+																	</xsl:if>
+																	<xsl:apply-templates select="." mode="other"/>
+															 	</xsl:for-each>
+															</a>
+														</xsl:when>
+														<xsl:otherwise>
+															<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+																<xsl:if test="position() > 1">
+																	<xsl:text>. </xsl:text>
+																</xsl:if>
+																<xsl:apply-templates select="." mode="other"/>
+														 	</xsl:for-each>
+														</xsl:otherwise>
+													</xsl:choose>
+												</xsl:if>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:variable name="aiCode" select="ape:aiFromEac($link, '')"/>
+												<xsl:choose>
+													<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
+													<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
+														<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}" target="_blank">
+															<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+																<xsl:if test="position() > 1">
+																	<xsl:text>. </xsl:text>
+																</xsl:if>
+																<xsl:apply-templates select="." mode="other"/>
+															</xsl:for-each>
+														</a>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+															<xsl:if test="position() > 1">
+																<xsl:text>. </xsl:text>
+															</xsl:if>
+															<xsl:apply-templates select="." mode="other"/>
+														 	</xsl:for-each>
+														</xsl:otherwise>
+													</xsl:choose>
+												</xsl:otherwise>
+											</xsl:choose>
+								 	   </xsl:if>
+						 	 		</xsl:when>
+					 	 		<xsl:otherwise>
+					 	 			<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+										<xsl:if test="position() > 1">
+											<xsl:text>. </xsl:text>
+										</xsl:if>
+										<xsl:apply-templates select="." mode="other"/>
+								 	</xsl:for-each>
+					 	 		</xsl:otherwise>
+					 	 	</xsl:choose>
+					 	 	<xsl:call-template name="agencyAlternativeSet">
+								<xsl:with-param name="list" select="$list/parent::node()/eac:componentEntry[@localType='agencyName' or @localType='agencyCode']"/>
+							</xsl:call-template> 
+					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
 					 	 	<xsl:choose>
@@ -510,6 +594,84 @@
 						 	 		</xsl:when>
 					 	 		<xsl:otherwise>
 					 	 			<xsl:for-each select="$list[@xml:lang = $language.selected]">
+										<xsl:if test="position() = 1">
+											<xsl:apply-templates select="." mode="other"/>
+										</xsl:if>
+								 	</xsl:for-each>
+					 	 		</xsl:otherwise>
+					 	 	</xsl:choose>
+					 	 	<xsl:call-template name="agencyAlternativeSet">
+								<xsl:with-param name="list" select="$list/parent::node()/eac:componentEntry[@localType='agencyName' or @localType='agencyCode']"/>
+							</xsl:call-template> 
+					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+					 	 	<xsl:variable name="link" select="$list/parent::node()/@xlink:href"/>
+					 	 	<xsl:choose>
+					 	 		<xsl:when test="$list/parent::node()/@xlink:href">
+					 	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
+										<a href="{$link}" target="_blank">
+											<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+												<xsl:if test="position()=1">
+													<xsl:apply-templates select="." mode="other"/>
+												</xsl:if>
+										 	</xsl:for-each>
+										</a>
+							 	   </xsl:if>
+							 	   <xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
+											<xsl:choose>
+												<xsl:when test="./parent::node()[eac:componentEntry[@localType='agencyCode']]">
+												<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
+										  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
+										  			<xsl:variable name="aiCode" select="ape:aiFromEac($link, $href)"/>
+													<xsl:choose>
+														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
+															<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+															<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
+															<a href="{$eacUrlBase}/aicode/{$encodedAiCode}/type/ec/id/{$encodedlink}" target="_blank">
+																<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+																	<xsl:if test="position() = 1">
+																		<xsl:apply-templates select="." mode="other"/>
+																	</xsl:if>
+															 	</xsl:for-each>
+															</a>
+														</xsl:when>
+														<xsl:otherwise>
+															<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+																<xsl:if test="position() = 1">
+																	<xsl:apply-templates select="." mode="other"/>
+																</xsl:if>
+														 	</xsl:for-each>
+														</xsl:otherwise>
+													</xsl:choose>
+												</xsl:if>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:variable name="aiCode" select="ape:aiFromEac($link, '')"/>
+												<xsl:choose>
+													<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
+													<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
+														<a href="{$eacUrlBase}/aicode/{$aiCode}/type/ec/id/{$encodedlink}" target="_blank">
+															<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+																<xsl:if test="position() = 1">
+																	<xsl:apply-templates select="." mode="other"/>
+																</xsl:if>
+															</xsl:for-each>
+														</a>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+															<xsl:if test="position() = 1">
+																<xsl:apply-templates select="." mode="other"/>
+															</xsl:if>
+														 	</xsl:for-each>
+														</xsl:otherwise>
+													</xsl:choose>
+												</xsl:otherwise>
+											</xsl:choose>
+								 	   </xsl:if>
+						 	 		</xsl:when>
+					 	 		<xsl:otherwise>
+					 	 			<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
 										<xsl:if test="position() = 1">
 											<xsl:apply-templates select="." mode="other"/>
 										</xsl:if>
@@ -841,6 +1003,66 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:when> -->
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/>
+									</xsl:otherwise>	
+								</xsl:choose>
+							</xsl:if>
+					 	</xsl:for-each> 
+					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+					 	<xsl:for-each select="$list[@xml:lang = $language.selected]"> 
+						   <xsl:if test="position()=1">
+								<xsl:choose>
+									<xsl:when test="./parent::node()/eac:componentEntry[@localType='agencyCode'] and ./parent::node()/eac:componentEntry[@localType='agencyName']">
+										<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
+									  		<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
+												<a href="{$href}" target="_blank">
+													<xsl:value-of select="./parent::node()/eac:componentEntry[@localType='agencyName']"/>
+												</a>
+									  		</xsl:if>
+									  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
+												<xsl:variable name="aiCode" select="ape:checkAICode($href, '', 'true')" />
+												<xsl:choose>
+													<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
+														<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+														<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+															<xsl:value-of select="./parent::node()/eac:componentEntry[@localType='agencyName']"/>
+														</a>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="./parent::node()/eac:componentEntry[@localType='agencyName']"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:if>
+									</xsl:when>
+									<xsl:when test="./parent::node()/eac:componentEntry[@localType='agencyCode']">
+										<xsl:variable name="href" select="./parent::node()/eac:componentEntry[@localType='agencyCode']"/>
+									  		<xsl:if test="starts-with($href, 'http') or starts-with($href, 'https') or starts-with($href, 'ftp') or starts-with($href, 'www')">
+												<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+									  		</xsl:if>
+									  		<xsl:if test="not(starts-with($href, 'http')) and not(starts-with($href, 'https')) and not(starts-with($href, 'ftp')) and not(starts-with($href, 'www'))">
+												<xsl:variable name="aiCode" select="ape:checkAICode($href, '', 'true')" />
+												<xsl:variable name="aiName" select="ape:checkAICode($href, '', 'false')" />
+												<xsl:choose>
+													<xsl:when test="$aiCode != 'ERROR' and $aiCode != '' and $aiName != 'ERROR' and $aiName != ''">
+														<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+														<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+															<xsl:value-of select="$aiName"/>
+														</a>
+													</xsl:when>
+													<xsl:when test="$aiCode != 'ERROR' and $aiCode != '' ">
+														<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCode)" />
+														<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
+															<xsl:apply-templates select="." mode="other"/>
+														</a>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:apply-templates select="." mode="other"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:if>
+										</xsl:when>
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/>
 									</xsl:otherwise>	

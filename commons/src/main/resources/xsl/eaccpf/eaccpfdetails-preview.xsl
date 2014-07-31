@@ -9,11 +9,11 @@
 		encoding="UTF-8"/>
 	<xsl:param name="eaccontent.extref.prefix"/>
 	<xsl:param name="language.selected"/>
+	<xsl:param name="lang.navigator"/>
 	<xsl:param name="aiCodeUrl"/>
 	<xsl:param name="eacUrlBase"/>
 	<xsl:param name="eadUrl"/>
 	<xsl:variable name="language.default" select="'eng'"/>
-	
 	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
 
@@ -1333,6 +1333,16 @@
 							 	</xsl:if> 
 					 	    </xsl:for-each> 
 						</xsl:when>
+						<xsl:when test="$list/eac:part[@xml:lang = $lang.navigator] and $list/eac:part[@xml:lang = $lang.navigator]/text() and $list/eac:part[@xml:lang = $lang.navigator]/text() != ''"> 
+						    <xsl:for-each select="$list/eac:part[@xml:lang = $lang.navigator]">
+								<xsl:if test="position()=1"> 
+										<xsl:call-template name="compositeName">
+											<xsl:with-param name="listName" select="current()/parent::node()"/>
+											<xsl:with-param name="isHeader" select="'true'"/>
+										</xsl:call-template> 
+							 	</xsl:if> 
+					 	    </xsl:for-each> 
+						</xsl:when>
 						<xsl:when test="$list/eac:part[@xml:lang = $language.default] and $list/eac:part[@xml:lang = $language.default]/text() and $list/eac:part[@xml:lang = $language.default]/text() != ''">
 						 	<xsl:for-each select="$list/eac:part[@xml:lang = $language.default]"> 
 								  <xsl:if test="position()=1">
@@ -1577,6 +1587,30 @@
 				<xsl:choose>
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
+							<p>
+								<xsl:choose>
+									<xsl:when test="@vocabularySource">
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+										</xsl:call-template>
+									</xsl:when>
+									<xsl:when test="name(current()) = 'citation'">
+										<xsl:call-template name="citationHref">
+											<xsl:with-param name="link" select="./@xlink:href"/>
+											<xsl:with-param name="title" select="./@xlink:title" />
+											<xsl:with-param name="content" select="./text()"/>
+											<xsl:with-param name="section" select="$list"/>
+										</xsl:call-template>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/> 
+									</xsl:otherwise>
+								</xsl:choose>
+							</p>	
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang =  $lang.navigator]/text() and $list[@xml:lang =  $lang.navigator]/text() != ''">
+						<xsl:for-each select="$list[@xml:lang =  $lang.navigator]">
 							<p>
 								<xsl:choose>
 									<xsl:when test="@vocabularySource">
@@ -1864,6 +1898,22 @@
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+						<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+							<xsl:if test="position() = 1">
+								<xsl:choose>
+									<xsl:when test="@vocabularySource">
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+										</xsl:call-template>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/> 
+									</xsl:otherwise>
+								</xsl:choose>	
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
 							<xsl:if test="position() = 1">
@@ -1948,6 +1998,28 @@
 				<xsl:choose>
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.selected and (not(@localType) or (@localType != 'birth' and @localType != 'death' and @localType != 'foundation' and @localType != 'suppression'))]">
+							<p>
+								<xsl:choose>
+									<xsl:when test="@vocabularySource">
+										<xsl:call-template name="vocabularySource">
+											<xsl:with-param name="node" select="."/>
+				   		   			    </xsl:call-template>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/> 
+									</xsl:otherwise>
+								</xsl:choose>
+
+								<xsl:if test="@countryCode">
+									<xsl:call-template name="countryName">
+										<xsl:with-param name="countryCode" select="./@countryCode"/>
+				   			        </xsl:call-template>
+			   			        </xsl:if>
+							</p>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+						<xsl:for-each select="$list[@xml:lang = $lang.navigator and (not(@localType) or (@localType != 'birth' and @localType != 'death' and @localType != 'foundation' and @localType != 'suppression'))]">
 							<p>
 								<xsl:choose>
 									<xsl:when test="@vocabularySource">
@@ -2166,6 +2238,25 @@
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+						<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+							<xsl:if test="current()/text()">
+		    			       	<xsl:choose>
+									<xsl:when test="current()[@localType='unknown' or @localType='unknownStart' or @localType='unknownEnd']">
+										<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
+									</xsl:when>
+									<xsl:when test="current()[@localType='open']">
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="." mode="other"/> 
+									</xsl:otherwise>
+								</xsl:choose>
+							    <xsl:if test="position() != last() and current()[not(@localType ='open')]">
+									<xsl:text>, </xsl:text>
+								</xsl:if>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
 							<xsl:if test="current()/text()">
@@ -2270,6 +2361,36 @@
 						    	</xsl:when>
 						    	<xsl:when test="./eac:toDate">
 						    		<xsl:if test="($currentLangTo = $language.selected)">
+						    			<xsl:if test="position() > 1  or (position() = 1 and ./parent::node()/eac:date/text())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+										<xsl:call-template name="fromToDate">
+				          	 				<xsl:with-param name="dateRange" select="."/>
+			                			</xsl:call-template>
+									</xsl:if>
+						    	</xsl:when>
+						    	<xsl:otherwise/>
+						    </xsl:choose>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="($list/eac:fromDate[@xml:lang = $lang.navigator] and $list/eac:fromDate[@xml:lang = $lang.navigator]/text() and $list/eac:fromDate[@xml:lang = $lang.navigator]/text() != '')
+					                 or ($list/eac:toDate[@xml:lang = $lang.navigator] and $list/eac:toDate[@xml:lang = $lang.navigator]/text() and $list/eac:toDate[@xml:lang = $lang.navigator]/text() != '')">
+						<xsl:for-each select="$list">
+						    <xsl:variable name="currentLangFrom" select="current()/eac:fromDate/@xml:lang"/>
+						    <xsl:variable name="currentLangTo" select="current()/eac:toDate/@xml:lang"/>
+						    <xsl:choose>
+						    	<xsl:when test="./eac:fromDate">
+						    		<xsl:if test="($currentLangFrom = $lang.navigator)">
+						    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+										<xsl:call-template name="fromToDate">
+				          	 				<xsl:with-param name="dateRange" select="."/>
+			                			</xsl:call-template>
+									</xsl:if>
+						    	</xsl:when>
+						    	<xsl:when test="./eac:toDate">
+						    		<xsl:if test="($currentLangTo = $lang.navigator)">
 						    			<xsl:if test="position() > 1  or (position() = 1 and ./parent::node()/eac:date/text())">
 											<xsl:text>, </xsl:text>
 										</xsl:if>
@@ -2510,6 +2631,15 @@
 							 	</xsl:if> 
 					 	    </xsl:for-each> 
 						</xsl:when>
+						<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+						    <xsl:for-each select="$list[@xml:lang = $lang.navigator]">
+								<xsl:if test="position()=1"> 
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="."/>
+									</xsl:call-template>
+							 	</xsl:if> 
+					 	    </xsl:for-each> 
+						</xsl:when>
 						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						 	<xsl:for-each select="$list[@xml:lang = $language.default]"> 
 								  <xsl:if test="position()=1">
@@ -2565,6 +2695,26 @@
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 							<xsl:if test="$currentLang = $language.selected">
+								<p>
+								    <xsl:apply-templates mode="other"/> 
+			   						<xsl:if test="name(current()) = 'language'">
+										<xsl:if test="./parent::node()/eac:descriptiveNote/eac:p/text() ">
+											<xsl:text> (</xsl:text>
+											<xsl:call-template  name="multilanguageNoP">
+									   			<xsl:with-param name="list" select="./parent::node()/eac:descriptiveNote/eac:p"/>
+									   			<xsl:with-param name="clazz" select="'language'"/>
+											</xsl:call-template>
+											<xsl:text>)</xsl:text>
+										</xsl:if>
+									</xsl:if>
+								</p>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="$currentLang = $lang.navigator">
 								<p>
 								    <xsl:apply-templates mode="other"/> 
 			   						<xsl:if test="name(current()) = 'language'">
@@ -2681,7 +2831,16 @@
 						    <xsl:apply-templates mode="other"/> 
 						</xsl:for-each>
 					</xsl:when>
-					
+					<!-- navigator's language -->
+					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
+						<xsl:variable name="listLangSelected" select="$list[@xml:lang = $lang.navigator]"/>
+						<xsl:for-each select="$listLangSelected">
+							<xsl:if test="position() > 1">
+								<xsl:text> </xsl:text>
+							</xsl:if>
+						    <xsl:apply-templates mode="other"/> 
+						</xsl:for-each>
+					</xsl:when>
 					<!-- default language -->
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:variable name="listLangDefault" select="$list[@xml:lang = $language.default]"/>
@@ -2809,6 +2968,13 @@
 				<xsl:call-template name="multilanguageOutlineRecursive">
 					<xsl:with-param name="list" select="$list"/>
 					<xsl:with-param name="language" select="$language.selected"/>
+				</xsl:call-template>
+			</xsl:when> 
+			<!-- language's navigator -->
+			<xsl:when test="$list/descendant-or-self::node()/eac:item[@xml:lang = $lang.navigator] and $list/descendant-or-self::node()/eac:item[@xml:lang = $lang.navigator]/text() and $list/descendant-or-self::node()/eac:item[@xml:lang = $lang.navigator]/text() != ''">
+				<xsl:call-template name="multilanguageOutlineRecursive">
+					<xsl:with-param name="list" select="$list"/>
+					<xsl:with-param name="language" select="$lang.navigator"/>
 				</xsl:call-template>
 			</xsl:when> 
 			<!-- default language (english) -->

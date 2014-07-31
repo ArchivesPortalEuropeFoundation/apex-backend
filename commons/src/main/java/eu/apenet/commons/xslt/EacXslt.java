@@ -63,7 +63,7 @@ public final class EacXslt {
     public static void convertEacToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms,
     		List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource,String secondDisplayUrl,
     		Integer aiId,boolean isPreview, String solrStopwordsUrl, String aiCodeUrl, String eacUrlBase,
-    		String eadUrl) throws SaxonApiException{
+    		String eadUrl, String langNavigator) throws SaxonApiException{
     	
 		String language = resourceBundleSource.getLocale().getLanguage().toLowerCase();
 		String languageIso3 = "eng";
@@ -73,14 +73,18 @@ public final class EacXslt {
 		if (langMap.get(language)!= null && !langMap.get(language).isEmpty()){
 			languageIso3 = langMap.get(language);
 		}
+		String langNavigatorIso3 = "eng";
+		if (langMap.get(langNavigator)!= null && !langMap.get(langNavigator).isEmpty()){
+			langNavigatorIso3 = langMap.get(langNavigator);
+		}
 		convertEacToHtml(xslUrl, writer, xmlSource, searchTerms, highlightFields, resourceBundleSource, languageIso3,
-				secondDisplayUrl, aiId, isPreview, solrStopwordsUrl, aiCodeUrl, eacUrlBase, eadUrl);
+				secondDisplayUrl, aiId, isPreview, solrStopwordsUrl, aiCodeUrl, eacUrlBase, eadUrl, langNavigatorIso3);
     }
 
     public static void convertEacToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms,
     		List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource, String language,
     		String secondDisplayUrl, Integer aiId,boolean isPreview, String solrStopwordsUrl, String aiCodeUrl,
-    		String eacUrlBase, String eadUrl) throws SaxonApiException{
+    		String eacUrlBase, String eadUrl, String langNavigator) throws SaxonApiException{
     	XsltExecutable executable = getXsltExecutable(xslUrl, searchTerms, highlightFields,resourceBundleSource, aiId, isPreview, solrStopwordsUrl);
         XsltTransformer transformer = executable.load();
         transformer.setParameter(new QName("eaccontent.extref.prefix"), new XdmAtomicValue(secondDisplayUrl));
@@ -88,6 +92,8 @@ public final class EacXslt {
         transformer.setParameter(new QName("aiCodeUrl"), new XdmAtomicValue(aiCodeUrl));
         transformer.setParameter(new QName("eacUrlBase"), new XdmAtomicValue(eacUrlBase));
         transformer.setParameter(new QName("eadUrl"), new XdmAtomicValue(eadUrl));
+        transformer.setParameter(new QName("lang.navigator"), new XdmAtomicValue(langNavigator));
+        
         transformer.setSource(xmlSource);
         Serializer serializer = new Serializer();
         serializer.setOutputWriter(writer);

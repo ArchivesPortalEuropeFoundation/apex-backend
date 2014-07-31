@@ -40,7 +40,7 @@
 					&gt; <a href="${aiCodeUrl}/${archivalInstitution.encodedRepositorycode}">${archivalInstitution.ainame}</a>
 				</h3>
 			 	<div id="eaccpfcontent">
-				    <dashboard:eac type="eaccpfdetails" eacUrl="${eac.path}" repositoryCode="${repositoryCode}" eaccpfIdentifier="${eaccpfIdentifier}" />
+				    <dashboard:eac type="eaccpfdetails" eacUrl="${eac.path}" repositoryCode="${repositoryCode}" eaccpfIdentifier="${eaccpfIdentifier}" langNavigator="${langNavigator}" />
 		   		</div>
 		   	</div>
 	   </div> 
