@@ -969,7 +969,7 @@
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
 
-		<div id="{$clazz}" class= "moreDisplay">
+		<div id="{$clazz}">
 			<xsl:choose>
 				<xsl:when test="count($list) > 1">
 					<!-- Checks the attribute "@localType". -->

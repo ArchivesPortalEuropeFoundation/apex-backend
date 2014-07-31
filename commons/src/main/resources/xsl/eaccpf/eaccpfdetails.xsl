@@ -1059,7 +1059,8 @@
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
 
-		<div id="{$clazz}" class= "moreDisplay">
+	<!--  	<div id="{$clazz}" class= "moreDisplay">-->
+	     <div id="{$clazz}">
 			<xsl:choose>
 				<xsl:when test="count($list) > 1">
 					<!-- Checks the attribute "@localType". -->
@@ -1114,14 +1115,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
-			<div class="linkMore">
+		<!--<div class="linkMore">
 				<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'p');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
 				</a>
 				<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'p');">
 					<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
 				</a>
-			</div>
+			</div>-->
 		</div>
 	</xsl:template>
 	
