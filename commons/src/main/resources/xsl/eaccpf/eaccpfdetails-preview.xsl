@@ -570,7 +570,7 @@
 				</xsl:for-each>		
 		    </xsl:if>
 		    <!-- occupation -->
-		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation  and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:descriptiveNote/eac:p/text()!= '')">
+		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation  and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:descriptiveNote/eac:p/text()!= '')">
 			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.occupation'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations"> 
 					<div class="blockPlural">
