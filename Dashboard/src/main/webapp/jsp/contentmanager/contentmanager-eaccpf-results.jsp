@@ -179,7 +179,16 @@
                         <td id="tdConverted_${eacCpfResult.id}" class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
                         <td id="tdValidated_${eacCpfResult.id}" class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
                         <td id="tdPublished_${eacCpfResult.id}" class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
-                        <td id="tdRelations_${eacCpfResult.id}">${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}</td>
+                        <td id="tdRelations_${eacCpfResult.id}">
+                            <c:choose>
+                                <c:when test="${eacCpfResult.published}">
+                                	${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}
+                                </c:when>
+                                <c:otherwise>
+                                    <apenet:resource>${eacCpfResult.indexedText}</apenet:resource>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
 <%--                        <td id="tdEdm_${eacCpfResult.id}" class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
                         <td id="tdEuropeana_${eacCpfResult.id}" class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>--%>
                         <td id="tdQueue_${eacCpfResult.id}" class="${eacCpfResult.queueCssClass}">

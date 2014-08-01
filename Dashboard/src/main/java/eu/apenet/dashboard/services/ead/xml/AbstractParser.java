@@ -9,17 +9,18 @@ public abstract class AbstractParser  {
 
 
 	public static final String APENET_EAD = "urn:isbn:1-931666-22-9";
+	public static final String APENET_EAC_CPF = "urn:isbn:1-931666-33-4";
 	public static final String XLINK = "http://www.w3.org/1999/xlink";
 	public static final String XSI = "http://www.w3.org/2001/XMLSchema-instance";
 
     protected static final QName EAD_ELEMENT = new QName(APENET_EAD, "ead");
     protected static final QName C_ELEMENT = new QName(APENET_EAD, "c");
-	
+
 
 	protected static void writeEndElement(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
 		if (xmlWriter != null){
 			xmlWriter.writeEndElement();
-		}		
+		}
 	}
 
 	protected static void writeStartElement(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
@@ -29,20 +30,20 @@ public abstract class AbstractParser  {
 			for (int i=0; i < xmlReader.getAttributeCount(); i++){
 				xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
 			}
-		}		
+		}
 	}
 
-	
+
 	protected static void writeCharacters(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
 		if (xmlWriter != null){
 			xmlWriter.writeCharacters(xmlReader.getText());
-		}		
+		}
 	}
-	
+
 	protected static void writeCData(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
 		if (xmlWriter != null){
 			xmlWriter.writeCData(xmlReader.getText());
-		}		
+		}
 	}
 	protected static String limitTitle(String string){
 		String temp = removeUnusedCharacters(string);
@@ -62,7 +63,7 @@ public abstract class AbstractParser  {
 		}else {
 			return null;
 		}
-		
+
 	}
 
     protected final void writeEAD(XMLStreamWriter xmlWriter) throws XMLStreamException {
@@ -75,5 +76,5 @@ public abstract class AbstractParser  {
             xmlWriter.writeAttribute("audience", "external");
 		}
 	}
-    
+
 }
