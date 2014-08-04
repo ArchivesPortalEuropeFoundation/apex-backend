@@ -464,6 +464,7 @@ public class ExistingFilesChecker {
     public static String extractAttributeFromXML(String path, String element, String attribute, boolean isReturningFirstInstance, boolean eacCpf) throws WstxParsingException {
         final String CONVERTED_FLAG;
         final String CONVERTED_FLAG_NEW;
+        final String CREATED_FLAG_DASHBOARD = "Created_with_apeEAC-CPF_form";
         XMLStreamReader2 input = null;
         InputStream sfile = null;
         XMLInputFactory2 xmlif = (XMLInputFactory2) XMLInputFactory2.newInstance();
@@ -489,6 +490,7 @@ public class ExistingFilesChecker {
             boolean wasInsidePath = false;
             boolean eventType = false;
             boolean derived = false;
+            boolean created = false;
             String importantData = "";
 
             String[] pathElements = element.split("/");
@@ -534,8 +536,13 @@ public class ExistingFilesChecker {
                         }
                         break;
                     case XMLEvent.CHARACTERS:
-                        if (eventType && input.getText().equalsIgnoreCase("derived")) {
-                            derived = true;
+                        if (eventType) {
+                        	String target = input.getText();
+                        	if(target.equalsIgnoreCase("derived")){
+                        		derived = true;
+                        	}else if(target.equalsIgnoreCase("created")){
+                        		created = true;
+                        	}
                         }
                         if (isInsideElement) {
                             importantData = input.getText();
@@ -547,7 +554,8 @@ public class ExistingFilesChecker {
                                 return "empty";
                             }
                             if (((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && !eacCpf)
-                                    || ((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && eacCpf && derived)) {
+                                    || ((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW) && derived)
+                                    || (importantData.startsWith(CREATED_FLAG_DASHBOARD) && created) && eacCpf ) ) {
                                 return "true";
                             } else if (isReturningFirstInstance) {
                                 return importantData;
