@@ -15,9 +15,9 @@
                     <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.identity.name')" /></th>
                 </tr>
                 <tr id="trNamePart_1">
-                    <td><label for="textPersonName"><b><s:property value="getText('eaccpf.identity.name.full')" />*</b></label></td>
+                    <td><label for="textPersonName"><b><s:property value="getText('eaccpf.identity.name.full')" />*</b>:</label></td>
                     <td><input type="text" id="textPersonName" name="identityPersonName_<s:property value="#status.index + 1" />_part_1" required="required" value="<s:property value="#current.name" />" /></td>
-                    <td><label for="identityComponentOfName"><s:property value="getText('eaccpf.identity.name.component')" /></label></td>
+                    <td><label for="identityComponentOfName"><s:property value="getText('eaccpf.identity.name.component')" />:</label></td>
                     <td>
                         <select id="identityComponentOfName" name="identityPersonName_<s:property value="#status.index + 1" />_comp_1" required="required">
                             <s:iterator value="componentNameList" var="compNames">
@@ -27,7 +27,7 @@
                     </td>
                 </tr>
                 <tr id="trNameForm">
-                    <td><label for="identityFormOfName"><s:property value="getText('eaccpf.identity.name.form')" /></label></td>
+                    <td><label for="identityFormOfName"><s:property value="getText('eaccpf.identity.name.form')" />:</label></td>
                     <td>
                         <select id="identityFormOfName" name="identityFormOfName_<s:property value="#status.index + 1" />" required="required">
                             <s:iterator value="formNameList" var="formNames">
@@ -35,7 +35,7 @@
                             </s:iterator>
                         </select>
                     </td>
-                    <td><label for="identityNameLanguage"><s:property value="getText('eaccpf.commons.select.language')" /></label></td>
+                    <td><label for="identityNameLanguage"><s:property value="getText('eaccpf.commons.select.language')" />:</label></td>
                     <td>
                         <select id="identityNameLanguage" name="identityNameLanguage_<s:property value="#status.index + 1" />">
                             <s:iterator value="languages" var="language">
@@ -180,7 +180,7 @@
             <tr id="trPersonId">
                 <td><s:property value="cpfTypeIdentifierText" /></td>
                 <td><input type="text" id="textPersonId" name="textPersonId_1"/></td>
-                <td><s:property value="getText('eaccpf.commons.identifier.type')" /></td>
+                <td><s:property value="getText('eaccpf.identity.identifier.agency')" /></td>
                 <td><input type="text" id="textPersonTypeId" name="textPersonTypeId_1"/></td>
             </tr>
         </table>
@@ -194,26 +194,26 @@
     </table>
     <table id="dateExistenceTable" class="tablePadding">
         <tr id="trDateExistenceTableHeader">
-            <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.identity.dates.existence')" />*</th>
+            <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.identity.dates.existence')" /></th>
         </tr>
         <s:if test="%{loader.existDates.size() > 0}">
             <s:iterator var="current" value="loader.existDates" status="status">
                 <tr id="trDate_text_<s:property value="#status.index + 1" />">
                     <td>
-                        <label for="date_1">
+                        <label for="date_1"><b>
                             <s:if test="#currentDateRow.dateContent2 != null"><s:property value="getText('eaccpf.commons.from.date')" /></s:if>
                             <s:else><s:property value="getText('eaccpf.commons.date')" /></s:else>
-                            </label>
+                            *</b></label>
                         </td>
                         <td>
                             <input type="text" id="date_1" name="dateExistenceTable_date_1_<s:property value="#status.index + 1" />" value="<s:property value="#current.dateContent1" />" <s:if test="%{#current.standardDate1.year == 0000}">disabled="disabled" </s:if>onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'), '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />');"><br />
-                        <input type="checkbox" id="date_unknown_1" name="dateExistenceTable_date_unknown_1_<s:property value="#status.index + 1" />" <s:if test="%{#current.standardDate1.year == 0000}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1"><s:property value="getText('eaccpf.commons.unknown.date')" /></label>
+                        <input type="checkbox" id="date_unknown_1" name="dateExistenceTable_date_unknown_1_<s:property value="#status.index + 1" />" <s:if test="%{#current.standardDate1.year == 0000}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1"><s:property value="getText('eaccpf.commons.unknown.date')" />:</label>
                         </td>
                     <s:if test="#current.dateContent2 != null or #current.standardDate2 != null">
                         <td><s:property value="getText('eaccpf.commons.to.date')" /></td>
                         <td>
                             <input type="text" id="date_2" name="dateExistenceTable_date_2_<s:property value="#status.index + 1" />" value="<s:property value="#current.dateContent2" />" <s:if test="%{#current.standardDate2.year == 2999}">disabled="disabled" </s:if>onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'), '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />');"><br />
-                            <input type="checkbox" id="date_unknown_2" name="dateExistenceTable_date_unknown_2_<s:property value="#status.index + 1" />" <s:if test="%{#current.standardDate2.year == 2999}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2"><s:property value="getText('eaccpf.commons.unknown.date')" /></label>
+                            <input type="checkbox" id="date_unknown_2" name="dateExistenceTable_date_unknown_2_<s:property value="#status.index + 1" />" <s:if test="%{#current.standardDate2.year == 2999}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2"><s:property value="getText('eaccpf.commons.unknown.date')" />:</label>
                             </td>
                     </s:if>
                     <s:else>
@@ -258,7 +258,7 @@
         </s:if>
         <s:else>
             <tr id="trDate_text_1">
-                <td><s:property value="getText('eaccpf.commons.from.date')" /></td>
+                <td><b><s:property value="getText('eaccpf.commons.from.date')" /></b></td>
                 <td>
                     <input type="text" id="date_1" name="dateExistenceTable_date_1_1" onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'), '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />');"><br />
                 </td>
@@ -275,9 +275,7 @@
                     <input type="radio" name="dateExistenceTable_date_1_radio_1" value="known" checked="checked" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.date.known')"/>&nbsp;
                     <input type="radio" name="dateExistenceTable_date_1_radio_1" value="unknown" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.unknown.date')"/>&nbsp;
                 </td>
-                <td>
-                    <s:property value="getText('eaccpf.commons.date.type')"/>
-                </td>
+                <td></td>
                 <td>
                     <input type="radio" name="dateExistenceTable_date_2_radio_1" value="known" checked="checked" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.date.known')"/>&nbsp;
                     <input type="radio" name="dateExistenceTable_date_2_radio_1" value="unknown" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.unknown.date')"/>&nbsp;

@@ -6,7 +6,7 @@
 <div id="controlTabContent">
     <table id="controlTable" class="tablePadding">
         <tr>
-            <td><label for="apeId"><s:property value="getText('eaccpf.control.idintheapeeaccpf')" /></label></td>
+            <td><label for="apeId"><b><s:property value="getText('eaccpf.control.idintheapeeaccpf')" />*</b></label></td>
             <s:if test="%{loader.recordId == ''}">
                 <td><s:property value="getText('eaccpf.control.valuewillbegenerated')" /></td>
             </s:if>

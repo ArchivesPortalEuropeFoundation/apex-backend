@@ -12,7 +12,7 @@
                     <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.description.place')" /></th>
                 </tr>
                 <tr>
-                    <td><label for="place"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                    <td><label for="place"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                     <td><input type="text" id="place" name="place_<s:property value="#status.index + 1" />" value="<s:property value="#current.placeName" />" /></td>
                     <td><label for="placeLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
                     <td>
@@ -151,7 +151,7 @@
                 <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.description.place')" /></th>
             </tr>
             <tr>
-                <td><label for="place"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                <td><label for="place"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                 <td><input type="text" id="place" name="place_1" oninput="togglePlaceFields($(this));" /></td>
                 <td><label for="placeLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
                 <td>
@@ -256,7 +256,7 @@
                         <s:iterator var="currentCountryCode" value="#current.countryCodes" status="status3">
                             <s:if test="%{#status2.index == #status3.index}">
                                 <tr id="trPlaceFunction_<s:property value="#status.index + 1" />">
-                                    <td><label for="textPlaceFunction"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                                    <td><label for="textPlaceFunction"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                                     <td><input type="text" id="textPlaceFunction" name="functionTable_<s:property value="#status.index + 1" />_place_<s:property value="#status2.index + 1" />" value="<s:property value="#currentPlace" />" /></td>
                                     <td><label for="functionCountry"><s:property value="getText('eaccpf.description.country')" /></label></td>
                                     <td>
@@ -273,7 +273,7 @@
                 </s:if>
                 <s:else>
                     <tr id="trPlaceFunction_<s:property value="#status.index + 1" />">
-                        <td><label for="textPlaceFunction"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                        <td><label for="textPlaceFunction"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                         <td><input type="text" id="textPlaceFunction" name="functionTable_<s:property value="#status.index + 1" />_place_1" /></td>
                         <td><label for="functionCountry"><s:property value="getText('eaccpf.description.country')" /></label></td>
                         <td>
@@ -373,7 +373,7 @@
                 <td colspan="3"><textarea id="functionDescription" name="functionDescription_1"></textarea></td>
             </tr>
             <tr id="trPlaceFunction_1">
-                <td><label for="textPlaceFunction"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                <td><label for="textPlaceFunction"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                 <td><input type="text" id="textPlaceFunction" name="functionTable_1_place_1" /></td>
                 <td><label for="functionCountry"><s:property value="getText('eaccpf.description.country')" /></label></td>
                 <td>
@@ -433,7 +433,7 @@
                         <s:iterator var="currentCountryCode" value="#current.countryCodes" status="status3">
                             <s:if test="%{#status2.index == #status3.index}">
                                 <tr id="trPlaceOccupation_<s:property value="#status.index + 1" />">
-                                    <td><label for="textPlaceOccupation"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                                    <td><label for="textPlaceOccupation"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                                     <td><input type="text" id="textPlaceOccupation" name="occupationTable_<s:property value="#status.index + 1" />_place_<s:property value="#status2.index + 1" />" value="<s:property value="#currentPlace" />" /></td>
                                     <td><label for="occupationCountry"><s:property value="getText('eaccpf.description.country')" /></label></td>
                                     <td>
@@ -450,7 +450,7 @@
                 </s:if>
                 <s:else>
                     <tr id="trPlaceOccupation_<s:property value="#status.index + 1" />">
-                        <td><label for="textPlaceOccupation"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                        <td><label for="textPlaceOccupation"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                         <td><input type="text" id="textPlaceOccupation" name="occupationTable_<s:property value="#status.index + 1" />_place_1" /></td>
                         <td><label for="occupationCountry"><s:property value="getText('eaccpf.description.country')" /></label></td>
                         <td>
@@ -551,7 +551,7 @@
                 <td colspan="3"><textarea id="occupationDescription" name="occupationDescription_1"></textarea></td>
             </tr>
             <tr id="trPlaceOccupation_1">
-                <td><label for="textPlaceOccupation"><s:property value="getText('eaccpf.description.place')" /></label></td>
+                <td><label for="textPlaceOccupation"><s:property value="getText('eaccpf.description.place.name')" /></label></td>
                 <td><input type="text" id="textPlaceOccupation" name="occupationTable_1_place_1" /></td>
                 <td><label for="occupationCountry"><s:property value="getText('eaccpf.description.country')" /></label></td>
                 <td>
@@ -607,7 +607,9 @@
         <table id="genealogyContent_1" class="tablePadding">
             <tr>
                 <td><label for="genealogyDescription"><s:property value="getText('eaccpf.description.description')" /></label></td>
-                <td rowspan="3"><textarea id="genealogyDescription" name="genealogyDescription_1"></textarea></td>
+                <td colspan="3"><textarea id="genealogyDescription" name="genealogyDescription_1"></textarea></td>
+            </tr>
+            <tr>
                 <td><label for="genealogyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
                 <td>
                     <select id="genealogyLanguage" name="genealogyLanguage_1" >
@@ -616,6 +618,8 @@
                         </s:iterator>
                     </select>
                 </td>
+                <td></td>
+                <td></td>
             </tr>
         </table>
     </s:else>
@@ -651,7 +655,9 @@
         <table id="biographyContent_1" class="tablePadding">
             <tr>
                 <td><label for="biographyDescription"><s:property value="getText('eaccpf.description.description')" /></label></td>
-                <td rowspan="3"><textarea id="biographyDescription" name="biographyDescription_1"></textarea></td>
+                <td colspan="3"><textarea id="biographyDescription" name="biographyDescription_1"></textarea></td>
+            </tr>
+            <tr>
                 <td><label for="biographyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
                 <td>
                     <select id="biographyLanguage" name="biographyLanguage_1" >
@@ -660,6 +666,8 @@
                         </s:iterator>
                     </select>
                 </td>
+                <td></td>
+                <td></td>
             </tr>
         </table>
     </s:else>

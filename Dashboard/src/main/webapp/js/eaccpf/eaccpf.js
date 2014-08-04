@@ -446,9 +446,7 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
             '<input type="radio" name="' + tableName + '_date_1_radio_' + incrCounter + '" value="known" checked="checked" onchange="toggleDateTextfields($(this));">' + knownLabel + '&nbsp;' +
             '<input type="radio" name="' + tableName + '_date_1_radio_' + incrCounter + '" value="unknown" onchange="toggleDateTextfields($(this));">' + unknownLabel + '&nbsp;' +
             '</td>' +
-            '<td>' +
-            dateTypeLabel +
-            '</td>' +
+            '<td></td>' +
             '<td>' +
             '<input type="radio" name="' + tableName + '_date_2_radio_' + incrCounter + '" value="known" checked="checked" onchange="toggleDateTextfields($(this));">' + knownLabel + '&nbsp;' +
             '<input type="radio" name="' + tableName + '_date_2_radio_' + incrCounter + '" value="unknown" onchange="toggleDateTextfields($(this));">' + unknownLabel + '&nbsp;' +
