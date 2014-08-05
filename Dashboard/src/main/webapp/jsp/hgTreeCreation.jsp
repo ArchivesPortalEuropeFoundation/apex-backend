@@ -216,28 +216,6 @@
                 duration: 200
             },
 
-            dnd: {
-                preventVoidMoves: false,
-                onDragStart: function(node) {
-                    return true;
-                },
-                onDragEnter: function(node, sourceNode) {
-                    return true;
-                },
-                onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-                    logMsg(hitMode);
-                    //todo: Also do some DB changes
-                    alert("<s:property value="getText('hgTreeCreation.notImplemented')" />");
-                    if(hitMode == "over"){
-                        node.addChild(sourceNode);
-                        sourceNode.remove();
-                        node.expand(true);
-                    }else if(hitMode == "before" || hitMode == "after"){
-                        sourceNode.move(node, hitMode);
-                    }
-                }
-            },
-
             onPostInit: function(isReloading, isError) {
                 $.fn.colorbox({
                     width:"80%",
