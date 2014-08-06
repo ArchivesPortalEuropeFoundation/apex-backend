@@ -13,9 +13,9 @@
             <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.identity.name')" /></th>
         </tr>
         <tr id="trNamePart_1">
-            <td><label for="textPersonName"><b><s:property value="getText('eaccpf.identity.name.full')" />*</b></label></td>
+            <td><label for="textPersonName"><b><s:property value="getText('eaccpf.identity.name.full')" />:*</b></label></td>
             <td><input type="text" id="textPersonName" name="identityPersonName_1_part_1" /></td>
-            <td><label for="identityComponentOfName"><s:property value="getText('eaccpf.identity.name.component')" /></label></td>
+            <td><label for="identityComponentOfName"><s:property value="getText('eaccpf.identity.name.component')" />:</label></td>
             <td>
                 <select id="identityComponentOfName" name="identityPersonName_1_comp_1">
                     <s:iterator value="componentNameList" var="compNames">
@@ -29,7 +29,7 @@
             <td colspan="3"></td>
         </tr>
         <tr id="trNameForm">
-            <td><label for="identityFormOfName"><s:property value="getText('eaccpf.identity.name.form')" /></label></td>
+            <td><label for="identityFormOfName"><s:property value="getText('eaccpf.identity.name.form')" />:</label></td>
             <td>
                 <select id="identityFormOfName" name="identityFormOfName_1">
                     <s:iterator value="formNameList" var="formNames">
@@ -37,7 +37,7 @@
                     </s:iterator>
                 </select>
             </td>
-            <td><label for="identityNameLanguage"><s:property value="getText('eaccpf.commons.select.language')" /></label></td>
+            <td><label for="identityNameLanguage"><s:property value="getText('eaccpf.commons.select.language')" />:</label></td>
             <td>
                 <select id="identityNameLanguage" name="identityNameLanguage_1">
                     <s:iterator value="languages" var="language">
@@ -47,7 +47,7 @@
             </td>
         </tr>
         <tr>
-            <td><label><s:property value="getText('eaccpf.identity.dates.use')" /></label></td>
+            <td><label><s:property value="getText('eaccpf.identity.dates.use')" />:</label></td>
             <td><input type="button" value="<s:property value="getText('eaccpf.commons.add.single.date')" />" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />')" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="button" value="<s:property value="getText('eaccpf.commons.add.range.date')" />" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'), '<s:property value="getText('eaccpf.commons.date')" />', '<s:property value="getText('eaccpf.commons.from.date')" />', '<s:property value="getText('eaccpf.commons.to.date')" />', '<s:property value="getText('eaccpf.commons.date.type')" />', '<s:property value="getText('eaccpf.commons.date.known')" />', '<s:property value="getText('eaccpf.commons.unknown.date')" />', '<s:property value="openLabel" />', '<s:property value="getText('eaccpf.commons.iso.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />')" /></td>
             <td><input type="hidden" id="identityPersonName_1_rows" name="identityPersonName_1_rows" value="0" /></td>
@@ -66,9 +66,9 @@
             <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.identity.identifier')" /></th>
         </tr>
         <tr id="trPersonId">
-            <td><s:property value="cpfTypeIdentifierText" /></td>
+            <td><s:property value="cpfTypeIdentifierText" />:</td>
             <td><input type="text" id="textPersonId" name="textPersonId_1"/></td>
-            <td><s:property value="getText('eaccpf.identity.identifier.agency')" /></td>
+            <td><s:property value="getText('eaccpf.identity.identifier.agency')" />:</td>
             <td><input type="text" id="textPersonTypeId" name="textPersonTypeId_1"/></td>
         </tr>
     </table>
@@ -81,21 +81,21 @@
     </table>
     <table id="dateExistenceTable" class="tablePadding">
         <tr id="trDateExistenceTableHeader">
-            <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.identity.dates.existence')" /></th>
+            <th class="sectionHeader" colspan="4"><s:property value="getText('eaccpf.identity.dates.existence')" />*</th>
         </tr>
         <tr id="trDate_text_1">
-            <td><b><s:property value="getText('eaccpf.commons.from.date')" /></b></td>
+            <td><b><s:property value="getText('eaccpf.commons.from.date')" />:*</b></td>
             <td>
                 <input type="text" id="date_1" name="dateExistenceTable_date_1_1" onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'), '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />');"><br />
             </td>
-            <td><s:property value="getText('eaccpf.commons.to.date')" /></td>
+            <td><b><s:property value="getText('eaccpf.commons.to.date')" />:*</b></td>
             <td>
                 <input type="text" id="date_2" name="dateExistenceTable_date_2_1" onchange="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'), '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />');"><br />
             </td>
         </tr>
         <tr id="trDate_radio_1">
             <td>
-                <s:property value="getText('eaccpf.commons.date.type')"/>
+                <s:property value="getText('eaccpf.commons.date.type')"/>:
             </td>
             <td>
                 <input type="radio" name="dateExistenceTable_date_1_radio_1" value="known" checked="checked" onchange="toggleDateTextfields($(this));"><s:property value="getText('eaccpf.commons.date.known')"/>&nbsp;
@@ -109,7 +109,7 @@
             </td>
         </tr>
         <tr id="trDate_iso_1">
-            <td><s:property value="getText('eaccpf.commons.iso.date')" /></td>
+            <td><s:property value="getText('eaccpf.commons.iso.date')" />:</td>
             <td>
                 <input type="text" title="YYYY" id="date_1_Year" name="dateExistenceTable_date_1_Year_1" size="4" maxlength="4" onchange="validateIsoDates($(this), '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />');" /> &ndash;
                 <input type="text" title="MM" id="date_1_Month" name="dateExistenceTable_date_1_Month_1" size="2" maxlength="2" onchange="validateIsoDates($(this), '<s:property value="getText('eaccpf.commons.error.no.standard.date')" />', '<s:property value="getText('eaccpf.commons.error.no.standard.dateRange')" />');" /> &ndash;

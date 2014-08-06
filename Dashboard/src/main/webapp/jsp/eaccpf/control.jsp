@@ -6,7 +6,7 @@
 <div id="controlTabContent">
     <table id="controlTable" class="tablePadding">
         <tr>
-            <td><label for="apeId"><b><s:property value="getText('eaccpf.control.idintheapeeaccpf')" />*</b></label></td>
+            <td><label for="apeId"><b><s:property value="getText('eaccpf.control.idintheapeeaccpf')" />*</b>:</label></td>
             <s:if test="%{loader.recordId == ''}">
                 <td><s:property value="getText('eaccpf.control.valuewillbegenerated')" /></td>
             </s:if>
@@ -15,17 +15,17 @@
                 </s:else>
         </tr>
         <tr>
-            <td><label for="responsiblePerson"><s:property value="getText('eaccpf.control.personinstitutionresponsiblefordescription')" /></label></td>
+            <td><label for="responsiblePerson"><s:property value="getText('eaccpf.control.personinstitutionresponsiblefordescription')" />:</label></td>
             <td><input type="text" id="responsiblePerson" name="responsiblePerson" disabled="disabled" value="${loader.controlResponsiblePerson}" /></td>
         </tr>
         <tr>
-            <td><label for="responsibleInstitution"><b><s:property value="getText('eaccpf.control.identifierofinstitutionresponsible')" />*</b></label></td>
+            <td><label for="responsibleInstitution"><b><s:property value="getText('eaccpf.control.identifierofinstitutionresponsible')" />*</b>:</label></td>
             <td><input type="text" id="responsibleInstitution" name="responsibleInstitution" disabled="disabled" value="${loader.agencyCode}" /></td>
         </tr>
     </table>
     <table id="localId_1" class="tablePadding">
         <tr>
-            <td><label for="textLocalId_1"><s:property value="getText('eaccpf.control.otherRecordIdentifier')" /></label></td>
+            <td><label for="textLocalId_1"><s:property value="getText('eaccpf.control.otherRecordIdentifier')" />:</label></td>
             <td><input type="text" id="textLocalId_1" name="textLocalId_1" /></td>
         </tr>
     </table>
@@ -39,7 +39,7 @@
             <th colspan="4"><s:property value="getText('eaccpf.control.usedlanguagesandscriptsfordescription')" /></th>
         </tr>
         <tr>
-            <td><b><s:property value="getText('eaccpf.commons.select.language')" />*</b></td>
+            <td><b><s:property value="getText('eaccpf.commons.select.language')" />:*</b></td>
             <td>
                 <select id="controlLanguage" name="controlLanguage" >
                     <s:iterator value="languages" var="language">
@@ -47,7 +47,7 @@
                     </s:iterator>
                 </select>
             </td>
-            <td><b><s:property value="getText('eaccpf.control.selectascript')" />*</b></td>
+            <td><b><s:property value="getText('eaccpf.control.selectascript')" />:*</b></td>
             <td>
                 <select id="controlScript" name="controlScript" >
                     <s:iterator value="scriptList" var="script">
