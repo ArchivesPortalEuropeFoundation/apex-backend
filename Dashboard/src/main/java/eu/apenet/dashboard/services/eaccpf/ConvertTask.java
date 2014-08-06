@@ -38,14 +38,14 @@ public class ConvertTask extends AbstractEacCpfTask {
             String xslFileName = "default-apeEAC-CPF.xsl";
             ArchivalInstitution archivalInstitution = eacCpf.getArchivalInstitution();
             String mainagencycode = archivalInstitution.getRepositorycode();
-            String recordId = eacCpf.getIdentifier() + "";
+            String identifier = eacCpf.getIdentifier() + "";
             Map<String, String> parameters = getConversionProperties(properties);
 
             if (mainagencycode != null) {
                 parameters.put("mainagencycode", mainagencycode);
             }
-            if (recordId != null) {
-                parameters.put("recordId", recordId);
+            if (identifier != null  && !identifier.isEmpty()) {
+                parameters.put("recordId", "eac_" + mainagencycode.replaceAll("/", "_") + "_" + identifier);
             }
 //            String countryCode = archivalInstitution.getCountry().getIsoname();
 //            if (StringUtils.isNotEmpty(countryCode)) {
