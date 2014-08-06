@@ -157,19 +157,38 @@ public class CreateEacCpf extends EacCpfAction {
             uploadMethod.setMethod(UploadMethod.HTTP);
             uploadMethod.setId(3);
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-//            String otherRecordId = "";
-//            if(control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()){
-//                otherRecordId = control.getOtherRecordId().get(0).getContent();
-//            }
-//            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
+            String aiRepoCode = archivalInstitution.getRepositorycode().replaceAll("\\\\", "_").replaceAll("/", "_");
+            String otherRecordId = "";
+            if(control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()){
+                otherRecordId = control.getOtherRecordId().get(0).getContent().replaceAll("[^\\p{Alnum}_\\.:-]", "_");
+            }
+            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId);
 
-//            if (noRecordIdAvailable) {
+            String identifier;
+            if (noRecordIdAvailable) {
                 String id = System.currentTimeMillis() + "";
                 id = id.substring(0, id.length() - 4);
-                newEac.setIdentifier(id);
-//            } else {
-//                newEac.setIdentifier(otherRecordId);
+                identifier = "eac_" + aiRepoCode + "_" + id;
+            } else {
+                identifier ="eac_" + aiRepoCode + "_" + otherRecordId;
+            }
+
+//TODO: determine duplicate ID on first save, but ignore these afterwards
+//
+//            if (eacCpfDAO.getEacCpfByIdentifier(aiId, identifier) != null){
+//                boolean dbIdMatch = true;
+//                int i = 1;
+//                while(dbIdMatch){
+//                    String replacementIdentifier = identifier + "_" + i;
+//                    if (eacCpfDAO.getEacCpfByIdentifier(aiId, replacementIdentifier) == null){
+//                        identifier = replacementIdentifier;
+//                        dbIdMatch = false;
+//                    }
+//                    i++;
+//                }
 //            }
+
+            newEac.setIdentifier(identifier);
             control.getRecordId().setValue(newEac.getIdentifier());
             newEac.setUploadMethod(uploadMethod);
             newEac.setArchivalInstitution(archivalInstitution);
