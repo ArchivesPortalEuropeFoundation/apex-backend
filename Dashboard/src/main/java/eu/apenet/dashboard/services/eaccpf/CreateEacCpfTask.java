@@ -114,7 +114,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 
         //if the list is populated, sort it by priority and process the first entry
         if (titleElements != null && !titleElements.isEmpty()) {
-            Collections.sort(titleElements, new NameEntryComp());
+            //Collections.sort(titleElements, new NameEntryComp());
 
             //Since the list is sorted prior to use, its first element should almost always return a value from which a
             //title can be built without problems. If this however should not be the case, for example if the file uses
@@ -126,6 +126,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                 StringBuilder surname = new StringBuilder();
                 StringBuilder firstname = new StringBuilder();
                 StringBuilder patronymic = new StringBuilder();
+                StringBuilder content = new StringBuilder();
 
                 //if there is only a persname/famname/corpname, directly attach it to the main StringBuilder, otherwise use the partial builders and build title from them
                 for (Part part : titleEntryParts) {
@@ -137,18 +138,18 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                             surname.append(" ");
                         }
                         surname.append(part.getContent());
-                    }
-                    if (part.getLocalType().equals("firstname")) {
+                    }else if (part.getLocalType().equals("firstname")) {
                         if (firstname.length() != 0) {
                             firstname.append(" ");
                         }
                         firstname.append(part.getContent());
-                    }
-                    if (part.getLocalType().equals("patronymic")) {
+                    }else if (part.getLocalType().equals("patronymic")) {
                         if (patronymic.length() != 0) {
                             patronymic.append(" ");
                         }
                         patronymic.append(part.getContent());
+                    }else{
+                    	content.append(part.getContent());
                     }
                 }
 
@@ -164,7 +165,11 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                     }
                     builderTitle.append(patronymic);
                     if (builderTitle.length() == 0) {
-                        builderTitle.append(" ");
+                    	if(content.length()>0){
+                    		builderTitle.append(content);
+                    	}else{
+                    		builderTitle.append(" ");
+                    	}
                     }
                 }
                 //output of the title
@@ -255,20 +260,24 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                         }
                         if (input.getLocalName().equalsIgnoreCase(pathElements[(pathElements.length - 1)])) {
                             Part part = new Part();
-                            for (int i = 0; i < input.getAttributeCount(); i++) {
-                                if (input.getAttributeLocalName(i).equals("localType")) {
-                                    if (input.getAttributeValue(i).equals("persname")
-                                            || (input.getAttributeValue(i).equals("corpname"))
-                                            || (input.getAttributeValue(i).equals("famname"))
-                                            || (input.getAttributeValue(i).equals("surname"))
-                                            || (input.getAttributeValue(i).equals("firstname"))
-                                            || (input.getAttributeValue(i).equals("patronymic"))) {
-                                        part.setLocalType(input.getAttributeValue(i));
-                                    } else if (!input.getAttributeValue(i).isEmpty()) {
-                                        part.setLocalType("unknownValue");
+                            if(input.getAttributeCount()>0){
+                            	for (int i = 0; i < input.getAttributeCount(); i++) {
+                                    if (input.getAttributeLocalName(i).equals("localType")) {
+                                        if (input.getAttributeValue(i).equals("persname")
+                                                || (input.getAttributeValue(i).equals("corpname"))
+                                                || (input.getAttributeValue(i).equals("famname"))
+                                                || (input.getAttributeValue(i).equals("surname"))
+                                                || (input.getAttributeValue(i).equals("firstname"))
+                                                || (input.getAttributeValue(i).equals("patronymic"))) {
+                                            part.setLocalType(input.getAttributeValue(i));
+                                        } else if (!input.getAttributeValue(i).isEmpty()) {
+                                            part.setLocalType("unknownValue");
+                                        }
+                                        addText = true;
                                     }
-                                    addText = true;
                                 }
+                            }else{ //in case there is no attributes, take the content
+                            	addText = true;
                             }
                             partStack.push(part);
                         }
