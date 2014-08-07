@@ -56,7 +56,7 @@
 				</a>
 			</div>	
 		 	<div id="eaccpfcontent">
-			    <dashboard:eac type="eaccpfdetails" eacUrl="${eac.path}" repositoryCode="${repositoryCode}" eaccpfIdentifier="${eaccpfIdentifier}" langNavigator="${langNavigator}" />
+			    <dashboard:eac type="eaccpfdetails" eacUrl="${eac.path}" repositoryCode="${repositoryCode}" eaccpfIdentifier="${eaccpfIdentifier}" langNavigator="${langNavigator}" translationLanguage="${translationLanguage}" />
 	   		</div>
 	   </div> 
 	</div>

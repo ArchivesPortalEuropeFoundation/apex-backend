@@ -225,6 +225,9 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 			//navigator's lang
 			String langNavigator = request.getHeader("Accept-Language").substring(0, 2);	
 			request.setAttribute("langNavigator", langNavigator);
+
+			// Default view.
+			request.setAttribute("translationLanguage", "default");
 			
 		  return "success-eaccpf";
 		  

@@ -40,6 +40,7 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	private String eacUrl;
 	private String repositoryCode;
 	private String eaccpfIdentifier;
+	private String translationLanguage;
 	// Variables for the relations.
 	private String aiCodeUrl;
 	private String eacUrlBase;
@@ -76,7 +77,8 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 				}else {
 					EacXslt.convertEacToHtml(xslLocation, this.getJspContext().getOut(), xmlSource, searchTerms,
 							highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(),
-							getSolrStopwordsUrl(), this.getAiCodeUrl(), this.getEacUrlBase(), this.getEadUrl(), this.getLangNavigator());
+							getSolrStopwordsUrl(), this.getTranslationLanguage(), this.getAiCodeUrl(),
+							this.getEacUrlBase(), this.getEadUrl(), this.getLangNavigator());
 				}
 			}else {
 				try {
@@ -207,6 +209,20 @@ public abstract class AbstractEacTag extends SimpleTagSupport {
 	 */
 	public void setEaccpfIdentifier(String eaccpfIdentifier) {
 		this.eaccpfIdentifier = eaccpfIdentifier;
+	}
+
+	/**
+	 * @return the translationLanguage
+	 */
+	public String getTranslationLanguage() {
+		return this.translationLanguage;
+	}
+
+	/**
+	 * @param translationLanguage the translationLanguage to set
+	 */
+	public void setTranslationLanguage(String translationLanguage) {
+		this.translationLanguage = translationLanguage;
 	}
 
 	/**
