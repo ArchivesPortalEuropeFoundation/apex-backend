@@ -1860,22 +1860,38 @@
 						<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCodeEac)" />
 						<xsl:variable name="encodedlink" select="ape:encodeSpecialCharacters($link)" />
 						<a href="{$eacUrlBase}/aicode/{$encodedAiCode}/type/ec/id/{$encodedlink}" target="_blank">
-							<xsl:value-of select="$title"/>
+							<xsl:call-template name="citationHrefTitle">
+								<xsl:with-param name="content" select="$content" />
+								<xsl:with-param name="section" select="$section" />
+								<xsl:with-param name="title" select="$title" />
+							</xsl:call-template>
 						</a>
 					</xsl:when>
 					<xsl:when test="$aiCodeEad != 'ERROR' and $aiCodeEad != ''">
 						<a href="{$eadUrl}/{$aiCodeEad}" target="_blank">
-							<xsl:value-of select="$title"/>
+							<xsl:call-template name="citationHrefTitle">
+								<xsl:with-param name="content" select="$content" />
+								<xsl:with-param name="section" select="$section" />
+								<xsl:with-param name="title" select="$title" />
+							</xsl:call-template>
 						</a>
 					</xsl:when>
 					<xsl:when test="$aiCodeEag != 'ERROR' and $aiCodeEag != ''">
 						<xsl:variable name="encodedAiCode" select="ape:encodeSpecialCharacters($aiCodeEag)" />
 						<a href="{$aiCodeUrl}/{$encodedAiCode}" target="_blank">
-							<xsl:value-of select="$title"/>
+							<xsl:call-template name="citationHrefTitle">
+								<xsl:with-param name="content" select="$content" />
+								<xsl:with-param name="section" select="$section" />
+								<xsl:with-param name="title" select="$title" />
+							</xsl:call-template>
 						</a>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="$title"/>
+						<xsl:call-template name="citationHrefTitle">
+							<xsl:with-param name="content" select="$content" />
+							<xsl:with-param name="section" select="$section" />
+							<xsl:with-param name="title" select="$title" />
+						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
