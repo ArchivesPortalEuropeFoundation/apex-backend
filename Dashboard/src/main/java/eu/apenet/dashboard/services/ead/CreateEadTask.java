@@ -79,7 +79,7 @@ public class CreateEadTask extends AbstractEadTask {
                 startPath = getPath(xmlType, archivalInstitution) + System.currentTimeMillis() + "_" + upFile.getFilename();
                 destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() + startPath);
             }
-			newEad.setPathApenetead(startPath);
+			newEad.setPath(startPath);
 			newEad.setUploadMethod(upFile.getUploadMethod());
 			newEad = DAOFactory.instance().getEadDAO().store(newEad);
 
