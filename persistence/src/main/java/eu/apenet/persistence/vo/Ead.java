@@ -2,8 +2,6 @@ package eu.apenet.persistence.vo;
 
 import java.util.Set;
 
-import eu.archivesportaleurope.util.ApeUtil;
-
 public abstract class Ead  extends AbstractContent{
 	/**
 	 * 
@@ -16,6 +14,7 @@ public abstract class Ead  extends AbstractContent{
 	public abstract String getPathApenetead();
 	@Deprecated
 	public abstract void setPathApenetead(String pathApenetead);
+	public abstract void setPath(String path);
 	public abstract String getEadid();
 	public abstract void setEadid(String eadid);
 	public abstract Long getTotalNumberOfDaos();
@@ -49,7 +48,6 @@ public abstract class Ead  extends AbstractContent{
 	@Override
 	public void setIdentifier(String identifier) {
 		setEadid(identifier);
-		
 	}
 	@Override
 	public String toString() {
