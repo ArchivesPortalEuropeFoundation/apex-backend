@@ -19,6 +19,7 @@ import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
@@ -27,6 +28,7 @@ import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
@@ -538,7 +540,7 @@ public class EadService {
                             new ValidateTask().execute(newEad);
                             new PublishTask().execute(newEad);
                             if(ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-                                Properties europeanaProperties = createEuropeanaProperties(preferences);
+                                Properties europeanaProperties = createEuropeanaProperties(preferences, newEad);
                                 new ConvertToEseEdmTask().execute(newEad, europeanaProperties);
                                 new DeliverToEuropeanaTask().execute(newEad);
                             }
@@ -777,8 +779,8 @@ public class EadService {
         return queueItem;
     }
 
-    private static Properties createEuropeanaProperties(Properties preferences) {
-    	EseConfig config = new EseConfig();
+    private static Properties createEuropeanaProperties(Properties preferences, Ead ead) {
+    	EdmConfig config = new EdmConfig();
     	config.setDataProvider(preferences.getProperty(QueueItem.DATA_PROVIDER));
     	config.setUseExistingRepository("true".equals(preferences.getProperty(QueueItem.DATA_PROVIDER_CHECK)));
     	config.setProvider("Archives Portal Europe");
@@ -807,6 +809,16 @@ public class EadService {
             config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
         }
         config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
+
+        String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
+                            + APEnetUtilities.FILESEPARATOR + "fa"
+                            + APEnetUtilities.FILESEPARATOR + ead.getEadid();
+        config.setEdmIdentifier(oaiIdentifier);
+        //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
+        //repositoryCode is taken from the tool while the other two have fixed values.
+        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
+        config.setXmlTypeName("fa");
     	return config.getProperties();
     }
 }

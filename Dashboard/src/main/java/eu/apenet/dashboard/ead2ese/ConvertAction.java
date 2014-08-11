@@ -22,11 +22,13 @@ import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.actions.content.ead.BatchEadActions;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.util.Ead2EseInformation;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueueAction;
@@ -229,7 +231,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 
 	@SuppressWarnings("unchecked")
 	public String execute() throws Exception{		
-		EseConfig config = fillConfig();
+		EdmConfig config = fillConfig();
 		if (StringUtils.isBlank(batchItems)){
 			EadService.convertToEseEdm(Integer.parseInt(id), config.getProperties());
 		}else {
@@ -257,8 +259,8 @@ public class ConvertAction extends AbstractInstitutionAction {
    		return SUCCESS;
     }
 
-	protected EseConfig fillConfig(){
-    	EseConfig config = new EseConfig();  	
+	protected EdmConfig fillConfig(){
+    	EdmConfig config = new EdmConfig();  	
     	config.setContextInformationPrefix(this.getHierarchyPrefix());
     	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
@@ -303,6 +305,16 @@ public class ConvertAction extends AbstractInstitutionAction {
     	} else {
     		config.setMinimalConversion(false);
     	}
+        
+        Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
+        String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
+                            + APEnetUtilities.FILESEPARATOR + "fa"
+                            + APEnetUtilities.FILESEPARATOR + ead.getEadid();
+        config.setEdmIdentifier(oaiIdentifier);
+        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
+        config.setXmlTypeName("fa");
+
     	return config;
 	}
 
