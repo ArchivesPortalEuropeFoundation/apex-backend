@@ -269,12 +269,10 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                                         } else if (!input.getAttributeValue(i).isEmpty()) {
                                             part.setLocalType("unknownValue");
                                         }
-                                        addText = true;
                                     }
                                 }
-                            }else{ //in case there is no attributes, take the content
-                            	addText = true;
                             }
+                        	addText = true;
                             partStack.push(part);
                         }
                         break;
