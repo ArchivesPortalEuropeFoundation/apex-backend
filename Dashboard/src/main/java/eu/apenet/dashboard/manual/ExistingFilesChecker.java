@@ -554,7 +554,7 @@ public class ExistingFilesChecker {
                                 return "empty";
                             }
                             if (((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && !eacCpf)
-                                    || ((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW) && derived)
+                                    || (((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && derived)
                                     || (importantData.startsWith(CREATED_FLAG_DASHBOARD) && created) && eacCpf ) ) {
                                 return "true";
                             } else if (isReturningFirstInstance) {
