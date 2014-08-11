@@ -949,22 +949,29 @@
 		<!-- Relations boxes-->
 		<div id="relations">
 			<!-- Alternative descriptions. -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent/eac:componentEntry/text()">
+			<xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent/eac:componentEntry/text()
+							and ./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent/eac:componentEntry/text() != '')
+						or ./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent[@xlink:href != '']">
 				<xsl:call-template name="alternativeDescriptions"/>
 			</xsl:if>
 
 			<!-- Archival materials. -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/text()">
+			<xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/text()
+							and ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/text() != '')
+						or ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation[@xlink:href != '']">
 				<xsl:call-template name="archivalMaterials"/>
 			</xsl:if>
 
 			<!-- Related names. -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation/eac:relationEntry/text()">
+			<xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation/eac:relationEntry/text()
+							and ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation/eac:relationEntry/text() != '')
+						or ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation[@xlink:href != '']">
 				<xsl:call-template name="relatedNames"/>
 			</xsl:if>
 
 			<!-- Archives. -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/@localType='agencyName'">
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/@localType='agencyName'
+						and ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry[@localType='agencyName']/text() != ''">
 				<xsl:call-template name="archivesRelations"/>
 			</xsl:if>	
 		</div>
