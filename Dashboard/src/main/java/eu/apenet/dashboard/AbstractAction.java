@@ -88,19 +88,25 @@ public abstract class AbstractAction extends ActionSupport  implements Preparabl
 	/**
 	 * Method to delete temporary EAG 2012 files.
 	 */
-	protected String removeInvalidEAG(final Integer aiId) {
-		String alCountry = new ArchivalLandscapeUtils().getmyCountry();
-		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
-				aiId + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
-		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
-		File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
-		if (invalidFile.exists() && invalidFile.isFile()) {
-			try {
-				FileUtils.forceDelete(invalidFile);
-			} catch (IOException e) {
-				return "ERROR trying to remove the file " + tempPath;
-			}
-		}  
+	protected String removeInvalidEAG(SecurityContext.SelectedArchivalInstitution selectedArchivalInstitution) {
+		if (selectedArchivalInstitution != null){
+			removeInvalidEAG(selectedArchivalInstitution.getId());
+		}
+		return SUCCESS;
+	}
+	protected String removeInvalidEAG(Integer aiId) {
+			String alCountry = new ArchivalLandscapeUtils().getmyCountry();
+			String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
+					aiId + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+			String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
+			File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
+			if (invalidFile.exists() && invalidFile.isFile()) {
+				try {
+					FileUtils.forceDelete(invalidFile);
+				} catch (IOException e) {
+					return "ERROR trying to remove the file " + tempPath;
+				}
+			}  
 		return SUCCESS;
 	}
 }
