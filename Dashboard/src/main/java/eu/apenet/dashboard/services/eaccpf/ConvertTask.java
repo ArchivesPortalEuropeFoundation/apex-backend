@@ -45,7 +45,7 @@ public class ConvertTask extends AbstractEacCpfTask {
                 parameters.put("mainagencycode", mainagencycode);
             }
             if (identifier != null  && !identifier.isEmpty()) {
-                parameters.put("recordId", "eac_" + mainagencycode.replaceAll("/", "_") + "_" + identifier);
+                parameters.put("recordId", "eac_" + archivalInstitution.getEncodedRepositorycode() + "_" + identifier);
             }
 //            String countryCode = archivalInstitution.getCountry().getIsoname();
 //            if (StringUtils.isNotEmpty(countryCode)) {
