@@ -183,7 +183,7 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
         // or of the FA files.
         if (XmlType.EAC_CPF.getName().equalsIgnoreCase(type)) {
         	EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-        	idUsed = eacCpfDAO.isEacCpfIdUsed(this.neweadid.trim(), this.ai_id, EacCpf.class) != null;
+        	idUsed = eacCpfDAO.isEacCpfIdUsed(this.neweadid.trim(), null, EacCpf.class) != null;
         } else {
     		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
         	idUsed = eadDAO.isEadidUsed(this.neweadid.trim(), ai_id, FindingAid.class) != null;

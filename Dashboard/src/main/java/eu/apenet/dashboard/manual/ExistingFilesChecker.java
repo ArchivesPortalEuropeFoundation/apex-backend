@@ -417,7 +417,7 @@ public class ExistingFilesChecker {
             }
             result = STATUS_ERROR;
         } else {
-            Integer identifier = eacCpfDAO.isEacCpfIdUsed(cpfId, archivalInstitutionId, EacCpf.class);
+            Integer identifier = eacCpfDAO.isEacCpfIdUsed(cpfId, null, EacCpf.class);
             if (identifier != null) { //The cpf_id is already stored in the table
 
                 // The cpfId already exists

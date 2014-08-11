@@ -215,7 +215,9 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     public Integer isEacCpfIdUsed(String identifier, Integer aiId, Class<? extends EacCpf> clazz) {
         Criteria criteria = getSession().createCriteria(clazz, "eac").setProjection(Projections.property("id"));
         criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
-        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        if(aiId!=null){
+        	criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        }
         criteria.add(Restrictions.eq("identifier", identifier));
         List<Integer> result = criteria.list();
         if (result.size() > 0) {

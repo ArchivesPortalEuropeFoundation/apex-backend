@@ -710,7 +710,9 @@
 			}
 						
 			function checkEADIDavailability(oldeadid, neweadid, fileId, type, indexRepeated, isRepeated) {
-				$.getJSON("${pageContext.request.contextPath}/generateEadidResponseJSON.action", 
+				var pattern = /^[a-zA-Z0-9\.\:\_\-]*$/i;
+				if((type=="EAC-CPF" && neweadid.toUpperCase().match(pattern))){
+					$.getJSON("${pageContext.request.contextPath}/generateEadidResponseJSON.action", 
 						{ eadid: oldeadid, 
 					      neweadid: neweadid, 
 					      fileId: fileId,
@@ -847,8 +849,23 @@
 								$("input#form_submit").attr("disabled","disabled");
 							}
 						}
-			    );
-				
+			    	);
+				}else{
+					$("input").filter(function() {
+						if($(this).val()==neweadid){
+							var eadid = $(this).attr("id");
+							if(eadid.length>"neweadidRepeated".length){
+								eadid = eadid.substring("neweadidRepeated".length);
+								var targetText = "<s:property value="getText('content.message.errorinvalidcharacters')" />";
+								$("input#SaveChangesButtonRepeated" + eadid).attr("disabled","disabled");
+								$("label#resultChangeEADIDRepeated" + eadid).text(targetText);
+								$("label#resultChangeEADIDRepeated" + eadid).css("color","red");
+								$("label#resultChangeEADIDRepeated" + eadid).css("font-weight","bold");
+								$("label#resultChangeEADIDRepeated" + eadid).show();
+							}
+						}
+					});
+				}
 			}
 			
 			
