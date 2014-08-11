@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:fn="http://www.w3.org/2005/xpath-functions"
+<xsl:stylesheet version="2.0" xmlns:fn="http://www.w3.org/2005/xpath-functions"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns='http://www.w3.org/1999/xhtml' xmlns:eac="urn:isbn:1-931666-33-4"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions"
@@ -246,17 +246,52 @@
 			</xsl:if>
 
 			<!-- localDescription -->
-			<xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription) and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:descriptiveNote/eac:p/text()!= '')">
+			<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<localDescriptions>" is a valid
+				 one. -->
+			<xsl:variable name="validHrefLinkLocalDescription">
+				<xsl:choose>
+					<xsl:when test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:href != '']">
+						<xsl:value-of select="ape:checkHrefValue(string-join(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription
+						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:term/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:placeEntry/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:dateSet/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:citation/text() != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:citation[@xlink:href != '']
+								and $validHrefLinkLocalDescription = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:citation[@xlink:title != '']
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:descriptiveNote/eac:p/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:descriptiveNote/eac:p/text() != '')">
 			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.localDescription'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions"> 
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/>
 					    <xsl:for-each select="./eac:localDescription">
-					    	<xsl:if test="./eac:term/text()!= '' or ./eac:placeEntry/text()!= '' or ./eac:descriptiveNote/eac:p/text()!= ''">
-						    	<div class="blockSingular">	
+					    	<xsl:if test="./eac:term/text() != ''
+					    				or ./eac:placeEntry/text() != ''
+										or ./eac:date/text() != ''
+										or ./eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:dateSet/eac:date/text() != ''
+										or ./eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:citation/text() != ''
+										or (./eac:citation[@xlink:href != ''] and $validHrefLinkLocalDescription = 'true')
+										or ./eac:citation[@xlink:title != '']
+					    				or ./eac:descriptiveNote/eac:p/text() != ''">
+						    	<div class="blockSingular">
+						    		<xsl:variable name="posChild" select="position()"/>
 
 						    		<!-- term localDescription -->
-						    		<xsl:variable name="posChild" select="position()"/>
 							    	<xsl:call-template name="term">
 							    		<xsl:with-param name="list" select="./eac:term"/>
 							    		<xsl:with-param name="clazz" select="'localDescription_'"/>
@@ -276,6 +311,14 @@
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 							    	</xsl:call-template>
 
+									<!-- dates in localDescription -->
+									<xsl:call-template name="commonDates">
+							    		<xsl:with-param name="date" select="./eac:date"/>
+							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					   					<xsl:with-param name="mode" select="$translationMode"/>
+							    	</xsl:call-template>
+
 									<!-- citation in localDescription -->
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
@@ -284,14 +327,6 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
-							    	</xsl:call-template>
-
-									<!-- dates in localDescription -->
-									<xsl:call-template name="commonDates">
-							    		<xsl:with-param name="date" select="./eac:date"/>
-							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in localDescription -->
@@ -320,14 +355,49 @@
 				</xsl:for-each>
 		   </xsl:if>
 
-		   <!-- legalStatus -->
-		   <xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus) and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:descriptiveNote/eac:p/text()!= '')">
+
+			<!-- legalStatus -->
+			<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<legalStatuses>" is a valid one. -->
+			<xsl:variable name="validHrefLinkLegalStatus">
+				<xsl:choose>
+					<xsl:when test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:href != '']">
+						<xsl:value-of select="ape:checkHrefValue(string-join(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus
+						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:term/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:placeEntry/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:dateSet/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:citation/text() != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:citation[@xlink:href != '']
+								and $validHrefLinkLegalStatus = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:citation[@xlink:title != '']
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus/eac:descriptiveNote/eac:p/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:descriptiveNote/eac:p/text() != '')">
 			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.legalStatus'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses">
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/> 
 					    <xsl:for-each select="./eac:legalStatus">
-						    <xsl:if test="./eac:term/text()!= '' or ./eac:placeEntry/text()!= '' or ./eac:descriptiveNote/eac:p/text()!= ''">
+						    <xsl:if test="./eac:term/text() != ''
+					    				or ./eac:placeEntry/text() != ''
+										or ./eac:date/text() != ''
+										or ./eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:dateSet/eac:date/text() != ''
+										or ./eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:citation/text() != ''
+										or (./eac:citation[@xlink:href != ''] and $validHrefLinkLegalStatus = 'true')
+										or ./eac:citation[@xlink:title != '']
+					    				or ./eac:descriptiveNote/eac:p/text() != ''">
 						    	<div class="blockSingular">	
 						    		<xsl:variable name="posChild" select="position()"/>
 
@@ -351,6 +421,14 @@
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 							    	</xsl:call-template>
 
+									<!-- dates in legalStatus -->
+									<xsl:call-template name="commonDates">
+							    		<xsl:with-param name="date" select="./eac:date"/>
+							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					   					<xsl:with-param name="mode" select="$translationMode"/>
+							    	</xsl:call-template>
+
 									<!-- citation in legalStatus -->
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
@@ -359,14 +437,6 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
-							    	</xsl:call-template>
-
-									<!-- dates in legalStatus -->
-									<xsl:call-template name="commonDates">
-							    		<xsl:with-param name="date" select="./eac:date"/>
-							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in legalStatus -->
@@ -395,14 +465,49 @@
 				</xsl:for-each>
 		   </xsl:if>
 
-		   <!-- function -->
-		   <xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function) and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:descriptiveNote/eac:p/text()!= '')">
+
+			<!-- function -->
+			<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<functions>" is a valid one. -->
+			<xsl:variable name="validHrefLinkFunction">
+				<xsl:choose>
+					<xsl:when test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:href != '']">
+						<xsl:value-of select="ape:checkHrefValue(string-join(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion
+						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:term/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:placeEntry/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:dateSet/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:citation/text() != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:citation[@xlink:href != '']
+								and $validHrefLinkFunction = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:citation[@xlink:title != '']
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:descriptiveNote/eac:p/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:descriptiveNote/eac:p/text() != '')">
 			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.function'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions">
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/> 
 					    <xsl:for-each select="./eac:function">
-						    <xsl:if test="./eac:term/text()!= '' or ./eac:placeEntry/text()!= '' or ./eac:descriptiveNote/eac:p/text()!= ''">
+						    <xsl:if test="./eac:term/text() != ''
+					    				or ./eac:placeEntry/text() != ''
+										or ./eac:date/text() != ''
+										or ./eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:dateSet/eac:date/text() != ''
+										or ./eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:citation/text() != ''
+										or (./eac:citation[@xlink:href != ''] and $validHrefLinkFunction = 'true')
+										or ./eac:citation[@xlink:title != '']
+					    				or ./eac:descriptiveNote/eac:p/text() != ''">
 						    	<div class="blockSingular">	
 						    		<xsl:variable name="posChild" select="position()"/>
 
@@ -426,6 +531,14 @@
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 							    	</xsl:call-template>
 
+									<!-- dates in function-->
+									<xsl:call-template name="commonDates">
+							    		<xsl:with-param name="date" select="./eac:date"/>
+							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					   					<xsl:with-param name="mode" select="$translationMode"/>
+							    	</xsl:call-template>
+
 									<!-- citation in function -->
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
@@ -434,14 +547,6 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
-							    	</xsl:call-template>
-
-									<!-- dates in function-->
-									<xsl:call-template name="commonDates">
-							    		<xsl:with-param name="date" select="./eac:date"/>
-							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in function-->
@@ -471,13 +576,47 @@
 		    </xsl:if>
 
 		    <!-- occupation -->
-		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation  and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:descriptiveNote/eac:p/text()!= '')">
+			<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<occupations>" is a valid one. -->
+			<xsl:variable name="validHrefLinkOccupation">
+				<xsl:choose>
+					<xsl:when test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:href != '']">
+						<xsl:value-of select="ape:checkHrefValue(string-join(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+		    
+		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation
+						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:term/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:placeEntry/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:dateSet/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:citation/text() != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:citation[@xlink:href != '']
+								and $validHrefLinkOccupation = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:citation[@xlink:title != '']
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:descriptiveNote/eac:p/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:descriptiveNote/eac:p/text() != '')">
 			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.occupation'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations"> 
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/> 
 					    <xsl:for-each select="./eac:occupation">
-						    <xsl:if test="./eac:term/text()!= '' or ./eac:placeEntry/text()!= '' or ./eac:descriptiveNote/eac:p/text()!= ''">
+						    <xsl:if test="./eac:term/text() != ''
+					    				or ./eac:placeEntry/text() != ''
+										or ./eac:date/text() != ''
+										or ./eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:dateSet/eac:date/text() != ''
+										or ./eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:citation/text() != ''
+										or (./eac:citation[@xlink:href != ''] and $validHrefLinkOccupation = 'true')
+										or ./eac:citation[@xlink:title != '']
+					    				or ./eac:descriptiveNote/eac:p/text() != ''">
 						    	<div class="blockSingular">	
 						    		<xsl:variable name="posChild" select="position()"/>
 
@@ -501,6 +640,14 @@
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 							    	</xsl:call-template>
 
+									<!-- dates in occupation-->
+									<xsl:call-template name="commonDates">
+							    		<xsl:with-param name="date" select="./eac:date"/>
+							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+					   					<xsl:with-param name="mode" select="$translationMode"/>
+							    	</xsl:call-template>
+
 									<!-- citation in occupation -->
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
@@ -509,14 +656,6 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
-							    	</xsl:call-template>
-
-									<!-- dates in occupation-->
-									<xsl:call-template name="commonDates">
-							    		<xsl:with-param name="date" select="./eac:date"/>
-							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in occupation-->
@@ -546,13 +685,47 @@
 		    </xsl:if>
 
 		    <!--mandates-->
-		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:term/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:placeEntry/text()!= '' or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:descriptiveNote/eac:p/text()!= '' )">
+			<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<mandates>" is a valid one. -->
+			<xsl:variable name="validHrefLinkMandate">
+				<xsl:choose>
+					<xsl:when test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:href != '']">
+						<xsl:value-of select="ape:checkHrefValue(string-join(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate
+						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:term/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:placeEntry/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:dateSet/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:citation/text() != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:citation[@xlink:href != '']
+								and $validHrefLinkMandate = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:citation[@xlink:title != '']
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:descriptiveNote/eac:p/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:descriptiveNote/eac:p/text() != '')">
 			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.mandate'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates">
 					<div class="blockPlural">
 						<xsl:variable name="posParent" select="position()"/>  
 					    <xsl:for-each select="./eac:mandate">
-					    	<xsl:if test="./eac:term/text()!= '' or ./eac:placeEntry/text()!= '' or ./eac:descriptiveNote/eac:p/text()!= ''">
+					    	<xsl:if test="./eac:term/text() != ''
+					    				or ./eac:placeEntry/text() != ''
+										or ./eac:date/text() != ''
+										or ./eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:dateSet/eac:date/text() != ''
+										or ./eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+										or ./eac:citation/text() != ''
+										or (./eac:citation[@xlink:href != ''] and $validHrefLinkMandate = 'true')
+										or ./eac:citation[@xlink:title != '']
+					    				or ./eac:descriptiveNote/eac:p/text() != ''">
 						    	<div class="blockSingular">	
 						    		<xsl:variable name="posChild" select="position()"/>
 
@@ -576,6 +749,14 @@
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
 							    	</xsl:call-template>
 
+									<!-- dates in mandates-->
+									<xsl:call-template name="commonDates">
+							    		<xsl:with-param name="date" select="./eac:date"/>
+							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+						   				<xsl:with-param name="mode" select="$translationMode"/>
+							    	</xsl:call-template>
+
 									<!-- citation in mandates -->
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
@@ -584,14 +765,6 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
-							    	</xsl:call-template>
-
-									<!-- dates in mandates-->
-									<xsl:call-template name="commonDates">
-							    		<xsl:with-param name="date" select="./eac:date"/>
-							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-						   				<xsl:with-param name="mode" select="$translationMode"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in mandates-->
@@ -708,6 +881,7 @@
 						</div>
 				</div>
 			</xsl:if>-->
+
 			<!-- other information -->
 			<div id="footer">
 				<h2 class="otherInformation"><xsl:value-of select="ape:resource('eaccpf.portal.otherInformation')"/></h2>

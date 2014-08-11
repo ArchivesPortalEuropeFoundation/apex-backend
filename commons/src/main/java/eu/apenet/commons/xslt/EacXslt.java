@@ -24,6 +24,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.xslt.extensions.CheckAgencyCodeExtension;
 import eu.apenet.commons.xslt.extensions.EadidCheckerExtension;
 import eu.apenet.commons.xslt.extensions.HighlighterExtension;
+import eu.apenet.commons.xslt.extensions.HrefCheckerExtension;
 import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveCountryNameExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEacIdExtension;
@@ -33,7 +34,7 @@ import eu.apenet.commons.xslt.extensions.SpecialCharactersEncoderExtension;
 
 public final class EacXslt {
     private static final Logger LOG = Logger.getLogger(EacXslt.class);
-    
+
 	private static XsltExecutable getXsltExecutable(String xslUrl, String searchTerms, List<SolrField> highlightFields,
 			ResourceBundleSource resourceBundleSource, Integer aiId, boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
         ClassLoader classLoader = (ClassLoader) Thread.currentThread().getContextClassLoader();
@@ -47,6 +48,7 @@ public final class EacXslt {
         RetrieveRepositoryCodeFromEadIdExtension repositoryCodeEad = new RetrieveRepositoryCodeFromEadIdExtension();
         CheckAgencyCodeExtension checkAgencyCode = new CheckAgencyCodeExtension();
         RetrieveCountryNameExtension countryName = new RetrieveCountryNameExtension();
+        HrefCheckerExtension hrefChecker = new HrefCheckerExtension();
         processor.registerExtensionFunction(highLighter);
         processor.registerExtensionFunction(resourcebundleRetriever);
         processor.registerExtensionFunction(eadidChecker);
@@ -55,6 +57,7 @@ public final class EacXslt {
         processor.registerExtensionFunction(repositoryCodeEad);
         processor.registerExtensionFunction(checkAgencyCode);
         processor.registerExtensionFunction(countryName);
+        processor.registerExtensionFunction(hrefChecker);
         XsltCompiler compiler = processor.newXsltCompiler();
         compiler.setURIResolver(new ClasspathURIResolver(xslUrl));
         return compiler.compile(xsltSource);
@@ -103,5 +106,5 @@ public final class EacXslt {
         transformer.setDestination(serializer);
         transformer.transform();
     }
-    
+
 }
