@@ -4295,10 +4295,10 @@ function checkNameOfInstitution(text, institutionName) {
 				exists = true;
 			}
 		});
-		if (!exists) {
-			alert(text);
-			return false;
-		}
+		//if (!exists) {
+		//	alert(text);
+		//	return false;
+		//}
 	}
 	return true;
 }
