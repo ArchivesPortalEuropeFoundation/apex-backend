@@ -295,7 +295,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 	public boolean isAllTextBelow() {
 		return allTextBelow;
 	}
-	protected String convertToString(Collection<String> results, int start, String separator){
+	protected static String convertToString(Collection<String> results, int start, String separator){
 		if (results.size() == 0){
 			return null;
 		}
@@ -311,7 +311,7 @@ public abstract class AbstractXpathHandler implements XmlStreamHandler {
 		}
 		return convertEmptyStringToNull(builder.toString());
 	}
-	protected String convertEmptyStringToNull(String string){
+	protected static String convertEmptyStringToNull(String string){
 		if (StringUtils.isBlank(string)){
 			return null;
 		}else {

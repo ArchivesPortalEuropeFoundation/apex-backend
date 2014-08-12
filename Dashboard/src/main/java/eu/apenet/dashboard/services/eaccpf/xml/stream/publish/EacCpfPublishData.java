@@ -1,10 +1,11 @@
 package eu.apenet.dashboard.services.eaccpf.xml.stream.publish;
 
+import java.util.List;
 import java.util.Set;
 
 public class EacCpfPublishData {
 	private String language;
-	private Set<String> names;
+	private List<String> names;
 	private Set<String> places;
 	private Set<String> functions;
 	private Set<String> mandates;	
@@ -29,7 +30,7 @@ public class EacCpfPublishData {
 		this.language = language;
 	}
 
-	public void setNames(Set<String> names) {
+	public void setNames(List<String> names) {
 		this.names = names;
 	}
 	public void setPlaces(Set<String> places) {
@@ -80,7 +81,7 @@ public class EacCpfPublishData {
 	public String getLanguage() {
 		return language;
 	}
-	public Set<String> getNames() {
+	public List<String> getNames() {
 		return names;
 	}
 	public Set<String> getMandates() {

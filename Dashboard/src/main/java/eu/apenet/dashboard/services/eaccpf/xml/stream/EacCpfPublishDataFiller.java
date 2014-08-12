@@ -109,6 +109,7 @@ public class EacCpfPublishDataFiller {
 		entityIdHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "entityId" });
 		
 		namesHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "nameEntry" });
+		namesHandler.setAttributeValueAsKey("localType");
 		namesParallelHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {  "nameEntryParallel",  "nameEntry" });
 		
 		placesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "places", "place", "placeEntry" });
@@ -258,9 +259,21 @@ public class EacCpfPublishDataFiller {
 		publishData.setEntityType(entityTypeHandler.getFirstResult());
 		publishData.setLanguage(languageHandler.getResultAsString());
 		publishData.setEntityIds(entityIdHandler.getResultSet());
-		publishData.setNames(namesHandler.getResultSet("part"));
-		if (publishData.getNames().size() == 0){
-			publishData.setNames(namesParallelHandler.getResultSet("part"));
+//		publishData.setNames(namesHandler.getResultSet("part"));
+//		if (publishData.getNames().size() == 0){
+//			publishData.setNames(namesParallelHandler.getResultSet("part"));
+//		}
+		if (namesHandler.getResults().size() > 0){
+			List<String> names = new ArrayList<String>();
+			for (Map<String, List<String>> tempResults: namesHandler.getResults()){
+				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
+				if (StringUtils.isBlank(name)){
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, ", ");
+				}
+				names.add(name);
+			}
+			//"Surname (Birthname), Prefix, Firstname Patronym, Suffix, Title (alias: Alias)"."
+			publishData.setNames(names);
 		}
 		
 		publishData.setPlaces(strip(placesHandler.getResultSet()));

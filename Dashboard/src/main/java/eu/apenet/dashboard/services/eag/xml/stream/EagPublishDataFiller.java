@@ -126,8 +126,11 @@ public class EagPublishDataFiller {
 		StringBuilder other = new StringBuilder();
 		add(other, holdingsHandler.getResultAsStringWithWhitespace());
 		add(other, historyHandler.getResultAsStringWithWhitespace());
-		String address = locationHandler.getResultAsStringWithWhitespace("street") + ", " + locationHandler.getResultAsStringWithWhitespace("municipalityPostalcode");
-		publishData.getAddress().add(address);
+		if (locationHandler.getResults().size() > 0){
+			String address = TextMapXpathHandler.getResultAsStringWithWhitespace(locationHandler.getResults().get(0), new String[] {"street", "municipalityPostalcode"},", ");
+			publishData.getAddress().add(address);
+		}
+		
 		publishData.setOther(other.toString());
 		publishData.setLanguage(languageHandler.getResultAsStringWithWhitespace());
 	
