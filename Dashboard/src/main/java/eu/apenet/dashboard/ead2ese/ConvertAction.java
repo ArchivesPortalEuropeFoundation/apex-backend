@@ -311,7 +311,7 @@ public class ConvertAction extends AbstractInstitutionAction {
                             + APEnetUtilities.FILESEPARATOR + "fa"
                             + APEnetUtilities.FILESEPARATOR + ead.getEadid();
         config.setEdmIdentifier(oaiIdentifier);
-        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
         config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         config.setXmlTypeName("fa");
 

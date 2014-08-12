@@ -818,7 +818,7 @@ public class EadService {
         config.setEdmIdentifier(oaiIdentifier);
         //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
         //repositoryCode is taken from the tool while the other two have fixed values.
-        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
         config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         config.setXmlTypeName("fa");
     	return config.getProperties();
