@@ -66,8 +66,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                     EdmConfig edmConfig = new EdmConfig(properties);
                     edmConfig.setEdmIdentifier(oaiIdentifier);
                     edmConfig.setRepositoryCode(findingAid.getArchivalInstitution().getRepositorycode());
-                    edmConfig.setPrefixUrl("http://" + APEnetUtilities.getDashboardConfig().getDomainNameMainServer()
-                            + "/web/guest/ead-display/-/ead/fp");
+                    edmConfig.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
                     edmConfig.setXmlTypeName(FA_XML_TYPE);
 
                     File apenetEad = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
