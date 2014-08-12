@@ -5157,8 +5157,10 @@ function checkName(text, id){
 	var indexPercentage = name.indexOf("\%");
 	var indexLessThan = name.indexOf("\<");
 	var indexGreaterThan = name.indexOf("\>");
+	var indexBackslash = name.indexOf("\\");
+	var indexColon = name.indexOf("\:");
 	var showAlert = true;
-	while (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1){
+	while (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1 || indexBackslash > -1 || indexColon > -1){
 		if (showAlert) {
 			alert(text);
 			showAlert = false;
@@ -5166,10 +5168,14 @@ function checkName(text, id){
 		name =  name.replace("\%",'');
 		name =  name.replace("\<",'');
 		name =  name.replace("\>",'');
+		name =  name.replace("\\",'');
+		name =  name.replace("\:",'');
 		$(id).attr("value",name);
 		indexPercentage =  name.indexOf("\%");
 		indexLessThan =  name.indexOf("\<");
 		indexGreaterThan =  name.indexOf("\>");
+		indexBackslash = name.indexOf("\\");
+		indexColon = name.indexOf("\:");
 	}
 	nameOfInstitutionChanged(text, name);
 }
