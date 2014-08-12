@@ -25,7 +25,6 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dashboard.archivallandscape.Institution;
 
 public class SecurityInterceptor extends AbstractInterceptor implements Serializable {
 	private static final String INSTITUTION_REQUIRED = "institution_required";
@@ -113,8 +112,8 @@ public class SecurityInterceptor extends AbstractInterceptor implements Serializ
 		}
 		if (isAllowed(emailAddress, role, actionName)) {
 			if (invocation.getProxy().getAction() instanceof AbstractInstitutionAction){
-				LOGGER.info(invocation.getProxy().getAction().getClass().getName());
 				if (securityContext == null || securityContext.getSelectedInstitution() == null){
+					LOGGER.info("user: " + emailAddress + " with role: " + role + " has NO institution selected, when accessing: " + invocation.getProxy().getAction().getClass().getName());
 					return INSTITUTION_REQUIRED;
 				}
 			}
