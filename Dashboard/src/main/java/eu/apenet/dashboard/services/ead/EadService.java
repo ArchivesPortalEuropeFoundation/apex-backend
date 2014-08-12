@@ -696,7 +696,9 @@ public class EadService {
 			QueueItem queueItem = ead.getQueueItem();
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
-			deleteFromQueueInternal(queueItem, true);
+			if (queueItem != null){
+				deleteFromQueueInternal(queueItem, true);
+			}
 			eads.remove(size - 1);
 		}
 		JpaUtil.commitDatabaseTransaction();
