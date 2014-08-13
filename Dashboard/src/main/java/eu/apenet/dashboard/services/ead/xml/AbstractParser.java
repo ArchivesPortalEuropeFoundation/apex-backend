@@ -9,7 +9,6 @@ public abstract class AbstractParser  {
 
 
 	public static final String APENET_EAD = "urn:isbn:1-931666-22-9";
-	public static final String APENET_EAC_CPF = "urn:isbn:1-931666-33-4";
 	public static final String XLINK = "http://www.w3.org/1999/xlink";
 	public static final String XSI = "http://www.w3.org/2001/XMLSchema-instance";
 
