@@ -259,10 +259,6 @@ public class EacCpfPublishDataFiller {
 		publishData.setEntityType(entityTypeHandler.getFirstResult());
 		publishData.setLanguage(languageHandler.getResultAsString());
 		publishData.setEntityIds(entityIdHandler.getResultSet());
-//		publishData.setNames(namesHandler.getResultSet("part"));
-//		if (publishData.getNames().size() == 0){
-//			publishData.setNames(namesParallelHandler.getResultSet("part"));
-//		}
 		if (namesHandler.getResults().size() > 0){
 			List<String> names = new ArrayList<String>();
 			for (Map<String, List<String>> tempResults: namesHandler.getResults()){
@@ -272,10 +268,20 @@ public class EacCpfPublishDataFiller {
 				}
 				names.add(name);
 			}
-			//"Surname (Birthname), Prefix, Firstname Patronym, Suffix, Title (alias: Alias)"."
 			publishData.setNames(names);
+		}else if (namesParallelHandler.getResults().size() > 0){
+			List<String> names = new ArrayList<String>();
+			for (Map<String, List<String>> tempResults: namesParallelHandler.getResults()){
+				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
+				if (StringUtils.isBlank(name)){
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, ", ");
+				}
+				names.add(name);
+			}
+			publishData.setNames(names);			
 		}
 		
+
 		publishData.setPlaces(strip(placesHandler.getResultSet()));
 		publishData.setFunctions(strip(functionsHandler.getResultSet()));
 		publishData.setOccupations(strip(occupationsHandler.getResultSet()));
