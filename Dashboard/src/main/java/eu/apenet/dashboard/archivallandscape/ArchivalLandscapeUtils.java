@@ -1725,6 +1725,7 @@ public class ArchivalLandscapeUtils {
 		while(itListInstitutions.hasNext()){
 			ArchivalInstitution targetInstitution = itListInstitutions.next();
 			if (targetInstitution.getAiname()!=null && (targetInstitution.getAiname().contains("<") 
+				|| targetInstitution.getAiname().contains(":") || targetInstitution.getAiname().contains("\\")
 				|| targetInstitution.getAiname().contains(">") || targetInstitution.getAiname().contains("%"))){
 				ArchivalLandscapeUtils.addInstitutionsWithSpecialCharacters(targetInstitution.getAiname());
 			}else{
@@ -1734,6 +1735,7 @@ public class ArchivalLandscapeUtils {
 				while(!found && itAlternativeNames.hasNext()){
 					AiAlternativeName alternativeName = itAlternativeNames.next();
 					if (alternativeName.getAiAName().contains("<") || alternativeName.getAiAName().contains(">")
+						|| targetInstitution.getAiname().contains(":") || targetInstitution.getAiname().contains("\\")
 						|| alternativeName.getAiAName().contains("%")){
 						
 						ArchivalLandscapeUtils.addInstitutionsWithSpecialCharacters(targetInstitution.getAiname());

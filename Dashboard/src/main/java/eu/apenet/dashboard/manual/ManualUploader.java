@@ -555,7 +555,8 @@ public abstract class ManualUploader {
     private boolean checkSpecialCharacter(List<String> autformValueList) {
 		// TODO Auto-generated method stub
     	 for (int i = 0; i < autformValueList.size(); i++) {
-             if (autformValueList.get(i).contains("<") || autformValueList.get(i).contains(">") || autformValueList.get(i).contains("%")) {
+             if (autformValueList.get(i).contains("<") || autformValueList.get(i).contains(">") || autformValueList.get(i).contains("%")
+            		 || autformValueList.get(i).contains(":") || autformValueList.get(i).contains("\\")) {
                 return true;
              }
          }
