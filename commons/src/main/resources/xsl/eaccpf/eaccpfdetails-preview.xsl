@@ -1068,7 +1068,14 @@
 		
 		<!-- bioHist section title -->
 		<xsl:if test="$bioHist/eac:p/text() or $bioHist/eac:citation/text() or $bioHist/eac:chronList/eac:chronItem">
-			<h2 id="chronListTitle" class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.biogHist'), $smallcase, $uppercase)"/></h2>
+			<h2 id="chronListTitle" class="title">
+				<xsl:if test="$entityType='corporateBody'">
+	   				<xsl:value-of select="translate(ape:resource('eaccpf.portal.historicalNote'), $smallcase, $uppercase)"/>
+	   			</xsl:if>
+	   			<xsl:if test="$entityType='person' or $entityType='family'">
+	   				<xsl:value-of select="translate(ape:resource('eaccpf.portal.biogHist'), $smallcase, $uppercase)"/>
+	   			</xsl:if>
+			</h2>
 		</xsl:if>
 		<!-- biogHist p --> 
 		<xsl:if test="$bioHist/eac:p/text()">   
@@ -1097,13 +1104,13 @@
 			<div class="row">
 				<div class="leftcolumn">
 			   		<h2 class="subrow">
-			   			<xsl:if test="$entityType='corporateBody'">
+			   			<!--<xsl:if test="$entityType='corporateBody'">
 			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
 			   			</xsl:if>
 			   			<xsl:if test="$entityType='person' or $entityType='family'">
 			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
-			   			</xsl:if>
-			   			<xsl:text>:</xsl:text>
+			   			</xsl:if> -->
+			   			<xsl:value-of select="ape:resource('eaccpf.portal.citation')"/><xsl:text>:</xsl:text>
 			   		</h2>
 			   	</div>
 			   	<div class="rightcolumn">
@@ -1151,7 +1158,7 @@
 						<xsl:if test="./eac:placeEntry">
 						<div id="chronListItemContent" class="row">
 							<div class="leftcolumn">
-						   		<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.description.place')"/></h2>
+						   		<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.description.place')"/><xsl:text>:</xsl:text></h2>
 						   	</div> 
 						    <div class="rightcolumn"> 
 								<xsl:call-template name="multilanguagePlaceEntry">
@@ -1163,7 +1170,7 @@
 						<xsl:if test="./eac:event">
 							<div id="chronListItemContent" class="row">
 								<div class="leftcolumn">
-							   		<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.event')"/></h2>
+							   		<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.event')"/><xsl:text>:</xsl:text></h2>
 							   	</div> 
 							    <div class="rightcolumn"> 
 									<xsl:call-template name="multilanguageNoP"> <!-- multilanguageEvent -->
@@ -3067,13 +3074,13 @@
 		   	<div class="row">
 				<div class="leftcolumn">
 					<xsl:if test="$entityType='person'">
-				    	<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/></h2>
+				    	<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/><xsl:text>:</xsl:text></h2>
 					</xsl:if>
 					<xsl:if test="$entityType='corporateBody'">
-						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structure')"/></h2>
+						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structure')"/><xsl:text>:</xsl:text></h2>
 					</xsl:if>
 					<xsl:if test="$entityType='family'">
-						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
+						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/><xsl:text>:</xsl:text></h2>
 				   </xsl:if>
 			   	</div>
 			   	<div class="rightcolumn moreDisplay" id="{$clazz}">
