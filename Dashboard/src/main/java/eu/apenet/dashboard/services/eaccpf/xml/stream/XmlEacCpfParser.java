@@ -14,7 +14,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.services.eaccpf.publish.EacCpfCounts;
 import eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfPublishData;
 import eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfSolrPublisher;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
@@ -25,13 +24,9 @@ public class XmlEacCpfParser extends AbstractParser {
 
     private static Logger LOG = Logger.getLogger(XmlEacCpfParser.class);
     public static final String UTF_8 = "utf-8";
-    public static final QName CPF_RELATION = new QName(APENET_EAC_CPF, "cpfRelation");
-    public static final QName RESOURCE_RELATION = new QName(APENET_EAC_CPF, "resourceRelation");
-    public static final QName FUNCTION_RELATION = new QName(APENET_EAC_CPF, "functionRelation");
 
     public static long parseAndPublish(EacCpf eacCpf) throws Exception {
         EacCpfSolrPublisher solrPublisher = new EacCpfSolrPublisher();
-        EacCpfCounts eacCpfCounts = new EacCpfCounts();
 
         FileInputStream fileInputStream = getFileInputStream(eacCpf.getPath());
 
@@ -46,15 +41,6 @@ public class XmlEacCpfParser extends AbstractParser {
                 if (event == XMLStreamConstants.START_ELEMENT) {
                     lastElement = xmlReader.getName();
                     add(pathPosition, lastElement);
-                    if (CPF_RELATION.equals(lastElement)) {
-                        eacCpfCounts.incrementCpfRelations();
-                    }
-                    if (RESOURCE_RELATION.equals(lastElement)) {
-                        eacCpfCounts.incrementResourceRelations();
-                    }
-                    if (FUNCTION_RELATION.equals(lastElement)) {
-                        eacCpfCounts.incrementFunctionRelations();
-                    }
                     eacCpfParser.processStartElement(pathPosition, xmlReader);
                 } else if (event == XMLStreamConstants.END_ELEMENT) {
                     eacCpfParser.processEndElement(pathPosition, xmlReader);
@@ -72,9 +58,9 @@ public class XmlEacCpfParser extends AbstractParser {
             eacCpfParser.fillData(publishData, eacCpf);
             solrPublisher.publishEacCpf(eacCpf, publishData);
             solrPublisher.commitSolrDocuments();
-            eacCpf.setCpfRelations(eacCpfCounts.getNumberOfCpfRelations());
-            eacCpf.setResourceRelations(eacCpfCounts.getNumberOfResourceRelations());
-            eacCpf.setFunctionRelations(eacCpfCounts.getNumberOfFunctionRelations());
+            eacCpf.setCpfRelations(publishData.getNumberOfCpfRelations());
+            eacCpf.setResourceRelations(publishData.getNumberOfArchivalMaterialRelations());
+            eacCpf.setFunctionRelations(publishData.getNumberOfFunctionRelations());
             JpaUtil.commitDatabaseTransaction();
         } catch (Exception de) {
             JpaUtil.rollbackDatabaseTransaction();

@@ -82,6 +82,9 @@ public class EacCpfPublishDataFiller {
 
 	private CountXpathHandler countArchivalMaterialRelationsHandler;
 	private CountXpathHandler countNameRelationsHandler;
+	private CountXpathHandler countCpfRelationHandler;
+	private CountXpathHandler countFunctionRelationHandler;
+
 	private TextXpathHandler institutionsRelationsHandler;
 	
 	private TextXpathHandler relationsPlaceEntryHandler;
@@ -157,6 +160,9 @@ public class EacCpfPublishDataFiller {
 		countArchivalMaterialRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation"});
 		countNameRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});
 		countNameRelationsHandler.setAttribute("cpfRelationType", "identity", true);
+		countCpfRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});		
+		countFunctionRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"functionRelation"});		
+
 		institutionsRelationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation", "relationEntry"});
 		institutionsRelationsHandler.setAttribute("localType", "agencyCode", false);
 		relationsDescriptiveNoteHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"descriptiveNote", "p"}, true);
@@ -218,6 +224,8 @@ public class EacCpfPublishDataFiller {
 		
 		relationsHandler.getHandlers().add(countArchivalMaterialRelationsHandler);
 		relationsHandler.getHandlers().add(countNameRelationsHandler);
+		relationsHandler.getHandlers().add(countCpfRelationHandler);
+		relationsHandler.getHandlers().add(countFunctionRelationHandler);
 		relationsHandler.getHandlers().add(institutionsRelationsHandler);
 		relationsHandler.getHandlers().add(relationsDescriptiveNoteHandler);
 		relationsHandler.getHandlers().add(relationsPlaceEntryHandler);
@@ -309,7 +317,10 @@ public class EacCpfPublishDataFiller {
 		publishData.setNumberOfArchivalMaterialRelations(countArchivalMaterialRelationsHandler.getCount());
 		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
 		publishData.setNumberOfInstitutionsRelations(institutionsRelationsHandler.getResultSet().size());
-		
+		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
+		countCpfRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});		
+		countFunctionRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"functionRelation"});		
+
 		/*
 		 * dates
 		 */

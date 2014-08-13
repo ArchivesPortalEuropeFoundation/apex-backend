@@ -22,8 +22,9 @@ public class EacCpfPublishData {
 	private Integer numberOfArchivalMaterialRelations;
 	private Integer numberOfNameRelations;
 	private Integer numberOfInstitutionsRelations;
-	
-	
+	private Integer numberOfCpfRelations;
+	private Integer numberOfFunctionRelations;
+
 
 
 	public void setLanguage(String language) {
@@ -136,6 +137,22 @@ public class EacCpfPublishData {
 
 	public void setDateType(String dateType) {
 		this.dateType = dateType;
+	}
+
+	public Integer getNumberOfCpfRelations() {
+		return numberOfCpfRelations;
+	}
+
+	public void setNumberOfCpfRelations(Integer numberOfCpfRelations) {
+		this.numberOfCpfRelations = numberOfCpfRelations;
+	}
+
+	public Integer getNumberOfFunctionRelations() {
+		return numberOfFunctionRelations;
+	}
+
+	public void setNumberOfFunctionRelations(Integer numberOfFunctionRelations) {
+		this.numberOfFunctionRelations = numberOfFunctionRelations;
 	}
 
 
