@@ -2927,15 +2927,18 @@
 		<xsl:if test="$list/eac:outline/eac:level/eac:item/text()"> 
 		   	<div class="row">
 				<div class="leftcolumn">
-					<xsl:if test="$entityType='person'">
-				    	<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/></h2>
-					</xsl:if>
-					<xsl:if test="$entityType='corporateBody'">
-						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structure')"/></h2>
-					</xsl:if>
-					<xsl:if test="$entityType='family'">
-						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/></h2>
-				   </xsl:if>
+					<h2 class="subrow">
+						<xsl:if test="$entityType='person'">
+					    	<xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/>
+						</xsl:if>
+						<xsl:if test="$entityType='corporateBody'">
+							<xsl:value-of select="ape:resource('eaccpf.portal.structure')"/>
+						</xsl:if>
+						<xsl:if test="$entityType='family'">
+							<xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/>
+						</xsl:if>
+			   			<xsl:text>:</xsl:text>
+					</h2>
 			   	</div>
 			   	<div class="rightcolumn moreDisplay" id="{$clazz}">
 			   		<xsl:call-template name="multilanguageOutline">
