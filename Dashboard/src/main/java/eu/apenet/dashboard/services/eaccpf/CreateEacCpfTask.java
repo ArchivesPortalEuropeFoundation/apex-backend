@@ -111,13 +111,15 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
      */
     private String builderTitle(String path) {
         StringBuilder builderTitle = new StringBuilder();
-		StringBuilder unknownLocalType = new StringBuilder();
 
         //titleElements collects all <nameEntry> with their paths
         LinkedList<NameEntry> titleElements = searchForAllTitleElements(path, "nameEntry/part");
 
         //if the list is populated, sort it by priority and process the first entry
         if (titleElements != null && !titleElements.isEmpty()) {
+    		StringBuilder unknownLocalType = new StringBuilder();
+    		boolean hasPart = false;
+
             //Collections.sort(titleElements, new NameEntryComp());
 
             //Since the list is sorted prior to use, its first element should almost always return a value from which a
@@ -140,6 +142,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 
 	                //if there is only a persname/famname/corpname, directly attach it to the main StringBuilder, otherwise use the partial builders and build title from them
 	                for (Part part : titleEntryParts) {
+	                	hasPart = true;
 	                    if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
 	                        builderTitle.append(part.getContent());
 	                    }
@@ -197,10 +200,17 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         	}
 
             if (builderTitle.length() != 0) {
+            	// Case in which at least one "<part>" element has content.
                 return builderTitle.toString();
-            } else if (unknownLocalType.length() != 0) {
+            } else if (unknownLocalType.length() != 0 && !hasPart) {
+            	// Case in which the "@localType" attribute of "<nameEntry>"
+            	// element has unknown value.
                 return unknownLocalType.toString();
+            } else if (hasPart) {
+            	// Case in which has "<part>" element but all have no content.
+            	return " ";
             } else {
+            	// Case in which the part is ineligible.
                 return getText("eaccpf.error.no.ineligible.part");
             }
         } else {
