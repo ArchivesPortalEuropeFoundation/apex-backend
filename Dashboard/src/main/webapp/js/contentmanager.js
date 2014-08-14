@@ -81,14 +81,12 @@ function initSubpage() {
 	});
 	//listview
 	$("#selectNone").bind("click", function() {
-		var ids = new Array();
 		$("input:checkbox[name=check]").each(function() {
 			if ($(this).is(":checked")) {
 				$(this).removeAttr('checked');
-				ids.push(this.value);
 			}
 		});
-		addFewFiles(ids);
+		clearFilesFromSession();
 	});
 	//----------------------------------------------------------
 
