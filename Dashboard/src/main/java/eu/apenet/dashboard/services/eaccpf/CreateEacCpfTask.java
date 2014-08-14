@@ -3,16 +3,23 @@ package eu.apenet.dashboard.services.eaccpf;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.Properties;
+import java.util.Stack;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.struts2.util.TextProviderHelper;
+
 import com.ctc.wstx.exc.WstxParsingException;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
+
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -22,10 +29,6 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.UpFile;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Stack;
 
 public class CreateEacCpfTask extends AbstractEacCpfTask {
 
@@ -108,6 +111,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
      */
     private String builderTitle(String path) {
         StringBuilder builderTitle = new StringBuilder();
+		StringBuilder unknownLocalType = new StringBuilder();
 
         //titleElements collects all <nameEntry> with their paths
         LinkedList<NameEntry> titleElements = searchForAllTitleElements(path, "nameEntry/part");
@@ -119,70 +123,88 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
             //Since the list is sorted prior to use, its first element should almost always return a value from which a
             //title can be built without problems. If this however should not be the case, for example if the file uses
             //other values than the six possibilities for apeEAC-CPF, an error message will be displayed in the title column
-            if (!titleElements.getFirst().getLocalType().equals(NameEntryLocalType.UNKNOWN)) {
-                LinkedList<Part> titleEntryParts = titleElements.getFirst().getParts();
+        	// If the content of the "<part>" of the first element is empty,
+        	// will check the content of the next ones.
+        	boolean foundTitle = false;
+        	for (int i = 0; !foundTitle && i < titleElements.size(); i++) {
+        		NameEntry currentNameEntry = titleElements.get(i);
 
-                //StringBuilder objects for single parts of the name, if needed
-                StringBuilder surname = new StringBuilder();
-                StringBuilder firstname = new StringBuilder();
-                StringBuilder patronymic = new StringBuilder();
-                StringBuilder content = new StringBuilder();
+	            if (!currentNameEntry.getLocalType().equals(NameEntryLocalType.UNKNOWN)) {
+	                LinkedList<Part> titleEntryParts = currentNameEntry.getParts();
 
-                //if there is only a persname/famname/corpname, directly attach it to the main StringBuilder, otherwise use the partial builders and build title from them
-                for (Part part : titleEntryParts) {
-                    if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
-                        builderTitle.append(part.getContent());
-                    }
-                    if (part.getLocalType().equals("surname")) {
-                        if (surname.length() != 0) {
-                            surname.append(" ");
-                        }
-                        surname.append(part.getContent());
-                    }else if (part.getLocalType().equals("firstname")) {
-                        if (firstname.length() != 0) {
-                            firstname.append(" ");
-                        }
-                        firstname.append(part.getContent());
-                    }else if (part.getLocalType().equals("patronymic")) {
-                        if (patronymic.length() != 0) {
-                            patronymic.append(" ");
-                        }
-                        patronymic.append(part.getContent());
-                    }else{
-                    	content.append(part.getContent());
-                    }
-                }
+	                //StringBuilder objects for single parts of the name, if needed
+	                StringBuilder surname = new StringBuilder();
+	                StringBuilder firstname = new StringBuilder();
+	                StringBuilder patronymic = new StringBuilder();
+	                StringBuilder content = new StringBuilder();
 
-                // if the builder is empty, build the title from the parts
-                if (builderTitle.length() == 0) {
-                    builderTitle.append(surname);
-                    if (builderTitle.length() != 0) {
-                        builderTitle.append(", ");
-                    }
-                    builderTitle.append(firstname);
-                    if (builderTitle.length() != 0) {
-                        builderTitle.append(" ");
-                    }
-                    builderTitle.append(patronymic);
-                    if (builderTitle.length() == 0) {
-                    	if(content.length()>0){
-                    		builderTitle.append(content);
-                    	}else{
-                    		builderTitle.append(" ");
-                    	}
-                    }
-                }
-                //output of the title
-                if (builderTitle.length() != 0) {
-                    return builderTitle.toString();
-                } else {
-                    return "ERROR: Cannot build title from ineligible part";
-                }
+	                //if there is only a persname/famname/corpname, directly attach it to the main StringBuilder, otherwise use the partial builders and build title from them
+	                for (Part part : titleEntryParts) {
+	                    if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
+	                        builderTitle.append(part.getContent());
+	                    }
+	                    if (part.getLocalType().equals("surname")) {
+	                        if (surname.length() != 0) {
+	                            surname.append(" ");
+	                        }
+	                        surname.append(part.getContent());
+	                    }else if (part.getLocalType().equals("firstname")) {
+	                        if (firstname.length() != 0) {
+	                            firstname.append(" ");
+	                        }
+	                        firstname.append(part.getContent());
+	                    }else if (part.getLocalType().equals("patronymic")) {
+	                        if (patronymic.length() != 0) {
+	                            patronymic.append(" ");
+	                        }
+	                        patronymic.append(part.getContent());
+	                    }else if (part.getContent()!= null
+	                    		&& !part.getContent().trim().isEmpty()) {
+	                    	if (content.length() != 0) {
+	                    		content.append(" ");
+	                    	}
+	                    	content.append(part.getContent().trim());
+	                    }
+	                }
+
+	                // if the builder is empty, build the title from the parts
+	                if (builderTitle.length() == 0) {
+	                    builderTitle.append(surname);
+	                    if (builderTitle.length() != 0) {
+	                        builderTitle.append(", ");
+	                    }
+	                    builderTitle.append(firstname);
+	                    if (builderTitle.length() != 0) {
+	                        builderTitle.append(" ");
+	                    }
+	                    builderTitle.append(patronymic);
+	                    if (builderTitle.length() == 0) {
+	                    	if(content.length()>0){
+	                    		builderTitle.append(content);
+	                    	}
+//	                    	else{
+//	                    		builderTitle.append(" ");
+//	                    	}
+	                    }
+	                }
+	                //output of the title
+	                if (builderTitle.length() != 0) {
+	                	foundTitle = true;
+	                }
+	            } else {
+	            	unknownLocalType.append(getText("eaccpf.error.no.known.localtype"));
+	            }
+        	}
+
+            if (builderTitle.length() != 0) {
+                return builderTitle.toString();
+            } else if (unknownLocalType.length() != 0) {
+                return unknownLocalType.toString();
             } else {
-                return "ERROR: Cannot build title from unknown nameEntry/@localtype";
+                return getText("eaccpf.error.no.ineligible.part");
             }
         } else {
-            return "ERROR: No title";
+            return getText("eaccpf.error.no.title");
         }
     }
 
@@ -422,5 +444,17 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         public int compare(NameEntry o1, NameEntry o2) {
             return o1.getLocalTypeEnumValue().compareTo(o2.getLocalTypeEnumValue());
         }
+    }
+
+    /**
+     * Method to get the localized texts.
+     *
+     * @param code Key for the text to recover in localized form.
+     * 
+     * @return Localized text.
+     */
+    private String getText(String code) {
+    	ValueStack valueStack = ActionContext.getContext().getValueStack();
+    	return TextProviderHelper.getText(code, code, valueStack);
     }
 }

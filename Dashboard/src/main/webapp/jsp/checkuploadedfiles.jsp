@@ -711,7 +711,10 @@
 						
 			function checkEADIDavailability(oldeadid, neweadid, fileId, type, indexRepeated, isRepeated) {
 				var pattern = /^[a-zA-Z0-9\.\:\_\-]*$/i;
-				if((type=="EAC-CPF" && neweadid.toUpperCase().match(pattern))){
+				if ((type == "EAC-CPF" && neweadid.toUpperCase().match(pattern))
+						|| type == "Finding Aid"
+						|| type == "Holdings Guide"
+						|| type == "Source Guide") {
 					$.getJSON("${pageContext.request.contextPath}/generateEadidResponseJSON.action", 
 						{ eadid: oldeadid, 
 					      neweadid: neweadid, 
