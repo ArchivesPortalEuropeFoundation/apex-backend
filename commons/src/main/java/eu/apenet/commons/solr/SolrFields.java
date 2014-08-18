@@ -83,7 +83,6 @@ public final class SolrFields {
 	public final static String EAG_REPOSITORY_TYPE = "repositoryTypeFacet";
 	public final static String EAG_DESCRIPTION = "description";
 	public final static String EAG_OTHER = "other";
-	public final static String EAG_LANGUAGE = "language";
 	public final static String EAG_AI_GROUPS = "aiGroups";
 	public final static String EAG_AI_GROUPS_FACET = "aiGroupsFacet";
 	public final static String EAG_AI_GROUP_ID = "aiGroupIds";	
