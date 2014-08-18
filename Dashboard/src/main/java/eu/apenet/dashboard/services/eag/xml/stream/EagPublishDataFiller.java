@@ -39,6 +39,8 @@ public class EagPublishDataFiller {
 	private StringXpathHandler historyHandler;
 	private StringXpathHandler holdingsHandler;
 	private TextMapXpathHandler locationHandler;
+	private TextXpathHandler actingMaintenanceForHandler;
+	private TextXpathHandler municipalityPostalcodeHandler;	
 	private List<XmlStreamHandler> eagHandlers = new ArrayList<XmlStreamHandler>();
 	private static Map<String, Set<String>> countryResourceBundles;
 	static {
@@ -80,12 +82,16 @@ public class EagPublishDataFiller {
 		locationHandler.setAttribute("localType", "visitors address", false);
 		locationHandler.setAllTextBelow(true);
 		locationHandler.setOnlyFirst(true);
+		actingMaintenanceForHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "holdings", "actingMaintenanceForGroup", "actingMaintenanceFor", "placeEntry" }); 
+		municipalityPostalcodeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "location", "municipalityPostalcode" });
 		eagHandlers.add(otherNamesHandler);
 		eagHandlers.add(repositoryNameHandler);
 		eagHandlers.add(repositoryTypeHandler);
 		eagHandlers.add(historyHandler);
 		eagHandlers.add(holdingsHandler);
 		eagHandlers.add(locationHandler);
+		eagHandlers.add(actingMaintenanceForHandler);
+		eagHandlers.add(municipalityPostalcodeHandler);
 	}
 
 	public void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
@@ -126,7 +132,9 @@ public class EagPublishDataFiller {
 			String address = TextMapXpathHandler.getResultAsStringWithWhitespace(locationHandler.getResults().get(0), new String[] {"street", "municipalityPostalcode"},", ");
 			publishData.getAddress().add(address);
 		}
-		
+		publishData.setPlaces(municipalityPostalcodeHandler.getResultSet());
+		publishData.getPlaces().addAll(actingMaintenanceForHandler.getResultSet());
+
 		publishData.setOther(other.toString());
 	
 		ArchivalInstitution ai = archivalInstitution.getParent();

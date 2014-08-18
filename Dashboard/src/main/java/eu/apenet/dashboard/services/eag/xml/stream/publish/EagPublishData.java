@@ -15,6 +15,7 @@ public class EagPublishData{
  	private Set<String> otherNames;
 	private Set<String> repositories;
 	private Set<String> repositoryTypes;
+	private Set<String> places;
 	private String other;
 	private String description;
 	
@@ -99,13 +100,12 @@ public class EagPublishData{
 		this.address = address;
 	}
 
+	public Set<String> getPlaces() {
+		return places;
+	}
 
-
-
-
-
-
-
-
+	public void setPlaces(Set<String> places) {
+		this.places = places;
+	}
 	
 }
