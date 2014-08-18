@@ -17,7 +17,6 @@ public class EagPublishData{
 	private Set<String> repositoryTypes;
 	private String other;
 	private String description;
-	private String language;
 	
 	public Set<String> getOtherNames() {
 		return otherNames;
@@ -59,13 +58,6 @@ public class EagPublishData{
 		this.description = description;
 	}
 
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
 
 	public Set<String> getCountries() {
 		return countries;
