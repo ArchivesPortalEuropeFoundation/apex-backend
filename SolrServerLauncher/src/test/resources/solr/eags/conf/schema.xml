@@ -93,6 +93,7 @@
 	  <field name="aiGroupIds" type="int" multiValued="true" indexed="true" stored="false" required="false"/>  
  	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>  
 	  <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="true"/>
+	  <field name="places" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />	  
 	  <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 	  <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" />
 
@@ -108,5 +109,6 @@
 	<copyField source="repositories" dest="spell"/>		
 	<copyField source="countries" dest="spell"/>
 	<copyField source="aiGroups" dest="spell"/>	
+	<copyField source="places" dest="spell"/>		
 	<copyField source="name" dest="namesort"/>
   </schema>
