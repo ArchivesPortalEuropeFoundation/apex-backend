@@ -85,7 +85,6 @@
 	  <field name="description" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="other" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="country" type="string" indexed="true" stored="true" required="false"/>
-	  <field name="language" type="languageText" indexed="true" stored="true" required="false"/>
 	  <field name="repositoryTypeFacet" type="facetText" multiValued="true" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="countries" type="text" multiValued="true" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="aiGroups" type="text" multiValued="true" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
