@@ -88,7 +88,7 @@ public final class SolrFields {
 	public final static String EAG_AI_GROUP_ID = "aiGroupIds";	
 	public final static String EAG_ADDRESS = "address";		
 	public final static String EAG_COUNTRIES = "countries";	
-
+	public final static String EAG_PLACES = "places";
 }
 
 
