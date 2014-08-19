@@ -27,6 +27,7 @@ import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
+import eu.apenet.persistence.vo.EacCpf;
 
 public class StatisticsAction extends AbstractAction {
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -117,6 +118,13 @@ public class StatisticsAction extends AbstractAction {
 				institutionStatistics.daos += convertLong(eadDAO.countDaos(searchOptions));
 				institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
 			}
+            // eac-cpf
+            searchOptions.setContentClass(EacCpf.class);
+            institutionStatistics.eaccpf = convertLong(eadDAO.countEads(searchOptions));
+//            if (institutionStatistics.eaccpf > 0){
+//                institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
+//                institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
+//            }
 			// findingaids
 			searchOptions.setContentClass(FindingAid.class);
 			institutionStatistics.findingaids = convertLong(eadDAO.countEads(searchOptions));
@@ -154,6 +162,7 @@ public class StatisticsAction extends AbstractAction {
 		long findingaids = 0;
 		long holdingsguide = 0;
 		long sourceguide = 0;
+        long eaccpf = 0;
 		long daos = 0;
 		long units = 0;
 		long totalChosDeliveredToEuropeana = 0;
@@ -164,7 +173,7 @@ public class StatisticsAction extends AbstractAction {
 			this.archivalInstitution = archivalInstitution;
 		}
 		public boolean containsSearchableItems(){
-			return (findingaids + holdingsguide + sourceguide) > 0;
+			return (findingaids + holdingsguide + sourceguide + eaccpf) > 0;
 		}
 	}
 
@@ -176,6 +185,7 @@ public class StatisticsAction extends AbstractAction {
 		long findingaids = 0;
 		long holdingsguide = 0;
 		long sourceguide = 0;
+		long eaccpf = 0;
 		long daos = 0;
 		long units = 0;
 		long totalChosDeliveredToEuropeana = 0;
@@ -198,6 +208,7 @@ public class StatisticsAction extends AbstractAction {
 			findingaids += institutionStatistics.findingaids;
 			holdingsguide += institutionStatistics.holdingsguide;
 			sourceguide += institutionStatistics.sourceguide;
+			eaccpf += institutionStatistics.eaccpf;
 			daos += institutionStatistics.daos;
 			units += institutionStatistics.units;
 			totalChos += totalChos;
@@ -227,6 +238,8 @@ public class StatisticsAction extends AbstractAction {
 			fillHeaderCell(colNumber, rowNumber, "#Published HG");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published SG");
+            colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published EAC-CPF");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published Descriptive units");
 			colNumber++;
@@ -267,6 +280,8 @@ public class StatisticsAction extends AbstractAction {
 			fillCell(colNumber, rowNumber, institutionStatistics.holdingsguide);
 			colNumber++;
 			fillCell(colNumber, rowNumber, institutionStatistics.sourceguide);
+            colNumber++;
+            fillCell(colNumber, rowNumber, institutionStatistics.eaccpf);
 			colNumber++;
 			fillCell(colNumber, rowNumber, institutionStatistics.units);
 			colNumber++;
@@ -339,6 +354,8 @@ public class StatisticsAction extends AbstractAction {
 			fillHeaderCell(colNumber, rowNumber, "#Published HG");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published SG");
+            colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published EAC-CPF");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published Descriptive units");
 			colNumber++;
@@ -365,8 +382,10 @@ public class StatisticsAction extends AbstractAction {
 			colNumber++;
 			fillCell(colNumber, rowNumber, countryStatistics.holdingsguide);
 			colNumber++;
-			fillCell(colNumber, rowNumber, countryStatistics.sourceguide);
-			colNumber++;
+            fillCell(colNumber, rowNumber, countryStatistics.sourceguide);
+            colNumber++;
+            fillCell(colNumber, rowNumber, countryStatistics.eaccpf);
+            colNumber++;
 			fillCell(colNumber, rowNumber, countryStatistics.units);
 			colNumber++;
 			fillCell(colNumber, rowNumber, countryStatistics.daos);
