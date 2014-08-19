@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>eu.archivesportaleurope.backend</groupId>
 		<artifactId>backend-project</artifactId>
-		<version>1.6.0-beta-8-SNAPSHOT</version>
+		<version>1.6.0-beta-8</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>persistence</artifactId>
