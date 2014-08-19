@@ -13,7 +13,7 @@
         <li><a href ="ingestionprofiles.action"><s:property value="getText('dashboard.menu.editIngestionprofiles')" /></a></li>
         <li><a href ="automaticharvestingcreation.action"><s:property value="getText('dashboard.menu.automaticharvestingcreation')" /></a></li>
 		<li><a href ="upload.action"><s:property value="getText('dashboard.menu.uploadcontent')" /></a></li>
-		<li><a href ="indexEacCpf.action">Create EAC-CPF</a></li>
+		<li><a href ="indexEacCpf.action"><s:property value="getText('dashboard.menu.createNewEacCpf')" /></a></li>
 		<li><a href ="checkfilesuploaded.action"><s:property value="getText('dashboard.menu.contentmanager')" /></a></li>
 	</ul>
 </div>
