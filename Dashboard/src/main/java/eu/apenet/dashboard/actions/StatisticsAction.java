@@ -121,10 +121,6 @@ public class StatisticsAction extends AbstractAction {
             // eac-cpf
             searchOptions.setContentClass(EacCpf.class);
             institutionStatistics.eaccpf = convertLong(eadDAO.countEads(searchOptions));
-//            if (institutionStatistics.eaccpf > 0){
-//                institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
-//                institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
-//            }
 			// findingaids
 			searchOptions.setContentClass(FindingAid.class);
 			institutionStatistics.findingaids = convertLong(eadDAO.countEads(searchOptions));
