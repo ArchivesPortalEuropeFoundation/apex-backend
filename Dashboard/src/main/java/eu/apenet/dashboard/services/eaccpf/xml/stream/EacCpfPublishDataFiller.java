@@ -313,11 +313,17 @@ public class EacCpfPublishDataFiller {
 		add(other, relationsRelationEntryHandler.getResultAsStringWithWhitespace());
 		add(other, alternativeSetDescriptiveNoteHandler.getResultAsStringWithWhitespace());
 		add(other, alternativeSetComponentEntryHandler.getResultAsStringWithWhitespace());		
+		
+		relationsHandler.getHandlers().add(countArchivalMaterialRelationsHandler);
+		relationsHandler.getHandlers().add(countNameRelationsHandler);
+		relationsHandler.getHandlers().add(countCpfRelationHandler);
+		relationsHandler.getHandlers().add(countFunctionRelationHandler);
+		relationsHandler.getHandlers().add(institutionsRelationsHandler);
 		publishData.setOther(other.toString());
 		publishData.setNumberOfArchivalMaterialRelations(countArchivalMaterialRelationsHandler.getCount());
 		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
-		publishData.setNumberOfInstitutionsRelations(institutionsRelationsHandler.getResultSet().size());
-		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
+		publishData.setNumberOfCpfRelations(countCpfRelationHandler.getCount());
+		publishData.setNumberOfFunctionRelations(countFunctionRelationHandler.getCount());
 		countCpfRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});		
 		countFunctionRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"functionRelation"});		
 
