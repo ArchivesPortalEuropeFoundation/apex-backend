@@ -157,7 +157,10 @@ public class CreateEacCpf extends EacCpfAction {
             uploadMethod.setMethod(UploadMethod.HTTP);
             uploadMethod.setId(3);
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-            String otherRecordId = control.getOtherRecordId().get(0).getContent();
+            String otherRecordId = null;
+            if (control.getOtherRecordId().size() > 0){
+            	otherRecordId = control.getOtherRecordId().get(0).getContent();
+            }
             boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
             	
             if (noRecordIdAvailable){
