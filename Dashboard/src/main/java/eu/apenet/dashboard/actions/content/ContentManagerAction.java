@@ -325,7 +325,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         dynamicEadSearchOptions.setContentClass(SourceGuide.class);
         results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
         getServletRequest().setAttribute("results", results);
-        getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
+        getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
         if (countResults>0)
         	return SUCCESS;
