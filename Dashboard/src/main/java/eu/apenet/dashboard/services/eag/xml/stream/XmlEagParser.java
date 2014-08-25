@@ -103,17 +103,12 @@ public class XmlEagParser extends AbstractParser {
 
 	}
 	private static void add(LinkedList<QName> path, QName qName) {
-		//if (!CLEVEL.equals(qName)) {
-			path.add(qName);
-		//}
+		path.add(qName);
 	}
 
 	private static void removeLast(LinkedList<QName> path, QName qName) {
-		//if (!CLEVEL.equals(qName)) {
-			if (!path.isEmpty()) {
-				path.removeLast();
-			}
-		//}
-
+		if (!path.isEmpty()) {
+			path.removeLast();
+		}
 	}
 }
