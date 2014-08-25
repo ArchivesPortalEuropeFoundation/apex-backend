@@ -5,15 +5,20 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import eu.archivesportaleurope.xml.ApeXMLConstants;
+
 public abstract class AbstractParser  {
 
 
-	public static final String APENET_EAD = "urn:isbn:1-931666-22-9";
-	public static final String XLINK = "http://www.w3.org/1999/xlink";
-	public static final String XSI = "http://www.w3.org/2001/XMLSchema-instance";
+	@Deprecated
+	public static final String APENET_EAD = ApeXMLConstants.APE_EAD_NAMESPACE;
+	@Deprecated
+	public static final String XLINK = ApeXMLConstants.XLINK_NAMESPACE;
+	@Deprecated
+	public static final String XSI = ApeXMLConstants.XSI_NAMESPACE;
 
-    protected static final QName EAD_ELEMENT = new QName(APENET_EAD, "ead");
-    protected static final QName C_ELEMENT = new QName(APENET_EAD, "c");
+    protected static final QName EAD_ELEMENT = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "ead");
+    protected static final QName C_ELEMENT = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "c");
 
 
 	protected static void writeEndElement(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
@@ -29,9 +34,18 @@ public abstract class AbstractParser  {
 			for (int i=0; i < xmlReader.getAttributeCount(); i++){
 				xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
 			}
-		}
-	}
-
+			for (int i = 0; i < xmlReader.getNamespaceCount(); i++){
+				String prefix = xmlReader.getNamespacePrefix(i);
+				String namespaceURI = xmlReader.getNamespaceURI(i);
+				
+				if (prefix.isEmpty()){
+					xmlWriter.writeDefaultNamespace(namespaceURI);
+				}else {
+					xmlWriter.writeNamespace(prefix, namespaceURI);
+				}
+			}
+		}		
+	}	
 
 	protected static void writeCharacters(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
 		if (xmlWriter != null){
@@ -68,10 +82,10 @@ public abstract class AbstractParser  {
     protected final void writeEAD(XMLStreamWriter xmlWriter) throws XMLStreamException {
 		if (xmlWriter != null) {
 			xmlWriter.writeStartElement(EAD_ELEMENT.getPrefix(), EAD_ELEMENT.getLocalPart(), EAD_ELEMENT.getNamespaceURI());
-			xmlWriter.writeDefaultNamespace(APENET_EAD);
-			xmlWriter.writeNamespace("xlink", XLINK);
-			xmlWriter.writeNamespace("xsi", XSI);
-            xmlWriter.writeAttribute(XSI, "schemaLocation", "urn:isbn:1-931666-22-9 http://schemas.archivesportaleurope.net/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd");
+			xmlWriter.writeDefaultNamespace(ApeXMLConstants.APE_EAD_NAMESPACE);
+			xmlWriter.writeNamespace(ApeXMLConstants.XLINK_PREFIX, ApeXMLConstants.XLINK_NAMESPACE);
+			xmlWriter.writeNamespace(ApeXMLConstants.XSI_PREFIX, ApeXMLConstants.XSI_NAMESPACE);
+            xmlWriter.writeAttribute(ApeXMLConstants.XSI_NAMESPACE, ApeXMLConstants.SCHEMA_LOCATION, ApeXMLConstants.APE_EAD_NAMESPACE + " " + ApeXMLConstants.APE_EAD_LOCATION + " " +   ApeXMLConstants.XLINK_NAMESPACE + " " +  ApeXMLConstants.XLINK_LOCATION);
             xmlWriter.writeAttribute("audience", "external");
 		}
 	}
