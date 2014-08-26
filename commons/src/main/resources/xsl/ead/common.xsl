@@ -704,7 +704,7 @@
 					<xsl:value-of select="number('2')"/>
 				</xsl:when>
 				<xsl:when test="$isChild">
-					<xsl:value-of select="number('6')"/>
+					<xsl:value-of select="number('2')"/>
 				</xsl:when>				
 				<xsl:otherwise>
 					<xsl:value-of select="number('0')"/>
@@ -714,7 +714,7 @@
 		<xsl:variable name="maxDisplayNumber">
 			<xsl:choose>
 				<xsl:when test="$isChild">
-					<xsl:value-of select="number('5')"/>
+					<xsl:value-of select="number('1')"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="number('0')"/>
