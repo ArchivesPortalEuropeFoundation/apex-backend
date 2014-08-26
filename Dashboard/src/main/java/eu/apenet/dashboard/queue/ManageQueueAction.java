@@ -56,6 +56,15 @@ public class ManageQueueAction extends AbstractAction {
 	public void setSelectedAction(String selectedAction) {
 		this.selectedAction = selectedAction;
 	}
+	
+
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
 
 	@Override
 	protected void buildBreadcrumbs() {
