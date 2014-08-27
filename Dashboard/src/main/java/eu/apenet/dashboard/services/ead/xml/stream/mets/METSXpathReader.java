@@ -74,21 +74,29 @@ public class METSXpathReader {
 	}
 
 
-	public List<DaoInfo> getData() {
+	public List<DaoInfo> getData() throws METSParserException {
 		List<DaoInfo> results = new ArrayList<DaoInfo>();
 		Map<String, MetsFile> defaultMetsFiles = defaultFileHandler.getResults();
 		Map<String, MetsFile> thumbsMetsFiles = thumbsFileHandler.getResults();
 		List<StructMapDiv> divs = structMapDivXpathHandler.getResults();
+		int numberOfThumbnails = 0;
+		int numberOfLinks = 0;
 		for (StructMapDiv div: divs){
 			MetsFile defaultMetsFile = getMetsFile(defaultMetsFiles, div.getFileIds());
 			if (defaultMetsFile != null){
+				numberOfLinks++;
 				DaoInfo daoInfo = new DaoInfo();
 				daoInfo.setLabel(div.getLabel());
 				daoInfo.setReference(defaultMetsFile);
 				MetsFile thumbsMetsFile = getMetsFile(thumbsMetsFiles, div.getFileIds());
 				daoInfo.setThumbnail(thumbsMetsFile);
 				results.add(daoInfo);
-			
+				if (thumbsMetsFile != null){
+					numberOfThumbnails++;
+				}
+				if (numberOfThumbnails > 0 && numberOfThumbnails != numberOfLinks){
+					throw new METSParserException("There are thumbnails, but the number of thumbnails less that the number of references. The problem start with DIV: " + div.getLabel() + ":<br/>file ID: "+defaultMetsFile.getId());
+				}
 			}
 		}
 		return results;
