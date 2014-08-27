@@ -386,10 +386,11 @@ function drawColumns(fa, hg, sg, eac){
 	var small = Math.round(width*0.05);
 	var id = Math.round(width*0.10);
 	var title = Math.round(width*0.30);
+	var queue = Math.round(width*0.10);
 	var actions = Math.round(width*0.15);
 	//eaccpf
 	var name = Math.round(width*0.25);
-	var relations = Math.round(width*0.10);
+	var relations = Math.round(width*0.05);
 
 	$("#thLabel").width(small);
 	$("#thLabel" ).css( "maxWidth", (small) + "px" );
@@ -433,11 +434,11 @@ function drawColumns(fa, hg, sg, eac){
 		$(this).css( "maxWidth", (small) + "px" );
 	});
 	
-	$("#thQueue").width(small);
-	$("#thQueue" ).css( "maxWidth", (small) + "px" );
+	$("#thQueue").width(queue);
+	$("#thQueue" ).css( "maxWidth", (queue) + "px" );
 	$("table [id^='tdQueue_']").each(function() {
-		$(this).width(small);
-		$(this).css( "maxWidth", (small) + "px" );
+		$(this).width(queue);
+		$(this).css( "maxWidth", (queue) + "px" );
 	});
 	
 	$("#thActions").width(actions);
