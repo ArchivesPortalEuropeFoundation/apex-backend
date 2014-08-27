@@ -37,7 +37,7 @@ public class FileXpathHandler extends AbstractXpathHandler {
 	public void processChildStartElementMatch(XMLStreamReader xmlReader) {
 		if (FLOCAT.equals(xmlReader.getName())) {
 			tempMetsFile.setHref(xmlReader.getAttributeValue(ApeXMLConstants.XLINK_NAMESPACE, "href"));
-			tempMetsFile.setRole(xmlReader.getAttributeValue(null, "role"));
+			tempMetsFile.setRole(xmlReader.getAttributeValue(ApeXMLConstants.XLINK_NAMESPACE, "role"));
 		}
 	}
 
