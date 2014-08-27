@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -25,6 +24,7 @@ import org.xml.sax.SAXException;
 
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
+import eu.archivesportaleurope.harvester.util.StreamUtil;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
 
 public class METSParser extends AbstractParser {
@@ -95,8 +95,7 @@ public class METSParser extends AbstractParser {
 	}
 
 	private static XMLStreamReader getXMLReader(File file) throws FileNotFoundException, XMLStreamException {
-		XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
-		return (XMLStreamReader) inputFactory.createXMLStreamReader(new FileInputStream(file), ApeXMLConstants.UTF_8);
+		return StreamUtil.getXMLStreamReader(new FileInputStream(file));
 	}
 
 	protected static class IndexData {

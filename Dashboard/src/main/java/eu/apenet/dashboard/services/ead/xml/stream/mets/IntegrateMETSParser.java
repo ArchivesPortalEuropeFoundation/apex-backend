@@ -20,7 +20,6 @@ import org.xml.sax.SAXParseException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
-import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.vo.Ead;
 import eu.archivesportaleurope.harvester.util.StreamUtil;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
@@ -34,97 +33,123 @@ public class IntegrateMETSParser extends AbstractParser {
 		long startTime = System.currentTimeMillis();
 		String error = integrateMets(new File("/home/bverhoef/eadfiles/1.11.06.11-with-METS.xml"), new File(
 				"/home/bverhoef/eadfiles/1.11.06.11-APE-with-dao.xml"));
-		if (error == null){
-			LOGGER.info("Merging done in: " + (System.currentTimeMillis() - startTime));
-		}else {
-			LOGGER.error("Merging failed:\n" +error);
+		if (error == null) {
+			LOGGER.info("Merging done in: " + (System.currentTimeMillis() - startTime) + "ms");
+		} else {
+			LOGGER.error("Merging failed:\n" + error);
 		}
 	}
 
-	public static void mergeMETSinEAD(Ead ead) {
-		long startTime = System.currentTimeMillis();
+	public static String mergeMETSinEAD(Ead ead) throws Exception {
 		XmlType xmlType = XmlType.getContentType(ead);
 		LOGGER.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): Start merging METS");
 		File inputEadFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + ead.getPath());
 		File outputEadFile = new File(inputEadFile.getParentFile(), "TEMP_OUTPUT_" + System.currentTimeMillis() + "_"
 				+ inputEadFile.getName());
-		String error = integrateMets(inputEadFile, outputEadFile);
-		if (error == null){
-			LOGGER.info("Merging done in: " + (System.currentTimeMillis() - startTime));
-		}else {
-			LOGGER.error("Merging failed:\n" +error);
-		}
+		return integrateMets(inputEadFile, outputEadFile);
 	}
 
-	private static String integrateMets(File inputFile, File outputFile) {
+	private static String integrateMets(File inputFile, File outputFile) throws Exception {
 		String error = null;
-		try {
-			FileInputStream fileInputStream = new FileInputStream(inputFile);
-			XMLStreamReader xmlReader = StreamUtil.getXMLStreamReader(fileInputStream);
-			FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
-			XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(fileOutputStream,
-					ApeXMLConstants.UTF_8);
-			boolean isMetsDAO = false;
-			MetsHttpClient httpClient = new MetsHttpClient();
-			for (int event = xmlReader.next(); error == null && event != XMLStreamConstants.END_DOCUMENT; event = xmlReader
-					.next()) {
-				if (event == XMLStreamConstants.START_ELEMENT) {
-					QName element = xmlReader.getName();
-					isMetsDAO = DAO_ELEMENT.equals(element)
-							&& "METS".equalsIgnoreCase(xmlReader.getAttributeValue(ApeXMLConstants.XLINK_NAMESPACE,
-									"role"));
-					if (isMetsDAO) {
-						error = integrateDaoWithMets(xmlReader, xmlWriter, httpClient,outputFile.getParentFile());
-					}
-					if (!isMetsDAO) {
-						writeStartElement(xmlReader, xmlWriter);
-					}
-				} else if (event == XMLStreamConstants.CHARACTERS) {
-					if (!isMetsDAO) {
-						writeCharacters(xmlReader, xmlWriter);
-					}
-				} else if (event == XMLStreamConstants.CDATA) {
-					if (!isMetsDAO) {
-						writeCData(xmlReader, xmlWriter);
-					}
-				} else if (event == XMLStreamConstants.END_ELEMENT) {
-					if (!DAO_ELEMENT.equals(xmlReader.getName()) || !isMetsDAO) {
-						writeEndElement(xmlReader, xmlWriter);
-					}
-					if (isMetsDAO) {
-						isMetsDAO = false;
-					}
+		MetsHttpClient httpClient = new MetsHttpClient();
+		FileInputStream fileInputStream = new FileInputStream(inputFile);
+		XMLStreamReader xmlReader = StreamUtil.getXMLStreamReader(fileInputStream);
+		FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
+		XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(fileOutputStream,
+				ApeXMLConstants.UTF_8);
+		boolean isMetsDAO = false;
+
+		for (int event = xmlReader.next(); error == null && event != XMLStreamConstants.END_DOCUMENT; event = xmlReader
+				.next()) {
+			if (event == XMLStreamConstants.START_ELEMENT) {
+				QName element = xmlReader.getName();
+				isMetsDAO = DAO_ELEMENT.equals(element)
+						&& "METS"
+								.equalsIgnoreCase(xmlReader.getAttributeValue(ApeXMLConstants.XLINK_NAMESPACE, "role"));
+				if (isMetsDAO) {
+					error = integrateDaoWithMets(xmlReader, xmlWriter, httpClient, outputFile.getParentFile());
+				}
+				if (!isMetsDAO) {
+					writeStartElement(xmlReader, xmlWriter);
+				}
+			} else if (event == XMLStreamConstants.CHARACTERS) {
+				if (!isMetsDAO) {
+					writeCharacters(xmlReader, xmlWriter);
+				}
+			} else if (event == XMLStreamConstants.CDATA) {
+				if (!isMetsDAO) {
+					writeCData(xmlReader, xmlWriter);
+				}
+			} else if (event == XMLStreamConstants.END_ELEMENT) {
+				if (!DAO_ELEMENT.equals(xmlReader.getName()) || !isMetsDAO) {
+					writeEndElement(xmlReader, xmlWriter);
+				}
+				if (isMetsDAO) {
+					isMetsDAO = false;
 				}
 			}
-			httpClient.close();
-			xmlWriter.writeEndDocument();
-			xmlWriter.flush();
-			xmlWriter.close();
-			if (error != null) {
-				ContentUtils.deleteFile(outputFile, false);
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
+		}
+		xmlWriter.writeEndDocument();
+		httpClient.close();
+		xmlWriter.flush();
+		xmlWriter.close();
+		xmlReader.close();
+		if (error == null) {
+			inputFile.delete();
+			outputFile.renameTo(inputFile);
+		} else {
+			outputFile.delete();
 		}
 		return error;
 	}
 
 	private static String integrateDaoWithMets(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter,
-			MetsHttpClient httpClient, File dir ) {
+			MetsHttpClient httpClient, File dir) {
 		QName element = xmlReader.getName();
 		String href = xmlReader.getAttributeValue(ApeXMLConstants.XLINK_NAMESPACE, "href");
-		String filename = "METS_TEMP_FILE_"+System.currentTimeMillis()+".xml";
-		File metsFile = new File(dir, filename);		
+		String filename = "METS_TEMP_FILE_" + System.currentTimeMillis() + ".xml";
+		File metsFile = new File(dir, filename);
+		/*
+		 * downloading file
+		 */
+		LOGGER.debug("Downloading: " + href);
+		CloseableHttpResponse closeableHttpResponse = null;
+		InputStream response = null;
+		FileOutputStream outputStream = null;
+		try {
+			closeableHttpResponse = httpClient.get(href);
+			response = httpClient.getResponseInputStream(closeableHttpResponse);
+			outputStream = new FileOutputStream(metsFile);
+			IOUtils.copy(response, outputStream);
+		} catch (Exception e) {
+			if (metsFile.exists()) {
+				metsFile.delete();
+			}
+			StringBuilder error = new StringBuilder();
+			error.append("<span class=\"validation-error\"><b>METS file (" + href + ") :</b><br/>");
+			error.append(e.getMessage());
+			return error.toString();
+		} finally {
+			try {
+				if (closeableHttpResponse != null) {
+					closeableHttpResponse.close();
+				}
+				if (response != null) {
+					response.close();
+				}
+				if (outputStream != null) {
+					outputStream.flush();
+					outputStream.close();
+				}
+			} catch (Exception e) {
+			}
+		}
+
 		try {
 			/*
 			 * write to file
 			 */
-			LOGGER.debug("Downloading: " + href);
-			CloseableHttpResponse closeableHttpResponse = httpClient.get(href);
-			InputStream response = httpClient.getResponseInputStream(closeableHttpResponse);
-			FileOutputStream outputStream = new FileOutputStream(metsFile);
-			IOUtils.copy(response, outputStream);
-			closeableHttpResponse.close();
+
 			LOGGER.debug("Merging: " + href);
 			List<DaoInfo> daoInfos = METSParser.parse(metsFile);
 			for (int i = 0; i < daoInfos.size(); i++) {
@@ -152,17 +177,19 @@ public class IntegrateMETSParser extends AbstractParser {
 
 		} catch (SAXParseException exception) {
 			StringBuilder error = new StringBuilder();
-			error.append("<span class=\"validation-error\"><b>METS file (" + href+ ") :</b><br/>");
-			error.append("l.").append(exception.getLineNumber()).append(" c.")
-				.append(exception.getColumnNumber()).append(": ").append(exception.getMessage())
-				.append("</span>").append("<br />");			
+			error.append("<span class=\"validation-error\"><b>METS file (" + href + ") :</b><br/>");
+			error.append("l.").append(exception.getLineNumber()).append(" c.").append(exception.getColumnNumber())
+					.append(": ").append(exception.getMessage()).append("</span>").append("<br />");
 			return error.toString();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			StringBuilder error = new StringBuilder();
-			error.append("<span class=\"validation-error\"><b>METS file (" + href+ ") :</b><br/>");
+			error.append("<span class=\"validation-error\"><b>METS file (" + href + ") :</b><br/>");
 			error.append(e.getMessage());
 			return error.toString();
-		}finally {
+		} finally {
+			metsFile.delete();
+		}
+		if (metsFile.exists()) {
 			metsFile.delete();
 		}
 		return null;
