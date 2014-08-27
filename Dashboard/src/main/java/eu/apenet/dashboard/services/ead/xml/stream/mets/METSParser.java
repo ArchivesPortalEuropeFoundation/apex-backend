@@ -22,20 +22,18 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
 
-
 public class METSParser extends AbstractParser {
 
-    public static List<DaoInfo> parse(File file) throws Exception {
-    	
+	public static List<DaoInfo> parse(File file) throws Exception {
+		XMLStreamReader xmlReader = null;
 		try {
 			validateMETS(file);
-			XMLStreamReader xmlReader = getXMLReader(file);
+			xmlReader = getXMLReader(file);
 			QName lastElement = null;
 
 			LinkedList<QName> pathPosition = new LinkedList<QName>();
@@ -55,30 +53,37 @@ public class METSParser extends AbstractParser {
 					metsXpathReader.processCharacters(pathPosition, xmlReader);
 				}
 			}
-			xmlReader.close();
 			return metsXpathReader.getData();
-		
-		}catch (SAXParseException exception){
-			throw exception;
-		}
-		catch (Exception e) {
+		}catch (Exception e) {
 			throw e;
 
+		}finally {
+			if (xmlReader != null){
+				xmlReader.close();
+			}
 		}
 	}
-	private static void validateMETS(File file) throws SAXException, IOException, XMLStreamException {
+
+	private static void validateMETS(File file) throws SAXException, IOException {
 		List<URL> schemaURLs = new ArrayList<URL>();
 		schemaURLs.add(METSParser.class.getResource("/apeMETS.xsd"));
 		schemaURLs.add(METSParser.class.getResource("/apeMETSRights.xsd"));
 		schemaURLs.add(METSParser.class.getResource("/apeMETSxlink.xsd"));
-               InputStreamReader reader = new InputStreamReader(new FileInputStream(file), ApeXMLConstants.UTF_8);
-		StreamSource source = new StreamSource(reader);
+		InputStreamReader reader = null;
+		try {
+			reader = new InputStreamReader(new FileInputStream(file), ApeXMLConstants.UTF_8);
+			StreamSource source = new StreamSource(reader);
+			Schema schema = getSchema(schemaURLs);
+			Validator validator = schema.newValidator();
+			validator.validate(source);
+		} finally {
+			if (reader != null){
+				reader.close();
+			}
+		}
 
-		Schema schema = getSchema(schemaURLs);
-		Validator validator = schema.newValidator();
-		validator.validate(source);
-		reader.close();
 	}
+
 	private static Schema getSchema(List<URL> schemaURLs) throws SAXException {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		schemaFactory.setResourceResolver(new APEXmlCatalogResolver());
@@ -89,12 +94,10 @@ public class METSParser extends AbstractParser {
 		return schemaFactory.newSchema(schemaSources.toArray(new StreamSource[] {}));
 	}
 
-	private static XMLStreamReader getXMLReader(File file) throws FileNotFoundException,
-			XMLStreamException {
+	private static XMLStreamReader getXMLReader(File file) throws FileNotFoundException, XMLStreamException {
 		XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
 		return (XMLStreamReader) inputFactory.createXMLStreamReader(new FileInputStream(file), ApeXMLConstants.UTF_8);
 	}
-
 
 	protected static class IndexData {
 		private long startIndex = -1;
@@ -117,6 +120,7 @@ public class METSParser extends AbstractParser {
 		}
 
 	}
+
 	private static void add(LinkedList<QName> path, QName qName) {
 		path.add(qName);
 	}
