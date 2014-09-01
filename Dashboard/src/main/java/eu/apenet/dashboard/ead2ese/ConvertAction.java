@@ -107,7 +107,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
-	
+
 	@Override
 	public void validate() {
 		if (this.isBatchConversion()) {
@@ -163,7 +163,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 		String[] isoLanguages = Locale.getISOLanguages();
 		for (String language : isoLanguages) {
 			String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
-			//String label = language + " (" +  languageDescription + ")"; 
+			//String label = language + " (" +  languageDescription + ")";
 			this.languages.add(new SelectItem(language, languageDescription));
 		}
 
@@ -214,7 +214,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 			this.setNoLanguageOnParents(!ead2EseInformation.isLanguagesOnParent());
 
 			this.setBatchConversion(false);
-		}else {		
+		}else {
 			this.setDataProviderCheck(true);
 			this.setBatchConversion(true);
 		}
@@ -230,7 +230,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String execute() throws Exception{		
+	public String execute() throws Exception{
 		EdmConfig config = fillConfig();
 		if (StringUtils.isBlank(batchItems)){
 			EadService.convertToEseEdm(Integer.parseInt(id), config.getProperties());
@@ -260,7 +260,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     }
 
 	protected EdmConfig fillConfig(){
-    	EdmConfig config = new EdmConfig();  	
+    	EdmConfig config = new EdmConfig();
     	config.setContextInformationPrefix(this.getHierarchyPrefix());
     	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
@@ -305,14 +305,19 @@ public class ConvertAction extends AbstractInstitutionAction {
     	} else {
     		config.setMinimalConversion(false);
     	}
-        
-        Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
-        String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
+
+        //if id is not empty, oaiIdentifier and repositoryCode will be filled here; otherwise this is done in EadService
+        //immediately before the respective file is added to the queue; see also
+        //EadService.addBatchToQueue(ContentSearchOptions eadSearchOptions, QueueAction queueAction, Properties preferences)
+        if(id != null && !id.isEmpty()){
+            Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
+            String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
                             + APEnetUtilities.FILESEPARATOR + "fa"
                             + APEnetUtilities.FILESEPARATOR + ead.getEadid();
-        config.setEdmIdentifier(oaiIdentifier);
+            config.setEdmIdentifier(oaiIdentifier);
+            config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
+        }
         config.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
-        config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         config.setXmlTypeName("fa");
 
     	return config;
@@ -405,7 +410,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	public void setLanguages(Set<SelectItem> languages) {
 		this.languages = languages;
 	}
-	
+
 	public String getMappingsFileFileName() {
 		return mappingsFileFileName;
 	}

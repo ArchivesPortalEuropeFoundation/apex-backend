@@ -631,7 +631,18 @@ public class EadService {
 		int size = 0;
 		while ((size = eads.size()) > 0) {
 			Ead ead = eads.get(size - 1);
-			QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
+                        QueueItem queueItem;
+                        if (QueueAction.CONVERT_TO_ESE_EDM.equals(queueAction)){
+                            Properties properties = preferences;
+                            String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
+                            + APEnetUtilities.FILESEPARATOR + "fa"
+                            + APEnetUtilities.FILESEPARATOR + ead.getEadid();
+                            properties.put("edm_identifier", oaiIdentifier);
+                            properties.put("repository_code", ead.getArchivalInstitution().getRepositorycode());
+                            queueItem = fillQueueItem(ead, queueAction, properties);
+                        } else {
+                            queueItem = fillQueueItem(ead, queueAction, preferences);
+                        }
 			ead.setQueuing(QueuingState.READY);
 			eadDAO.updateSimple(ead);
 			eads.remove(size - 1);
