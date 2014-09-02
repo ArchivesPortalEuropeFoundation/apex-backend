@@ -30,7 +30,7 @@
 		<xsl:value-of select="fn:normalize-space(ape:highlight(., 'otherwithcoma'))" disable-output-escaping="yes" />
 		<!-- Extent option -->
 		<xsl:if test="string-length(../@unit)>0">
-			<xsl:text> (</xsl:text><xsl:value-of select="../@unit"/><xsl:text>)</xsl:text>
+			<!--  <xsl:text> (</xsl:text>--><xsl:text> </xsl:text><xsl:value-of select="../@unit"/><!-- <xsl:text>)</xsl:text> -->
 		</xsl:if>	
 		<xsl:if test="position() != last()">
 		   <xsl:text>, </xsl:text>
@@ -643,7 +643,7 @@
 		  <xsl:for-each select="ead:extent">
 			<xsl:apply-templates mode="otherwithoutwhitespace"/>
 			<xsl:if test="./@unit"> 
-				<xsl:text> (</xsl:text><xsl:value-of select="./@unit"/><xsl:text>)</xsl:text>
+			 <!--  <xsl:text> (</xsl:text>--><xsl:text> </xsl:text><xsl:value-of select="./@unit"/><!--  <xsl:text>)</xsl:text>-->
 			</xsl:if>
 			<xsl:if test="position() != last()">
 				<xsl:text>, </xsl:text>
@@ -1110,14 +1110,14 @@
 	<xsl:template match="ead:extent">
 	    <xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
 	    <xsl:if test="./@unit">
-	    	<xsl:text> (</xsl:text><xsl:value-of select="./@unit"/><xsl:text>)</xsl:text>
+	    	<!--<xsl:text> (</xsl:text>--><xsl:text> </xsl:text><xsl:value-of select="./@unit"/><!--  <xsl:text>)</xsl:text>-->
 	    </xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="ead:dimensions">
 	    <xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
 	    <xsl:if test="./@unit">
-	    	<xsl:text> (</xsl:text><xsl:value-of select="./@unit"/><xsl:text>)</xsl:text>
+	    	<!-- <xsl:text> (</xsl:text>--> <xsl:text> </xsl:text><xsl:value-of select="./@unit"/><!--<xsl:text>)</xsl:text>-->
 	    </xsl:if>
 	</xsl:template>
 	
