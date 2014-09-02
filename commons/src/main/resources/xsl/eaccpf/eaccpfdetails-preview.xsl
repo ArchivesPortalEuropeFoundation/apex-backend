@@ -612,19 +612,19 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion
-						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:term/text() != ''
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:placeEntry/text() != ''
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:date/text() != ''
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:dateSet/eac:date/text() != ''
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:citation/text() != ''
-							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:citation[@xlink:href != '']
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function
+						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:term/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:placeEntry/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:dateSet/eac:date/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:dateSet/eac:dateRange[eac:fromDate or eac:toDate]/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:citation/text() != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:citation[@xlink:href != '']
 								and $validHrefLinkFunction = 'true')
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:citation[@xlink:title != '']
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:funtion/eac:descriptiveNote/eac:p/text() != ''
-							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:funtions/eac:descriptiveNote/eac:p/text() != '')">
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:citation[@xlink:title != '']
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:descriptiveNote/eac:p/text() != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:descriptiveNote/eac:p/text() != '')">
 			    <h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.function'), $smallcase, $uppercase)"/></h2>
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions">
 					<div class="blockPlural">
