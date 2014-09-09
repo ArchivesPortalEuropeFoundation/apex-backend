@@ -29,22 +29,22 @@
 
 		<maxBooleanClauses>256</maxBooleanClauses>
 
-		<filterCache class="solr.LRUCache" size="128" initialSize="64"
-			autowarmCount="64" />
+		<filterCache class="solr.LRUCache" size="64" initialSize="32"
+			autowarmCount="32" />
 
-		<queryResultCache class="solr.LRUCache" size="128"
-			initialSize="64" autowarmCount="64" />
+		<queryResultCache class="solr.LRUCache" size="64"
+			initialSize="32" autowarmCount="32" />
 
-		<documentCache class="solr.LRUCache" size="128"
-			initialSize="64" autowarmCount="0" />
+		<documentCache class="solr.LRUCache" size="64"
+			initialSize="32" autowarmCount="0" />
 
 		<enableLazyFieldLoading>true</enableLazyFieldLoading>
 
 
-		<queryResultWindowSize>50</queryResultWindowSize>
+		<queryResultWindowSize>10</queryResultWindowSize>
 
 
-		<queryResultMaxDocsCached>50</queryResultMaxDocsCached>
+		<queryResultMaxDocsCached>10</queryResultMaxDocsCached>
 
 
 
