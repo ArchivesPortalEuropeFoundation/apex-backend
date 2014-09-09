@@ -99,7 +99,7 @@ public final class EacXslt {
         transformer.setParameter(new QName("eacUrlBase"), new XdmAtomicValue(eacUrlBase));
         transformer.setParameter(new QName("eadUrl"), new XdmAtomicValue(eadUrl));
         transformer.setParameter(new QName("lang.navigator"), new XdmAtomicValue(langNavigator));
-
+        transformer.setParameter(new QName("searchTerms"), new XdmAtomicValue(searchTerms));
         transformer.setSource(xmlSource);
         Serializer serializer = new Serializer();
         serializer.setOutputWriter(writer);

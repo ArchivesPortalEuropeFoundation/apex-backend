@@ -16,7 +16,8 @@
 	<xsl:param name="aiCodeUrl"/>
 	<xsl:param name="eacUrlBase"/>
 	<xsl:param name="eadUrl"/>
-
+    <xsl:param name="searchTerms"/>
+    
 	<!-- Global variables. -->
 	<xsl:variable name="language.default" select="'eng'"/>
 	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
@@ -37,22 +38,22 @@
 	<xsl:template match="/">
 		<xsl:variable name="existDates" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates"/>
 		<xsl:variable name="entityType" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
-
+      
 		<!-- Set the variable which indicates the mode used to display the translations. -->
    		<xsl:variable name="translationMode">
     		<xsl:choose>
-    			<xsl:when test="$translationLanguage = 'other'">
-    				<xsl:value-of select="'other'"/>
+    			<xsl:when test="$translationLanguage = 'default'">
+    				<xsl:value-of select="'default'"/>
     			</xsl:when>
     			<xsl:when test="$translationLanguage = 'showAll'">
     				<xsl:value-of select="'showAll'"/>
     			</xsl:when>
     			<xsl:otherwise>
-		    		<xsl:value-of select="'default'"/>
+		    		<xsl:value-of select="'other'"/>
     			</xsl:otherwise>
     		</xsl:choose>
    		</xsl:variable>
-
+        
 		<h1 class="blockHeader">
 		    <!-- nameEntry -->
 			<!-- Checks if exists any content in the translation language. -->
@@ -2783,79 +2784,91 @@
 			<div id="{$clazz}{$posParent}{$posChild}" class= "moreDisplay">
 				<xsl:choose>
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							<p>
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:when test="name(current()) = 'citation'">
-										<xsl:call-template name="citationHref">
-											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./@xlink:title" />
-											<xsl:with-param name="content" select="./text()"/>
-											<xsl:with-param name="section" select="$list"/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-							</p>	
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(($currentLang = $language.selected) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
+								<p>
+									<xsl:choose>
+										<xsl:when test="@vocabularySource">
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:when test="name(current()) = 'citation'">
+											<xsl:call-template name="citationHref">
+												<xsl:with-param name="link" select="./@xlink:href"/>
+												<xsl:with-param name="title" select="./@xlink:title" />
+												<xsl:with-param name="content" select="./text()"/>
+												<xsl:with-param name="section" select="$list"/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+								</p>
+							</xsl:if>		
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang =  $lang.navigator]/text() and $list[@xml:lang =  $lang.navigator]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang =  $lang.navigator]">
-							<p>
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:when test="name(current()) = 'citation'">
-										<xsl:call-template name="citationHref">
-											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./@xlink:title" />
-											<xsl:with-param name="content" select="./text()"/>
-											<xsl:with-param name="section" select="$list"/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-							</p>	
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(($currentLang = $lang.navigator) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">	
+								<p>
+									<xsl:choose>
+										<xsl:when test="@vocabularySource">
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:when test="name(current()) = 'citation'">
+											<xsl:call-template name="citationHref">
+												<xsl:with-param name="link" select="./@xlink:href"/>
+												<xsl:with-param name="title" select="./@xlink:title" />
+												<xsl:with-param name="content" select="./text()"/>
+												<xsl:with-param name="section" select="$list"/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+								</p>
+							</xsl:if>		
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $language.default]">
-							<p>
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:when test="name(current()) = 'citation'">
-										<xsl:call-template name="citationHref">
-											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./@xlink:title" />
-											<xsl:with-param name="content" select="./text()"/>
-											<xsl:with-param name="section" select="$list"/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-									 <xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-							</p>	
+						<!--  <xsl:for-each select="$list[@xml:lang = $language.default]">-->
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(($currentLang = $language.default) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">	
+								<p>
+									<xsl:choose>
+										<xsl:when test="@vocabularySource">
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:when test="name(current()) = 'citation'">
+											<xsl:call-template name="citationHref">
+												<xsl:with-param name="link" select="./@xlink:href"/>
+												<xsl:with-param name="title" select="./@xlink:title" />
+												<xsl:with-param name="content" select="./text()"/>
+												<xsl:with-param name="section" select="$list"/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:otherwise>
+										 <xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+								</p>
+							</xsl:if>		
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-					  	<xsl:for-each select="$list[not(@xml:lang)]">
+					  <!-- 	<xsl:for-each select="$list[not(@xml:lang)]"> -->
+						 <xsl:for-each select="$list">
+						   <xsl:if test="not(@xml:lang) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))"> 	 
 						 	  <p>
 								 <xsl:choose>
 									<xsl:when test="@vocabularySource">
@@ -2875,7 +2888,8 @@
 									 <xsl:apply-templates select="." mode="other"/> 
 									</xsl:otherwise>
 								</xsl:choose>
-							  </p>   
+							  </p>
+							</xsl:if>	     
 					   	</xsl:for-each> 
 					</xsl:when>
 					<xsl:otherwise>
@@ -2883,28 +2897,28 @@
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 							<xsl:variable name="currentText" select="current()/text()"></xsl:variable>
-									<xsl:if test="$currentLang = $language.first">
-										<p>
-											<xsl:choose>
-												<xsl:when test="@vocabularySource">
-												    <xsl:call-template name="vocabularySource">
-														<xsl:with-param name="node" select="."/>
-													</xsl:call-template>
-												</xsl:when>
-												<xsl:when test="name(current()) = 'citation'">
-													<xsl:call-template name="citationHref">
-														<xsl:with-param name="link" select="./@xlink:href"/>
-														<xsl:with-param name="title" select="./@xlink:title" />
-														<xsl:with-param name="content" select="./text()"/>
-														<xsl:with-param name="section" select="$list"/>
-													</xsl:call-template>
-												</xsl:when>
-												<xsl:otherwise>
-												 	<xsl:apply-templates select="$currentText" mode="other"/> 
-												</xsl:otherwise>
-											</xsl:choose>
-										</p>
-									</xsl:if>
+							<xsl:if test="(($currentLang = $language.first) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
+								<p>
+									<xsl:choose>
+										<xsl:when test="@vocabularySource">
+										    <xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:when test="name(current()) = 'citation'">
+											<xsl:call-template name="citationHref">
+												<xsl:with-param name="link" select="./@xlink:href"/>
+												<xsl:with-param name="title" select="./@xlink:title" />
+												<xsl:with-param name="content" select="./text()"/>
+												<xsl:with-param name="section" select="$list"/>
+											</xsl:call-template>
+										</xsl:when>
+										<xsl:otherwise>
+										 	<xsl:apply-templates select="$currentText" mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+								</p>
+							</xsl:if>
 						</xsl:for-each>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -3224,73 +3238,83 @@
 			<div id="{$clazz}{$posParent}{$posChild}" class= "moreDisplay">
 				<xsl:choose>
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							<p>
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-				   		   			    </xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-
-								<xsl:if test="@countryCode">
-									<xsl:call-template name="countryName">
-										<xsl:with-param name="countryCode" select="./@countryCode"/>
-				   			        </xsl:call-template>
-			   			        </xsl:if>
-							</p>
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(($currentLang = $language.selected) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">	
+								<p>
+									<xsl:choose>
+										<xsl:when test="@vocabularySource">
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+					   		   			    </xsl:call-template>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+	
+									<xsl:if test="@countryCode">
+										<xsl:call-template name="countryName">
+											<xsl:with-param name="countryCode" select="./@countryCode"/>
+					   			        </xsl:call-template>
+				   			        </xsl:if>
+								</p>
+							</xsl:if>	
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $lang.navigator and (not(@localType) or (@localType != 'birth' and @localType != 'death' and @localType != 'foundation' and @localType != 'suppression'))]">
-							<p>
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-				   		   			    </xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-
-								<xsl:if test="@countryCode">
-									<xsl:call-template name="countryName">
-										<xsl:with-param name="countryCode" select="./@countryCode"/>
-				   			        </xsl:call-template>
-			   			        </xsl:if>
-							</p>
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(($currentLang = $lang.navigator) and (not(@localType) or (@localType != 'birth' and @localType != 'death' and @localType != 'foundation' and @localType != 'suppression')) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">		
+								<p>
+									<xsl:choose>
+										<xsl:when test="@vocabularySource">
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+					   		   			    </xsl:call-template>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+	
+									<xsl:if test="@countryCode">
+										<xsl:call-template name="countryName">
+											<xsl:with-param name="countryCode" select="./@countryCode"/>
+					   			        </xsl:call-template>
+				   			        </xsl:if>
+								</p>
+							</xsl:if>	
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="($list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != '')">
-						<xsl:for-each select="$list[@xml:lang = $language.default]">
-							<p>
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-				   		   			    </xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-									 <xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-
-								<xsl:if test="@countryCode">
-									<xsl:call-template name="countryName">
-										<xsl:with-param name="countryCode" select="./@countryCode"/>
-				   			        </xsl:call-template>
-			   			        </xsl:if>
-							</p>
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(($currentLang = $language.default) and (not(@localType) or (@localType != 'birth' and @localType != 'death' and @localType != 'foundation' and @localType != 'suppression')) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">			
+								<p>
+									<xsl:choose>
+										<xsl:when test="@vocabularySource">
+											<xsl:call-template name="vocabularySource">
+												<xsl:with-param name="node" select="."/>
+					   		   			    </xsl:call-template>
+										</xsl:when>
+										<xsl:otherwise>
+										 <xsl:apply-templates select="." mode="other"/> 
+										</xsl:otherwise>
+									</xsl:choose>
+	
+									<xsl:if test="@countryCode">
+										<xsl:call-template name="countryName">
+											<xsl:with-param name="countryCode" select="./@countryCode"/>
+					   			        </xsl:call-template>
+				   			        </xsl:if>
+								</p>
+							</xsl:if>	
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-					  	<xsl:for-each select="$list[not(@xml:lang)]">
+						<xsl:for-each select="$list">
+						   <xsl:if test="not(@xml:lang) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))"> 	 	 
 						 	  <p>
 								 <xsl:choose>
 									<xsl:when test="@vocabularySource">
@@ -3309,6 +3333,7 @@
 				   			        </xsl:call-template>
 			   			        </xsl:if>
 							</p>
+						  </xsl:if>	
 					   	</xsl:for-each> 
 					</xsl:when>
 					<xsl:otherwise>
@@ -3316,7 +3341,7 @@
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 							<xsl:variable name="currentText" select="current()/text()"></xsl:variable>
-							<xsl:if test="$currentLang = $language.first">
+							<xsl:if test="(($currentLang = $language.first) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
 								<p>
 									<xsl:choose>
 										<xsl:when test="@vocabularySource">
@@ -3446,8 +3471,8 @@
 				<xsl:choose>
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="$currentLang = $language.selected">
+						    <xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							 <xsl:if test="(($currentLang = $language.selected) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
 								<p>
 								    <xsl:apply-templates mode="other"/> 
 			   						<xsl:if test="name(current()) = 'language'">
@@ -3461,13 +3486,13 @@
 										</xsl:if>
 									</xsl:if>
 								</p>
-							</xsl:if>
+							</xsl:if> 	
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="$currentLang = $lang.navigator">
+							<xsl:if test="(($currentLang = $lang.navigator) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
 								<p>
 								    <xsl:apply-templates mode="other"/> 
 			   						<xsl:if test="name(current()) = 'language'">
@@ -3487,7 +3512,7 @@
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="$currentLang = $language.default">
+							<xsl:if test="(($currentLang = $language.default) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
 								<p>
 									<xsl:apply-templates mode="other"/> 
 			   						<xsl:if test="name(current()) = 'language'">
@@ -3505,27 +3530,29 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-						  	<xsl:for-each select="$list[not(@xml:lang)]"> 
-								<p>
-								  	<xsl:apply-templates select="." mode="other"/>
-		   							<xsl:if test="name(current()) = 'language'">
-									<xsl:if test="./parent::node()/eac:descriptiveNote/eac:p/text() ">
-										<xsl:text> (</xsl:text>
-										<xsl:call-template  name="multilanguageNoP">
-								   			<xsl:with-param name="list" select="./parent::node()/eac:descriptiveNote/eac:p"/>
-								   			<xsl:with-param name="clazz" select="'language'"/>
-										</xsl:call-template>
-										<xsl:text>)</xsl:text>
+						     <xsl:for-each select="$list">
+						     	<xsl:if test="not(@xml:lang) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))">
+									<p>
+									  	<xsl:apply-templates select="." mode="other"/>
+			   							<xsl:if test="name(current()) = 'language'">
+										<xsl:if test="./parent::node()/eac:descriptiveNote/eac:p/text() ">
+											<xsl:text> (</xsl:text>
+											<xsl:call-template  name="multilanguageNoP">
+									   			<xsl:with-param name="list" select="./parent::node()/eac:descriptiveNote/eac:p"/>
+									   			<xsl:with-param name="clazz" select="'language'"/>
+											</xsl:call-template>
+											<xsl:text>)</xsl:text>
+										</xsl:if>
 									</xsl:if>
-								</xsl:if>
-						   		</p>
+							   		</p>
+						   	   </xsl:if>	
 						   	</xsl:for-each> 
 					</xsl:when>
 					<xsl:otherwise> <!-- first language -->
 						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="$currentLang = $language.first">
+							<xsl:if test="(($currentLang = $language.first) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
 								<p>
 									 <xsl:apply-templates select="." mode="other"/> 	
 			   							<xsl:if test="name(current()) = 'language'">
@@ -3647,64 +3674,70 @@
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>	
 		<xsl:choose>
-			<!--  -->
 			<xsl:when test="count($list) > 1">
 				<xsl:choose>
-					
 					<!-- lang equals selected language -->
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						<xsl:variable name="listLangSelected" select="$list[@xml:lang = $language.selected]"/>
-						<xsl:for-each select="$listLangSelected">
-							<xsl:if test="position() > 1">
-								<xsl:text> </xsl:text>
-							</xsl:if>
-						    <xsl:apply-templates mode="other"/> 
+						<xsl:for-each select="$list">
+						   <xsl:variable name="currentLang" select="current()/@xml:lang"/>
+							 <xsl:if test="(($currentLang = $language.selected) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
+								<xsl:if test="position() > 1">
+									<xsl:text> </xsl:text>
+							    </xsl:if>
+						   		 <xsl:apply-templates mode="other"/> 
+							 </xsl:if>
 						</xsl:for-each>
 					</xsl:when>
 					<!-- navigator's language -->
 					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
-						<xsl:variable name="listLangSelected" select="$list[@xml:lang = $lang.navigator]"/>
-						<xsl:for-each select="$listLangSelected">
-							<xsl:if test="position() > 1">
-								<xsl:text> </xsl:text>
-							</xsl:if>
-						    <xsl:apply-templates mode="other"/> 
+						<xsl:for-each select="$list">
+						   <xsl:variable name="currentLang" select="current()/@xml:lang"/>
+							 <xsl:if test="(($currentLang = $lang.navigator) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
+								<xsl:if test="position() > 1">
+									<xsl:text> </xsl:text>
+							    </xsl:if>
+						   		 <xsl:apply-templates mode="other"/> 
+							 </xsl:if>
 						</xsl:for-each>
 					</xsl:when>
 					<!-- default language -->
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-						<xsl:variable name="listLangDefault" select="$list[@xml:lang = $language.default]"/>
-						<xsl:for-each select="$listLangDefault">
-							<xsl:if test="position() > 1">
-								<xsl:text> </xsl:text>
-							</xsl:if>
-						    <xsl:apply-templates mode="other"/> 
+						<xsl:for-each select="$list">
+						   <xsl:variable name="currentLang" select="current()/@xml:lang"/>
+							 <xsl:if test="(($currentLang = $language.default) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
+								<xsl:if test="position() > 1">
+									<xsl:text> </xsl:text>
+							    </xsl:if>
+						   		 <xsl:apply-templates mode="other"/> 
+							 </xsl:if>
 						</xsl:for-each>
 					</xsl:when>
 				  	
 				  	<!-- no lang -->
 					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-					  	<xsl:variable name="listNoLang" select="$list[not(@xml:lang)]"/>
-					  	<xsl:for-each select="$listNoLang"> 
+					   <xsl:for-each select="$list">
+					     <xsl:if test="not(@xml:lang) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))">
 							<xsl:if test="position() > 1">
 								<xsl:text> </xsl:text>
-							</xsl:if>
-						  	<xsl:apply-templates select="." mode="other"/>
-					   	</xsl:for-each> 
+						    </xsl:if>
+					   		 <xsl:apply-templates mode="other"/> 
+						 </xsl:if>
+						</xsl:for-each>
 					</xsl:when>
 					
 					<!-- first language -->
 					<xsl:otherwise> 
 						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:variable name="listFirstLang" select="$list[@xml:lang = $language.first]"/>
-						<xsl:for-each select="$listFirstLang">
-							<xsl:if test="position() > 1">
-								<xsl:text> </xsl:text>
-							</xsl:if>
-							<xsl:apply-templates select="." mode="other"/> 
-						</xsl:for-each>
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(($currentLang = $language.first) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
+								<xsl:if test="position() > 1">
+								   <xsl:text> </xsl:text>
+						        </xsl:if>
+					   		 	<xsl:apply-templates mode="other"/> 
+						    </xsl:if>
+						 </xsl:for-each>
 					</xsl:otherwise>
-					
 				</xsl:choose>
 			</xsl:when>
 			<!-- 1 element -->
@@ -4052,7 +4085,7 @@
 		<xsl:param name="language"/>
 	    <ul class="level">
 			 <xsl:for-each select="$list">
-				 	<xsl:if test="./descendant-or-self::node()/eac:item[@xml:lang = $language] or ($language='notLang' and ./descendant-or-self::node()/eac:item[not(@xml:lang)])"> 
+				 	<xsl:if test="./descendant-or-self::node()/eac:item[@xml:lang = $language] or ($language='notLang' and ./descendant-or-self::node()/eac:item[not(@xml:lang)]) or ./descendant-or-self::node()/eac:item[fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]"> 
 						<xsl:choose>
 							<xsl:when test="name(./parent::node()) != 'outline'">
 							   <ul class="level">
