@@ -19,7 +19,8 @@
 				</span>
 			</div>
 			<ul>
-				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent">
+				<!--  Issue #1572: Only display the first 100 relations. -->
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:alternativeSet/eac:setComponent[position() &lt;= 100]">
 					<li>
 						<xsl:choose>
 							<xsl:when test="./eac:componentEntry[@localType='title']">
