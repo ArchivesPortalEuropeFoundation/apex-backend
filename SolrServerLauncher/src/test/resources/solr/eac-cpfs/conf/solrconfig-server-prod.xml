@@ -41,10 +41,10 @@
 		<enableLazyFieldLoading>true</enableLazyFieldLoading>
 
 
-		<queryResultWindowSize>50</queryResultWindowSize>
+		<queryResultWindowSize>10</queryResultWindowSize>
 
 
-		<queryResultMaxDocsCached>50</queryResultMaxDocsCached>
+		<queryResultMaxDocsCached>20</queryResultMaxDocsCached>
 
 
 
