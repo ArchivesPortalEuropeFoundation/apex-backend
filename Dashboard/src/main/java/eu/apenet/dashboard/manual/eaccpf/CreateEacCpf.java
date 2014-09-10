@@ -70,7 +70,6 @@ import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import eu.apenet.dpt.utils.eaccpf.Term;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
 import eu.apenet.dpt.utils.eaccpf.UseDates;
-import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -152,31 +151,33 @@ public class CreateEacCpf extends EacCpfAction {
                 control.getRecordId().setValue(content[0]);
             }
         } else {
-            newEac.setUploadDate(new java.util.Date());
-            UploadMethod uploadMethod = new UploadMethod();
-            uploadMethod.setMethod(UploadMethod.HTTP);
-            uploadMethod.setId(3);
-            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-            String otherRecordId = null;
-            if (control.getOtherRecordId().size() > 0){
-            	otherRecordId = control.getOtherRecordId().get(0).getContent();
-            }
-            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
-            	
-            if (noRecordIdAvailable){
-                String id = System.currentTimeMillis() +"";
-                id = id.substring(0,id.length()-4);
-                newEac.setIdentifier(id);
-            }else {
-            	 newEac.setIdentifier(otherRecordId);
-            	 
-            }
-            control.getRecordId().setValue(newEac.getIdentifier());
-            newEac.setUploadMethod(uploadMethod);
-            newEac.setArchivalInstitution(archivalInstitution);
-            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
-            newEac.setTitle("temporary title");
-            newEac = eacCpfDAO.store(newEac);
+        	if (StringUtils.isBlank(newEac.getIdentifier()) && newEac.getId() == null){
+	            newEac.setUploadDate(new java.util.Date());
+	            UploadMethod uploadMethod = new UploadMethod();
+	            uploadMethod.setMethod(UploadMethod.HTTP);
+	            uploadMethod.setId(3);
+	            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+	            String otherRecordId = null;
+	            if (control.getOtherRecordId().size() > 0){
+	            	otherRecordId = control.getOtherRecordId().get(0).getContent();
+	            }
+	            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
+	            	
+	            if (noRecordIdAvailable){
+	                String id = System.currentTimeMillis() +"";
+	                id = id.substring(0,id.length()-4);
+	                newEac.setIdentifier(id);
+	            }else {
+	            	 newEac.setIdentifier(otherRecordId);
+	            	 
+	            }
+	            newEac.setUploadMethod(uploadMethod);
+	            newEac.setArchivalInstitution(archivalInstitution);
+	            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
+	            newEac.setTitle("temporary title");
+	            newEac = eacCpfDAO.store(newEac);
+        	}
+        	control.getRecordId().setValue(newEac.getIdentifier());
         }
 
         // eacCpf/control/maintenanceStatus
