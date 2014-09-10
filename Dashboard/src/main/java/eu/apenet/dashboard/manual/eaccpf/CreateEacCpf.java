@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.eaccpf.actions.EacCpfAction;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
@@ -83,7 +84,11 @@ import eu.apenet.persistence.vo.User;
  */
 public class CreateEacCpf extends EacCpfAction {
 
-    private EacCpf eacCpf = new EacCpf();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1967202440160548074L;
+	private EacCpf eacCpf = new EacCpf();
     private Map parameters;
     private eu.apenet.persistence.vo.EacCpf newEac = new eu.apenet.persistence.vo.EacCpf();
     private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
@@ -173,7 +178,8 @@ public class CreateEacCpf extends EacCpfAction {
 	            }
 	            newEac.setUploadMethod(uploadMethod);
 	            newEac.setArchivalInstitution(archivalInstitution);
-	            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
+	            String filename =  APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
+	            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
 	            newEac.setTitle("temporary title");
 	            newEac = eacCpfDAO.store(newEac);
         	}
