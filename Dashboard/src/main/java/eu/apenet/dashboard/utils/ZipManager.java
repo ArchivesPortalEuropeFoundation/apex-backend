@@ -86,7 +86,7 @@ public class ZipManager {
 	private void extract(ZipEntry temp, ZipInputStream source) throws IOException {
 
 		byte data[] = new byte[BUFFER_SIZE];
-		FileOutputStream fos = new FileOutputStream(this.path + temp.getName());
+		FileOutputStream fos = new FileOutputStream(this.path + APEnetUtilities.convertToFilename(temp.getName()));
 		BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE);
 
 		Integer size;
