@@ -67,7 +67,7 @@ public class ManualFTPEADUploaderTest {
     public void D_downloadFile(){
         System.out.println("get file");
         try {
-            File file = ftpUploader.getFile(ftpClient, filePath, 1);
+            File file = ftpUploader.getFile(ftpClient, filePath, filePath, 1);
             Assert.assertNotNull(file);
         } catch (IOException e){
             Assert.fail();
