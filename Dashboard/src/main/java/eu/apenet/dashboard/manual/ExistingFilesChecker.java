@@ -245,7 +245,6 @@ public class ExistingFilesChecker {
             }
 
         } else if (xmlType == XmlType.EAC_CPF) {
-            LOG.info("We try to insert an EAC-CPF file");
             result = insertEacCpfFile(fileUnit, xmlType);
 
         } else {
@@ -592,7 +591,7 @@ public class ExistingFilesChecker {
             if (e instanceof WstxParsingException) {
                 throw (WstxParsingException) e;
             }
-            LOG.error("Error parsing StAX for file " + path, e);
+            LOG.error("Error parsing StAX for file " + path + ": " + e.getMessage());
         } finally {
             try {
                 if (input != null) {
