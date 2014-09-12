@@ -919,7 +919,12 @@
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
             </result>
-        </action>       
+        </action>  
+        <action name="rebuildAutosuggestion" class="eu.apenet.dashboard.queue.ManageQueueAction" method="rebuildAutosuggestion">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageQueue</param>
+            </result>
+        </action>             
         
         <action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction">
             <result name="success" type="tiles">sessionManagement</result>
@@ -996,6 +1001,12 @@
                 <param name="countryId">${countryId}</param>
             </result>
         </action>
+        <action name="changeMets" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="changeMets">
+            <result name="success" type="redirectAction">
+                <param name="actionName">institutionManagerManagement</param>
+                <param name="countryId">${countryId}</param>
+            </result>
+        </action>        
         <action name="changeToInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="changeToInstitutionManager">
             <result name="success" type="redirectAction">
                 <param name="actionName">index</param>

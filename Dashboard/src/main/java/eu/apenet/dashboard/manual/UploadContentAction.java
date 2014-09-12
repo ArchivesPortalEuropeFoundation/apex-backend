@@ -340,11 +340,12 @@ public class UploadContentAction extends AbstractInstitutionAction {
         if (client == null) {
             client = (FTPClient) session.get("ftpClient");
         }
-        for (String filePath : filesToUpload) {
+        for (String filePathOrig : filesToUpload) {
+            String sourceFilePath = filePathOrig.substring(filePathOrig.lastIndexOf(APEnetUtilities.FILESEPARATOR) + 1);
+            String filePath = APEnetUtilities.convertToFilename(sourceFilePath);
             try {
-                filePath = filePath.substring(filePath.lastIndexOf(APEnetUtilities.FILESEPARATOR) + 1);
                 String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
-                uploader_ftp.getFile(client, filePath, aiId);
+                uploader_ftp.getFile(client, sourceFilePath,filePath, aiId);
                 if (fileType.equals("xml")) {
                     createDBentry(filePath, "FTP");
                 } else if (fileType.equals("zip")) {

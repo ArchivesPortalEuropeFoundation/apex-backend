@@ -704,7 +704,7 @@
 					<xsl:value-of select="number('2')"/>
 				</xsl:when>
 				<xsl:when test="$isChild">
-					<xsl:value-of select="number('6')"/>
+					<xsl:value-of select="number('2')"/>
 				</xsl:when>				
 				<xsl:otherwise>
 					<xsl:value-of select="number('0')"/>
@@ -714,7 +714,7 @@
 		<xsl:variable name="maxDisplayNumber">
 			<xsl:choose>
 				<xsl:when test="$isChild">
-					<xsl:value-of select="number('5')"/>
+					<xsl:value-of select="number('1')"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="number('0')"/>
@@ -789,7 +789,11 @@
 					</xsl:variable>
 					<xsl:choose>
 						<xsl:when test="number($maxDisplayNumber) eq 0 or $linkPosition &lt;= number($maxDisplayNumber)">
-						<div class="dao"><a href="{$href}" target="_blank"><img src="{$thumbnailHref}" alt="{$dao.title}" title="{$dao.title}"/>
+						<div class="dao"><a href="{$href}" target="_blank">
+							<xsl:choose>
+								<xsl:when test="$linkPosition &lt;= 5"><img src="{$thumbnailHref}" alt="{$dao.title}" title="{$dao.title}"/></xsl:when>
+								<xsl:otherwise><img data-src="{$thumbnailHref}" alt="{$dao.title}" title="{$dao.title}"/></xsl:otherwise>
+							</xsl:choose>
 							<span><xsl:value-of select="$dao.title" /></span></a></div>
 						</xsl:when>
 						<xsl:otherwise>

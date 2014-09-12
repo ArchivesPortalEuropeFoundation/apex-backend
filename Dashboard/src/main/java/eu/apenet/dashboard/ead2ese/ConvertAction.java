@@ -22,11 +22,13 @@ import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.actions.content.ead.BatchEadActions;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.util.Ead2EseInformation;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueueAction;
@@ -105,7 +107,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
-	
+
 	@Override
 	public void validate() {
 		if (this.isBatchConversion()) {
@@ -161,7 +163,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 		String[] isoLanguages = Locale.getISOLanguages();
 		for (String language : isoLanguages) {
 			String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
-			//String label = language + " (" +  languageDescription + ")"; 
+			//String label = language + " (" +  languageDescription + ")";
 			this.languages.add(new SelectItem(language, languageDescription));
 		}
 
@@ -212,7 +214,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 			this.setNoLanguageOnParents(!ead2EseInformation.isLanguagesOnParent());
 
 			this.setBatchConversion(false);
-		}else {		
+		}else {
 			this.setDataProviderCheck(true);
 			this.setBatchConversion(true);
 		}
@@ -228,8 +230,8 @@ public class ConvertAction extends AbstractInstitutionAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String execute() throws Exception{		
-		EseConfig config = fillConfig();
+	public String execute() throws Exception{
+		EdmConfig config = fillConfig();
 		if (StringUtils.isBlank(batchItems)){
 			EadService.convertToEseEdm(Integer.parseInt(id), config.getProperties());
 		}else {
@@ -257,8 +259,8 @@ public class ConvertAction extends AbstractInstitutionAction {
    		return SUCCESS;
     }
 
-	protected EseConfig fillConfig(){
-    	EseConfig config = new EseConfig();  	
+	protected EdmConfig fillConfig(){
+    	EdmConfig config = new EdmConfig();
     	config.setContextInformationPrefix(this.getHierarchyPrefix());
     	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
@@ -303,6 +305,21 @@ public class ConvertAction extends AbstractInstitutionAction {
     	} else {
     		config.setMinimalConversion(false);
     	}
+
+        //if id is not empty, oaiIdentifier and repositoryCode will be filled here; otherwise this is done in EadService
+        //immediately before the respective file is added to the queue; see also
+        //EadService.addBatchToQueue(ContentSearchOptions eadSearchOptions, QueueAction queueAction, Properties preferences)
+        if(id != null && !id.isEmpty()){
+            Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
+            String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
+                            + APEnetUtilities.FILESEPARATOR + "fa"
+                            + APEnetUtilities.FILESEPARATOR + ead.getEadid();
+            config.setEdmIdentifier(oaiIdentifier);
+            config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
+        }
+        config.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+        config.setXmlTypeName("fa");
+
     	return config;
 	}
 
@@ -393,7 +410,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	public void setLanguages(Set<SelectItem> languages) {
 		this.languages = languages;
 	}
-	
+
 	public String getMappingsFileFileName() {
 		return mappingsFileFileName;
 	}

@@ -3,6 +3,7 @@ package eu.apenet.commons.solr;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
@@ -71,6 +72,26 @@ public abstract class AbstractSolrServerHolder {
 		}
 		return solrServer;
 	}
-
+	public long rebuildSpellchecker() throws SolrServerException {
+		if (isAvailable()) {
+			try {
+				long startTime = System.currentTimeMillis();
+				SolrQuery query = new SolrQuery();
+				query.setRows(0);
+				query.setQuery("*:*");
+				query.setRequestHandler("list");
+				query.set("spellcheck", "on");
+				query.set("spellcheck.build", "true");
+				query.set("spellcheck.count", "0");
+				solrServer.query(query);
+				LOGGER.info("rebuild spellchecker of " + getSolrUrl() + ": " + (System.currentTimeMillis() - startTime) + "ms");
+				return System.currentTimeMillis() - startTime;
+			} catch (Exception e) {
+				throw new SolrServerException("Could not rebuild spellchecker", e);
+			}
+		} else {
+			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
+		}
+	}
 
 }

@@ -24,8 +24,10 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.AbstractInstitutionAction;
 
 public class SecurityInterceptor extends AbstractInterceptor implements Serializable {
+	private static final String INSTITUTION_REQUIRED = "institution_required";
 	private static final String UNKNOWN = "unknown";
 	private static final String AUTHORIZATION_XML_FILE = "authorization.xml";
 	private static final String COMMA_SEPARATOR = ",";
@@ -109,6 +111,12 @@ public class SecurityInterceptor extends AbstractInterceptor implements Serializ
 			role = securityContext.getRole();
 		}
 		if (isAllowed(emailAddress, role, actionName)) {
+			if (invocation.getProxy().getAction() instanceof AbstractInstitutionAction){
+				if (securityContext == null || securityContext.getSelectedInstitution() == null){
+					LOGGER.info("user: " + emailAddress + " with role: " + role + " has NO institution selected, when accessing: " + invocation.getProxy().getAction().getClass().getName());
+					return INSTITUTION_REQUIRED;
+				}
+			}
 			return invocation.invoke();
 		};
 		return AUTHORIZATION_REQUIRED;

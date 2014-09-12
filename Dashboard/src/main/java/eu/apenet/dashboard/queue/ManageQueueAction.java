@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
@@ -33,7 +34,7 @@ public class ManageQueueAction extends AbstractAction {
 	private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 	private Integer queueItemId;
 	private String selectedAction;
-
+	private String sourceType;
 	/**
 	 * 
 	 */
@@ -54,6 +55,15 @@ public class ManageQueueAction extends AbstractAction {
 
 	public void setSelectedAction(String selectedAction) {
 		this.selectedAction = selectedAction;
+	}
+	
+
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	@Override
@@ -105,7 +115,7 @@ public class ManageQueueAction extends AbstractAction {
 					Properties preferences = EadService.readProperties(queueItem.getPreferences());
 					IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction
 							.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
-					displayItem.setAction(displayItem.getAction() + "("
+					displayItem.setAction(displayItem.getAction() + " ("
 							+ getText(ingestionprofileDefaultUploadAction.getResourceName()) + ")");
 				}
 			} catch (Exception e) {
@@ -190,6 +200,16 @@ public class ManageQueueAction extends AbstractAction {
 			}
 
 		return SUCCESS;
+	}
+	public String rebuildAutosuggestion() throws SolrServerException{
+		if ("ead".equals(sourceType)){
+			EadSolrServerHolder.getInstance().rebuildSpellchecker();
+		}else if ("eac".equals(sourceType)){
+			EacCpfSolrServerHolder.getInstance().rebuildSpellchecker();
+		}else if ("eag".equals(sourceType)){
+			EagSolrServerHolder.getInstance().rebuildSpellchecker();
+		}
+		return SUCCESS;		
 	}
 	public String changeMaintenanceMode(){
 		if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){

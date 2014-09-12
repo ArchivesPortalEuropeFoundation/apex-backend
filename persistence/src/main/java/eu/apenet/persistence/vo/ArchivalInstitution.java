@@ -68,6 +68,10 @@ public class ArchivalInstitution implements java.io.Serializable {
 	private boolean containSearchableItems;
 	@Column(name = "content_lastmodified_date")
 	private Date contentLastModifiedDate;
+	
+	@Column(name = "using_mets")
+	private boolean usingMets;
+	
 	@OneToMany(mappedBy="archivalInstitution")
 	private Set<AiAlternativeName> aiAlternativeNames = new HashSet<AiAlternativeName>(0);
 
@@ -278,4 +282,11 @@ public class ArchivalInstitution implements java.io.Serializable {
 		this.contentLastModifiedDate = contentLastModifiedDate;
 	}
 
+	public boolean isUsingMets() {
+		return usingMets;
+	}
+
+	public void setUsingMets(boolean usingMets) {
+		this.usingMets = usingMets;
+	}
 }

@@ -23,7 +23,6 @@ import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagPublishData;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
-import eu.archivesportaleurope.xml.xpath.AttributeXpathHandler;
 import eu.archivesportaleurope.xml.xpath.StringXpathHandler;
 import eu.archivesportaleurope.xml.xpath.TextMapXpathHandler;
 import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
@@ -40,7 +39,8 @@ public class EagPublishDataFiller {
 	private StringXpathHandler historyHandler;
 	private StringXpathHandler holdingsHandler;
 	private TextMapXpathHandler locationHandler;
-	private AttributeXpathHandler languageHandler;
+	private TextXpathHandler actingMaintenanceForHandler;
+	private TextXpathHandler municipalityPostalcodeHandler;	
 	private List<XmlStreamHandler> eagHandlers = new ArrayList<XmlStreamHandler>();
 	private static Map<String, Set<String>> countryResourceBundles;
 	static {
@@ -74,7 +74,6 @@ public class EagPublishDataFiller {
 		otherNamesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","identity", "autform | parform | nonpreform" });
 		repositoryNameHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "repositoryName" }); 
 		repositoryTypeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","identity", "repositoryType"}); 
-		languageHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "control", "languageDeclarations", "languageDeclaration", "language" }, "languageCode");
 		historyHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "repositorhist", "descriptiveNote" });
 		historyHandler.setAllTextBelow(true);
 		holdingsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "holdings", "descriptiveNote" }); 
@@ -83,13 +82,16 @@ public class EagPublishDataFiller {
 		locationHandler.setAttribute("localType", "visitors address", false);
 		locationHandler.setAllTextBelow(true);
 		locationHandler.setOnlyFirst(true);
+		actingMaintenanceForHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "holdings", "actingMaintenanceForGroup", "actingMaintenanceFor", "placeEntry" }); 
+		municipalityPostalcodeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "location", "municipalityPostalcode" });
 		eagHandlers.add(otherNamesHandler);
 		eagHandlers.add(repositoryNameHandler);
 		eagHandlers.add(repositoryTypeHandler);
 		eagHandlers.add(historyHandler);
 		eagHandlers.add(holdingsHandler);
-		eagHandlers.add(languageHandler);
 		eagHandlers.add(locationHandler);
+		eagHandlers.add(actingMaintenanceForHandler);
+		eagHandlers.add(municipalityPostalcodeHandler);
 	}
 
 	public void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
@@ -126,10 +128,14 @@ public class EagPublishDataFiller {
 		StringBuilder other = new StringBuilder();
 		add(other, holdingsHandler.getResultAsStringWithWhitespace());
 		add(other, historyHandler.getResultAsStringWithWhitespace());
-		String address = locationHandler.getResultAsStringWithWhitespace("street") + ", " + locationHandler.getResultAsStringWithWhitespace("municipalityPostalcode");
-		publishData.getAddress().add(address);
+		if (locationHandler.getResults().size() > 0){
+			String address = TextMapXpathHandler.getResultAsStringWithWhitespace(locationHandler.getResults().get(0), new String[] {"street", "municipalityPostalcode"},", ");
+			publishData.getAddress().add(address);
+		}
+		publishData.setPlaces(municipalityPostalcodeHandler.getResultSet());
+		publishData.getPlaces().addAll(actingMaintenanceForHandler.getResultSet());
+
 		publishData.setOther(other.toString());
-		publishData.setLanguage(languageHandler.getResultAsStringWithWhitespace());
 	
 		ArchivalInstitution ai = archivalInstitution.getParent();
 		List<ArchivalInstitution> ais = new ArrayList<ArchivalInstitution>();

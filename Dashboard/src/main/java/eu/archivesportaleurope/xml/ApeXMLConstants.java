@@ -9,6 +9,7 @@ public class ApeXMLConstants {
 	public static final String APE_EAC_CPF_NAMESPACE = "urn:isbn:1-931666-33-4";
 	public static final String XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
 	public static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
+	public static final String METS_NAMESPACE = "http://www.loc.gov/METS/";
 	public static final String XLINK_PREFIX = "xlink";
 	public static final String XSI_PREFIX = "xsi";
 	public static final String APE_EAD_LOCATION = "http://schemas.archivesportaleurope.net/profiles/apeEAD_XSD1.0.xsd";

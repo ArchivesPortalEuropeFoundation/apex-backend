@@ -188,7 +188,7 @@ background : #fff;
 #buttonSaveEacCpf {
     float:right;
     margin-right: 20px;
-    margin-bottom: 5px;
+/*     margin-bottom: 5px; */
 }
 
 #eacCpfDiv input {

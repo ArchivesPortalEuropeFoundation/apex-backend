@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.manual.eaccpf.actions.EacCpfAction;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
 import eu.apenet.dpt.utils.eaccpf.Address;
@@ -69,19 +71,24 @@ import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import eu.apenet.dpt.utils.eaccpf.Term;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
 import eu.apenet.dpt.utils.eaccpf.UseDates;
-import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
+import eu.apenet.persistence.vo.User;
 
 /**
  *
  * @author papp
  */
-public class CreateEacCpf {
+public class CreateEacCpf extends EacCpfAction {
 
-    private EacCpf eacCpf = new EacCpf();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1967202440160548074L;
+	private EacCpf eacCpf = new EacCpf();
     private Map parameters;
     private eu.apenet.persistence.vo.EacCpf newEac = new eu.apenet.persistence.vo.EacCpf();
     private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
@@ -113,26 +120,30 @@ public class CreateEacCpf {
     public EacCpf getJaxbEacCpf() {
         return eacCpf;
     }
-    public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
-    	if (this.eacCpfId > 0) {
-    		newEac = eacCpfDAO.findById(this.eacCpfId);
-    	}
 
-		return newEac;
+    public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
+        if (this.eacCpfId > 0) {
+            newEac = eacCpfDAO.findById(this.eacCpfId);
+        }
+
+        return newEac;
     }
+
     private Control fillControl() {
         Control control = new Control();
         // eacCpf/control/otherRecordId
         int counter = 1;
         String parameterName = "textLocalId_";
         while (parameters.containsKey(parameterName + counter) || (String[]) parameters.get(parameterName + counter) != null) {
-            OtherRecordId otherRecordId = new OtherRecordId();
             String[] content = (String[]) parameters.get(parameterName + counter);
-            if (content.length == 1) {
-                otherRecordId.setContent(content[0]);
+            if (!content[0].isEmpty()) {
+                OtherRecordId otherRecordId = new OtherRecordId();
+                if (content.length == 1) {
+                    otherRecordId.setContent(content[0]);
+                }
+                otherRecordId.setLocalType("original");
+                control.getOtherRecordId().add(otherRecordId);
             }
-            otherRecordId.setLocalType("original");
-            control.getOtherRecordId().add(otherRecordId);
             counter++;
         }
         // eac-cpf/control/recordId
@@ -145,32 +156,35 @@ public class CreateEacCpf {
                 control.getRecordId().setValue(content[0]);
             }
         } else {
-            newEac.setUploadDate(new java.util.Date());
-            UploadMethod uploadMethod = new UploadMethod();
-            uploadMethod.setMethod(UploadMethod.HTTP);
-            uploadMethod.setId(3);
-            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-            String otherRecordId = control.getOtherRecordId().get(0).getContent();
-            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
-
-            if (noRecordIdAvailable){
-                String id = System.currentTimeMillis() +"";
-                id = id.substring(0,id.length()-4);
-                newEac.setIdentifier(id);
-            }else {
-            	 newEac.setIdentifier(otherRecordId);
-
-            }
-            control.getRecordId().setValue(newEac.getIdentifier());
-            newEac.setUploadMethod(uploadMethod);
-            newEac.setArchivalInstitution(archivalInstitution);
-            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution));
-            newEac.setTitle("temporary title");
-            newEac = eacCpfDAO.store(newEac);
-
+        	if (StringUtils.isBlank(newEac.getIdentifier()) && newEac.getId() == null){
+	            newEac.setUploadDate(new java.util.Date());
+	            UploadMethod uploadMethod = new UploadMethod();
+	            uploadMethod.setMethod(UploadMethod.HTTP);
+	            uploadMethod.setId(3);
+	            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+	            String otherRecordId = null;
+	            if (control.getOtherRecordId().size() > 0){
+	            	otherRecordId = control.getOtherRecordId().get(0).getContent();
+	            }
+	            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
+	            	
+	            if (noRecordIdAvailable){
+	                String id = System.currentTimeMillis() +"";
+	                id = id.substring(0,id.length()-4);
+	                newEac.setIdentifier(id);
+	            }else {
+	            	 newEac.setIdentifier(otherRecordId);
+	            	 
+	            }
+	            newEac.setUploadMethod(uploadMethod);
+	            newEac.setArchivalInstitution(archivalInstitution);
+	            String filename =  APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
+	            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
+	            newEac.setTitle("temporary title");
+	            newEac = eacCpfDAO.store(newEac);
+        	}
+        	control.getRecordId().setValue(newEac.getIdentifier());
         }
-
-
 
         // eacCpf/control/maintenanceStatus
         if (control.getMaintenanceStatus() == null) {
@@ -196,18 +210,13 @@ public class CreateEacCpf {
         if (control.getMaintenanceAgency().getAgencyCode() == null) {
             control.getMaintenanceAgency().setAgencyCode(new AgencyCode());
         }
-        String[] content = (String[]) parameters.get("responsibleInstitution");
-        if (content.length == 1) {
-            control.getMaintenanceAgency().getAgencyCode().setValue(content[0]);
-        }
+        control.getMaintenanceAgency().getAgencyCode().setValue(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getRepositorycode());
 
         // eacCpf/control/maintenanceAgency/agencyName
-        if (parameters.containsKey("responsibleInstitution") && (String[]) parameters.get("responsibleInstitution") != null) {
-            if (control.getMaintenanceAgency().getAgencyName() == null) {
-                control.getMaintenanceAgency().setAgencyName(new AgencyName());
-            }
-            control.getMaintenanceAgency().getAgencyName().setContent("European test archives");
+        if (control.getMaintenanceAgency().getAgencyName() == null) {
+            control.getMaintenanceAgency().setAgencyName(new AgencyName());
         }
+        control.getMaintenanceAgency().getAgencyName().setContent(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getAiname());
 
         // eacCpf/control/languageDeclaration
         if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])
@@ -279,14 +288,17 @@ public class CreateEacCpf {
         if (maintenanceEvent.getAgent() == null) {
             maintenanceEvent.setAgent(new Agent());
         }
-        if (parameters.containsKey("responsiblePerson") && ((String[]) parameters.get("responsiblePerson")).length != 0 && !((String[]) parameters.get("responsiblePerson"))[0].isEmpty()) {
-            maintenanceEvent.getAgent().setContent(((String[]) parameters.get("responsiblePerson"))[0]);
+        ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
+        if (archivalInstitution.getPartner() != null) {
+            maintenanceEvent.getAgent().setContent(archivalInstitution.getPartner().getName());
         } else {
-            maintenanceEvent.getAgent().setContent("automatically created agent");
+            UserDAO partnerdao = DAOFactory.instance().getUserDAO();
+            User countryManager = partnerdao.getCountryManagerOfCountry(archivalInstitution.getCountry());
+            maintenanceEvent.getAgent().setContent(countryManager.getName());
         }
 
         EventDescription eventDescription = new EventDescription();
-        eventDescription.setContent(TransformationTool.getFullEACCPFVersion());
+        eventDescription.setContent("Created_with_apeEAC-CPF_form");
         maintenanceEvent.setEventDescription(eventDescription);
 
         // MaintenanceHistory
@@ -1492,10 +1504,9 @@ public class CreateEacCpf {
             //set element values
             fromDate.setStandardDate(standardDate.toString());
             fromDate.setContent(((String[]) parameters.get(date1text + rowCounter))[0]);
-        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN)){
+        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN)) {
             fromDate.setContent(UNKNOWN);
         }
-
 
         //add toDate if known; same procedure as with fromDate
         ToDate toDate = new ToDate();
@@ -1512,9 +1523,9 @@ public class CreateEacCpf {
             }
             toDate.setStandardDate(standardDate.toString());
             toDate.setContent(((String[]) parameters.get(date2text + rowCounter))[0]);
-        } else if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(UNKNOWN)){
+        } else if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(UNKNOWN)) {
             toDate.setContent(UNKNOWN);
-        } else if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(OPEN)){
+        } else if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(OPEN)) {
             toDate.setContent(OPEN);
         }
 
@@ -1555,9 +1566,9 @@ public class CreateEacCpf {
             //set element values
             date.setStandardDate(standardDate.toString());
             date.setContent(((String[]) parameters.get(date1text + rowCounter))[0]);
-        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN)){
+        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN)) {
             date.setContent(UNKNOWN);
-        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(OPEN)){
+        } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(OPEN)) {
             date.setContent(OPEN);
         }
         return date;
@@ -1584,7 +1595,7 @@ public class CreateEacCpf {
 
     private boolean hasData(DateRange dateRange) {
         if (dateRange.getLocalType() == null || dateRange.getLocalType().isEmpty()) {
-            return dateRange.getFromDate().getContent() != null && dateRange.getToDate().getContent() != null ;
+            return dateRange.getFromDate().getContent() != null && dateRange.getToDate().getContent() != null;
         } else {
             return true;
         }

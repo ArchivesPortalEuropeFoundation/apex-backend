@@ -8,6 +8,7 @@
 	<table class="defaultlayout">
 		<tr>
 			<th><s:text name="usermanagement.institution"/></th>
+			<th><s:text name="institution.mets"/></th>
 			<th><s:text name="usermanagement.email"/></th>
 			<th><s:text name="usermanagement.name"/></th>			
 			<th><s:text name="usermanagement.actions"/></th>
@@ -15,6 +16,7 @@
 	<c:forEach var="ai" items="${ais}">
 		<tr>
 			<td><c:out value="${ai.ainame}"/></td>
+			<td><c:if test="${ai.usingMets}"><s:text name="content.message.yes"/></c:if></td>
 			<c:choose>
 				<c:when test="${empty ai.partner}">
 					<td colspan="2" class="nomanager" ><s:text name="usermanagement.no.institutionmanager"/></td>
@@ -24,6 +26,22 @@
 							<input type="hidden" name="countryId" value="${countryId}"/>
 							<s:submit key="usermanagement.create.institutionmanager" name="displayCreateInstitutionManager"/>
 						</s:form>
+						<c:choose>
+							<c:when test="${ai.usingMets}">
+								<s:form action="changeMets" theme="simple">
+									<input type="hidden" name="aiId" value="${ai.aiId}"/>
+									<input type="hidden" name="countryId" value="${countryId}"/>
+									<s:submit key="institution.mets.disable" cssClass="changeMets" name="disable"/>
+								</s:form>								
+							</c:when>
+							<c:otherwise>
+								<s:form action="changeMets" theme="simple">
+									<input type="hidden" name="aiId" value="${ai.aiId}"/>
+									<input type="hidden" name="countryId" value="${countryId}"/>
+									<s:submit key="institution.mets.enable"  name="enable" cssClass="changeMets"/>
+								</s:form>								
+							</c:otherwise>
+						</c:choose>							
 					</td>				
 				</c:when>
 				<c:otherwise>
@@ -58,8 +76,23 @@
 								<input type="hidden" name="aiId" value="${ai.aiId}"/>
 								<s:submit key="usermanagement.takeover"  name="changeToInstitutionManager"/>
 							</s:form>
-						</c:if>
-									
+							<c:choose>
+								<c:when test="${ai.usingMets}">
+									<s:form action="changeMets" theme="simple">
+										<input type="hidden" name="aiId" value="${ai.aiId}"/>
+										<input type="hidden" name="countryId" value="${countryId}"/>
+										<s:submit key="institution.mets.disable" cssClass="changeMets" name="disable"/>
+									</s:form>								
+								</c:when>
+								<c:otherwise>
+									<s:form action="changeMets" theme="simple">
+										<input type="hidden" name="aiId" value="${ai.aiId}"/>
+										<input type="hidden" name="countryId" value="${countryId}"/>
+										<s:submit key="institution.mets.enable" cssClass="changeMets" name="enable"/>
+									</s:form>								
+								</c:otherwise>
+							</c:choose>								
+						</c:if>		
 					</td>
 				</c:otherwise>
 			</c:choose>

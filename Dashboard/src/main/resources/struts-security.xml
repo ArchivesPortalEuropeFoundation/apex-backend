@@ -68,6 +68,7 @@
 		<global-results>
 			<result type="tiles" name="authentication_required">login</result>
 			<result type="tiles" name="authorization_required">error-403</result>
+			<result type="tiles" name="institution_required">institution_selection_required</result>
 			<result type="tiles" name="start_page">startpage</result>
 			<result type="tiles" name="custom_error">exception</result>
 		</global-results>

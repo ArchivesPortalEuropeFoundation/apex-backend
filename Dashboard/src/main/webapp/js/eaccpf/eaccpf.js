@@ -75,13 +75,13 @@ function clickGoAction() {
  * Save button function, checks mandatory fields
  * before submitting the form
  **************************************/
-function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing) {
+function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing, invalidDateMessage, invalidRangeMessage) {
 // Check fill mandatory fields in tab "your institution".
-    var identityValidation = checkIdentityTab(nameMissing, dateMissing, startDateMissing, endDateMissing);
+    var identityValidation = checkIdentityTab(nameMissing, dateMissing, startDateMissing, endDateMissing, invalidDateMessage, invalidRangeMessage);
     if (identityValidation !== "ok") {
         return;
     }
-    var descriptionValidation = checkDescriptionTab();
+    var descriptionValidation = checkDescriptionTab(invalidDateMessage, invalidRangeMessage);
     if (descriptionValidation !== "ok") {
         return;
     }
@@ -169,7 +169,7 @@ function deleteChecks() {
     $('.fieldRequired').remove();
 }
 
-var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endDateMissing) {
+var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endDateMissing, invalidDateMessage, invalidRangeMessage) {
     //check if at least one name was added
     var personName = $("table#identityPersonName_1 input#textPersonName").attr("value");
     if (personName == null || personName == "") {
@@ -211,7 +211,7 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
                     if (dateRowNotEmpty("identityPersonName_" + tc, rc)) {
                         dateCounter = $("table#identityPersonName_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
                         for (var dc = 1; dc <= dateCounter; dc++) {
-                            checkResult = checkIsoDateRow("identityPersonName_" + tc, rc, dc);
+                            checkResult = checkIsoDateRow("identityPersonName_" + tc, rc, dc, invalidDateMessage, invalidRangeMessage);
                             if (checkResult != "ok") {
                                 return;
                             }
@@ -228,7 +228,7 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
             if (dateRowNotEmpty("dateExistenceTable", rc)) {
                 dateCounter = $("table#dateExistenceTable tr#trDate_text_" + rc + " input[id^='date_']").length;
                 for (var dc = 1; dc <= dateCounter; dc++) {
-                    checkResult = checkIsoDateRow("dateExistenceTable", rc, dc);
+                    checkResult = checkIsoDateRow("dateExistenceTable", rc, dc, invalidDateMessage, invalidRangeMessage);
                     if (checkResult != "ok") {
                         return;
                     }
@@ -241,7 +241,7 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
     return "ok";
 };
 
-var checkDescriptionTab = function() {
+var checkDescriptionTab = function(invalidDateMessage, invalidRangeMessage) {
     //check any ISO date rows in description tab for validity one more time
     var checkResult = "ok";
     var tableCounter = $("table[id^='placeTable_']").length;
@@ -256,7 +256,7 @@ var checkDescriptionTab = function() {
                     if (dateRowNotEmpty("placeTable_" + tc, rc)) {
                         dateCounter = $("table#placeTable_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
                         for (var dc = 1; dc <= dateCounter; dc++) {
-                            checkResult = checkIsoDateRow("placeTable_" + tc, rc, dc);
+                            checkResult = checkIsoDateRow("placeTable_" + tc, rc, dc, invalidDateMessage, invalidRangeMessage);
                             if (checkResult != "ok") {
                                 return;
                             }
@@ -277,7 +277,7 @@ var checkDescriptionTab = function() {
                     if (dateRowNotEmpty("functionTable_" + tc, rc)) {
                         dateCounter = $("table#functionTable_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
                         for (var dc = 1; dc <= dateCounter; dc++) {
-                            checkResult = checkIsoDateRow("functionTable_" + tc, rc, dc);
+                            checkResult = checkIsoDateRow("functionTable_" + tc, rc, dc, invalidDateMessage, invalidRangeMessage);
                             if (checkResult != "ok") {
                                 return;
                             }
@@ -298,7 +298,7 @@ var checkDescriptionTab = function() {
                     if (dateRowNotEmpty("occupationTable_" + tc, rc)) {
                         dateCounter = $("table#occupationTable_" + tc + " tr#trDate_text_" + rc + " input[id^='date_']").length;
                         for (var dc = 1; dc <= dateCounter; dc++) {
-                            checkResult = checkIsoDateRow("occupationTable_" + tc, rc, dc);
+                            checkResult = checkIsoDateRow("occupationTable_" + tc, rc, dc, invalidDateMessage, invalidRangeMessage);
                             if (checkResult != "ok") {
                                 return;
                             }
@@ -399,11 +399,11 @@ function alertFillFieldsBeforeChangeTab(text) {
  * date-related functions
  **************************************/
 
-function insertDateAfter(tableName, anchorId, incrCounter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
+function insertDateAfter(tableName, anchorId, incrCounter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage) {
     var newDate = $('<tr id="trDate_text_' + incrCounter + '">' +
             '<td>' + dateLabel + '</td>' +
             '<td>' +
-            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
+            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');"><br />' +
             '</td>' +
             '<td></td><td></td>' +
             '</tr>' +
@@ -420,23 +420,23 @@ function insertDateAfter(tableName, anchorId, incrCounter, dateLabel, dateTypeLa
             '</tr>' +
             '<tr id="trDate_iso_' + incrCounter + '">' +
             '<td>' + isoLabel + '</td>' +
-            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /></td>' +
+            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
+            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
+            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
             '<td></td><td></td>' +
             '</tr>');
     $("table#" + tableName + " " + anchorId).after(newDate);
 }
 
-function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
+function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage) {
     var newDateRange = $('<tr id="trDate_text_' + incrCounter + '">' +
             '<td>' + fromDateLabel + '</td>' +
             '<td>' +
-            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
+            '<input type="text" id="date_1" name="' + tableName + '_date_1_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');"><br />' +
             '</td>' +
             '<td>' + toDateLabel + '</td>' +
             '<td>' +
-            '<input type="text" id="date_2" name="' + tableName + '_date_2_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'));"><br />' +
+            '<input type="text" id="date_2" name="' + tableName + '_date_2_' + incrCounter + '" onchange="parseDateToISO($(this).attr(\'value\'), $(this).parent().parent().parent().parent().attr(\'id\'), $(this).parent().parent().attr(\'id\'), $(this).attr(\'id\'), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');"><br />' +
             '</td>' +
             '<tr id="trDate_radio_' + incrCounter + '">' +
             '<td>' +
@@ -446,9 +446,7 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
             '<input type="radio" name="' + tableName + '_date_1_radio_' + incrCounter + '" value="known" checked="checked" onchange="toggleDateTextfields($(this));">' + knownLabel + '&nbsp;' +
             '<input type="radio" name="' + tableName + '_date_1_radio_' + incrCounter + '" value="unknown" onchange="toggleDateTextfields($(this));">' + unknownLabel + '&nbsp;' +
             '</td>' +
-            '<td>' +
-            dateTypeLabel +
-            '</td>' +
+            '<td></td>' +
             '<td>' +
             '<input type="radio" name="' + tableName + '_date_2_radio_' + incrCounter + '" value="known" checked="checked" onchange="toggleDateTextfields($(this));">' + knownLabel + '&nbsp;' +
             '<input type="radio" name="' + tableName + '_date_2_radio_' + incrCounter + '" value="unknown" onchange="toggleDateTextfields($(this));">' + unknownLabel + '&nbsp;' +
@@ -458,13 +456,13 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
             '</tr>' +
             '<tr id="trDate_iso_' + incrCounter + '">' +
             '<td>' + isoLabel + '</td>' +
-            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /></td>' +
+            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
+            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
+            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
             '<td></td>' +
-            '<td><input type="text" title="YYYY" id="date_2_Year" name="' + tableName + '_date_2_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this));" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_2_Month" name="' + tableName + '_date_2_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_2_Day" name="' + tableName + '_date_2_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this));" /></td>' +
+            '<td><input type="text" title="YYYY" id="date_2_Year" name="' + tableName + '_date_2_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
+            '<input type="text" title="MM" id="date_2_Month" name="' + tableName + '_date_2_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
+            '<input type="text" title="DD" id="date_2_Day" name="' + tableName + '_date_2_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
             '</tr>');
     $("table#" + tableName + " " + anchorId).after(newDateRange);
 }
@@ -490,7 +488,7 @@ function dateRowNotEmpty(table, counter) {
         return true;
 }
 
-function parseDateToISO(content, table, row, date) {
+function parseDateToISO(content, table, row, date, invalidDateMessage, invalidRangeMessage) {
     var counterRow = row.split('_');
     var counterDate = date.split('_');
 //Normal ISO pattern
@@ -566,7 +564,7 @@ function parseDateToISO(content, table, row, date) {
     }
 
     // validate changed content for plausibility
-    checkIsoDateRow(table, counterRow[2], counterDate[1]);
+    checkIsoDateRow(table, counterRow[2], counterDate[1], invalidDateMessage, invalidRangeMessage);
 }
 
 function addTrailingZero(value) {
@@ -602,7 +600,7 @@ function toggleDateTextfields(radiobutton) {
     }
 }
 
-function validateIsoDates(textfield) {
+function validateIsoDates(textfield, invalidDateMessage, invalidRangeMessage) {
     var id = $(textfield).attr("id");
     var idParts = id.split("_");
     var name = $(textfield).attr("name");
@@ -615,10 +613,10 @@ function validateIsoDates(textfield) {
         $(textfield).attr("value", addTrailingZero(value));
     }
     // check ISO date field set and, if available, date range for plausibility
-    checkIsoDateRow(tableName, counter, idParts[1]);
+    checkIsoDateRow(tableName, counter, idParts[1], invalidDateMessage, invalidRangeMessage);
 }
 
-var checkIsoDateRow = function(tableName, rowCounter, dateCounter) {
+var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMessage, invalidRangeMessage) {
 //1. check date for general validity
     var year = 1;
     var month = 1;
@@ -635,7 +633,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter) {
         }
         var date = new Date(year, month - 1, day);
         if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
-            alert(year + "-" + month + "-" + day + " is not a valid date");
+            alert(year + "-" + month + "-" + day + ": " + invalidDateMessage);
             return;
         }
     }
@@ -685,7 +683,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter) {
         date2 = new Date(year, month - 1, day);
     }
     if (date1 > date2) {
-        alert("The entered start date of a date range is later than the end date. Please enter a valid start date.");
+        alert(invalidRangeMessage);
         return;
     }
     return "ok";
@@ -723,42 +721,42 @@ function addPartName(tableName, nameMissing) {
 }
 ;
 
-function addDateOrDateRangeName(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
+function addDateOrDateRangeName(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
     if (buttonClicked == "addNameDate") {
         if (counter == 0) {
-            insertDateAfter(tableName, "tr#trNameForm", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateAfter(tableName, "tr#trNameForm", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trNameForm", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trNameForm", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
     }
     if (buttonClicked == "addNameDateRange") {
         if (counter == 0) {
-            insertDateRangeAfter(tableName, "tr#trNameForm", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateRangeAfter(tableName, "tr#trNameForm", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trNameForm", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trNameForm", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
@@ -843,42 +841,42 @@ function addPersonId(identifierMissing) {
     $("table#identityPersonId_" + (counter + 1) + " input#textPersonTypeId").attr("name", "textPersonTypeId_" + (counter + 1));
 }
 
-function addDateOrDateRangeExistence(buttonClicked, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
+function addDateOrDateRangeExistence(buttonClicked, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage) {
     var counter = $("table#dateExistenceTable tr[id^='trDate_text_']").length;
     if (buttonClicked == "addExistDate") {
         if (counter == 0) {
-            insertDateAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty("dateExistenceTable", counter)) {
-                insertDateAfter("dateExistenceTable", "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateAfter("dateExistenceTable", "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#dateExistenceTable tr#trDate_radio_" + counter).remove();
                     $("table#dateExistenceTable tr#trDate_iso_" + counter).remove();
-                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#dateExistenceTable tr#trDate_radio_" + counter).remove();
                     $("table#dateExistenceTable tr#trDate_iso_" + counter).remove();
-                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateAfter("dateExistenceTable", "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateAfter("dateExistenceTable", "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
     }
     if (buttonClicked == "addExistDateRange") {
         if (counter == 0) {
-            insertDateRangeAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateRangeAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty("dateExistenceTable", counter)) {
-                insertDateRangeAfter("dateExistenceTable", "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateRangeAfter("dateExistenceTable", "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#dateExistenceTable tr#trDate_radio_" + counter).remove();
                     $("table#dateExistenceTable tr#trDate_iso_" + counter).remove();
-                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#dateExistenceTable tr#trDate_radio_" + counter).remove();
                     $("table#dateExistenceTable tr#trDate_iso_" + counter).remove();
-                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter("dateExistenceTable", "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#dateExistenceTable tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter("dateExistenceTable", "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
@@ -889,6 +887,61 @@ function addDateOrDateRangeExistence(buttonClicked, dateLabel, fromDateLabel, to
 /**************************************
  * Description tab functions
  **************************************/
+
+function togglePlaceFields(nameTf) {
+    var tableName = $(nameTf).parent().parent().parent().parent().attr("id");
+    var addrCompCounter = $("table#" + tableName + " tr[id^='trAddressComponent_']").length;
+    var dateCounter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
+
+    if ($(nameTf).val() == "") {
+        $('table#' + tableName + ' input#linkPlaceVocab').attr("disabled", "disabled");
+        $('table#' + tableName + ' select#placeCountry').attr("disabled", "disabled");
+        for (var i = 1; i <= addrCompCounter; i++) {
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' input#addressDetails').attr("disabled", "disabled");
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' select#addressComponent').attr("disabled", "disabled");
+        }
+        $('table#' + tableName + ' input#addAddressComponentButton').attr("disabled", "disabled");
+        $('table#' + tableName + ' tr#trPlaceRole select#placeRole_1').attr("disabled", "disabled");
+        for (var i = 1; i <= dateCounter; i++) {
+            $('table#' + tableName + ' tr#trDate_text_' + i + ' input[type="text"]').each(function() {
+                $(this).attr("disabled", "disabled");
+            });
+            $('table#' + tableName + ' tr#trDate_radio_' + i + ' input[type="radio"]').each(function() {
+                $(this).attr("disabled", "disabled");
+            });
+            $('table#' + tableName + ' tr#trDate_iso_' + i + ' input[type="text"]').each(function() {
+                $(this).attr("disabled", "disabled");
+            });
+        }
+        $('table#' + tableName + ' input#addPlaceDate').attr("disabled", "disabled");
+        $('table#' + tableName + ' input#addPlaceDateRange').attr("disabled", "disabled");
+    } else {
+        $('table#' + tableName + ' input#linkPlaceVocab').removeAttr("disabled");
+        $('table#' + tableName + ' select#placeCountry').removeAttr("disabled");
+        for (var i = 1; i <= addrCompCounter; i++) {
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' input#addressDetails').removeAttr("disabled");
+            $('table#' + tableName + " tr#trAddressComponent_" + i + ' select#addressComponent').removeAttr("disabled");
+        }
+        $('table#' + tableName + ' input#addAddressComponentButton').removeAttr("disabled");
+        $('table#' + tableName + ' tr#trPlaceRole select#placeRole_1').removeAttr("disabled");
+        for (var i = 1; i <= dateCounter; i++) {
+            var elementCounter = $('table#' + tableName + ' tr#trDate_radio_' + i + ' input[id="date_"]').length;
+            $('table#' + tableName + ' tr#trDate_radio_' + i + ' input[type="radio"]').each(function() {
+                $(this).removeAttr("disabled");
+            });
+            for (var j = 1; j <= elementCounter; j++) {
+                if ($('table#' + tableName + ' tr#trDate_radio_' + i + ' input[name="' + tableName + '_date_' + j + '_radio_' + i + '"]:checked').val() == "known") {
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j).removeAttr("disabled");
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j + '_Year').removeAttr("disabled");
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j + '_Month').removeAttr("disabled");
+                    $('table#' + tableName + ' tr#trDate_text_' + i + ' input#date_' + j + '_Day').removeAttr("disabled");
+                }
+            }
+        }
+        $('table#' + tableName + ' input#addPlaceDate').removeAttr("disabled");
+        $('table#' + tableName + ' input#addPlaceDateRange').removeAttr("disabled");
+    }
+}
 
 function addAddressComponent(tableName, componentMissing) {
     var counter = $("table#" + tableName + " tr[id^='trAddressComponent_']").length;
@@ -914,42 +967,42 @@ function addAddressComponent(tableName, componentMissing) {
     });
 }
 
-function addDateOrDateRangePlace(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
+function addDateOrDateRangePlace(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
     if (buttonClicked == "addPlaceDate") {
         if (counter == 0) {
-            insertDateAfter(tableName, "tr#trPlaceRole", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateAfter(tableName, "tr#trPlaceRole", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trPlaceRole", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trPlaceRole", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
     }
     if (buttonClicked == "addPlaceDateRange") {
         if (counter == 0) {
-            insertDateRangeAfter(tableName, "tr#trPlaceRole", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateRangeAfter(tableName, "tr#trPlaceRole", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trPlaceRole", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trPlaceRole", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
@@ -965,28 +1018,47 @@ function addPlace(defaultLanguage, placeMissing) {
         return;
     }
 
+    //counting var for determining the total number of elements; initialized for value replication of date radiobuttons
+    var idCounter = $("table#placeTable_" + counter + " tr[id^='trDate_text_']").length;
+
+    //collecting of radiobutton values in array
+    var dateRadioValues = new Array();
+    if (idCounter > 0) {
+        for (var i = 1; i <= idCounter; i++) {
+            var elementCounter = $("table#placeTable_" + counter + " tr#trDate_text_" + i + " input[id^='date_']").length;
+            for (var j = 1; j <= elementCounter; j++) {
+                var dateRadioValue = new Array();
+                dateRadioValue.push(i);
+                dateRadioValue.push("placeTable_" + counter + "_date_" + j + "_radio_" + i);
+                dateRadioValue.push($("table#placeTable_" + counter + " tr#trDate_radio_" + i + " input[name=placeTable_" + counter + "_date_" + j + "_radio_" + i + "]:checked").val());
+                dateRadioValues.push(dateRadioValue);
+            }
+        }
+    }
+
     var clone = $("table[id^='placeTable_" + counter + "']").clone();
     clone = "<table id='" + ("placeTable_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='placeTable_" + counter + "']").after(clone);
     // rename header of clone
     $("table#placeTable_" + (counter + 1) + " th#thPlaceTableHeader").html("Place " + (counter + 1));
     // delete superfluous address component rows
-    var idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trAddressComponent_']").length;
+    idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trAddressComponent_']").length;
     if (idCounter > 1) {
         for (var i = idCounter; i > 1; i--) {
             $("table#placeTable_" + (counter + 1) + " tr#trAddressComponent_" + i).remove();
         }
     }
-// delete superfluous date rows
-    idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trDate_']").length;
+    //delete superfluous date rows in clone
+    idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trDate_text_']").length;
     if (idCounter > 0) {
-        idCounter = idCounter / 2;
-        for (var i = idCounter; i > 0; i--) {
+        for (var i = idCounter; i >= 0; i--) {
             $("table#placeTable_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#placeTable_" + (counter + 1) + " tr#trDate_radio_" + i).remove();
             $("table#placeTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-// Reset parameters
+
+    // Reset parameters
     $("table#placeTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name"); //remove old name
@@ -1003,6 +1075,15 @@ function addPlace(defaultLanguage, placeMissing) {
     $("table#placeTable_" + (counter + 1) + " input#addressDetails").attr("name", "placeTable_" + (counter + 1) + "_addressDetails_1");
     $("table#placeTable_" + (counter + 1) + " select#addressComponent").attr("name", "placeTable_" + (counter + 1) + "_addressComponent_1");
     $("table#placeTable_" + (counter + 1) + " input#placeRole").attr("name", "placeRole_" + (counter + 1));
+    // Set elements as inactive
+    $("table#placeTable_" + (counter + 1) + " input#linkPlaceVocab").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " select#placeCountry").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addressDetails").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " select#addressComponent").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#placeRole").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addAddressComponentButton").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addPlaceDate").attr("disabled", "disabled");
+    $("table#placeTable_" + (counter + 1) + " input#addPlaceDateRange").attr("disabled", "disabled");
     // Set correct params to hidden counter
     $("table#placeTable_" + (counter + 1) + " input[type='hidden']").removeAttr("id");
     $("table#placeTable_" + (counter + 1) + " input[type='hidden']").removeAttr("name");
@@ -1012,6 +1093,10 @@ function addPlace(defaultLanguage, placeMissing) {
     // If default language given, set language field to this value
     if (defaultLanguage != null) {
         $("table#placeTable_" + (counter + 1) + " select#placeLanguage").attr("value", defaultLanguage);
+    }
+    // Finally, set correct values for original radio buttons once again
+    for (var i = 0; i < dateRadioValues.length; i++){
+        $("table#placeTable_" + counter + " tr#trDate_radio_" + dateRadioValues[i][0] + " input[name=" + dateRadioValues[i][1] + "][value=" + dateRadioValues[i][2] + "]").attr('checked', 'checked');
     }
 }
 
@@ -1039,42 +1124,42 @@ function addPlaceFunction(tableName, placeMissing) {
     });
 }
 
-function addDateOrDateRangeFunction(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
+function addDateOrDateRangeFunction(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
     if (buttonClicked == "addFunctionDate") {
         if (counter == 0) {
-            insertDateAfter(tableName, "tr#trPlaceFunctionButton", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateAfter(tableName, "tr#trPlaceFunctionButton", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trPlaceFunctionButton", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trPlaceFunctionButton", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
     }
     if (buttonClicked == "addFunctionDateRange") {
         if (counter == 0) {
-            insertDateRangeAfter(tableName, "tr#trPlaceFunctionButton", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateRangeAfter(tableName, "tr#trPlaceFunctionButton", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trPlaceFunctionButton", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trPlaceFunctionButton", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
@@ -1165,42 +1250,42 @@ function addPlaceOccupation(tableName, placeMissing) {
     });
 }
 
-function addDateOrDateRangeOccupation(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel) {
+function addDateOrDateRangeOccupation(buttonClicked, tableName, dateLabel, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
     if (buttonClicked == "addOccupationDate") {
         if (counter == 0) {
-            insertDateAfter(tableName, "tr#trPlaceOccupationButton", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateAfter(tableName, "tr#trPlaceOccupationButton", counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trPlaceOccupationButton", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trPlaceOccupationButton", counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, dateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
     }
     if (buttonClicked == "addOccupationDateRange") {
         if (counter == 0) {
-            insertDateRangeAfter(tableName, "tr#trPlaceOccupationButton", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+            insertDateRangeAfter(tableName, "tr#trPlaceOccupationButton", counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
         } else {
             if (dateRowNotEmpty(tableName, counter)) {
-                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel);
+                insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trPlaceOccupationButton", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trPlaceOccupationButton", counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 } else {
                     $("table#" + tableName + " tr#trDate_radio_" + counter).remove();
                     $("tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter, fromDateLabel, toDateLabel, dateTypeLabel, knownLabel, unknownLabel, openLabel, isoLabel, invalidDateMessage, invalidRangeMessage));
                 }
             }
         }
@@ -1365,29 +1450,6 @@ function addCpfRelation(defaultLanguage, relationMissing) {
     }
 }
 
-function addCpfRelRespOrg(table, organisationMissing) {
-    var id = $(table).attr("id");
-    var counter = $("table#" + id + " tr[id^='trCpfRelationRespOrg_']").length;
-    var respOrgName = $("table#" + id + " tr#trCpfRelationRespOrg_" + counter + " td input#textCpfRelRespOrgPerson").attr("value");
-    var respOrgId = $("table#" + id + " tr#trCpfRelationRespOrg_" + counter + " td input#textCpfRelRespOrgId").attr("value");
-    if (respOrgName == null || respOrgName == "" || respOrgId == null || respOrgId == "") {
-        alertEmptyFields(organisationMissing);
-        return;
-    }
-
-    var clone = $("table#" + id + " tr[id^='trCpfRelationRespOrg_" + counter + "']").clone();
-    clone = "<tr id='" + ("trCpfRelationRespOrg_" + (counter + 1)) + "'>" + clone.html() + "</tr>";
-    $("table#" + id + " tr[id^='trCpfRelationRespOrg_" + counter + "']").after(clone);
-    // Delete old names and reset parameters
-    $("table#" + id + " tr#trCpfRelationRespOrg_" + (counter + 1) + " input[type='text']").each(function() {
-        $(this).removeAttr("name");
-        $(this).val(""); // Clean all input_text.
-    });
-    // Set new names
-    $("table#" + id + " tr#trCpfRelationRespOrg_" + (counter + 1) + " input#textCpfRelRespOrgPerson").attr("name", id + "_textCpfRelRespOrgPerson_" + (counter + 1));
-    $("table#" + id + " tr#trCpfRelationRespOrg_" + (counter + 1) + " input#textCpfRelRespOrgId").attr("name", id + "_textCpfRelRespOrgId_" + (counter + 1));
-}
-
 function addResRelation(defaultLanguage, relationMissing) {
     var counter = $("table[id^='resRelationsTable_']").length;
     var relation = $("table#resRelationsTable_" + counter + " input#textResRelationName").attr("value");
@@ -1434,29 +1496,6 @@ function addResRelation(defaultLanguage, relationMissing) {
     }
 }
 
-function addResRelRespOrg(table, organisationMissing) {
-    var id = $(table).attr("id");
-    var counter = $("table#" + id + " tr[id^='trResRelationRespOrg_']").length;
-    var respOrgName = $("table#" + id + " tr#trResRelationRespOrg_" + counter + " td input#textResRelRespOrgPerson").attr("value");
-    var respOrgId = $("table#" + id + " tr#trResRelationRespOrg_" + counter + " td input#textResRelRespOrgId").attr("value");
-    if (respOrgName == null || respOrgName == "" || respOrgId == null || respOrgId == "") {
-        alertEmptyFields(organisationMissing);
-        return;
-    }
-
-    var clone = $("table#" + id + " tr[id^='trResRelationRespOrg_" + counter + "']").clone();
-    clone = "<tr id='" + ("trResRelationRespOrg_" + (counter + 1)) + "'>" + clone.html() + "</tr>";
-    $("table#" + id + " tr[id^='trResRelationRespOrg_" + counter + "']").after(clone);
-    // Delete old names and reset parameters
-    $("table#" + id + " tr#trResRelationRespOrg_" + (counter + 1) + " input[type='text']").each(function() {
-        $(this).removeAttr("name");
-        $(this).val(""); // Clean all input_text.
-    });
-    // Set new names
-    $("table#" + id + " tr#trResRelationRespOrg_" + (counter + 1) + " input#textResRelRespOrgPerson").attr("name", id + "_textResRelRespOrgPerson_" + (counter + 1));
-    $("table#" + id + " tr#trResRelationRespOrg_" + (counter + 1) + " input#textResRelRespOrgId").attr("name", id + "_textResRelRespOrgId_" + (counter + 1));
-}
-
 function addFncRelation(defaultLanguage, relationMissing) {
     var counter = $("table[id^='fncRelationsTable_']").length;
     var relation = $("table#fncRelationsTable_" + counter + " input#textFncRelationName").attr("value");
@@ -1501,29 +1540,6 @@ function addFncRelation(defaultLanguage, relationMissing) {
     if (defaultLanguage != null) {
         $("table#fncRelationsTable_" + (counter + 1) + " select#fncRelationLanguage").attr("value", defaultLanguage);
     }
-}
-
-function addFncRelRespOrg(table, organisationMissing) {
-    var id = $(table).attr("id");
-    var counter = $("table#" + id + " tr[id^='trFncRelationRespOrg_']").length;
-    var respOrgName = $("table#" + id + " tr#trFncRelationRespOrg_" + counter + " td input#textFncRelRespOrgPerson").attr("value");
-    var respOrgId = $("table#" + id + " tr#trFncRelationRespOrg_" + counter + " td input#textFncRelRespOrgId").attr("value");
-    if (respOrgName == null || respOrgName == "" || respOrgId == null || respOrgId == "") {
-        alertEmptyFields(organisationMissing);
-        return;
-    }
-
-    var clone = $("table#" + id + " tr[id^='trFncRelationRespOrg_" + counter + "']").clone();
-    clone = "<tr id='" + ("trFncRelationRespOrg_" + (counter + 1)) + "'>" + clone.html() + "</tr>";
-    $("table#" + id + " tr[id^='trFncRelationRespOrg_" + counter + "']").after(clone);
-    // Delete old names and reset parameters
-    $("table#" + id + " tr#trFncRelationRespOrg_" + (counter + 1) + " input[type='text']").each(function() {
-        $(this).removeAttr("name");
-        $(this).val(""); // Clean all input_text.
-    });
-    // Set new names
-    $("table#" + id + " tr#trFncRelationRespOrg_" + (counter + 1) + " input#textFncRelRespOrgPerson").attr("name", id + "_textFncRelRespOrgPerson_" + (counter + 1));
-    $("table#" + id + " tr#trFncRelationRespOrg_" + (counter + 1) + " input#textFncRelRespOrgId").attr("name", id + "_textFncRelRespOrgId_" + (counter + 1));
 }
 
 /**************************************

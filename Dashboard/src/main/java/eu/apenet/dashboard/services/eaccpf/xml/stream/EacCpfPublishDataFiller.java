@@ -82,6 +82,9 @@ public class EacCpfPublishDataFiller {
 
 	private CountXpathHandler countArchivalMaterialRelationsHandler;
 	private CountXpathHandler countNameRelationsHandler;
+	private CountXpathHandler countCpfRelationHandler;
+	private CountXpathHandler countFunctionRelationHandler;
+
 	private TextXpathHandler institutionsRelationsHandler;
 	
 	private TextXpathHandler relationsPlaceEntryHandler;
@@ -109,6 +112,7 @@ public class EacCpfPublishDataFiller {
 		entityIdHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "entityId" });
 		
 		namesHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "nameEntry" });
+		namesHandler.setAttributeValueAsKey("localType");
 		namesParallelHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {  "nameEntryParallel",  "nameEntry" });
 		
 		placesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "places", "place", "placeEntry" });
@@ -156,6 +160,9 @@ public class EacCpfPublishDataFiller {
 		countArchivalMaterialRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation"});
 		countNameRelationsHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});
 		countNameRelationsHandler.setAttribute("cpfRelationType", "identity", true);
+		countCpfRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});		
+		countFunctionRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"functionRelation"});		
+
 		institutionsRelationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"resourceRelation", "relationEntry"});
 		institutionsRelationsHandler.setAttribute("localType", "agencyCode", false);
 		relationsDescriptiveNoteHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"descriptiveNote", "p"}, true);
@@ -217,6 +224,8 @@ public class EacCpfPublishDataFiller {
 		
 		relationsHandler.getHandlers().add(countArchivalMaterialRelationsHandler);
 		relationsHandler.getHandlers().add(countNameRelationsHandler);
+		relationsHandler.getHandlers().add(countCpfRelationHandler);
+		relationsHandler.getHandlers().add(countFunctionRelationHandler);
 		relationsHandler.getHandlers().add(institutionsRelationsHandler);
 		relationsHandler.getHandlers().add(relationsDescriptiveNoteHandler);
 		relationsHandler.getHandlers().add(relationsPlaceEntryHandler);
@@ -258,11 +267,29 @@ public class EacCpfPublishDataFiller {
 		publishData.setEntityType(entityTypeHandler.getFirstResult());
 		publishData.setLanguage(languageHandler.getResultAsString());
 		publishData.setEntityIds(entityIdHandler.getResultSet());
-		publishData.setNames(namesHandler.getResultSet("part"));
-		if (publishData.getNames().size() == 0){
-			publishData.setNames(namesParallelHandler.getResultSet("part"));
+		if (namesHandler.getResults().size() > 0){
+			List<String> names = new ArrayList<String>();
+			for (Map<String, List<String>> tempResults: namesHandler.getResults()){
+				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
+				if (StringUtils.isBlank(name)){
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, ", ");
+				}
+				names.add(name);
+			}
+			publishData.setNames(names);
+		}else if (namesParallelHandler.getResults().size() > 0){
+			List<String> names = new ArrayList<String>();
+			for (Map<String, List<String>> tempResults: namesParallelHandler.getResults()){
+				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
+				if (StringUtils.isBlank(name)){
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, ", ");
+				}
+				names.add(name);
+			}
+			publishData.setNames(names);			
 		}
 		
+
 		publishData.setPlaces(strip(placesHandler.getResultSet()));
 		publishData.setFunctions(strip(functionsHandler.getResultSet()));
 		publishData.setOccupations(strip(occupationsHandler.getResultSet()));
@@ -286,11 +313,20 @@ public class EacCpfPublishDataFiller {
 		add(other, relationsRelationEntryHandler.getResultAsStringWithWhitespace());
 		add(other, alternativeSetDescriptiveNoteHandler.getResultAsStringWithWhitespace());
 		add(other, alternativeSetComponentEntryHandler.getResultAsStringWithWhitespace());		
+		
+		relationsHandler.getHandlers().add(countArchivalMaterialRelationsHandler);
+		relationsHandler.getHandlers().add(countNameRelationsHandler);
+		relationsHandler.getHandlers().add(countCpfRelationHandler);
+		relationsHandler.getHandlers().add(countFunctionRelationHandler);
+		relationsHandler.getHandlers().add(institutionsRelationsHandler);
 		publishData.setOther(other.toString());
 		publishData.setNumberOfArchivalMaterialRelations(countArchivalMaterialRelationsHandler.getCount());
 		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
-		publishData.setNumberOfInstitutionsRelations(institutionsRelationsHandler.getResultSet().size());
-		
+		publishData.setNumberOfCpfRelations(countCpfRelationHandler.getCount());
+		publishData.setNumberOfFunctionRelations(countFunctionRelationHandler.getCount());
+		countCpfRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});		
+		countFunctionRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"functionRelation"});		
+
 		/*
 		 * dates
 		 */

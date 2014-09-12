@@ -1,10 +1,11 @@
 package eu.apenet.dashboard.services.eaccpf.xml.stream.publish;
 
+import java.util.List;
 import java.util.Set;
 
 public class EacCpfPublishData {
 	private String language;
-	private Set<String> names;
+	private List<String> names;
 	private Set<String> places;
 	private Set<String> functions;
 	private Set<String> mandates;	
@@ -21,15 +22,16 @@ public class EacCpfPublishData {
 	private Integer numberOfArchivalMaterialRelations;
 	private Integer numberOfNameRelations;
 	private Integer numberOfInstitutionsRelations;
-	
-	
+	private Integer numberOfCpfRelations;
+	private Integer numberOfFunctionRelations;
+
 
 
 	public void setLanguage(String language) {
 		this.language = language;
 	}
 
-	public void setNames(Set<String> names) {
+	public void setNames(List<String> names) {
 		this.names = names;
 	}
 	public void setPlaces(Set<String> places) {
@@ -80,7 +82,7 @@ public class EacCpfPublishData {
 	public String getLanguage() {
 		return language;
 	}
-	public Set<String> getNames() {
+	public List<String> getNames() {
 		return names;
 	}
 	public Set<String> getMandates() {
@@ -135,6 +137,22 @@ public class EacCpfPublishData {
 
 	public void setDateType(String dateType) {
 		this.dateType = dateType;
+	}
+
+	public Integer getNumberOfCpfRelations() {
+		return numberOfCpfRelations;
+	}
+
+	public void setNumberOfCpfRelations(Integer numberOfCpfRelations) {
+		this.numberOfCpfRelations = numberOfCpfRelations;
+	}
+
+	public Integer getNumberOfFunctionRelations() {
+		return numberOfFunctionRelations;
+	}
+
+	public void setNumberOfFunctionRelations(Integer numberOfFunctionRelations) {
+		this.numberOfFunctionRelations = numberOfFunctionRelations;
 	}
 
 

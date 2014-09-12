@@ -18,11 +18,11 @@ import org.xml.sax.helpers.LocatorImpl;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.ead.xml.stream.mets.IntegrateMETSParser;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
@@ -40,46 +40,12 @@ public class ValidateTask extends AbstractEadTask {
 	protected void execute(Ead ead, Properties properties) throws APEnetException {
 		if (valid(ead)) {
 			Xsd_enum schema = Xsd_enum.XSD_APE_SCHEMA;
-			ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
-			String filepath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
-//			logger.info("'" + archivalInstitution.getAiname() + "' is validating file: '" + ead.getEadid()
-//					+ "' with id: '" + ead.getId() + "'");
+			String filepath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPath();
 			File file = new File(filepath);
 
 			try {
-				/* Special for Spanish non UTF8 data */
-				List<SAXParseException> exceptions = null;
-				XMLStreamReader reader = null;
-				FileInputStream inputStream = null;
-				try {
-					inputStream = new FileInputStream(file);
-					reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream, "UTF-8");
-					reader.next();
-				} catch (Exception e) {
-					exceptions = new ArrayList<SAXParseException>();
-					exceptions
-							.add(new SAXParseException(
-									"The file is not UTF-8 - We will try to convert it right now to UTF-8 or make sure your file is UTF-8 before re-uploading. If not, the file will not pass the index step and will fail.",
-									new LocatorImpl()));
-					logger.warn("ERROR - not UTF-8 ? - Trying to convert it to UTF-8");
-					try {
-						simpleUtf8Conversion(
-								APEnetUtilities.getDashboardConfig().getRepoDirPath() + ead.getPathApenetead(),
-								archivalInstitution.getAiId());
-						exceptions = null;
-						logger.trace("File converted to UTF-8, we try to validate like it would normally.");
-					} catch (Exception ex) {
-						exceptions.add(new SAXParseException("File could not be converted to UTF-8 using before.xsl",
-								new LocatorImpl()));
-					}
-				} finally {
-					if (reader != null)
-						reader.close();
-					if (inputStream != null){
-						inputStream.close();
-					}
-				}
-				/* End: Special for Spanish non UTF8 data */
+				List<SAXParseException> exceptions = utf8Check(ead, file);
+
 				boolean errors = false;
 				StringBuilder warn = new StringBuilder();
 				if (exceptions == null) {
@@ -90,6 +56,30 @@ public class ValidateTask extends AbstractEadTask {
 						warn.append("<span class=\"validation-error\">");
 						warn.append(sax.getMessage()).append("</span>").append("<br />");
 						ead.setValidated(ValidatedState.FATAL_ERROR);
+					}
+
+					if (ead.getArchivalInstitution().isUsingMets() && !errors && exceptions == null){
+						/*
+						 * Merge METS in EAD
+						 */
+						long startTime = System.currentTimeMillis();
+						String error = IntegrateMETSParser.mergeMETSinEAD(ead);
+						if (error == null){
+							logger.info("Merging METS done in: " + (System.currentTimeMillis() - startTime) + "ms");
+							try {
+								exceptions = DocumentValidation.xmlValidation(new FileInputStream(file), schema);
+							}catch (SAXException sax){
+								errors = true;
+								warn.append("<span class=\"validation-error\">");
+								warn.append(sax.getMessage()).append("</span>").append("<br />");
+								ead.setValidated(ValidatedState.FATAL_ERROR);
+							}	
+						}else {
+							errors = true;
+							warn.append("<span class=\"validation-error\">");
+							warn.append(error).append("</span>").append("<br />");
+							ead.setValidated(ValidatedState.FATAL_ERROR);
+						}
 					}
 				}
 
@@ -111,6 +101,7 @@ public class ValidateTask extends AbstractEadTask {
 
 
 				}
+				
 				if (errors){
 					boolean warningExists = false;
 					Set<Warnings> warningsFromEad = ead.getWarningses();
@@ -170,5 +161,41 @@ public class ValidateTask extends AbstractEadTask {
 		} catch (Exception e) {
 			throw new APEnetException("Could not convert to UTF8");
 		}
+	}
+	private List<SAXParseException> utf8Check(Ead ead, File file) throws Exception{
+		/* Special for Spanish non UTF8 data */
+		List<SAXParseException> exceptions = null;
+		XMLStreamReader reader = null;
+		FileInputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(file);
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream, "UTF-8");
+			reader.next();
+		} catch (Exception e) {
+			exceptions = new ArrayList<SAXParseException>();
+			exceptions
+					.add(new SAXParseException(
+							"The file is not UTF-8 - We will try to convert it right now to UTF-8 or make sure your file is UTF-8 before re-uploading. If not, the file will not pass the index step and will fail.",
+							new LocatorImpl()));
+			logger.warn("ERROR - not UTF-8 ? - Trying to convert it to UTF-8");
+			try {
+				simpleUtf8Conversion(
+						APEnetUtilities.getDashboardConfig().getRepoDirPath() + ead.getPath(),
+						ead.getAiId());
+				exceptions = null;
+				logger.trace("File converted to UTF-8, we try to validate like it would normally.");
+			} catch (Exception ex) {
+				exceptions.add(new SAXParseException("File could not be converted to UTF-8 using before.xsl",
+						new LocatorImpl()));
+			}
+		} finally {
+			if (reader != null)
+				reader.close();
+			if (inputStream != null){
+				inputStream.close();
+			}
+		}	
+		/* End: Special for Spanish non UTF8 data */
+		return exceptions;
 	}
 }

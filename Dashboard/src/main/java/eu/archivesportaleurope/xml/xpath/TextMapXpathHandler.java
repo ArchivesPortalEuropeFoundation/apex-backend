@@ -13,10 +13,12 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.commons.lang.StringUtils;
 
 public class TextMapXpathHandler extends AbstractXpathHandler {
-	private Map<String, List<String>> results = new HashMap<String, List<String>>();
-	private String currentKey = null;
+	private List<Map<String, List<String>>> results = new ArrayList<Map<String, List<String>>>();
+	private Map<String, List<String>> tempResults;
+	private String currentKey;
 	private String temp = "";
 	private boolean addWhitespaces;
+	private String attributeValueAsKey;
 	public TextMapXpathHandler(String defaultNamespace, String[] xpathQueryArray) {
 		super(defaultNamespace, xpathQueryArray);
 	}
@@ -35,24 +37,40 @@ public class TextMapXpathHandler extends AbstractXpathHandler {
 		}
 
 	}
+	
 
+	public void setAttributeValueAsKey(String attributeValueAsKey) {
+		this.attributeValueAsKey = attributeValueAsKey;
+	}
+	@Override
+	protected void processExactStartElementMatch(XMLStreamReader xmlReader) {
+		tempResults = new HashMap<String, List<String>>();
+	}
 	@Override
 	protected void processExactEndElementMatch() {
+		results.add(tempResults);
+		tempResults = null;
 		currentKey=null;
 	}
 
 	@Override
 	public void processChildStartElementMatch(XMLStreamReader xmlReader) {
 		currentKey = xmlReader.getLocalName();
+		if (StringUtils.isNotBlank(attributeValueAsKey)){ 
+			String attrValue = xmlReader.getAttributeValue(null, attributeValueAsKey);
+			if (StringUtils.isNotBlank(attrValue)){
+				currentKey+= "@"+ attrValue;
+			}
+		}
 	}
 
 	@Override
 	public void processChildEndElementMatch(XMLStreamReader xmlReader) {
 		if (currentKey != null && StringUtils.isNotBlank(temp)){
-			List<String> values = results.get(currentKey);
+			List<String> values = tempResults.get(currentKey);
 			if (values == null){
 				values = new ArrayList<String>();
-				results.put(currentKey, values);
+				tempResults.put(currentKey, values);
 			}
 			values.add(temp);
 		}
@@ -60,20 +78,49 @@ public class TextMapXpathHandler extends AbstractXpathHandler {
 		temp = "";
 	}
 
-	public Map<String, List<String>> getResults() {
+	public List<Map<String, List<String>>> getResults() {
 		return results;
 	}
 
-	public Set<String> getResultSet(String key) {
-		List<String> temp = results.get(key);
+	public static Set<String> getResultSet(Map<String, List<String>> source, String key) {
+		List<String> temp = source.get(key);
 		if (temp == null){
 			return new HashSet<String>();
 		}else {
 			return new LinkedHashSet<String>(temp);
 		}
 	}
-	public String getResultAsStringWithWhitespace(String key){
-		return convertToString(getResultSet(key),0, WHITE_SPACE);	
+	public static String getResultAsStringWithWhitespace(Map<String, List<String>> source, String[] keys, String separator){
+		String result = null;
+		for (String key: keys){
+			 List<String> values = source.get(key);
+			 if (values != null && values.size() > 0){
+				String value = getResultAsStringWithWhitespaceWithKey(source, key);
+				if (result == null){
+					result = value;
+				}else {
+					result += separator + value;
+				}
+				
+			 }
+		}
+		return result;
+	}
+	public static String getResultAsStringWithWhitespaceWithKey(Map<String, List<String>> source, String key){
+		return convertToString(getResultSet(source, key),0, WHITE_SPACE);	
+	}
+	public static String getResultAsStringWithWhitespace(Map<String, List<String>> source, String separator){
+		String result = null;
+		for (String key: source.keySet()){
+			String value = convertToString(getResultSet(source, key),0, WHITE_SPACE);
+			if (result == null){
+				result = value;
+			}else {
+				result += separator + value;
+			}
+
+		}
+		return result;
 	}
 	@Override
 	protected void clear() {

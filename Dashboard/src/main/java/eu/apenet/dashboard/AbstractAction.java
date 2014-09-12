@@ -88,6 +88,15 @@ public abstract class AbstractAction extends ActionSupport  implements Preparabl
 	/**
 	 * Method to delete temporary EAG 2012 files.
 	 */
+	protected String removeInvalidEAG(SecurityContext.SelectedArchivalInstitution selectedArchivalInstitution) {
+		if (selectedArchivalInstitution != null){
+			removeInvalidEAG(selectedArchivalInstitution.getId());
+		}
+		return SUCCESS;
+	}
+	/**
+	 * Method to delete temporary EAG 2012 files.
+	 */
 	protected String removeInvalidEAG(final Integer aiId) {
 		String alCountry = new ArchivalLandscapeUtils().getmyCountry();
 		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +

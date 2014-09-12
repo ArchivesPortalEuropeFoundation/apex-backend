@@ -42,8 +42,7 @@ public class EagSolrPublisher  extends AbstractSolrPublisher{
 		doc.addField(SolrFields.EAG_REPOSITORY_TYPE, convertRepositoryTypes(publishData.getRepositoryTypes()));
 		add(doc, SolrFields.EAG_DESCRIPTION, publishData.getDescription());
 		add(doc, SolrFields.EAG_OTHER, publishData.getOther());	
-		add(doc, SolrFields.EAG_LANGUAGE, publishData.getLanguage());	
-		
+		doc.addField(SolrFields.EAG_PLACES, publishData.getPlaces());	
 		doc.addField(SolrFields.EAG_AI_GROUPS, publishData.getAiGroups());
 		doc.addField(SolrFields.EAG_AI_GROUPS_FACET, publishData.getAiGroupFacets());
 		doc.addField(SolrFields.EAG_AI_GROUP_ID, publishData.getAiGroupIds());

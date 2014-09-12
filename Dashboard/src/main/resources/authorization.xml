@@ -52,7 +52,7 @@
             editTarget,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,
             modifyStructure,showEAGPreviewAL,showLanguages,storeAlIdentifier,viewAL,institutionManagerManagement,
             displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager,downloadInstitutionsStatistics,
-			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm,ALCancelOverwrite,ALOverwrite,ALReport,ALRecheckIdentifiers, ALContinueUpload
+			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm,ALCancelOverwrite,ALOverwrite,ALReport,ALRecheckIdentifiers, ALContinueUpload,changeMets
         </group>
         <group name="adminActions">
             checkEagNamespace,downloadCountriesStatistics,
@@ -62,7 +62,7 @@
             changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
             viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,manageQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
             manageHarvest, startStopHarvester, manageHarvestItem,
-            eag2012GeoCoordinates, changeIdentifierInDDBB, fixALOrderInDDBB, republishAllEagFiles,showLogFiles,downloadLogFile,changeMaintenanceMode
+            eag2012GeoCoordinates, changeIdentifierInDDBB, fixALOrderInDDBB, republishAllEagFiles,showLogFiles,downloadLogFile,changeMaintenanceMode,rebuildAutosuggestion
         </group>
     </groups>
     <role-mappings>

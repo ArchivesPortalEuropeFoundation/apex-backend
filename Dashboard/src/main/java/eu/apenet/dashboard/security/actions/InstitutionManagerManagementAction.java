@@ -8,6 +8,7 @@ import eu.apenet.dashboard.security.SecurityService.LoginResult.LoginResultType;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 
 public class InstitutionManagerManagementAction extends AbstractAction{
 
@@ -18,6 +19,7 @@ public class InstitutionManagerManagementAction extends AbstractAction{
 	private Integer countryId;
 	private Integer aiId;
 	private Integer partnerId;
+
 	
 	private void buildBreadcrumb() {
 		super.buildBreadcrumbs();
@@ -37,6 +39,13 @@ public class InstitutionManagerManagementAction extends AbstractAction{
 		getServletRequest().setAttribute("ais" , aiDao.getArchivalInstitutionsByCountryId(countryId, false));
 		buildBreadcrumb();
 		 return SUCCESS;
+	}
+	public String changeMets(){
+		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+		ArchivalInstitution archivalInstitution = aiDao.findById(getAiId());
+		archivalInstitution.setUsingMets(!archivalInstitution.isUsingMets());
+		aiDao.store(archivalInstitution);
+		return SUCCESS;	
 	}
 	public String disableUser(){
 		UserService.disableUser(partnerId);
@@ -88,5 +97,6 @@ public class InstitutionManagerManagementAction extends AbstractAction{
 	public void setPartnerId(Integer partnerId) {
 		this.partnerId = partnerId;
 	}
+
 
 }

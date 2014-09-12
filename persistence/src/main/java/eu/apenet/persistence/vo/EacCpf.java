@@ -3,8 +3,8 @@ package eu.apenet.persistence.vo;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "eac_cpf")
@@ -30,7 +31,7 @@ public class EacCpf extends AbstractContent {
     private Integer id;
     private String title;
     @Column(name = "upload_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
     private Date uploadDate;
     private String path;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -40,28 +40,29 @@ import eu.apenet.persistence.vo.ValidatedState;
  * @author papp
  */
 public class StoreEacCpfAction extends EacCpfAction {
-	/**
-	 * Serializable.
-	 */
-	private static final long serialVersionUID = -2496853052970461291L;
-	// Log.
-	private final static Logger LOG = Logger.getLogger(StoreEacCpfAction.class);
 
-	// Constants for the results.
-	private static final String EXIT_CONTENT_MANAGER = "exitContentManager";
-	private static final String EXIT_DASHBOARD_HOME = "exitDashboardHome";
+    /**
+     * Serializable.
+     */
+    private static final long serialVersionUID = -2496853052970461291L;
+    // Log.
+    private final static Logger LOG = Logger.getLogger(StoreEacCpfAction.class);
 
-	// Constants for the possible return pages.
-	private static final String RETURN_CONTENT_MANAGER = "contentmanager";
+    // Constants for the results.
+    private static final String EXIT_CONTENT_MANAGER = "exitContentManager";
+    private static final String EXIT_DASHBOARD_HOME = "exitDashboardHome";
+
+    // Constants for the possible return pages.
+    private static final String RETURN_CONTENT_MANAGER = "contentmanager";
 //	private static final String RETURN_DASHBOARD_HOME = "dashboardHome";
 
-	// Constants for the possible actions.
-	private static final String EXIT = "exit";
-	private static final String SAVE = "save";
-	private static final String SAVE_EXIT = "save_exit";
+    // Constants for the possible actions.
+    private static final String EXIT = "exit";
+    private static final String SAVE = "save";
+    private static final String SAVE_EXIT = "save_exit";
 
-	// Constants for encoding.
-	private static final String UTF8 = "UTF-8";
+    // Constants for encoding.
+    private static final String UTF8 = "UTF-8";
 
     private List<String> warnings_ead = new ArrayList<String>();
 
@@ -75,67 +76,71 @@ public class StoreEacCpfAction extends EacCpfAction {
 
     @Override
     public String execute() throws Exception {
-    	String result = ERROR;
-    	// Checks the selected  option.
-    	if (StoreEacCpfAction.SAVE.equalsIgnoreCase(this.getSaveOrExit())) {
+        String result = ERROR;
+        // Checks the selected  option.
+        if (StoreEacCpfAction.SAVE.equalsIgnoreCase(this.getSaveOrExit())) {
     		// TODO: issue 1223, for complete the reload when save first needed the edit
-    		// of an apeEAC-CPF will be implemented.
-    		// Save the contents.
+            // of an apeEAC-CPF will be implemented.
+            // Save the contents.
 //    		result = storeApeEacCpf();
 
-    		// Define the params for the response.
-    		getServletRequest().setCharacterEncoding(UTF8);
-			getServletResponse().setCharacterEncoding(UTF8);
-			getServletResponse().setContentType("application/json");
-			Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
+            // Define the params for the response.
+            getServletRequest().setCharacterEncoding(UTF8);
+            getServletResponse().setCharacterEncoding(UTF8);
+            getServletResponse().setContentType("application/json");
+            Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
 
-    		// Save the contents.
-    		result = storeApeEacCpf();
+            // Save the contents.
+            result = storeApeEacCpf();
 
-    		StringBuilder buffer = new StringBuilder();
-    		if (result.equalsIgnoreCase(SUCCESS)) {
-    			buffer.append("{\"fileId\":\"" + this.getFileId() + "\",");
-    			buffer.append("\"eacDaoId\":\"" + this.getEacDaoId() + "\",");
-    			buffer.append("\"resultMessage\":\"" + getText("eaccpf.info.eaccorrectlycreated") + "\"}");
-    			
-    		} else {
-    			buffer.append("{\"error\":\"" + getText("content.message.error") + "\"}");
-    		}
+            StringBuilder buffer = new StringBuilder();
+            if (result.equalsIgnoreCase(SUCCESS)) {
+                buffer.append("{\"fileId\":\"" + this.getFileId() + "\",");
+                buffer.append("\"eacDaoId\":\"" + this.getEacDaoId() + "\",");
+                buffer.append("\"resultMessage\":\"" + getText("eaccpf.info.eaccorrectlycreated") + "\"}");
 
-    		writer.write(buffer.toString());
+            } else {
+                buffer.append("{\"error\":\"" + getText("content.message.error") + "\"}");
+                for (int i = 0; i < warnings_ead.size(); i++) {
+                    buffer.append(warnings_ead.get(i));
+                }
+            }
 
-    		try{
-				if (writer != null) {
-					writer.flush();
-					writer.close();
-				}
-			}catch(IOException e){
-				LOG.error(e.getMessage(), e);
-			}
-    	} else if (StoreEacCpfAction.EXIT.equalsIgnoreCase(this.getSaveOrExit())) {
-    		// Checks the return page.
-    		if (StoreEacCpfAction.RETURN_CONTENT_MANAGER.equalsIgnoreCase(this.getReturnPage())) {
-    			result = StoreEacCpfAction.EXIT_CONTENT_MANAGER;
-    		} else {
-    			result = StoreEacCpfAction.EXIT_DASHBOARD_HOME;
-    		}
-    	} else if (StoreEacCpfAction.SAVE_EXIT.equalsIgnoreCase(this.getSaveOrExit())) {
-    		// Save the contents.
-    		result = storeApeEacCpf();
+            writer.write(buffer.toString());
 
-    		// Checks the return page.
-    		if (result.equalsIgnoreCase(SUCCESS)
-    				&& StoreEacCpfAction.RETURN_CONTENT_MANAGER.equalsIgnoreCase(this.getReturnPage())) {
-    			result = StoreEacCpfAction.EXIT_CONTENT_MANAGER;
-    		} else if (result.equalsIgnoreCase(SUCCESS)) {
-    			result = StoreEacCpfAction.EXIT_DASHBOARD_HOME;
-    		}
-    	}
+            try {
+                if (writer != null) {
+                    writer.flush();
+                    writer.close();
+                }
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        } else if (StoreEacCpfAction.EXIT.equalsIgnoreCase(this.getSaveOrExit())) {
+            // Checks the return page.
+            if (StoreEacCpfAction.RETURN_CONTENT_MANAGER.equalsIgnoreCase(this.getReturnPage())) {
+                result = StoreEacCpfAction.EXIT_CONTENT_MANAGER;
+            } else {
+                result = StoreEacCpfAction.EXIT_DASHBOARD_HOME;
+            }
+        } else if (StoreEacCpfAction.SAVE_EXIT.equalsIgnoreCase(this.getSaveOrExit())) {
+            // Save the contents.
+            result = storeApeEacCpf();
 
-    	return result;
+            // Checks the return page.
+            if (result.equalsIgnoreCase(SUCCESS)
+                    && StoreEacCpfAction.RETURN_CONTENT_MANAGER.equalsIgnoreCase(this.getReturnPage())) {
+                result = StoreEacCpfAction.EXIT_CONTENT_MANAGER;
+            } else if (result.equalsIgnoreCase(SUCCESS)) {
+                result = StoreEacCpfAction.EXIT_DASHBOARD_HOME;
+            }
+        }
+
+        return result;
     }
 
     private String storeApeEacCpf() throws Exception {
+        String methodResult = SUCCESS;
         String countryCode = new ArchivalLandscapeUtils().getmyCountry();
         String basePath = APEnetUtilities.FILESEPARATOR + countryCode + APEnetUtilities.FILESEPARATOR
                 + this.getAiId() + APEnetUtilities.FILESEPARATOR + "EAC-CPF" + APEnetUtilities.FILESEPARATOR;
@@ -144,12 +149,12 @@ public class StoreEacCpfAction extends EacCpfAction {
         EacCpf eac = creator.getJaxbEacCpf();
         String filename = "";
         if (this.getFileId() == null || this.getFileId().isEmpty()) {
-        	filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier());
-        	this.setFileId(filename);
+            filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier());
+            this.setFileId(filename);
         } else {
-        	filename = this.getFileId();
+            filename = this.getFileId();
         }
-    	filename = filename + ".xml";
+        filename = filename + ".xml";
 
         // Save XML.
         try {
@@ -170,7 +175,7 @@ public class StoreEacCpfAction extends EacCpfAction {
             // It is necessary to validate the file against apeEAC-CPF schema.
             LOG.debug("Beginning EAC-CPF validation");
             if (validateFile(eacCpfTempFile)) {
-            	LOG.info("EAC-CPF file is valid");
+                LOG.info("EAC-CPF file is valid");
 
                 // Move temp file to final file.
                 File eacCpfFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
@@ -178,7 +183,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                     try {
                         FileUtils.forceDelete(eacCpfFinalFile);
                     } catch (IOException e) {
-                    	LOG.error(e.getMessage(), e);
+                        LOG.error(e.getMessage(), e);
                     }
                 }
                 FileUtils.moveFile(eacCpfTempFile, eacCpfFinalFile);
@@ -186,7 +191,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                     try {
                         FileUtils.forceDelete(eacCpfTempFile);
                     } catch (IOException e) {
-                    	LOG.error(e.getMessage(), e);
+                        LOG.error(e.getMessage(), e);
                     }
                 }
 
@@ -195,12 +200,12 @@ public class StoreEacCpfAction extends EacCpfAction {
                 eu.apenet.persistence.vo.EacCpf storedEacEntry = null;
 
                 if (this.getEacDaoId() != null
-                		&& !this.getEacDaoId().isEmpty()
-                		&& Integer.valueOf(this.getEacDaoId()) > 0) {
+                        && !this.getEacDaoId().isEmpty()
+                        && Integer.valueOf(this.getEacDaoId()) > 0) {
 //                	storedEacEntry = eacCpfDAO.findById(Integer.parseInt(this.getEacDaoId()));
-                	storedEacEntry = eacCpfDAO.findById(Integer.valueOf(this.getEacDaoId()));
+                    storedEacEntry = eacCpfDAO.findById(Integer.valueOf(this.getEacDaoId()));
                 } else {
-                	storedEacEntry = creator.getDatabaseEacCpf();
+                    storedEacEntry = creator.getDatabaseEacCpf();
                 }
                 storedEacEntry.setTitle(getTitleFromFile(eac));
                 storedEacEntry.setUploadDate(new Date());
@@ -210,7 +215,7 @@ public class StoreEacCpfAction extends EacCpfAction {
 
                 this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
             } else {
-            	LOG.warn("The file " + filename + " is not valid");
+                LOG.warn("The file " + filename + " is not valid");
                 for (int i = 0; i < warnings_ead.size(); i++) {
                     String warning = warnings_ead.get(i).replace("<br/>", "");
                     LOG.debug(warning);
@@ -224,19 +229,28 @@ public class StoreEacCpfAction extends EacCpfAction {
                         addActionMessage(parseEag2012Errors.errorsValidation());
                     }
                 }
+                if (eacCpfTempFile.exists()) {
+                    try {
+                        FileUtils.forceDelete(eacCpfTempFile);
+                    } catch (IOException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+                methodResult = ERROR;
             }
         } catch (JAXBException jaxbe) {
-        	LOG.error(jaxbe.getMessage(), jaxbe);
+            LOG.error(jaxbe.getMessage(), jaxbe);
         } catch (APEnetException e) {
-        	LOG.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (SAXException e) {
-        	LOG.error(e.getMessage());
+            LOG.error(e.getMessage());
         }
 
-        return SUCCESS;
+        return methodResult;
     }
 
     public boolean validateFile(File tempFile) throws APEnetException, SAXException, IOException {
+        boolean result = true;
         Xsd_enum schema = Xsd_enum.XSD_APE_EAC_SCHEMA;
         InputStream in = null;
         try {
@@ -251,7 +265,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                             .append("<br/>");
                     warnings_ead.add(warn.toString());
                 }
-                return false;
+                result = false;
             }
         } catch (FileNotFoundException e) {
             throw new APEnetException("Exception while validating: File not found", e);
@@ -262,7 +276,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                 in.close();
             }
         }
-        return true;
+        return result;
     }
 
     private String getTitleFromFile(EacCpf eacCpf) {
@@ -292,19 +306,19 @@ public class StoreEacCpfAction extends EacCpfAction {
                         StringBuilder patronymic = new StringBuilder();
                         for (Part part : parts) {
                             if (part.getLocalType().equals("surname")) {
-                                if(surname.length() != 0){
+                                if (surname.length() != 0) {
                                     surname.append(" ");
                                 }
                                 surname.append(part.getContent());
                             }
                             if (part.getLocalType().equals("firstname")) {
-                                if(firstname.length() != 0){
+                                if (firstname.length() != 0) {
                                     firstname.append(" ");
                                 }
                                 firstname.append(part.getContent());
                             }
                             if (part.getLocalType().equals("patronymic")) {
-                                if(patronymic.length() != 0){
+                                if (patronymic.length() != 0) {
                                     patronymic.append(" ");
                                 }
                                 patronymic.append(part.getContent());
@@ -333,59 +347,59 @@ public class StoreEacCpfAction extends EacCpfAction {
         return title;
     }
 
-	/**
-	 * @return the fileId
-	 */
-	public String getFileId() {
-		return this.fileId;
-	}
+    /**
+     * @return the fileId
+     */
+    public String getFileId() {
+        return this.fileId;
+    }
 
-	/**
-	 * @param fileId the fileId to set
-	 */
-	public void setFileId(String fileId) {
-		this.fileId = fileId;
-	}
+    /**
+     * @param fileId the fileId to set
+     */
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
 
-	/**
-	 * @return the eacDaoId
-	 */
-	public String getEacDaoId() {
-		return this.eacDaoId;
-	}
+    /**
+     * @return the eacDaoId
+     */
+    public String getEacDaoId() {
+        return this.eacDaoId;
+    }
 
-	/**
-	 * @param eacDaoId the eacDaoId to set
-	 */
-	public void setEacDaoId(String eacDaoId) {
-		this.eacDaoId = eacDaoId;
-	}
+    /**
+     * @param eacDaoId the eacDaoId to set
+     */
+    public void setEacDaoId(String eacDaoId) {
+        this.eacDaoId = eacDaoId;
+    }
 
-	/**
-	 * @return the returnPage
-	 */
-	public String getReturnPage() {
-		return this.returnPage;
-	}
+    /**
+     * @return the returnPage
+     */
+    public String getReturnPage() {
+        return this.returnPage;
+    }
 
-	/**
-	 * @param returnPage the returnPage to set
-	 */
-	public void setReturnPage(String returnPage) {
-		this.returnPage = returnPage;
-	}
+    /**
+     * @param returnPage the returnPage to set
+     */
+    public void setReturnPage(String returnPage) {
+        this.returnPage = returnPage;
+    }
 
-	/**
-	 * @return the saveOrExit
-	 */
-	public String getSaveOrExit() {
-		return this.saveOrExit;
-	}
+    /**
+     * @return the saveOrExit
+     */
+    public String getSaveOrExit() {
+        return this.saveOrExit;
+    }
 
-	/**
-	 * @param saveOrExit the saveOrExit to set
-	 */
-	public void setSaveOrExit(String saveOrExit) {
-		this.saveOrExit = saveOrExit;
-	}
+    /**
+     * @param saveOrExit the saveOrExit to set
+     */
+    public void setSaveOrExit(String saveOrExit) {
+        this.saveOrExit = saveOrExit;
+    }
 }

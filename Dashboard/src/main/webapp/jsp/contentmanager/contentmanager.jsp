@@ -76,7 +76,7 @@
 		<div id="queueStopped">
 			<c:choose>
 				<c:when test="${harvestingStarted}"><s:text name="content.message.harvesting" /></c:when>
-				<c:when test="${!queueActive}"><s:text name="content.message.queue.stopped" /></c:when>
+				<c:when test="${!queueActive}"><s:text name="content.message.queue.stopped.maintenance" /></c:when>
 			</c:choose>
 			
 		</div>

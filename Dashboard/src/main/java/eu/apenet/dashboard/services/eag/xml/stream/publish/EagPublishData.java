@@ -15,9 +15,9 @@ public class EagPublishData{
  	private Set<String> otherNames;
 	private Set<String> repositories;
 	private Set<String> repositoryTypes;
+	private Set<String> places;
 	private String other;
 	private String description;
-	private String language;
 	
 	public Set<String> getOtherNames() {
 		return otherNames;
@@ -59,13 +59,6 @@ public class EagPublishData{
 		this.description = description;
 	}
 
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
 
 	public Set<String> getCountries() {
 		return countries;
@@ -107,13 +100,12 @@ public class EagPublishData{
 		this.address = address;
 	}
 
+	public Set<String> getPlaces() {
+		return places;
+	}
 
-
-
-
-
-
-
-
+	public void setPlaces(Set<String> places) {
+		this.places = places;
+	}
 	
 }

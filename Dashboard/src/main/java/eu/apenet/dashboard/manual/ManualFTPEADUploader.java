@@ -109,8 +109,8 @@ public class ManualFTPEADUploader extends ManualUploader {
      * @return The File that has been downloaded
      * @throws IOException If the connection is problematic
      */
-	public File getFile(FTPClient ftpClient, String pathFile, int archivalInstitutionId) throws IOException{
-		log.info("Downloading: " + pathFile);
+	public File getFile(FTPClient ftpClient, String pathFile,String destFile, int archivalInstitutionId) throws IOException{
+		log.info("Downloading: " +ftpClient.getRemoteAddress() + ":"+ftpClient.getRemotePort()+ " " + pathFile);
         String file = pathFile.split("/")[pathFile.split("/").length - 1];
         log.debug("File is: " + file);
         String dir = pathFile.replace("/"+file, "");
@@ -121,7 +121,7 @@ public class ManualFTPEADUploader extends ManualUploader {
         File dirToSave = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId);
         if(!dirToSave.exists())
             dirToSave.mkdir();
-        File fileToSave = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + pathFile);
+        File fileToSave = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + destFile);
 
         OutputStream os = new FileOutputStream(fileToSave);
         if(ftpClient.retrieveFile(file, os)) {

@@ -50,6 +50,14 @@
 		</c:choose>
 
 	</s:form>
+	
+	<s:form action="deleteAllQueueItemsWithErrors" theme="simple" method="post">
+		<s:submit value="Delete all errors from the Queue"></s:submit>
+	</s:form>
+	<s:form action="deleteAllUnusedUploadFiles" theme="simple" method="post">
+		<s:submit value="Delete all unused uploads"></s:submit>
+	</s:form>
+	<h2>Other management tasks</h2>
 	<s:form action="changeMaintenanceMode" method="post">
 		<s:actionerror />
 		<c:choose>
@@ -62,12 +70,6 @@
 		</c:choose>
 
 	</s:form>	
-	<s:form action="deleteAllQueueItemsWithErrors" theme="simple" method="post">
-		<s:submit value="Delete all errors from the Queue"></s:submit>
-	</s:form>
-	<s:form action="deleteAllUnusedUploadFiles" theme="simple" method="post">
-		<s:submit value="Delete all unused uploads"></s:submit>
-	</s:form>
 	<s:form action="forceSolrCommit" theme="simple" method="post">
 		<s:submit value="Force Solr commit"></s:submit>
 	</s:form>
@@ -75,6 +77,18 @@
 		<s:form action="republishAllEagFiles" theme="simple" method="post">
 			<s:submit value="Republish all EAG files"></s:submit>
 		</s:form>	
+		<s:form action="rebuildAutosuggestion" theme="simple" method="post">
+			<input type="hidden" name="sourceType" value="ead"  />
+			<s:submit value="Build autosuggestion dictionary of EAD files"></s:submit>
+		</s:form>	
+		<s:form action="rebuildAutosuggestion" theme="simple" method="post">
+			<input type="hidden" name="sourceType" value="eac"  />
+			<s:submit value="Build autosuggestion dictionary of EAC-CPF files"></s:submit>
+		</s:form>			
+		<s:form action="rebuildAutosuggestion" theme="simple" method="post">
+			<input type="hidden" name="sourceType" value="eag"  />
+			<s:submit value="Build autosuggestion dictionary of EAG files"></s:submit>
+		</s:form>				
 	</c:if>
 	<c:if test="${!empty firstItems}">
 		<h2>First items:</h2>

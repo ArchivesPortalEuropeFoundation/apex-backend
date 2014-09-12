@@ -44,6 +44,9 @@ public class EacCpfResult extends TypeResult {
             queueAction = eacCpf.getQueueItem().getAction();
         }
         this.identifier = eacCpf.getIdentifier();
+        this.cpfRelations = eacCpf.getCpfRelations();
+        this.resourceRelations = eacCpf.getResourceRelations();
+        this.functionRelations = eacCpf.getFunctionRelations();
         this.containWarnings = eacCpf.getWarningses().size() > 0;
         this.containValidationErrors = containValidationErrors(eacCpf);
     }
