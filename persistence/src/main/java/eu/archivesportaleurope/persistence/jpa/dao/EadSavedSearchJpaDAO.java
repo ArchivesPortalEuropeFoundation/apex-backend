@@ -4,8 +4,16 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
+
 import eu.apenet.persistence.dao.EadSavedSearchDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
+import eu.apenet.persistence.vo.CollectionContent;
 import eu.apenet.persistence.vo.EadSavedSearch;
 
 public class EadSavedSearchJpaDAO extends AbstractHibernateDAO<EadSavedSearch, Long> implements EadSavedSearchDAO {
@@ -40,6 +48,43 @@ public class EadSavedSearchJpaDAO extends AbstractHibernateDAO<EadSavedSearch, L
 		query.setMaxResults(pageSize);
 		query.setFirstResult(pageSize * (pageNumber - 1));
 		return query.getResultList();
+	}
+	
+	public List<EadSavedSearch> getEadSavedSearchOutOfCollectionByCollectionIdAndLiferayUser(Long collectionId,long liferayUserId){
+		List<EadSavedSearch> searches = null;
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadSavedSearch");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		if(liferayUserId>0){
+			criteria.add(Restrictions.eq("eadSavedSearch.liferayUserId", liferayUserId));
+		}
+		if(collectionId!=null && collectionId>0){
+			DetachedCriteria collectionSubquery = DetachedCriteria.forClass(CollectionContent.class, "collectionContent");
+			collectionSubquery.setProjection(Projections.property("collectionContent.eadSavedSearch.id"));
+			collectionSubquery.add(Restrictions.eq("collectionContent.collection.id",collectionId));
+			collectionSubquery.add(Restrictions.isNotNull("collectionContent.eadSavedSearch.id"));
+			criteria.add(Subqueries.propertyNotIn("eadSavedSearch.id",collectionSubquery));
+		}
+		searches = criteria.list();
+		return searches;
+	}
+
+	@Override
+	public List<EadSavedSearch> getEadSavedSearchByIdsAndUserid(List<Long> eadSavedSearchesIds, Long liferayUserId) {
+		List<EadSavedSearch> searches = null;
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadSavedSearch");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		if(liferayUserId>0){
+			criteria.add(Restrictions.eq("eadSavedSearch.liferayUserId", liferayUserId));
+			if(eadSavedSearchesIds!=null && eadSavedSearchesIds.size()>0){
+				Disjunction restrinction = Restrictions.disjunction();
+				for(long targetId:eadSavedSearchesIds){
+					restrinction.add(Restrictions.eq("eadSavedSearch.id",targetId));
+				}
+				criteria.add(restrinction);
+			}
+			searches = criteria.list();
+		}
+		return searches;
 	}
 
 }

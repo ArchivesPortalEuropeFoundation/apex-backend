@@ -4,8 +4,16 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
+
 import eu.apenet.persistence.dao.SavedBookmarksDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
+import eu.apenet.persistence.vo.CollectionContent;
 import eu.apenet.persistence.vo.EadSavedSearch;
 import eu.apenet.persistence.vo.SavedBookmarks;
 
@@ -48,6 +56,44 @@ public class SavedBookmarksJpaDAO extends AbstractHibernateDAO<SavedBookmarks, L
 				return bookmark;
 		}
 		return null;
+	}
+
+	@Override
+	public List<SavedBookmarks> getSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(Long id, long liferayUserId) {
+		List<SavedBookmarks> searches = null;
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "savedBookmarks");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		if(liferayUserId>0){
+			criteria.add(Restrictions.eq("savedBookmarks.liferayUserId", liferayUserId));
+		}
+		if(id!=null && id>0){
+			DetachedCriteria collectionSubquery = DetachedCriteria.forClass(CollectionContent.class, "collectionContent");
+			collectionSubquery.setProjection(Projections.property("collectionContent.savedBookmarks.id"));
+			collectionSubquery.add(Restrictions.eq("collectionContent.collection.id",id));
+			collectionSubquery.add(Restrictions.isNotNull("collectionContent.savedBookmarks.id"));
+			criteria.add(Subqueries.propertyNotIn("savedBookmarks.id",collectionSubquery));
+		}
+		searches = criteria.list();
+		return searches;
+	}
+
+	@Override
+	public List<SavedBookmarks> getSavedSearchesByIdsAndUserid(List<Long> bookmarksOut, Long liferayUserId) {
+		List<SavedBookmarks> searches = null;
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "savedBookmarks");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		if(liferayUserId>0){
+			criteria.add(Restrictions.eq("savedBookmarks.liferayUserId", liferayUserId));
+			if(bookmarksOut!=null && bookmarksOut.size()>0){
+				Disjunction restrinction = Restrictions.disjunction();
+				for(long targetId:bookmarksOut){
+					restrinction.add(Restrictions.eq("savedBookmarks.id",targetId));
+				}
+				criteria.add(restrinction);
+			}
+			searches = criteria.list();
+		}
+		return searches;
 	}
 
 }

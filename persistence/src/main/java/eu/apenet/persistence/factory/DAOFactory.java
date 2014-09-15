@@ -7,6 +7,8 @@ import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.CLevelDAO;
+import eu.apenet.persistence.dao.CollectionDAO;
+import eu.apenet.persistence.dao.CollectionContentDAO;
 import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
@@ -25,6 +27,7 @@ import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
+import eu.apenet.persistence.dao.SavedBookmarksDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
@@ -134,5 +137,8 @@ public abstract class DAOFactory {
     public abstract IngestionprofileDAO getIngestionprofileDAO();
     public abstract CoordinatesDAO getCoordinatesDAO();
     public abstract EadSavedSearchDAO getEadSavedSearchDAO();
+    public abstract CollectionDAO getCollectionDAO();
+    public abstract CollectionContentDAO getCollectionContentDAO();
     public abstract EacCpfDAO getEacCpfDAO();
+    public abstract SavedBookmarksDAO getSavedBookmarksDAO();
 }

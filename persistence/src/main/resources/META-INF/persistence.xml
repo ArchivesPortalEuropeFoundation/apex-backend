@@ -29,6 +29,9 @@
 		<class>eu.apenet.persistence.vo.Coordinates</class>
 		<class>eu.apenet.persistence.vo.EadSavedSearch</class>
 		<class>eu.apenet.persistence.vo.EacCpf</class>
+		<class>eu.apenet.persistence.vo.Collection</class>
+		<class>eu.apenet.persistence.vo.CollectionContent</class>
+		<class>eu.apenet.persistence.vo.SavedBookmarks</class>
 		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
