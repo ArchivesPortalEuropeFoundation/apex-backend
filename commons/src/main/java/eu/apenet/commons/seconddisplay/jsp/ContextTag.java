@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -73,7 +74,11 @@ public class ContextTag extends SimpleTagSupport{
 	 * @return The escaped string.
 	 */
 	private String escapeChars(String str) {
-		return str.replaceAll(">", "&#62;").replaceAll("<","&#60;");
+		if (StringUtils.isBlank(str)){
+			return "---";
+		}else {
+			return str.replaceAll(">", "&#62;").replaceAll("<","&#60;");
+		}
 	}
 
 
