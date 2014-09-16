@@ -53,14 +53,6 @@ public class EadSavedSearch {
 	@Column(name = "al_tree_selected_nodes")
 	private	String alTreeSelectedNodes;	  
 
-	@Column(name = "results_per_page")
-	private	Integer resultPerPage;	 
-	@Column(name = "pagenumber")
-	private	Integer pageNumber;
-	
-	private	String sorting;	 
-	@Column(name = "sorting_asc")
-	private	Boolean sortingAsc;
 
 	@Column(name = "refinement_country")
 	private	String refinementCountry;	
@@ -199,30 +191,7 @@ public class EadSavedSearch {
 	public void setAlTreeSelectedNodes(String alTreeSelectedNodes) {
 		this.alTreeSelectedNodes = alTreeSelectedNodes;
 	}
-	public Integer getResultPerPage() {
-		return resultPerPage;
-	}
-	public void setResultPerPage(Integer resultPerPage) {
-		this.resultPerPage = resultPerPage;
-	}
-	public Integer getPageNumber() {
-		return pageNumber;
-	}
-	public void setPageNumber(Integer pageNumber) {
-		this.pageNumber = pageNumber;
-	}
-	public String getSorting() {
-		return sorting;
-	}
-	public void setSorting(String sorting) {
-		this.sorting = sorting;
-	}
-	public Boolean isSortingAsc() {
-		return sortingAsc;
-	}
-	public void setSortingAsc(Boolean sortingAsc) {
-		this.sortingAsc = sortingAsc;
-	}
+
 	public String getRefinementCountry() {
 		return refinementCountry;
 	}
