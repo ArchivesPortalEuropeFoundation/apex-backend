@@ -37,13 +37,11 @@
 				<td id="tdTitleOfRelatedMaterial">
 					<label for="textTitleOfRelatedMaterial"><s:property value="getText('eag2012.relations.titleOfRelatedMaterial')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());"><s:property value="loader.relationsResourceRelationEntry[#status.index]" /></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectTitleOfRelatedMaterialLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectTitleOfRelatedMaterialLang" onchange="selectTitleRelatedLangChange($(this).parent().parent().parent().parent());" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.relationsResourceRelationEntryLang[#status.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -56,13 +54,11 @@
 				<td id="tdDescriptionOfRelation">
 					<label for="textDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textDescriptionOfRelation"><s:property value="loader.relationsResourceRelationEntryDescription[#status.index]" /></textarea>
 				</td>
 				<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectLanguageDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectLanguageDescriptionOfRelation">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.relationsResourceRelationEntryDescriptionLang[#status.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -105,13 +101,11 @@
 				<td id="tdTitleOfRelatedMaterial">
 					<label for="tdTitleOfRelatedMaterial"><s:property value="getText('eag2012.relations.titleOfRelatedMaterial')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());"></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectTitleOfRelatedMaterialLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectTitleOfRelatedMaterialLang" onchange="selectTitleRelatedLangChange($(this).parent().parent().parent().parent());">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />" ><s:property value="#language.value" /></option>
@@ -124,13 +118,11 @@
 				<td id="tdDescriptionOfRelation">
 					<label for="tdDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textDescriptionOfRelation"></textarea>
 				</td>
 				<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectLanguageDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectLanguageDescriptionOfRelation" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key"/>" ><s:property value="#language.value" /></option>
@@ -187,13 +179,11 @@
 				<td id="tdTitleOfRelatedInstitution">
 					<label for="textTitleOfRelatedInstitution"><s:property value="getText('eag2012.relations.titleOfRelatedInstitution')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textTitleOfRelatedInstitution"><s:property value="loader.relationsEagRelationEntry[#status.index]" /></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectTitleOfRelatedInstitutionLang" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.relationsEagRelationEntryLang[#status.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -206,13 +196,11 @@
 				<td id="tdInstitutionDescriptionOfRelation">
 					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textInstitutionDescriptionOfRelation"><s:property value="loader.relationsEagRelationEntryDescription[#status.index]" /></textarea>
 				</td>
 				<td id="tdLanguageInstitutionDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectLanguageInstitutionDescriptionOfRelation" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.relationsEagRelationEntryDescriptionLang[#status.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -258,13 +246,11 @@
 				<td id="tdTitleOfRelatedInstitution">
 					<label for="textTitleOfRelatedInstitution"><s:property value="getText('eag2012.relations.titleOfRelatedInstitution')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textTitleOfRelatedInstitution"></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectTitleOfRelatedInstitutionLang">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />" ><s:property value="#language.value" /></option>
@@ -277,13 +263,11 @@
 				<td id="tdInstitutionDescriptionOfRelation">
 					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textInstitutionDescriptionOfRelation"></textarea>
 				</td>
 				<td id="tdLanguageInstitutionDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-				</td>
-				<td>
+					<label class="language" for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 					<select id="selectLanguageInstitutionDescriptionOfRelation" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>

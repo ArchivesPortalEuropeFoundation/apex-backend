@@ -164,7 +164,9 @@
 	float: left;
 	width: 100%;
 }
-
+#eag2012Div table td.orangeLine{
+	border-bottom:1px solid #E6BB5F;
+}
 .tablePadding {
 	padding-right: 18px;
 	padding-left: 18px;
@@ -176,6 +178,10 @@
 }
 #eag2012Div td label {
 	width: 25%;
+}
+#eag2012Div td label.language{
+	padding-bottom:10px;
+	display:table-cell;
 }
 #buttonExitEAG2012{
 	float:right;
@@ -198,7 +204,9 @@
 	font-size: 12px;
 	color: black;
 }
-
+#eag2012Div  select#textYISelectParallelNameOfTheInstitution, select#selectTypeOfTheInstitution{
+	width:95%;
+}
 #eag2012Div .longButton {
 	float: left;
 	width: 70%;
@@ -238,11 +246,19 @@
 }
 textarea {
 	height:60px;
-	width: 200px;
+/*	width: 200px;*/width:95%;
 	font-weight: bold;
 	overflow: auto;
 }
-
+#eag2012Div .textContact{
+	width:50%;
+}
+#eag2012Div .inputWidth{
+	width:200px;
+}
+#eag2012Div tr#trEmailOfTheInstitution{
+	padding-right:10px;
+}
 input[type="button"] {
 	text-align: center;
 	font-weight: bold;
@@ -289,7 +305,7 @@ input[type="button"]:disabled {
 }
 
 input[type="text"] {
-	width: 200px;
+/*	width: 200px;*/ width:95%;
 	padding-left: 6px;
 	font-weight: bold;
 	color: black;

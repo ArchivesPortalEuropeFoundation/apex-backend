@@ -25,13 +25,11 @@
 								<td id="tdRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
 									<label for="textRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="#internalCurrent" /></textarea>
 								</td>
-								<td id="tdLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
-								<td>
+								<td id="tdLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
+									<label class="language" for="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #repositorhistLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -46,13 +44,11 @@
 							<td id="tdRepositoryHistory_1">
 								<label for="textRepositoryHistory_1"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textRepositoryHistory_1" ></textarea>
 							</td>
-							<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
-								<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
-							<td>
+							<td id="tdLanguageRepositoryHistory_1">
+								<label class="language" for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<select id="selectLanguageRepositoryHistory_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -67,13 +63,11 @@
 						<td id="tdRepositoryHistory_1">
 							<label for="textRepositoryHistory_1"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textRepositoryHistory_1" ></textarea>
 						</td>
-						<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
-							<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
-						<td>
+						<td id="tdLanguageRepositoryHistory_1">
+							<label class="language" for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<select id="selectLanguageRepositoryHistory_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -90,7 +84,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+         			<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<tr>
 					<td id="tdDateOfRepositoryFoundation">
 						<label for="textDateOfRepositoryFoundation"><s:property value="getText('eag2012.description.foundationDate')" />:</label>
@@ -121,13 +117,11 @@
 								<td id="tdRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
 									<label for="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
-								<td>
+									<label class="language" for="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #repositorFoundRuleLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -142,13 +136,11 @@
 							<td id="tdRuleOfRepositoryFoundation_1">
 								<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 							</td>
 							<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
-								<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
-							<td>
+								<label class="language" for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<select id="selectLanguageRuleOfRepositoryFoundation_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -163,13 +155,11 @@
 						<td id="tdRuleOfRepositoryFoundation_1">
 							<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 						</td>
 						<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
-							<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
-						<td>
+							<label class="language" for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<select id="selectLanguageRuleOfRepositoryFoundation_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -186,7 +176,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+         			<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<tr>
 					<td id="tdDateOfRepositorySuppression">
 						<label for="textDateOfRepositorySuppression"><s:property value="getText('eag2012.description.dateArchiveClosure')" />:</label>
@@ -217,13 +209,11 @@
 								<td id="tdRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />">
 									<label for="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
-								<td>
+									<label class="language" for="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #repositorSupRuleLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -238,13 +228,11 @@
 							<td id="tdRuleOfRepositorySuppression_1">
 								<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 							</td>
 							<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
-								<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
-							<td>
+								<label class="language" for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<select id="selectLanguageRuleOfRepositorySuppression_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -259,13 +247,11 @@
 						<td id="tdRuleOfRepositorySuppression_1">
 							<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 						</td>
 						<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
-							<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
-						<td>
+							<label class="language" for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<select id="selectLanguageRuleOfRepositorySuppression_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -299,13 +285,11 @@
 								<td id="tdUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />">
 									<label for="textUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
-								<td>
+									<label class="language" for="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #adminunitLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -320,13 +304,11 @@
 							<td id="tdUnitOfAdministrativeStructure_1">
 								<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
 							</td>
 							<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
-								<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
-							<td>
+								<label class="language" for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<select id="selectLanguageUnitOfAdministrativeStructure_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -341,13 +323,11 @@
 						<td id="tdUnitOfAdministrativeStructure_1">
 							<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
 						</td>
 						<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
-							<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
-						<td>
+							<label class="language" for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<select id="selectLanguageUnitOfAdministrativeStructure_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -381,13 +361,11 @@
 								<td id="tdBuilding_<s:property value="%{#internalStatus.index + 1}" />">
 									<label for="textBuilding_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.building')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textBuilding_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
-								<td>
+									<label class="language" for="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #buildingLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -402,13 +380,11 @@
 							<td id="tdBuilding_1">
 								<label for="textBuilding_1"><s:property value="getText('eag2012.description.building')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textBuilding_1"></textarea>
 							</td>
 							<td id="tdLanguageBuilding_1" class="labelLeft">
-								<label for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
-							<td>
+								<label class="language" for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<select id="selectLanguageBuilding_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -423,13 +399,11 @@
 						<td id="tdBuilding_1">
 							<label for="textBuilding_1"><s:property value="getText('eag2012.description.building')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textBuilding_1"></textarea>
 						</td>
 						<td id="tdLanguageBuilding_1" class="labelLeft">
-							<label for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
-						<td>
+							<label class="language" for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<select id="selectLanguageBuilding_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -446,7 +420,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+         			<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<tr>
 					<td id="tdRepositoryArea">
 						<label for="textRepositoryArea"><s:property value="getText('eag2012.description.repositoryArea')" />:</label>
@@ -505,13 +481,11 @@
 								<td id="tdArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
 									<label for="textArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
-								<td>
+									<label class="language" for="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #holdingsLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -526,13 +500,11 @@
 							<td id="tdArchivalAndOtherHoldings_1">
 								<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textArchivalAndOtherHoldings_1"></textarea>
 							</td>
 							<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
-								<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
-							<td>
+								<label class="language" for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<select id="selectLanguageArchivalAndOtherHoldings_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -547,13 +519,11 @@
 						<td id="tdArchivalAndOtherHoldings_1">
 							<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textArchivalAndOtherHoldings_1"></textarea>
 						</td>
 						<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
-							<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
-						<td>
+							<label class="language" for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<select id="selectLanguageArchivalAndOtherHoldings_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -570,7 +540,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+    				<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<tr>
 					<td colspan="4">
 						<s:property value="getText('eag2012.description.yearsOfTheHoldings')" />
@@ -653,7 +625,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+    				<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<tr>
 					<td id="tdExtent">
 						<label for="textExtent"><s:property value="getText('eag2012.description.extent')" />:</label>
@@ -703,13 +677,11 @@
 			<td id="tdRepositoryHistory_1">
 				<label for="textRepositoryHistory_1"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textRepositoryHistory_1" ></textarea>
 			</td>
-			<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
-				<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
+			<td id="tdLanguageRepositoryHistory_1">
+				<label class="language" for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageRepositoryHistory_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -725,7 +697,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+         	<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td id="tdDateOfRepositoryFoundation">
 				<label for="textDateOfRepositoryFoundation"><s:property value="getText('eag2012.description.foundationDate')" />:</label>
@@ -740,13 +714,11 @@
 			<td id="tdRuleOfRepositoryFoundation_1">
 				<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 			</td>
 			<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
-				<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
+				<label class="language" for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageRuleOfRepositoryFoundation_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -762,7 +734,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+         	<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td id="tdDateOfRepositorySuppression">
 				<label for="textDateOfRepositorySuppression"><s:property value="getText('eag2012.description.dateArchiveClosure')" />:</label>
@@ -777,13 +751,11 @@
 			<td id="tdRuleOfRepositorySuppression_1">
 				<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 			</td>
 			<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
-				<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
+				<label class="language" for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageRuleOfRepositorySuppression_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -811,13 +783,11 @@
 			<td id="tdUnitOfAdministrativeStructure_1">
 				<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
 			</td>
 			<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
-				<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
+				<label class="language" for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageUnitOfAdministrativeStructure_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -845,13 +815,11 @@
 			<td id="tdBuilding_1">
 				<label for="textBuilding_1"><s:property value="getText('eag2012.description.building')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textBuilding_1"></textarea>
 			</td>
 			<td id="tdLanguageBuilding_1" class="labelLeft">
-				<label for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
+				<label class="language" for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageBuilding_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -867,7 +835,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+    		<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td id="tdRepositoryArea">
 				<label for="textRepositoryArea"><s:property value="getText('eag2012.description.repositoryArea')" />:</label>
@@ -899,13 +869,11 @@
 			<td id="tdArchivalAndOtherHoldings_1">
 				<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textArchivalAndOtherHoldings_1"></textarea>
 			</td>
 			<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
-				<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
+				<label class="language" for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageArchivalAndOtherHoldings_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -921,7 +889,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+    		<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td colspan="4">
 				<s:property value="getText('eag2012.description.yearsOfTheHoldings')" />
@@ -949,7 +919,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+ 			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td id="tdExtent">
 				<label for="textExtent"><s:property value="getText('eag2012.description.extent')" />:</label>

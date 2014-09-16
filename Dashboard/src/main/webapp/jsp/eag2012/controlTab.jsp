@@ -21,13 +21,11 @@
 			<td id="tdPesonResponsible">
 				<label for="textPesonResponsible"><s:property value="getText('eag2012.commons.personResponsible')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textPesonResponsible" onchange="controlPersonResponsibleForDescriptionChanged();">${loader.agent}</textarea>
 			</td>
 			<td id="tdLanguagePesonresponsible" class="labelLeft">
-				<label for="selectLanguagePesonresponsible"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
+				<label class="language" for="selectLanguagePesonresponsible"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguagePesonresponsible">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.controlAgentLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -146,10 +144,10 @@
 					<td id="tdContactFullName_<s:property value="%{#status.index + 1}" />">
 						<label for="textContactFullName_<s:property value="%{#status.index + 1}" />"><s:property value="getText('eag2012.control.fullName')" />:</label>
 					</td>
-					<td>
+					<td colspan="2">
 						<textarea id="textContactFullName_<s:property value="%{#status.index + 1}" />"><s:property value="#usedFullName" /></textarea>
 					</td>
-					<td colspan="2">
+					<td>
 					</td>
 				</tr>
 				<s:set var="counter" value="%{#counter + 1}"/>
@@ -171,10 +169,10 @@
 				<td id="tdContactFullName_1">
 					<label for="textContactFullName_1"><s:property value="getText('eag2012.control.fullName')" />:</label>
 				</td>
-				<td>
+				<td colspan="2">
 					<textarea id="textContactFullName_1"></textarea>
 				</td>
-				<td colspan="2">
+				<td>
 				</td>
 			</tr>
 		</s:else>

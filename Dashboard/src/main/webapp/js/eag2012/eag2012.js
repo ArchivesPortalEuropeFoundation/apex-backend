@@ -1703,8 +1703,10 @@ function yiAddPostalAddressTranslation(text1) {
 
 function yiFutherAccessInformation() {
 	$("#buttonFutherAccessInformation").remove();
+	$("#orangeLineFurtherAccessInformation").remove();
 	$("#trYIButtonFutherAccessInformation").show();
 	$("#buttonFutherAccessInformation2").show();
+	$("#orangeLineFutherAccessInformation2").show();
 }
 function yiFutherAccessInformation2(text1){
 	var count = $("tr[id^='trYIButtonFutherAccessInformation']").length;
@@ -2047,7 +2049,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 
 		$("table#contactTable_"+(counter+1)+" input#buttonContactAddPostalAddressIfDifferent").hide();
 
-		$("table#contactTable_"+(counter+1)+" tr#trButtonContactAddPostalAddressIfDifferent").after('<tr><td colspan="4"><table id="contactTablePostalAddress_1">'+
+		$("table#contactTable_"+(counter+1)+" tr#trButtonContactAddPostalAddressIfDifferent").after('<tr><td><table id="contactTablePostalAddress_1">'+
 			'<tr id="trContactPostalAddressLabel">'+
 				'<td id="postalAddressLabel" colspan="4"><label>'+property1+'</label>'+
 				'</td>'+
@@ -2056,25 +2058,25 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 				'<td>'+
 					'<label for="textContactPAStreet">'+property3+'<span class="required">*</span>:</label>'+
 				'</td>'+
-				'<td>'+
+				'<td colspan="2" class="textContact">'+
 				'<textarea id="textContactPAStreet"></textarea>'+
 				'</td>'+
 				'<td id="contactPostalAddressLanguage">'+
-					'<label for="selectContactLanguagePostalAddress">'+property2+':</label>'+
-				'</td>'+
-				'<td>'+selectContactLanguagePostalAddress+
+					'<label class="language" for="selectContactLanguagePostalAddress">'+property2+':</label>'+
+				 selectContactLanguagePostalAddress+
 				'</td>'+
 			'</tr>'+
 			'<tr id="contactPostalAddressCity">'+
 				'<td>'+
 					'<label for="textContactPACity">'+property4+'<span class="required">*</span>:</label>'+
 				'</td>'+
-				'<td>'+
+				'<td colspan="2" class="textContact">'+
 				'<textarea id="textContactPACity"></textarea>'+
 				'</td>'+
 			'</tr></table></td></tr>');
 
 		$("table#contactTable_"+(counter+1)+" tr#trButtonContacPostalAddressTranslation").show();
+	//	$("table#contactTable"+(counter+1)+" tr#orangeLineContacPostalAddressTranslation").show();
 		$("table#contactTable_"+(counter+1)+" table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress").attr("value","none");
 
 		$("table#contactTable_"+(counter+1)+" #textContactPACity").attr("value",postalCity);
@@ -2587,13 +2589,12 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 				'<td>'+
 					'<label for="textFormerlyUsedName">'+text1+':</label>'+
 				'</td>'+
-				'<td>'+
+				'<td colspan="2">'+
 					'<textarea id="textFormerlyUsedName"></textarea>'+
 				'</td>'+
 				'<td class="labelLeft">'+
-					'<label for="tfun_languageList">'+text2+':</label>'+
-				'</td>'+
-				'<td>'+select+
+					'<label class="language" for="tfun_languageList">'+text2+':</label>'+
+				 select+
 				'</td>'+
 			'</tr>'+
 			'<tr id="trLabelDatesWhenThisNameWasUsed">'+
@@ -2660,13 +2661,12 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 				'<td>'+
 					'<label for="textFormerlyUsedName">'+text1+':</label>'+
 				'</td>'+
-				'<td>'+
+				'<td colspan="2">'+
 					'<textarea id="textFormerlyUsedName" value=""/>'+
 				'</td>'+
 				'<td class="labelLeft">'+
-					'<label for="tfun_languageList">'+text2+':</label>'+
-				'</td>'+
-				'<td>'+select+
+					'<label class="language" for="tfun_languageList">'+text2+':</label>'+
+				 select+
 				'</td>'+
 			'</tr>'+
 			'<tr id="trLabelDatesWhenThisNameWasUsed">'+
@@ -2899,7 +2899,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	}
     
 	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
-
+	$("table#contactTable"+currentTab+" tr#orangeLineContactAddPostalAddressIfDifferent").hide();
 	$("table#contactTable"+currentTab+" tr#trButtonContactAddPostalAddressIfDifferent").after('<tr><td colspan="4"><table id="contactTablePostalAddress_1">'+
 		'<tr id="trContactPostalAddressLabel">'+
 			'<td id="postalAddressLabel" colspan="4">'+property1+
@@ -2909,23 +2909,24 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 			'<td>'+
 				'<label for="textContactPAStreet">'+property3+':</label>'+
 			'</td>'+
-			'<td>'+textContactPAStreet+
+			'<td colspan="2" class="textContact">'+textContactPAStreet+
 			'</td>'+
 			'<td id="contactPostalAddressLanguage">'+
-				'<label for="selectContactLanguagePostalAddress">'+property2+':</label>'+
-			'</td>'+
-			'<td>'+selectContactLanguagePostalAddress+
+				'<label class="language" for="selectContactLanguagePostalAddress">'+property2+':</label>'+
+			 selectContactLanguagePostalAddress+
 			'</td>'+
 		'</tr>'+
 		'<tr id="contactPostalAddressCity">'+
 			'<td>'+
 				'<label for="textContactPACity">'+property4+':</label>'+
 			'</td>'+
-			'<td>'+textContactPACity+
+			'<td colspan="2" class="textContact">'+textContactPACity+
 			'</td>'+
 		'</tr></table></td></tr>');
 
 	$("table#contactTable"+currentTab+" tr#trButtonContacPostalAddressTranslation").show();
+	$("table#contactTable"+currentTab+" tr#orangeLineContacPostalAddressTranslation").show();
+	$("table#contactTable"+currentTab+" tr#orangeLineContactVisitorsAddressTranslation").hide();
 	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress").attr("value","none");
 	if(!control && currentTab == "_1"){
 		control=true;
@@ -2968,6 +2969,8 @@ function contactAddPostalAddressTranslation(text1) {
 	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)+" #selectContactLanguagePostalAddress").attr("value","none");
 //	// Remove "*".
 //	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)).find("span").remove();
+//	$("table#contactTable"+currentTab+" tr#orangeLineContacPostalAddressTranslation")[0].hide();
+	
 }
 
 function addFurtherTelephoneOfTheInstitution(text1){
@@ -3318,12 +3321,11 @@ function aSSRAddDescriptionOfYourComputerPlaces(property1, property2, text1){
 			"<td id=\"tdDescriptionOfYourComputerPlaces_1\">"+
 				"<label for=\"textDescriptionOfYourComputerPlaces_1\">"+property1+":</label>"+
 			"</td>"+
-			"<td>"+
+			"<td colspan=\"2\">"+
 				"<textarea id=\"textDescriptionOfYourComputerPlaces_1\"></textarea>"+
 			"<td id=\"tdSelectDescriptionOfYourComputerPlaces_1\" class=\"labelLeft\">"+
-				"<label for=\"selectDescriptionOfYourComputerPlaces_1\">"+property2+":</label>"+
-			"</td>"+
-			"<td>"+select+
+				"<label class=\"language\" for=\"selectDescriptionOfYourComputerPlaces_1\">"+property2+":</label>"+
+			 select+
 			"</td></tr>");
 		$("table#accessAndServicesTable"+currentTab+" tr#trASSRDescriptionOfYourComputerPlaces_1 select#selectDescriptionOfYourComputerPlaces_1").attr("value","none");
 	} else {

@@ -23,7 +23,7 @@
 										<label for="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.openingHours')" />:</label>
 									</s:else>
 								</td>
-								<td>
+								<td colspan="2">
 									<s:if test="%{#counter > 0}">
 										<textarea id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
@@ -31,10 +31,8 @@
 										<textarea id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSOpeningHoursOfInstitutionChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
-								<td class="labelLeft">
-									<label for="selectLanguageOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectLanguageOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<s:if test="%{#counter > 0}">
 										<select id="selectLanguageOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />">
 									</s:if>
@@ -54,7 +52,7 @@
 							<td id="tdOpeningTimes_1">
 								<label for="textOpeningTimes_1"><s:property value="getText('eag2012.commons.openingHours')" /><span class="required">*</span>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<s:if test="%{#counter > 0}">
 									<textarea id="textOpeningTimes_1"></textarea>
 								</s:if>
@@ -62,10 +60,8 @@
 									<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 								</s:else>
 							</td>
-							<td class="labelLeft">
-								<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
 							<td>
+								<label class="language" for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<s:if test="%{#counter > 0}">
 									<select id="selectLanguageOpeningTimes_1">
 								</s:if>
@@ -85,7 +81,7 @@
 						<td id="tdOpeningTimes_1">
 							<label for="textOpeningTimes_1"><s:property value="getText('eag2012.commons.openingHours')" /><span class="required">*</span>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<s:if test="%{#counter > 0}">
 								<textarea id="textOpeningTimes_1"></textarea>
 							</s:if>
@@ -93,10 +89,8 @@
 								<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 							</s:else>
 						</td>
-						<td class="labelLeft">
-							<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
 						<td>
+							<label class="language" for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<s:if test="%{#counter > 0}">
 								<select id="selectLanguageOpeningTimes_1">
 							</s:if>
@@ -118,7 +112,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asClosing.size() > 0}">
 					<s:set var="closing" value="loader.asClosing[#counter]"/>
 					<s:set var="closingLang" value="loader.asClosingLang[#counter]"/>
@@ -128,7 +124,7 @@
 								<td>
 									<label for="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<s:if test="%{#counter > 0}">
 										<textarea id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
@@ -136,10 +132,8 @@
 										<textarea id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSClosingHoursOfInstitutionChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
-								<td class="labelLeft">
-									<label for="selectLanguageClosingDates_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectLanguageClosingDates_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<s:if test="%{#counter > 0}">
 										<select id="selectLanguageClosingDates_<s:property value="%{#internalStatus.index + 1}" />">
 									</s:if>
@@ -159,7 +153,7 @@
 							<td>
 								<label for="textClosingDates_1"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<s:if test="%{#counter > 0}">
 									<textarea id="textClosingDates_1"></textarea>
 								</s:if>
@@ -167,10 +161,8 @@
 									<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 								</s:else>
 							</td>
-							<td class="labelLeft">
-								<label for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
 							<td>
+								<label class="language" for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<s:if test="%{#counter > 0}">
 									<select id="selectLanguageClosingDates_1">
 								</s:if>
@@ -190,7 +182,7 @@
 						<td>
 							<label for="textClosingDates_1"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<s:if test="%{#counter > 0}">
 								<textarea id="textClosingDates_1"></textarea>
 							</s:if>
@@ -198,10 +190,8 @@
 								<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 							</s:else>
 						</td>
-						<td class="labelLeft">
-							<label for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
 						<td>
+							<label class="language" for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<s:if test="%{#counter > 0}">
 								<select id="selectLanguageClosingDates_1">
 							</s:if>
@@ -223,7 +213,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asNumberOfDirections.size() > 0}">
 					<s:set var="numberOfDirections" value="loader.asNumberOfDirections[#counter]"/>
 					<s:set var="directions" value="loader.asDirections[#counter]"/>
@@ -236,13 +228,11 @@
 								<td>
 									<label for="textTravellingDirections_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textTravellingDirections_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#directions[#internalCounter]" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASATDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASATDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASATDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #directionsLang[#internalCounter]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -269,13 +259,11 @@
 							<td>
 								<label for="textTravellingDirections_1"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textTravellingDirections_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASATDSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -301,13 +289,11 @@
 						<td>
 							<label for="textTravellingDirections_1"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textTravellingDirections_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASATDSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -335,7 +321,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:set var="accesibleToThePublic" value="loader.asAccessQuestion[#counter]"/>
 				<tr>
 					<td>
@@ -361,7 +349,7 @@
 								<td>
 									<label for="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<s:if test="%{#counter > 0}">
 										<textarea id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
@@ -369,10 +357,8 @@
 										<textarea id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherAccessInformationChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASARSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASARSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<s:if test="%{#counter > 0}">
 										<select id="selectASARSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 									</s:if>
@@ -392,7 +378,7 @@
 							<td>
 								<label for="textASAccessRestrictions_1"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<s:if test="%{#counter > 0}">
 									<textarea id="textASAccessRestrictions_1"></textarea>
 								</s:if>
@@ -400,10 +386,8 @@
 									<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 								</s:else>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<s:if test="%{#counter > 0}">
 									<select id="selectASARSelectLanguage_1">
 								</s:if>
@@ -423,7 +407,7 @@
 						<td>
 							<label for="textASAccessRestrictions_1"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<s:if test="%{#counter > 0}">
 								<textarea id="textASAccessRestrictions_1"></textarea>
 							</s:if>
@@ -431,10 +415,8 @@
 								<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 							</s:else>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<s:if test="%{#counter > 0}">
 								<select id="selectASARSelectLanguage_1">
 							</s:if>
@@ -456,7 +438,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asNumberOfTermsOfUse.size() > 0}">
 					<s:set var="numberOfTermsOfUse" value="loader.asNumberOfTermsOfUse[#counter]"/>
 					<s:set var="termsOfUse" value="loader.asTermsOfUse[#counter]"/>
@@ -468,13 +452,11 @@
 								<td>
 									<label for="textASTermOfUse_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASTermOfUse_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#termsOfUse[#internalStatus.index]" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASAFTOUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASAFTOUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASAFTOUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #termsOfUseLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -490,7 +472,7 @@
 								<td colspan="2">
 									<textarea id="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#termsOfUseHref[#internalStatus.index]" /></textarea>
 								</td>
-								<td colspan="2">
+								<td>
 								</td>
 							</tr>
 						</s:iterator>
@@ -500,13 +482,11 @@
 							<td>
 								<label for="textASTermOfUse_1"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASTermOfUse_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASAFTOUSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -519,10 +499,10 @@
 							<td>
 								<label for="textASTOULink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASTOULink_1"></textarea>
 							</td>
-							<td colspan="2">
+							<td>
 							</td>
 						</tr>
 					</s:else>
@@ -532,13 +512,11 @@
 						<td>
 							<label for="textASTermOfUse_1"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASTermOfUse_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASAFTOUSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -551,10 +529,10 @@
 						<td>
 							<label for="textASTOULink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASTOULink_1"></textarea>
 						</td>
-						<td colspan="2">
+						<td>
 						</td>
 					</tr>
 				</s:else>
@@ -566,7 +544,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:set var="accessibilityToThePublic" value="loader.asAccessibilityQuestion[#counter]"/>
 				<tr>
 					<td>
@@ -590,7 +570,7 @@
 								<td>
 									<label for="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<s:if test="%{#counter > 0}">
 										<textarea id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
@@ -598,10 +578,8 @@
 										<textarea id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASASelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASASelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<s:if test="%{#counter > 0}">
 										<select id="selectASASelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 									</s:if>
@@ -621,7 +599,7 @@
 							<td>
 								<label for="textASAccessibility_1"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<s:if test="%{#counter > 0}">
 									<textarea id="textASAccessibility_1"></textarea>
 								</s:if>
@@ -629,10 +607,8 @@
 									<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 								</s:else>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								<s:if test="%{#counter > 0}">
 									<select id="selectASASelectLanguage_1">
 								</s:if>
@@ -652,7 +628,7 @@
 						<td>
 							<label for="textASAccessibility_1"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<s:if test="%{#counter > 0}">
 								<textarea id="textASAccessibility_1"></textarea>
 							</s:if>
@@ -660,10 +636,8 @@
 								<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 							</s:else>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							<s:if test="%{#counter > 0}">
 								<select id="selectASASelectLanguage_1">
 							</s:if>
@@ -685,7 +659,6 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
 				<tr>
 					<td id="searchroomLabel" colspan="4">
 						<span><s:property value="getText('eag2012.accessAndServices.searchroom')" /></span>
@@ -999,13 +972,11 @@
 								<td id="tdDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />">
 									<label for="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.computerplacesDescription')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdSelectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
-								<td>
+									<label class="language" for="selectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #srComputerPlacesDescriptionLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -1021,6 +992,9 @@
 							<td>
 							</td>
 						</tr>
+						<tr>
+							<td class="orangeLine" colspan="4"></td>
+						</tr>
 					</s:if>
 					<s:else>
 						<tr id="trASSRAddDescriptionOfYourComputerPlaces">
@@ -1029,6 +1003,9 @@
 							</td>
 							<td>
 							</td>
+						</tr>
+						<tr>
+							<td class="orangeLine" colspan="4"></td>
 						</tr>
 					</s:else>
 				</s:if>
@@ -1039,6 +1016,9 @@
 						</td>
 						<td>
 						</td>
+					</tr>
+					<tr>
+						<td class="orangeLine" colspan="4"></td>
 					</tr>
 				</s:else>
 
@@ -1101,13 +1081,11 @@
 								<td>
 									<label for="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.readersTicket')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#readersTicketContent[#internalStatus.index]" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectReadersTickectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectReadersTickectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectReadersTickectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #readersTicketLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -1120,10 +1098,10 @@
 								<td>
 									<label for="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea  id="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#readersTicketHref[#internalStatus.index]" /></textarea>
 								</td>
-								<td colspan="2">
+								<td>
 								</td>
 							</tr>
 						</s:iterator>
@@ -1133,13 +1111,11 @@
 							<td>
 								<label for="textASSRReadersTicket_1"><s:property value="getText('eag2012.accessAndServices.readersTicket')"/>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASSRReadersTicket_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectReadersTickectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1152,10 +1128,10 @@
 							<td>
 								<label for="textASSRRTLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASSRRTLink_1"></textarea>
 							</td>
-							<td colspan="2">
+							<td>
 							</td>
 						</tr>
 					</s:else>
@@ -1165,13 +1141,11 @@
 						<td>
 							<label for="textASSRReadersTicket_1"><s:property value="getText('eag2012.accessAndServices.readersTicket')"/>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASSRReadersTicket_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectReadersTickectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1184,10 +1158,10 @@
 						<td>
 							<label for="textASSRRTLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASSRRTLink_1"></textarea>
 						</td>
-						<td colspan="2">
+						<td>
 						</td>
 					</tr>
 				</s:else>
@@ -1199,7 +1173,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asSearchRoomNumberOfAdvancedOrders.size() > 0}">
 					<s:set var="numberOfAdvancedOrders" value="loader.asSearchRoomNumberOfAdvancedOrders[#counter]"/>
 					<s:set var="advancedOrdersContent" value="loader.asSearchRoomAdvancedOrdersContent[#counter]"/>
@@ -1211,13 +1187,11 @@
 								<td>
 									<label for="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#advancedOrdersContent[#internalStatus.index]" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASSRAFOIUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASSRAFOIUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASSRAFOIUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #advancedOrdersLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -1230,10 +1204,10 @@
 								<td>
 									<label for="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#advancedOrdersHref[#internalStatus.index]" /></textarea>
 								</td>
-								<td colspan="2">
+								<td>
 								</td>
 							</tr>
 						</s:iterator>
@@ -1243,13 +1217,11 @@
 							<td>
 								<label for="textASSRAdvancedOrders_1"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASSRAdvancedOrders_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASSRAFOIUSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1262,10 +1234,10 @@
 							<td>
 								<label for="textASSRAOLink_1"><s:property value="getText('eag2012.accessAndServices.link')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASSRAOLink_1"></textarea>
 							</td>
-							<td colspan="2">
+							<td>
 							</td>
 						</tr>
 					</s:else>
@@ -1275,13 +1247,11 @@
 						<td>
 							<label for="textASSRAdvancedOrders_1"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASSRAdvancedOrders_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASSRAFOIUSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1294,10 +1264,10 @@
 						<td>
 							<label for="textASSRAOLink_1"><s:property value="getText('eag2012.accessAndServices.link')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASSRAOLink_1"></textarea>
 						</td>
-						<td colspan="2">
+						<td>
 						</td>
 					</tr>
 				</s:else>
@@ -1309,7 +1279,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asSearchRoomResearchServicesContent.size() > 0}">
 					<s:set var="researchServicesContent" value="loader.asSearchRoomResearchServicesContent[#counter]"/>
 					<s:set var="researchServicesLang" value="loader.asSearchRoomResearchServicesLang[#counter]"/>
@@ -1319,13 +1291,11 @@
 								<td>
 									<label for="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.researchServices')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="textASSRRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="textASSRRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="textASSRRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #researchServicesLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -1340,13 +1310,11 @@
 							<td>
 								<label for="textASSRResearchServices_1"><s:property value="getText('eag2012.accessAndServices.researchServices')"/>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASSRResearchServices_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="textASSRRSSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1361,13 +1329,11 @@
 						<td>
 							<label for="textASSRResearchServices_1"><s:property value="getText('eag2012.accessAndServices.researchServices')"/>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASSRResearchServices_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="textASSRRSSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1384,7 +1350,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<tr>
 					<td id="libraryLabel">
 						<span><s:property value="getText('eag2012.accessAndServices.library')" /></span>
@@ -1691,13 +1659,11 @@
 								<td>
 									<label for="textASDescription_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.description')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASDescription_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #internetAccessDescriptionLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -1712,13 +1678,11 @@
 							<td>
 								<label for="textASDescription_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASDescription_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASDSelectLanguage_1">
 									<s:iterator value="languageList" var="language">
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1733,13 +1697,11 @@
 						<td>
 							<label for="textASDescription_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASDescription_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASDSelectLanguage_1">
 								<s:iterator value="languageList" var="language">
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1805,13 +1767,11 @@
 								<td>
 									<label for="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASTSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASTSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASTSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #restorationlabDescriptionLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -1826,13 +1786,11 @@
 							<td>
 								<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASTSSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1847,13 +1805,11 @@
 						<td>
 							<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASTSSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -1870,7 +1826,9 @@
 					<td>
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asRestorationlabTelephone.size() > 0}">
 					<s:set var="restorationlabTelephone" value="loader.asRestorationlabTelephone[#counter]"/>
 					<s:if test="%{#restorationlabTelephone.size() > 0}">
@@ -2107,13 +2065,11 @@
 								<td>
 									<label for="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASTSRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASTSRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASTSRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #reproductionserDescriptionLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -2128,13 +2084,11 @@
 							<td>
 								<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASTSRSSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2149,13 +2103,11 @@
 						<td>
 							<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASTSRSSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2172,7 +2124,9 @@
 					<td>
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>	
 				<s:if test="%{loader.asReproductionserTelephone.size() > 0}">
 					<s:set var="reproductionserTelephone" value="loader.asReproductionserTelephone[#counter]"/>
 					<s:if test="%{#reproductionserTelephone.size() > 0}">
@@ -2515,13 +2469,11 @@
 								<td>
 									<label for="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASReSeRefreshmentSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASReSeRefreshmentSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASReSeRefreshmentSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #recreationalServicesRefreshmentAreaLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -2536,13 +2488,11 @@
 							<td>
 								<label for="textASReSeRefreshment_1"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASReSeRefreshment_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASReSeRefreshmentSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2557,13 +2507,11 @@
 						<td>
 							<label for="textASReSeRefreshment_1"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASReSeRefreshment_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASReSeRefreshmentSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2580,7 +2528,9 @@
 					<td>
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asRSNumberOfExhibition.size() > 0}">
 					<s:set var="numberOfExhibition" value="loader.asRSNumberOfExhibition[#counter]"/>
 					<s:set var="rsExhibition" value="loader.asRSExhibition[#counter]"/>
@@ -2593,13 +2543,11 @@
 								<td>
 									<label for="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsExhibition[#internalStatus.index]" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASReSeExhibitionSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASReSeExhibitionSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASReSeExhibitionSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #rsExhibitionLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -2629,13 +2577,11 @@
 							<td>
 								<label for="textASReSeExhibition_1"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASReSeExhibition_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASReSeExhibitionSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2665,13 +2611,11 @@
 						<td>
 							<label for="textASReSeExhibition_1"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASReSeExhibition_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASReSeExhibitionSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2703,7 +2647,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asRSNumberOfToursSessions.size() > 0}">
 					<s:set var="numberOfToursSessions" value="loader.asRSNumberOfToursSessions[#counter]"/>
 					<s:set var="rsToursSessions" value="loader.asRSToursSessions[#counter]"/>
@@ -2716,13 +2662,11 @@
 								<td>
 									<label for="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsToursSessions[#internalStatus.index]" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASReSeToursAndSessionsSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASReSeToursAndSessionsSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASReSeToursAndSessionsSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #rsToursSessionsLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -2752,13 +2696,11 @@
 							<td>
 								<label for="textASReSeToursAndSessions_1" ><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASReSeToursAndSessions_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASReSeToursAndSessionsSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2788,13 +2730,11 @@
 						<td>
 							<label for="textASReSeToursAndSessions_1" ><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASReSeToursAndSessions_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASReSeToursAndSessionsSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2826,7 +2766,9 @@
 					<td colspan="2">
 					</td>
 				</tr>
-
+				<tr>
+					<td class="orangeLine" colspan="4"></td>
+				</tr>
 				<s:if test="%{loader.asRSNumberOfOtherServices.size() > 0}">
 					<s:set var="numberOfOtherServices" value="loader.asRSNumberOfOtherServices[#counter]"/>
 					<s:set var="rsOtherServices" value="loader.asRSOtherServices[#counter]"/>
@@ -2839,13 +2781,11 @@
 								<td>
 									<label for="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 								</td>
-								<td>
+								<td colspan="2">
 									<textarea id="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsOtherServices[#internalStatus.index]" /></textarea>
 								</td>
-								<td class="labelLeft">
-									<label for="selectASReSeOtherServicesSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-								</td>
 								<td>
+									<label class="language" for="selectASReSeOtherServicesSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 									<select id="selectASReSeOtherServicesSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #rsOtherServicesLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -2875,13 +2815,11 @@
 							<td>
 								<label for="textASReSeOtherServices_1" ><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 							</td>
-							<td>
+							<td colspan="2">
 								<textarea id="textASReSeOtherServices_1"></textarea>
 							</td>
-							<td class="labelLeft">
-								<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-							</td>
 							<td>
+								<label class="language" for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 								<select id="selectASReSeOtherServicesSelectLanguage_1">
 									<s:iterator value="languageList" var="language"> 
 										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2911,13 +2849,11 @@
 						<td>
 							<label for="textASReSeOtherServices_1" ><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 						</td>
-						<td>
+						<td colspan="2">
 							<textarea id="textASReSeOtherServices_1"></textarea>
 						</td>
-						<td class="labelLeft">
-							<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</td>
 						<td>
+							<label class="language" for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							<select id="selectASReSeOtherServicesSelectLanguage_1">
 								<s:iterator value="languageList" var="language"> 
 									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2969,13 +2905,11 @@
 			<td id="tdOpeningTimes_1">
 				<label for="textOpeningTimes_1"><s:property value="getText('eag2012.commons.openingHours')" /><span class="required">*</span>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
 			<td>
+				<label class="language" for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionLangChanged($(this));">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -2991,18 +2925,18 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trASClosingDates_1">
 			<td>
 				<label for="textClosingDates_1"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
 			<td>
+				<label class="language" for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectLanguageClosingDates_1" onchange="aSClosingHoursOfInstitutionLangChanged($(this));">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3018,18 +2952,18 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trTravellingDirections_1">
 			<td>
 				<label for="textTravellingDirections_1"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textTravellingDirections_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASATDSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3056,7 +2990,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td>
 				<label for="selectASAccesibleToThePublic"><s:property value="getText('eag2012.commons.accessiblePublic')"/><span class="required">*</span>:</label>
@@ -3076,13 +3012,11 @@
 			<td>
 				<label for="textASAccessRestrictions_1"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASARSelectLanguage_1" onchange="aSFutherAccessInformationLangChanged($(this));">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3098,18 +3032,18 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trASAddFutherTermOfUse_1">
 			<td>
 				<label for="textASTermOfUse_1"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASTermOfUse_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASAFTOUSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3122,10 +3056,10 @@
 			<td>
 				<label for="textASTOULink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASTOULink_1"></textarea>
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 
@@ -3136,7 +3070,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td>
 				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('eag2012.commons.disabledAccess')"/><span class="required">*</span>:</label>
@@ -3154,13 +3090,11 @@
 			<td>
 				<label for="textASAccessibility_1"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				<select id="selectASASelectLanguage_1" onchange="aSFutherInformationOnExistingFacilitiesLangChanged($(this));">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3176,7 +3110,6 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
 		<tr>
 			<td id="searchroomLabel" colspan="4">
 				<span><s:property value="getText('eag2012.accessAndServices.searchroom')" /></span>
@@ -3253,7 +3186,9 @@
 			<td>
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td>
 				<label for="textASSRMicrofilmPlaces"><s:property value="getText('eag2012.accessAndServices.microfilmPlaces')"/>:</label>
@@ -3277,13 +3212,11 @@
 			<td>
 				<label for="textASSRReadersTicket_1"><s:property value="getText('eag2012.accessAndServices.readersTicket')"/>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASSRReadersTicket_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectReadersTickectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3296,10 +3229,10 @@
 			<td>
 				<label for="textASSRRTLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASSRRTLink_1"></textarea>
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 
@@ -3310,18 +3243,18 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trASSRAddFurtherOrderInformation_1">
 			<td>
 				<label for="textASSRAdvancedOrders_1"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASSRAdvancedOrders_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASSRAFOIUSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3334,10 +3267,10 @@
 			<td>
 				<label for="textASSRAOLink_1"><s:property value="getText('eag2012.accessAndServices.link')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASSRAOLink_1"></textarea>
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 
@@ -3348,18 +3281,18 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trASSRResearchServices_1">
 			<td>
 				<label for="textASSRResearchServices_1"><s:property value="getText('eag2012.accessAndServices.researchServices')"/>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASSRResearchServices_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="textASSRRSSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3375,7 +3308,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td id="libraryLabel">
 				<span><s:property value="getText('eag2012.accessAndServices.library')" /></span>
@@ -3466,13 +3401,11 @@
 			<td>
 				<label for="textASDescription_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASDescription_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASDSelectLanguage_1">
 					<s:iterator value="languageList" var="language">
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3514,13 +3447,11 @@
 			<td>
 				<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASTSSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3536,7 +3467,9 @@
 			<td>
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td>
 				<label for="textASTSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
@@ -3597,13 +3530,11 @@
 			<td>
 				<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASTSRSSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3619,7 +3550,9 @@
 			<td>
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr>
 			<td>
 				<label for="textASTSRSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
@@ -3732,13 +3665,11 @@
 			<td>
 				<label for="textASReSeRefreshment_1"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASReSeRefreshment_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASReSeRefreshmentSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3754,18 +3685,18 @@
 			<td>
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trASReSeExhibition_1">
 			<td>
 				<label for="textASReSeExhibition_1"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASReSeExhibition_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASReSeExhibitionSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3796,18 +3727,18 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trASReSeToursAndSessions_1">
 			<td>
 				<label for="textASReSeToursAndSessions_1" ><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASReSeToursAndSessions_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASReSeToursAndSessionsSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
@@ -3838,18 +3769,18 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td class="orangeLine" colspan="4"></td>
+		</tr>
 		<tr id="trASReSeOtherServices_1">
 			<td>
 				<label for="textASReSeOtherServices_1" ><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 			</td>
-			<td>
+			<td colspan="2">
 				<textarea id="textASReSeOtherServices_1"></textarea>
 			</td>
-			<td class="labelLeft">
-				<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-			</td>
 			<td>
+				<label class="language" for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 				<select id="selectASReSeOtherServicesSelectLanguage_1">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
