@@ -9,8 +9,6 @@
 	$(function() {
 
 		$("#conversionTypefull").click(function() {
-			$('#hiddenHierarchyPrefix').show();
-			enableHierarchyPrefixState();
 			$('#hiddenInheritFileParent').show();
 			enableInheritFileParentCheckState();
 			$('#hiddenInheritOrigination').show();
@@ -18,8 +16,6 @@
 		});
 
 		$("#conversionTypeminimal").click(function() {
-			$('#hiddenHierarchyPrefix').hide();
-			disableHierarchyPrefixState($('input#hierarchyPrefixInitialValue').val());
 			$('#hiddenInheritFileParent').hide();
 			disableInheritFileParentCheckState();
 			$('#hiddenInheritOrigination').hide();
@@ -76,23 +72,6 @@
 		});
 
 	});
-
-	function changeHierarchyPrefixState(value) {
-		if ($("#hierarchyPrefixCheck").attr('checked')) {
-			enableHierarchyPrefixState();
-		} else {
-			disableHierarchyPrefixState(value);
-		}
-	}
-
-	function enableHierarchyPrefixState() {
-		$("#hierarchyPrefix").removeAttr('disabled');
-	}
-
-	function disableHierarchyPrefixState(value) {
-		$("#hierarchyPrefix").attr('disabled', 'disabled');
-		$("#hierarchyPrefix").val(value);
-	}
 
 	function changeInheritFileParentCheckState() {
 		if ($("#inheritFileParentCheck").attr('checked')) {
@@ -266,14 +245,6 @@
 		<s:if test="conversionType=='minimal'">
 			<c:set var="showMinimal" value="style=\"display: none;\""></c:set>
 		</s:if>
-		<tr id="hiddenHierarchyPrefix" ${showMinimal}>
-			<td class="inputLabel">
-				<s:hidden id="hierarchyPrefixInitialValue" value="%{hierarchyPrefix}"></s:hidden>
-				<s:checkbox name="hierarchyPrefixCheck" id="hierarchyPrefixCheck" value="true" onchange="changeHierarchyPrefixState('%{hierarchyPrefix}');"></s:checkbox>
-				<s:label key="ead2ese.label.hierarchy.prefix" for="hierarchyPrefix" />:
-			</td>
-			<td><s:textfield id="hierarchyPrefix" name="hierarchyPrefix"></s:textfield></td>
-		</tr>
 		<tr id="hiddenInheritFileParent" ${showMinimal}>
 			<td class="inputLabel">
 				<s:checkbox name="inheritFileParentCheck" id="inheritFileParentCheck" value="true" onchange="changeInheritFileParentCheckState();"></s:checkbox>

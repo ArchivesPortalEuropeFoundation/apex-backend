@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -26,20 +29,15 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ZipManager;
-import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.dao.IngestionprofileDAO;
+import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
-import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import java.util.LinkedHashSet;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * User: Yoann Moranville Date: Sep 2, 2010
@@ -586,8 +584,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
         properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
         properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
         properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
-        properties.setProperty(QueueItem.HIERARCHY_PREFIX_CHECK, ingestionprofile.getEuropeanaHierarchyPrefixCheck()+"");
-        properties.setProperty(QueueItem.HIERARCHY_PREFIX, ingestionprofile.getEuropeanaHierarchyPrefix()+"");
         properties.setProperty(QueueItem.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck()+"");
         properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
         properties.setProperty(QueueItem.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()+"");

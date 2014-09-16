@@ -4,6 +4,17 @@
  */
 package eu.apenet.dashboard.manual;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
@@ -14,15 +25,6 @@ import eu.apenet.persistence.vo.IngestionprofileDefaultDaoType;
 import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -80,8 +82,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String europeanaLicense;
     private String cc_js_result_uri;
     private String licenseAdditionalInformation;
-    private String hierarchyPrefixCheck;
-    private String hierarchyPrefix;
     private String inheritFileParentCheck;
     private String inheritFileParent;
     private String inheritOriginationCheck;
@@ -135,8 +135,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 cc_js_result_uri = ingestionprofile.getEuropeanaLicenseDetails();
             }
             licenseAdditionalInformation = ingestionprofile.getEuropeanaAddRights();
-            hierarchyPrefixCheck = Boolean.toString(ingestionprofile.getEuropeanaHierarchyPrefixCheck());
-            hierarchyPrefix = ingestionprofile.getEuropeanaHierarchyPrefix();
             inheritFileParentCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritElementsCheck());
             inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
             inheritOriginationCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritOriginCheck());
@@ -195,8 +193,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         	profile.setEuropeanaLicenseDetails("http://www.europeana.eu/rights/out-of-copyright-non-commercial/");
         }
         profile.setEuropeanaAddRights(licenseAdditionalInformation);
-        profile.setEuropeanaHierarchyPrefixCheck(Boolean.parseBoolean(hierarchyPrefixCheck));
-        profile.setEuropeanaHierarchyPrefix(hierarchyPrefix);
         profile.setEuropeanaInheritElementsCheck(Boolean.parseBoolean(inheritFileParentCheck));
         profile.setEuropeanaInheritElements(Boolean.parseBoolean(inheritFileParent));
         profile.setEuropeanaInheritOriginCheck(Boolean.parseBoolean(inheritOriginationCheck));
@@ -248,8 +244,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         license = EUROPEANA;
         europeanaLicense = "";
         licenseAdditionalInformation = "";
-        hierarchyPrefixCheck = Boolean.toString(true);
-        hierarchyPrefix = getText("ead2ese.content.hierarchy.prefix");
         inheritFileParentCheck = Boolean.toString(true);
         inheritFileParent = Boolean.toString(false);
         inheritOriginationCheck = Boolean.toString(true);
@@ -428,14 +422,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.europeanaLicenseSet = europeanaLicenseSet;
     }
 
-    public String getHierarchyPrefix() {
-        return hierarchyPrefix;
-    }
-
-    public void setHierarchyPrefix(String hierarchyPrefix) {
-        this.hierarchyPrefix = hierarchyPrefix;
-    }
-
     public String getProfileName() {
         return profileName;
     }
@@ -578,14 +564,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setLicenseAdditionalInformation(String licenseAdditionalInformation) {
         this.licenseAdditionalInformation = licenseAdditionalInformation;
-    }
-
-    public String getHierarchyPrefixCheck() {
-        return hierarchyPrefixCheck;
-    }
-
-    public void setHierarchyPrefixCheck(String hierarchyPrefixCheck) {
-        this.hierarchyPrefixCheck = hierarchyPrefixCheck;
     }
 
     public String getInheritFileParentCheck() {

@@ -20,15 +20,13 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
-import eu.apenet.dpt.utils.ead2ese.EseConfig;
-import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
@@ -812,9 +810,6 @@ public class EadService {
     		config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
     	}
     	config.setRightsAdditionalInformation(preferences.getProperty(QueueItem.LICENSE_ADD_INFO));
-    	if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.HIERARCHY_PREFIX_CHECK)) && StringUtils.isNotEmpty(preferences.getProperty(QueueItem.HIERARCHY_PREFIX))) {
-            config.setContextInformationPrefix(preferences.getProperty(QueueItem.HIERARCHY_PREFIX));
-        }
     	if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE_CHECK)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE))) {
             config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
         }

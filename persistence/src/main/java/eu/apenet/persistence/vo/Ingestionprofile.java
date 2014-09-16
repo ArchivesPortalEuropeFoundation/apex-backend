@@ -62,10 +62,6 @@ public class Ingestionprofile implements Serializable {
     private String europeanaLicenseDetails;
     @Column(name = "europeana_add_rights")
     private String europeanaAddRights;
-    @Column(name = "europeana_hp_check")
-    private Boolean europeanaHierarchyPrefixCheck = true;
-    @Column(name = "europeana_hp")
-    private String europeanaHierarchyPrefix;
     @Column(name = "europeana_inh_elements_check")
     private Boolean europeanaInheritElementsCheck = true;
     @Column(name = "europeana_inh_elements")
@@ -242,22 +238,6 @@ public class Ingestionprofile implements Serializable {
 
     public void setEuropeanaAddRights(String europeanaAddRights) {
         this.europeanaAddRights = europeanaAddRights;
-    }
-
-    public Boolean getEuropeanaHierarchyPrefixCheck() {
-        return europeanaHierarchyPrefixCheck;
-    }
-
-    public void setEuropeanaHierarchyPrefixCheck(Boolean europeanaHierarchyPrefixCheck) {
-        this.europeanaHierarchyPrefixCheck = europeanaHierarchyPrefixCheck;
-    }
-
-    public String getEuropeanaHierarchyPrefix() {
-        return europeanaHierarchyPrefix;
-    }
-
-    public void setEuropeanaHierarchyPrefix(String europeanaHierarchyPrefix) {
-        this.europeanaHierarchyPrefix = europeanaHierarchyPrefix;
     }
 
     public Boolean getEuropeanaInheritElementsCheck() {

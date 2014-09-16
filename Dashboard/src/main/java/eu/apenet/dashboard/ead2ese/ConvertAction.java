@@ -19,16 +19,14 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
-import eu.apenet.dashboard.actions.content.ead.BatchEadActions;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
+import eu.apenet.dashboard.actions.content.ead.BatchEadActions;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
-import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.util.Ead2EseInformation;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueueAction;
@@ -88,7 +86,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String validateLinks = ConvertAction.OPTION_NO;
     private String inheritLanguage = ConvertAction.OPTION_NO;
     //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
-    private String hierarchyPrefix;
     private String inheritOrigination= ConvertAction.OPTION_NO;
     private String inheritFileParent= ConvertAction.OPTION_NO;
     private String customDataProvider;
@@ -99,7 +96,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean batchConversion;
     private boolean dataProviderCheck = true;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
-    private boolean hierarchyPrefixCheck;
     private boolean inheritFileParentCheck;
     private boolean inheritOriginationCheck;
     private boolean inheritLanguageCheck = true;
@@ -191,7 +187,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 		this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_FREE, this.getText("ead2ese.content.license.europeana.access.free")));
 		this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_ORPHAN, this.getText("ead2ese.content.license.europeana.access.orphan")));
 		this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_PAID, this.getText("ead2ese.content.license.europeana.access.paid")));
-		this.setHierarchyPrefix(this.getText("ead2ese.content.hierarchy.prefix" ));
     }
 
 	public String input() throws IOException, SAXException, ParserConfigurationException{
@@ -261,7 +256,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 
 	protected EdmConfig fillConfig(){
     	EdmConfig config = new EdmConfig();
-    	config.setContextInformationPrefix(this.getHierarchyPrefix());
     	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
 
@@ -377,14 +371,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 
 	public void setInheritLanguage(String inheritLanguage) {
 		this.inheritLanguage = inheritLanguage;
-	}
-
-	public String getHierarchyPrefix() {
-		return hierarchyPrefix;
-	}
-
-	public void setHierarchyPrefix(String hierarchyPrefix) {
-		this.hierarchyPrefix = hierarchyPrefix;
 	}
 
 	public String getInheritOrigination() {
@@ -597,20 +583,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 */
 	public void setConversionType(String conversionType) {
 		this.conversionType = conversionType;
-	}
-
-	/**
-	 * @return the hierarchyPrefixCheck
-	 */
-	public boolean isHierarchyPrefixCheck() {
-		return this.hierarchyPrefixCheck;
-	}
-
-	/**
-	 * @param hierarchyPrefixCheck the hierarchyPrefixCheck to set
-	 */
-	public void setHierarchyPrefixCheck(boolean hierarchyPrefixCheck) {
-		this.hierarchyPrefixCheck = hierarchyPrefixCheck;
 	}
 
 	/**
