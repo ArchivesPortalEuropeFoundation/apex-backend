@@ -85,7 +85,7 @@ import eu.apenet.persistence.vo.User;
 public class CreateEacCpf extends EacCpfAction {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1967202440160548074L;
 	private EacCpf eacCpf = new EacCpf();
@@ -167,14 +167,14 @@ public class CreateEacCpf extends EacCpfAction {
 	            	otherRecordId = control.getOtherRecordId().get(0).getContent();
 	            }
 	            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
-	            	
+
 	            if (noRecordIdAvailable){
 	                String id = System.currentTimeMillis() +"";
 	                id = id.substring(0,id.length()-4);
 	                newEac.setIdentifier(id);
 	            }else {
 	            	 newEac.setIdentifier(otherRecordId);
-	            	 
+
 	            }
 	            newEac.setUploadMethod(uploadMethod);
 	            newEac.setArchivalInstitution(archivalInstitution);
@@ -183,7 +183,7 @@ public class CreateEacCpf extends EacCpfAction {
 	            newEac.setTitle("temporary title");
 	            newEac = eacCpfDAO.store(newEac);
         	}
-        	control.getRecordId().setValue(newEac.getIdentifier());
+        	control.getRecordId().setValue(replaceNonNmtokenChars(newEac.getIdentifier()));
         }
 
         // eacCpf/control/maintenanceStatus
@@ -1507,6 +1507,8 @@ public class CreateEacCpf extends EacCpfAction {
         } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN)) {
             fromDate.setContent(UNKNOWN);
         }
+        //clean StringBuilder
+        standardDate.delete(0, standardDate.length());
 
         //add toDate if known; same procedure as with fromDate
         ToDate toDate = new ToDate();
@@ -1528,6 +1530,9 @@ public class CreateEacCpf extends EacCpfAction {
         } else if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(OPEN)) {
             toDate.setContent(OPEN);
         }
+
+        dateRange.setFromDate(fromDate);
+        dateRange.setToDate(toDate);
 
         return dateRange;
     }
@@ -1607,5 +1612,36 @@ public class CreateEacCpf extends EacCpfAction {
         } else {
             return true;
         }
+    }
+
+    private static String replaceNonNmtokenChars(String urlPart) {
+    	if (urlPart != null){
+	        String result = urlPart.replaceAll("\\*", "_");
+	        result = result.replaceAll("=", "_");
+	        result = result.replaceAll("/", "_");
+	        result = result.replaceAll("\\\\", "_");
+	        result = result.replaceAll("\\[", "_");
+	        result = result.replaceAll("\\]", "_");
+	        result = result.replaceAll("\\+", "_");
+	        result = result.replaceAll("%", "_");
+	        result = result.replaceAll("@", "_");
+	        result = result.replaceAll("\\$", "_");
+	        result = result.replaceAll("#", "_");
+	        result = result.replaceAll("\\^", "_");
+	        result = result.replaceAll("&", "_");
+	        result = result.replaceAll("\\(", "_");
+	        result = result.replaceAll("\\)", "_");
+	        result = result.replaceAll("!", "_");
+	        result = result.replaceAll("~", "_");
+	        result = result.replaceAll("<", "_");
+	        result = result.replaceAll(">", "_");
+	        result = result.replaceAll("\"", "_");
+	        result = result.replaceAll(",", "_");
+	        result = result.replaceAll(";", "_");
+	        result = result.replaceAll(" ", "_");
+	        return result;
+    	}else {
+    		return null;
+    	}
     }
 }

@@ -174,6 +174,7 @@ public class StoreEacCpfAction extends EacCpfAction {
 
             // It is necessary to validate the file against apeEAC-CPF schema.
             LOG.debug("Beginning EAC-CPF validation");
+            EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
             if (validateFile(eacCpfTempFile)) {
                 LOG.info("EAC-CPF file is valid");
 
@@ -196,7 +197,6 @@ public class StoreEacCpfAction extends EacCpfAction {
                 }
 
                 //update ddbb entry
-                EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
                 eu.apenet.persistence.vo.EacCpf storedEacEntry = null;
 
                 if (this.getEacDaoId() != null
