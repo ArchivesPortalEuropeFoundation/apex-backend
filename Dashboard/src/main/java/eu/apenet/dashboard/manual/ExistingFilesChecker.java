@@ -13,7 +13,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -52,7 +51,6 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import java.util.logging.Level;
 
 /**
  * User: Eloy García Date: Sep 23d, 2010
@@ -245,6 +243,7 @@ public class ExistingFilesChecker {
             }
 
         } else if (xmlType == XmlType.EAC_CPF) {
+            LOG.info("We try to insert an EAC-CPF file");
             result = insertEacCpfFile(fileUnit, xmlType);
 
         } else {
@@ -291,8 +290,8 @@ public class ExistingFilesChecker {
                             File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
                             if (file.exists()) {
                                 //Windows file lock workaround; uncomment if necessary
-                                System.gc();
-                                Thread.sleep(2000);
+                                //System.gc();
+                                //Thread.sleep(2000);
                                 FileUtils.forceDelete(file);
                             }
 
@@ -304,8 +303,8 @@ public class ExistingFilesChecker {
                         } catch (IOException ex) {
                             LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
                         // belonging to Windows file lock workaround (see above)
-                        } catch (InterruptedException ex) {
-                            LOG.error(ex);
+//                        } catch (InterruptedException ex) {
+//                            LOG.error(ex);
                         }
                     }
                     result = STATUS_ERROR;
@@ -397,8 +396,8 @@ public class ExistingFilesChecker {
                     File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
                     if (file.exists()) {
                         //Windows file lock workaround; uncomment if necessary
-                        System.gc();
-                        Thread.sleep(2000);
+                        //System.gc();
+                        //Thread.sleep(2000);
                         FileUtils.forceDelete(file);
                     }
 
@@ -410,13 +409,13 @@ public class ExistingFilesChecker {
                 } catch (IOException ex) {
                     LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
                         // belonging to Windows file lock workaround (see above)
-                } catch (InterruptedException ex) {
-                    LOG.error(ex);
+//                } catch (InterruptedException ex) {
+//                    LOG.error(ex);
                 }
             }
             result = STATUS_ERROR;
         } else {
-            Integer identifier = eacCpfDAO.isEacCpfIdUsed(cpfId, null, EacCpf.class);
+            Integer identifier = eacCpfDAO.isEacCpfIdUsed(cpfId, archivalInstitutionId, EacCpf.class);
             if (identifier != null) { //The cpf_id is already stored in the table
 
                 // The cpfId already exists
@@ -591,7 +590,7 @@ public class ExistingFilesChecker {
             if (e instanceof WstxParsingException) {
                 throw (WstxParsingException) e;
             }
-            LOG.error("Error parsing StAX for file " + path + ": " + e.getMessage());
+            LOG.error("Error parsing StAX for file " + path, e);
         } finally {
             try {
                 if (input != null) {
