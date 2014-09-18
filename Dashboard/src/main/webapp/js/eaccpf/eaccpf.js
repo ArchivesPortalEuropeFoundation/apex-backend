@@ -420,9 +420,24 @@ function insertDateAfter(tableName, anchorId, incrCounter, dateLabel, dateTypeLa
             '</tr>' +
             '<tr id="trDate_iso_' + incrCounter + '">' +
             '<td>' + isoLabel + '</td>' +
-            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td>' +
+            '<table style="width: 50%;">' +
+            '<tr>' +
+            '<td style="padding: 0px;"><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;"><input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;"><input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td style="padding: 0px;">YYYY</td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;">MM</td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;">DD</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
             '<td></td><td></td>' +
             '</tr>');
     $("table#" + tableName + " " + anchorId).after(newDate);
@@ -456,13 +471,43 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
             '</tr>' +
             '<tr id="trDate_iso_' + incrCounter + '">' +
             '<td>' + isoLabel + '</td>' +
-            '<td><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td>' +
+            '<table style="width: 50%;">' +
+            '<tr>' +
+            '<td style="padding: 0px;"><input type="text" title="YYYY" id="date_1_Year" name="' + tableName + '_date_1_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;"><input type="text" title="MM" id="date_1_Month" name="' + tableName + '_date_1_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;"><input type="text" title="DD" id="date_1_Day" name="' + tableName + '_date_1_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td style="padding: 0px;">YYYY</td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;">MM</td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;">DD</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
             '<td></td>' +
-            '<td><input type="text" title="YYYY" id="date_2_Year" name="' + tableName + '_date_2_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
-            '<input type="text" title="MM" id="date_2_Month" name="' + tableName + '_date_2_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /> &ndash; ' +
-            '<input type="text" title="DD" id="date_2_Day" name="' + tableName + '_date_2_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td>' +
+            '<table style="width: 50%;">' +
+            '<tr>' +
+            '<td style="padding: 0px;"><input type="text" title="YYYY" id="date_2_Year" name="' + tableName + '_date_2_Year_' + incrCounter + '" size="4" maxlength="4" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;"><input type="text" title="MM" id="date_2_Month" name="' + tableName + '_date_2_Month_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;"><input type="text" title="DD" id="date_2_Day" name="' + tableName + '_date_2_Day_' + incrCounter + '" size="2" maxlength="2" onchange="validateIsoDates($(this), \'' + invalidDateMessage + '\', \'' + invalidRangeMessage + '\');" /></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td style="padding: 0px;">YYYY</td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;">MM</td>' +
+            '<td style="padding: 0px;">&ndash;</td>' +
+            '<td style="padding: 0px;">DD</td>' +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
             '</tr>');
     $("table#" + tableName + " " + anchorId).after(newDateRange);
 }
