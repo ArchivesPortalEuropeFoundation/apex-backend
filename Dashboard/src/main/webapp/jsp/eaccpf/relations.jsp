@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-            <td colspan="3"><textarea id="textareaCpfRelationDescription" name="textareaCpfRelationDescription_1"></textarea></td>
+            <td colspan="3"><textarea id="textareaCpfRelationDescription" name="textareaCpfRelationDescription_1" style="height: 16px;"></textarea></td>
         </tr>
     </table>
     <table class="tablePadding">
@@ -98,7 +98,7 @@
         </tr>
         <tr>
             <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-            <td colspan="3"><textarea id="textareaResRelationDescription" name="textareaResRelationDescription_1"></textarea></td>
+            <td colspan="3"><textarea id="textareaResRelationDescription" name="textareaResRelationDescription_1" style="height: 16px;"></textarea></td>
         </tr>
     </table>
     <table class="tablePadding">
@@ -149,7 +149,7 @@
         </tr>
         <tr>
             <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-            <td colspan="3"><textarea id="textareaFncRelationDescription" name="textareaFncRelationDescription_1"></textarea></td>
+            <td colspan="3"><textarea id="textareaFncRelationDescription" name="textareaFncRelationDescription_1" style="height: 16px;"></textarea></td>
         </tr>
     </table>
     <table class="tablePadding">

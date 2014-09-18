@@ -235,6 +235,7 @@ textarea {
     height: 100px;
     width: available;
     font-weight: bold;
+    padding-left: 6px;
 }
 
 input[type="button"] {
@@ -334,7 +335,7 @@ hr.tablePadding {
 }
 
 .spanEacSave {
-	text-align: center; 
+	text-align: center;
 	color: green;
 	font-weight: bold;
 	padding-top: 5px;
