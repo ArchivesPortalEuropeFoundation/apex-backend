@@ -1,5 +1,6 @@
 package eu.apenet.persistence.dao;
 import eu.apenet.persistence.vo.EacCpf;
+
 import java.util.List;
 
 public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
@@ -26,4 +27,6 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
     public List<EacCpf> getAllEacCpfsPublishedByArchivalInstitutionId(int aiId);
 
 	public List<EacCpf> getAllEacCpfsByArchivalInstitutionId(int aiId);
+	
+	public boolean existEacCpfs(ContentSearchOptions contentSearchOptions);
 }

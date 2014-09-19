@@ -19,6 +19,7 @@ import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.EacCpf;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
@@ -119,7 +120,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         }
         return query.getResultList();
     }
-
+    @SuppressWarnings("unchecked")
     @Override
     public long countEacCpfs(ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
@@ -130,6 +131,19 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
 
         return getEntityManager().createQuery(cq).getSingleResult();
     }
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean existEacCpfs(ContentSearchOptions contentSearchOptions) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<EacCpf> cq = criteriaBuilder.createQuery(EacCpf.class);
+        Root<? extends EacCpf> from = (Root<? extends EacCpf>) cq.from(contentSearchOptions.getContentClass());
+		cq.where(buildWhere(from, cq, contentSearchOptions));
+		cq.select(from);
+
+		TypedQuery<EacCpf> query = getEntityManager().createQuery(cq);
+		query.setMaxResults(1);
+		return query.getResultList().size() > 0;
+	}
 
     private Predicate buildWhere(Root<? extends EacCpf> from, CriteriaQuery<?> cq, ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
