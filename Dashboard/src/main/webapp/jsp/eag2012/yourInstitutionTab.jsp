@@ -768,7 +768,7 @@
 						</s:iterator>
 					</select>
 				</td>
-				<td colspan="2" class="labelLeft">
+				<td colspan="2" class="buttonAddInformation">
 					<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('eag2012.commons.addFutherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
 				</td>
 			</tr>
@@ -889,7 +889,7 @@
 						</s:iterator>
 					</select>
 				</td>
-				<td colspan="2" class="labelLeft">
+				<td colspan="2" class="buttonAddInformation">
 					<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('eag2012.yourinstitution.addInfoOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
 				</td>
 			</tr>

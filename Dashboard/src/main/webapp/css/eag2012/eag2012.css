@@ -22,6 +22,7 @@
 	float: left;
 	width: 100%;
 	line-height: normal;
+	font-weight: bold;
 }
 
 #eag2012TabsContainer {
@@ -165,7 +166,7 @@
 	width: 100%;
 }
 #eag2012Div table td.orangeLine{
-	border-bottom:1px solid #E6BB5F;
+	border-bottom:2px solid #E6BB5F;
 }
 .tablePadding {
 	padding-right: 18px;
@@ -185,8 +186,7 @@
 }
 #buttonExitEAG2012{
 	float:right;
-	/*margin-right: 20px;
-	margin-bottom: 5px;*/
+	margin-right:10px;
 }
 #buttonSaveEAG2012 {
 	float:right;
@@ -266,19 +266,17 @@ input[type="button"] {
 	padding-right: 5px;
 	padding-top: 3px;
 	padding-bottom: 3px;
-	border-radius: 15px;
 	display: inline;
  	vertical-align: top;
 	letter-spacing: 0.8px;
-	color: #006CB0;
-	background-color: #E9F3FA;
+    color: #00384D;
+    border-radius: 3px;
+    background: url("../../images/mainbutton.jpg") #FFFFFF;
 	border: 1px solid #00A0DF;
 }
 
 input[type="button"]:hover {
 	color: #00384D;
-	background-color: #BAE0FC;
-	border-radius: 15px;
 }
 
 input[type="button"]:disabled {
@@ -297,7 +295,9 @@ input[type="button"]:disabled {
 #buttonAddFutherInformationOnExistingFacilities, #buttonAddFutherInformationOnExistingFacilities2{
 	width:88%;
 }
-
+#eag2012Div td.buttonAddInformation{
+	width:50%;
+}
 #buttonAccessAndServiceTabPrevious, #buttonContactTabPrevious, #buttonControlTabPrevious,
 #buttonDescriptionTabPrevious, #buttonIdentityTabPrevious, #buttonRelationsTabPrevious,
 #buttonYourInstitutionTabPrevious {
@@ -305,7 +305,7 @@ input[type="button"]:disabled {
 }
 
 input[type="text"] {
-/*	width: 200px;*/ width:95%;
+/*	width: 200px;*/ /*width:95%;*/ width:90%;
 	padding-left: 6px;
 	font-weight: bold;
 	color: black;
