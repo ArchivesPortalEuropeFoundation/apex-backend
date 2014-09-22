@@ -621,8 +621,9 @@ public class ContentUtils {
 			return hasEads;
 		} else {
 			EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
-//			return eacDAO.getAllEacCpfsPublishedByArchivalInstitutionId(archivalInstitution.getAiId()).size()>0;
-			return eacDAO.getAllEacCpfsByArchivalInstitutionId(archivalInstitution.getAiId()).size()>0;
+			ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+			contentSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
+			return eacDAO.existEacCpfs(contentSearchOptions);
 		}
 	}
 }
