@@ -57,7 +57,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         QueuingState.ERROR.toString()};
     private Map<String, String> searchTermsFieldList = new LinkedHashMap<String, String>();
     private Integer pageNumber = 1;
-    private Integer resultPerPage = 100;
+    private Integer resultPerPage = 30;
     private String orderByField = "id";
     private boolean orderByAscending = false;
     private String searchTerms;
