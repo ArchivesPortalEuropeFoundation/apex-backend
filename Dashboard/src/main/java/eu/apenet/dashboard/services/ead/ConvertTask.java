@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import eu.apenet.persistence.vo.ValidatedState;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -20,6 +22,7 @@ import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
 
 public class ConvertTask extends AbstractEadTask {
@@ -52,7 +55,7 @@ public class ConvertTask extends AbstractEadTask {
 			if (new File(languageXmlPath).exists())
 				parameters.put("loclanguage", languageXmlPath);
 
-			String filepath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
+			String filepath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPath();
 			File file = new File(filepath);
 
 			try {
@@ -96,8 +99,8 @@ public class ConvertTask extends AbstractEadTask {
 				}
 
 				StringBuilder xslWarnings = new StringBuilder();
-				String[] xslWarningLines = xslMessages.toString().split("\n");
 
+				List<String> xslWarningLines = convertToWarnings(xslMessages);
 				int count = 0;
 				for (String xslWarningLine : xslWarningLines) {
 					if ((count++) % 2 == 0)
@@ -145,6 +148,28 @@ public class ConvertTask extends AbstractEadTask {
 		}
 	}
 
+	private List<String> convertToWarnings(StringWriter xslMessages){
+		List<String> result = new ArrayList<String>();
+		Map<String, Integer> lines = new LinkedHashMap<String, Integer>();
+		String[] xslWarningLines = xslMessages.toString().split("\n");
+		for (String warning: xslWarningLines){
+			if (lines.containsKey(warning)){
+				Integer value = lines.get(warning);
+				lines.put(warning, value+1);
+			}else {
+				lines.put(warning, 1);
+			}
+		}
+		for (Map.Entry<String,Integer> entry: lines.entrySet()){
+			if (entry.getValue() > 1){
+				result.add(entry.getKey() + " (" + entry.getValue()+" times)");
+			}else {
+				result.add(entry.getKey());
+			}
+		}
+		return result;
+	}
+	
     private Map<String, String> getConversionProperties(Properties properties) {
         if(properties == null)
             return new HashMap<String, String>();
