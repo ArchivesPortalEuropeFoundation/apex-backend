@@ -315,7 +315,11 @@
                                             <option value="colorbox|showwarnings.action?iswarning=true">
                                                 <s:text name="content.message.showerror" />
                                             </option>
-
+                                            <c:if test="${not eadResult.validated and not eadResult.dynamic}">
+                                                <option value="_self|download.action">
+                                                    <s:text name="content.message.download" />
+                                                </option>
+                                            </c:if>
                                         </c:if>
                                         <c:if test="${eadResult.published}">
                                             <option value="action|unpublish">
