@@ -256,6 +256,11 @@
                                             <option value="colorbox|showwarnings.action?iswarning=true">
                                                 <s:text name="content.message.showerror" />
                                             </option>
+                                            <c:if test="${not eacCpfResult.validated}">
+	                                            <option value="_self|downloadEacCpf.action">
+	                                                <s:text name="content.message.download" />
+	                                            </option>
+                                            </c:if>                                            
                                         </c:if>
                                         <c:if test="${eacCpfResult.published}">
                                             <option value="action|unpublish">
