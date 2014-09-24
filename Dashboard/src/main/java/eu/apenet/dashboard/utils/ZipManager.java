@@ -5,10 +5,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -17,7 +21,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
  * This class is in charge of extract zip files
  */
 public class ZipManager {
-	private final Logger log = Logger.getLogger(getClass());
+	private final static Logger log = Logger.getLogger(ZipManager.class);
 	private static final Integer BUFFER_SIZE = 2048;
 	private String path;
 	private String pathFile;
@@ -44,9 +48,90 @@ public class ZipManager {
 			navigate(null, null);
 		} catch (Exception e) {
 			log.error(e);
-		}// It's temporally until it's managed exceptions by Struts2
-			// configuration
+			//trying apache algorithm
+			extractZip(pathFile);
+			log.info("Zip extracted SUCCESS! with second part");
+		}
 	}
+	
+    public static void extractZip(String archivePath) {
+        File archiveFile = new File(archivePath);
+        File unzipDestFolder = null;
+ 
+        try {
+            unzipDestFolder = new File(archiveFile.getPath());
+            String[] zipRootFolder = new String[]{null};
+            unzipFolder(archiveFile, archiveFile.length(), unzipDestFolder, zipRootFolder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private static boolean unzipFolder(File archiveFile,long compressedSize, File zipDestinationFolder, String[] outputZipRootFolder) {
+ 
+        ZipFile zipFile = null;
+        try {
+            zipFile = new ZipFile(archiveFile);
+            byte[] buf = new byte[BUFFER_SIZE];
+ 
+            Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
+            while (entries.hasMoreElements()) {
+                ZipArchiveEntry zipEntry = entries.nextElement();
+                String name = APEnetUtilities.convertToFilename(zipEntry.getName());
+                name = name.replace("\\", "/");
+                int i = name.indexOf("/");
+                if (i > 0) {
+                    outputZipRootFolder[0] = name.substring(0, i);
+                }
+                name = name.substring(i + 1);
+ 
+                File destinationFile = new File(zipDestinationFolder.getParentFile().getPath(), name);
+                if (name.endsWith("/")) {
+                    if (!destinationFile.isDirectory() && !destinationFile.mkdirs()) {
+                        log.error("Error creating temp directory:" + destinationFile.getPath());
+                        return false;
+                    }
+                    continue;
+                } else if (name.indexOf("/") != -1) {
+                    File parentFolder = destinationFile.getParentFile();
+                    if (!parentFolder.isDirectory()) {
+                        if (!parentFolder.mkdirs()) {
+                            log.error("Error creating temp directory:" + parentFolder.getPath());
+                            return false;
+                        }
+                    }
+                }
+ 
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(destinationFile);
+                    int n;
+                    InputStream entryContent = zipFile.getInputStream(zipEntry);
+                    while ((n = entryContent.read(buf)) != -1) {
+                        if (n > 0) {
+                            fos.write(buf, 0, n);
+                        }
+                    }
+                } finally {
+                    if (fos != null) {
+                        fos.close();
+                    }
+                }
+            }
+            return true;
+        } catch (IOException e) {
+            log.error("Unzip failed:" + e.getMessage());
+        } finally {
+            if (zipFile != null) {
+                try {
+                    zipFile.close();
+                } catch (IOException e) {
+                    log.error("Error closing zip file");
+                }
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * This method browse into pathFile and decide follow navigating (folder) or
