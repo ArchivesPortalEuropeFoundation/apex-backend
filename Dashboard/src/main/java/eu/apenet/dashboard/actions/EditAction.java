@@ -105,7 +105,7 @@ public class EditAction extends AbstractAction {
 						return SUCCESS;
 					}
 					else{
-						addActionMessage(getText("oldpassword.notEquals"));
+						addActionMessage(getText("oldpassword.wrong"));
 						SecurityContext securityContext = SecurityContext.get();
 						if (securityContext!=null && securityContext.isAdmin()) {
 							return "error_admin";
