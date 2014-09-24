@@ -4,6 +4,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		initContentManager(${xmlTypeId});
+		hideOrShowSelectAllFAsWindow();
 	});
 </script>
 <div id="contentmanager">

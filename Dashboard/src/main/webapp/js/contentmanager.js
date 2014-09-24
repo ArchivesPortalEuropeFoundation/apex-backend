@@ -277,9 +277,7 @@ function initResultsHandlers(refresh_interval) {
 function hideOrShowSelectAllFAsWindow() {
 	clearFilesFromSession();
 	count();
-    if(($('#newSearchForm_xmlTypeId0').is(':checked')) || ($('#newSearchForm_xmlTypeId2').is(':checked')) ||
-    		$('#newSearchForm_xmlTypeId1').is(':checked') || $('#newSearchForm_xmlTypeId3').is(':checked')
-    		) {
+    if(($('#newSearchForm_xmlTypeId0').is(':checked')) || ($('#newSearchForm_xmlTypeId2').is(':checked'))) {
         $("#listFiles").removeClass("hidden");
     } else {
         $("#listFiles").addClass("hidden");

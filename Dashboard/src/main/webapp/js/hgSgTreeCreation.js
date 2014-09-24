@@ -187,6 +187,7 @@
                         $("#editBtnSave").css("display", "block");
                         $.fn.colorbox.close();
                     }
+                    hideOrShowSelectAllFAsWindow(); //from contentmanager.js
                 }, "json");
             } else {
                 $("#waitImg").css("display", "inline");
