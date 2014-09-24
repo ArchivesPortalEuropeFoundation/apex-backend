@@ -158,78 +158,12 @@
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places"> 
 					<div class="blockPlural">		
 						<xsl:variable name="posParent" select="position()"/>
-						<xsl:for-each select="./eac:place">
-							<div class="blockSingular">	
-								<xsl:variable name="posChild" select="position()"/>
-
-							    <!-- placeEntry in place -->
-								<xsl:call-template name="placesPriorisation">
-						    		<xsl:with-param name="list" select="./eac:placeEntry"/>
+						<!-- placeEntry in place and other nodes-->
+							 	<xsl:call-template name="placesPriorisation">
+						    		<xsl:with-param name="list" select="./eac:place"/>
 					   				<xsl:with-param name="posParent" select="$posParent"/>
-					   				<xsl:with-param name="posChild" select="$posChild"/>
 					   				<xsl:with-param name="mode" select="$translationMode"/>
 					    		</xsl:call-template>
-
-						       <!-- placeRole -->
-						       <xsl:if test="(($translationMode = 'default' or $translationMode = 'showAll') and ./eac:placeRole/text() and ./eac:placeEntry/text())
-								       		or ($translationMode = 'other' and ./eac:placeRole[@xml:lang = $translationLanguage]/text() and ./eac:placeEntry[@xml:lang = $translationLanguage]/text())">
-							        <div class="row">
-									    <div class="leftcolumn">
-								   			<h2 class="subrow">
-								   				<xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/>
-								   				<xsl:text>:</xsl:text>
-								   			</h2>
-								   	    </div>
-								     	<div class="rightcolumn">
-								     		<xsl:call-template name="multilanguageWithVocabularySource">
-				   								<xsl:with-param name="list" select="./eac:placeRole"/>
-								   				<xsl:with-param name="clazz" select="'placeRole_'"/>
-								   				<xsl:with-param name="posParent" select="$posParent"/>
-								   				<xsl:with-param name="posChild" select="$posChild"/>
-								   			</xsl:call-template>
-									    </div>
-							        </div>
-							    </xsl:if>
-
-								<!-- addressLine -->
-								<xsl:call-template name="addressPriorisation">
-						    		<xsl:with-param name="list" select="./eac:address/eac:addressLine"/>
-					   				<xsl:with-param name="posParent" select="$posParent"/>
-					   				<xsl:with-param name="posChild" select="$posChild"/>
-					   				<xsl:with-param name="mode" select="$translationMode"/>
-					    		</xsl:call-template>
-
-								<!-- dates in place -->
-								<xsl:call-template name="commonDates">
-						    		<xsl:with-param name="date" select="./eac:date"/>
-						    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-						    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-					   				<xsl:with-param name="mode" select="$translationMode"/>
-						    	</xsl:call-template>
-
-								<!--descriptive note place-->
-								<xsl:if test="./eac:descriptiveNote/eac:p/text()">   
-						    		<xsl:call-template name="commonChild">
-							    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
-							    		<xsl:with-param name="clazz" select="'descriptiveNotelocationPlace_'"/>					   			
-						   				<xsl:with-param name="posParent" select="$posParent"/>
-				    					<xsl:with-param name="posChild" select="$posChild"/>
-					   					<xsl:with-param name="mode" select="$translationMode"/>
-						    			<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
-					    			</xsl:call-template>
-							    </xsl:if>
-
-							    <!-- citation in place -->
-							  	<xsl:call-template name="commonChild">
-						    		<xsl:with-param name="list" select="./eac:citation"/>
-						    		<xsl:with-param name="clazz" select="'citationlocationPlace_'"/>
-						    		<xsl:with-param name="posParent" select="$posParent"/>
-						    		<xsl:with-param name="posChild" select="$posChild"/>
-				   					<xsl:with-param name="mode" select="$translationMode"/>
-						    		<xsl:with-param name="title" select="'eaccpf.relations.link'"/>
-						    	</xsl:call-template>
-					    	</div>	
-					     </xsl:for-each>
 
 				     	<!-- descriptiveNote places-->
 				     	<xsl:if test="./eac:descriptiveNote/eac:p/text()">
@@ -2279,17 +2213,17 @@
 
 	<!-- Template for select the correct order to display the places based in
 		 the value of the attribute "@localType". -->
-	<xsl:template name="placesPriorisation">
+	<xsl:template name="placePriorisation">
 		<xsl:param name="list"/>
 		<xsl:param name="posParent"/>
-		<xsl:param name="posChild"/>
+	 	<xsl:param name="posChild"/>
 		<xsl:param name="mode"/>
 
 		<!-- Checks the attribute "@localType". -->
 		<!-- localType = birth -->
-		<xsl:if test="$list[@localType = 'birth']">
-			<xsl:call-template name="places">
-   				<xsl:with-param name="list" select="$list[@localType = 'birth']"/>
+		<xsl:if test="$list/eac:placeEntry[@localType = 'birth']">
+	  		<xsl:call-template name="places">
+   				<xsl:with-param name="list" select="$list/eac:placeEntry[@localType = 'birth']"/>
    				<xsl:with-param name="clazz" select="'locationBirthPlace_'"/>
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
@@ -2299,9 +2233,9 @@
 		</xsl:if>
 
 		<!-- localType = foundation -->
-		<xsl:if test="$list[@localType = 'foundation']">
+		<xsl:if test="$list/eac:placeEntry[@localType = 'foundation']">
 			<xsl:call-template name="places">
-   				<xsl:with-param name="list" select="$list[@localType = 'foundation']"/>
+   				<xsl:with-param name="list" select="$list/eac:placeEntry[@localType = 'foundation']"/>
    				<xsl:with-param name="clazz" select="'locationFoundationPlace_'"/>
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
@@ -2311,9 +2245,9 @@
 		</xsl:if>
 
 		<!-- localType = private-residence -->
-		<xsl:if test="$list[@localType = 'private-residence']">
+		<xsl:if test="$list/eac:placeEntry[@localType = 'private-residence']">
 			<xsl:call-template name="places">
-   				<xsl:with-param name="list" select="$list[@localType = 'private-residence']"/>
+   				<xsl:with-param name="list" select="$list/eac:placeEntry[@localType = 'private-residence']"/>
    				<xsl:with-param name="clazz" select="'locationPrivatePlace_'"/>
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
@@ -2323,9 +2257,9 @@
 		</xsl:if>
 
 		<!-- localType = business-residence -->
-		<xsl:if test="$list[@localType = 'business-residence']">
+		<xsl:if test="$list/eac:placeEntry[@localType = 'business-residence']">
 			<xsl:call-template name="places">
-   				<xsl:with-param name="list" select="$list[@localType = 'business-residence']"/>
+   				<xsl:with-param name="list" select="$list/eac:placeEntry[@localType = 'business-residence']"/>
    				<xsl:with-param name="clazz" select="'locationBusinessPlace_'"/>
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
@@ -2335,9 +2269,9 @@
 		</xsl:if>
 
 		<!-- localType = death -->
-		<xsl:if test="$list[@localType = 'death']">
+		<xsl:if test="$list/eac:placeEntry[@localType = 'death']">
 			<xsl:call-template name="places">
-   				<xsl:with-param name="list" select="$list[@localType = 'death']"/>
+   				<xsl:with-param name="list" select="$list/eac:placeEntry[@localType = 'death']"/>
    				<xsl:with-param name="clazz" select="'locationDeathPlace_'"/>
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
@@ -2347,9 +2281,9 @@
 		</xsl:if>
 
 		<!-- localType = suppression -->
-		<xsl:if test="$list[@localType = 'suppression']">
+		<xsl:if test="$list/eac:placeEntry[@localType = 'suppression']">
 			<xsl:call-template name="places">
-   				<xsl:with-param name="list" select="$list[@localType = 'suppression']"/>
+   				<xsl:with-param name="list" select="$list/eac:placeEntry[@localType = 'suppression']"/>
    				<xsl:with-param name="clazz" select="'locationSuppressionPlace_'"/>
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
@@ -2362,9 +2296,9 @@
 		<!-- localType = other -->
 		<!-- no localType -->
 		<!-- empty localType -->
-		<xsl:if test="$list[not(@localType = 'birth') and not(@localType = 'death') and not(@localType = 'foundation') and not(@localType = 'private-residence') and not(@localType = 'business-residence') and not(@localType = 'suppression')]">
+		<xsl:if test="$list/eac:placeEntry[not(@localType = 'birth') and not(@localType = 'death') and not(@localType = 'foundation') and not(@localType = 'private-residence') and not(@localType = 'business-residence') and not(@localType = 'suppression')]">
 			<xsl:call-template name="places">
-				<xsl:with-param name="list" select="$list[not(@localType = 'birth') and not(@localType = 'death') and not(@localType = 'foundation') and not(@localType = 'private-residence') and not(@localType = 'business-residence') and not(@localType = 'suppression')]"/>
+				<xsl:with-param name="list" select="$list/eac:placeEntry[not(@localType = 'birth') and not(@localType = 'death') and not(@localType = 'foundation') and not(@localType = 'private-residence') and not(@localType = 'business-residence') and not(@localType = 'suppression')]"/>
    				<xsl:with-param name="clazz" select="'locationOtherPlace_'"/>
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
@@ -3389,6 +3323,207 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- template for the details in /places/place -->
+	<xsl:template name="placeDetails">
+		<xsl:param name="list"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="posChild"/>
+		<xsl:param name="posParent"/>
+			
+			<div class="blockSingular">	
+				
+			   <!--  placeEntry in place  --> 
+				<xsl:call-template name="placePriorisation">
+		    		<xsl:with-param name="list" select="$list"/>
+	   				<xsl:with-param name="posParent" select="$posParent"/>
+	   				<xsl:with-param name="posChild" select="$posChild"/>
+	   				<xsl:with-param name="mode" select="$mode"/>
+	    		</xsl:call-template>
+	
+		      <!--   placeRole  -->
+		       <xsl:if test="(($mode = 'default' or $mode = 'showAll') and $list/eac:placeRole/text() and $list/eac:placeEntry/text())
+				       		or ($mode = 'other' and $list/eac:placeRole[@xml:lang = $translationLanguage]/text() and $list/eac:placeEntry[@xml:lang = $translationLanguage]/text())">
+			        <div class="row">
+					    <div class="leftcolumn">
+				   			<h2 class="subrow">
+				   				<xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/>
+				   				<xsl:text>:</xsl:text>
+				   			</h2>
+				   	    </div>
+				     	<div class="rightcolumn">
+				     		<xsl:call-template name="multilanguageWithVocabularySource">
+	  								<xsl:with-param name="list" select="$list/eac:placeRole"/>
+				   				<xsl:with-param name="clazz" select="'placeRole_'"/>
+				   				<xsl:with-param name="posParent" select="$posParent"/>
+				   				<xsl:with-param name="posChild" select="$posChild"/>
+				   			</xsl:call-template>
+					    </div>
+			        </div>
+			    </xsl:if> 
+	
+				<!--  addressLine  -->
+			 	<xsl:call-template name="addressPriorisation">
+		    		<xsl:with-param name="list" select="$list/eac:address/eac:addressLine"/>
+	   				<xsl:with-param name="posParent" select="$posParent"/>
+	   				<xsl:with-param name="posChild" select="$posChild"/>
+	   				<xsl:with-param name="mode" select="$mode"/>
+	    		</xsl:call-template> 
+	
+				<!--   dates in place -->
+			  	<xsl:call-template name="commonDates">
+		    		<xsl:with-param name="date" select="$list/eac:date"/>
+		    		<xsl:with-param name="dateRange" select="$list/eac:dateRange"/>
+		    		<xsl:with-param name="dateSet" select="$list/eac:dateSet"/>
+	   				<xsl:with-param name="mode" select="$mode"/>
+		    	</xsl:call-template>
+	
+				<!--  descriptive note place -->
+				<xsl:if test="$list/eac:descriptiveNote/eac:p/text()">   
+		    	 	<xsl:call-template name="commonChild">
+			    		<xsl:with-param name="list" select="$list/eac:descriptiveNote/eac:p"/>
+			    		<xsl:with-param name="clazz" select="'descriptiveNotelocationPlace_'"/>					   			
+		   				<xsl:with-param name="posParent" select="$posParent"/>
+	   					<xsl:with-param name="posChild" select="$posChild"/>
+	   					<xsl:with-param name="mode" select="$mode"/>
+		    			<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+	    			</xsl:call-template> 
+			    </xsl:if>
+	
+			    <!--  citation in place  -->
+			    <xsl:call-template name="commonChild">
+		    		<xsl:with-param name="list" select="$list/eac:citation"/>
+		    		<xsl:with-param name="clazz" select="'citationlocationPlace_'"/>
+		    		<xsl:with-param name="posParent" select="$posParent"/>
+		    		<xsl:with-param name="posChild" select="$posChild"/>
+	  				<xsl:with-param name="mode" select="$mode"/>
+		    		<xsl:with-param name="title" select="'eaccpf.relations.link'"/>
+		    	</xsl:call-template>
+	    	</div>
+	</xsl:template>
+	 
+	 <!--template to order eac:placeEntry into eac:places level -->
+	<xsl:template name="placesPriorisation">
+		<xsl:param name="list"/>
+		<xsl:param name="posParent"/>
+		<xsl:param name="mode"/>
+		
+		<!-- Checks the attribute "@localType". -->
+		<!-- localType = birth -->
+		<xsl:if test="$list/eac:placeEntry[@localType = 'birth']">
+			<xsl:for-each select="$list">
+				<xsl:variable name="posChild" select="position()"/>
+				<xsl:if test="./eac:placeEntry[@localType = 'birth']">
+					<xsl:call-template name="placeDetails">
+						<xsl:with-param name="list" select="."/>
+					  	<xsl:with-param name="posChild" select="$posChild"/>
+						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+
+		<!-- localType = foundation -->
+		<xsl:if test="$list/eac:placeEntry[@localType = 'foundation']">
+			<xsl:for-each select="$list">
+				<xsl:variable name="posChild" select="position()"/>
+				<xsl:if test="./eac:placeEntry[@localType ='foundation'] and not(./eac:placeEntry[@localType = 'birth'])">
+				  	<xsl:call-template name="placeDetails">
+						<xsl:with-param name="list" select="."/>
+						<xsl:with-param name="posChild" select="$posChild"/>
+						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>	
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+
+		<!-- localType = private-residence -->
+		<xsl:if test="$list/eac:placeEntry[@localType = 'private-residence']">
+			<xsl:for-each select="$list">
+				<xsl:variable name="posChild" select="position()"/>
+				<xsl:if test="./eac:placeEntry[@localType ='private-residence'] and not(./eac:placeEntry[@localType = 'birth']) and not(./eac:placeEntry[@localType = 'foundation'])">
+				  	<xsl:call-template name="placeDetails">
+						<xsl:with-param name="list" select="."/>
+						<xsl:with-param name="posChild" select="$posChild"/>
+						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>	
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+
+		<!-- localType = business-residence -->
+		<xsl:if test="$list/eac:placeEntry[@localType = 'business-residence']">
+			<xsl:for-each select="$list">
+				<xsl:variable name="posChild" select="position()"/>
+				<xsl:if test="./eac:placeEntry[@localType ='business-residence'] and not(./eac:placeEntry[@localType = 'birth']) and not(./eac:placeEntry[@localType = 'foundation'])
+								and not(./eac:placeEntry[@localType = 'private-residence'])">
+				  	<xsl:call-template name="placeDetails">
+						<xsl:with-param name="list" select="."/>
+						<xsl:with-param name="posChild" select="$posChild"/>
+						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>	
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+
+		<!-- localType = death -->
+		<xsl:if test="$list/eac:placeEntry[@localType = 'death']">
+			<xsl:for-each select="$list">
+				<xsl:variable name="posChild" select="position()"/>
+				<xsl:if test="./eac:placeEntry[@localType ='death'] and not(./eac:placeEntry[@localType = 'birth']) and not(./eac:placeEntry[@localType = 'foundation'])
+								and not(./eac:placeEntry[@localType = 'private-residence']) and not(./eac:placeEntry[@localType = 'business-residence'])">
+				  	<xsl:call-template name="placeDetails">
+						<xsl:with-param name="list" select="."/>
+						<xsl:with-param name="posChild" select="$posChild"/>
+						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>	
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+		
+		<!-- localType = suppression -->
+		<xsl:if test="$list/eac:placeEntry[@localType = 'suppression']">
+			<xsl:for-each select="$list">
+				<xsl:variable name="posChild" select="position()"/>
+				<xsl:if test="./eac:placeEntry[@localType ='suppression'] and not(./eac:placeEntry[@localType = 'birth']) and not(./eac:placeEntry[@localType = 'foundation'])
+								and not(./eac:placeEntry[@localType = 'private-residence']) and not(./eac:placeEntry[@localType = 'business-residence'])
+								and not(./eac:placeEntry[@localType = 'death'])">
+				  	<xsl:call-template name="placeDetails">
+						<xsl:with-param name="list" select="."/>
+						<xsl:with-param name="posChild" select="$posChild"/>
+						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>	
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+
+		<!-- In any other case checks the whole list. -->
+		<!-- localType = other -->
+		<!-- no localType -->
+		<!-- empty localType -->
+		<xsl:if test="$list/eac:placeEntry[not(@localType = 'birth') and not(@localType = 'death') and not(@localType = 'foundation') and not(@localType = 'private-residence') and not(@localType = 'business-residence') and not(@localType = 'suppression')]">
+			<xsl:for-each select="$list">
+				<xsl:variable name="posChild" select="position()"/>
+				<xsl:if test="./eac:placeEntry[not(@localType = 'birth') and not(@localType = 'death') and not(@localType = 'foundation') and not(@localType = 'private-residence') and not(@localType = 'business-residence') and not(@localType = 'suppression')] 
+								and not(./eac:placeEntry[@localType = 'birth']) and not(./eac:placeEntry[@localType = 'foundation'])
+								and not(./eac:placeEntry[@localType = 'private-residence']) and not(./eac:placeEntry[@localType = 'business-residence'])
+								and not(./eac:placeEntry[@localType = 'death']) and not(./eac:placeEntry[@localType = 'suppression'])">
+				  	<xsl:call-template name="placeDetails">
+						<xsl:with-param name="list" select="."/>
+						<xsl:with-param name="posChild" select="$posChild"/>
+						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>	
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+	 
 	<!-- template for language only one element -->
 	<xsl:template name="multilanguagePlaceEntry">
 		<xsl:param name="list"/>
@@ -3558,7 +3693,7 @@
 					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $lang.navigator) and (not(@localType) or (@localType != 'birth' and @localType != 'death' and @localType != 'foundation' and @localType != 'suppression')) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">		
+							<xsl:if test="(($currentLang = $lang.navigator) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">		
 								<p>
 									<xsl:choose>
 										<xsl:when test="@vocabularySource">
@@ -3583,7 +3718,7 @@
 					<xsl:when test="($list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != '')">
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $language.default) and (not(@localType) or (@localType != 'birth' and @localType != 'death' and @localType != 'foundation' and @localType != 'suppression')) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">			
+							<xsl:if test="(($currentLang = $language.default) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">			
 								<p>
 									<xsl:choose>
 										<xsl:when test="@vocabularySource">
