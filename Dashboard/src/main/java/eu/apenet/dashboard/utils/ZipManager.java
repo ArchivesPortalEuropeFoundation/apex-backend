@@ -46,6 +46,7 @@ public class ZipManager {
 		this.pathFile = pathFile;
 		try {
 			navigate(null, null);
+			log.debug("Zip extracted SUCCESS! with normal part");
 		} catch (Exception e) {
 			log.error(e);
 			//trying apache algorithm
@@ -61,13 +62,13 @@ public class ZipManager {
         try {
             unzipDestFolder = new File(archiveFile.getPath());
             String[] zipRootFolder = new String[]{null};
-            unzipFolder(archiveFile, archiveFile.length(), unzipDestFolder, zipRootFolder);
+            unzipFolder(archiveFile, unzipDestFolder, zipRootFolder);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    private static boolean unzipFolder(File archiveFile,long compressedSize, File zipDestinationFolder, String[] outputZipRootFolder) {
+    private static boolean unzipFolder(File archiveFile, File zipDestinationFolder, String[] outputZipRootFolder) {
  
         ZipFile zipFile = null;
         try {
