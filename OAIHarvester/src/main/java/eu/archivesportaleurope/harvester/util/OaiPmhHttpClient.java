@@ -2,6 +2,7 @@ package eu.archivesportaleurope.harvester.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Security;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipInputStream;
@@ -13,10 +14,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
-import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
@@ -25,14 +24,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.auth.DigestSchemeFactory;
-import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import eu.archivesportaleurope.harvester.oaipmh.auth.JCIFSNTLMSchemeFactory;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
@@ -43,6 +41,9 @@ public class OaiPmhHttpClient {
 	private CloseableHttpClient httpClient;
 	private HttpClientContext context;
 	public OaiPmhHttpClient (){
+		if (Security.getProperty(BouncyCastleProvider.PROVIDER_NAME)== null){
+			Security.addProvider(new BouncyCastleProvider());			
+		}		
 		RequestConfig defaultRequestConfig = RequestConfig.custom()
 			    .setSocketTimeout(TIMEOUT)
 			    .setConnectTimeout(TIMEOUT)
@@ -53,6 +54,9 @@ public class OaiPmhHttpClient {
 	}
 	
 	public OaiPmhHttpClient (String proxyServer, String username, String password){
+		if (Security.getProperty(BouncyCastleProvider.PROVIDER_NAME)== null){
+			Security.addProvider(new BouncyCastleProvider());			
+		}
     	String scheme = "http";
     	String hostname = null;
     	int port = 80;
