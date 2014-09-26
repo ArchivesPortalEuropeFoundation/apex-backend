@@ -110,7 +110,7 @@ public class OaiPmhHttpClient {
 			LOGGER.debug("requestURL=" + url);
 		}
 		HttpGet httpGet = new HttpGet(url);
-		httpGet.setHeader("User-Agent", "Archives Portal Europe OAI-PMH Harvester/" + getVersion());
+		httpGet.setHeader("User-Agent", getName() + "/" + getVersion());
 		httpGet.setHeader("Accept-Encoding", "compress, gzip, identify");
 		try {
 			CloseableHttpResponse response = httpClient.execute(httpGet, context);
@@ -127,6 +127,9 @@ public class OaiPmhHttpClient {
 		httpClient.close();
 	}
 
+	protected String getName(){
+		return "Archives Portal Europe OAI-PMH Harvester";
+	}
 	public static String getVersion() {
 		String version = OaiPmhHttpClient.class.getPackage().getImplementationVersion();
 		if (StringUtils.isBlank(version)) {
