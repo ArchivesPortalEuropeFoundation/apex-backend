@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 import eu.apenet.commons.infraestructure.EmailComposer;
+import eu.apenet.commons.infraestructure.EmailComposer.Priority;
 import eu.apenet.commons.infraestructure.Emailer;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.DashboardAPEnetException;
@@ -15,6 +16,8 @@ import eu.apenet.dashboard.exception.NotAuthorizedException;
 import eu.apenet.dashboard.infraestructure.PasswordGenerator;
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
 import eu.apenet.dashboard.utils.ChangeControl;
+import eu.apenet.dashboard.utils.PropertiesKeys;
+import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UserDAO;
@@ -27,6 +30,7 @@ import eu.apenet.persistence.vo.SentMailRegister;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject.DateHarvestModel;
+import eu.archivesportaleurope.util.ApeUtil;
 
 /**
  * Service for manage users in the Dashboard
@@ -37,6 +41,7 @@ import eu.archivesportaleurope.harvester.oaipmh.HarvestObject.DateHarvestModel;
 public final class UserService {
 	private static final String DEFAULT_SECRET_QUESTION = "What is your generated security answer?";
 
+	private final static String ADMINS_EMAIL = PropertiesUtil.get(PropertiesKeys.APE_EMAILS_ADMINS);
 	/**
 	 * Delete Country Manager by id
 	 * 
@@ -593,4 +598,11 @@ public final class UserService {
 		String nameMainServer = APEnetUtilities.getDashboardConfig().getDomainNameMainServer();
 		return requestHttp.getScheme() + "://" + nameMainServer + requestHttp.getContextPath() + "/";
 	}
+    public static void sendExceptionToAdmin(String title, Throwable e) {
+        Emailer emailer = new Emailer();
+        EmailComposer emailComposer = new EmailComposer("emails/admins.txt", title, true, false);
+        emailComposer.setProperty("body", ApeUtil.generateThrowableLog(e));
+        emailComposer.setPriority(Priority.HIGH);
+        emailer.sendMessage(ADMINS_EMAIL, null, null, null, emailComposer);
+    }
 }
