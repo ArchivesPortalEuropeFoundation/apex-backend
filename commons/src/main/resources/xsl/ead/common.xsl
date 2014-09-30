@@ -123,41 +123,37 @@
 		<xsl:variable name="prefix" select="$eadcontent.extref.prefix" />
 		<xsl:choose>
 			<xsl:when test="starts-with($href,'http')">
-				<div class="linkButton">
+				<div class="externalLink">
 					<xsl:choose>
 						<xsl:when test="./@xlink:title and text()">
 							<xsl:variable name="title" select="./@xlink:title" />
-							<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa')" />
+							<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa.external')" />
 							<a href="{$href}" target="_blank" title="{$initTitle} '{$title}'">
-								<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+								<xsl:value-of select="ape:resource('seconddisplay.view.fa.external')" />
 								<xsl:text> '</xsl:text>
 								<xsl:value-of select="text()" />
 								<xsl:text>' </xsl:text>
-								<span class="icon_new_window"><xsl:text> </xsl:text></span>
 							</a>
 						</xsl:when>
 						<xsl:when test="./@xlink:title">
 							<a href="{$href}" target="_blank">
-								<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+								<xsl:value-of select="ape:resource('seconddisplay.view.fa.external')" />
 								<xsl:text> '</xsl:text>
 								<xsl:value-of select="./@xlink:title" />
 								<xsl:text>' </xsl:text>
-								<span class="icon_new_window"><xsl:text> </xsl:text></span>
 							</a>
 						</xsl:when>
 						<xsl:when test="text()">
 							<a href="{$href}" target="_blank">
-								<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+								<xsl:value-of select="ape:resource('seconddisplay.view.fa.external')" />
 								<xsl:text> '</xsl:text>
 								<xsl:value-of select="text()" />
 								<xsl:text>' </xsl:text>
-								<span class="icon_new_window"><xsl:text> </xsl:text></span>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
 							<a href="{$href}" target="_blank">
-								<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
-								<span class="icon_new_window"><xsl:text> </xsl:text></span>
+								<xsl:value-of select="ape:resource('seconddisplay.view.fa.external')" />
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -171,37 +167,33 @@
 							<xsl:choose>
 								<xsl:when test="./@xlink:title and text()">
 									<xsl:variable name="title" select="./@xlink:title" />
-									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa')" />
+									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa.internal')" />
 									<a href="{$prefix}{$encodedHref}" target="{$encodedHref}" title="{$initTitle} '{$title}'">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:when test="./@xlink:title">
 									<a href="{$prefix}{$encodedHref}" target="{$encodedHref}">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="./@xlink:title" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:when test="text()">
 									<a href="{$prefix}{$encodedHref}" target="{$encodedHref}">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
 									<a href="{$prefix}{$encodedHref}" target="{$encodedHref}">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 									</a>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -213,37 +205,33 @@
 							<xsl:choose>
 								<xsl:when test="./@xlink:title and text()">
 									<xsl:variable name="title" select="./@xlink:title" />
-									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa')" />
+									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa.internal')" />
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" title="{$initTitle} '{$title}'">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:when test="./@xlink:title">
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="./@xlink:title" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:when test="text()">
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 									</a>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -255,37 +243,33 @@
 							<xsl:choose>
 								<xsl:when test="./@xlink:title and text()">
 									<xsl:variable name="title" select="./@xlink:title" />
-									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa')" />
+									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa.internal')" />
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" class="notIndexed" title="{$initTitle} '{$title}'">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:when test="./@xlink:title">
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" class="notIndexed">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="./@xlink:title" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:when test="text()">
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" class="notIndexed">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
 									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" class="notIndexed">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
-										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 									</a>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -296,9 +280,9 @@
 							<xsl:choose>
 								<xsl:when test="./@xlink:title and text()">
 									<xsl:variable name="title" select="./@xlink:title" />
-									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa')" />
+									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa.internal')" />
 									<div class="nolink">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
@@ -306,7 +290,7 @@
 								</xsl:when>
 								<xsl:when test="./@xlink:title">
 									<div class="nolink">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="./@xlink:title" />
 										<xsl:text>' </xsl:text>
@@ -314,7 +298,7 @@
 								</xsl:when>
 								<xsl:when test="text()">
 									<div class="nolink">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
 										<xsl:text>' </xsl:text>
@@ -322,7 +306,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<div class="nolink">
-										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa.internal')" />
 									</div>
 								</xsl:otherwise>
 							</xsl:choose>
