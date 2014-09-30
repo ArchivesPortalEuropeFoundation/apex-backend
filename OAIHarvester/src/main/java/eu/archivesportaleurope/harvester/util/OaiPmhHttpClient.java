@@ -2,6 +2,7 @@ package eu.archivesportaleurope.harvester.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Security;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipInputStream;
@@ -13,10 +14,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
-import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
@@ -25,20 +24,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.auth.DigestSchemeFactory;
-import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import eu.archivesportaleurope.harvester.oaipmh.auth.JCIFSNTLMSchemeFactory;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import org.apache.http.HttpHost;
 
 public class OaiPmhHttpClient {
 	private static final int TIMEOUT = 300000;
@@ -46,18 +41,22 @@ public class OaiPmhHttpClient {
 	private CloseableHttpClient httpClient;
 	private HttpClientContext context;
 	public OaiPmhHttpClient (){
-            HttpHost proxy = new HttpHost("10.6.34.8", 3128);
+		if (Security.getProperty(BouncyCastleProvider.PROVIDER_NAME)== null){
+			Security.addProvider(new BouncyCastleProvider());			
+		}		
 		RequestConfig defaultRequestConfig = RequestConfig.custom()
 			    .setSocketTimeout(TIMEOUT)
 			    .setConnectTimeout(TIMEOUT)
 			    .setConnectionRequestTimeout(TIMEOUT)
 			    .setStaleConnectionCheckEnabled(true)
-                            .setProxy(proxy)
 			    .build();
 		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(defaultRequestConfig).useSystemProperties().build();
 	}
 	
 	public OaiPmhHttpClient (String proxyServer, String username, String password){
+		if (Security.getProperty(BouncyCastleProvider.PROVIDER_NAME)== null){
+			Security.addProvider(new BouncyCastleProvider());			
+		}
     	String scheme = "http";
     	String hostname = null;
     	int port = 80;
@@ -111,7 +110,7 @@ public class OaiPmhHttpClient {
 			LOGGER.debug("requestURL=" + url);
 		}
 		HttpGet httpGet = new HttpGet(url);
-		httpGet.setHeader("User-Agent", "Archives Portal Europe OAI-PMH Harvester/" + getVersion());
+		httpGet.setHeader("User-Agent", getName() + "/" + getVersion());
 		httpGet.setHeader("Accept-Encoding", "compress, gzip, identify");
 		try {
 			CloseableHttpResponse response = httpClient.execute(httpGet, context);
@@ -128,6 +127,9 @@ public class OaiPmhHttpClient {
 		httpClient.close();
 	}
 
+	protected String getName(){
+		return "Archives Portal Europe OAI-PMH Harvester";
+	}
 	public static String getVersion() {
 		String version = OaiPmhHttpClient.class.getPackage().getImplementationVersion();
 		if (StringUtils.isBlank(version)) {
