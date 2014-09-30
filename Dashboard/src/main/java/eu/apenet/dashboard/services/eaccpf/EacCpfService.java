@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
@@ -315,6 +316,13 @@ public class EacCpfService {
                     queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                     queueItem.setPriority(0);
                     queueItemDAO.store(queueItem);
+                    /*
+                     * throw exception when solr has problem, so the queue will stop for a while.
+                     */
+                    if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                        throw (Exception) e;
+
+                    }
                 }
             } else {
                 try {
@@ -360,6 +368,13 @@ public class EacCpfService {
                     eacDAO.store(eac);
                     queueItem.setPriority(0);
                     queueItemDAO.store(queueItem);
+                    /*
+                     * throw exception when solr has problem, so the queue will stop for a while.
+                     */
+                    if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                        throw (Exception) e;
+
+                    }
                 }
             }
         } else { //USE_PROFILE
@@ -415,6 +430,13 @@ public class EacCpfService {
                             queueItem.setPriority(0);
                             queueItemDAO.store(queueItem);
                             continueTask = false;
+                            /*
+                             * throw exception when solr has problem, so the queue will stop for a while.
+                             */
+                            if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                                throw (Exception) e;
+
+                            }
                         }
                     } else if (ingestionprofileDefaultExistingFileAction.isKeep()) {
                         LOGGER.info("File will be removed, because there is already one with the same eadid: " + upFilePath);
@@ -464,6 +486,13 @@ public class EacCpfService {
                         queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                         queueItem.setPriority(0);
                         queueItemDAO.store(queueItem);
+                        /*
+                         * throw exception when solr has problem, so the queue will stop for a while.
+                         */
+                        if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                            throw (Exception) e;
+
+                        }
                     }
                 }
             }
