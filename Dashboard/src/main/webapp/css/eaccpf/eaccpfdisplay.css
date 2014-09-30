@@ -90,11 +90,16 @@ body {
 	font-size:9pt;
 	font-weight:bold;
 	text-align:left;
-	padding-top:8px;
+/*	padding-top:8px;*/ margin-top:8px;
 	float:left;
+	/*******/
+	padding-left:15px; /*padding to expanded icon*/
+	cursor:pointer;
+	width:100%;
 }
+
 #eacCpfDisplayPortlet .blockPlural, #eacCpfDisplayPortlet .blockSingular{
-	padding-bottom:8px;
+/*	padding-bottom:8px;*/ margin-bottom:8px;
 	width:100%;
 	float:left;
 }
@@ -145,12 +150,15 @@ p {
 	/*overflow-y: auto;*/
 	margin-top:9px;
 	width:23%;
+	background:none repeat scroll 0 0 #ECF6FF;
 }
 
 #eacCpfDisplayPortlet .rightcolumn {
 	float:right;
     width:75%;
 	margin-top:9px;
+	border-bottom:1px solid #E8EDFF;
+	border-top:1px solid #E8EDFF;
 }
 
 #eacCpfDisplayPortlet #language {
@@ -175,6 +183,10 @@ p {
 #eacCpfDisplayPortlet .box .boxtitle {
 	height:12px;
 	cursor:pointer;
+}
+
+#eacCpfDisplayPortlet .box{
+	margin-bottom:15px;
 }
 
 #relations .collapsibleIcon {
