@@ -21,7 +21,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
  * This class is in charge of extract zip files
  */
 public class ZipManager {
-	private final static Logger log = Logger.getLogger(ZipManager.class);
+	private final static Logger LOGGER = Logger.getLogger(ZipManager.class);
 	private static final Integer BUFFER_SIZE = 2048;
 	private String path;
 	private String pathFile;
@@ -46,12 +46,12 @@ public class ZipManager {
 		this.pathFile = pathFile;
 		try {
 			navigate(null, null);
-			log.debug("Zip extracted SUCCESS! with normal part");
+			LOGGER.debug("Zip extracted SUCCESS! with normal part");
 		} catch (Exception e) {
-			log.error(e);
+			LOGGER.error(e.getMessage());
 			//trying apache algorithm
 			extractZip(pathFile);
-			log.info("Zip extracted SUCCESS! with second part");
+			LOGGER.info("Zip extracted SUCCESS! with second part");
 		}
 	}
 	
@@ -64,7 +64,7 @@ public class ZipManager {
             String[] zipRootFolder = new String[]{null};
             unzipFolder(archiveFile, unzipDestFolder, zipRootFolder);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
     }
     
@@ -89,7 +89,7 @@ public class ZipManager {
                 File destinationFile = new File(zipDestinationFolder.getParentFile().getPath(), name);
                 if (name.endsWith("/")) {
                     if (!destinationFile.isDirectory() && !destinationFile.mkdirs()) {
-                        log.error("Error creating temp directory:" + destinationFile.getPath());
+                        LOGGER.error("Error creating temp directory:" + destinationFile.getPath());
                         return false;
                     }
                     continue;
@@ -97,7 +97,7 @@ public class ZipManager {
                     File parentFolder = destinationFile.getParentFile();
                     if (!parentFolder.isDirectory()) {
                         if (!parentFolder.mkdirs()) {
-                            log.error("Error creating temp directory:" + parentFolder.getPath());
+                            LOGGER.error("Error creating temp directory:" + parentFolder.getPath());
                             return false;
                         }
                     }
@@ -121,13 +121,13 @@ public class ZipManager {
             }
             return true;
         } catch (IOException e) {
-            log.error("Unzip failed:" + e.getMessage());
+            LOGGER.error("Unzip failed:" + e.getMessage());
         } finally {
             if (zipFile != null) {
                 try {
                     zipFile.close();
                 } catch (IOException e) {
-                    log.error("Error closing zip file");
+                    LOGGER.error("Error closing zip file");
                 }
             }
         }
