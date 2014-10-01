@@ -74,13 +74,13 @@ public class EadPublishDataFiller {
 			 * unittitle
 			 */
 			unittitleHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
-					"unittitle" });
+					"unittitle" }, true);
 			unittitleHandler.setAllTextBelow(true);
 			/*
 			 * scopecontent
 			 */
 			scopecontentHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
-					new String[] { "scopecontent" });
+					new String[] { "scopecontent" }, true);
 			scopecontentHandler.setAllTextBelow(true);
 
 			/*
@@ -95,10 +95,10 @@ public class EadPublishDataFiller {
 			 * other
 			 */
 			didOtherHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
-					"not(unittitle | unitid | unitdate | dao)" });
+					"not(unittitle | unitid | unitdate | dao)" }, true);
 			didOtherHandler.setAllTextBelow(true);
 			otherHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
-					new String[] { "not(scopecontent | did)" });
+					new String[] { "not(scopecontent | did)" }, true);
 			otherHandler.setAllTextBelow(true);
 
 			countDaoHandler = new CountXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did", "dao" });
