@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.view.jsp.SelectItem;
@@ -101,23 +102,20 @@ public class CreateUserAction extends AbstractAction {
 
 	public void validate() {
 		if (existingPartnerId == null) {
-			if (this.getFirstName() != null) {
-				if (this.getFirstName().length() == 0) {
-					addFieldError("firstName", getText("firstname.required"));
-				}
+			if (StringUtils.isBlank(this.getFirstName())) {
+				addFieldError("firstName", getText("firstname.required"));
 			}
 
-			if (this.getLastName() != null) {
-				if (this.getLastName().length() == 0) {
-					addFieldError("lastName", getText("lastname.required"));
-				}
+			if (StringUtils.isBlank(this.getLastName())) {
+				addFieldError("lastName", getText("lastname.required"));
 			}
 
 			if (this.getEmail() != null) {
-				if (this.getEmail().length() == 0) {
+				if (StringUtils.isBlank(this.getEmail())) {
 					addFieldError("email", getText("email.required"));
 				} else {
-					if (UserService.exitsEmailUser(this.getEmail())) {
+					String email = this.getEmail().trim();
+					if (UserService.exitsEmailUser(email)) {
 						addFieldError("email", getText("email.notAvailable"));
 					}
 					else {
@@ -158,7 +156,7 @@ public class CreateUserAction extends AbstractAction {
 		User partner = new User();
 		partner.setFirstName(this.getFirstName());
 		partner.setLastName(this.getLastName());
-		partner.setEmailAddress(this.getEmail());
+		partner.setEmailAddress(this.getEmail().trim());
 		if (aiId != null) {
 			UserService.createOrAssociateInstitutionManager(partner, aiId, existingPartnerId);
 		} else if (countryId != null) {
