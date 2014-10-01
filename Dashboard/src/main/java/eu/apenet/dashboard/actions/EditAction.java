@@ -128,7 +128,7 @@ public class EditAction extends AbstractAction {
 	private boolean relog(String email, String passw, User userToUpdate, boolean changePwd) throws Exception
 	{
 		log.trace("relog() method is called");
-		
+		Integer aiId = SecurityContext.get().getSelectedInstitution().getId();
 		try {
 			//if the user has changed the password is needed to check usertoupdate password
 			if (changePwd){
@@ -137,6 +137,8 @@ public class EditAction extends AbstractAction {
 					UserService.updateUser(userToUpdate);
 					SecurityService.logout("true".equals(parent));
 					SecurityService.login(email, passw, true);
+					if (aiId != null)
+						SecurityService.selectArchivalInstitution(aiId);
 					log.trace("relog() method has finished right.");
 					return true;
 				}
@@ -148,6 +150,8 @@ public class EditAction extends AbstractAction {
 					UserService.updateUser(userToUpdate);
 					SecurityService.logout("true".equals(parent));
 					SecurityService.login(email, passw, true);
+					if (aiId != null)
+						SecurityService.selectArchivalInstitution(aiId);					
 					log.trace("relog() method has finished right.");
 					return true;
 				}else{
