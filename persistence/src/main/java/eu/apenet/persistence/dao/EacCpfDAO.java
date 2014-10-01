@@ -24,9 +24,5 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
 
     public List<Integer> getAllIds(Class<EacCpf> aClass, int aiId);
     
-    public List<EacCpf> getAllEacCpfsPublishedByArchivalInstitutionId(int aiId);
-
-	public List<EacCpf> getAllEacCpfsByArchivalInstitutionId(int aiId);
-	
 	public boolean existEacCpfs(ContentSearchOptions contentSearchOptions);
 }

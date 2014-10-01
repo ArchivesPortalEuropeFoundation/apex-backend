@@ -405,8 +405,10 @@ public class ContentUtils {
 				}
 				if (!updated && numberOfPublishedEads <= 1) {
 					EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-					List<EacCpf> publishedEacs = eacCpfDAO.getAllEacCpfsPublishedByArchivalInstitutionId(ai.getAiId());
-					if(publishedEacs!=null && publishedEacs.size()>0){
+					EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
+					ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+					contentSearchOptions.setArchivalInstitionId(ai.getAiId());
+					if(eacDAO.existEacCpfs(contentSearchOptions)){
 						LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
 						ai.setContainSearchableItems(searchable);
 						ai.setContentLastModifiedDate(new Date());
