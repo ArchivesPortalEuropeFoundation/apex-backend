@@ -958,29 +958,50 @@
 		
 		<!-- Set the positions of the <citation>, <chronList>, <p> in the xml file-->
 		<xsl:variable name="pPosition">
-			<xsl:for-each select="$bioHist/*">
-	  			<xsl:if test="name() = 'p'">
-					<xsl:value-of select="concat(position(),',')" /> 
-				</xsl:if>
-			</xsl:for-each>
+			<xsl:choose>
+				<xsl:when test="$bioHist/eac:p">
+					<xsl:for-each select="$bioHist/*">
+			  			<xsl:if test="name() = 'p'">
+							<xsl:value-of select="concat(position(),',')" /> 
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat('6',',')" /> 
+				</xsl:otherwise>	
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="posP" select="number(substring-before($pPosition,',' ))"/>
 		
 		<xsl:variable name="citationPosition">
-			<xsl:for-each select="$bioHist/*">
-	  			<xsl:if test="name() = 'citation'">
-					<xsl:value-of select="concat(position(),',')" /> 
-				</xsl:if>
-			</xsl:for-each>
+			<xsl:choose>
+			<xsl:when test="$bioHist/eac:citation">
+				<xsl:for-each select="$bioHist/*">
+		  			<xsl:if test="name() = 'citation'">
+						<xsl:value-of select="concat(position(),',')" /> 
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat('6',',')" />
+			</xsl:otherwise>	
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="posCitation" select="number(substring-before($citationPosition,',' ))"/>
 		
 		<xsl:variable name="chronListPosition">
-			<xsl:for-each select="$bioHist/*">
-	  			<xsl:if test="name() = 'chronList'">
-					<xsl:value-of select="concat(position(),',')" /> 
-				</xsl:if>
-			</xsl:for-each>
+			<xsl:choose>
+				<xsl:when test="$bioHist/eac:chronList">
+					<xsl:for-each select="$bioHist/*">
+			  			<xsl:if test="name() = 'chronList'">
+							<xsl:value-of select="concat(position(),',')" /> 
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:when>	
+				<xsl:otherwise>
+					<xsl:value-of select="concat('6',',')" /> 
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="posChron" select="number(substring-before($chronListPosition,',' ))"/>
 		
