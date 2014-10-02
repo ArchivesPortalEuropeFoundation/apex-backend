@@ -520,4 +520,12 @@ public class EacCpfLoader {
     public void setResRelations(List<RelationType> resRelations) {
         this.resRelations = resRelations;
     }
+
+    public List<RelationType> getFncRelations() {
+        return fncRelations;
+    }
+
+    public void setFncRelations(List<RelationType> fncRelations) {
+        this.fncRelations = fncRelations;
+    }
 }

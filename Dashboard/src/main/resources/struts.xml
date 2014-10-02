@@ -79,11 +79,11 @@
             <result name="input2" type="tiles">webFormEAG2012WithoutCreate</result>
             <result name="success" type="tiles">webFormEAG2012</result>
             <result name="successCreated" type="tiles">webFormEAG2012WithMenu</result> <!-- eagsuccesscreated -->
-            
+
             <result name="saveAndExit" type="redirectAction">
                 <param name="actionName">removeInvalidEAG2012</param>
             </result>
-            
+
         </action>
 
         <action name="removeInvalidEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="removeInvalidEAG2012">
@@ -202,10 +202,10 @@
             <result name="success" type="tiles">checkuploadedfiles</result>
         </action>
 
-        <action name="checkexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="checkExistingFiles">          
+        <action name="checkexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="checkExistingFiles">
             <interceptor-ref name="token"></interceptor-ref>
             <interceptor-ref name="defaultStack"></interceptor-ref>
-            
+
             <result name="success" type="tiles">checkuploadedfiles</result>
             <result name="contentmanager" type="redirectAction">
                 <param name="actionName">contentmanager</param>
@@ -276,12 +276,12 @@
             <result name="success-eaccpf">/jsp/eaccpf/eaccpf.jsp</result>
             <result name="error">/jsp/eadcontent/error.jsp</result>
         </action>
-		
+
         <action name="printEacCpfDetails" class="eu.apenet.commons.seconddisplay.SecondDisplayAction" method="displayEacCpf">
         	<result name="success-eaccpf">/jsp/eaccpf/printEacCpfDetails.jsp</result>
         	<result name="error">/jsp/eadcontent/error.jsp</result>
         </action>
-        
+
         <action name="generateTreeJSON" class="eu.apenet.commons.seconddisplay.GenerateTreeJSONAction">
             <result name="SUCCESS" type="stream">
                 <param name="inputName">outputStream</param>
@@ -889,7 +889,7 @@
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
             </result>
-        </action>        
+        </action>
         <action name="deleteQueueItem" class="eu.apenet.dashboard.queue.ManageQueueAction" method="deleteQueueItem">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
@@ -919,13 +919,13 @@
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
             </result>
-        </action>  
+        </action>
         <action name="rebuildAutosuggestion" class="eu.apenet.dashboard.queue.ManageQueueAction" method="rebuildAutosuggestion">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
             </result>
-        </action>             
-        
+        </action>
+
         <action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction">
             <result name="success" type="tiles">sessionManagement</result>
         </action>
@@ -1006,7 +1006,7 @@
                 <param name="actionName">institutionManagerManagement</param>
                 <param name="countryId">${countryId}</param>
             </result>
-        </action>        
+        </action>
         <action name="changeToInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="changeToInstitutionManager">
             <result name="success" type="redirectAction">
                 <param name="actionName">index</param>
@@ -1104,11 +1104,10 @@
         <action name="storeEacCpf" class="eu.apenet.dashboard.manual.eaccpf.actions.StoreEacCpfAction">
         	<!-- TODO: issue 1223, for complete the reload when save first needed the edit
         		 of an apeEAC-CPF will be implemented -->
-<!--             <result name="success" type="tiles">editEacCpf</result> -->
-            <result name="success" type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
+            <result name="success" type="redirectAction">
+                <param name="actionName">editEacCpf</param>
+                <param name="fileToLoad">${fileToLoad}</param>
+            </result>
             <result name="exitContentManager" type="redirectAction">
                 <param name="actionName">contentmanager</param>
             </result>
@@ -1118,9 +1117,9 @@
         </action>
 		<action name="downloadLogFile" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction" method="download">
             <result name="error" type="tiles">error</result>
-        </action>  
+        </action>
         <action name="showLogFiles" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction">
             <result name="success" type="tiles">showLogFiles</result>
-        </action>          
+        </action>
     </package>
 </struts>

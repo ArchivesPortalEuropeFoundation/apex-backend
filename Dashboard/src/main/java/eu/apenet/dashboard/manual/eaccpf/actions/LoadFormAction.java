@@ -5,6 +5,7 @@
  */
 package eu.apenet.dashboard.manual.eaccpf.actions;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.eaccpf.EacCpfLoader;
 import eu.apenet.dashboard.manual.eaccpf.util.DateType;
 import eu.apenet.dashboard.manual.eaccpf.util.IdentifierType;
@@ -41,6 +42,7 @@ public class LoadFormAction extends EacCpfAction {
     private String cpfType;
     private String cpfTypeDescriptionText;
     private String cpfTypeIdentifierText;
+    private String fileToLoad;
     private File upload;
     private String content;
     private EacCpfLoader loader;
@@ -54,6 +56,9 @@ public class LoadFormAction extends EacCpfAction {
     @Override
     public String execute() throws Exception {
         this.loader = new EacCpfLoader();
+        if (fileToLoad != null){
+            upload = new File(APEnetUtilities.getConfig().getRepoDirPath() + DAOFactory.instance().getEacCpfDAO().findById(Integer.valueOf(fileToLoad)).getPath());
+        }
         if (upload != null) {
             boolean result = this.loader.fillEacCpf(upload);
             cpfType = this.loader.getEntityType();
@@ -399,5 +404,13 @@ public class LoadFormAction extends EacCpfAction {
 
     public String getOpenLabel() {
         return openLabel;
+    }
+
+    public String getFileToLoad() {
+        return fileToLoad;
+    }
+
+    public void setFileToLoad(String fileToLoad) {
+        this.fileToLoad = fileToLoad;
     }
 }

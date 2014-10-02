@@ -23,12 +23,24 @@
             <td><input type="text" id="responsibleInstitution" name="responsibleInstitution" disabled="disabled" value="${loader.agencyCode}" /></td>
         </tr>
     </table>
+    <s:if test="%{loader.otherRecordIds.size() > 0}">
+        <s:iterator var="current" value="loader.otherRecordIds" status="status">
+            <table id="localId_<s:property value="#status.index + 1" />" class="tablePadding">
+                <tr>
+                    <td><label for="textLocalId_<s:property value="#status.index + 1" />"><s:property value="getText('eaccpf.control.addlocalidentifier')" /></label></td>
+                    <td><input type="text" id="textLocalId_<s:property value="#status.index + 1" />" name="textLocalId_<s:property value="#status.index + 1" />" value="<s:property value="#current" />"/></td>
+                </tr>
+            </table>
+        </s:iterator>
+    </s:if>
+    <s:else>
     <table id="localId_1" class="tablePadding">
         <tr>
             <td><label for="textLocalId_1"><s:property value="getText('eaccpf.control.otherRecordIdentifier')" />:</label></td>
             <td><input type="text" id="textLocalId_1" name="textLocalId_1" /></td>
         </tr>
     </table>
+    </s:else>
     <table id="addLocalIdButtonPanel" class="tablePadding">
         <tr>
             <td><input type="button" value="<s:property value="getText('eaccpf.control.addlocalidentifier')" />" id="addLocalIdButton" onClick="addLocalId('<s:property value="getText('eaccpf.control.error.emptyfields')" />');" /></td>

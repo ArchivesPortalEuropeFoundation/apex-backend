@@ -17,7 +17,16 @@ public class DateType {
     private SimpleDate standardDate2;
     private String dateContent1;
     private String dateContent2;
+    private String radioValue1;
+    private String radioValue2;
     private String localType;
+
+    //possible values for date types
+    private final String KNOWN = "known";
+    private final String UNKNOWN = "unknown";
+    private final String UNKNOWN_START = "unknownStart";
+    private final String UNKNOWN_END = "unknownEnd";
+    private final String OPEN = "open";
 
     public DateType(SimpleDate date1) {
         this.standardDate1 = date1;
@@ -69,8 +78,24 @@ public class DateType {
         this.localType = localType;
     }
 
+    public String getRadioValue1() {
+        return radioValue1;
+    }
+
+    public void setRadioValue1(String radioValue1) {
+        this.radioValue1 = radioValue1;
+    }
+
+    public String getRadioValue2() {
+        return radioValue2;
+    }
+
+    public void setRadioValue2(String radioValue2) {
+        this.radioValue2 = radioValue2;
+    }
+
     public DateType fillDataWith(Date date) {
-        if (date.getContent() != null && !date.getContent().isEmpty()){
+        if (date.getContent() != null && !date.getContent().isEmpty()) {
             this.setDateContent1(date.getContent());
         }
         if (date.getStandardDate() != null && !date.getStandardDate().isEmpty()) {
@@ -83,11 +108,44 @@ public class DateType {
                 standardDate1.setDay(Integer.parseInt(dateContent[2]));
             }
         }
+        if (date.getLocalType() != null && !date.getLocalType().isEmpty()) {
+            if (date.getLocalType().equals(UNKNOWN)) {
+                this.setRadioValue1(UNKNOWN);
+            } else if (date.getLocalType().equals(OPEN)) {
+                this.setRadioValue1(OPEN);
+            }
+            this.setLocalType(date.getLocalType());
+        } else {
+            this.setRadioValue1(KNOWN);
+        }
         return this;
     }
 
     public DateType fillDataWith(DateRange dateRange) {
-        if (dateRange.getFromDate() != null && dateRange.getFromDate().getContent() != null && !dateRange.getFromDate().getContent().isEmpty()){
+        if (dateRange.getLocalType() != null && !dateRange.getLocalType().isEmpty()) {
+            if (dateRange.getLocalType().equals(UNKNOWN)) {
+                this.setRadioValue1(UNKNOWN);
+                this.setRadioValue2(UNKNOWN);
+            } else if (dateRange.getLocalType().equals(UNKNOWN_START)) {
+                this.setRadioValue1(UNKNOWN);
+                this.setRadioValue2(KNOWN);
+            } else if (dateRange.getLocalType().equals(UNKNOWN_END)) {
+                this.setRadioValue1(KNOWN);
+                this.setRadioValue2(UNKNOWN);
+            } else if (dateRange.getLocalType().equals(OPEN)) {
+                if (dateRange.getFromDate().getContent().equals(UNKNOWN)) {
+                    this.setRadioValue1(UNKNOWN);
+                } else {
+                    this.setRadioValue1(KNOWN);
+                }
+                this.setRadioValue2(OPEN);
+            }
+            this.setLocalType(dateRange.getLocalType());
+        } else {
+            this.setRadioValue1(KNOWN);
+            this.setRadioValue2(KNOWN);
+        }
+        if (dateRange.getFromDate() != null && dateRange.getFromDate().getContent() != null && !dateRange.getFromDate().getContent().isEmpty()) {
             this.setDateContent1(dateRange.getFromDate().getContent());
         }
         if (dateRange.getFromDate() != null && dateRange.getFromDate().getStandardDate() != null
@@ -101,7 +159,7 @@ public class DateType {
                 standardDate1.setDay(Integer.parseInt(dateContent[2]));
             }
         }
-        if (dateRange.getToDate() != null && dateRange.getToDate().getContent() != null && !dateRange.getToDate().getContent().isEmpty()){
+        if (dateRange.getToDate() != null && dateRange.getToDate().getContent() != null && !dateRange.getToDate().getContent().isEmpty()) {
             this.setDateContent2(dateRange.getToDate().getContent());
         }
         if (dateRange.getToDate() != null && dateRange.getToDate().getStandardDate() != null
@@ -119,10 +177,17 @@ public class DateType {
     }
 
     @Override
-    public String toString(){
-        if(standardDate2 == null)
+    public String toString() {
+        if (standardDate2 == null) {
             return standardDate1.toString();
-        else
+        } else {
             return standardDate1.toString() + " - " + standardDate2.toString();
+        }
+    }
+
+    public String formatNumber(int number){
+        if(number > 0 && number < 10){
+            return "0" + number;
+        } else return "" + number;
     }
 }

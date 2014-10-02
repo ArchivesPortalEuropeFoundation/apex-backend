@@ -85,10 +85,10 @@ import eu.apenet.persistence.vo.User;
 public class CreateEacCpf extends EacCpfAction {
 
     /**
-	 *
-	 */
-	private static final long serialVersionUID = 1967202440160548074L;
-	private EacCpf eacCpf = new EacCpf();
+     *
+     */
+    private static final long serialVersionUID = 1967202440160548074L;
+    private EacCpf eacCpf = new EacCpf();
     private Map parameters;
     private eu.apenet.persistence.vo.EacCpf newEac = new eu.apenet.persistence.vo.EacCpf();
     private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
@@ -122,8 +122,8 @@ public class CreateEacCpf extends EacCpfAction {
     }
 
     public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
-        if (this.eacCpfId > 0) {
-            newEac = eacCpfDAO.findById(this.eacCpfId);
+        if (this.getJaxbEacCpf().getControl() != null && this.getJaxbEacCpf().getControl().getRecordId() != null && this.getJaxbEacCpf().getControl().getRecordId().getValue() != null) {
+            newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
         }
 
         return newEac;
@@ -156,34 +156,34 @@ public class CreateEacCpf extends EacCpfAction {
                 control.getRecordId().setValue(content[0]);
             }
         } else {
-        	if (StringUtils.isBlank(newEac.getIdentifier()) && newEac.getId() == null){
-	            newEac.setUploadDate(new java.util.Date());
-	            UploadMethod uploadMethod = new UploadMethod();
-	            uploadMethod.setMethod(UploadMethod.HTTP);
-	            uploadMethod.setId(3);
-	            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-	            String otherRecordId = null;
-	            if (control.getOtherRecordId().size() > 0){
-	            	otherRecordId = control.getOtherRecordId().get(0).getContent();
-	            }
-	            boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
+            if (StringUtils.isBlank(newEac.getIdentifier()) && newEac.getId() == null) {
+                newEac.setUploadDate(new java.util.Date());
+                UploadMethod uploadMethod = new UploadMethod();
+                uploadMethod.setMethod(UploadMethod.HTTP);
+                uploadMethod.setId(3);
+                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+                String otherRecordId = null;
+                if (control.getOtherRecordId().size() > 0) {
+                    otherRecordId = control.getOtherRecordId().get(0).getContent();
+                }
+                boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
 
-	            if (noRecordIdAvailable){
-	                String id = System.currentTimeMillis() +"";
-	                id = id.substring(0,id.length()-4);
-	                newEac.setIdentifier(id);
-	            }else {
-	            	 newEac.setIdentifier(otherRecordId);
+                if (noRecordIdAvailable) {
+                    String id = System.currentTimeMillis() + "";
+                    id = id.substring(0, id.length() - 4);
+                    newEac.setIdentifier(id);
+                } else {
+                    newEac.setIdentifier(otherRecordId);
 
-	            }
-	            newEac.setUploadMethod(uploadMethod);
-	            newEac.setArchivalInstitution(archivalInstitution);
-	            String filename =  APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
-	            newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
-	            newEac.setTitle("temporary title");
-	            newEac = eacCpfDAO.store(newEac);
-        	}
-        	control.getRecordId().setValue(replaceNonNmtokenChars(newEac.getIdentifier()));
+                }
+                newEac.setUploadMethod(uploadMethod);
+                newEac.setArchivalInstitution(archivalInstitution);
+                String filename = APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
+                newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
+                newEac.setTitle("temporary title");
+                newEac = eacCpfDAO.store(newEac);
+            }
+            control.getRecordId().setValue(replaceNonNmtokenChars(newEac.getIdentifier()));
         }
 
         // eacCpf/control/maintenanceStatus
@@ -1615,33 +1615,33 @@ public class CreateEacCpf extends EacCpfAction {
     }
 
     private static String replaceNonNmtokenChars(String urlPart) {
-    	if (urlPart != null){
-	        String result = urlPart.replaceAll("\\*", "_");
-	        result = result.replaceAll("=", "_");
-	        result = result.replaceAll("/", "_");
-	        result = result.replaceAll("\\\\", "_");
-	        result = result.replaceAll("\\[", "_");
-	        result = result.replaceAll("\\]", "_");
-	        result = result.replaceAll("\\+", "_");
-	        result = result.replaceAll("%", "_");
-	        result = result.replaceAll("@", "_");
-	        result = result.replaceAll("\\$", "_");
-	        result = result.replaceAll("#", "_");
-	        result = result.replaceAll("\\^", "_");
-	        result = result.replaceAll("&", "_");
-	        result = result.replaceAll("\\(", "_");
-	        result = result.replaceAll("\\)", "_");
-	        result = result.replaceAll("!", "_");
-	        result = result.replaceAll("~", "_");
-	        result = result.replaceAll("<", "_");
-	        result = result.replaceAll(">", "_");
-	        result = result.replaceAll("\"", "_");
-	        result = result.replaceAll(",", "_");
-	        result = result.replaceAll(";", "_");
-	        result = result.replaceAll(" ", "_");
-	        return result;
-    	}else {
-    		return null;
-    	}
+        if (urlPart != null) {
+            String result = urlPart.replaceAll("\\*", "_");
+            result = result.replaceAll("=", "_");
+            result = result.replaceAll("/", "_");
+            result = result.replaceAll("\\\\", "_");
+            result = result.replaceAll("\\[", "_");
+            result = result.replaceAll("\\]", "_");
+            result = result.replaceAll("\\+", "_");
+            result = result.replaceAll("%", "_");
+            result = result.replaceAll("@", "_");
+            result = result.replaceAll("\\$", "_");
+            result = result.replaceAll("#", "_");
+            result = result.replaceAll("\\^", "_");
+            result = result.replaceAll("&", "_");
+            result = result.replaceAll("\\(", "_");
+            result = result.replaceAll("\\)", "_");
+            result = result.replaceAll("!", "_");
+            result = result.replaceAll("~", "_");
+            result = result.replaceAll("<", "_");
+            result = result.replaceAll(">", "_");
+            result = result.replaceAll("\"", "_");
+            result = result.replaceAll(",", "_");
+            result = result.replaceAll(";", "_");
+            result = result.replaceAll(" ", "_");
+            return result;
+        } else {
+            return null;
+        }
     }
 }

@@ -9,6 +9,7 @@ import eu.apenet.dpt.utils.eaccpf.DateRange;
 import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.NameEntry;
 import eu.apenet.dpt.utils.eaccpf.NameEntryParallel;
+import eu.apenet.dpt.utils.eaccpf.Part;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +19,17 @@ import java.util.List;
  */
 public class NameEntryType {
 
-    private String name;
+    private List<Part> parts;
     private String language;
     private String form;
-    private String component;
     private List<DateType> dates;
 
-    public String getName() {
-        return name;
+    public List<Part> getParts() {
+        return parts;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
     }
 
     public String getLanguage() {
@@ -48,14 +48,6 @@ public class NameEntryType {
         this.form = form;
     }
 
-    public String getComponent() {
-        return component;
-    }
-
-    public void setComponent(String component) {
-        this.component = component;
-    }
-
     public List<DateType> getDates() {
         return dates;
     }
@@ -68,15 +60,13 @@ public class NameEntryType {
         if (nameEntry.getLocalType() != null && !nameEntry.getLocalType().isEmpty()) {
             this.setForm(nameEntry.getLocalType());
         }
-        if (nameEntry.getPart() != null && nameEntry.getPart().get(0) != null
-                && nameEntry.getPart().get(0).getLocalType() != null
-                && !nameEntry.getPart().get(0).getLocalType().isEmpty()) {
-            this.setComponent(nameEntry.getPart().get(0).getLocalType());
-        }
-        if (nameEntry.getPart() != null && nameEntry.getPart().get(0) != null
-                && nameEntry.getPart().get(0).getContent() != null
-                && !nameEntry.getPart().get(0).getContent().isEmpty()) {
-            this.setName(nameEntry.getPart().get(0).getContent());
+
+        this.parts = new ArrayList<Part>();
+        if (nameEntry.getPart() != null && !nameEntry.getPart().isEmpty()) {
+            for (Part part: nameEntry.getPart()){
+                this.parts.add(part);
+            }
+            this.language = nameEntry.getPart().get(0).getLang();
         }
 
         this.dates = new ArrayList<DateType>();
@@ -107,6 +97,14 @@ public class NameEntryType {
         return this;
     }
 
+    /**
+     * Fills a NameEntryType object for each NaneEmtry in a NameEntryParallel.
+     * Note: Code of this function has to be revised for future use in a "global" EAC-CPF editing form, as it is not used in
+     * the creation form and therefore might not work at the moment!
+     * @param nameEntry
+     * @param nameEntryParallel
+     * @return
+     */
     public NameEntryType fillDataWith(NameEntry nameEntry, NameEntryParallel nameEntryParallel) {
         if (nameEntry.getLocalType() != null && !nameEntry.getLocalType().isEmpty()) {
             this.setForm(nameEntry.getLocalType());
@@ -114,12 +112,12 @@ public class NameEntryType {
         if (nameEntry.getPart() != null && nameEntry.getPart().get(0) != null
                 && nameEntry.getPart().get(0).getLocalType() != null
                 && !nameEntry.getPart().get(0).getLocalType().isEmpty()) {
-            this.setComponent(nameEntry.getPart().get(0).getLocalType());
+//            this.setComponent(nameEntry.getPart().get(0).getLocalType());
         }
         if (nameEntry.getPart() != null && nameEntry.getPart().get(0) != null
                 && nameEntry.getPart().get(0).getContent() != null
                 && !nameEntry.getPart().get(0).getContent().isEmpty()) {
-            this.setName(nameEntry.getPart().get(0).getContent());
+//            this.setName(nameEntry.getPart().get(0).getContent());
         }
 //        if (nameEntryParallel.getUseDates() != null) {
 //            if (nameEntries.getUseDates().getDateSet() != null || nameEntries.getUseDates().getDateRange() != null || nameEntries.getUseDates().getDate() != null) {
@@ -130,19 +128,19 @@ public class NameEntryType {
 //                        && nameEntries.getUseDates().getDateSet().getDateOrDateRange().isEmpty()) {
 //                    for (Object object : nameEntries.getUseDates().getDateSet().getDateOrDateRange()) {
 //                        if (object instanceof Date) {
-//                            DateType dateType = new DateType(new SimpleDate(0));
+//                            DateType dateType = new DateType(new SimpleDate("0"));
 //                            this.dates.add(dateType.fillDataWith((Date) object));
 //                        }
 //                        if (object instanceof DateRange) {
-//                            DateType dateType = new DateType(new SimpleDate(0), new SimpleDate(0));
+//                            DateType dateType = new DateType(new SimpleDate("0"), new SimpleDate("0"));
 //                            this.dates.add(dateType.fillDataWith((DateRange) object));
 //                        }
 //                    }
 //                } else if (nameEntries.getUseDates().getDate() != null) {
-//                    DateType dateType = new DateType(new SimpleDate(0));
+//                    DateType dateType = new DateType(new SimpleDate("0"));
 //                    dates.add(dateType.fillDataWith(nameEntries.getUseDates().getDate()));
 //                } else if (nameEntries.getUseDates().getDateRange() != null) {
-//                    DateType dateType = new DateType(new SimpleDate(0), new SimpleDate(0));
+//                    DateType dateType = new DateType(new SimpleDate("0"), new SimpleDate("0"));
 //                    dates.add(dateType.fillDataWith(nameEntries.getUseDates().getDateRange()));
 //                }
 //            }

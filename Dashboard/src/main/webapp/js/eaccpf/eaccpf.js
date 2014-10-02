@@ -97,28 +97,29 @@ function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, e
     if (onlySave) {
 // TODO: issue 1223, for complete the reload when save first needed the edit
 // of an apeEAC-CPF will be implemented
-//    	$("input#saveOrExit").attr("value", "save");
+    	$("input#saveOrExit").attr("value", "save");
+        $('#webformEacCpf').submit();
 
 // Try to save without refresh the page.
-        $.post("storeEacCpf.action", $('#webformEacCpf').serialize(), function(d) {
-            if (d.fileId) {
-                $("input#fileId").attr("value", d.fileId);
-            }
-            if (d.eacDaoId) {
-                $("input#eacDaoId").attr("value", d.eacDaoId);
-            }
-            if (d.resultMessage) {
-                $("ul#eacCpfTabsContainer a[href='#tab-identity']").trigger('click');
-                $("div#spanMessage").html("<span>" + d.resultMessage + "</span>")
-                $("div#spanMessage").fadeIn("slow");
-                $(document).bind('keyup mousedown', function() {
-                    $("div#spanMessage").fadeOut("slow");
-                });
-            }
-            if (d.error) {
-                alert(d.error);
-            }
-        });
+//        $.post("storeEacCpf.action", $('#webformEacCpf').serialize(), function(d) {
+//            if (d.fileId) {
+//                $("input#fileId").attr("value", d.fileId);
+//            }
+//            if (d.eacDaoId) {
+//                $("input#eacDaoId").attr("value", d.eacDaoId);
+//            }
+//            if (d.resultMessage) {
+//                $("ul#eacCpfTabsContainer a[href='#tab-identity']").trigger('click');
+//                $("div#spanMessage").html("<span>" + d.resultMessage + "</span>")
+//                $("div#spanMessage").fadeIn("slow");
+//                $(document).bind('keyup mousedown', function() {
+//                    $("div#spanMessage").fadeOut("slow");
+//                });
+//            }
+//            if (d.error) {
+//                alert(d.error);
+//            }
+//        });
     } else {
         $("input#saveOrExit").attr("value", "save_exit");
         $('#webformEacCpf').submit();

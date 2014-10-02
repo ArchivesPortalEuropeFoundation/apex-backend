@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,48 +72,16 @@ public class StoreEacCpfAction extends EacCpfAction {
     private String returnPage;
     private String saveOrExit;
 
+    // Variable for the File to be reloaded
+    private int fileToLoad;
+
     @Override
     public String execute() throws Exception {
         String result = ERROR;
         // Checks the selected  option.
         if (StoreEacCpfAction.SAVE.equalsIgnoreCase(this.getSaveOrExit())) {
-    		// TODO: issue 1223, for complete the reload when save first needed the edit
-            // of an apeEAC-CPF will be implemented.
-            // Save the contents.
-//    		result = storeApeEacCpf();
-
-            // Define the params for the response.
-            getServletRequest().setCharacterEncoding(UTF8);
-            getServletResponse().setCharacterEncoding(UTF8);
-            getServletResponse().setContentType("application/json");
-            Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
-
             // Save the contents.
             result = storeApeEacCpf();
-
-            StringBuilder buffer = new StringBuilder();
-            if (result.equalsIgnoreCase(SUCCESS)) {
-                buffer.append("{\"fileId\":\"" + this.getFileId() + "\",");
-                buffer.append("\"eacDaoId\":\"" + this.getEacDaoId() + "\",");
-                buffer.append("\"resultMessage\":\"" + getText("eaccpf.info.eaccorrectlycreated") + "\"}");
-
-            } else {
-                buffer.append("{\"error\":\"" + getText("content.message.error") + "\"}");
-                for (int i = 0; i < warnings_ead.size(); i++) {
-                    buffer.append(warnings_ead.get(i));
-                }
-            }
-
-            writer.write(buffer.toString());
-
-            try {
-                if (writer != null) {
-                    writer.flush();
-                    writer.close();
-                }
-            } catch (IOException e) {
-                LOG.error(e.getMessage(), e);
-            }
         } else if (StoreEacCpfAction.EXIT.equalsIgnoreCase(this.getSaveOrExit())) {
             // Checks the return page.
             if (StoreEacCpfAction.RETURN_CONTENT_MANAGER.equalsIgnoreCase(this.getReturnPage())) {
@@ -182,6 +148,9 @@ public class StoreEacCpfAction extends EacCpfAction {
                 File eacCpfFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
                 if (eacCpfFinalFile.exists()) {
                     try {
+                        // Windows file lock workaround; uncomment if necessary
+                                         System.gc();
+                                         Thread.sleep(2000);
                         FileUtils.forceDelete(eacCpfFinalFile);
                     } catch (IOException e) {
                         LOG.error(e.getMessage(), e);
@@ -214,6 +183,7 @@ public class StoreEacCpfAction extends EacCpfAction {
                 eacCpfDAO.update(storedEacEntry);
 
                 this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
+                this.setFileToLoad(storedEacEntry.getId());
             } else {
                 LOG.warn("The file " + filename + " is not valid");
                 for (int i = 0; i < warnings_ead.size(); i++) {
@@ -401,5 +371,13 @@ public class StoreEacCpfAction extends EacCpfAction {
      */
     public void setSaveOrExit(String saveOrExit) {
         this.saveOrExit = saveOrExit;
+    }
+
+    public int getFileToLoad() {
+        return fileToLoad;
+    }
+
+    public void setFileToLoad(int fileToLoad) {
+        this.fileToLoad = fileToLoad;
     }
 }
