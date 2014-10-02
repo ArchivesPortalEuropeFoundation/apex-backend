@@ -23,31 +23,31 @@ function hideAndShow(idPrefix, shown) {
 function validateAndSave(profileNameError, dataProviderError, edmDaoError, languageError, europeanaLicenseError) {
     var profilename = $("#profilename").attr("value");
     if (profilename == null || profilename == "") {
-        alert(profileNameError);
+    	alertAndDecode(profileNameError);
         return;
     }
     var upFileAction = $("#uploadedFileAction").attr("value");
     if (upFileAction == "2") {
         var dataProvider = $("#textDataProvider").attr("value");
         if (dataProvider == null || dataProvider == "") {
-            alert(dataProviderError);
+        	alertAndDecode(dataProviderError);
             return;
         }
         var edmDaoType = $("#edmDaoType").attr("value");
         if (edmDaoType == null || edmDaoType == "") {
-            alert(edmDaoError);
+        	alertAndDecode(edmDaoError);
             return;
         }
         var languageSelection = $("#languageselection").attr("value");
         if (languageSelection == null || languageSelection == "") {
-            alert(languageError);
+        	alertAndDecode(languageError);
             return;
         }
         var license = $("#licenseeuropeana").attr("checked");
         if (license == "checked") {
             var europeanaLicense = $("#europeanaLicense").attr("value");
             if (europeanaLicense == null || europeanaLicense == "") {
-                alert(europeanaLicenseError);
+            	alertAndDecode(europeanaLicenseError);
                 return;
             }
         }

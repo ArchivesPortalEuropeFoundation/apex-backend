@@ -14,7 +14,7 @@ function writeStatusBar(label, errorText, confirmText) {
  */
 function stopBrowser(label, text) {
     if (label && xmlHttpRequest) {
-        alert(text);
+    	alertAndDecode(text);
         xmlHttpRequest.abort();
         window.location.href = "upload.action";
     }
@@ -77,7 +77,7 @@ function uploadProgress(evt) {
 function addConfirm(confirmText) {
     $("a").click(function(event) {
         event.preventDefault();
-        var response = confirm(confirmText);
+        var response = confirmAndDecode(confirmText);
         if (response) {
             window.location.href = $(this).attr("href");
         }
@@ -180,7 +180,7 @@ function internetExplorer9Way(xmlHttpRequest) {
         xmlHttpRequest.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
         xmlHttpRequest.setRequestHeader("Content-Length", request.length);
         xmlHttpRequest.send(request);
-        alert(request);
+        alertAndDecode(request);
     } else {//not suppported '.upload'
         alternativeForIe();
     }
@@ -302,6 +302,6 @@ function upload(warningText, confirmText) {
             }
         }
     } else {
-        alert(warningText);
+    	alertAndDecode(warningText);
     }
 }

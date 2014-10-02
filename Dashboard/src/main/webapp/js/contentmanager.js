@@ -196,7 +196,7 @@ function performBatchContentAction(type) {
 				if(message.length>"error".length){
 					message = data.substring("error".length+1);
 				}
-				alert(message);
+				alertAndDecode(message);
 			}
 
 			updateCurrentSearchResults(updateForm);

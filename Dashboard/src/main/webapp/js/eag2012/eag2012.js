@@ -49,11 +49,11 @@ function hideAndShow(idPrefix,shown){
 
 function clickExitAction(strSaveMsg,form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, errorspecialcharacter){
 	
-	if (confirm(strSaveMsg)) 
+	if (confirmAndDecode(strSaveMsg)) {
 		clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, true, errorspecialcharacter);
-	else 
+	}else{ 
 		location.href="removeInvalidEAG2012.action";
-	
+	}
 }
 
 
@@ -134,7 +134,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "your institution".
 				var jsonDataYourInstitution = clickYourInstitutionAction(text1,message);
 				if (!jsonDataYourInstitution) {
-					alert(error1);
+					alertAndDecode(error1);
 					if($("#tab_yourInstitutionTable_1").length>0){
 						$("#tab_yourInstitutionTable_1").trigger('click');
 						$("#tab_yourInstitutionTable_1 a[href='#tab-yourInstitution']").trigger('click');
@@ -151,7 +151,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 					// Check fill mandatory fields in tab "identity".
 					var jsonDataIdentity = clickIdentityAction(text1);
 					if (!jsonDataIdentity) {
-						alert(error2);
+						alertAndDecode(error2);
 						if($("#tab_yourInstitutionTable_1").length>0){
 							$("#tab_yourInstitutionTable_1").trigger('click');
 							$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
@@ -161,7 +161,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 						exit = true;
 					}
 		        } else{
-		        	alert(errorspecialcharacter);
+		        	alertAndDecode(errorspecialcharacter);
 		        	if (errorTab ==1){
 		        		if($("#tab_yourInstitutionTable_1").length>0){
 							$("#tab_yourInstitutionTable_1").trigger('click');
@@ -186,12 +186,12 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "contact".
 				var jsonDataContact = checkAllContactTabs(text1,message);
 				if (!jsonDataContact) {
-					alert(error3);
+					alertAndDecode(error3);
 					navigateToCurrentRepoTab(href);
 					exit = true;
 				}
 				if (jsonDataContact===true){
-					  alert(error9);
+					  alertAndDecode(error9);
 					  navigateToCurrentRepoTab(href);
 					  exit = true;
 				}
@@ -200,7 +200,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "access and services".
 				var jsonDataAccessAndServices = checkAllAccessAndServicesTabs(text1,message);
 				if (!jsonDataAccessAndServices) {
-					alert(error4);
+					alertAndDecode(error4);
 					navigateToCurrentRepoTab(href);
 					exit = true;
 				}
@@ -209,7 +209,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "description".
 				var jsonDataDescription = checkAllDescriptionTabs(text1);
 				if (!jsonDataDescription) {
-					alert(error5);
+					alertAndDecode(error5);
 					navigateToCurrentRepoTab(href);
 					exit = true;
 				}
@@ -218,7 +218,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "control".
 				var jsonDataControl = clickControlAction(text1);
 				if(!jsonDataControl){
-					alert(error6);
+					alertAndDecode(error6);
 					$("#tab_yourInstitutionTable_1").trigger('click');
 					$("#tab_yourInstitutionTable_1 a[href='#tab-control']").trigger('click');
 					exit = true;
@@ -228,7 +228,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "relations".
 				var jsonDataRelations = clickRelationsAction(text1,message);
 				if (!jsonDataRelations) {
-					alert(error7);
+					alertAndDecode(error7);
 					if($("#tab_yourInstitutionTable_1").length>0){
 						$("#tab_yourInstitutionTable_1").trigger('click');
 						$("#tab_yourInstitutionTable_1 a[href='#tab-relations']").trigger('click');
@@ -1739,7 +1739,7 @@ function yiFutherAccessInformation2(text1){
 	clone.find("[id^='selectFutherAccessInformation']").attr("value","none");
 	clone.find("[id^='selectFutherAccessInformation']").removeAttr("onchange");
 	if(wrongField){
-		alert(text1);
+		alertAndDecode(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -1779,7 +1779,7 @@ function yiAddFutherInformationOnExistingFacilities2(text1) {
 	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").attr("value","none");
 	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").removeAttr("onchange");
 	if(wrongField){
-		alert(text1);
+		alertAndDecode(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -1817,7 +1817,7 @@ function yiAddReferencetoyourinstitutionsholdingsguide(text1){
 	clone.find("[id^='textYIHoldingsGuideLinkTitle']").removeAttr("onchange");
 	clone2.find("[id^='selectYIReferencetoHoldingsguide']").attr("value","none");
 	if(wrongField){
-		alert(text1);
+		alertAndDecode(text1);
 	}else{
 		$(target2).after(clone2);
 		$(target2).after(clone);
@@ -2270,7 +2270,7 @@ function addYIFurtherEmailsOfTheInstitution(text1){
 	clone.find("[id^='selectTextYILangEmail']").attr("value","none");
 	clone2.find("[id^='textYIEmailLinkTitle']").attr("value","");
 	if(wrongField){
-		alert(text1);
+		alertAndDecode(text1);
 	}else{
 		$(target2).after(clone2);
 		$(target2).after(clone);
@@ -2316,7 +2316,7 @@ function addYIFurtherWebsOfTheInstitution(text1){
 	clone2.attr("id","trButtonYILangWebpage_"+(count+1));
 		
 	if(wrongField){
-		alert(text1);
+		alertAndDecode(text1);
 	}else{
 		$(target2).after(clone2);
 		$(target2).after(clone);
@@ -2350,7 +2350,7 @@ function yIAddOpeningTimes(text1){
 	clone.find("span").remove();
 	clone.find("p").remove();
 	if(wrongField){
-		alert(text1);
+		alertAndDecode(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -2465,7 +2465,7 @@ function yIAddClosingDates2(text1){
 	clone.find("[id^='yourInstitutionClosingDates']").attr("value","");
 	clone.find("[id^='selectTextYIClosingTimes']").attr("value","none");
 	if(wrongField){
-		alert(text1);
+		alertAndDecode(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -4135,11 +4135,11 @@ function relationAddNewInstitutionRelation(text1){
 }
 
 function alertEmptyFields(text1) {
-	alert(text1);
+	alertAndDecode(text1);
 }
 
 function alertFillFieldsBeforeChangeTab(text1) {
-	alert(text1);
+	alertAndDecode(text1);
 }
 
 // Copy content functions.
@@ -4160,7 +4160,7 @@ function idOfInstitutionChanged(text, text1, index){
 		$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i,v){
 			var otherFurtherId = $("#otherRepositorId_"+i).val();
 			if (identifier == otherFurtherId && check && identifier != "") {
-				alert("\""+identifier+"\" "+text);
+				alertAndDecode("\""+identifier+"\" "+text);
 				$("#otherRepositorId_"+i).attr("value","");
 				if ($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes"){
 					$("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
@@ -4181,7 +4181,7 @@ function idOfInstitutionChanged(text, text1, index){
 			if(i!=index){
 				if ((furtherId == otherFurtherId
 				|| furtherId == identifier) && check && furtherId !=""){
-					alert("\""+furtherId+"\" "+text);
+					alertAndDecode("\""+furtherId+"\" "+text);
 					$("#otherRepositorId_"+index).attr("value","");
 					if ($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes"){
 						$("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
@@ -4204,7 +4204,7 @@ function idOfInstitutionChanged(text, text1, index){
 		$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i){
 			var otherFurtherId = $("#otherRepositorId_"+(i)).val();
 			if (identifier == otherFurtherId && check && identifier != "") {
-				alert("\""+identifier+"\" " + text);
+				alertAndDecode("\""+identifier+"\" " + text);
 				$("#textYIIdentifierOfTheInstitution").attr("value","");
 				if ( $("#selectYICodeISIL").val()=="yes"){
 					$("#selectYICodeISIL").attr("value","no"); 
@@ -4229,7 +4229,7 @@ function idOfInstitutionChanged(text, text1, index){
 		if($("#selectYICodeISIL").val()=="yes"){
 			if(matched==null || matched != identifier){
 				$("#selectYICodeISIL").attr("value","no");
-				alert("\""+identifier+"\" "+text1);	
+				alertAndDecode("\""+identifier+"\" "+text1);	
 				$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 					$(this).removeAttr("disabled");
 				});
@@ -4249,7 +4249,7 @@ function idOfInstitutionChanged(text, text1, index){
 			var matched1 = furtherId.match(pattern);
 			if(matched1==null || matched1 != furtherId){
 				$("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
-				alert("\""+furtherId+"\" "+text1);
+				alertAndDecode("\""+furtherId+"\" "+text1);
 				$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 					$(this).removeAttr("disabled");
 				});
@@ -4845,7 +4845,7 @@ function codeISILChanged(text1, index){
 	  if($("#selectYICodeISIL").val()=="yes"){
             if(matched==null || matched != identifier){
                 $("#selectYICodeISIL").attr("value","no");
-		        alert("\""+identifier+"\" "+text1);	
+                alertAndDecode("\""+identifier+"\" "+text1);	
                 $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 				    $(this).removeAttr("disabled");
 			     });	
@@ -4866,7 +4866,7 @@ function codeISILChanged(text1, index){
                var check = index;
                     if(matched1==null || matched1 != furtherId){
                         $("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
-			            alert("\""+furtherId+"\" "+ text1);
+                        alertAndDecode("\""+furtherId+"\" "+ text1);
                         $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 				           $(this).removeAttr("disabled");
 			            });
@@ -4890,7 +4890,7 @@ function codeISILChanged(text1, index){
 	if(index==undefined && $("#selectYICodeISIL").val()=="yes"){
               if(matched==null || matched != identifier){
                        $("#selectYICodeISIL").attr("value","no");
-			           alert("\""+identifier+"\" "+text);	
+                       alertAndDecode("\""+identifier+"\" "+text);	
                       }else{
 		                id = $("#textYIIdentifierOfTheInstitution").val();
                        } 
@@ -4899,7 +4899,7 @@ function codeISILChanged(text1, index){
          var matched1 = furtherId.match(pattern);
                     if(matched1==null || matched1 != furtherId){
                         $("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
-			           alert("\""+furtherId+"\" "+text);	
+                        alertAndDecode("\""+furtherId+"\" "+text);	
                       }else{
 		                 id = $("#otherRepositorId_"+index).val();
                      }
@@ -5164,7 +5164,7 @@ function checkName(text, id){
 	var showAlert = true;
 	while (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1 || indexBackslash > -1 || indexColon > -1){
 		if (showAlert) {
-			alert(text);
+			alertAndDecode(text);
 			showAlert = false;
 		}
 		name =  name.replace("\%",'');

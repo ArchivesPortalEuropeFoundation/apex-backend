@@ -74,7 +74,7 @@ function initReport(selectMessage){
 				$("input#overwriteIDs").attr("value", "overwriteIds");
 				$("#updatesPartForm").submit();
 			} else {
-				alert(selectMessage);
+				alertAndDecode(selectMessage);
 			}
 		});
 
@@ -89,7 +89,7 @@ function initReport(selectMessage){
 				$("input#overwriteIDs").attr("value", "keepIds");
 				$("#updatesPartForm").submit();
 			} else {
-				alert(selectMessage);
+				alertAndDecode(selectMessage);
 			}
 		});
 	} else {

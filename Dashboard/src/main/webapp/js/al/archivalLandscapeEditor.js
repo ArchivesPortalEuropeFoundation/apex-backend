@@ -240,7 +240,7 @@ function checkName(text, id){
 	var showAlert = true;
 	while (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1 || indexBackslash > -1 || indexColon > -1){
 		if (showAlert) {
-			alert(text);
+			alertAndDecode(text);
 			showAlert = false;
 		}
 		name =  name.replace("\%",'');

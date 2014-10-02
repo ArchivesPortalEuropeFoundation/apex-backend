@@ -154,7 +154,7 @@ function clickExitAction(question, nameMissing, dateMissing, startDateMissing, e
     }
 
 // Ask user for the action.
-    if (confirm(question)) {
+    if (confirmAndDecode(question)) {
         clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
     } else {
         $("input#saveOrExit").attr("value", "exit");
@@ -389,11 +389,11 @@ function checkWebpages(target, message) {
 }
 
 function alertEmptyFields(text1) {
-    alert(text1);
+	alertAndDecode(text1);
 }
 
 function alertFillFieldsBeforeChangeTab(text) {
-    alert(text);
+	alertAndDecode(text);
 }
 
 /**************************************
@@ -679,7 +679,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMe
         }
         var date = new Date(year, month - 1, day);
         if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
-            alert(year + "-" + month + "-" + day + ": " + invalidDateMessage);
+        	alertAndDecode(year + "-" + month + "-" + day + ": " + invalidDateMessage);
             return;
         }
     }
@@ -729,7 +729,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMe
         date2 = new Date(year, month - 1, day);
     }
     if (date1 > date2) {
-        alert(invalidRangeMessage);
+    	alertAndDecode(invalidRangeMessage);
         return;
     }
     return "ok";
@@ -1613,11 +1613,11 @@ function addLocalId(fieldsMissing) {
  * Tab validation functions
  ****************************************************/
 var clickChooseTypeAction = function(text1) {
-    alert(text);
+	alertAndDecode(text);
 }
 
 var clickIdentityAction = function(text, message) {
-    alert(text + '; ' + message);
+	alertAndDecode(text + '; ' + message);
 }
 
 /*************************************************************************************

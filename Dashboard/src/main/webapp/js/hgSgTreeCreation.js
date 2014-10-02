@@ -1,6 +1,6 @@
     function bindDefaultContextMenu(message) {
         $("#myMenu .cancel a").click(function(){
-            if(confirm(message)){
+            if(confirmAndDecode(message)){
                 window.location = 'contentmanager.action';
             }
         });
@@ -110,7 +110,7 @@
             }
         );
         $("#myMenu .delete a").click(function(){
-            if(confirm('dashboard.hgcreation.areyousuredeletechildren')){
+            if(confirmAndDecode('dashboard.hgcreation.areyousuredeletechildren')){
                 var node = $("#tree").dynatree("getActiveNode");
                 $.post("deleteLevelHG.action", {key: node.data.key}, function(databack){
                     if(databack.success){
@@ -134,7 +134,7 @@
         $("#myMenu li.save").removeClass('disabled');
         $("#myMenu li.cancel").removeClass('disabled');
         $("#myMenu .delete a").click(function(){
-            if(confirm('dashboard.hgcreation.areyousuredelete')){
+            if(confirmAndDecode('dashboard.hgcreation.areyousuredelete')){
                 var node = $("#tree").dynatree("getActiveNode");
                 $.post("deleteLevelHG.action", {key: node.data.key}, function(databack){
                     if(databack.success){

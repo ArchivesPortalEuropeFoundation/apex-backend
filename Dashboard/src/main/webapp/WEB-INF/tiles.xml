@@ -15,6 +15,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -29,6 +30,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -42,6 +44,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -57,6 +60,7 @@
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/help.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -70,6 +74,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="eagfirstcreation" extends="dashboardLayout">
@@ -79,6 +84,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="eagsuccesscreated" extends="dashboardLayout">
@@ -87,6 +93,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="webformeag" extends="dashboardLayout">
@@ -96,6 +103,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 
@@ -108,6 +116,7 @@
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
 			<add-attribute type="string" value="/js/breadcrumb.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="webFormEAG2012WithoutCreate" extends="dashboardLayout">
@@ -119,6 +128,7 @@
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
 			<add-attribute type="string" value="/js/breadcrumb.js"/>
 			<add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
 	</definition>
 	<definition name="webFormEAG2012WithMenu" extends="dashboardLayout">
@@ -130,6 +140,7 @@
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
 			<add-attribute type="string" value="/js/breadcrumb.js"/>
 			<add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
 	</definition>
 
@@ -139,6 +150,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 
@@ -148,6 +160,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		    <add-attribute type="string" value="/js/webformainame.js"/>	
 		</put-list-attribute>
 	</definition>
@@ -164,6 +177,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="httpuploadeag" extends="dashboardLayout">
@@ -173,6 +187,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="httpuploadeagwithtempeag" extends="dashboardLayout">
@@ -182,6 +197,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="httpuploadeagwithmenu" extends="dashboardLayout">
@@ -190,6 +206,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagerrors" extends="dashboardLayout">
@@ -199,6 +216,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagerrorswithtempeag" extends="dashboardLayout">
@@ -208,6 +226,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 		<definition name="uploadeagerrorswithmenu" extends="dashboardLayout">
@@ -216,6 +235,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagold" extends="dashboardLayout">
@@ -225,6 +245,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagoldwithtempeag" extends="dashboardLayout">
@@ -234,6 +255,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagerrorspecialcharacterwithtempeag" extends="dashboardLayout">
@@ -243,6 +265,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagerrorspecialcharacter" extends="dashboardLayout">
@@ -252,6 +275,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagerrorspecialcharacterwithmenu" extends="dashboardLayout">
@@ -260,6 +284,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="contentproviderinf" extends="dashboardLayout">
@@ -268,6 +293,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="error" extends="dashboardLayout">
@@ -276,6 +302,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="checkexistingfiles" extends="dashboardLayout">
@@ -285,6 +312,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
 	</definition>
 	<definition name="checkuploadedfiles" extends="dashboardLayout">
@@ -294,6 +322,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
 	</definition>
 	<definition name="contentmanager" extends="DefaultLayout">
@@ -307,6 +336,7 @@
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/contentmanager.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/css/colorbox.css"/>
@@ -321,6 +351,7 @@
             <add-attribute type="string" value="/js/httpupload.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
 	</definition>
     <definition name="successprofileupload" extends="dashboardLayout">
@@ -331,6 +362,7 @@
             <add-attribute type="string" value="/js/httpupload.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
     </definition>
 	<definition name="viewftpfiles" extends="dashboardLayout">
@@ -343,6 +375,7 @@
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
             <add-attribute type="string" value="/js/help.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -354,6 +387,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
     <definition name="uploaderrorexisting" extends="dashboardLayout">
@@ -362,6 +396,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
     <definition name="uploaderrorformat" extends="dashboardLayout">
@@ -370,6 +405,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
     <definition name="viewHarvest" extends="dashboardLayout">
@@ -380,6 +416,7 @@
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/help.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
 	</definition>
         <definition name="ingestionprofilesMain" extends="dashboardLayout">
@@ -391,6 +428,7 @@
                 <add-attribute type="string" value="/js/breadcrumb.js"/>
                 <add-attribute type="string" value="/js/ingestionprofile.js"/>
                 <add-attribute type="string" value="/js/browsers.js"/>
+            	<add-attribute type="string" value="/js/commons.js"/>
             </put-list-attribute>
         </definition>
 
@@ -401,6 +439,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
     </definition>
@@ -411,6 +450,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/eaccpf/eaccpf.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
     </definition>
 
@@ -420,6 +460,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/eaccpf/eaccpf.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
     </definition>
 				<!-- END DASHBOARD ACTIONS -->
@@ -431,6 +472,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="viewAL" extends="ArchivalLandscapeLayout">
@@ -443,6 +485,7 @@
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
 	        <add-attribute type="string" value="/js/directory.js"/>
 	        <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -460,6 +503,7 @@
 	        <add-attribute type="string" value="/js/al/archivalLandscapeEditor.js"/>
 	        <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
 	        <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 		<put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -480,6 +524,7 @@
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
 	        <add-attribute type="string" value="/js/al/archivalLandscape.js"/>
 	        <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 		<put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -492,6 +537,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 	        <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="selectArchive" extends="ArchivalLandscapeLayout" >
@@ -500,6 +546,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="ALnotFound" extends="ArchivalLandscapeLayout" >
@@ -508,6 +555,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="ALnotExists" extends="ArchivalLandscapeLayout" >
@@ -516,6 +564,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="changeInstitutionManager" extends="ArchivalLandscapeLayout">
@@ -524,6 +573,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
  	</definition>
 	<definition name="view" extends="ArchivalLandscapeLayout" >
@@ -532,6 +582,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="edit" extends="DefaultLayout" >
@@ -540,6 +591,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="viewresult2" extends="ArchivalLandscapeLayout">
@@ -549,6 +601,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploaderroralcontentpublished" extends="ArchivalLandscapeLayout">
@@ -558,6 +611,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploaderroralcontentnotpublished" extends="ArchivalLandscapeLayout">
@@ -567,6 +621,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploaderrorformat2" extends="ArchivalLandscapeLayout">
@@ -576,6 +631,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploaderrorallangnull" extends="ArchivalLandscapeLayout">
@@ -585,6 +641,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploaderroralidentifier" extends="ArchivalLandscapeLayout">
@@ -594,6 +651,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 
@@ -620,6 +678,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="uploaderroralduplicatedidentifier" extends="ArchivalLandscapeLayout">
@@ -629,6 +688,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="errorlandscape" extends="ArchivalLandscapeLayout">
@@ -638,6 +698,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="ALnotFoundByInstitutionManager" extends="DefaultLayout" >
@@ -647,6 +708,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="ALnotExistsByInstitutionManager" extends="DefaultLayout" >
@@ -656,6 +718,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="changeAlIdentifiers" extends="ArchivalLandscapeLayout" >
@@ -665,6 +728,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 
@@ -676,6 +740,7 @@
 			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 	        <add-attribute type="string" value="/js/al/archivalLandscape.js"/>
 	        <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 		<put-list-attribute name="cssfilesInternal">
 			<add-attribute type="string" value="/css/al/archivalLandscape.css"/>
@@ -691,6 +756,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="forgetPwd" extends="DefaultLayout" >
@@ -699,6 +765,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<definition name="success" extends="DefaultLayout" >
@@ -707,6 +774,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
 	</definition>
 	<!-- Moved up to ARCHIVAL LANDSCAPE ACTIONS
@@ -724,6 +792,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="sslrequired" extends="DefaultLayout" >
@@ -732,6 +801,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="exception" extends="DefaultLayout" >
@@ -740,6 +810,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="contact" extends="DefaultLayout" >
@@ -748,6 +819,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="termsOfUse" extends="DefaultLayout" >
@@ -756,6 +828,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="error-500" extends="DefaultLayout" >
@@ -764,6 +837,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="error-404" extends="DefaultLayout" >
@@ -772,6 +846,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="error-403" extends="DefaultLayout" >
@@ -780,6 +855,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="institution_selection_required" extends="DefaultLayout" >
@@ -788,6 +864,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>    
     
@@ -797,6 +874,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <!-- END LOGIN ACTIONS -->
@@ -815,6 +893,7 @@
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
             <add-attribute type="string" value="/js/eadedition.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -832,6 +911,7 @@
             <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/css/creativecommons.css"/>
@@ -844,6 +924,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/linktohgsg.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
     </definition>
     <definition name="hgTreeCreation" extends="DefaultLayout">
@@ -857,6 +938,7 @@
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
             <add-attribute type="string" value="/js/hgSgTreeCreation.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -871,6 +953,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
 
@@ -883,6 +966,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="countryCreation" extends="AdminLayout" >
@@ -891,6 +975,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="countryAltNames" extends="AdminLayout" >
@@ -899,6 +984,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="languageNames" extends="AdminLayout" >
@@ -907,6 +993,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="blank" extends="AdminLayout" >
@@ -914,6 +1001,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="filesFailed" extends="AdminLayout" >
@@ -921,6 +1009,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="manageQueue" extends="AdminLayout" >
@@ -929,6 +1018,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="manageHarvest" extends="DefaultLayout" >
@@ -937,6 +1027,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="sessionManagement" extends="DefaultLayout" >
@@ -945,6 +1036,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="userManagement" extends="DefaultLayout" >
@@ -953,6 +1045,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="institutionManagerManagement" extends="DefaultLayout" >
@@ -961,6 +1054,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="createCountryManager" extends="DefaultLayout" >
@@ -969,6 +1063,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="createInstitutionManager" extends="DefaultLayout" >
@@ -977,6 +1072,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="dptVersion" extends="DefaultLayout">
@@ -985,6 +1081,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 		    <add-attribute type="string" value="/js/browsers.js"/>
+            <add-attribute type="string" value="/js/commons.js"/>
 		</put-list-attribute>
     </definition>
     <definition name="showLogFiles" extends="AdminLayout" >

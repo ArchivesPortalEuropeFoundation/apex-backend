@@ -41,7 +41,7 @@ function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave,
         onClick: function(dtnode, event) {
         	var value = $("input#changed").val();
         	if (value == "true") {
-        		alert(messagePleaseSaveChanges);
+        		alertAndDecode(messagePleaseSaveChanges);
         		return false;
         	}
         },
@@ -318,7 +318,7 @@ function isValidCountryCode(messageEmptyWhenSave, messageInvalidCountrycode, mes
 		var value = $.trim($("input[name="+ name + "]").val());
 		if(value.length <= 0) {
 			if (showAlert) {
-				alert(messageEmptyWhenSave);
+				alertAndDecode(messageEmptyWhenSave);
 			}
 			result = false;
 			$("input[name=" + name + "]").after("<p id=\"alertCountryCode\" class=\"alertMessage\">" + messageEmptyCountrycode + "</p>");
@@ -334,7 +334,7 @@ function isValidCountryCode(messageEmptyWhenSave, messageInvalidCountrycode, mes
 			var resultTest = pattern.test(value);
 			if(!resultTest){
 				if (showAlert) {
-					alert(messageInvalidCountrycode);
+					alertAndDecode(messageInvalidCountrycode);
 				}
 				result = false;
 				$("input[name=" + name + "]").after("<p id=\"alertCountryCode\" class=\"alertMessage\">" + messageInvalidCountrycode + "</p>");
@@ -365,7 +365,7 @@ function isEmptyMainagencycode(messageEmptyMainagencycode, showAlert) {
 		var value = $.trim($("input[name="+ name + "]").val());
 		if(value.length <= 0) {
 			if (showAlert) {
-				alert(messageEmptyWhenSave);
+				alertAndDecode(messageEmptyWhenSave);
 			}
 			result = true;
 			$("input[name=" + name + "]").after("<p id=\"alertMainagencyname\" class=\"alertMessage\">" + messageEmptyMainagencycode + "</p>");
@@ -399,7 +399,7 @@ function isEmptyEADID(messageEmptyWhenSave, messageEmptyEADID, showAlert) {
 			var value = $.trim($("input[name="+ name + "]").val());
 			if(value.length <= 0) {
 				if (showAlert) {
-					alert(messageEmptyWhenSave);
+					alertAndDecode(messageEmptyWhenSave);
 				}
 				result = true;
 				$("input[name=" + name + "]").after("<p id=\"alertEADID\" class=\"alertMessage\">" + messageEmptyEADID + "</p>");
@@ -455,7 +455,7 @@ function isNewEADIDavailable(fileId) {
 						{ 'eadid': oldeadid, 'neweadid': neweadid, 'fileId': fileId }, 
 						function(dataResponse) {
 							if (dataResponse.existingChangeEADIDAnswers == "KO") {
-								alert(dataResponse.message);
+								alertAndDecode(dataResponse.message);
 								result = false;
 								$("input[name=" + name + "]").after("<p id=\"alertEADID\" class=\"alertMessage\">" + dataResponse.message + "</p>");
 								$("input[name=" + name + "]").val(neweadid);
@@ -488,7 +488,7 @@ function checkCountryCodeValue(messageEmptyCountrycode) {
 
 			var value = $("input[name="+ name + "]").val();
 			if(value.length == 0) {
-				alert(messageEmptyCountrycode);
+				alertAndDecode(messageEmptyCountrycode);
 			}
     	});
 	});
@@ -503,7 +503,7 @@ function checkMainagencycodeValue(messageEmptyMainagencycode) {
 
 			var value = $("input[name="+ name + "]").val();
 			if(value.length == 0) {
-				alert(messageEmptyMainagencycode);
+				alertAndDecode(messageEmptyMainagencycode);
 			}
     	});
 	});
@@ -527,7 +527,7 @@ function checkEADIDValue(messageEmptyEADID) {
 
 				var value = $("input[name="+ name + "]").val();
 				if(value.length == 0) {
-					alert(messageEmptyEADID);
+					alertAndDecode(messageEmptyEADID);
 				}
         	});
 
@@ -575,7 +575,7 @@ function checkNormalValue(messageNormalCorrecVal, messageEmptyNormal) {
 				var resultTest = pattern.test(value);
 				if(!resultTest){
 					//The attribute must not include special characters.
-					alert(messageNormalCorrecVal);
+					alertAndDecode(messageNormalCorrecVal);
 
 					// Check char by char to find all the special characters.
 					var newString = "";
@@ -589,7 +589,7 @@ function checkNormalValue(messageNormalCorrecVal, messageEmptyNormal) {
 					$("input[name="+ name + "]").val(newString);
 				}
 			} else {
-				alert(messageEmptyNormal + " " + messageNormalCorrecVal);
+				alertAndDecode(messageEmptyNormal + " " + messageNormalCorrecVal);
 			}
     	});
 	});
@@ -614,7 +614,7 @@ function isEmptyTitleproper(messageEmptyWhenSave, messageEmptyTitleproper, showA
 			$("input[name=" + name + "]").val(value);
 			if (!result) {
 				if (showAlert) {
-					alert(messageEmptyWhenSave);
+					alertAndDecode(messageEmptyWhenSave);
 					$('html, body').stop().animate({
 				        'scrollTop': $("input[name=" + name + "]").offset().top - 30
 				    }, 900, 'swing', function () {
@@ -647,7 +647,7 @@ function isEmptyNormal(messageEmptyWhenSave, messageEmptyNormal, showAlert) {
 			$("input[name=" + name + "]").val(value);
 			if (!result) {
 				if (showAlert) {
-					alert(messageEmptyWhenSave);
+					alertAndDecode(messageEmptyWhenSave);
 					$('html, body').stop().animate({
 				        'scrollTop': $("input[name=" + name + "]").offset().top - 30
 				    }, 900, 'swing', function () {
@@ -702,7 +702,7 @@ function isCorrectNormal(messageNormalCorrecVal, showAlert) {
 			$("input[name=" + name + "]").val(value);
 			if (!result) {
 				if (showAlert) {
-					alert(messageNormalCorrecVal);
+					alertAndDecode(messageNormalCorrecVal);
 					$('html, body').stop().animate({
 				        'scrollTop': $("input[name=" + name + "]").offset().top - 30
 				    }, 900, 'swing', function () {
@@ -731,7 +731,7 @@ function checkTitleproperValue(messageEmptyTitleproper) {
 
 			var value = $("input[name="+ name + "]").val();
 			if(value.length == 0) {
-				alert(messageEmptyTitleproper);
+				alertAndDecode(messageEmptyTitleproper);
 			}
     	});
 	});
@@ -833,7 +833,7 @@ function isPreviousLanguageFilled(name) {
 	$("select[name^='" + baseNameSelects + "']").each(function(){
 		var name = $(this).attr("name");
 		if ($("select[name^='" + name + "']").val() == "none") {
-			alert(globalMessageEmptyPreviousLang);
+			alertAndDecode(globalMessageEmptyPreviousLang);
 			result = false;
 		}
 	});
@@ -843,7 +843,7 @@ function isPreviousLanguageFilled(name) {
 		var name = $(this).attr("name");
 		if ($("input[name^='" + name + "']").val() == "") {
 			if (result) {
-				alert(globalMessageEmptyPreviousLang);
+				alertAndDecode(globalMessageEmptyPreviousLang);
 				result = false;
 			}
 		}

@@ -504,7 +504,7 @@
 	        	}
  	        	else{
         			var strErr = '<s:property value="getText('content.message.filesEADIDerror')"/>' + " " + filesWithErrors;
-		    		alert(strErr);
+        			alertAndDecode(strErr);
 	        	} 
 	        }
 	        	        

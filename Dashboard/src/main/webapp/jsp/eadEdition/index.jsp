@@ -155,7 +155,7 @@
             }
         }, "json");
         $("#exitButton").bind("click", function(){
-            if(!$("#saveFullXml").is(":visible") || ($("#saveFullXml").is(":visible") && confirm("<s:property value="getText('dashboard.editead.info.areyousure')" />"))){
+            if(!$("#saveFullXml").is(":visible") || ($("#saveFullXml").is(":visible") && confirmAndDecode("<s:property value="getText('dashboard.editead.info.areyousure')" />"))){
                 $("#information").html("");
                 $("#information").append("<br /><img src=\"images/colorbox/loading.gif\" />");
                 $("#information").css("visibility", "visible");

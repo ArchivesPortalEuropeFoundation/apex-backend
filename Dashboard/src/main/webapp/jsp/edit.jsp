@@ -14,7 +14,7 @@ function settings(text){
 				});
 			}
 		}
-		alert(text);
+		alertAndDecode(text);
 	}else{
 		if ($("table#passwordTable").is(':visible')) {
 			checkSave(text);
@@ -31,7 +31,7 @@ function settings(text){
 function checkSave(text) {
 	if($("table#passwordTable").is(':visible')){
 		if ($.trim($("#currentPassword").val()).length==0 || $.trim($("#newPassword").val()).length==0 || $.trim($("#rePassword").val()).length==0){
-			alert(text);
+			alertAndDecode(text);
 			return;
 		}	
 	}

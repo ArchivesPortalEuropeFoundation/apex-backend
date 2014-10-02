@@ -116,7 +116,7 @@
         $("#myMenu li.save").removeClass('disabled');
         $("#myMenu li.cancel").removeClass('disabled');
         $("#myMenu .delete a").click(function(){
-            if(confirm('<s:property value="getText('dashboard.hgcreation.areyousuredelete')" />')){
+            if(confirmAndDecode('<s:property value="getText('dashboard.hgcreation.areyousuredelete')" />')){
                 var node = $("#tree").dynatree("getActiveNode");
                 $.post("${pageContext.request.contextPath}/deleteLevelHG.action", {key: node.data.key}, function(databack){
                     if(databack.success){
