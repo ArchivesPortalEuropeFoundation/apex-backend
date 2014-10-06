@@ -76,7 +76,10 @@ function clickGoAction() {
  * before submitting the form
  **************************************/
 function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing, invalidDateMessage, invalidRangeMessage) {
-// Check fill mandatory fields in tab "your institution".
+    var Dlg = document.getElementById('dialog-saveOnQuit');
+    Dlg.style.visibility = 'hidden';
+
+    // Check fill mandatory fields in tab "your institution".
     var identityValidation = checkIdentityTab(nameMissing, dateMissing, startDateMissing, endDateMissing, invalidDateMessage, invalidRangeMessage);
     if (identityValidation !== "ok") {
         return;
@@ -97,7 +100,7 @@ function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, e
     if (onlySave) {
 // TODO: issue 1223, for complete the reload when save first needed the edit
 // of an apeEAC-CPF will be implemented
-    	$("input#saveOrExit").attr("value", "save");
+        $("input#saveOrExit").attr("value", "save");
         $('#webformEacCpf').submit();
 
 // Try to save without refresh the page.
@@ -144,7 +147,7 @@ function clickExitActionStartPage() {
  * the contents or leaves the form without
  * saving them
  **************************************/
-function clickExitAction(question, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing) {
+function clickExitAction() {
 // Checks the return page on exit.
     var useMode = $('input[name=useMode]').val();
     if (useMode == "load") {
@@ -153,13 +156,45 @@ function clickExitAction(question, nameMissing, dateMissing, startDateMissing, e
         $("input#returnPage").attr("value", "dashboardHome");
     }
 
+    // Display the dialog box.
+    $("#eacCpfDiv :input").attr("readonly", true);
+    var Dlg = document.getElementById("dialog-saveOnQuit");
+    Dlg.style.visibility = "visible";
+
 // Ask user for the action.
-    if (confirmAndDecode(question)) {
-        clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
-    } else {
-        $("input#saveOrExit").attr("value", "exit");
-        $('#webformEacCpf').submit();
-    }
+//    if (confirmAndDecode(question)) {
+//        clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
+//    } else {
+//        $("input#saveOrExit").attr("value", "exit");
+//        $('#webformEacCpf').submit();
+//    }
+//
+//    $("#dialog-saveOnQuit").dialog({
+//        resizable: false,
+//        height: 140,
+//        modal: true,
+//        buttons: {
+//            "Yes": function() {
+//                clickSaveAction(false, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing);
+//            },
+//            "No": function() {
+//                $("input#saveOrExit").attr("value", "exit");
+//                $('#webformEacCpf').submit();
+//            }
+//        }
+//    });
+}
+
+/**************************************
+ * Exit button function, ask the user to save
+ * the contents or leaves the form without
+ * saving them
+ **************************************/
+function clickExitWithoutSaveAction() {
+    var Dlg = document.getElementById('dialog-saveOnQuit');
+    Dlg.style.visibility = 'hidden';
+    $('input#saveOrExit').attr('value', 'exit');
+    $('#webformEacCpf').submit();
 }
 
 /**************************************
@@ -1141,7 +1176,7 @@ function addPlace(defaultLanguage, placeMissing) {
         $("table#placeTable_" + (counter + 1) + " select#placeLanguage").attr("value", defaultLanguage);
     }
     // Finally, set correct values for original radio buttons once again
-    for (var i = 0; i < dateRadioValues.length; i++){
+    for (var i = 0; i < dateRadioValues.length; i++) {
         $("table#placeTable_" + counter + " tr#trDate_radio_" + dateRadioValues[i][0] + " input[name=" + dateRadioValues[i][1] + "][value=" + dateRadioValues[i][2] + "]").attr('checked', 'checked');
     }
 }
@@ -1647,7 +1682,7 @@ function init() {
         }
     });
     expandedSection();
-	sameHeight();
+    sameHeight();
 }
 function initPrint() {
     eraseData();
@@ -1778,55 +1813,55 @@ function redirect(country) {
 /**
  * Function to expand or collapse the different eac-cpf's sections
  */
-function expandedSection(){
-	$('h2.title').click(function() {
-		var target = $(this).next();
-		if ($(this).hasClass("expanded")) {
-			$(this).removeClass("expanded").addClass("collapsed");
-			target.hide();
-			$(target).find('.displayLinkShowMore').each(function(){
-				$(this).addClass("hidden");
-			});
-			$(target).find('.displayLinkShowLess').each(function(){
-				$(this).addClass("hidden");
-			});
-		} else {
-			$(this).removeClass("collapsed").addClass("expanded");
-			target.show();
-			$(target).find('.moreDisplay').each(function(index){
-				if ($(this).find('p').length > 3){
-					$(this).find('.displayLinkShowMore').removeClass("hidden");
-					$(this).find('p').each(function(index){
-						if(index > 2){
-							$(this).addClass("hidden");
-						}
-					});
-					sameHeight();
-				}	else if ($(this).find('li.item').length > 3){
-						$(this).find('.displayLinkShowMore').removeClass("hidden");
-						$(this).find('li.item').each(function(index){
-							if(index > 2){
-								$(this).addClass("hidden");
-							}
-						});
-					sameHeight();
-				} else{
-					$(this).find('.displayLinkShowMore').addClass("hidden");
-				}
-			});
-		}
-			
-	});
+function expandedSection() {
+    $('h2.title').click(function() {
+        var target = $(this).next();
+        if ($(this).hasClass("expanded")) {
+            $(this).removeClass("expanded").addClass("collapsed");
+            target.hide();
+            $(target).find('.displayLinkShowMore').each(function() {
+                $(this).addClass("hidden");
+            });
+            $(target).find('.displayLinkShowLess').each(function() {
+                $(this).addClass("hidden");
+            });
+        } else {
+            $(this).removeClass("collapsed").addClass("expanded");
+            target.show();
+            $(target).find('.moreDisplay').each(function(index) {
+                if ($(this).find('p').length > 3) {
+                    $(this).find('.displayLinkShowMore').removeClass("hidden");
+                    $(this).find('p').each(function(index) {
+                        if (index > 2) {
+                            $(this).addClass("hidden");
+                        }
+                    });
+                    sameHeight();
+                } else if ($(this).find('li.item').length > 3) {
+                    $(this).find('.displayLinkShowMore').removeClass("hidden");
+                    $(this).find('li.item').each(function(index) {
+                        if (index > 2) {
+                            $(this).addClass("hidden");
+                        }
+                    });
+                    sameHeight();
+                } else {
+                    $(this).find('.displayLinkShowMore').addClass("hidden");
+                }
+            });
+        }
+
+    });
 }
 
 /**
  * Function to assign the same height that its container
  */
-function sameHeight(){
-	$('#eacCpfDisplayPortlet .row').each(function(){
-		$(this).css("height","");
-		$(this).children().css("height","");
-		var height = $(this).css("height");
-		$(this).children().css("height",height);
-	});
+function sameHeight() {
+    $('#eacCpfDisplayPortlet .row').each(function() {
+        $(this).css("height", "");
+        $(this).children().css("height", "");
+        var height = $(this).css("height");
+        $(this).children().css("height", height);
+    });
 }
