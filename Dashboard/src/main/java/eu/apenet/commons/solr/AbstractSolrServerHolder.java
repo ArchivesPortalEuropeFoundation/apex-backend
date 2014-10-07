@@ -1,5 +1,6 @@
 package eu.apenet.commons.solr;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
@@ -33,9 +34,10 @@ public abstract class AbstractSolrServerHolder {
 				solrServer.setSoTimeout(HTTP_TIMEOUT);
 				solrServer.deleteByQuery(query);
 				return System.currentTimeMillis() - startTime;
-			} catch (Exception e) {
+			} catch (IOException e) {
 				throw new SolrServerException("Could not execute query: " + query, e);
 			}
+			
 		} else {
 			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
 		}
@@ -49,7 +51,7 @@ public abstract class AbstractSolrServerHolder {
 				solrServer.setSoTimeout(HTTP_TIMEOUT);
 				solrServer.add(documents);
 				return System.currentTimeMillis() - startTime;
-			} catch (Exception e) {
+			} catch (IOException e) {
 				throw new SolrServerException("Could not add documents", e);
 			}
 		} else {
@@ -66,7 +68,7 @@ public abstract class AbstractSolrServerHolder {
 				solrServer.commit(true, true, false);
 				LOGGER.info("hardcommit: " + (System.currentTimeMillis() - startTime) + "ms");
 				return System.currentTimeMillis() - startTime;
-			} catch (Exception e) {
+			} catch (IOException e) {
 				throw new SolrServerException("Could not commit", e);
 			}
 		} else {
@@ -88,7 +90,6 @@ public abstract class AbstractSolrServerHolder {
 	}
 	public long rebuildSpellchecker() throws SolrServerException {
 		if (isAvailable()) {
-			try {
 				long startTime = System.currentTimeMillis();
 				SolrQuery query = new SolrQuery();
 				query.setRows(0);
@@ -102,9 +103,6 @@ public abstract class AbstractSolrServerHolder {
 				solrServer.query(query);
 				LOGGER.info("rebuild spellchecker of " + getSolrUrl() + ": " + (System.currentTimeMillis() - startTime) + "ms");
 				return System.currentTimeMillis() - startTime;
-			} catch (Exception e) {
-				throw new SolrServerException("Could not rebuild spellchecker", e);
-			}
 		} else {
 			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
 		}
