@@ -17,6 +17,9 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfPublishData;
 import eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfSolrPublisher;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
+import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
@@ -27,7 +30,7 @@ public class XmlEacCpfParser extends AbstractParser {
 
     public static long parseAndPublish(EacCpf eacCpf) throws Exception {
         EacCpfSolrPublisher solrPublisher = new EacCpfSolrPublisher();
-
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         FileInputStream fileInputStream = getFileInputStream(eacCpf.getPath());
 
         XMLStreamReader xmlReader = getXMLReader(fileInputStream);
@@ -61,12 +64,16 @@ public class XmlEacCpfParser extends AbstractParser {
             eacCpf.setCpfRelations(publishData.getNumberOfCpfRelations());
             eacCpf.setResourceRelations(publishData.getNumberOfArchivalMaterialRelations());
             eacCpf.setFunctionRelations(publishData.getNumberOfFunctionRelations());
+			ContentUtils.changeSearchable(eacCpf, true);
+			eacCpfDAO.insertSimple(eacCpf);
             JpaUtil.commitDatabaseTransaction();
         } catch (Exception de) {
             JpaUtil.rollbackDatabaseTransaction();
             if (solrPublisher != null) {
                 LOG.error(eacCpf + ": rollback:", de);
                 solrPublisher.unpublish(eacCpf);
+    			eacCpfDAO.insertSimple(eacCpf);
+                JpaUtil.commitDatabaseTransaction();
             }
             throw de;
         }
