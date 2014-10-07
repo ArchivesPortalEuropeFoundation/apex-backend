@@ -29,14 +29,14 @@
 
 		<maxBooleanClauses>256</maxBooleanClauses>
 
-		<filterCache class="solr.LRUCache" size="128" initialSize="64"
-			autowarmCount="64" />
+		<filterCache class="solr.FastLRUCache" size="128"
+			initialSize="32" autowarmCount="90%" cleanupThread="true" />
 
-		<queryResultCache class="solr.LRUCache" size="128"
-			initialSize="64" autowarmCount="64" />
+		<queryResultCache class="solr.FastLRUCache" size="128"
+			initialSize="32" autowarmCount="90%" cleanupThread="true"  />
 
-		<documentCache class="solr.LRUCache" size="128"
-			initialSize="64" autowarmCount="0" />
+		<documentCache class="solr.FastLRUCache" size="128"
+			initialSize="32" autowarmCount="90%"  cleanupThread="true" />
 
 		<enableLazyFieldLoading>true</enableLazyFieldLoading>
 
@@ -44,7 +44,7 @@
 		<queryResultWindowSize>10</queryResultWindowSize>
 
 
-		<queryResultMaxDocsCached>20</queryResultMaxDocsCached>
+		<queryResultMaxDocsCached>30</queryResultMaxDocsCached>
 
 
 
