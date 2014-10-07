@@ -1,13 +1,12 @@
 package eu.apenet.dashboard.listener;
 
+import java.net.SocketException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -20,6 +19,7 @@ import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
+import eu.apenet.persistence.exception.PersistenceException;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.EacCpf;
@@ -69,35 +69,39 @@ public class QueueTask implements Runnable {
                 cleanUp();
                 numberOfTries++;
             } else {
+            	boolean exception = false;
                 try {
                     QueueDaemon.setQueueProcessing(true);
                     processQueue(endTime);
                 } catch (PersistenceException e) {
                     LOGGER.fatal("Database exception, the queue processing will be stopped. " + e.getMessage());
-                    APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
-                    QueueDaemon.stop();
+                    exception = true;
                     UserService.sendExceptionToAdmin("Queue processing is stopped and dashboard is in maintenance mode, due to database exception", e);
                 } catch (Throwable e) {
-                	APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
-                    LOGGER.error("Search engine exception:" + e.getMessage());
+                	exception = true;
                     UserService.sendExceptionToAdmin("Queue processing is stopped and dashboard is in maintenance mode, due to solr search engine exception", e);
                     try {
                         JpaUtil.rollbackDatabaseTransaction();
                     } catch (Exception de) {
                         LOGGER.error(de.getMessage());
                     }
+                }
+                if (exception){
+                	stopped = true;
+                    APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
+                	cleanUp();
                     QueueDaemon.stop();
-                    stopped = true;
                 }
             }
-            if (!scheduler.isShutdown() &&  !stopped && (System.currentTimeMillis() + INTERVAL) < endTime) {
-                cleanUp();
+
+            if (!stopped &&  !scheduler.isShutdown() &&  (System.currentTimeMillis() + INTERVAL) < endTime) {
+            cleanUp();
                 try {
                     Thread.sleep(INTERVAL);
                 } catch (InterruptedException e) {
                 }
             } else {
-                cleanUp();
+            	cleanUp();            
                 stopped = true;
             }
 
@@ -195,7 +199,10 @@ public class QueueTask implements Runnable {
                  * throw exception when solr has problem, so the queue will stop for a while.
                  */
                 if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
-                    throw (Exception) e;
+                	SolrServerException cause = (SolrServerException) e.getCause();
+                	if (cause.getCause() instanceof SocketException){
+                		throw (Exception) e;
+                	}
 
                 }
             }
