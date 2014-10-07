@@ -22,15 +22,9 @@ public class PublishTask extends AbstractEacCpfTask{
 		if (valid(eacCpf)) {
 			try {
 				long startTime = System.currentTimeMillis();
-				EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 				long solrTime = XmlEacCpfParser.parseAndPublish(eacCpf);
-				ContentUtils.changeSearchable(eacCpf, true);
-				eacCpfDAO.insertSimple(eacCpf);
-				JpaUtil.commitDatabaseTransaction();
 				logSolrAction(eacCpf, "", solrTime, System.currentTimeMillis()-(startTime+solrTime));
 			} catch (Exception e) {
-				JpaUtil.rollbackDatabaseTransaction();
-				new EacCpfSolrPublisher().unpublish(eacCpf);
 				logAction(eacCpf, e);
 				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
 			}
