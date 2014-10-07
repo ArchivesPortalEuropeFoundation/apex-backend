@@ -11,7 +11,7 @@
                 <td><s:property value="getText('eaccpf.control.valuewillbegenerated')" /></td>
             </s:if>
             <s:else>
-                <td><input type="text" id="apeId" name="apeId" readonly="true" value="${loader.recordId}"/></td>
+                <td><input type="text" id="apeId" name="apeId" readonly="true" value="${loader.recordId}" style="background: lightgrey"/></td>
                 </s:else>
         </tr>
         <tr>
