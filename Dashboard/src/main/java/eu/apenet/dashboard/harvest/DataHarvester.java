@@ -5,20 +5,26 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.security.UserService;
+import eu.apenet.dashboard.services.ead.CreateEadTask;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
+import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.apenet.persistence.vo.OaiPmhStatus;
@@ -31,6 +37,7 @@ import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionExc
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterInterruptionException;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
@@ -143,6 +150,32 @@ public class DataHarvester {
 			}
 			JpaUtil.commitDatabaseTransaction();
 			LOGGER.info("Files are added to queue");
+			if (harvestObject.getDeletedRecords().size() > 0) {
+	            XmlType xmlType = XmlType.getType(ingestionprofile.getFileType());
+				String path = CreateEadTask.getPath(xmlType, archivalInstitution);
+				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+				ContentSearchOptions searchOptions = new ContentSearchOptions();
+				searchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
+				searchOptions.setContentClass(xmlType.getClazz());
+				searchOptions.setSearchTermsField("path");
+				searchOptions.setPageSize(1);
+				for (OaiPmhRecord deletedRecord: harvestObject.getDeletedRecords()){
+					String fullPath = path + deletedRecord.getFilenameFromIdentifier();
+					searchOptions.setSearchTerms(fullPath);
+					List<Ead> eads = eadDAO.getEads(searchOptions);
+					if (eads.size() > 0){
+						Ead ead = eads.get(0);
+						String log = "Record " + deletedRecord +  " is deleted in OAI-PMH repository. The ead with identifier " + ead.getIdentifier() + " is automaticly deleted.";
+						LOGGER.info(log);
+						harvestObject.addWarnings(log);						
+						EadService.deleteByHarvester(ead);
+					}else {
+						String log = "Record " + deletedRecord +  " is deleted in OAI-PMH repository. Please delete it manually in the dashboard";
+						LOGGER.warn(log);
+						harvestObject.addWarnings(log);
+					}
+				}
+			}
 			archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
 			archivalInstitutionOaiPmh.setHarvestingDetails(harvestObject.getHarvestingDetails());
 			archivalInstitutionOaiPmh.setErrorsResponsePath(harvestObject.getNotParsableResponses());
