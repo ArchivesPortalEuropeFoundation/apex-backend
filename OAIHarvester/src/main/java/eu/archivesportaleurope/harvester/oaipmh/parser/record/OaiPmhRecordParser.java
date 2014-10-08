@@ -39,7 +39,7 @@ public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 				else if (METADATA.equals(lastElement)) {
 					if (!record.isDropped()){
 						OaiPmhMetadataParser parser = new OaiPmhMetadataParser(getOutputDirectory());
-						record.setFilename(parser.parse(xmlReader,record.getIdentifier()));
+						record.setFilename(parser.parse(xmlReader,record.getFilenameFromIdentifier()));
 					}
 				}
 				add(path, lastElement);
