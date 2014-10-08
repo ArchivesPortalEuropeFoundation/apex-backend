@@ -13,7 +13,8 @@
       <pre>${errorMessage}</pre>
     </blockquote>
     <small><font face="Helvetica, Arial, sans-serif">${errorFileMessage}
-    	Harvesting process information:<br/>
+    	  In total we harvested ${numberEadHarvested} records with the server information below:<br/>
+
           <br>
 			${infoHarvestedServer}
           <br/>
