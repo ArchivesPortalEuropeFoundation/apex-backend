@@ -853,6 +853,24 @@ function addNameForm(text1, defaultLanguage) {
         return;
     }
 
+    //counting var for determining the total number of elements; initialized for value replication of date radiobuttons
+    var idCounter = $("table#identityPersonName_" + counter + " tr[id^='trDate_text_']").length;
+
+    //collecting of radiobutton values in array
+    var dateRadioValues = new Array();
+    if (idCounter > 0) {
+        for (var i = 1; i <= idCounter; i++) {
+            var elementCounter = $("table#identityPersonName_" + counter + " tr#trDate_text_" + i + " input[id^='date_']").length;
+            for (var j = 1; j <= elementCounter; j++) {
+                var dateRadioValue = new Array();
+                dateRadioValue.push(i);
+                dateRadioValue.push("identityPersonName_" + counter + "_date_" + j + "_radio_" + i);
+                dateRadioValue.push($("table#identityPersonName_" + counter + " tr#trDate_radio_" + i + " input[name=identityPersonName_" + counter + "_date_" + j + "_radio_" + i + "]:checked").val());
+                dateRadioValues.push(dateRadioValue);
+            }
+        }
+    }
+
     var clone = $("table[id^='identityPersonName_" + counter + "']").clone();
     clone = "<table id='" + ("identityPersonName_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='identityPersonName_" + counter + "']").after(clone);
@@ -864,16 +882,16 @@ function addNameForm(text1, defaultLanguage) {
             $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_" + i).remove();
         }
     }
-//Remove superfluous date rows
-    var idCounter = $("table#identityPersonName_" + (counter + 1) + " tr[id^='trDate_']").length;
+    //delete superfluous date rows in clone
+    idCounter = $("table#identityPersonName_" + (counter + 1) + " tr[id^='trDate_text_']").length;
     if (idCounter > 0) {
-        idCounter = idCounter / 2;
-        for (var i = idCounter; i > 0; i--) {
+        for (var i = idCounter; i >= 0; i--) {
             $("table#identityPersonName_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#identityPersonName_" + (counter + 1) + " tr#trDate_radio_" + i).remove();
             $("table#identityPersonName_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-//Set correct names
+    //Set correct names
     $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 input#textPersonName").removeAttr("name");
     $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 input#textPersonName").attr("name", "identityPersonName_" + (counter + 1) + "_part_1");
     $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityNameLanguage").removeAttr("name");
@@ -898,6 +916,10 @@ function addNameForm(text1, defaultLanguage) {
     $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityFormOfName").attr("value", "authorized");
     $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 select#identityComponentOfName").attr("value", "persname");
     $("table#identityPersonName_" + (counter + 1) + " input#identityPersonName_" + (counter + 1) + "_rows").attr("value", 0);
+    // Finally, set correct values for original radio buttons once again
+    for (var i = 0; i < dateRadioValues.length; i++) {
+        $("table#identityPersonName_" + counter + " tr#trDate_radio_" + dateRadioValues[i][0] + " input[name=" + dateRadioValues[i][1] + "][value=" + dateRadioValues[i][2] + "]").attr('checked', 'checked');
+    }
 }
 
 function addPersonId(identifierMissing) {
@@ -1256,6 +1278,24 @@ function addFunction(defaultLanguage, functionMissing) {
         return;
     }
 
+    //counting var for determining the total number of elements; initialized for value replication of date radiobuttons
+    var idCounter = $("table#functionTable_" + counter + " tr[id^='trDate_text_']").length;
+
+    //collecting of radiobutton values in array
+    var dateRadioValues = new Array();
+    if (idCounter > 0) {
+        for (var i = 1; i <= idCounter; i++) {
+            var elementCounter = $("table#functionTable_" + counter + " tr#trDate_text_" + i + " input[id^='date_']").length;
+            for (var j = 1; j <= elementCounter; j++) {
+                var dateRadioValue = new Array();
+                dateRadioValue.push(i);
+                dateRadioValue.push("functionTable_" + counter + "_date_" + j + "_radio_" + i);
+                dateRadioValue.push($("table#functionTable_" + counter + " tr#trDate_radio_" + i + " input[name=functionTable_" + counter + "_date_" + j + "_radio_" + i + "]:checked").val());
+                dateRadioValues.push(dateRadioValue);
+            }
+        }
+    }
+
     var clone = $("table[id^='functionTable_" + counter + "']").clone();
     clone = "<table id='" + ("functionTable_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='functionTable_" + counter + "']").after(clone);
@@ -1268,16 +1308,16 @@ function addFunction(defaultLanguage, functionMissing) {
             $("table#functionTable_" + (counter + 1) + " tr#trPlaceFunction_" + i).remove();
         }
     }
-// delete superfluous date rows
-    idCounter = $("table#functionTable_" + (counter + 1) + " tr[id^='trDate_']").length;
+    //delete superfluous date rows in clone
+    idCounter = $("table#functionTable_" + (counter + 1) + " tr[id^='trDate_text_']").length;
     if (idCounter > 0) {
-        idCounter = idCounter / 2;
-        for (var i = idCounter; i > 0; i--) {
+        for (var i = idCounter; i >= 0; i--) {
             $("table#functionTable_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#functionTable_" + (counter + 1) + " tr#trDate_radio_" + i).remove();
             $("table#functionTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-// Reset parameters
+    // Reset parameters
     $("table#functionTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name");
@@ -1304,6 +1344,10 @@ function addFunction(defaultLanguage, functionMissing) {
     // If default language given, set language field to this value
     if (defaultLanguage != null) {
         $("table#functionTable_" + (counter + 1) + " select#functionLanguage").attr("value", defaultLanguage);
+    }
+    // Finally, set correct values for original radio buttons once again
+    for (var i = 0; i < dateRadioValues.length; i++) {
+        $("table#functionTable_" + counter + " tr#trDate_radio_" + dateRadioValues[i][0] + " input[name=" + dateRadioValues[i][1] + "][value=" + dateRadioValues[i][2] + "]").attr('checked', 'checked');
     }
 }
 
@@ -1382,6 +1426,24 @@ function addOccupation(defaultLanguage, occupationMissing) {
         return;
     }
 
+    //counting var for determining the total number of elements; initialized for value replication of date radiobuttons
+    var idCounter = $("table#occupationTable_" + counter + " tr[id^='trDate_text_']").length;
+
+    //collecting of radiobutton values in array
+    var dateRadioValues = new Array();
+    if (idCounter > 0) {
+        for (var i = 1; i <= idCounter; i++) {
+            var elementCounter = $("table#occupationTable_" + counter + " tr#trDate_text_" + i + " input[id^='date_']").length;
+            for (var j = 1; j <= elementCounter; j++) {
+                var dateRadioValue = new Array();
+                dateRadioValue.push(i);
+                dateRadioValue.push("occupationTable_" + counter + "_date_" + j + "_radio_" + i);
+                dateRadioValue.push($("table#occupationTable_" + counter + " tr#trDate_radio_" + i + " input[name=occupationTable_" + counter + "_date_" + j + "_radio_" + i + "]:checked").val());
+                dateRadioValues.push(dateRadioValue);
+            }
+        }
+    }
+
     var clone = $("table[id^='occupationTable_" + counter + "']").clone();
     clone = "<table id='" + ("occupationTable_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='occupationTable_" + counter + "']").after(clone);
@@ -1394,16 +1456,16 @@ function addOccupation(defaultLanguage, occupationMissing) {
             $("table#occupationTable_" + (counter + 1) + " tr#trPlaceOccupation_" + i).remove();
         }
     }
-// delete superfluous date rows
-    idCounter = $("table#occupationTable_" + (counter + 1) + " tr[id^='trDate_']").length;
+    //delete superfluous date rows in clone
+    idCounter = $("table#occupationTable_" + (counter + 1) + " tr[id^='trDate_text_']").length;
     if (idCounter > 0) {
-        idCounter = idCounter / 2;
-        for (var i = idCounter; i > 0; i--) {
+        for (var i = idCounter; i >= 0; i--) {
             $("table#occupationTable_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#occupationTable_" + (counter + 1) + " tr#trDate_radio_" + i).remove();
             $("table#occupationTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-// Reset parameters
+    // Reset parameters
     $("table#occupationTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name");
@@ -1430,6 +1492,10 @@ function addOccupation(defaultLanguage, occupationMissing) {
     // If default language given, set language field to this value
     if (defaultLanguage != null) {
         $("table#occupationTable_" + (counter + 1) + " select#occupationLanguage").attr("value", defaultLanguage);
+    }
+    // Finally, set correct values for original radio buttons once again
+    for (var i = 0; i < dateRadioValues.length; i++) {
+        $("table#occupationTable_" + counter + " tr#trDate_radio_" + dateRadioValues[i][0] + " input[name=" + dateRadioValues[i][1] + "][value=" + dateRadioValues[i][2] + "]").attr('checked', 'checked');
     }
 }
 
