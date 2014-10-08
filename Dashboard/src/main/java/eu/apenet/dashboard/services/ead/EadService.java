@@ -182,7 +182,9 @@ public class EadService {
 
 		}
 	}
-
+	public static void deleteByHarvester(Ead ead) throws Exception {
+		addToQueue(ead, QueueAction.DELETE, null);
+	}
 	public static void delete(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
