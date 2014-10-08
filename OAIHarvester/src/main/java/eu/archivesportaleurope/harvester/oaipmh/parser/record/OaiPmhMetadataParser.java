@@ -14,9 +14,8 @@ public class OaiPmhMetadataParser extends AbstractOaiPmhParser{
 	public OaiPmhMetadataParser(File outputDirectory) {
 		super(outputDirectory);
 	}
-	public String parse(XMLStreamReader xmlReader, String identifier)
+	public String parse(XMLStreamReader xmlReader, String filename)
 			throws Exception {
-		String filename = identifier.replaceAll("[^a-zA-Z0-9\\-\\.]", "_") +".xml";
 		File file = new File(getOutputDirectory(),filename);
 		if (file.exists()){
 			file.delete();

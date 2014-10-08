@@ -3,6 +3,8 @@ package eu.archivesportaleurope.harvester.oaipmh.parser.record;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 public class OaiPmhRecord {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	private String identifier;
@@ -12,6 +14,12 @@ public class OaiPmhRecord {
     private boolean dropped;
 	public String getIdentifier() {
 		return identifier;
+	}
+	public String getFilenameFromIdentifier(){
+		if (StringUtils.isNotBlank(identifier)){
+			return identifier.replaceAll("[^a-zA-Z0-9\\-\\.]", "_") +".xml";
+		}
+		return null;
 	}
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
