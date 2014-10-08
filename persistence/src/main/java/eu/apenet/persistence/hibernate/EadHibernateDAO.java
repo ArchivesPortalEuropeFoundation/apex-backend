@@ -236,6 +236,8 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 				for (String searchTerm : searchTerms) {
 					whereClause.add(criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%"));
 				}
+			}else if ("path".equals(eadSearchOptions.getSearchTermsField())) {
+				whereClause.add(criteriaBuilder.equal(from.<String> get("pathApenetead"), eadSearchOptions.getSearchTerms() ));
 			} else {
 				for (String searchTerm : searchTerms) {
 					Predicate titlePredicate = criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%");
