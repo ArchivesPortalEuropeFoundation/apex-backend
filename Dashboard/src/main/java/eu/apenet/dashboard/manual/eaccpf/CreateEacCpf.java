@@ -71,12 +71,18 @@ import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import eu.apenet.dpt.utils.eaccpf.Term;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
 import eu.apenet.dpt.utils.eaccpf.UseDates;
+import eu.apenet.dpt.utils.util.FileUtil;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -125,6 +131,7 @@ public class CreateEacCpf extends EacCpfAction {
         if (this.getJaxbEacCpf().getControl() != null && this.getJaxbEacCpf().getControl().getRecordId() != null && this.getJaxbEacCpf().getControl().getRecordId().getValue() != null) {
             newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
         }
+        newEac.getPath();
 
         return newEac;
     }
@@ -153,15 +160,23 @@ public class CreateEacCpf extends EacCpfAction {
         if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
             String[] content = (String[]) parameters.get("apeId");
             if (content.length == 1) {
-                control.getRecordId().setValue(content[0]);
+                newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, content[0]);
+                try {
+                    FileUtils.forceDelete(new File(APEnetUtilities.getConfig().getRepoDirPath() + newEac.getPath()));
+                } catch (IOException ex) {
+                    Logger.getLogger(CreateEacCpf.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+            if (control.getOtherRecordId() != null && !control.getOtherRecordId().get(0).getContent().isEmpty()) {
+                control.getRecordId().setValue(control.getOtherRecordId().get(0).getContent());
+            } else {
+                if (content.length == 1) {
+                    control.getRecordId().setValue(content[0]);
+                }
+            }
+            newEac.setIdentifier(control.getRecordId().getValue());
         } else {
             if (StringUtils.isBlank(newEac.getIdentifier()) && newEac.getId() == null) {
-                newEac.setUploadDate(new java.util.Date());
-                UploadMethod uploadMethod = new UploadMethod();
-                uploadMethod.setMethod(UploadMethod.HTTP);
-                uploadMethod.setId(3);
-                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
                 String otherRecordId = null;
                 if (control.getOtherRecordId().size() > 0) {
                     otherRecordId = control.getOtherRecordId().get(0).getContent();
@@ -176,15 +191,20 @@ public class CreateEacCpf extends EacCpfAction {
                     newEac.setIdentifier(otherRecordId);
 
                 }
-                newEac.setUploadMethod(uploadMethod);
-                newEac.setArchivalInstitution(archivalInstitution);
-                String filename = APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
-                newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
-                newEac.setTitle("temporary title");
-                newEac = eacCpfDAO.store(newEac);
             }
             control.getRecordId().setValue(replaceNonNmtokenChars(newEac.getIdentifier()));
         }
+        UploadMethod uploadMethod = new UploadMethod();
+        uploadMethod.setMethod(UploadMethod.HTTP);
+        uploadMethod.setId(3);
+        ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+        newEac.setUploadDate(new java.util.Date());
+        newEac.setUploadMethod(uploadMethod);
+        newEac.setArchivalInstitution(archivalInstitution);
+        String filename = APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
+        newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
+        newEac.setTitle("temporary title");
+        newEac = eacCpfDAO.store(newEac);
 
         // eacCpf/control/maintenanceStatus
         if (control.getMaintenanceStatus() == null) {
@@ -288,7 +308,6 @@ public class CreateEacCpf extends EacCpfAction {
         if (maintenanceEvent.getAgent() == null) {
             maintenanceEvent.setAgent(new Agent());
         }
-        ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
         if (archivalInstitution.getPartner() != null) {
             maintenanceEvent.getAgent().setContent(archivalInstitution.getPartner().getName());
         } else {

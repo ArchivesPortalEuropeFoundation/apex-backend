@@ -113,7 +113,7 @@ public class StoreEacCpfAction extends EacCpfAction {
 
         CreateEacCpf creator = new CreateEacCpf(getServletRequest(), getAiId(), Integer.parseInt(this.getEacDaoId()));
         EacCpf eac = creator.getJaxbEacCpf();
-        String filename = "";
+        String filename;
         if (this.getFileId() == null || this.getFileId().isEmpty()) {
             filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier());
             this.setFileId(filename);
@@ -135,7 +135,7 @@ public class StoreEacCpfAction extends EacCpfAction {
 
             // Save in temporal file
             FileUtils.forceMkdir(new File(APEnetUtilities.getConfig().getRepoDirPath() + basePath));
-            File eacCpfTempFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
+            File eacCpfTempFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
             jaxbMarshaller.marshal(eac, eacCpfTempFile);
 
             // It is necessary to validate the file against apeEAC-CPF schema.
