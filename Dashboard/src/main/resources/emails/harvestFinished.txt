@@ -9,7 +9,7 @@
           <br/>
           ============================================
           <br/>
-         In total we harvested ${numberEadHarvested} EAD files with the server information below:<br/>
+         In total we harvested ${numberEadHarvested} records with the server information below:<br/>
           <br>
 			${infoHarvestedServer}
           <br/>
