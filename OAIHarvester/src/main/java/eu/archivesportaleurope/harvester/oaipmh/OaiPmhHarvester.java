@@ -49,7 +49,7 @@ public class OaiPmhHarvester {
 				OaiPmhRecord record = records.get(0);
 				if (record.isDropped() || record.isDeleted()){
 					if (record.isDeleted()){
-						harvestObject.addWarnings("Record " + record + " is deleted in OAI-PMH repository. Please delete it manually in the dashboard");
+						harvestObject.addDeletedRecord(record);
 					}
 				}
 				records.remove(0);
@@ -118,7 +118,7 @@ public class OaiPmhHarvester {
 					if (record.isDropped() || record.isDeleted()){
 						harvestObject.increaseNumberOfGetRecords();
 						if (record.isDeleted()){
-							harvestObject.addWarnings("Record " + record + " is deleted in OAI-PMH repository. Please delete it manually in the dashboard");
+							harvestObject.addDeletedRecord(record);
 						}
 					}else {
 

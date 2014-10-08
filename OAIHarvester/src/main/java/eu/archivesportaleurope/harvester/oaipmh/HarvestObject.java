@@ -23,7 +23,8 @@ public class HarvestObject {
     private String notParsableResponses;
     private Integer maxNumberOfRecords = null;
     private List<OaiPmhRecord> records = new ArrayList<OaiPmhRecord>();
-
+    private List<OaiPmhRecord> deletedRecords = new ArrayList<OaiPmhRecord>();
+    
     public HarvestObject(){
     }
     
@@ -172,6 +173,17 @@ public class HarvestObject {
 			this.harvestingDetails += errors + "\n";
 		}
 	}
+	public void addDeletedRecord(OaiPmhRecord record){
+		if (record != null){
+			this.deletedRecords.add(record);
+		}
+	}
+	
+	public List<OaiPmhRecord> getDeletedRecords() {
+		return deletedRecords;
+	}
+
+
 	public void addWarnings(String errors) {
 		if (this.harvestingDetails == null){
 			this.harvestingDetails = errors + "\n";
