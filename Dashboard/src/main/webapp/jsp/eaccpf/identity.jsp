@@ -92,7 +92,7 @@
                                     </td>
                             </s:if>
                             <s:else>
-                            <input type="radio" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_radio_<s:property value="#status.index2 + 1" />" value="open" <s:if test='%{#currentDateRow.radioValue1 == "open"}'>checked="checked"</s:if> onchange="toggleDateTextfields($(this));"><s:property value="openLabel"/>&nbsp;
+                            <input type="radio" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_radio_<s:property value="#status2.index + 1" />" value="open" <s:if test='%{#currentDateRow.radioValue1 == "open"}'>checked="checked"</s:if> onchange="toggleDateTextfields($(this));"><s:property value="openLabel"/>&nbsp;
                                 </td>
                                 <td></td>
                                 <td></td>

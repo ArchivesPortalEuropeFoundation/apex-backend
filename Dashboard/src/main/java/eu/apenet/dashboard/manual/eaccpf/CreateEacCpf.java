@@ -157,17 +157,14 @@ public class CreateEacCpf extends EacCpfAction {
         if (control.getRecordId() == null) {
             control.setRecordId(new RecordId());
         }
+        String oldPathName = null;
         if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
             String[] content = (String[]) parameters.get("apeId");
             if (content.length == 1) {
                 newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, content[0]);
-                try {
-                    FileUtils.forceDelete(new File(APEnetUtilities.getConfig().getRepoDirPath() + newEac.getPath()));
-                } catch (IOException ex) {
-                    Logger.getLogger(CreateEacCpf.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                oldPathName = newEac.getPath();
             }
-            if (control.getOtherRecordId() != null && !control.getOtherRecordId().get(0).getContent().isEmpty()) {
+            if (control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()) {
                 control.getRecordId().setValue(control.getOtherRecordId().get(0).getContent());
             } else {
                 if (content.length == 1) {
@@ -205,6 +202,12 @@ public class CreateEacCpf extends EacCpfAction {
         newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
         newEac.setTitle("temporary title");
         newEac = eacCpfDAO.store(newEac);
+        if(oldPathName != null && !oldPathName.equals(newEac.getPath())){
+            File fileToDelete = new File(APEnetUtilities.getConfig().getRepoDirPath() + oldPathName);
+            if(fileToDelete.exists()){
+                fileToDelete.delete();
+            }
+        }
 
         // eacCpf/control/maintenanceStatus
         if (control.getMaintenanceStatus() == null) {
@@ -467,6 +470,7 @@ public class CreateEacCpf extends EacCpfAction {
 
             //collect all name entries in one list for check if <nameEntryParallel> is required or not
             nameEntries.add(nameEntry);
+            rowCounter = 1;
             tableCounter++;
         }
 
