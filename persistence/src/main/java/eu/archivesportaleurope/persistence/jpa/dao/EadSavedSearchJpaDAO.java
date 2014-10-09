@@ -7,6 +7,7 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
@@ -50,8 +51,21 @@ public class EadSavedSearchJpaDAO extends AbstractHibernateDAO<EadSavedSearch, L
 		return query.getResultList();
 	}
 	
-	public List<EadSavedSearch> getEadSavedSearchOutOfCollectionByCollectionIdAndLiferayUser(Long collectionId,long liferayUserId){
+	@Override
+	public Long countEadSavedSearchOutOfCollectionByCollectionIdAndLiferayUser(Long id, long liferayUserId) {
+		Criteria criteria = getCriteriaEadSavedSearchOutOfCollectionByCollectionIdAndLiferayUser(id,liferayUserId,null,null);
+		criteria.setProjection(Projections.rowCount());
+		return (Long)criteria.uniqueResult();
+	}
+	
+	public List<EadSavedSearch> getEadSavedSearchOutOfCollectionByCollectionIdAndLiferayUser(Long collectionId,long liferayUserId, int pageNumber, int pageSize){
 		List<EadSavedSearch> searches = null;
+		Criteria criteria = getCriteriaEadSavedSearchOutOfCollectionByCollectionIdAndLiferayUser(collectionId,liferayUserId,pageNumber,pageSize); 
+		searches = criteria.list();
+		return searches;
+	}
+
+	private Criteria getCriteriaEadSavedSearchOutOfCollectionByCollectionIdAndLiferayUser(Long collectionId,long liferayUserId, Integer pageNumber, Integer pageSize) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadSavedSearch");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		if(liferayUserId>0){
@@ -64,8 +78,13 @@ public class EadSavedSearchJpaDAO extends AbstractHibernateDAO<EadSavedSearch, L
 			collectionSubquery.add(Restrictions.isNotNull("collectionContent.eadSavedSearch.id"));
 			criteria.add(Subqueries.propertyNotIn("eadSavedSearch.id",collectionSubquery));
 		}
-		searches = criteria.list();
-		return searches;
+		if(pageNumber!=null && pageNumber>0){
+			criteria.setFirstResult((pageNumber-1)*pageSize);
+		}
+		if(pageSize!=null && pageSize>0){
+			criteria.setMaxResults(pageSize);
+		}
+		return criteria;
 	}
 
 	@Override
@@ -86,5 +105,7 @@ public class EadSavedSearchJpaDAO extends AbstractHibernateDAO<EadSavedSearch, L
 		}
 		return searches;
 	}
+
+	
 
 }

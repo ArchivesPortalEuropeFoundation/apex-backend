@@ -7,6 +7,7 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
@@ -59,22 +60,40 @@ public class SavedBookmarksJpaDAO extends AbstractHibernateDAO<SavedBookmarks, L
 	}
 
 	@Override
-	public List<SavedBookmarks> getSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(Long id, long liferayUserId) {
+	public List<SavedBookmarks> getSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(Long id, long liferayUserId, int pageNumber, int pageSize) {
 		List<SavedBookmarks> searches = null;
+		Criteria criteria = getCriteriaSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(id,liferayUserId,pageNumber,pageSize);
+		searches = criteria.list();
+		return searches;
+	}
+	
+	private Criteria getCriteriaSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(Long id, long liferayUserId, Integer pageNumber, Integer pageSize) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "savedBookmarks");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		if(liferayUserId>0){
-			criteria.add(Restrictions.eq("savedBookmarks.liferayUserId", liferayUserId));
-		}
 		if(id!=null && id>0){
+			if(liferayUserId>0){
+				criteria.add(Restrictions.eq("savedBookmarks.liferayUserId", liferayUserId));
+			}
 			DetachedCriteria collectionSubquery = DetachedCriteria.forClass(CollectionContent.class, "collectionContent");
 			collectionSubquery.setProjection(Projections.property("collectionContent.savedBookmarks.id"));
 			collectionSubquery.add(Restrictions.eq("collectionContent.collection.id",id));
 			collectionSubquery.add(Restrictions.isNotNull("collectionContent.savedBookmarks.id"));
 			criteria.add(Subqueries.propertyNotIn("savedBookmarks.id",collectionSubquery));
 		}
-		searches = criteria.list();
-		return searches;
+		if(pageNumber!=null && pageNumber>0){
+			criteria.setFirstResult((pageNumber-1)*pageSize);
+		}
+		if(pageSize!=null && pageSize>0){
+			criteria.setMaxResults(pageSize);
+		}
+		return criteria;
+	}
+
+	@Override
+	public Long countSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(Long id, long liferayUserId) {
+		Criteria criteria = getCriteriaSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(id,liferayUserId,null,null);
+		criteria.setProjection(Projections.rowCount());
+		return (Long)criteria.uniqueResult();
 	}
 
 	@Override
