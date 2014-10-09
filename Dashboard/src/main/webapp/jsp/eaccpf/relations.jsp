@@ -66,7 +66,7 @@
                 </s:else>
                 <tr>
                     <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-                    <td colspan="3"><textarea id="textareaCpfRelationDescription" name="textareaCpfRelationDescription_<s:property value="#status.index + 1" />" style="height: 16px;"><s:property value="#current.description" /></textarea></td>
+                    <td colspan="3"><textarea id="textareaCpfRelationDescription" name="textareaCpfRelationDescription_<s:property value="#status.index + 1" />" style="height: 16px; width: 200px;"><s:property value="#current.description" /></textarea></td>
                 </tr>
             </table>
         </s:iterator>
@@ -115,7 +115,7 @@
             </tr>
             <tr>
                 <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-                <td colspan="3"><textarea id="textareaCpfRelationDescription" name="textareaCpfRelationDescription_1" style="height: 16px;"></textarea></td>
+                <td colspan="3"><textarea id="textareaCpfRelationDescription" name="textareaCpfRelationDescription_1" style="height: 16px; width: 200px;"></textarea></td>
             </tr>
         </table>
     </s:else>
@@ -186,7 +186,7 @@
                 </s:else>
                 <tr>
                     <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-                    <td colspan="3"><textarea id="textareaResRelationDescription" name="textareaResRelationDescription_<s:property value="#status.index + 1" />" style="height: 16px;"><s:property value="#current.description" /></textarea></td>
+                    <td colspan="3"><textarea id="textareaResRelationDescription" name="textareaResRelationDescription_<s:property value="#status.index + 1" />" style="height: 16px; width: 200px;"><s:property value="#current.description" /></textarea></td>
                 </tr>
             </table>
         </s:iterator>
@@ -235,7 +235,7 @@
             </tr>
             <tr>
                 <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-                <td colspan="3"><textarea id="textareaResRelationDescription" name="textareaResRelationDescription_1" style="height: 16px;"></textarea></td>
+                <td colspan="3"><textarea id="textareaResRelationDescription" name="textareaResRelationDescription_1" style="height: 16px; width: 200px;"></textarea></td>
             </tr>
         </table>
     </s:else>
@@ -306,7 +306,7 @@
                 </s:else>
                 <tr>
                     <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-                    <td colspan="3"><textarea id="textareaFncRelationDescription" name="textareaFncRelationDescription_<s:property value="#status.index + 1" />" style="height: 16px;"><s:property value="#current.description" /></textarea></td>
+                    <td colspan="3"><textarea id="textareaFncRelationDescription" name="textareaFncRelationDescription_<s:property value="#status.index + 1" />" style="height: 16px; width: 200px;"><s:property value="#current.description" /></textarea></td>
                 </tr>
             </table>
         </s:iterator>
@@ -355,7 +355,7 @@
             </tr>
             <tr>
                 <td><label><s:property value="getText('eaccpf.relations.description')" />:</label></td>
-                <td colspan="3"><textarea id="textareaFncRelationDescription" name="textareaFncRelationDescription_1" style="height: 16px;"></textarea></td>
+                <td colspan="3"><textarea id="textareaFncRelationDescription" name="textareaFncRelationDescription_1" style="height: 16px; width: 200px;"></textarea></td>
             </tr>
         </table>
     </s:else>
