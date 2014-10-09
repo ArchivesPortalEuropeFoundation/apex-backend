@@ -1565,9 +1565,7 @@
 		</xsl:variable>
 		<!-- bioHist section title -->
 		<xsl:if test="((($bioHist/eac:p/text()
-							or $bioHist/eac:citation/text()
-			                or ($bioHist/eac:citation[@xlink:href != ''] and $validHrefLinkBiogHist = 'true')
-			                or $bioHist/eac:citation[@xlink:title != '']
+							or $bioHist/eac:citation
 							or $bioHist/eac:chronList/eac:chronItem 
 							or $bioHist/eac:abstract/text()) and ($mode='default' or $mode='showAll'))
 		               or ($mode='other' and 
