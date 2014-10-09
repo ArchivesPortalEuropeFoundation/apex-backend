@@ -17,7 +17,7 @@
 	<xsl:param name="eacUrlBase"/>
 	<xsl:param name="eadUrl"/>
     <xsl:param name="searchTerms"/>
-    
+
 	<!-- Global variables. -->
 	<xsl:variable name="language.default" select="'eng'"/>
 	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
@@ -38,7 +38,7 @@
 	<xsl:template match="/">
 		<xsl:variable name="existDates" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates"/>
 		<xsl:variable name="entityType" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
-      
+
 		<!-- Set the variable which indicates the mode used to display the translations. -->
    		<xsl:variable name="translationMode">
     		<xsl:choose>
@@ -53,7 +53,7 @@
     			</xsl:otherwise>
     		</xsl:choose>
    		</xsl:variable>
-        
+
 		<h1 class="blockHeader">
 		    <!-- nameEntry -->
 			<!-- Checks if exists any content in the translation language. -->
@@ -152,8 +152,21 @@
 
 			<!-- location -->
 			<xsl:variable name="location" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place"/>
-			
-			
+
+			<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<localDescriptions>" is a valid
+				 one. -->
+			<xsl:variable name="validHrefLinkPlaces">
+				<xsl:choose>
+					<xsl:when test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places//eac:citation[@xlink:href != '']">
+						<xsl:value-of select="ape:checkHrefValue(string-join(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places//eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
 				<h2 class="title expanded">
 					<xsl:value-of select="translate(ape:resource('eaccpf.description.place'), $smallcase, $uppercase)"/>
@@ -166,6 +179,7 @@
 						    		<xsl:with-param name="list" select="./eac:place"/>
 					   				<xsl:with-param name="posParent" select="$posParent"/>
 					   				<xsl:with-param name="mode" select="$translationMode"/>
+									<xsl:with-param name="validHrefLink" select="$validHrefLinkPlaces"/>
 					    		</xsl:call-template>
 
 				     	<!-- descriptiveNote places-->
@@ -177,6 +191,7 @@
 			    				<xsl:with-param name="posChild" select="''"/>
 			   					<xsl:with-param name="mode" select="$translationMode"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.place.note'"/>
+		   						<xsl:with-param name="validHrefLink" select="''"/>
 					    	 </xsl:call-template>
 				    	 </xsl:if>
 				    </div>
@@ -247,6 +262,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+						   				<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 
 									<!-- dates in localDescription -->
@@ -265,6 +281,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+		   								<xsl:with-param name="validHrefLink" select="$validHrefLinkLocalDescription"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in localDescription -->
@@ -275,6 +292,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 							  	</div>  
 						  	</xsl:if>	
@@ -288,6 +306,7 @@
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							<xsl:with-param name="validHrefLink" select="''"/>
 			    	 	</xsl:call-template>
 				   </div>
 				</xsl:for-each>
@@ -357,6 +376,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 
 									<!-- dates in legalStatus -->
@@ -375,6 +395,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+		   								<xsl:with-param name="validHrefLink" select="$validHrefLinkLegalStatus"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in legalStatus -->
@@ -385,6 +406,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 					    		</div>
 					    	</xsl:if>
@@ -398,6 +420,7 @@
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							<xsl:with-param name="validHrefLink" select="''"/>
 				    	</xsl:call-template>
 		    	 	</div>
 				</xsl:for-each>
@@ -467,6 +490,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 
 									<!-- dates in function-->
@@ -485,6 +509,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+		   								<xsl:with-param name="validHrefLink" select="$validHrefLinkFunction"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in function-->
@@ -495,6 +520,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 							    </div>	
 							</xsl:if>
@@ -508,6 +534,7 @@
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							<xsl:with-param name="validHrefLink" select="''"/>
 				    	</xsl:call-template>
 			    	</div>
 				</xsl:for-each>
@@ -576,6 +603,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 
 									<!-- dates in occupation-->
@@ -594,6 +622,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+		   								<xsl:with-param name="validHrefLink" select="$validHrefLinkOccupation"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in occupation-->
@@ -604,6 +633,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 							    </div>
 							</xsl:if>
@@ -617,6 +647,7 @@
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+   							<xsl:with-param name="validHrefLink" select="''"/>
 				    	</xsl:call-template>
 		    	 	</div>
 				</xsl:for-each>
@@ -685,6 +716,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 
 									<!-- dates in mandates-->
@@ -703,6 +735,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+		   								<xsl:with-param name="validHrefLink" select="$validHrefLinkMandate"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in mandates-->
@@ -713,6 +746,7 @@
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+		   								<xsl:with-param name="validHrefLink" select="''"/>
 							    	</xsl:call-template>
 							    </div>
 						    </xsl:if>
@@ -726,6 +760,7 @@
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+   							<xsl:with-param name="validHrefLink" select="''"/>
 				    	</xsl:call-template>
 			    	 </div>
 				</xsl:for-each>
@@ -1529,13 +1564,18 @@
 			</xsl:choose>
 		</xsl:variable>
 		<!-- bioHist section title -->
-		<xsl:if test="((($bioHist/eac:p/text() or $bioHist/eac:citation/text() or $bioHist/eac:chronList/eac:chronItem or $bioHist/eac:abstract/text()) and ($mode='default' or $mode='showAll'))
+		<xsl:if test="((($bioHist/eac:p/text()
+							or $bioHist/eac:citation/text()
+			                or ($bioHist/eac:citation[@xlink:href != ''] and $validHrefLinkBiogHist = 'true')
+			                or $bioHist/eac:citation[@xlink:title != '']
+							or $bioHist/eac:chronList/eac:chronItem 
+							or $bioHist/eac:abstract/text()) and ($mode='default' or $mode='showAll'))
 		               or ($mode='other' and 
 			              ($bioHist/eac:abstract[@xml:lang=$translationLanguage]/text() != ''
 			               or $bioHist/eac:p[@xml:lang=$translationLanguage]/text() != ''
-			               or $bioHist/eac:citation[@xml:lang=$translationLanguage]/text() != ''
-			               or ($bioHist/eac:citation[@xlink:href != ''] and $validHrefLinkBiogHist = 'true')
-			               or $bioHist/eac:citation[@xlink:title != '']
+			               or $bioHist/eac:citation[@xml:lang=$translationLanguage and @xml:lang=$translationLanguage]/text() != ''
+			               or ($bioHist/eac:citation[@xml:lang=$translationLanguage and @xlink:href != ''] and $validHrefLinkBiogHist = 'true')
+			               or $bioHist/eac:citation[@xml:lang=$translationLanguage and @xlink:title != '']
 			               or $bioHist/eac:chronList/eac:chronItem/eac:date[@xml:lang = $translationLanguage]/text() != ''
 						   or $bioHist/eac:chronList/eac:chronItem/eac:dateRange/eac:fromDate[@xml:lang = $translationLanguage]/text() != ''
 						   or $bioHist/eac:chronList/eac:chronItem/eac:dateRange/eac:toDate[@xml:lang = $translationLanguage]/text() != ''
@@ -1610,7 +1650,7 @@
 				</xsl:choose>
 			</xsl:variable>
 			<xsl:variable name="posChron" select="number(substring-before($chronListPosition,',' ))"/>
-			
+
 			<!-- Display the information according to the position of the nodes -->
 			<xsl:choose>
 				<xsl:when test="($posP &lt; $posCitation) and ($posP &lt; $posChron)">
@@ -1643,6 +1683,7 @@
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
 						    		<xsl:with-param name="title" select="$title"/>
+	   								<xsl:with-param name="validHrefLink" select="$validHrefLinkBiogHist"/>
 						    	</xsl:call-template>
 							</xsl:if>
 							<!-- biogHist chronList -->
@@ -1680,6 +1721,7 @@
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
 						    		<xsl:with-param name="title" select="$title"/>
+	   								<xsl:with-param name="validHrefLink" select="$validHrefLinkBiogHist"/>
 						    	</xsl:call-template>
 							</xsl:if>
 						</xsl:otherwise>
@@ -1705,6 +1747,7 @@
 							<xsl:with-param name="posChild" select="''"/>
 							<xsl:with-param name="mode" select="$mode"/>
 				    		<xsl:with-param name="title" select="$title"/>
+	   						<xsl:with-param name="validHrefLink" select="$validHrefLinkBiogHist"/>
 				    	</xsl:call-template>
 					</xsl:if>
 					<xsl:choose>
@@ -1781,6 +1824,7 @@
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
 						    		<xsl:with-param name="title" select="$title"/>
+	   								<xsl:with-param name="validHrefLink" select="$validHrefLinkBiogHist"/>
 						    	</xsl:call-template>
 							</xsl:if>
 						</xsl:when>
@@ -1804,6 +1848,7 @@
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
 						    		<xsl:with-param name="title" select="$title"/>
+	   								<xsl:with-param name="validHrefLink" select="$validHrefLinkBiogHist"/>
 						    	</xsl:call-template>
 							</xsl:if>
 							<!-- biogHist p --> 
@@ -2448,6 +2493,7 @@
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
 	    		<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.street'"/>
+				<xsl:with-param name="validHrefLink" select="''"/>
 	    	</xsl:call-template>
 		</xsl:if>
 
@@ -2460,6 +2506,7 @@
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
     			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.postalcode'"/>
+				<xsl:with-param name="validHrefLink" select="''"/>
    			</xsl:call-template>
 		</xsl:if>
 
@@ -2472,6 +2519,7 @@
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
     			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.firstdem'"/>
+				<xsl:with-param name="validHrefLink" select="''"/>
     		</xsl:call-template>
 		</xsl:if>
 
@@ -2484,6 +2532,7 @@
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
     			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.secondem'"/>
+				<xsl:with-param name="validHrefLink" select="''"/>
     		</xsl:call-template>
 		</xsl:if>
 
@@ -2496,6 +2545,7 @@
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
     			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.localentity'"/>
+				<xsl:with-param name="validHrefLink" select="''"/>
     		</xsl:call-template>
 		</xsl:if>
 
@@ -2508,6 +2558,7 @@
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
     			<xsl:with-param name="title" select="'eaccpf.portal.place.address.information'"/>
+				<xsl:with-param name="validHrefLink" select="''"/>
     		</xsl:call-template>
 		</xsl:if>
 
@@ -2520,6 +2571,7 @@
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
     			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.country'"/>
+				<xsl:with-param name="validHrefLink" select="''"/>
     		</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
@@ -2612,6 +2664,7 @@
 		   				<xsl:with-param name="clazz" select="$clazz"/>
 		   				<xsl:with-param name="posParent" select="$posParent"/>
 		   				<xsl:with-param name="posChild" select="$posChild"/>
+		   				<xsl:with-param name="validHrefLink" select="''"/>
 		   			</xsl:call-template>
 				</div>
 			</div>
@@ -2630,6 +2683,7 @@
 	    <xsl:param name="posChild"/>
 	    <xsl:param name="mode"/>
 	    <xsl:param name="title"/>
+	    <xsl:param name="validHrefLink"/>
 
 		<!-- Checks if exists any content in the translation language. -->
 		<!-- Try to select the content in the specific language. -->
@@ -2696,6 +2750,7 @@
 		   				<xsl:with-param name="clazz" select="$clazz"/>
 		   				<xsl:with-param name="posParent" select="$posParent"/>
 		   				<xsl:with-param name="posChild" select="$posChild"/>
+		   				<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 		   			</xsl:call-template>
 				</div>
 			</div>
@@ -3033,11 +3088,15 @@
 		<xsl:param name="clazz"/>
 		<xsl:param name="posParent"/>
 		<xsl:param name="posChild"/>
+		<xsl:param name="validHrefLink"/>
 		<xsl:choose>
 			<xsl:when test="count($list) > 1">
 			<div id="{$clazz}{$posParent}{$posChild}" class= "moreDisplay">
 				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+					<xsl:when test="$list[@xml:lang = $language.selected]
+										and (($list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != '')
+											or ($list[@xml:lang = $language.selected and @xlink:href != '' and $validHrefLink = 'true'])
+											or $list[@xml:lang = $language.selected and @xlink:title != ''])">
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 							<xsl:if test="(($currentLang = $language.selected) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
@@ -3064,7 +3123,10 @@
 							</xsl:if>		
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang =  $lang.navigator]/text() and $list[@xml:lang =  $lang.navigator]/text() != ''">
+					<xsl:when test="$list[@xml:lang = $lang.navigator]
+										and (($list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != '')
+											or ($list[@xml:lang = $lang.navigator and @xlink:href != '' and $validHrefLink = 'true'])
+											or $list[@xml:lang = $lang.navigator and @xlink:title != ''])">
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 							<xsl:if test="(($currentLang = $lang.navigator) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">	
@@ -3091,7 +3153,10 @@
 							</xsl:if>		
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+					<xsl:when test="$list[@xml:lang = $language.default]
+										and (($list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != '')
+											or ($list[@xml:lang = $language.default and @xlink:href != '' and $validHrefLink = 'true'])
+											or $list[@xml:lang = $language.default and @xlink:title != ''])">
 						<!--  <xsl:for-each select="$list[@xml:lang = $language.default]">-->
 						<xsl:for-each select="$list">
 							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
@@ -3119,7 +3184,10 @@
 							</xsl:if>		
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
+					<xsl:when test="$list[not(@xml:lang)]
+										and (($list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != '')
+											or ($list[not(@xml:lang) and @xlink:href != '' and $validHrefLink = 'true'])
+											or $list[not(@xml:lang) and @xlink:title != ''])">
 					  <!-- 	<xsl:for-each select="$list[not(@xml:lang)]"> -->
 						 <xsl:for-each select="$list">
 						   <xsl:if test="not(@xml:lang) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))"> 	 
@@ -3356,6 +3424,7 @@
 		<xsl:param name="mode"/>
 		<xsl:param name="posChild"/>
 		<xsl:param name="posParent"/>
+		<xsl:param name="validHrefLink"/>
 			
 			<div class="blockSingular">	
 				
@@ -3383,6 +3452,7 @@
 				   				<xsl:with-param name="clazz" select="'placeRole_'"/>
 				   				<xsl:with-param name="posParent" select="$posParent"/>
 				   				<xsl:with-param name="posChild" select="$posChild"/>
+		   						<xsl:with-param name="validHrefLink" select="''"/>
 				   			</xsl:call-template>
 					    </div>
 			        </div>
@@ -3413,6 +3483,7 @@
 	   					<xsl:with-param name="posChild" select="$posChild"/>
 	   					<xsl:with-param name="mode" select="$mode"/>
 		    			<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+						<xsl:with-param name="validHrefLink" select="''"/>
 	    			</xsl:call-template> 
 			    </xsl:if>
 	
@@ -3424,6 +3495,7 @@
 		    		<xsl:with-param name="posChild" select="$posChild"/>
 	  				<xsl:with-param name="mode" select="$mode"/>
 		    		<xsl:with-param name="title" select="'eaccpf.relations.link'"/>
+					<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 		    	</xsl:call-template>
 	    	</div>
 	</xsl:template>
@@ -3433,6 +3505,7 @@
 		<xsl:param name="list"/>
 		<xsl:param name="posParent"/>
 		<xsl:param name="mode"/>
+		<xsl:param name="validHrefLink"/>
 		
 		<!-- Checks the attribute "@localType". -->
 		<!-- localType = birth -->
@@ -3445,6 +3518,7 @@
 					  	<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
 						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 					</xsl:call-template>
 				</xsl:if>
 			</xsl:for-each>
@@ -3460,6 +3534,7 @@
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
 						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -3475,6 +3550,7 @@
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
 						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -3491,6 +3567,7 @@
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
 						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -3507,6 +3584,7 @@
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
 						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -3524,6 +3602,7 @@
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
 						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -3545,6 +3624,7 @@
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
 						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="validHrefLink" select="$validHrefLink"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
