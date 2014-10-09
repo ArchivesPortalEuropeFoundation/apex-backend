@@ -2550,9 +2550,9 @@
 		</xsl:if>
 
 		<!-- addressLine @localType="other" -->
-		<xsl:if test="$list[@localType='other']/text()">
+		<xsl:if test="$list[@localType='other']/text() or $list[not(@localType)]/text()">
     		<xsl:call-template name="commonChild">
-	   			<xsl:with-param name="list" select="$list[@localType='other']"/>
+	   			<xsl:with-param name="list" select="$list[@localType='other' or not(@localType)]"/>
 	   			<xsl:with-param name="clazz" select="'addressLineOther'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
