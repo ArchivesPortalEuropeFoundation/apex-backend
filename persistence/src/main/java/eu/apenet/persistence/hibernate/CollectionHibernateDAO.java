@@ -2,15 +2,18 @@ package eu.apenet.persistence.hibernate;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.CollectionDAO;
 import eu.apenet.persistence.vo.Collection;
+import eu.archivesportaleurope.util.ApeUtil;
 
 public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Long> implements CollectionDAO{
-
+	private static final Logger LOGGER = Logger.getLogger(CollectionHibernateDAO.class);
 	@Override
 	public List<Collection> getCollectionsByUserId(Long liferayUserId,Integer pageNumber,Integer pageSize) {
 		if(liferayUserId!=null && liferayUserId>0){
@@ -69,5 +72,5 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 		}
 		return collection;
 	}
-    
+
 }

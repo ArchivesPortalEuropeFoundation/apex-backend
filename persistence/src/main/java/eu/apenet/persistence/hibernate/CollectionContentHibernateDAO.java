@@ -3,13 +3,18 @@ package eu.apenet.persistence.hibernate;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-
 import eu.apenet.persistence.dao.CollectionContentDAO;
 import eu.apenet.persistence.vo.CollectionContent;
+import eu.archivesportaleurope.util.ApeUtil;
 
 public class CollectionContentHibernateDAO extends AbstractHibernateDAO<CollectionContent, Long> implements CollectionContentDAO{
+    
+	private static final Logger LOGGER = Logger.getLogger(CollectionContentHibernateDAO.class);
 
 	@Override
 	public List<CollectionContent> getCollectionContentsByCollectionId(long id) {
@@ -38,5 +43,4 @@ public class CollectionContentHibernateDAO extends AbstractHibernateDAO<Collecti
 		}
 		return collectionContents;
 	}
-
 }

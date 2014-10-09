@@ -3,6 +3,7 @@ package eu.apenet.persistence.dao;
 import java.util.List;
 
 import eu.apenet.persistence.vo.Collection;
+import eu.apenet.persistence.vo.CollectionContent;
 
 public interface CollectionDAO extends GenericDAO<Collection, Long>{
 	
