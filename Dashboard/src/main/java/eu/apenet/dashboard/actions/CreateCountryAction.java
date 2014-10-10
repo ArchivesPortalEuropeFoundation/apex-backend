@@ -19,6 +19,7 @@ import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import com.neovisionaries.i18n.CountryCode;
 
 /**
  * @author Jara Alvarez
@@ -113,14 +114,12 @@ public class CreateCountryAction extends ActionSupport{
 		if (this.getIsoCountryName()!=null && (this.getIsoCountryName().length()!=2 && this.getIsoCountryName().length()!=3)){
 			addFieldError("isoCountryName", getText("createCountry.isoCountryNameWrong"));
 		}else if(this.getIsoCountryName()!=null){
-			Locale[] locales = Locale.getAvailableLocales();
-			tempLocale = null;
-			for( int i=0;tempLocale==null && i<locales.length;i++){
-				if(locales[i].getDisplayCountry().toUpperCase().equals(this.getEnglishCountryName().toUpperCase())){
-					tempLocale = locales[i];
-				}
-			}
-            if(tempLocale == null && (this.getIsoCountryName().equals("EU") || this.getIsoCountryName().equals("EUR"))) {
+            tempLocale = null;
+            CountryCode countryCode = CountryCode.getByCodeIgnoreCase(getIsoCountryName());
+            if(countryCode != null) {
+                tempLocale = countryCode.toLocale();
+            }
+			if(tempLocale == null && (this.getIsoCountryName().equals("EU") || this.getIsoCountryName().equals("EUR"))) {
                 europeTempCountryCode = "EU";
             } else if(tempLocale==null || !((this.getIsoCountryName().length()==3 && tempLocale.getISO3Country().toUpperCase().equals(this.getIsoCountryName().toUpperCase())) || (this.getIsoCountryName().length()==2 && tempLocale.getCountry().toUpperCase().equals(this.getIsoCountryName().toUpperCase())))){
 				addFieldError("isoCountryName", getText("createCountry.isoCountryNameWrong"));
