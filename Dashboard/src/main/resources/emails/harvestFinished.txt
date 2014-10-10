@@ -9,6 +9,10 @@
           <br/>
           ============================================
           <br/>
+          The process finished, with the following info message:</font></small><br/>
+    <blockquote>
+      <pre>${harvestingDetails}</pre>
+    </blockquote>          
     	  Harvesting process information:<br/>
           <br>
 			${infoHarvestedServer}
