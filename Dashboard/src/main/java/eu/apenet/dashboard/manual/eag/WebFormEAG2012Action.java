@@ -656,19 +656,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				String basePath = APEnetUtilities.FILESEPARATOR + this.getCountryCode() + APEnetUtilities.FILESEPARATOR +
 						this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
 				String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
+				this.loader = new EAG2012Loader(getAiId());
 				if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()) {
-					this.loader = new EAG2012Loader(getAiId());
 					boolean result = this.loader.fillEag2012();
 					log.info("Loader: "+this.loader.toString()+" has been charged.");
-
 					if (!result) {
 						addActionMessage(this.getText("eag2012.errors.loadingEAGFile"));
 					}
-
-					this.loader.setInitialAutform(getInitialAutformValue());
-
 					state = INPUT;
+				}else{
+					this.loader.setCountryCode(new ArchivalLandscapeUtils().getmyCountry());
+					this.loader.setRecordId(Eag2012.generatesISOCode(this.loader.getId()));
+					this.loader.fillIntitialAutformEscaped();
 				}
+				this.loader.setInitialAutform(getInitialAutformValue());
 			}
 		} catch (Exception e) {
 			log.error("Show/Edit EAG2012 Exception: "+e.getMessage());
