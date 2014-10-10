@@ -4,8 +4,6 @@ import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.CLevelDAO;
-import eu.apenet.persistence.dao.CollectionContentDAO;
-import eu.apenet.persistence.dao.CollectionDAO;
 import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
@@ -13,7 +11,6 @@ import eu.apenet.persistence.dao.DptUpdateDAO;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSavedSearchDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
@@ -23,8 +20,9 @@ import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
-import eu.apenet.persistence.dao.SavedBookmarksDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
+import eu.apenet.persistence.dao.TopicDAO;
+import eu.apenet.persistence.dao.TopicMappingDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.dao.UserDAO;
@@ -33,8 +31,6 @@ import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.hibernate.AiAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.ArchivalInstitutionHibernateDAO;
 import eu.apenet.persistence.hibernate.CLevelHibernateDAO;
-import eu.apenet.persistence.hibernate.CollectionHibernateDAO;
-import eu.apenet.persistence.hibernate.CollectionContentHibernateDAO;
 import eu.apenet.persistence.hibernate.CoordinatesHibernateDAO;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
@@ -55,10 +51,10 @@ import eu.apenet.persistence.hibernate.UserRoleHibernateDAO;
 import eu.apenet.persistence.hibernate.WarningsHibernateDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.ArchivalInstitutionOaiPmhJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.EacCpfJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.EadSavedSearchJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.HgSgFaRelationJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.IngestionprofileJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.SavedBookmarksJpaDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.TopicJpaDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.TopicMappingJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.UpFileJpaDAO;
 
 
@@ -203,29 +199,16 @@ public class HibernateDAOFactory extends DAOFactory {
     }
     
     @Override
-    public EadSavedSearchDAO getEadSavedSearchDAO() {
-        return (EadSavedSearchDAO) instantiateDAO(EadSavedSearchJpaDAO.class);
-    }
-    
-    @Override
 	public EacCpfDAO getEacCpfDAO() {
 		return (EacCpfDAO) instantiateDAO(EacCpfJpaDAO.class);
 	}
 
-
 	@Override
-	public CollectionDAO getCollectionDAO() {
-		return (CollectionDAO) instantiateDAO(CollectionHibernateDAO.class);
+	public TopicDAO getTopicDAO() {
+		return (TopicDAO) instantiateDAO(TopicJpaDAO.class);
 	}
-
-
 	@Override
-	public CollectionContentDAO getCollectionContentDAO() {
-		return (CollectionContentDAO) instantiateDAO(CollectionContentHibernateDAO.class);
-	}
-
-	@Override
-	public SavedBookmarksDAO getSavedBookmarksDAO() {
-		return (SavedBookmarksDAO) instantiateDAO(SavedBookmarksJpaDAO.class);
+	public TopicMappingDAO getTopicMappingDAO() {
+		return (TopicMappingDAO) instantiateDAO(TopicMappingJpaDAO.class);
 	}
 }
