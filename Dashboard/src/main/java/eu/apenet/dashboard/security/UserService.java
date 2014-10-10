@@ -515,10 +515,11 @@ public final class UserService {
 		}
 		if (toEmail != null){
 	    	EmailComposer emailComposer = null;
+	    	String title = "OAI-PMH harvest process " + oaiPmhStatus.getName()+ " (" + numberEadHarvested + " records of " + archivalInstitution.getAiname() +")";
 	    	if (OaiPmhStatus.SUCCEED.equals(oaiPmhStatus)){
-	    		emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
+	    		emailComposer = new EmailComposer("emails/harvestFinished.txt", title, true, true);
 	    	}else {
-	    		emailComposer = new EmailComposer("emails/harvestFinishedWithWarnings.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
+	    		emailComposer = new EmailComposer("emails/harvestFinishedWithWarnings.txt", title, true, true);
 	    	}
 	    	emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name",name);
@@ -542,6 +543,8 @@ public final class UserService {
 		        }else {
 		        	emailComposer.setProperty("errorFileMessage", "");
 		        }	   
+	        }else {
+	        	emailComposer.setProperty("harvestingDetails","");
 	        }
 	        Emailer emailer = new Emailer();
         	emailer.sendMessage(toEmail, ccEmail, bccEmail, null, emailComposer);
