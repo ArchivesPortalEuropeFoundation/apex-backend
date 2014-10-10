@@ -181,7 +181,7 @@ public class DataHarvester {
 			archivalInstitutionOaiPmh.setErrorsResponsePath(harvestObject.getNotParsableResponses());
 			if (harvestObject.isError()){
 				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED_WITH_ERRORS);
-			}else if (harvestObject.getHarvestingDetails() != null){
+			}else if (harvestObject.isWarning()){
 				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED_WITH_WARNINGS);
 			}else {
 				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED);
