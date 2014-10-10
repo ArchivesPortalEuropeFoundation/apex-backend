@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -25,12 +26,15 @@ import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.HgSgFaRelationDAO;
+import eu.apenet.persistence.dao.TopicMappingDAO;
 import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.TopicMapping;
 import eu.apenet.persistence.vo.Warnings;
 
 public class EadSolrPublisher {
@@ -53,6 +57,7 @@ public class EadSolrPublisher {
     private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
     private static final int MAX_NUMBER_OF_PENDING_DOCS = 200;
     private long solrTime = 0l;
+    private List<String> topicsBySourceGuides = new ArrayList<String>();
 
     public EadSolrPublisher(Ead ead) {
         this.ead = ead;
@@ -60,6 +65,19 @@ public class EadSolrPublisher {
         fond = XMLUtils.removeUnusedCharacters(ead.getTitle());
         xmlType = XmlType.getContentType(ead);
         eadDao = DAOFactory.instance().getEadDAO();
+		TopicMappingDAO topicMappingDAO = DAOFactory.instance().getTopicMappingDAO();
+		HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
+		List<TopicMapping> mappings = topicMappingDAO.getTopicMappingsByAiId(ead.getAiId());
+		for (TopicMapping mapping: mappings){
+			if (mapping.getSgId() != null){
+				boolean exist = hgSgFaRelationDAO.existHgSgFaRelations(mapping.getSgId(), ead.getId());
+				if (exist){
+					topicsBySourceGuides.add(mapping.getTopic().getPropertyKey());
+				}
+			}
+
+			
+		}
     }
 
     public long publishArchdesc(EadPublishData publishData) throws Exception {
@@ -326,7 +344,9 @@ public class EadSolrPublisher {
         add(doc1, SolrFields.FOND_ID, solrPrefix + ead.getId());
         add(doc1, SolrFields.TITLE_OF_FOND, fond + COLON + solrPrefix + ead.getId());
         add(doc1, SolrFields.TYPE, solrType);
-
+        if (topicsBySourceGuides.size() > 0){
+        	doc1.addField(SolrFields.TOPIC_FACET, topicsBySourceGuides);
+        }
         for (int i = 0; i < publishData.getUpperLevelUnittitles().size(); i++) {
             LevelInfo levelInfo = publishData.getUpperLevelUnittitles().get(i);
             String result = "";
