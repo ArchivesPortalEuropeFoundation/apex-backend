@@ -14,6 +14,11 @@
 			<xsl:value-of select="./eag:eag/eag:archguide/eag:identity/eag:autform"></xsl:value-of>
 		</h2>
 
+		<!-- Hidden div to store the value of the selected language. -->
+		<div id="languageSelected" class="hidden">
+			<span id="languageSelected"><xsl:value-of select="$language.selected"/></span>
+		</div>
+
 		<!-- CONTACT -->
 		<!-- starts loop -->
 		<xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository">
@@ -1196,7 +1201,7 @@
 		</table>
 	</xsl:template>
 
-<!-- template for email-->
+	<!-- template for email-->
 	<xsl:template name="email">
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
@@ -1345,7 +1350,6 @@
 			</tr>
 		</xsl:if>
 	</xsl:template>
-
 
 	<!-- template for webpage-->
 	<xsl:template name="webpage">
@@ -1505,7 +1509,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for multilanguage for webpage Exhibition-->
+	<!-- template for multilanguage for webpage Exhibition-->
 	<xsl:template name="multilanguageWebpageExhibition">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -1642,7 +1646,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language Exhibition-->
+	<!-- template for language Exhibition-->
 	<xsl:template name="multilanguageExhibition">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -1837,7 +1841,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language ToursSessions-->
+	<!-- template for language ToursSessions-->
 	<xsl:template name="multilanguageToursSessions">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -2032,7 +2036,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language OtherServices-->
+	<!-- template for language OtherServices-->
 	<xsl:template name="multilanguageOtherServices">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -2424,7 +2428,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
-<!-- template for language Accessibility -->
+	<!-- template for language Accessibility -->
 	<xsl:template name="multilanguageAccessibility">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -2656,7 +2660,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
-<!-- template for language computerPlaces -->
+	<!-- template for language computerPlaces -->
 	<xsl:template name="multilanguageComputerPlaces">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -2714,7 +2718,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language refreshment -->
+	<!-- template for language refreshment -->
 	<xsl:template name="multilanguageRefreshment">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -2772,7 +2776,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language researchServices -->
+	<!-- template for language researchServices -->
 	<xsl:template name="multilanguageResearchServices">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -2830,7 +2834,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language reproductionser -->
+	<!-- template for language reproductionser -->
 	<xsl:template name="multilanguageReproductionser">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -3178,7 +3182,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language repositorsup -->
+	<!-- template for language repositorsup -->
 	<xsl:template name="multilanguageRepositorsup">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -3294,7 +3298,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-<!-- template for language building -->
+	<!-- template for language building -->
 	<xsl:template name="multilanguageBuilding">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -3417,7 +3421,10 @@
 			<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
 			<xsl:variable name="text" select="current()/text()"></xsl:variable>
 			<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-			<div>
+			<xsl:variable name="typeRelation" select="./parent::node()/@eagRelationType"/>
+			<xsl:variable name="position" select="position()"/>
+			
+			<div id="eagRelation_{$position}">
 				<xsl:choose>
 					<xsl:when test="$link and $link != '' and $text and $text != ''">
 							<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
@@ -3431,6 +3438,9 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</a>
+								<span id="linkEagRelation" class="hidden"><xsl:value-of select="$link"/></span>
+								<span id="typeEagRelation" class="hidden"><xsl:value-of select="$typeRelation"/></span>
+								<span id="langEagRelation" class="hidden"><xsl:value-of select="$currentLang"/></span>
 							</xsl:if>
 							<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
 								<a href="#">
@@ -3444,6 +3454,9 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</a>
+								<span id="linkEagRelation" class="hidden"><xsl:value-of select="$link"/></span>
+								<span id="typeEagRelation" class="hidden"><xsl:value-of select="$typeRelation"/></span>
+								<span id="langEagRelation" class="hidden"><xsl:value-of select="$currentLang"/></span>
 							</xsl:if>
 					</xsl:when>
 					<xsl:when test="$link and $link != ''">
@@ -3451,12 +3464,18 @@
 								<a href="{$link}" target="_blank">
 									<xsl:value-of select="ape:resource('eag2012.portal.linktorelatedresource')"/>
 								</a>
+								<span id="linkEagRelation" class="hidden"><xsl:value-of select="$link"/></span>
+								<span id="typeEagRelation" class="hidden"><xsl:value-of select="$typeRelation"/></span>
+								<span id="langEagRelation" class="hidden"><xsl:value-of select="$currentLang"/></span>
 							</xsl:if>
 							<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
 								<a href="#">
 									<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
 									<xsl:value-of select="ape:resource('eag2012.portal.linktorelatedresource')"/>
 								</a>
+								<span id="linkEagRelation" class="hidden"><xsl:value-of select="$link"/></span>
+								<span id="typeEagRelation" class="hidden"><xsl:value-of select="$typeRelation"/></span>
+								<span id="langEagRelation" class="hidden"><xsl:value-of select="$currentLang"/></span>
 							</xsl:if>
 					</xsl:when>
 					<xsl:when test="$text and $text != ''">
@@ -3543,7 +3562,9 @@
 			<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
 			<xsl:variable name="text" select="current()/text()"></xsl:variable>
 			<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-			<div>
+			<xsl:variable name="typeRelation" select="./parent::node()/@resourceRelationType"/>
+			<xsl:variable name="position" select="position()"/>
+			<div id="resource_{$position}">
 				<xsl:choose>
 					<xsl:when test="$link and $link != '' and $text and $text != ''">
 							<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
@@ -3557,6 +3578,9 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</a>
+								<span id="linkRelation" class="hidden"><xsl:value-of select="$link"/></span>
+								<span id="typeRelation" class="hidden"><xsl:value-of select="$typeRelation"/></span>
+								<span id="lang" class="hidden"><xsl:value-of select="$currentLang"/></span>
 							</xsl:if>
 							<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
 								<a href="#">
@@ -3577,6 +3601,9 @@
 								<a href="{$link}" target="_blank">
 									<xsl:value-of select="ape:resource('eag2012.portal.linktorelatedresource')"/>
 								</a>
+								<span id="linkRelation" class="hidden"><xsl:value-of select="$link"/></span>
+								<span id="typeRelation" class="hidden"><xsl:value-of select="$typeRelation"/></span>
+								<span id="lang" class="hidden"><xsl:value-of select="$currentLang"/></span>
 							</xsl:if>
 							<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
 								<a href="#">
@@ -3597,14 +3624,14 @@
 					</xsl:when>
 				</xsl:choose>
 
-				<xsl:call-template name="multilanguageRelatedResources">
+		  		<xsl:call-template name="multilanguageRelatedResources">
 					<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
 				</xsl:call-template>
 			</div>
 		</xsl:for-each>
 	</xsl:template>
 
-<!-- template for language related resources-->
+	<!-- template for language related resources-->
 	<xsl:template name="multilanguageRelatedResources">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -3908,7 +3935,7 @@
 		</xsl:if>
 	</xsl:template>
 	
-		<!-- template for multilanguage terms of use -->
+	<!-- template for multilanguage terms of use -->
 	<xsl:template name="multilanguageTermsofuse">
 		<xsl:param name="title"/>
 		<xsl:param name="class" select="'header'"/>
