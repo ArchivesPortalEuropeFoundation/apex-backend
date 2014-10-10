@@ -32,6 +32,8 @@
 		<class>eu.apenet.persistence.vo.Collection</class>
 		<class>eu.apenet.persistence.vo.CollectionContent</class>
 		<class>eu.apenet.persistence.vo.SavedBookmarks</class>
+		<class>eu.apenet.persistence.vo.Topic</class>		
+		<class>eu.apenet.persistence.vo.TopicMapping</class>			
 		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
