@@ -50,5 +50,14 @@ public class HgSgFaRelationJpaDAO extends AbstractHibernateDAO<HgSgFaRelation, L
 		}
 		return query.getSingleResult();
 	}
+	@Override
+	public boolean existHgSgFaRelations(Integer sgId, Integer faId) {
+		String jpaQuery  = "SELECT id FROM HgSgFaRelation hgSgFaRelation WHERE sgId = :sgId AND faId = :faId";
 
+		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
+		query.setParameter("sgId", sgId);
+		query.setParameter("faId", faId);
+		query.setMaxResults(1);
+		return query.getResultList().size() > 0;
+	}
 }
