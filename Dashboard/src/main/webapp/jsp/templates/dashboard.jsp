@@ -148,9 +148,8 @@
              <div id="footernavbar">
                    <div id="footerCatInner">
                        <ul>
-						<li><a id="food1" href="#" title="Navigation guide"><s:property value="getText('label.footer.navigationguide')"/> | </a></li>
+						<li><a id="food1" href="http://www.apex-project.eu/index.php/en/outcomes/tools-and-manuals" title="Navigation guide"><s:property value="getText('label.footer.navigationguide')"/> | </a></li>
                            <li><a id="food2" href="termsOfUse.action" title="<s:property value="getText('terms.use.title')"/>"><s:property value="getText('label.footer.termsofuse')"/> | </a></li>
-                           <li><a id="food3" href="#" title="Site map"><s:property value="getText('label.footer.sitemap')"/> | </a></li>
                          	<li><a id="food4" href="contact.action" title="Contact"><s:property value="getText('label.footer.contact')"/></a></li>  
                        </ul>
                    </div>
