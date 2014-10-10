@@ -485,7 +485,7 @@ public final class UserService {
 
 	}
 
-    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested, OaiPmhStatus oaiPmhStatus, String errors, String errorsResponsePath) {
+    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested, OaiPmhStatus oaiPmhStatus, String details, String errorsResponsePath) {
 		User partner = archivalInstitution.getPartner();
 		User countryManager  = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
 		String name = "UNKNOWN";
@@ -515,7 +515,7 @@ public final class UserService {
 		}
 		if (toEmail != null){
 	    	EmailComposer emailComposer = null;
-	    	if (errors  == null){
+	    	if (OaiPmhStatus.SUCCEED.equals(oaiPmhStatus)){
 	    		emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
 	    	}else {
 	    		emailComposer = new EmailComposer("emails/harvestFinishedWithWarnings.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
@@ -535,8 +535,8 @@ public final class UserService {
 	        }else {
 	        	emailComposer.setProperty("newestFileHarvested", "");
 	        } 
-	        if (errors != null){
-		        emailComposer.setProperty("errorMessage",errors);
+	        if (details != null){
+		        emailComposer.setProperty("harvestingDetails",details);
 		        if (errorsResponsePath != null){
 		        	emailComposer.setProperty("errorFileMessage", "Look at the dashboard for the OAI-PMH response that contains errors<br/><br/>");
 		        }else {

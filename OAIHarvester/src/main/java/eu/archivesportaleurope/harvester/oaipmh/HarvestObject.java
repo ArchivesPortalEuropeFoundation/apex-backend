@@ -13,6 +13,7 @@ public class HarvestObject {
     private String harvestingDetails;
     private boolean failed;
     private boolean error;
+    private boolean warning;
     private int numberOfRecords = 0;
     private int numberOfGetRecords = 0;
     private int numberOfRequests = 0;
@@ -64,6 +65,17 @@ public class HarvestObject {
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 	}
+	
+	public boolean isWarning() {
+		return warning;
+	}
+
+
+	public void setWarning(boolean warning) {
+		this.warning = warning;
+	}
+
+
 	public boolean isError() {
 		return error;
 	}
@@ -182,9 +194,16 @@ public class HarvestObject {
 	public List<OaiPmhRecord> getDeletedRecords() {
 		return deletedRecords;
 	}
-
+	public void addInfo(String info) {
+		if (this.harvestingDetails == null){
+			this.harvestingDetails = info + "\n";
+		}else {
+			this.harvestingDetails += info + "\n";
+		}
+	}
 
 	public void addWarnings(String errors) {
+		this.warning= true;
 		if (this.harvestingDetails == null){
 			this.harvestingDetails = errors + "\n";
 		}else {
