@@ -29,6 +29,7 @@ public final class SolrFields {
 	public final static String AI_ID = "aiId";	  
 	public final static String FOND_ID = "fondId";	  
 	public final static String ALTERDATE_FACET = "alterdateFacet";
+	public final static String TOPIC_FACET = "topic";
 	public final static String DATE_TYPE = "dateType";
 	public final static String PARENT_ID = "parentId";
 	//public final static String TREE_ID = "treeId";
