@@ -10,7 +10,7 @@
           <br/>
           The process failed, with the following error message:</font></small><br/>
     <blockquote>
-      <pre>${errorMessage}</pre>
+      <pre>${harvestingDetails}</pre>
     </blockquote>
     <small><font face="Helvetica, Arial, sans-serif">${errorFileMessage}
     	Harvesting process information:<br/>
