@@ -167,7 +167,7 @@ public class DataHarvester {
 						Ead ead = eads.get(0);
 						String log = "Record " + deletedRecord +  " is deleted in OAI-PMH repository. The ead with identifier " + ead.getIdentifier() + " is automaticly deleted.";
 						LOGGER.info(log);
-						harvestObject.addWarnings(log);						
+						harvestObject.addInfo(log);						
 						EadService.deleteByHarvester(ead);
 					}else {
 						String log = "Record " + deletedRecord +  " is deleted in OAI-PMH repository. Please delete it manually in the dashboard";
