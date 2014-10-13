@@ -1,18 +1,12 @@
 package eu.apenet.persistence.vo;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -64,6 +58,8 @@ public class EadSavedSearch {
 	private	String refinementCountry;	
 	@Column(name = "refinement_ai")
 	private	String refinementAi;
+	@Column(name = "refinement_topic")
+	private	String refinementTopic;	
 	@Column(name = "refinement_fond")
 	private	String refinementFond;	
 	@Column(name = "refinement_type")
@@ -96,7 +92,7 @@ public class EadSavedSearch {
 		return alTreeSelectedNodes != null;
 	}
 	public boolean isContainsRefinements() {
-		return refinementCountry != null || refinementAi != null || refinementFond != null 
+		return refinementCountry != null || refinementAi != null || refinementFond != null || refinementTopic != null 
 				|| refinementType != null || refinementLevel != null || refinementDao != null || refinementRoledao != null || refinementDateType != null || refinementStartdate != null ||
 						refinementEnddate != null;
 	}
@@ -266,4 +262,14 @@ public class EadSavedSearch {
 	public void setRefinementLevel(String refinementLevel) {
 		this.refinementLevel = refinementLevel;
 	}
+
+	public String getRefinementTopic() {
+		return refinementTopic;
+	}
+
+	public void setRefinementTopic(String refinementTopic) {
+		this.refinementTopic = refinementTopic;
+	}
+	
+	
 }
