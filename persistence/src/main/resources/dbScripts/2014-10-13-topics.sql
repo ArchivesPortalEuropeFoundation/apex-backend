@@ -1,7 +1,7 @@
 CREATE TABLE topic
 (
 	id bigserial NOT NULL,
-	property_key character varying(100) NOT NULL,
+	property_key character varying(20) NOT NULL,
 	description character varying(100) NOT NULL,
   CONSTRAINT topic_pkey PRIMARY KEY (id)
 );
