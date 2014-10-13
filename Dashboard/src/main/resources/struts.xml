@@ -859,9 +859,9 @@
             <result name="error" type="tiles">blank</result>
         </action>
 
-        <!-- <action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction">
-            <result name="error" type="tiles">blank</result>
-        </action>  -->
+        <action name="manageTopicMappings" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction">
+            <result name="success" type="tiles">manageTopicMappings</result>
+        </action>
         <action name="manageHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction">
             <result name="success" type="tiles">manageHarvest</result>
         </action>
