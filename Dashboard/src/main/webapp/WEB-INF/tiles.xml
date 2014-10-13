@@ -1092,5 +1092,9 @@
         <put-attribute name="title" value="dashboard.menu.topic.mappings" />
         <put-attribute name="body" value="/jsp/topic/manage-mappings.jsp" />
     </definition>  
+     <definition name="createEditTopicMapping" extends="dashboardLayout" >
+        <put-attribute name="title" value="dashboard.menu.topic.mappings.create" />
+        <put-attribute name="body" value="/jsp/topic/create-edit-mapping.jsp" />
+    </definition>      
     
 </tiles-definitions>
