@@ -862,6 +862,16 @@
         <action name="manageTopicMappings" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction">
             <result name="success" type="tiles">manageTopicMappings</result>
         </action>
+        <action name="displayCreateEditTopicMapping" class="eu.apenet.dashboard.topics.CreateEditTopicMappingAction" method="input">
+            <result name="input" type="tiles">createEditTopicMapping</result>
+        </action>
+        <action name="createEditTopicMapping" class="eu.apenet.dashboard.topics.CreateEditTopicMappingAction">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageTopicMappings</param>
+            </result>
+            <result name="input" type="tiles">createEditTopicMapping</result>
+        </action>        
+        
         <action name="manageHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction">
             <result name="success" type="tiles">manageHarvest</result>
         </action>
