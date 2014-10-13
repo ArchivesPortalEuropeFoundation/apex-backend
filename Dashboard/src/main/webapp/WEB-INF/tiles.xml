@@ -1088,7 +1088,7 @@
         <put-attribute name="title" value="admin.showlogfiles.title" />
         <put-attribute name="body" value="/jsp/admin/showlogfiles.jsp" />
     </definition>    
-     <definition name="manageTopicMappings" extends="DefaultLayout" >
+     <definition name="manageTopicMappings" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.topic.mappings" />
         <put-attribute name="body" value="/jsp/topic/manage-mappings.jsp" />
     </definition>  
