@@ -16,25 +16,25 @@
 			<td><c:out value="${topicMapping.topic.description}"/></td>
 			<td>
 				<c:if test="${!empty topicMapping.sourceGuide}">
-					<b><c:out value="${topicMapping.sourceGuide.identifier}"/></b>: <c:out value="${topicMapping.sourceGuide.title}"/>
+					<c:out value="${topicMapping.sourceGuide.identifier}"/> - <c:out value="${topicMapping.sourceGuide.title}"/>
 				</c:if>
 			</td>
 			<td><c:out value="${topicMapping.controlaccessKeyword}"/></td>
 			<td>
-								<s:form action="editTopicMapping" theme="simple">
-									<input type="hidden" name="id"   value="${topicMapping.id}"/>
-									<s:submit key="content.message.edit" name="edit"/>
+								<s:form action="displayCreateEditTopicMapping" theme="simple">
+									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
+									<s:submit key="label.edit" name="edit"/>
 								</s:form>				
 								<s:form action="deleteTopicMapping" theme="simple">
-									<input type="hidden" name="id"   value="${topicMapping.id}"/>
+									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
 									<s:submit key="content.message.delete" name="delete"/>
 								</s:form>					
 			</td>
 		</tr>
 		</c:forEach>
 		<tr>
-			<td colspan="5">								<s:form action="addTopicMapping" theme="simple">
-									<s:submit key="content.message.add" name="add"/>
+			<td colspan="5">								<s:form action="displayCreateEditTopicMapping" theme="simple">
+									<s:submit key="topicmapping.create" name="add"/>
 								</s:form>	</td>
 		</tr>
 	</table>
