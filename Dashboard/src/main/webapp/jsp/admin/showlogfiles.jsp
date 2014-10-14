@@ -3,9 +3,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+	<script type="text/javascript">
+	
+	$(function() {
+		$("table").tablesorter({debug: false});
+
+		
+	});
+	</script>	
 <div id="showLogFiles">
 	<h2>Own log files</h2>
-	<table class="defaultlayout">
+	<table class="defaultlayout tablesorter">
 		<thead>
 			<tr>
 				<th><s:text name="admin.showlogfiles.filename" /></th>
@@ -24,7 +33,7 @@
 		</tbody>
 	</table>
 	<h2>Other log files</h2>
-	<table class="defaultlayout">
+	<table class="defaultlayout tablesorter">
 		<thead>
 			<tr>
 				<th><s:text name="admin.showlogfiles.filename" /></th>
