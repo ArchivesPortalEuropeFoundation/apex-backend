@@ -291,5 +291,9 @@
 			<artifactId>commons-compress</artifactId>
 			<version>1.8.1</version>
 		</dependency>
+        <dependency>
+            <groupId>com.neovisionaries</groupId>
+            <artifactId>nv-i18n</artifactId>
+        </dependency>
 	</dependencies>
 </project>
