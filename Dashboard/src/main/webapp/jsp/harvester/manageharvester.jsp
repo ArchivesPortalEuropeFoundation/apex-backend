@@ -3,6 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
+	<script type="text/javascript">
+	
+	$(function() {
+		$("table").tablesorter({debug: false});
+
+		
+	});
+	</script>
 <div id="manageHarvester">
     <table class="defaultlayout">
         <tr>
@@ -115,7 +123,7 @@
 			    </table>
 		<br/>
     	<h2>All saved harvest processes:</h2>
-                <table class="defaultlayout fullWidth">
+                <table class="defaultlayout fullWidth tablesorter">
 			        <thead>
 			            <tr>
 			            	<th>ID</th>
