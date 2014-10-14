@@ -870,7 +870,12 @@
                 <param name="actionName">manageTopicMappings</param>
             </result>
             <result name="input" type="tiles">createEditTopicMapping</result>
-        </action>        
+        </action>      
+        <action name="deleteTopicMapping" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction" method="deleteTopicMapping">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageTopicMappings</param>
+            </result>
+        </action>           
         
         <action name="manageHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction">
             <result name="success" type="tiles">manageHarvest</result>
