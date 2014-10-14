@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +58,9 @@ public class EadSolrPublisher {
     private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
     private static final int MAX_NUMBER_OF_PENDING_DOCS = 200;
     private long solrTime = 0l;
-    private List<String> topicsBySourceGuides = new ArrayList<String>();
+    private Set<String> topicsBySourceGuides = new HashSet<String>();
+    private Set<String> topicsByArchdescControlAccess = new HashSet<String>();    
+    private List<TopicMapping> mappings;
 
     public EadSolrPublisher(Ead ead) {
         this.ead = ead;
@@ -67,7 +70,7 @@ public class EadSolrPublisher {
         eadDao = DAOFactory.instance().getEadDAO();
 		TopicMappingDAO topicMappingDAO = DAOFactory.instance().getTopicMappingDAO();
 		HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
-		List<TopicMapping> mappings = topicMappingDAO.getTopicMappingsByAiId(ead.getAiId());
+		mappings = topicMappingDAO.getTopicMappingsByAiId(ead.getAiId());
 		for (TopicMapping mapping: mappings){
 			if (mapping.getSgId() != null){
 				boolean exist = hgSgFaRelationDAO.existHgSgFaRelations(mapping.getSgId(), ead.getId());
@@ -82,6 +85,15 @@ public class EadSolrPublisher {
 
     public long publishArchdesc(EadPublishData publishData) throws Exception {
         archivalinstitution = ead.getArchivalInstitution();
+		for (TopicMapping mapping: mappings){
+			if (StringUtils.isNotBlank(mapping.getControlaccessKeyword())){
+				if (publishData.getControlAccessSubjects().contains(mapping.getControlaccessKeyword())){
+					topicsByArchdescControlAccess.add(mapping.getTopic().getPropertyKey());
+				}
+			}
+
+			
+		}
         parseCLevelOrArchdesc(false, publishData);
         language = publishData.getGlobalLanguage();
         return 0;
@@ -175,7 +187,7 @@ public class EadSolrPublisher {
             langmaterial = archdesc_langmaterial;
         }
 
-        publishNode(publishData, startdate, enddate,
+        publishNode(clevel, publishData, startdate, enddate,
                 alterdate, langmaterial);
         return publishData.getNumberOfDaos();
     }
@@ -267,7 +279,7 @@ public class EadSolrPublisher {
         return null;
     }
 
-    private void publishNode(EadPublishData publishData,
+    private void publishNode(boolean clevel, EadPublishData publishData,
             String sdate, String edate, String alterdate,
             String langmaterial) throws MalformedURLException, SolrServerException, IOException {
         String solrPrefix = SolrValues.FA_PREFIX;
@@ -344,8 +356,20 @@ public class EadSolrPublisher {
         add(doc1, SolrFields.FOND_ID, solrPrefix + ead.getId());
         add(doc1, SolrFields.TITLE_OF_FOND, fond + COLON + solrPrefix + ead.getId());
         add(doc1, SolrFields.TYPE, solrType);
-        if (topicsBySourceGuides.size() > 0){
-        	doc1.addField(SolrFields.TOPIC_FACET, topicsBySourceGuides);
+        Set<String> topics = new HashSet<String>();
+        topics.addAll(topicsBySourceGuides);
+        topics.addAll(topicsByArchdescControlAccess);
+        if (clevel){
+    		for (TopicMapping mapping: mappings){
+    			if (StringUtils.isNotBlank(mapping.getControlaccessKeyword())){
+    				if (publishData.getControlAccessSubjects().contains(mapping.getControlaccessKeyword())){
+    					topics.add(mapping.getTopic().getPropertyKey());
+    				}
+    			}
+    		}        	
+        }
+        if (topics.size() > 0){
+        	doc1.addField(SolrFields.TOPIC_FACET, topics);
         }
         for (int i = 0; i < publishData.getUpperLevelUnittitles().size(); i++) {
             LevelInfo levelInfo = publishData.getUpperLevelUnittitles().get(i);

@@ -40,6 +40,8 @@ public class EadPublishDataFiller {
 	 */
 	private StringXpathHandler unitdateHandler;
 	private AttributeXpathHandler unitdateNormalHander;
+	
+	private TextXpathHandler controlAccessHandler;
 	/*
 	 * other
 	 */
@@ -110,6 +112,9 @@ public class EadPublishDataFiller {
 
 			extrefHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "otherfindaid",
 					"p", "extref" }, ApeXMLConstants.XLINK_NAMESPACE, "href");
+			
+			controlAccessHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
+			"subject" });
 
 			archdescClevelHandlers.add(unitidHandler);
 			archdescClevelHandlers.add(otherUnitidHandler);
@@ -123,6 +128,7 @@ public class EadPublishDataFiller {
 			archdescClevelHandlers.add(langmaterialHander);
 			archdescClevelHandlers.add(daoRoleHandler);
 			archdescClevelHandlers.add(extrefHandler);
+			archdescClevelHandlers.add(controlAccessHandler);
 		} else {
 			globalLanguageHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "ead",
 					"eadheader", "profiledesc", "langusage", "language" }, "langcode");
@@ -201,6 +207,7 @@ public class EadPublishDataFiller {
 		publishData.setUnitdateNormal(unitdateNormalHander.getFirstResult());
 		publishData.setNumberOfDaos(countDaoHandler.getCount());
 		publishData.setLangmaterial(langmaterialHander.getResultAsStringWithWhitespace());
+		publishData.setControlAccessSubjects(controlAccessHandler.getResultSet());
 		for (String roledao : daoRoleHandler.getResult()) {
 			String roledaoTemp = roledao.toUpperCase();
 			if (POSSIBLE_ROLE_DAO_VALUES.contains(roledaoTemp)){

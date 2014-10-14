@@ -20,6 +20,7 @@ public class EadPublishData extends PublishData {
 	private String level;
 	private Set<String> roledao = new HashSet<String>();
 	private String globalLanguage;
+	private Set<String> controlAccessSubjects = new HashSet<String>();
 	
 	public String getUnitid() {
 		return unitid;
@@ -99,6 +100,13 @@ public class EadPublishData extends PublishData {
 	}
 	public void setFirstOtherUnitid(String firstOtherUnitid) {
 		this.firstOtherUnitid = firstOtherUnitid;
+	}
+	
+	public Set<String> getControlAccessSubjects() {
+		return controlAccessSubjects;
+	}
+	public void setControlAccessSubjects(Set<String> controlAccessSubjects) {
+		this.controlAccessSubjects = controlAccessSubjects;
 	}
 	@Override
 	public String toString() {
