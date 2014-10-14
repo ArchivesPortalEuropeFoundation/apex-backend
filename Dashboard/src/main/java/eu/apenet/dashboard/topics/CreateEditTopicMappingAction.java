@@ -3,6 +3,8 @@ package eu.apenet.dashboard.topics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.persistence.dao.ContentSearchOptions;
@@ -89,48 +91,29 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 	}
 
 	public void validate() {
-		
-//		if (existingPartnerId == null) {
-//			if (StringUtils.isBlank(this.getFirstName())) {
-//				addFieldError("firstName", getText("firstname.required"));
-//			}
-//
-//			if (StringUtils.isBlank(this.getLastName())) {
-//				addFieldError("lastName", getText("lastname.required"));
-//			}
-//
-//			if (this.getEmail() != null) {
-//				if (StringUtils.isBlank(this.getEmail())) {
-//					addFieldError("email", getText("email.required"));
-//				} else {
-//					String email = this.getEmail().trim();
-//					if (UserService.exitsEmailUser(email)) {
-//						addFieldError("email", getText("email.notAvailable"));
-//					}
-//					else {
-//                        //RFC regexp for emails
-//                        String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-//			            Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);
-//			            Matcher matcher = pattern.matcher(email);
-//			            if(!matcher.matches())
-//			                addFieldError("email", getText("email.valid"));
-//					}
-//				}
-//			}
-//		}
-
+		if (this.topicMappingId == null){
+			if (this.getTopicId() == null){
+				addFieldError("topicId", getText("errors.required"));
+			}
+		}
+		if (this.getSourceGuideId() == null && StringUtils.isBlank(keywords)){
+			addActionError(getText("topicmapping.sourceguide.keyword.required", new String[]{"<controlaccess><subject>"}));
+		}
+		if (StringUtils.isNotBlank(keywords) && keywords.trim().length() > 255){
+			addFieldError("keywords", getText("errors.toolong", new String[]{"255"}));
+		}
 	}
 	
 
 	@Override
 	public void prepare() throws Exception {
 		if (topicMappingId == null){
-			List<Topic> topics = DAOFactory.instance().getTopicDAO().findAll();
+			List<Topic> topics = DAOFactory.instance().getTopicDAO().getTopicsWithoutMapping(getAiId());
 			for (Topic topic: topics){
-				this.topics.add(new SelectItem(topic.getId(), topic.getPropertyKey() + " - " + topic.getDescription()));
+				this.topics.add(new SelectItem(topic.getId(), topic.getDescription()));
 			}
 		}else {
-			TopicMapping topicMapping = DAOFactory.instance().getTopicMappingDAO().findById(topicMappingId);
+			TopicMapping topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByAiId(getAiId(), topicMappingId);
 			this.sourceGuideId = topicMapping.getSgId();
 			this.topicDescription = topicMapping.getTopic().getDescription();
 			this.keywords = topicMapping.getControlaccessKeyword();
