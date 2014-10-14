@@ -1026,9 +1026,13 @@
         <put-attribute name="body" value="/jsp/harvester/manageharvester.jsp" />
         <put-list-attribute name="jsfilesInternal">
             
-		    
+            <add-attribute type="string" value="/js/jquery/jquery.tablesorter.min.js"/>	
             
-		</put-list-attribute>
+            
+        </put-list-attribute>
+        <put-list-attribute name="cssfilesInternal">
+        <add-attribute type="string" value="/css/tablesorter.css"/>
+        </put-list-attribute>
     </definition>
     <definition name="sessionManagement" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.sessionmanagement.title" />
@@ -1087,10 +1091,28 @@
     <definition name="showLogFiles" extends="AdminLayout" >
         <put-attribute name="title" value="admin.showlogfiles.title" />
         <put-attribute name="body" value="/jsp/admin/showlogfiles.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            
+            <add-attribute type="string" value="/js/jquery/jquery.tablesorter.min.js"/>	
+            
+            
+        </put-list-attribute>
+        <put-list-attribute name="cssfilesInternal">
+        <add-attribute type="string" value="/css/tablesorter.css"/>
+        </put-list-attribute>        
     </definition>    
      <definition name="manageTopicMappings" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.topic.mappings" />
         <put-attribute name="body" value="/jsp/topic/manage-mappings.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            
+            <add-attribute type="string" value="/js/jquery/jquery.tablesorter.min.js"/>	
+            
+            
+        </put-list-attribute>
+        <put-list-attribute name="cssfilesInternal">
+        <add-attribute type="string" value="/css/tablesorter.css"/>
+        </put-list-attribute>           
     </definition>  
      <definition name="createEditTopicMapping" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.topic.mappings.create" />
