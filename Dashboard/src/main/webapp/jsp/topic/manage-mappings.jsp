@@ -32,7 +32,7 @@
 			</td>
 			<td><c:out value="${topicMapping.controlaccessKeyword}"/></td>
 			<td>
-								<s:form action="displayCreateEditTopicMapping" theme="simple">
+								<s:form action="displayCreateEditTopicMapping" theme="simple" method="GET">
 									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
 									<s:submit key="label.edit" name="edit"/>
 								</s:form>				
@@ -45,7 +45,7 @@
 		</c:forEach>
 		</tbody>
 	</table>
-<s:form action="displayCreateEditTopicMapping" theme="simple">
+<s:form action="displayCreateEditTopicMapping" theme="simple"  method="GET">
 									<s:submit key="topicmapping.create" name="add"/>
 								</s:form>
 </div>
