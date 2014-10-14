@@ -1,8 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	<script type="text/javascript">
+	
+	$(function() {
+		$("table").tablesorter({debug: false});
+
+		
+	});
+	</script>
 <div >  
-	<table class="defaultlayout fullWidth">
+	<table class="defaultlayout fullWidth tablesorter">
+	<thead>
 		<tr>
 			<th><s:text name="topic.property"/></th>
 			<th><s:text name="topic.description"/></th>
@@ -10,6 +19,8 @@
 			<th><s:text name="topic.mapping.keyword"/></th>
 			<th><s:text name="content.message.actions" /></th>
 		</tr>
+		</thead>
+		<tbody>
 		<c:forEach var="topicMapping" items="${topicMappings}">
 		<tr>
 			<td><c:out value="${topicMapping.topic.propertyKey}"/></td>
@@ -32,12 +43,10 @@
 			</td>
 		</tr>
 		</c:forEach>
-		<tr>
-			<td colspan="5">								<s:form action="displayCreateEditTopicMapping" theme="simple">
-									<s:submit key="topicmapping.create" name="add"/>
-								</s:form>	</td>
-		</tr>
+		</tbody>
 	</table>
-
+<s:form action="displayCreateEditTopicMapping" theme="simple">
+									<s:submit key="topicmapping.create" name="add"/>
+								</s:form>
 </div>
 
