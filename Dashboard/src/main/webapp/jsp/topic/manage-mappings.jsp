@@ -45,7 +45,7 @@
 		</c:forEach>
 		</tbody>
 	</table>
-<s:form action="displayCreateEditTopicMapping" theme="simple"  method="GET">
+						<s:form action="displayCreateEditTopicMapping" theme="simple"  method="GET">
 									<s:submit key="topicmapping.create" name="add"/>
 								</s:form>
 </div>
