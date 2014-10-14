@@ -126,7 +126,7 @@ public class EadSolrPublisher {
         // daoRoleAttributeExpression.evaluate(didNode, XPathConstants.STRING);
         String unitdate = publishData.getUnitdate();
 
-        if (StringUtils.isNotBlank(publishData.getUnitid()) && (attributeLevel == "fonds") && (existunitid_archdesc == false)) {
+        if (StringUtils.isNotBlank(publishData.getUnitid()) && "fonds".equals(attributeLevel) && !existunitid_archdesc) {
             unitidfond = publishData.getUnitid();
         }
         if (StringUtils.isNotBlank(unitdate)) {
