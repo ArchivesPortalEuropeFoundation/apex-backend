@@ -1,10 +1,13 @@
 package eu.archivesportaleurope.persistence.jpa.dao;
 
+import java.util.List;
+
 import javax.persistence.TypedQuery;
 
 import eu.apenet.persistence.dao.TopicDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.Topic;
+import eu.apenet.persistence.vo.TopicMapping;
 
 public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements TopicDAO {
 
@@ -18,6 +21,15 @@ public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements To
 		}else {
 			return null;
 		}
+	}
+
+	@Override
+	public List<Topic> getTopicsWithoutMapping(Integer aiId) {
+		String jpaSubQuery = "SELECT topicMapping.topicId FROM TopicMapping topicMapping WHERE topicMapping.aiId = :aiId";
+		String jpaQuery = "SELECT topic FROM Topic topic WHERE topic.id NOT IN (" +jpaSubQuery + ") ORDER BY topic.description";
+		TypedQuery<Topic> query = getEntityManager().createQuery(jpaQuery, Topic.class);		
+		query.setParameter("aiId", aiId);
+		return query.getResultList();
 	}
 
 

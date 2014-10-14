@@ -20,5 +20,14 @@ public class TopicMappingJpaDAO extends AbstractHibernateDAO<TopicMapping, Long>
 	
 	}
 
+	@Override
+	public TopicMapping getTopicMappingByAiId(Integer aiId, Long id) {
+		String jpaQuery = "SELECT topicMapping FROM TopicMapping topicMapping WHERE aiId = :aiId AND id = :id";
+		TypedQuery<TopicMapping> query = getEntityManager().createQuery(jpaQuery, TopicMapping.class);		
+		query.setParameter("aiId", aiId);
+		query.setParameter("id", id);
+		return query.getSingleResult();
+	}
+
 
 }
