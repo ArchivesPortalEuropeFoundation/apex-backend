@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" type="text/css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}<tiles:getAsString name="maincss"/>" type="text/css"/>
     <script src="${pageContext.request.contextPath}/js/jquery/jquery-1.8.2.min.js" type="text/javascript"></script>   
-    <script src="${pageContext.request.contextPath}/js/jquery/breadcrumb.js" type="text/javascript"></script>   
     <script src="${pageContext.request.contextPath}/js/browsers.js" type="text/javascript"></script>        
     <script src="${pageContext.request.contextPath}/js/commons.js" type="text/javascript"></script>         
     <c:forEach var="item" items="${jsInternal}"><script src="${pageContext.request.contextPath}${item}" type="text/javascript"></script></c:forEach>
