@@ -21,7 +21,7 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 	 */
 	private static final long serialVersionUID = 2768649306123342939L;
 	private List<SelectItem> topics = new ArrayList<SelectItem>();
-	private Integer topicId;
+	private Long topicId;
 	private String topicDescription;
 	private Long topicMappingId;
 	private List<SelectItem> sourceGuides = new ArrayList<SelectItem>();
@@ -33,7 +33,7 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 		return topics;
 	}
 
-	public Integer getTopicId() {
+	public Long getTopicId() {
 		return topicId;
 	}
 
@@ -57,7 +57,7 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 		this.topics = topics;
 	}
 
-	public void setTopicId(Integer topicId) {
+	public void setTopicId(Long topicId) {
 		this.topicId = topicId;
 	}
 
@@ -112,11 +112,6 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 			for (Topic topic: topics){
 				this.topics.add(new SelectItem(topic.getId(), topic.getDescription()));
 			}
-		}else {
-			TopicMapping topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByAiId(getAiId(), topicMappingId);
-			this.sourceGuideId = topicMapping.getSgId();
-			this.topicDescription = topicMapping.getTopic().getDescription();
-			this.keywords = topicMapping.getControlaccessKeyword();
 		}
 		ContentSearchOptions options = new ContentSearchOptions();
 		options.setArchivalInstitionId(getAiId());
@@ -131,10 +126,33 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 
 	@Override
 	public String input() throws Exception {
+		if (topicMappingId != null){
+			TopicMapping topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId , getAiId());
+			this.sourceGuideId = topicMapping.getSgId();
+			this.topicDescription = topicMapping.getTopic().getDescription();
+			this.keywords = topicMapping.getControlaccessKeyword();
+		}
 		return super.input();
 	}
 
 	public String execute() {
+		TopicMapping topicMapping = new TopicMapping();
+		if (topicMappingId == null){
+			topicMapping.setTopicId(topicId);
+			topicMapping.setAiId(getAiId());
+		}else {
+			topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+		}
+		if (topicMapping != null){
+			topicMapping.setSgId(sourceGuideId);
+			if (StringUtils.isBlank(keywords)){
+				topicMapping.setControlaccessKeyword(null);
+			}else {
+				topicMapping.setControlaccessKeyword(keywords.trim());
+			}
+			DAOFactory.instance().getTopicMappingDAO().store(topicMapping);
+		}
+		
 
 		return SUCCESS;
 	}
