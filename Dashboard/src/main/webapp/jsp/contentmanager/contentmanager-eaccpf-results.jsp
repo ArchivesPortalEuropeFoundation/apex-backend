@@ -179,7 +179,7 @@
                         <td id="tdConverted_${eacCpfResult.id}" class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
                         <td id="tdValidated_${eacCpfResult.id}" class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
                         <td id="tdPublished_${eacCpfResult.id}" class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
-                        <td id="tdRelations_${eacCpfResult.id}">
+                        <td id="tdRelations_${eacCpfResult.id}" title="<s:text name="content.message.tdrelations" />" >
                             <c:choose>
                                 <c:when test="${eacCpfResult.published}">
                                 	${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}
