@@ -52,7 +52,8 @@ public class EadSavedSearch {
 	 */
 	@Column(name = "al_tree_selected_nodes")
 	private	String alTreeSelectedNodes;	  
-
+	private String topic;
+	
 
 	@Column(name = "refinement_country")
 	private	String refinementCountry;	
@@ -85,7 +86,7 @@ public class EadSavedSearch {
 	}
 
 	public boolean isContainsAdvancedSearchOptions() {
-		return element != null || typedocument != null || fromdate != null || todate != null || exactDateSearch == true;	  
+		return element != null || typedocument != null || fromdate != null || todate != null || exactDateSearch == true || topic != null;	  
 	}
 
 	public boolean isContainsAlSearchOptions() {
@@ -269,6 +270,14 @@ public class EadSavedSearch {
 
 	public void setRefinementTopic(String refinementTopic) {
 		this.refinementTopic = refinementTopic;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
 	}
 	
 	
