@@ -440,7 +440,10 @@ public class UploadContentAction extends AbstractInstitutionAction {
             if(srcFile != null && destFile != null){
                 log.info("Moving file " + srcFile.getAbsolutePath() + " to " + destFile.getAbsolutePath());
                 FileUtils.moveFile(srcFile, destFile);
-                filesUploaded.add(filePath);
+            }
+            
+            if(StringUtils.isNotEmpty(filePath)){
+            	this.filesUploaded.add(filePath);
             }
 
             JpaUtil.commitDatabaseTransaction();
