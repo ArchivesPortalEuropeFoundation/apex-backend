@@ -1,0 +1,1 @@
+alter table ead_saved_search add column topic text DEFAULT NULL;
