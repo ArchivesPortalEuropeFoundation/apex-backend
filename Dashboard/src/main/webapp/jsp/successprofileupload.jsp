@@ -3,9 +3,20 @@
 <div id="divForm">
     <div style="align: center;">
         <p><s:property value="getText('dashboard.uploadcontent.successprofileupload')" /></p>
-            <s:form theme="simple" action="contentmanager.action" id="returnFrm" method="post">
-	        	<s:hidden id="ai_id" name="ai_id" value="%{ai_id}" theme="simple" />
-	        	<p><s:submit key="dashboard.menu.contentmanager" theme="simple" /></p>
-	        </s:form>
+		<s:if test="filesUploaded.size()>0" >
+        	<div id="filesUploadedList">
+				<select name="listUploaded" multiple="multiple" size="10" disabled="disabled" style="background-color:white;width:300px;">
+        			<s:iterator value="filesUploaded" >
+        				<option value="<s:property />"><s:property /></option>
+        			</s:iterator>
+        		</select>
+        	</div>
+        	<br>
+        	<br>
+        </s:if>
+        <s:form theme="simple" action="contentmanager.action" id="returnFrm" method="post">
+        	<s:hidden id="ai_id" name="ai_id" value="%{ai_id}" theme="simple" />
+        	<p><s:submit key="dashboard.menu.contentmanager" theme="simple" /></p>
+        </s:form>
     </div>
 </div>

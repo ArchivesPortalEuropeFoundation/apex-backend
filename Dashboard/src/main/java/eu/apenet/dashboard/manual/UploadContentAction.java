@@ -551,6 +551,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
                         result = SUCCESS;
                     }
                 } else if (result.equals("profile")) {
+                    this.filesUploaded = this.uploader_http.getFilesUploaded();
                     result = "profile";
                 } else if (result.equals("error")) {
                     result = ERROR;
