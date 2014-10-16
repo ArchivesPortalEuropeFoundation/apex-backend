@@ -21,7 +21,34 @@
 			<ul>
 				<!--  Issue #1572: Only display the first 100 relations. -->
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:cpfRelation[position() &lt;= 100]">
-					<li>
+					<xsl:variable name="link" select="./@xlink:href"/>
+					<xsl:variable name="entityType">
+						<xsl:choose>
+						<xsl:when test="$link!='' and not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
+							<xsl:value-of select="ape:typeOfEacCpf($link)"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="''"/>
+						</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:variable name="relationType">
+						<xsl:choose>
+				   			<xsl:when test="$entityType='person'">
+							   <xsl:value-of select="'relationPerson'"/>
+							</xsl:when>
+							<xsl:when test="$entityType='corporateBody'">
+							   <xsl:value-of select="'relationCorporateBody'"/>
+							</xsl:when>
+							<xsl:when test="$entityType='family'">
+							   <xsl:value-of select="'relationFamily'"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="'noEntity'"/>
+							</xsl:otherwise>
+						</xsl:choose>
+			   		</xsl:variable>
+					<li class="{$relationType}">
 						<xsl:choose>
 							<xsl:when test="./eac:relationEntry[@localType='title']">
 								<xsl:call-template name="multilanguageRelationsTitle">
@@ -34,7 +61,7 @@
 						   		</xsl:call-template>
 					   		</xsl:when>
 					   		<xsl:otherwise>
-					   			<xsl:variable name="link" select="./@xlink:href"/>
+					   		<!--  	<xsl:variable name="link" select="./@xlink:href"/>-->
 								<xsl:choose>
 									<xsl:when test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
 										<a href="{$link}" target="_blank">

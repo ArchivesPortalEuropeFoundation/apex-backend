@@ -6,7 +6,7 @@ import java.util.List;
 public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
 
 
-    public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier);
+    public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier, boolean isPublished);
 
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier);
 

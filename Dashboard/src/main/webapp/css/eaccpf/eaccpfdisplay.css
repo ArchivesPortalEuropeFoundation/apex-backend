@@ -51,17 +51,32 @@ body {
 #eacCpfDisplayPortlet #printPreview #details {
 	width:100%;
 }
-
+#eacCpfDisplayPortlet h1.iconPerson {
+	background-image: url("../../images/icons/eac_types/person_big.png");
+    background-repeat: no-repeat;
+    background-size:32px;
+}
+#eacCpfDisplayPortlet h1.iconCorporateBody {
+	background-image: url("../../images/icons/eac_types/org_big.png");
+    background-repeat: no-repeat;
+    background-size:32px;
+}
+#eacCpfDisplayPortlet h1.iconFamily {
+	background-image: url("../../images/icons/eac_types/fam_big.png");
+    background-repeat: no-repeat;
+    background-size:32px;
+}
 #eacCpfDisplayPortlet h1 {
     color: #2A4862;
     font-size: 130%;
     font-weight: bold;
 /*    margin: 0.3em 0;*/
-    text-align: center;
-    width:69%;
+    text-align: left;
+    width:64%;
 /*    display:inline-block;*/
     margin-top:40px;
-    margin-bottom:15px;	
+    padding-bottom:15px;	
+    padding-left:50px;
 }
 #eacCpfDisplayPortlet h3#contextInformation {
 	padding-top:0px;
@@ -126,6 +141,7 @@ p {
 	border-bottom: none;
 	font-size:8pt;
 	font-weight:bold;
+	padding-left:16px;
 }
 
 #eacCpfDisplayPortlet #printPreview a {
@@ -214,6 +230,27 @@ p {
 }
 #relations li {
 	padding-bottom:5px;
+}
+#persons li.relationPerson{
+	background-image: url("../../images/icons/eac_types/person_small.png");
+    background-repeat: no-repeat;
+    background-size:19px;
+    padding-left:25px;
+}
+#persons li.relationCorporateBody{
+	background-image: url("../../images/icons/eac_types/org_small.png");
+    background-repeat: no-repeat;
+    background-size:19px;
+    padding-left:25px;
+}
+#persons li.relationFamily{
+	background-image: url("../../images/icons/eac_types/fam_small.png");
+    background-repeat: no-repeat;
+    background-size:19px;
+    padding-left:25px;
+}
+#relations a{
+	background:none;
 }
 .linkShow:link {
 	color: #C65400;

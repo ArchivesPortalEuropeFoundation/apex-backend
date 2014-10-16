@@ -30,11 +30,13 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     private final Logger log = Logger.getLogger(EacCpfJpaDAO.class);
 
     @Override
-    public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier) {
+    public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier, boolean isPublished) {
         Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
-		criteria.add(Restrictions.eq("published", true));
+        if (isPublished) {
+        	criteria.add(Restrictions.eq("published", true));
+        }
         criteria.setMaxResults(1);
         List<EacCpf> list = criteria.list();
         if (list.size() > 0) {

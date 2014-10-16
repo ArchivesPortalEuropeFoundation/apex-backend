@@ -53,8 +53,23 @@
     			</xsl:otherwise>
     		</xsl:choose>
    		</xsl:variable>
-
-		<h1 class="blockHeader">
+   		<xsl:variable name="iconType">
+   			<xsl:choose>
+	   			<xsl:when test="$entityType='person'">
+				   <xsl:value-of select="'iconPerson'"/>
+				</xsl:when>
+				<xsl:when test="$entityType='corporateBody'">
+				   <xsl:value-of select="'iconCorporateBody'"/>
+				</xsl:when>
+				<xsl:when test="$entityType='family'">
+				   <xsl:value-of select="'iconFamily'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="''"/>
+				</xsl:otherwise>
+			</xsl:choose>
+   		</xsl:variable>
+		<h1 class="blockHeader {$iconType}">
 		    <!-- nameEntry -->
 			<!-- Checks if exists any content in the translation language. -->
 			<xsl:choose>
@@ -95,7 +110,7 @@
 					<xsl:text>)</xsl:text>
 				</xsl:if>
 			</xsl:if>
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
+		<!--  	<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
 				<xsl:text> </xsl:text>
 				<span id="entityType">
 					<xsl:if test="$entityType='person'">
@@ -108,7 +123,7 @@
 					   <xsl:value-of select="ape:resource('eaccpf.portal.family')"/>
 					</xsl:if>
 				</span>
-			</xsl:if>
+			</xsl:if>-->
 		</h1>
 		<div id="details">
 			<!-- Dates -->
@@ -117,7 +132,6 @@
 				<xsl:with-param name="mode" select="$translationMode" />
 				<xsl:with-param name="entityType" select="$entityType" />
 			</xsl:call-template>
-
 			<!-- descriptiveNote of the existDates element. -->
 			<xsl:call-template name="descriptiveNote">
 				<xsl:with-param name="list" select="$existDates/eac:descriptiveNote/eac:p" />
@@ -187,6 +201,7 @@
 							 <xsl:call-template name="commonChild">
 					    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 					    		<xsl:with-param name="clazz" select="'descriptiveNotelocationPlaces_'"/>
+					   			<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 					   			<xsl:with-param name="posParent" select="$posParent"/>
 			    				<xsl:with-param name="posChild" select="''"/>
 			   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -258,6 +273,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:placeEntry"/>
 							    		<xsl:with-param name="clazz" select="'locationLocalDescription_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -277,6 +293,7 @@
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
 							    		<xsl:with-param name="clazz" select="'citationLocalDescription_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -288,6 +305,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 							    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescription_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -302,6 +320,7 @@
 					 	<xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 				    		<xsl:with-param name="clazz" select="'descriptiveNoteLocalDescriptions_'"/>
+				    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 				    		<xsl:with-param name="posParent" select="$posParent"/>
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -372,6 +391,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:placeEntry"/>
 							    		<xsl:with-param name="clazz" select="'locationLegalStatus_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -391,6 +411,7 @@
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
 							    		<xsl:with-param name="clazz" select="'citationLegalStatus_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -402,6 +423,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 							    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatus_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -416,6 +438,7 @@
 						<xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 				    		<xsl:with-param name="clazz" select="'descriptiveNoteLegalStatuses_'"/>
+				    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 				    		<xsl:with-param name="posParent" select="$posParent"/>
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -486,6 +509,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:placeEntry"/>
 							    		<xsl:with-param name="clazz" select="'locationFunction_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -505,6 +529,7 @@
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
 							    		<xsl:with-param name="clazz" select="'citationFunction_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -516,6 +541,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 							    		<xsl:with-param name="clazz" select="'descriptiveNoteFunction_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -530,6 +556,7 @@
 						<xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 				    		<xsl:with-param name="clazz" select="'descriptiveNoteFunctions_'"/>
+				    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 				    		<xsl:with-param name="posParent" select="$posParent"/>
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -599,6 +626,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:placeEntry"/>
 							    		<xsl:with-param name="clazz" select="'locationOccupation_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -618,6 +646,7 @@
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
 							    		<xsl:with-param name="clazz" select="'citationOccupation_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -629,6 +658,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 							    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupation_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -643,6 +673,7 @@
 						<xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 				    		<xsl:with-param name="clazz" select="'descriptiveNoteOccupations_'"/>
+				    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 				    		<xsl:with-param name="posParent" select="$posParent"/>
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -712,6 +743,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:placeEntry"/>
 							    		<xsl:with-param name="clazz" select="'locationMandate_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -731,6 +763,7 @@
 								  	<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:citation"/>
 							    		<xsl:with-param name="clazz" select="'citationMandate_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -742,6 +775,7 @@
 									<xsl:call-template name="commonChild">
 							    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 							    		<xsl:with-param name="clazz" select="'descriptiveNoteMandate_'"/>
+							    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 					   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -756,6 +790,7 @@
 						<xsl:call-template name="commonChild">
 				    		<xsl:with-param name="list" select="./eac:descriptiveNote/eac:p"/>
 				    		<xsl:with-param name="clazz" select="'descriptiveNoteMandates_'"/>
+				    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 				    		<xsl:with-param name="posParent" select="$posParent"/>
 				    		<xsl:with-param name="posChild" select="''"/>
 		   					<xsl:with-param name="mode" select="$translationMode"/>
@@ -1677,6 +1712,7 @@
 						    	<xsl:call-template name="commonChild">
 						   			<xsl:with-param name="list" select="$bioHist/eac:citation"/>
 						   			<xsl:with-param name="clazz" select="'citationbioHist_'"/>
+						   			<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 						   			<xsl:with-param name="posParent" select="''"/>
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
@@ -1715,6 +1751,7 @@
 						    	<xsl:call-template name="commonChild">
 						   			<xsl:with-param name="list" select="$bioHist/eac:citation"/>
 						   			<xsl:with-param name="clazz" select="'citationbioHist_'"/>
+						   			<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 						   			<xsl:with-param name="posParent" select="''"/>
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
@@ -1741,6 +1778,7 @@
 				    	<xsl:call-template name="commonChild">
 				   			<xsl:with-param name="list" select="$bioHist/eac:citation"/>
 				   			<xsl:with-param name="clazz" select="'citationbioHist_'"/>
+				   			<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 				   			<xsl:with-param name="posParent" select="''"/>
 							<xsl:with-param name="posChild" select="''"/>
 							<xsl:with-param name="mode" select="$mode"/>
@@ -1818,6 +1856,7 @@
 						    	<xsl:call-template name="commonChild">
 						   			<xsl:with-param name="list" select="$bioHist/eac:citation"/>
 						   			<xsl:with-param name="clazz" select="'citationbioHist_'"/>
+						   			<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 						   			<xsl:with-param name="posParent" select="''"/>
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
@@ -1842,6 +1881,7 @@
 						    	<xsl:call-template name="commonChild">
 						   			<xsl:with-param name="list" select="$bioHist/eac:citation"/>
 						   			<xsl:with-param name="clazz" select="'citationbioHist_'"/>
+						   			<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 						   			<xsl:with-param name="posParent" select="''"/>
 									<xsl:with-param name="posChild" select="''"/>
 									<xsl:with-param name="mode" select="$mode"/>
@@ -1875,7 +1915,7 @@
 		<xsl:if test="$mode = 'other' and $list[@xml:lang = $translationLanguage]/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
 					</h2>
 				</div>
@@ -1893,7 +1933,7 @@
 		<xsl:if test="$mode = 'showAll' and $list/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
 					</h2>
 				</div>
@@ -1911,7 +1951,7 @@
 		<xsl:if test="$mode = 'default' and $list/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
 					</h2>
 				</div>
@@ -1937,7 +1977,7 @@
 		<xsl:if test="$mode = 'other' and $list[@xml:lang = $translationLanguage]/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:if test="$entityType='corporateBody'">
 							<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
 						</xsl:if>
@@ -1961,7 +2001,7 @@
 		<xsl:if test="$mode = 'showAll' and $list/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:if test="$entityType='corporateBody'">
 							<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
 						</xsl:if>
@@ -1985,7 +2025,7 @@
 		<xsl:if test="$mode = 'default' and $list/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:if test="$entityType='corporateBody'">
 							<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
 						</xsl:if>
@@ -2039,7 +2079,7 @@
 								<xsl:if test="./eac:placeEntry[@xml:lang = $translationLanguage]/text()">
 									<div id="chronListItemContent" class="row">
 										<div class="leftcolumn">
-											<h2 class="subrow">
+											<h2>
 												<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
 												<xsl:text>:</xsl:text>
 											</h2>
@@ -2055,7 +2095,7 @@
 								<xsl:if test="./eac:event[@xml:lang = $translationLanguage]/text()">
 									<div id="chronListItemContent" class="row">
 										<div class="leftcolumn">
-											<h2 class="subrow">
+											<h2>
 												<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
 												<xsl:text>:</xsl:text>
 											</h2>
@@ -2098,7 +2138,7 @@
 								<xsl:if test="./eac:placeEntry">
 									<div id="chronListItemContent" class="row">
 										<div class="leftcolumn">
-											<h2 class="subrow">
+											<h2>
 												<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
 												<xsl:text>:</xsl:text>
 											</h2>
@@ -2114,7 +2154,7 @@
 								<xsl:if test="./eac:event">
 									<div id="chronListItemContent" class="row">
 										<div class="leftcolumn">
-											<h2 class="subrow">
+											<h2>
 												<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
 												<xsl:text>:</xsl:text>
 											</h2>
@@ -2157,7 +2197,7 @@
 								<xsl:if test="./eac:placeEntry">
 									<div id="chronListItemContent" class="row">
 										<div class="leftcolumn">
-											<h2 class="subrow">
+											<h2>
 												<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
 												<xsl:text>:</xsl:text>
 											</h2>
@@ -2173,7 +2213,7 @@
 								<xsl:if test="./eac:event/text()">
 									<div id="chronListItemContent" class="row">
 										<div class="leftcolumn">
-											<h2 class="subrow">
+											<h2>
 												<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
 												<xsl:text>:</xsl:text>
 											</h2>
@@ -2392,7 +2432,7 @@
 		<xsl:if test="$mode = 'other' and $list[@xml:lang = $translationLanguage]/text()">
 			<div class="row locationPlace">
 			 	<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
@@ -2412,7 +2452,7 @@
 		<xsl:if test="$mode = 'showAll' and $list/text()">
 			<div class="row locationPlace">
 			 	<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
@@ -2432,7 +2472,7 @@
 		<xsl:if test="$mode = 'default' and $list/text()">
 			<div class="row locationPlace">
 			 	<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
@@ -2462,7 +2502,7 @@
 					or ($mode = 'other' and $list[@xml:lang = $translationLanguage]/text())">
 			<div class="row">
 			    <div class="leftcolumn">
-		   			<h2 class="subrow">
+		   			<h2>
 			   			<xsl:choose>
 			    			<xsl:when test="$list/parent::node()[@localType='visitors address']">
 			    				<xsl:value-of select="ape:resource('eaccpf.portal.place.address.visitors')"/>
@@ -2474,7 +2514,7 @@
 					    		<xsl:value-of select="ape:resource('eaccpf.portal.place.address')"/>
 			    			</xsl:otherwise>
 		    			</xsl:choose>
-		   				<xsl:text>:</xsl:text>
+		   			<!--<xsl:text>:</xsl:text>-->
 	   				</h2>
 		   	    </div>
 		     	<div class="rightcolumn">
@@ -2487,6 +2527,7 @@
 	    	<xsl:call-template name="commonChild">
 	   			<xsl:with-param name="list" select="$list[@localType='street']"/>
 	   			<xsl:with-param name="clazz" select="'addressLineStreet'"/>
+	   			<xsl:with-param name="h2Clazz" select="'subrow'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
@@ -2500,6 +2541,7 @@
     		<xsl:call-template name="commonChild">
 	   			<xsl:with-param name="list" select="$list[@localType='postalcode']"/>
 	   			<xsl:with-param name="clazz" select="'addressLinePC'"/>
+	   			<xsl:with-param name="h2Clazz" select="'subrow'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
@@ -2513,6 +2555,7 @@
     		<xsl:call-template name="commonChild">
 	   			<xsl:with-param name="list" select="$list[@localType='firstdem']"/>
 	   			<xsl:with-param name="clazz" select="'addressLineFirst'"/>
+	   			<xsl:with-param name="h2Clazz" select="'subrow'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
@@ -2526,6 +2569,7 @@
     		<xsl:call-template name="commonChild">
 	   			<xsl:with-param name="list" select="$list[@localType='secondem']"/>
 	   			<xsl:with-param name="clazz" select="'addressLineSecond'"/>
+	   			<xsl:with-param name="h2Clazz" select="'subrow'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
@@ -2539,6 +2583,7 @@
     		<xsl:call-template name="commonChild">
 	   			<xsl:with-param name="list" select="$list[@localType='localentity']"/>
 	   			<xsl:with-param name="clazz" select="'addressLineLocal'"/>
+	   			<xsl:with-param name="h2Clazz" select="'subrow'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
@@ -2552,6 +2597,7 @@
     		<xsl:call-template name="commonChild">
 	   			<xsl:with-param name="list" select="$list[@localType='other' or not(@localType)]"/>
 	   			<xsl:with-param name="clazz" select="'addressLineOther'"/>
+	   			<xsl:with-param name="h2Clazz" select="'subrow'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
@@ -2565,6 +2611,7 @@
     		<xsl:call-template name="commonChild">
 	   			<xsl:with-param name="list" select="$list[@localType='country']"/>
 	   			<xsl:with-param name="clazz" select="'addressLineCountry'"/>
+	   			<xsl:with-param name="h2Clazz" select="'subrow'"/>
 	   			<xsl:with-param name="posParent" select="$posParent"/>
 				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="mode" select="$mode"/>
@@ -2588,7 +2635,7 @@
 		<xsl:if test="$mode = 'other' and $list[@xml:lang = $translationLanguage]/text()">
 			<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:if test="$list/parent::node()/@localType">
 				   			<xsl:text> (</xsl:text>
@@ -2617,7 +2664,7 @@
 		<xsl:if test="$mode = 'showAll' and $list/text()">
 			<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:if test="$list/parent::node()/@localType">
 				   			<xsl:text> (</xsl:text>
@@ -2646,7 +2693,7 @@
 		<xsl:if test="$mode = 'default' and $list/text()">
 			<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:if test="$list/parent::node()/@localType">
 				   			<xsl:text> (</xsl:text>
@@ -2677,6 +2724,7 @@
 	<xsl:template name="commonChild">
 		<xsl:param name="list"/>
 	    <xsl:param name="clazz"/>
+	    <xsl:param name="h2Clazz"/>
 	    <xsl:param name="posParent"/>
 	    <xsl:param name="posChild"/>
 	    <xsl:param name="mode"/>
@@ -2689,7 +2737,7 @@
 						or (name($list[1])='citation' and $list[1][@xml:lang = $translationLanguage]/text()))">
 			<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2 class="{$h2Clazz}">
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
@@ -2713,7 +2761,7 @@
 		<xsl:if test="$mode = 'showAll' and ($list/text() or name($list[1])='citation')">
 			<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2 class="{$h2Clazz}">
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
@@ -2737,7 +2785,7 @@
 		<xsl:if test="$mode = 'default' and ($list/text() or name($list[1])='citation')">
 			<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2 class="{$h2Clazz}">
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
@@ -3439,7 +3487,7 @@
 				       		or ($mode = 'other' and $list/eac:placeRole[@xml:lang = $translationLanguage]/text() and $list/eac:placeEntry[@xml:lang = $translationLanguage]/text())">
 			        <div class="row">
 					    <div class="leftcolumn">
-				   			<h2 class="subrow">
+				   			<h2>
 				   				<xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/>
 				   				<xsl:text>:</xsl:text>
 				   			</h2>
@@ -3477,6 +3525,7 @@
 		    	 	<xsl:call-template name="commonChild">
 			    		<xsl:with-param name="list" select="$list/eac:descriptiveNote/eac:p"/>
 			    		<xsl:with-param name="clazz" select="'descriptiveNotelocationPlace_'"/>					   			
+		   				<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 		   				<xsl:with-param name="posParent" select="$posParent"/>
 	   					<xsl:with-param name="posChild" select="$posChild"/>
 	   					<xsl:with-param name="mode" select="$mode"/>
@@ -3489,6 +3538,7 @@
 			    <xsl:call-template name="commonChild">
 		    		<xsl:with-param name="list" select="$list/eac:citation"/>
 		    		<xsl:with-param name="clazz" select="'citationlocationPlace_'"/>
+		    		<xsl:with-param name="h2Clazz" select="'noSubrow'"/>
 		    		<xsl:with-param name="posParent" select="$posParent"/>
 		    		<xsl:with-param name="posChild" select="$posChild"/>
 	  				<xsl:with-param name="mode" select="$mode"/>
@@ -4308,17 +4358,17 @@
 			<div class="row">
 				<div class="leftcolumn">
 					<xsl:if test="$entityType='person'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
 					<xsl:if test="$entityType='corporateBody'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.structure')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
 					<xsl:if test="$entityType='family'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
@@ -4346,17 +4396,17 @@
 			<div class="row">
 				<div class="leftcolumn">
 					<xsl:if test="$entityType='person'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
 					<xsl:if test="$entityType='corporateBody'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.structure')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
 					<xsl:if test="$entityType='family'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
@@ -4384,17 +4434,17 @@
 			<div class="row">
 				<div class="leftcolumn">
 					<xsl:if test="$entityType='person'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.genealogy')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
 					<xsl:if test="$entityType='corporateBody'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.structure')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
 					<xsl:if test="$entityType='family'">
-						<h2 class="subrow">
+						<h2>
 							<xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/><xsl:text>:</xsl:text>
 						</h2>
 					</xsl:if>
@@ -4429,7 +4479,7 @@
 		<xsl:if test="$mode = 'other' and $list/eac:outline/eac:level/eac:item[@xml:lang = $translationLanguage]/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:value-of select="ape:resource($title)"/>
 						<xsl:text>:</xsl:text>
 					</h2>
@@ -4456,7 +4506,7 @@
 		<xsl:if test="$mode = 'showAll' and $list/eac:outline/eac:level/eac:item/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:value-of select="ape:resource($title)"/>
 						<xsl:text>:</xsl:text>
 					</h2>
@@ -4483,7 +4533,7 @@
 		<xsl:if test="$mode = 'default' and $list/eac:outline/eac:level/eac:item/text()">
 			<div class="row">
 				<div class="leftcolumn">
-					<h2 class="subrow">
+					<h2>
 						<xsl:value-of select="ape:resource($title)"/>
 						<xsl:text>:</xsl:text>
 					</h2>
@@ -4517,7 +4567,7 @@
 		<xsl:if test="$mode = 'other' and $list/eac:p[@xml:lang = $translationLanguage]/text()">
 	    	<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
 			   			<xsl:text>:</xsl:text>
 		   			</h2>
@@ -4536,7 +4586,7 @@
 		<xsl:if test="$mode = 'showAll' and $list/eac:p/text()">
 	    	<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
 			   			<xsl:text>:</xsl:text>
 		   			</h2>
@@ -4555,7 +4605,7 @@
 		<xsl:if test="$mode = 'default' and $list/eac:p/text()">
 	    	<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
 			   			<xsl:text>:</xsl:text>
 		   			</h2>

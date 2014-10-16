@@ -122,7 +122,7 @@ public class HrefCheckerExtension extends ExtensionFunctionDefinition {
 							if (!value) {
 								EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 								EacCpf eacCpf = null;
-								eacCpf = eacCpfDAO.getFirstPublishedEacCpfByIdentifier(currentVal);
+								eacCpf = eacCpfDAO.getFirstPublishedEacCpfByIdentifier(currentVal, true);
 
 								if (eacCpf != null) {
 									value = true;

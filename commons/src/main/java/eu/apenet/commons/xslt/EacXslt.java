@@ -30,6 +30,7 @@ import eu.apenet.commons.xslt.extensions.RetrieveCountryNameExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEacIdExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEadIdExtension;
 import eu.apenet.commons.xslt.extensions.SpecialCharactersEncoderExtension;
+import eu.apenet.commons.xslt.extensions.TypeOfEacCpfExtension;
 
 
 public final class EacXslt {
@@ -49,6 +50,7 @@ public final class EacXslt {
         CheckAgencyCodeExtension checkAgencyCode = new CheckAgencyCodeExtension();
         RetrieveCountryNameExtension countryName = new RetrieveCountryNameExtension();
         HrefCheckerExtension hrefChecker = new HrefCheckerExtension();
+        TypeOfEacCpfExtension typeOfEacCpf = new TypeOfEacCpfExtension();
         processor.registerExtensionFunction(highLighter);
         processor.registerExtensionFunction(resourcebundleRetriever);
         processor.registerExtensionFunction(eadidChecker);
@@ -58,6 +60,7 @@ public final class EacXslt {
         processor.registerExtensionFunction(checkAgencyCode);
         processor.registerExtensionFunction(countryName);
         processor.registerExtensionFunction(hrefChecker);
+        processor.registerExtensionFunction(typeOfEacCpf);
         XsltCompiler compiler = processor.newXsltCompiler();
         compiler.setURIResolver(new ClasspathURIResolver(xslUrl));
         return compiler.compile(xsltSource);

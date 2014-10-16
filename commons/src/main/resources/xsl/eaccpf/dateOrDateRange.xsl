@@ -23,7 +23,7 @@
 						or $dateSet[eac:dateRange[eac:toDate[@xml:lang = $translationLanguage]]]/text()))">
 		    <div class="row">
 		    	<div class="leftcolumn">
-				   		<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
+				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
 				</div>          
 		        <div class="rightcolumn">
 		        	<span class="nameEtryDates">

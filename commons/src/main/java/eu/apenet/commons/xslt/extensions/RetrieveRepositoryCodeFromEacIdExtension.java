@@ -92,7 +92,7 @@ public class RetrieveRepositoryCodeFromEacIdExtension extends ExtensionFunctionD
 					if (secondArgValue != null && !secondArgValue.isEmpty()) {
 						eacCpf = eacCpfDAO.getPublishedEacCpfByIdentifier(secondArgValue, firstArgValue);
 					} else {
-						eacCpf = eacCpfDAO.getFirstPublishedEacCpfByIdentifier(firstArgValue);
+						eacCpf = eacCpfDAO.getFirstPublishedEacCpfByIdentifier(firstArgValue, true);
 					}
 				}
 

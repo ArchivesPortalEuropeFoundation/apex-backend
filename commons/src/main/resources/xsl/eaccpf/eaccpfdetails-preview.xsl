@@ -25,7 +25,23 @@
 	<xsl:template match="/">
 		<xsl:variable name="existDates" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates"/>
 		<xsl:variable name="entityType" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
-		<h1 class="titleproper">
+		<xsl:variable name="iconType">
+   			<xsl:choose>
+	   			<xsl:when test="$entityType='person'">
+				   <xsl:value-of select="'iconPerson'"/>
+				</xsl:when>
+				<xsl:when test="$entityType='corporateBody'">
+				   <xsl:value-of select="'iconCorporateBody'"/>
+				</xsl:when>
+				<xsl:when test="$entityType='family'">
+				   <xsl:value-of select="'iconFamily'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="''"/>
+				</xsl:otherwise>
+			</xsl:choose>
+   		</xsl:variable>
+		<h1 class="titleproperEac {$iconType}">
 		    <!-- nameEntry -->
 	      	<xsl:call-template name="namePriorisation">
 	      		<xsl:with-param name="list" select="//eac:nameEntry"/>
@@ -49,7 +65,7 @@
 				</span>
 				<xsl:text>)</xsl:text>
 			</xsl:if>
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
+		<!-- 	<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
 				<xsl:text> </xsl:text>
 				<span id="entityType">
 					<xsl:if test="$entityType='person'">
@@ -62,7 +78,7 @@
 					   <xsl:value-of select="ape:resource('eaccpf.portal.family')"/>
 					</xsl:if>
 				</span>
-			</xsl:if>
+			</xsl:if>-->
 		</h1>
 		<div id="details">	
 			<!-- Dates -->
@@ -1480,7 +1496,7 @@
 							    		<xsl:value-of select="ape:resource('eaccpf.portal.place.address')"/>
 					    			</xsl:otherwise>
 				    			</xsl:choose>
-				   				<xsl:text>:</xsl:text>
+				   			<!--<xsl:text>:</xsl:text>-->
 			   				</h2>
 				   	    </div>
 				     	<div class="rightcolumn">
