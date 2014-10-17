@@ -590,7 +590,7 @@ public final class UserService {
 	        emailComposer.setProperty("name", name);
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
 	        emailComposer.setProperty("infoHarvestedServer", infoHarvestedServer.replaceAll("\n", "<br/>"));
-	        emailComposer.setProperty("errorMessage",errors);
+	        emailComposer.setProperty("harvestingDetails",errors);
 	        if (errorsResponsePath != null){
 	        	emailComposer.setProperty("errorFileMessage", "Look at the dashboard for the OAI-PMH response that contains errors<br/><br/>");
 	        }else {
