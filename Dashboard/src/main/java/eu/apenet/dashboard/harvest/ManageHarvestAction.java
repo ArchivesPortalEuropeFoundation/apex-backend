@@ -117,18 +117,64 @@ public class ManageHarvestAction extends AbstractAction {
     	}else if ("FULL".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setFrom(null);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
-    	}	else if ("DELAY".equals(selectedAction)){
+    	}else if ("DELAY".equals(selectedAction)){
     		Date newHarvestingDate = archivalInstitutionOaiPmh.getNewHarvesting();
     		if (newHarvestingDate == null){
     			newHarvestingDate = new Date();
     		}
-    		newHarvestingDate = new Date(newHarvestingDate.getTime() + ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH);
+    		newHarvestingDate = new Date(newHarvestingDate.getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting());
     		archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("DELAY_ONE_DAY".equals(selectedAction)){
+    		Date newHarvestingDate = archivalInstitutionOaiPmh.getNewHarvesting();
+    		if (newHarvestingDate == null){
+    			newHarvestingDate = new Date();
+    		}
+    		newHarvestingDate = new Date(newHarvestingDate.getTime() + ArchivalInstitutionOaiPmh.ONE_DAY);
+    		archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("INTERVAL_LOCK".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setLocked(true);
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("INTERVAL_UNLOCK".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setLocked(false);
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("INTERVAL_DECREASE".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setIntervalHarvesting(decreaseInterval(archivalInstitutionOaiPmh.getIntervalHarvesting()));
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("INTERVAL_INCREASE".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setIntervalHarvesting(increaseInterval(archivalInstitutionOaiPmh.getIntervalHarvesting()));
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}
+   	
     	return SUCCESS;
     }
 
+    private static Long increaseInterval(Long value){
+    	if (ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS > value){
+    		return ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS ;
+    	}else if (ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS.equals(value)){
+    		return ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH; 
+    	}else if (ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH.equals(value)){
+    		return ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH; 
+    	}else if (ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH.equals(value)){
+    		return ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH; 
+    	}else {
+    		return ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH; 
+    	}
+    }
+    
+    private static Long decreaseInterval(Long value){
+    	if (ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH.equals(value)){
+    		return ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH; 
+    	}else if (ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH.equals(value)){
+    		return ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH; 
+    	}else if (ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH.equals(value)){
+    		return ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS; 
+    	}else {
+    		return ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS; 
+    	}
+    }
 
     public String startStopHarvester() {
         if(HarvesterDaemon.isActive() || HarvesterDaemon.isHarvesterProcessing()) {

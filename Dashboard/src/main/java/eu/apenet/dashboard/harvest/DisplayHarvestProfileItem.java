@@ -31,6 +31,7 @@ public class DisplayHarvestProfileItem {
     private boolean enabled;
     private boolean readyForHarvesting;
     private boolean harvestMethodListByIdentifiers;
+    private boolean locked;
 
 	public DisplayHarvestProfileItem(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh, Date now){
 		this.id = archivalInstitutionOaiPmh.getId();
@@ -60,6 +61,7 @@ public class DisplayHarvestProfileItem {
 		this.harvestingDetails = archivalInstitutionOaiPmh.getHarvestingDetails();
 		this.errorResponsePath = archivalInstitutionOaiPmh.getErrorsResponsePath();
 		this.enabled = archivalInstitutionOaiPmh.isEnabled();
+		this.locked = archivalInstitutionOaiPmh.isLocked();
 
 	}
 	private static String convertToIntervalHarvesting(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh){
@@ -191,6 +193,9 @@ public class DisplayHarvestProfileItem {
 
 	public boolean isHarvestMethodListByIdentifiers() {
 		return harvestMethodListByIdentifiers;
+	}
+	public boolean isLocked() {
+		return locked;
 	}
 
 
