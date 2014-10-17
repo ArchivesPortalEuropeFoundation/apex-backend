@@ -272,7 +272,7 @@ public class EacCpfPublishDataFiller {
 			for (Map<String, List<String>> tempResults: namesHandler.getResults()){
 				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
 				if (StringUtils.isBlank(name)){
-					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, ", ");
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part"}, ", ");
 				}
 				names.add(name);
 			}
@@ -282,7 +282,7 @@ public class EacCpfPublishDataFiller {
 			for (Map<String, List<String>> tempResults: namesParallelHandler.getResults()){
 				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
 				if (StringUtils.isBlank(name)){
-					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, ", ");
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part"},  ", ");
 				}
 				names.add(name);
 			}
