@@ -46,6 +46,8 @@ body {
     margin-right:18px;
     float:left;
     text-align:left;
+    display:block;
+	word-wrap:break-word;
 }
 
 #eacCpfDisplayPortlet #printPreview #details {
@@ -236,18 +238,21 @@ p {
     background-repeat: no-repeat;
     background-size:19px;
     padding-left:25px;
+    padding-bottom:8px;
 }
 #persons li.relationCorporateBody{
 	background-image: url("../../images/icons/eac_types/org_small.png");
     background-repeat: no-repeat;
     background-size:19px;
     padding-left:25px;
+    padding-bottom:8px;
 }
 #persons li.relationFamily{
 	background-image: url("../../images/icons/eac_types/fam_small.png");
     background-repeat: no-repeat;
     background-size:19px;
     padding-left:25px;
+    padding-bottom:8px;
 }
 #relations a{
 	background:none;

@@ -1113,6 +1113,7 @@
 				</h2>	
 			</div>
 			<div class="rightcolumn">
+				<p>
 				<xsl:if test="name($dateElement) = 'dateRange'">
 					<xsl:call-template name="dateUnknow">
 						<xsl:with-param name="dateUnknow" select="$dateElement/eac:fromDate"/>
@@ -1139,6 +1140,7 @@
 				  		</xsl:call-template>		
 				    </xsl:if>
 				</xsl:if>
+				</p>
 			</div>
 		</div>
 	</xsl:template>
@@ -1162,6 +1164,7 @@
 				</h2>	
 			</div>
 			<div class="rightcolumn">
+				<p>
 				<xsl:if test="$existDates/eac:dateRange">
 					<xsl:call-template name="dateUnknow">
 						<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:fromDate"/>
@@ -1188,6 +1191,7 @@
 				  		</xsl:call-template>		
 				    </xsl:if>
 				</xsl:if>
+				</p>
 			</div>
 		</div>
 	</xsl:template>
@@ -1211,6 +1215,7 @@
 				</h2>	
 			</div>
 			<div class="rightcolumn">
+				<p>
 				<xsl:if test="name($dateElement) = 'dateRange'">
 					<xsl:call-template name="dateUnknow">
 						<xsl:with-param name="dateUnknow" select="$dateElement/eac:toDate"/>
@@ -1237,6 +1242,7 @@
 				  		</xsl:call-template>		
 				    </xsl:if>
 				</xsl:if>
+				</p>
 			</div>
 		</div>
 	</xsl:template>
@@ -1260,6 +1266,7 @@
 				</h2>	
 			</div>
 			<div class="rightcolumn">
+				<p>
 				<xsl:if test="$existDates/eac:dateRange">
 					<xsl:call-template name="dateUnknow">
 						<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:toDate"/>
@@ -1286,6 +1293,7 @@
 				  		</xsl:call-template>		
 				    </xsl:if>
 				</xsl:if>
+				</p>
 			</div>
 		</div>
 	</xsl:template>
