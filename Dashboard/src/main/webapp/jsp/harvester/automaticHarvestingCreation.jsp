@@ -180,11 +180,20 @@
                             </label>
                         </td>
                         <td>
-                            <select name="intervalHarvest" id="intervals">
-                                <c:forEach var="interval" items="${intervals}">
-                                    <option value="${interval.time}"<c:if test="${intervalHarvest == interval.time}"> selected="selected"</c:if>>${interval.description}</option>
-                                </c:forEach>
-                            </select>
+							<s:if test="%{locked}">
+	                            <select name="intervalHarvest" id="intervals" disabled="disabled">
+	                                <c:forEach var="interval" items="${intervals}">
+	                                    <option value="${interval.time}"<c:if test="${intervalHarvest == interval.time}"> selected="selected"</c:if>>${interval.description}</option>
+	                                </c:forEach>
+	                            </select>							
+							</s:if>
+							<s:else>
+	                            <select name="intervalHarvest" id="intervals">
+	                                <c:forEach var="interval" items="${intervals}">
+	                                    <option value="${interval.time}"<c:if test="${intervalHarvest == interval.time}"> selected="selected"</c:if>>${interval.description}</option>
+	                                </c:forEach>
+	                            </select>								
+							</s:else>
                         </td>
                     </tr>
                     <tr>
