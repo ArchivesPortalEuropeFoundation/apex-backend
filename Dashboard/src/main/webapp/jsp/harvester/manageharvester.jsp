@@ -204,15 +204,36 @@
 												</option>
 			                                </c:otherwise>
 			                            </c:choose>
-			                            		<option value="METHOD">
-													Change harvester method
+												<option value="INTERVAL_DECREASE">
+													Decrease interval
 												</option>
+												<option value="INTERVAL_INCREASE">
+													Increase interval
+												</option>
+			                            <c:choose>
+			                                <c:when test="${item.locked}">
+												<option value="INTERVAL_UNLOCK">
+													Unlock interval
+												</option>	
+			                                </c:when>
+			                                <c:otherwise>
+												<option value="INTERVAL_LOCK">
+													Lock interval
+												</option>
+			                                </c:otherwise>
+			                            </c:choose>																					
 												<option value="DELAY">
-													Delay one month
+													Delay with interval
 												</option>
+												<option value="DELAY_ONE_DAY">
+													Delay with one day
+												</option>												
 												<option value="FULL">
 													Harvest everything
 												</option>
+			                            		<option value="METHOD">
+													Change harvester method
+												</option>												
 			                            </select>
 			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
 			                            </s:form>
