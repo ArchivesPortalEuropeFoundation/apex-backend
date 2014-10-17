@@ -29,7 +29,6 @@ public class DisplayHarvestProfileItem {
 	private String harvestingDetails;
 	private String errorResponsePath;
     private boolean enabled;
-    private boolean harvestOnlyWeekend;
     private boolean readyForHarvesting;
     private boolean harvestMethodListByIdentifiers;
 
@@ -51,7 +50,7 @@ public class DisplayHarvestProfileItem {
 			readyForHarvesting = true;
 		}
 		this.from = archivalInstitutionOaiPmh.getFrom();
-		this.intervalHarvesting = ContentUtils.getDaysFromMilliseconds(archivalInstitutionOaiPmh.getIntervalHarvesting());
+		this.intervalHarvesting = convertToIntervalHarvesting(archivalInstitutionOaiPmh);
 		this.ingestionProfile = archivalInstitutionOaiPmh.getIngestionprofile().getNameProfile();
 		if (archivalInstitutionOaiPmh.getHarvestingStatus() != null){
 			this.harvestingStatus = archivalInstitutionOaiPmh.getHarvestingStatus().getResourceName();
@@ -61,8 +60,28 @@ public class DisplayHarvestProfileItem {
 		this.harvestingDetails = archivalInstitutionOaiPmh.getHarvestingDetails();
 		this.errorResponsePath = archivalInstitutionOaiPmh.getErrorsResponsePath();
 		this.enabled = archivalInstitutionOaiPmh.isEnabled();
-		this.harvestOnlyWeekend = archivalInstitutionOaiPmh.isHarvestOnlyWeekend();
 
+	}
+	private static String convertToIntervalHarvesting(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh){
+		String result = "";
+		if (ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS.equals(archivalInstitutionOaiPmh.getIntervalHarvesting())){
+			result = "2 weeks";
+		}else if (ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH.equals(archivalInstitutionOaiPmh.getIntervalHarvesting())){
+			result = "1 month";
+		}else if (ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH.equals(archivalInstitutionOaiPmh.getIntervalHarvesting())){
+			result = "3 months";
+		}else if (ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH.equals(archivalInstitutionOaiPmh.getIntervalHarvesting())){
+			result = "6 months";
+		}else {
+			result = ContentUtils.getDaysFromMilliseconds(archivalInstitutionOaiPmh.getIntervalHarvesting()) + " days";
+		}
+		if (archivalInstitutionOaiPmh.isHarvestOnlyWeekend()){
+			result += "(weekend)";
+		}
+		if (archivalInstitutionOaiPmh.isLocked()){
+			result += "(locked)";
+		}
+		return result;
 	}
 	
 	public static List<DisplayHarvestProfileItem> getItems(List<ArchivalInstitutionOaiPmh> list, Date now){
@@ -125,9 +144,6 @@ public class DisplayHarvestProfileItem {
 		return enabled;
 	}
 
-	public boolean isHarvestOnlyWeekend() {
-		return harvestOnlyWeekend;
-	}
 
 	public boolean isReadyForHarvesting() {
 		return readyForHarvesting;
