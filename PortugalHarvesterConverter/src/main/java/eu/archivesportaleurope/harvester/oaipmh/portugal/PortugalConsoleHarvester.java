@@ -22,21 +22,24 @@ public class PortugalConsoleHarvester extends ConsoleHarvester{
 		super(dataDir, properties);
 	}
 
-	@Override
-	public void start() {
-		super.start();
+    /**
+     * To be used with VM option: -DconsoleHarvesterClassName=eu.archivesportaleurope.harvester.oaipmh.portugal.PortugalConsoleHarvester
+     */
+    @Override
+    public void start() {
+        //For harvesting and converting, all together from the start
+        super.start();
         String set = getSet();
-//        String set = "AMCTC";
-
-        //2. Use the DC files to import in DB
         File resultDir = getOutputDir();
+
+        //For continuing a conversion that was stopped: Need to delete (or move) the other directories like "digitarq.adavr.arquivos.pt" so only one is left and is the one you want to continue converting
+        //You need to change the set below so it is the correct one that you harvested - it will continue converting from when it was stopped
+//        String set = "MABF";
 //        File resultDir = getDataDir(getDataDir());
+
         if(resultDir.getName().equals("DONE")) {
             resultDir = resultDir.getParentFile();
         }
-        File delete = new File(resultDir, "DONE");
-        if(delete.exists())
-            delete.delete();
 
         long start = System.currentTimeMillis();
         HarvesterConverter converter = new HarvesterConverter(resultDir);
@@ -52,7 +55,7 @@ public class PortugalConsoleHarvester extends ConsoleHarvester{
             LOG.error("Error...", e);
             throw new RuntimeException(e);
         }
-	}
+    }
 
 
     private static File getDataDir(File presumedDataDir) {

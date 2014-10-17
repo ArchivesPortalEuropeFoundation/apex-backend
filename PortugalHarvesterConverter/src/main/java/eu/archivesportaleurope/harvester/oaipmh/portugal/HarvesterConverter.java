@@ -59,6 +59,7 @@ public class HarvesterConverter extends AbstractParser {
 
     public void dublinCoreToEad() throws Exception{
         LOG.info("Starting DC to EAD process (creation of all CLevels from the DC elements of the harvested files)");
+        File file = null;
         try {
             if(files == null)
                 throw new Exception("Variable files is null");
@@ -72,7 +73,8 @@ public class HarvesterConverter extends AbstractParser {
             int currentSize = 0;
 
             XMLInputFactory2 inputFactory = (XMLInputFactory2) XMLInputFactory2.newInstance();
-            XMLStreamReader2 xmlReader = inputFactory.createXMLStreamReader(fileIterator.next()); //First iteration can never be empty
+            file = fileIterator.next();
+            XMLStreamReader2 xmlReader = inputFactory.createXMLStreamReader(file); //First iteration can never be empty
 
             XMLOutputFactory2 xmlOutputFactory = (XMLOutputFactory2)XMLOutputFactory2.newInstance();
 
@@ -146,7 +148,7 @@ public class HarvesterConverter extends AbstractParser {
 
                         CLevel cLevel = new CLevel();
                         cLevel.setLevel(levelString);
-                        cLevel.setUnitid(unitidString.replaceAll("-", "/"));
+                        cLevel.setUnitid(unitidString.replaceAll("-", "/").replaceAll("'", "&quot;"));
                         cLevel.setOrderId(numberOfClevel++);
                         cLevel.setXml(FileUtils.readFileToString(outputFile, UTF8));
                         cLevel.setEcId(eadcontentid);
@@ -156,7 +158,7 @@ public class HarvesterConverter extends AbstractParser {
 //                        if(outputFileDir.listFiles().length == 0)
 //                            FileUtils.deleteDirectory(outputFileDir);
                         if(fileIterator.hasNext()) {
-                            File file = fileIterator.next();
+                            file = fileIterator.next();
                             LOG.debug("Examining next file: " + (++currentSize + 1) + "/" + fullSize + " - " + "Name of file: " + file.getName());
                             xmlReader = inputFactory.createXMLStreamReader(file);
                         }
@@ -178,6 +180,9 @@ public class HarvesterConverter extends AbstractParser {
                 findingAidOutputStream2.close();
         } catch (Exception e){
             LOG.error("Error", e);
+            if(file != null) {
+                LOG.error("Error happened with file: " + file.getName());
+            }
             throw new RuntimeException();
         }
     }
@@ -191,17 +196,26 @@ public class HarvesterConverter extends AbstractParser {
         List<CLevel> cLevelsFonds = dbUtil.retrieveAllFonds(eadContent.getEcId());
 
         LinkedHashMap<String, Long> idsWithUnitids;
-        LOG.info("Size of cLevelsFonds: " + cLevelsFonds.size());
+        int cLevelsFondsSize = cLevelsFonds.size();
+        int current = 1;
+        LOG.info("Size of cLevelsFonds: " + cLevelsFondsSize);
         for(CLevel cLevel : cLevelsFonds) {
             LOG.info("====");
+            LOG.info("File " + (current++) + "/" + cLevelsFondsSize);
             idsWithUnitids = new LinkedHashMap<String, Long>();
-            //Create ONE FA per fonds!!!
-            List<CLevel> childrenOfFonds = dbUtil.retrieveChildrenOfFonds(cLevel.getUnitid());
-            LOG.info("Size of childrenOfFonds: " + childrenOfFonds.size());
-            for(CLevel child : childrenOfFonds) {
-                idsWithUnitids.put(child.getUnitid(), child.getClId());
+            String fileName = cLevel.getUnitid().replaceAll("/", "_") + ".xml";
+            File file = new File(directoryDone, fileName);
+            if(file.exists()) {
+                LOG.info("File '" + fileName + "'  exists, we do not create that file again!");
+            } else {
+                //Create ONE FA per fonds!!!
+                List<CLevel> childrenOfFonds = dbUtil.retrieveChildrenOfFonds(cLevel.getUnitid());
+                LOG.info("Size of childrenOfFonds: " + childrenOfFonds.size());
+                for(CLevel child : childrenOfFonds) {
+                    idsWithUnitids.put(child.getUnitid(), child.getClId());
+                }
+                dbToEad(cLevel.getUnitid(), eadContent, idsWithUnitids, mainagencycode);
             }
-            dbToEad(cLevel.getUnitid(), eadContent, idsWithUnitids, mainagencycode);
         }
         LOG.info("====");
         return cLevelsFonds.size();
