@@ -1,0 +1,29 @@
+   <small><font face="Helvetica, Arial, sans-serif">Dear ${name},<br/>
+          <br/>
+          <b>Your OAI-PMH profile is disabled, because the harvesting process fails two times.</b><br/>
+          Please have a look at the failures, and fix your OAI-PMH server. When it is fixed, you could enable the OAI-PMH profile again.
+          <br/>
+          The last automatic harvest of the data from '${archivalInstitution}' is not finished on '${dashboardBase}'.<br/>
+          <br/>
+          <b>The harvesting process failed due to errors during the harvesting process.</b><br/>
+          <br/>
+          Please see the following information on the harvest:<br/>
+          <br/>
+          ============================================
+          <br/>
+          The process failed, with the following error message:</font></small><br/>
+    <blockquote>
+      <pre>${harvestingDetails}</pre>
+    </blockquote>
+    <small><font face="Helvetica, Arial, sans-serif">${errorFileMessage}
+    	Harvesting process information:<br/>
+          <br>
+			${infoHarvestedServer}
+          <br/>
+          ============================================<br/>
+          <br/>
+          Best wishes,<br/>
+          Administrators of the Dashboard<br/>
+          <br/>
+          (Please do not reply to this automatically generated e-mail)
+        </font></small>
