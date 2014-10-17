@@ -89,69 +89,81 @@
 	float: left;
 }
 
- #ead-paging {
+#ead-paging {
 	float: right;
 	margin-right: 10px;
 }
 
 .warning {
 	font-size: 13px;
-    color: #F87217;
-    font-weight: bold;
-    padding: 5px;
+	color: #F87217;
+	font-weight: bold;
+	padding: 5px;
 }
 
 .linkButton {
 	text-align: center;
 }
 
-.linkButton a span, .linkButton .nolink span {
+.linkButton a span,.linkButton .nolink span {
 	margin-left: 5px;
 }
-.linkButton a, .linkButton .nolink {
 
-	margin:5px;
+.linkButton a,.linkButton .nolink {
+	margin: 5px;
 	font-size: 12px;
-    font-weight: bold;
-    padding-left:15px;
-    padding-right:15px;
-    padding-top:5px;
-    padding-bottom:5px;
-
-    border-radius: 15px;
-    display: inline-block;
-
-    letter-spacing:0.8px
+	font-weight: bold;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 15px;
+	display: inline-block;
+	letter-spacing: 0.8px
 }
+
 .linkButton a {
 	color: #006CB0;
 	background-color: #E9F3FA;
 	border: 1px solid #00A0DF;
 }
-
 
 .linkButton a:hover {
-    color: #00384D;
+	color: #00384D;
 	background-color: #BAE0FC;
-    border-radius: 15px;
+	border-radius: 15px;
 }
+
 .linkButton a {
 	color: #006CB0;
 	background-color: #E9F3FA;
 	border: 1px solid #00A0DF;
 }
+
 .linkButton a.notIndexed {
 	color: #333333;
 	background-color: #F2F2F2;
-	border: 1px solid #BDBDBD;	
+	border: 1px solid #BDBDBD;
 }
+
 .linkButton a.notIndexed:hover {
 	color: #333333;
 	background-color: #F2F2F2;
 	border: 1px solid #BDBDBD;
 }
+
 .linkButton .nolink {
 	color: #A4A4A4;
 	background-color: #F2F2F2;
-	border: 1px solid #E6E6E6;	
+	border: 1px solid #E6E6E6;
+}
+
+#manageHarvester .textLimitContainer {
+	max-width: 90px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#manageHarvester .textLimit {
+	white-space: nowrap;
 }
