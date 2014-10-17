@@ -73,7 +73,8 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     @Column(name="harvest_only_weekend")
     private boolean harvestOnlyWeekend;
   
-
+    @Column(name="locked")
+    private boolean locked;
 
     public String getFrom() {
 		return from;
@@ -249,6 +250,16 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
 	public void setHarvestingDetails(String harvestingDetails) {
 		this.harvestingDetails = harvestingDetails;
+	}
+
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
     
 }
