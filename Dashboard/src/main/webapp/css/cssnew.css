@@ -1178,17 +1178,17 @@ table.defaultlayout {
     color: #808080;
     font-style: italic;
 }
-.harvestProfileSucceed, .queueStarted {
+.harvestProfileSucceed, .queueStarted, .harvestProfileSucceed a {
     color: green;
     font-weight: bold;
     text-transform: uppercase;
 }
 .harvestProfileWarnings  {
-    color: green;
+    color: #c65400;
     font-weight: bold;
     text-transform: uppercase;
 }
-.harvestProfileErrors, .queueStopped, .queueStopping {
+.harvestProfileErrors, .queueStopped, .queueStopping,.harvestProfileErrors a {
     color: #FF0000;
     font-weight: bold;
     text-transform: uppercase;
