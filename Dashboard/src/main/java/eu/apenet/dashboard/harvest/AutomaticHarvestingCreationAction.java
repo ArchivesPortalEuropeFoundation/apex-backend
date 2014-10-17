@@ -58,6 +58,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
     private String intervalHarvest;
     private boolean harvesterMethod = true;
     private boolean defaultHarvestingProcessing = false;
+    private boolean locked;
     
     @Override
     protected void buildBreadcrumbs() {
@@ -154,6 +155,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 setSelectedMetadataFormat(archivalInstitutionOaiPmh.getMetadataPrefix());
                 setSelectedIngestionProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
                 setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
+                this.locked = archivalInstitutionOaiPmh.isLocked();
                 setSelectedActivation(Boolean.toString(archivalInstitutionOaiPmh.isEnabled()));
                 setSelectedWeekend(Boolean.toString(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()));
                 setHarvesterMethod(archivalInstitutionOaiPmh.isHarvestMethodListByIdentifiers());
@@ -181,7 +183,9 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
             if(getOaiprofiles() != -1) {
                 archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(getOaiprofiles().longValue());
                 archivalInstitutionOaiPmh.setProfileId(getSelectedIngestionProfile().longValue());
-                archivalInstitutionOaiPmh.setIntervalHarvesting(getInterval());
+                if (!archivalInstitutionOaiPmh.isLocked()){
+                	archivalInstitutionOaiPmh.setIntervalHarvesting(getInterval());
+                }
                 archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 archivalInstitutionOaiPmh.setHarvestMethodListByIdentifiers(isHarvesterMethod());
                 if(getSelectedActivation() != null) {
@@ -384,6 +388,13 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 	}
 	public void setHarvesterMethod(boolean harvesterMethod) {
 		this.harvesterMethod = harvesterMethod;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 
 	public class Interval {
