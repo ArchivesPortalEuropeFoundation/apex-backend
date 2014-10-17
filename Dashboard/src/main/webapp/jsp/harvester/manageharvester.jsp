@@ -89,14 +89,13 @@
 			            	<th>ID</th>
 			             	<th>Country</th>
 			             	<th>Archival Institution</th>
-			                <th><s:text name="label.harvesting.url" /></th>
-			                <th><s:text name="label.harvesting.set" /></th>
-			                <th><s:text name="label.harvesting.metadata" /></th>
-			                <th><s:text name="label.harvesting.lastHarvest" /></th>
-			                <th><s:text name="label.harvesting.newHarvest" /></th>
-			                <th><s:text name="label.harvesting.from" /></th>
-			                <th>Only weekend</th>
-			                <th><s:text name="label.harvesting.userprofile" /></th>
+			                <th>URL</th>
+			                <th>Set</th>
+			                <th>Metadata</th>
+			                <th>Last date</th>
+			                <th>Next date</th>
+			                <th>OAI-from</th>
+			                <th>Interval</th>
 			                <th>Status</th>
 			            </tr>
 			        </thead>
@@ -106,16 +105,15 @@
 			            <tr class="${item.globalCss}">
 			            	<td><c:out value="${item.id}" /></td>
 			            	<td><c:out value="${item.country}" /></td>
-			            	<td><c:out value="${item.ainame}" /></td>
-			                <td><c:out value="${item.url}" /></td>
+			            	<td class="textLimitContainer"><span class="textLimit" title="<c:out value="${item.ainame}" />"><c:out value="${item.ainame}" /></span></td>
+			                <td class="textLimitContainer"><span class="textLimit" title="<c:out value="${item.url}" />"><c:out value="${item.url}" /></span></td>
 			                <td><c:out value="${item.set}" /></td>
 			                <td><c:out value="${item.metadataPrefix}" /></td>
 			                <td><c:out value="${item.lastHarvesting}" /></td>
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
-			                <td><c:if test="${item.harvestOnlyWeekend}"><c:out value="${item.harvestOnlyWeekend}" /></c:if></td>
-			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td class="${item.errorCss}"><c:if test="${!empty item.harvestingStatus}"><apenet:resource>${item.harvestingStatus}</apenet:resource></c:if></td>
+			                <td><c:out value="${item.intervalHarvesting}" /></td>
+			                <td class="${item.errorCss} textLimitContainer"><c:if test="${!empty item.harvestingStatus}"><apenet:resource>${item.harvestingStatus}</apenet:resource></c:if></td>
 
 			            </tr>
 			        </c:forEach>
@@ -129,15 +127,14 @@
 			            	<th>ID</th>
 			             	<th>Country</th>
 			             	<th>Archival Institution</th>
-			                <th><s:text name="label.harvesting.url" /></th>
-			                <th><s:text name="label.harvesting.set" /></th>
-			                <th><s:text name="label.harvesting.metadata" /></th>
-			                <th><s:text name="label.harvesting.lastHarvest" /></th>
-			                <th><s:text name="label.harvesting.newHarvest" /></th>
-			                <th><s:text name="label.harvesting.from" /></th>
-			                <th>Method</th>
-			                <th>Only weekend</th>
-			                <th><s:text name="label.harvesting.userprofile" /></th>
+			                <th>URL</th>
+			                <th>Set</th>
+			                <th>Metadata</th>
+			                <th>Last date</th>
+			                <th>Next date</th>
+			                <th>OAI-from</th>
+			                <th>OAI-method</th>
+			                <th>Interval</th>
 			                <th>Status</th>
 			                <th>Actions</th>
 			            </tr>
@@ -148,8 +145,8 @@
 			            <tr class="${item.globalCss}">
 			            	<td><c:out value="${item.id}" /></td>
 			            	<td><c:out value="${item.country}" /></td>
-			            	<td><c:out value="${item.ainame}" /></td>
-			                <td><c:out value="${item.url}" /></td>
+			            	<td class="textLimitContainer"><span class="textLimit" title="<c:out value="${item.ainame}" />"><c:out value="${item.ainame}" /></span></td>
+			                <td class="textLimitContainer"><span class="textLimit" title="<c:out value="${item.url}" />"><c:out value="${item.url}" /></span></td>
 			                <td><c:out value="${item.set}" /></td>
 			                <td><c:out value="${item.metadataPrefix}" /></td>
 			                <td><c:out value="${item.lastHarvesting}" /></td>
@@ -161,9 +158,8 @@
 			                		<c:otherwise>ListRecords</c:otherwise>
 			                	</c:choose>
 			                </td>
-			                <td><c:if test="${item.harvestOnlyWeekend}"><c:out value="${item.harvestOnlyWeekend}" /></c:if></td>
-			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td  class="${item.errorCss}">
+			                <td><c:out value="${item.intervalHarvesting}" /></td>
+			                <td  class="${item.errorCss} textLimitContainer">
 			                	<c:if test="${!empty item.harvestingStatus}">
 			                		<c:choose>
 			                				<c:when test="${empty item.harvestingDetails}"><apenet:resource>${item.harvestingStatus}</apenet:resource></c:when>
