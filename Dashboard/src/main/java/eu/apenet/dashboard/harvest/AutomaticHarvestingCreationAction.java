@@ -140,8 +140,10 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 	            }
             }
             intervals = new ArrayList<Interval>(3);
-            intervals.add(new Interval(3, ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH));
-            intervals.add(new Interval(6, ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH));
+            intervals.add(new Interval(getText("label.harvesting.interval.weeks", new String[] {"2"}), ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS));
+            intervals.add(new Interval(getText("label.harvesting.interval.months", new String[] {"1"}), ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH));
+            intervals.add(new Interval(getText("label.harvesting.interval.months", new String[] {"3"}), ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH));
+            intervals.add(new Interval(getText("label.harvesting.interval.months", new String[] {"6"}), ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH));
             harvesterMethods = new ArrayList<SelectItem>();
             harvesterMethods.add(new SelectItem("true", getText("label.harvesting.method.listidentifiers")));
             harvesterMethods.add(new SelectItem("false", getText("label.harvesting.method.listrecords")));
@@ -235,10 +237,11 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 
     private Long getInterval(){
         Long interval = Long.parseLong(getIntervalHarvest());
-        if (ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH.equals(interval)){
+        
+        if (interval >= ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS){
         	return interval;
         }else {
-        	return ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH;
+        	return ArchivalInstitutionOaiPmh.INTERVAL_2_WEEKS;
         }
     }
     public Integer getStep() {
@@ -384,23 +387,26 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 	}
 
 	public class Interval {
-        private Integer months;
+        private String description;
         private Long time;
 
-        public Interval(Integer months, Long time) {
-            this.months = months;
+        public Interval(String description, Long time) {
+            this.description = description;
             this.time = time;
         }
 
-        public Integer getMonths() {
-            return months;
-        }
 
-        public void setMonths(Integer months) {
-            this.months = months;
-        }
+        public String getDescription() {
+			return description;
+		}
 
-        public Long getTime() {
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+
+		public Long getTime() {
             return time;
         }
 
