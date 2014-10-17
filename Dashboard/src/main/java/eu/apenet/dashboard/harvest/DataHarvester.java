@@ -258,7 +258,7 @@ public class DataHarvester {
 		}
 		DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmhNew);
 		UserService.sendEmailHarvestFailed(archivalInstitutionOaiPmhNew.getArchivalInstitution(), harvesterProfileLog,
-				errors, archivalInstitutionOaiPmhNew.getErrorsResponsePath());
+				errors, archivalInstitutionOaiPmhNew.getErrorsResponsePath(), failedEarlier);
 		try {
 			File parentFile = outputDirectory.getParentFile();
 			ContentUtils.deleteFile(outputDirectory, false);
