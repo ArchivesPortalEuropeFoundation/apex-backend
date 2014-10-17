@@ -22,7 +22,7 @@ import eu.archivesportaleurope.util.ApeUtil;
 public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> implements CLevelDAO {
 
 	private final static Logger LOG = Logger.getLogger(CLevelHibernateDAO.class);
-	
+
 	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid){
 		String varName = "findingAid";
 		if (FindingAid.class.equals(clazz)){
@@ -33,11 +33,11 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			varName = "holdingsGuide";
 		}
 
-		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND clevel.duplicateUnitid = false AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
-		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND clevel.duplicateUnitid = false AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
 		query.setParameter("unitid", ApeUtil.decodeSpecialCharacters(unitid));
 		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
-		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));		
+		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));
 		query.setMaxResults(2);
 		return query.getResultList();
 	}
@@ -51,11 +51,11 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			varName = "holdingsGuide";
 		}
 
-		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.clId  = :id AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
-		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.clId  = :id AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
 		query.setParameter("id", id);
 		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
-		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));		
+		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));
 		query.setMaxResults(1);
 		List<CLevel> results = query.getResultList();
 		if (results.size() > 0){
@@ -72,7 +72,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			propertyName = "sgId";
 		TypedQuery<Long> query = getEntityManager().createQuery(
 				"SELECT COUNT(clevel) FROM CLevel clevel WHERE clevel.eadContent." + propertyName + " = :fileId", Long.class);
-		query.setParameter("fileId", id);		
+		query.setParameter("fileId", id);
 		return query.getSingleResult();
 	}
 	@Override
@@ -322,4 +322,13 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return query.getResultList();
 	}
 
+    @Override
+    public List<CLevel> getCLevelsWithoutUnitid(Integer id) {
+        TypedQuery<CLevel> query = getEntityManager().createQuery(
+                "SELECT clevel FROM CLevel clevel WHERE clevel.eadContent.faId = :fileId "
+                + "AND unitid IS NULL "
+                + "ORDER BY clevel.id", CLevel.class);
+        query.setParameter("fileId", id);
+        return query.getResultList();
+    }
 }
