@@ -550,7 +550,7 @@ public final class UserService {
         	emailer.sendMessage(toEmail, ccEmail, bccEmail, null, emailComposer);
 		}
     }
-    public static void sendEmailHarvestFailed(ArchivalInstitution archivalInstitution,  String infoHarvestedServer, String errors, String errorsResponsePath) {
+    public static void sendEmailHarvestFailed(ArchivalInstitution archivalInstitution,  String infoHarvestedServer, String errors, String errorsResponsePath, boolean disabled) {
 		User partner = archivalInstitution.getPartner();
 		User countryManager  = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
 		String name = "UNKNOWN";
@@ -579,7 +579,13 @@ public final class UserService {
 			}
 		}
 		if (toEmail != null){
-	        EmailComposer emailComposer = new EmailComposer("emails/harvestFailed.txt", "Last harvesting process FAILED of your institution " + archivalInstitution.getAiname(), true, true);
+	    	String title = "OAI-PMH harvest process FAILED (" + archivalInstitution.getAiname() +")";
+	    	String file = "emails/harvestFailed.txt";
+	    	if (disabled){
+	    		title = "OAI-PMH harvest process FAILED and DISABLED (" + archivalInstitution.getAiname() +")";
+	    		file = "emails/harvestFailedAndDisabled.txt";
+	    	}
+	        EmailComposer emailComposer = new EmailComposer(file, title, true, true);
 	        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name", name);
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
