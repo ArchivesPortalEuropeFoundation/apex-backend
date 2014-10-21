@@ -32,7 +32,7 @@ public class ConvertTask extends AbstractEadTask {
 		return "convert to APE EAD";
 	}
 	public static boolean valid(Ead ead){
-		return !ead.isConverted() && !ead.getValidated().equals(ValidatedState.VALIDATED);
+		return !ead.getValidated().equals(ValidatedState.VALIDATED);
 	}
 
 	@Override
