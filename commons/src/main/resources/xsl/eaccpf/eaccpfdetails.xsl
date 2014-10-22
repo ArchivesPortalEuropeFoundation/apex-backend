@@ -978,8 +978,10 @@
 			</xsl:if>
 
 			<!-- Archives. -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/@localType='agencyName'
-						and ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry[@localType='agencyName']/text() != ''">
+			<xsl:if test="(./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/@localType='agencyName'
+							and ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry[@localType='agencyName']/text() != '')
+						or (./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry/@localType='agencyCode'
+							and ./eac:eac-cpf/eac:cpfDescription/eac:relations/eac:resourceRelation/eac:relationEntry[@localType='agencyCode']/text() != '')">
 				<xsl:call-template name="archivesRelations"/>
 			</xsl:if>	
 		</div>
