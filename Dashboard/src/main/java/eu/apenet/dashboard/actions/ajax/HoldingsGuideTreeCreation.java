@@ -308,7 +308,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         writer.writeDefaultNamespace(AbstractParser.APENET_EAD);
         writer.writeNamespace("xlink", AbstractParser.XLINK);
         writer.writeNamespace("xsi", AbstractParser.XSI);
-        writer.writeAttribute("level", "series");
         writer.writeAttribute("encodinganalog", "3.1.4");
 
         writeDidData(writer, levelTreeNode);

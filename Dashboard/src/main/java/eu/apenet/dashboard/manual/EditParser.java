@@ -443,23 +443,7 @@ public class EditParser extends AbstractParser {
     }
 
     private void writeCorrectInput(XMLStreamWriter2 xmlWriter, String lastElementName, String attrName, String attrValue, CLevel cLevel) throws XMLStreamException {
-        if (attrName.equals("level") && lastElementName.equals("c") && cLevel != null) {
-            xmlWriter.writeStartElement("select");
-            xmlWriter.writeAttribute("name", lastElementName + "_" + attrName);
-
-            List<String> childLevels = DAOFactory.instance().getCLevelDAO().findChildrenLevels(cLevel.getClId());
-            childLevels = EditEadAction.CElementLevel.getPossibleLevels(cLevel.getParent(), childLevels);
-            for (String childLevel : childLevels) {
-                xmlWriter.writeStartElement("option");
-                xmlWriter.writeAttribute("value", childLevel);
-                if (attrValue.equals(childLevel))
-                    xmlWriter.writeAttribute("selected", "selected");
-                xmlWriter.writeCharacters(childLevel);
-                xmlWriter.writeEndElement();
-            }
-
-            xmlWriter.writeEndElement();
-        } else if (EditParser.LANGCODE.equalsIgnoreCase(attrName)
+        if (EditParser.LANGCODE.equalsIgnoreCase(attrName)
         		&& EditParser.LANGUAGE.equalsIgnoreCase(lastElementName)) {
         	// Write the select for the possible language codes.
             xmlWriter.writeStartElement("select");

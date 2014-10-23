@@ -279,23 +279,14 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         	boolean dataChanged = false;
         	// Save the previous values in order to revert if an error occurs.
         	String initialXML = "";
-        	String level = "";
         	String eadid = "";
 
             if(this.getId() != null){
                 CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(this.getId());
                 initialXML = cLevel.getXml();
-                level = cLevel.getLevel();
                 String newXml = new EditParser().getNewXmlString(cLevel.getXml(), this.getFormValues());
                 cLevel.setXml(newXml);
 
-                // Check if <c@level> has been changed.
-                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.C_LEVEL))){
-                    if(!this.getFormValues().get(EditEadAction.C_LEVEL).equals(cLevel.getLevel())) {
-                        cLevel.setLevel(this.getFormValues().get(EditEadAction.C_LEVEL));
-                		dataChanged = true;
-                    }
-                }
                 if (!newXml.equalsIgnoreCase(initialXML)) {
                     dataChanged = true;
                 }
@@ -348,7 +339,6 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 					if(this.getId() != null){
 						CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(this.getId());
 						cLevel.setXml(initialXML);
-						cLevel.setLevel(level);
 	
 						DAOFactory.instance().getCLevelDAO().update(cLevel);
 					} else if(xmlType == XmlType.EAD_FA){
@@ -1022,58 +1012,6 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                     return true;
             }
             return false;
-        }
-    }
-
-    public enum CElementLevel {
-        FONDS(0, "fonds", new String[]{"fonds"}),
-        SERIES(1, "series", new String[]{"fonds", "series"}),
-        SUBSERIES(2, "subseries", new String[]{"series", "subseries"}),
-        FILE(3, "file", new String[]{"subseries", "file"}),
-        ITEM(4, "item", new String[]{"file", "item"});
-
-        int level;
-        String name;
-        String[] possibleChanges;
-        CElementLevel(int level, String name, String[] possibleChanges){
-            this.level = level;
-            this.name = name;
-            this.possibleChanges = possibleChanges;
-        }
-
-        public static CElementLevel getCElementLevel(String name){
-            for(CElementLevel cElementLevel : CElementLevel.values()){
-                if(cElementLevel.name.equals(name))
-                    return cElementLevel;
-            }
-            return null;
-        }
-
-        public static List<String> getPossibleLevels(CLevel parentCLevel, List<String> childLevels){
-            List<String> possibleValues = new ArrayList<String>();
-            CElementLevel parent;
-            if(parentCLevel != null)
-                parent = getCElementLevel(parentCLevel.getLevel());
-            else
-                parent = CElementLevel.FONDS;
-
-            CElementLevel highestChild = null;
-            for(String childLevel : childLevels){
-                LOG.info("bef: " + childLevel);
-                if(highestChild == null)
-                    highestChild = getCElementLevel(childLevel);
-                else {
-                    if(highestChild.level > getCElementLevel(childLevel).level)
-                        highestChild = getCElementLevel(childLevel);
-                }
-            }
-
-            for(CElementLevel cElementLevel : CElementLevel.values()){
-                if(cElementLevel.level >= parent.level && cElementLevel.level <= (highestChild==null?CElementLevel.ITEM.level+1:((highestChild == CElementLevel.FILE || highestChild == CElementLevel.ITEM)?highestChild.level-1:highestChild.level))){
-                    possibleValues.add(cElementLevel.name);
-                }
-            }
-            return possibleValues;
         }
     }
 

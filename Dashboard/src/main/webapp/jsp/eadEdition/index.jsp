@@ -283,12 +283,6 @@
                         window.setTimeout(function() {
                             maskFadeOut();
                         }, 3000);
-                        if(databack.error != null){
-                            if(databack.error == "c_level"){
-                                $('input[name="c_level"]').parent().append("<s:property value="getText('dashboard.editead.levelnotallowed')" />");
-                                $('input[name="c_level"]').css("color", "red");
-                            }
-                        }
                     }
                 }
             }, "json");

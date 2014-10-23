@@ -44,19 +44,10 @@ public class EadCreator extends AbstractParser {
 
         for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
             if (event == XMLStreamConstants.START_ELEMENT) {
-                if(xmlReader.getName().equals(EAD_ELEMENT))
+                if(xmlReader.getName().equals(EAD_ELEMENT)) {
                     writeEAD(xmlWriter);
-                else {
+                } else {
                     writeStartElement(xmlReader, xmlWriter);
-                    if(xmlReader.getName().equals(C_ELEMENT)){
-                        boolean containsLevel = false;
-                        for (int i=0; i < xmlReader.getAttributeCount(); i++){
-				            if(xmlReader.getAttributeLocalName(i).equals("level"))
-                                containsLevel = true;
-			            }
-                        if(!containsLevel && level != null)
-                            xmlWriter.writeAttribute("level", level);
-                    }
                 }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 QName name = xmlReader.getName();
