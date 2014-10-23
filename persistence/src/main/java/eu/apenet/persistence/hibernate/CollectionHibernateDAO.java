@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -15,12 +16,22 @@ import eu.archivesportaleurope.util.ApeUtil;
 public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Long> implements CollectionDAO{
 	private static final Logger LOGGER = Logger.getLogger(CollectionHibernateDAO.class);
 	@Override
-	public List<Collection> getCollectionsByUserId(Long liferayUserId,Integer pageNumber,Integer pageSize) {
+	public List<Collection> getCollectionsByUserId(Long liferayUserId,Integer pageNumber,Integer pageSize, String sortValue,
+			boolean ascending) {
 		if(liferayUserId!=null && liferayUserId>0){
 			Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			if(liferayUserId!=null && liferayUserId>0){
 				criteria.add(Restrictions.eq("collection.liferayUserId", liferayUserId));
+				
+				if (sortValue != null && sortValue != "none") {
+					if (ascending) {
+						criteria.addOrder(Order.asc(sortValue));
+					} else {
+						criteria.addOrder(Order.desc(sortValue));
+					}
+				}
+				
 			}
 			if(pageNumber!=null && pageNumber>0){
 				criteria.setFirstResult((pageNumber-1)*pageSize);

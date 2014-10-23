@@ -1,7 +1,9 @@
 package eu.apenet.persistence.vo;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,12 +27,14 @@ public class Collection implements java.io.Serializable {
 	private String title;
 	@Column(name = "liferay_user_id", nullable = false)
 	private long liferayUserId;
-	@Column(name = "public", nullable = false)
-	private boolean public_;
+	@Column(name = "public_collection", nullable = false)
+	private boolean public_collection;
 	@Column(name = "edit", nullable = false)
 	private boolean edit;
 	@Column(name = "description")
 	private String description;
+	@Column(name = "modified_date")
+	private Date modified_date;
 	@OneToMany(mappedBy = "collection")
 	private Set<CollectionContent> collectionContents = new HashSet<CollectionContent>();
 
@@ -40,19 +44,20 @@ public class Collection implements java.io.Serializable {
 	public Collection(long id, long liferayUserId, boolean public_, boolean edit) {
 		this.id = id;
 		this.liferayUserId = liferayUserId;
-		this.public_ = public_;
+		this.public_collection = public_;
 		this.edit = edit;
 	}
 
 	public Collection(long id, String title, long liferayUserId,
-			boolean public_, boolean edit, String description,
+			boolean public_, boolean edit, String description, Date modified_date, 
 			Set<CollectionContent> collectionContents) {
 		this.id = id;
 		this.title = title;
 		this.liferayUserId = liferayUserId;
-		this.public_ = public_;
+		this.public_collection = public_;
 		this.edit = edit;
 		this.description = description;
+		this.modified_date = modified_date;
 		this.collectionContents = collectionContents;
 	}
 
@@ -81,11 +86,11 @@ public class Collection implements java.io.Serializable {
 	}
 
 	public boolean isPublic_() {
-		return this.public_;
+		return this.public_collection;
 	}
 
 	public void setPublic_(boolean public_) {
-		this.public_ = public_;
+		this.public_collection = public_;
 	}
 
 	public boolean isEdit() {
@@ -110,6 +115,14 @@ public class Collection implements java.io.Serializable {
 
 	public void setCollectionContents(Set<CollectionContent> collectionContents) {
 		this.collectionContents = collectionContents;
+	}
+	
+	public Date getModified_date() {
+		return modified_date;
+	}
+
+	public void setModified_date(Date timeZone) {
+		this.modified_date = timeZone;
 	}
 
 }
