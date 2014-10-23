@@ -2,6 +2,7 @@ package eu.apenet.dashboard.manual;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -24,9 +26,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.ctc.wstx.exc.WstxParsingException;
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.eag.Eag2012;
@@ -38,11 +43,12 @@ import eu.apenet.dpt.utils.util.XsltChecker;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.EacCpf;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.Ingestionprofile;
-import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -60,6 +66,9 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public abstract class ManualUploader {
 
     private static final String MAGIC_KEY = "99999999999";
+
+    // Constant for the return type equals "profile".
+    private static final String PROFILE = "profile";
 
     private final Logger log = Logger.getLogger(getClass());
     protected String uploadingMethod;
@@ -79,6 +88,9 @@ public abstract class ManualUploader {
 
     private List<FindingAid> fasDeleted = new ArrayList<FindingAid>();
     private List<HoldingsGuide> hgsDeleted = new ArrayList<HoldingsGuide>();
+
+    // Indicates if the uploaded zip contains files withduplicate ids.
+    private boolean isDuplicated = false;
 
     public List<FindingAid> getFasDeleted() {
         return fasDeleted;
@@ -178,7 +190,21 @@ public abstract class ManualUploader {
         this.archivalInstitutionsParentChanged = archivalInstitutionsParentChanged;
     }
 
-    public String uploadFile(String uploadType, String fileName, File file, String contentType, Integer archivalInstitutionId, String uploadMethodString) {
+    /**
+	 * @return the isDuplicated
+	 */
+	public boolean isDuplicated() {
+		return this.isDuplicated;
+	}
+
+	/**
+	 * @param isDuplicated the isDuplicated to set
+	 */
+	public void setDuplicated(boolean isDuplicated) {
+		this.isDuplicated = isDuplicated;
+	}
+
+	public String uploadFile(String uploadType, String fileName, File file, String contentType, Integer archivalInstitutionId, String uploadMethodString) {
         return uploadFile(uploadType, fileName, file, contentType, archivalInstitutionId, uploadMethodString, null);
     }
 
@@ -229,14 +255,14 @@ public abstract class ManualUploader {
 
                                 String defaultUpDir = APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
                                 if (contentType.equals("xml")) {
-                                    upFile = createUpFile(defaultUpDir, fileName, uploadMethodString, archivalInstitutionId, FileType.XML);
+                                    upFile = createUpFile(defaultUpDir, fileName, uploadMethodString, archivalInstitutionId, FileType.XML, profile);
                                 } else if (contentType.equals("xsl") || contentType.equals("xslt")) {
-                                    upFile = createUpFile(defaultUpDir, fileName, uploadMethodString, archivalInstitutionId, FileType.XSL);
+                                    upFile = createUpFile(defaultUpDir, fileName, uploadMethodString, archivalInstitutionId, FileType.XSL, profile);
                                     if (!XsltChecker.isXsltParseable(theFile)) {
                                         log.error("Error! The XSLT file should NOT be kept on the server but should be removed and the partner should be advised.");
                                     }
                                 } else {
-                                    upFile = createUpFile(defaultUpDir, fileName, uploadMethodString, archivalInstitutionId, FileType.ZIP);
+                                    upFile = createUpFile(defaultUpDir, fileName, uploadMethodString, archivalInstitutionId, FileType.ZIP, profile);
                                 }
 
                                 DAOFactory.instance().getUpFileDAO().insertSimple(upFile);
@@ -252,8 +278,18 @@ public abstract class ManualUploader {
                                 FileUtils.copyFile(file, destFile);
                                 //If profile was added to upload, directly add file to queue in order to avoid delays for user, else process as usual
                                 if (profile != null) {
-                                    processWithProfile(upFile, profile);
-                                    return "profile";
+                                    // Check if the if the action for existing
+                                	// files is "ASK".
+                                	if (profile.getExistAction().isAsk()) {
+                                		// Call method to check if the file already exists.
+                                		return this.checkExistence(upFile, profile);
+                                	} else if (profile.getNoeadidAction().isAddLater()) {
+                                		// Call method to check if the file has not ID.
+                                		return this.checkIdExistence(upFile, profile);
+                                	} else {
+                                		processWithProfile(upFile, profile);
+                                		return ManualUploader.PROFILE;
+                                	}
                                 } else {
                                     return ActionSupport.SUCCESS;
                                 }
@@ -287,8 +323,8 @@ public abstract class ManualUploader {
                                 throw new APEnetException("The temporal directory " + tempPath + " could not be removed from tmp directory. Error: " + e.getMessage());
                             }
 
-                            if (profile != null) {
-                                return "profile";
+                            if (profile != null && !this.isDuplicated()) {
+                        		return ManualUploader.PROFILE;
                             } else {
                                 return ActionSupport.SUCCESS;
                             }
@@ -553,7 +589,6 @@ public abstract class ManualUploader {
 	 * @return true if there are specials characters and false in other case
 	 */
     private boolean checkSpecialCharacter(List<String> autformValueList) {
-		// TODO Auto-generated method stub
     	 for (int i = 0; i < autformValueList.size(); i++) {
              if (autformValueList.get(i).contains("<") || autformValueList.get(i).contains(">") || autformValueList.get(i).contains("%")
             		 || autformValueList.get(i).contains(":") || autformValueList.get(i).contains("\\")) {
@@ -591,7 +626,7 @@ public abstract class ManualUploader {
                      }*/
                     fullFileName = pathFile + a.getmyCountry() + "AL.xml";
                 }
-                File theFile = new File(fullFileName);
+//                File theFile = new File(fullFileName);
                 //theFile.delete();
                 //theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL_old.xml"));
 
@@ -685,11 +720,11 @@ public abstract class ManualUploader {
 
                         UpFile upFile;
                         if (format.equals("xml")) {
-                            upFile = createUpFile(defaultDirPath, fileStr, uploadMethodString, archivalInstitutionId, FileType.XML);
+                            upFile = createUpFile(defaultDirPath, fileStr, uploadMethodString, archivalInstitutionId, FileType.XML, profile);
                         } else if (format.equals("xsl")) {
-                            upFile = createUpFile(defaultDirPath, fileStr, uploadMethodString, archivalInstitutionId, FileType.XSL);
+                            upFile = createUpFile(defaultDirPath, fileStr, uploadMethodString, archivalInstitutionId, FileType.XSL, profile);
                         } else {
-                            upFile = createUpFile(defaultDirPath, fileStr, uploadMethodString, archivalInstitutionId, FileType.ZIP);
+                            upFile = createUpFile(defaultDirPath, fileStr, uploadMethodString, archivalInstitutionId, FileType.ZIP, profile);
                         }
 
                         DAOFactory.instance().getUpFileDAO().insertSimple(upFile);
@@ -703,7 +738,21 @@ public abstract class ManualUploader {
 
                         //If profile was added to upload, directly add file to queue in order to avoid delays for user
                         if (profile != null) {
-                            processWithProfile(upFile, profile);
+                            // Check if the if the action for existing
+                        	// files is "ASK".
+                        	if (profile.getExistAction().isAsk()) {
+                        		// Call method to check if the file already exists.
+                        		if (ActionSupport.SUCCESS.equalsIgnoreCase(this.checkExistence(upFile, profile))) {
+                        			this.setDuplicated(true);
+                        		}
+                        	} else if (profile.getNoeadidAction().isAddLater()) {
+                        		// Call method to check if the file has not ID.
+                        		if (ActionSupport.SUCCESS.equalsIgnoreCase(this.checkIdExistence(upFile, profile))) {
+                        			this.setDuplicated(true);
+                        		}
+                        	} else {
+                        		processWithProfile(upFile, profile);
+                        	}
                         }
                     } catch (Exception e) {
                         log.error("Error inserting the file " + fileStr + " in up_table (the user was uploading this file to the Dashboard) or error storing the file in temporal up repository [Database and FileSystem Rollback]. Error: " + e.getMessage());
@@ -722,7 +771,7 @@ public abstract class ManualUploader {
         }
     }
 
-    private UpFile createUpFile(String upDirPath, String filePath, String uploadMethodString, Integer aiId, FileType fileType) {
+    private UpFile createUpFile(String upDirPath, String filePath, String uploadMethodString, Integer aiId, FileType fileType, Ingestionprofile profile) {
         UpFile upFile = new UpFile();
         upFile.setFilename(filePath);
         upFile.setPath(upDirPath);
@@ -734,31 +783,40 @@ public abstract class ManualUploader {
 
         upFile.setFileType(fileType);
 
+        // Checks if exists profile.
+        if (profile != null) {
+        	try {
+        		upFile.setPreferences(writeProperties(retrieveProperties(profile)));
+            } catch (Exception ex) {
+            	log.error("Failed when adding the new up files into the upFile", ex);
+            }
+        }
+
         return upFile;
     }
 
     private static Properties retrieveProperties(Ingestionprofile ingestionprofile) {
         Properties properties = new Properties();
-        properties.setProperty(QueueItem.XML_TYPE, ingestionprofile.getFileType() + "");
-        properties.setProperty(QueueItem.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId() + "");
-        properties.setProperty(QueueItem.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
-        properties.setProperty(QueueItem.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
-        properties.setProperty(QueueItem.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
-        properties.setProperty(QueueItem.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
-        properties.setProperty(QueueItem.CONVERSION_TYPE, ingestionprofile.getEuropeanaConversionType() + "");
-        properties.setProperty(QueueItem.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
-        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
-        properties.setProperty(QueueItem.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
-        properties.setProperty(QueueItem.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
-        properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
-        properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
-        properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
-        properties.setProperty(QueueItem.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck()+"");
-        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
+        properties.setProperty(UpFile.XML_TYPE, ingestionprofile.getFileType() + "");
+        properties.setProperty(UpFile.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId() + "");
+        properties.setProperty(UpFile.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
+        properties.setProperty(UpFile.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
+        properties.setProperty(UpFile.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
+        properties.setProperty(UpFile.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
+        properties.setProperty(UpFile.CONVERSION_TYPE, ingestionprofile.getEuropeanaConversionType() + "");
+        properties.setProperty(UpFile.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
+        properties.setProperty(UpFile.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
+        properties.setProperty(UpFile.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
+        properties.setProperty(UpFile.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
+        properties.setProperty(UpFile.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
+        properties.setProperty(UpFile.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
+        properties.setProperty(UpFile.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
+        properties.setProperty(UpFile.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
+        properties.setProperty(UpFile.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
+        properties.setProperty(UpFile.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck()+"");
+        properties.setProperty(UpFile.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
+        properties.setProperty(UpFile.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()+"");
+        properties.setProperty(UpFile.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
         return properties;
     }
 
@@ -775,4 +833,94 @@ public abstract class ManualUploader {
         }
     }
 
+    /**
+     * Method to check if the uploaded file has the same id as other in the
+     * system for the same institution.
+     * 
+     * @param upFile Uploaded file.
+     * @param profile Profile to use.
+     *
+     * @return Action result.
+     */
+    private String checkExistence(UpFile upFile, Ingestionprofile profile) {
+		String identifier = "";
+        try {
+			XmlType xmlType = XmlType.getType(profile.getFileType());
+
+            String upFilePath = upFile.getPath() + upFile.getFilename();
+
+			if (profile.getFileType() == 2) {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eac-cpf/control/recordId", null, true, true).trim();
+			} else {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eadheader/eadid", null, true, false).trim();
+			}
+
+			if (StringUtils.isNotEmpty(identifier) && !"empty".equals(identifier) && !"error".equals(identifier)) {
+				if (profile.getFileType() == 2) {
+					EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier);
+					if (eacCpf != null) {
+						return Action.SUCCESS;
+					}
+				} else {
+					Ead ead = DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getEadClazz(), upFile.getAiId(), identifier);
+					if (ead != null) {
+						return Action.SUCCESS;
+					}
+				}
+			}
+		} catch (WstxParsingException e) {
+            log.error("File was not correct XML, cause: " + e.getMessage());
+		}
+
+		processWithProfile(upFile, profile);
+		return ManualUploader.PROFILE;
+    }
+
+    /**
+     * Method to check if the uploaded file has no id.
+     * 
+     * @param upFile Uploaded file.
+     * @param profile Profile to use.
+     *
+     * @return Action result.
+     */
+    private String checkIdExistence(UpFile upFile, Ingestionprofile profile) {
+		String identifier = "";
+        try {
+            String upFilePath = upFile.getPath() + upFile.getFilename();
+
+			if (profile.getFileType() == 2) {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eac-cpf/control/recordId", null, true, true).trim();
+			} else {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eadheader/eadid", null, true, false).trim();
+			}
+
+			if (StringUtils.isEmpty(identifier) || "empty".equals(identifier) || "error".equals(identifier)) {
+				return Action.SUCCESS;
+			}
+		} catch (WstxParsingException e) {
+            log.error("File was not correct XML, cause: " + e.getMessage());
+		}
+
+		processWithProfile(upFile, profile);
+		return ManualUploader.PROFILE;
+    }
+
+    /**
+     * Method to parse the Properties passed to String value.
+     *
+     * @param properties The Properties to parse.
+     *
+     * @return The String representing the Properties.
+     *
+     * @throws IOException Exception while managing StringWriter.
+     */
+	private static String writeProperties(Properties properties) throws IOException {
+		StringWriter stringWriter = new StringWriter();
+		properties.store(stringWriter, "");
+		String result = stringWriter.toString();
+		stringWriter.flush();
+		stringWriter.close();
+		return result;
+	}
 }

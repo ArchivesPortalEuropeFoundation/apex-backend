@@ -28,7 +28,6 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.apenet.persistence.vo.OaiPmhStatus;
-import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
@@ -286,27 +285,27 @@ public class DataHarvester {
 
 	private static Properties retrieveProperties(Ingestionprofile ingestionprofile) {
 		Properties properties = new Properties();
-		properties.setProperty(QueueItem.XML_TYPE, ingestionprofile.getFileType() + "");
-		properties.setProperty(QueueItem.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId() + "");
-		properties.setProperty(QueueItem.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
-		properties.setProperty(QueueItem.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
-		properties.setProperty(QueueItem.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
-		properties.setProperty(QueueItem.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
-		properties.setProperty(QueueItem.CONVERSION_TYPE, ingestionprofile.getEuropeanaConversionType() + "");
-		properties.setProperty(QueueItem.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
-		properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
-		properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
-		properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
-		properties.setProperty(QueueItem.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
-		properties.setProperty(QueueItem.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
-		properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
-		properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
-		properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
-		properties.setProperty(QueueItem.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck() + "");
-		properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements() + "");
-		properties.setProperty(QueueItem.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()
+		properties.setProperty(UpFile.XML_TYPE, ingestionprofile.getFileType() + "");
+		properties.setProperty(UpFile.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId() + "");
+		properties.setProperty(UpFile.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
+		properties.setProperty(UpFile.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
+		properties.setProperty(UpFile.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
+		properties.setProperty(UpFile.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
+		properties.setProperty(UpFile.CONVERSION_TYPE, ingestionprofile.getEuropeanaConversionType() + "");
+		properties.setProperty(UpFile.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
+		properties.setProperty(UpFile.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
+		properties.setProperty(UpFile.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
+		properties.setProperty(UpFile.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
+		properties.setProperty(UpFile.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
+		properties.setProperty(UpFile.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
+		properties.setProperty(UpFile.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
+		properties.setProperty(UpFile.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
+		properties.setProperty(UpFile.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
+		properties.setProperty(UpFile.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck() + "");
+		properties.setProperty(UpFile.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements() + "");
+		properties.setProperty(UpFile.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()
 				+ "");
-		properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin() + "");
+		properties.setProperty(UpFile.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin() + "");
 		return properties;
 	}
 

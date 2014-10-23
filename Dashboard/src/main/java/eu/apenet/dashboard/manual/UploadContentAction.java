@@ -3,6 +3,7 @@ package eu.apenet.dashboard.manual;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -21,8 +22,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.ctc.wstx.exc.WstxParsingException;
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
@@ -32,9 +36,10 @@ import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.EacCpf;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.Ingestionprofile;
-import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -326,6 +331,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
      * @return The code for the Struts2 dispatcher
      */
     public String saveFtpFiles() {
+    	String result = "";
         log.info("Save the FTP files");
         Integer aiId = getAiId();
         filesUploaded = new ArrayList<String>();
@@ -338,6 +344,9 @@ public class UploadContentAction extends AbstractInstitutionAction {
         if (client == null) {
             client = (FTPClient) session.get("ftpClient");
         }
+        if (filesToUpload == null) {
+        	return "noFile";
+        }
         for (String filePathOrig : filesToUpload) {
             String sourceFilePath = filePathOrig.substring(filePathOrig.lastIndexOf(APEnetUtilities.FILESEPARATOR) + 1);
             String filePath = APEnetUtilities.convertToFilename(sourceFilePath);
@@ -345,7 +354,10 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
                 uploader_ftp.getFile(client, sourceFilePath,filePath, aiId);
                 if (fileType.equals("xml")) {
-                    createDBentry(filePath, "FTP");
+                	String status = createDBentry(filePath, "FTP");
+                    if ("redirect".equalsIgnoreCase(status)) {
+                    	result = status;
+                    }
                 } else if (fileType.equals("zip")) {
                     String filename = filePath.substring(0, filePath.lastIndexOf("."));
                     log.info("Filename: " + filename);
@@ -375,7 +387,10 @@ public class UploadContentAction extends AbstractInstitutionAction {
                                 log.error(e.getMessage());
                             }
                         } else {
-                            createDBentry(file, "FTP", srcFile, destFile);
+                        	String status = createDBentry(file, "FTP", srcFile, destFile);
+                            if ("redirect".equalsIgnoreCase(status)) {
+                            	result = status;
+                            }
                         }
                     }
                     try {
@@ -405,21 +420,28 @@ public class UploadContentAction extends AbstractInstitutionAction {
             log.error(e);
             return NONE;
         }
-        return SUCCESS;
+
+        if (result == null || result.isEmpty()) {
+        	return Action.SUCCESS;
+        } else {
+        	return result;
+        }
     }
 
     /**
      * Will create an entry to the database for the uploaded file;
      * if file is processed with profile, will directly add it to queue
+     * or ask the user if a manual action is needed.
      *
      * @param filePath The current location of the saved file
      * @param uploadMethodString Depending if the file has been harvest or downloaded from an FTP server
      */
-    private void createDBentry(String filePath, String uploadMethodString) {
-        createDBentry(filePath, uploadMethodString, null, null);
+    private String createDBentry(String filePath, String uploadMethodString) {
+        return createDBentry(filePath, uploadMethodString, null, null);
     }
 
-        private void createDBentry(String filePath, String uploadMethodString, File srcFile, File destFile) {
+    private String createDBentry(String filePath, String uploadMethodString, File srcFile, File destFile) {
+    	String result = "profile";
         try {
             // Moving the file
             // Insert file uploaded into up_file table
@@ -449,7 +471,23 @@ public class UploadContentAction extends AbstractInstitutionAction {
             JpaUtil.commitDatabaseTransaction();
 
             //If profile was added to upload, directly add file to queue in order to avoid delays for user
-            processWithProfile(upFile);
+            if (ingestionprofile != null && !ingestionprofile.isEmpty()) {
+                IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+                Ingestionprofile profile = profileDAO.findById(Long.parseLong(ingestionprofile));
+                if (profile != null) {
+                    // Check if the if the action for existing
+                	// files is "ASK".
+                	if (profile.getExistAction().isAsk()) {
+                		// Call method to check if the file already exists.
+                		return this.checkExistence(upFile, profile);
+                	} else if (profile.getNoeadidAction().isAddLater()) {
+                		// Call method to check if the file has not ID.
+                		return this.checkIdExistence(upFile, profile);
+                	} else {
+                        processWithProfile(upFile, profile);
+                	}
+                }
+            }
         } catch (Exception e) {
             log.error("Error inserting the file " + filePath + " in up_table (the user was uploading this file to the Dashboard) or error storing the file in temporal up repository [Database and FileSystem Rollback]. Error: " + e.getMessage());
             JpaUtil.rollbackDatabaseTransaction();
@@ -462,6 +500,8 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 }
             }
         }
+
+        return result;
     }
 
     /**
@@ -572,45 +612,39 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     private static Properties retrieveProperties(Ingestionprofile ingestionprofile) {
         Properties properties = new Properties();
-        properties.setProperty(QueueItem.XML_TYPE, ingestionprofile.getFileType() + "");
-        properties.setProperty(QueueItem.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId() + "");
-        properties.setProperty(QueueItem.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
-        properties.setProperty(QueueItem.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
-        properties.setProperty(QueueItem.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
-        properties.setProperty(QueueItem.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
-        properties.setProperty(QueueItem.CONVERSION_TYPE, ingestionprofile.getEuropeanaConversionType() + "");
-        properties.setProperty(QueueItem.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
-        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
-        properties.setProperty(QueueItem.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
-        properties.setProperty(QueueItem.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
-        properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
-        properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
-        properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
-        properties.setProperty(QueueItem.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck()+"");
-        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
+        properties.setProperty(UpFile.XML_TYPE, ingestionprofile.getFileType() + "");
+        properties.setProperty(UpFile.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId() + "");
+        properties.setProperty(UpFile.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
+        properties.setProperty(UpFile.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
+        properties.setProperty(UpFile.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
+        properties.setProperty(UpFile.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
+        properties.setProperty(UpFile.CONVERSION_TYPE, ingestionprofile.getEuropeanaConversionType() + "");
+        properties.setProperty(UpFile.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
+        properties.setProperty(UpFile.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
+        properties.setProperty(UpFile.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
+        properties.setProperty(UpFile.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
+        properties.setProperty(UpFile.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
+        properties.setProperty(UpFile.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
+        properties.setProperty(UpFile.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
+        properties.setProperty(UpFile.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
+        properties.setProperty(UpFile.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
+        properties.setProperty(UpFile.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck()+"");
+        properties.setProperty(UpFile.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
+        properties.setProperty(UpFile.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()+"");
+        properties.setProperty(UpFile.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
         return properties;
     }
 
-    private void processWithProfile(UpFile upFile) {
-        if (ingestionprofile != null && !ingestionprofile.isEmpty()) {
-            IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
-            Ingestionprofile profile = profileDAO.findById(Long.parseLong(ingestionprofile));
-            if (profile != null) {
-                Properties properties = retrieveProperties(profile);
-                try {
-                    if(profile.getFileType() == 2){
-                        EacCpfService.useProfileAction(upFile, properties);
-                    } else {
-                        EadService.useProfileAction(upFile, properties);
-                    }
-                } catch (Exception ex) {
-                    LOG.error("Failed when adding the new up files into the queue", ex);
-                }
+    private void processWithProfile(UpFile upFile, Ingestionprofile profile) {
+        Properties properties = retrieveProperties(profile);
+        try {
+            if(profile.getFileType() == 2){
+                EacCpfService.useProfileAction(upFile, properties);
+            } else {
+                EadService.useProfileAction(upFile, properties);
             }
+        } catch (Exception ex) {
+            LOG.error("Failed when adding the new up files into the queue", ex);
         }
     }
 
@@ -624,4 +658,126 @@ public class UploadContentAction extends AbstractInstitutionAction {
             }
         }
     }
+
+    /**
+     * Method to check if the uploaded file has the same id as other in the
+     * system for the same institution.
+     * 
+     * @param upFile Uploaded file.
+     * @param profile Profile to use.
+     *
+     * @return Action result.
+     */
+    private String checkExistence(UpFile upFile, Ingestionprofile profile) {
+    	String result = "";
+		String identifier = "";
+        try {
+			XmlType xmlType = XmlType.getType(profile.getFileType());
+
+            String upFilePath = upFile.getPath() + upFile.getFilename();
+
+			if (profile.getFileType() == 2) {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eac-cpf/control/recordId", null, true, true).trim();
+			} else {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eadheader/eadid", null, true, false).trim();
+			}
+
+			if (StringUtils.isNotEmpty(identifier) && !"empty".equals(identifier) && !"error".equals(identifier)) {
+				if (profile.getFileType() == 2) {
+					EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier);
+					if (eacCpf != null) {
+						result = "redirect";
+					}
+				} else {
+					Ead ead = DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getEadClazz(), upFile.getAiId(), identifier);
+					if (ead != null) {
+						result = "redirect";
+					}
+				}
+			}
+		} catch (WstxParsingException e) {
+            log.error("File was not correct XML, cause: " + e.getMessage());
+		}
+
+        if (result == null || result.isEmpty()) {
+    		processWithProfile(upFile, profile);
+    		return "profile";
+        } else {
+        	if (upFile != null) {
+            	try {
+                    JpaUtil.beginDatabaseTransaction();
+        			upFile.setPreferences(writeProperties(retrieveProperties(profile)));
+                    JpaUtil.commitDatabaseTransaction();
+                } catch (Exception ex) {
+                	log.error("Failed when adding the new up files into the upFile", ex);
+                	JpaUtil.rollbackDatabaseTransaction();
+                }
+        	}
+        	return result;
+        }
+    }
+
+    /**
+     * Method to check if the uploaded file has no id.
+     * 
+     * @param upFile Uploaded file.
+     * @param profile Profile to use.
+     *
+     * @return Action result.
+     */
+    private String checkIdExistence(UpFile upFile, Ingestionprofile profile) {
+    	String result = "";
+		String identifier = "";
+        try {
+
+            String upFilePath = upFile.getPath() + upFile.getFilename();
+
+			if (profile.getFileType() == 2) {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eac-cpf/control/recordId", null, true, true).trim();
+			} else {
+				identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eadheader/eadid", null, true, false).trim();
+			}
+
+			if (StringUtils.isEmpty(identifier) || "empty".equals(identifier) || "error".equals(identifier)) {
+				result = "redirect";
+			}
+		} catch (WstxParsingException e) {
+            log.error("File was not correct XML, cause: " + e.getMessage());
+		}
+
+        if (result == null || result.isEmpty()) {
+    		processWithProfile(upFile, profile);
+    		return "profile";
+        } else {
+        	if (upFile != null) {
+            	try {
+                    JpaUtil.beginDatabaseTransaction();
+        			upFile.setPreferences(writeProperties(retrieveProperties(profile)));
+                    JpaUtil.commitDatabaseTransaction();
+                } catch (Exception ex) {
+                	log.error("Failed when adding the new up files into the upFile", ex);
+                	JpaUtil.rollbackDatabaseTransaction();
+                }
+        	}
+        	return result;
+        }
+    }
+
+    /**
+     * Method to parse the Properties passed to String value.
+     *
+     * @param properties The Properties to parse.
+     *
+     * @return The String representing the Properties.
+     *
+     * @throws IOException Exception while managing StringWriter.
+     */
+	private static String writeProperties(Properties properties) throws IOException {
+		StringWriter stringWriter = new StringWriter();
+		properties.store(stringWriter, "");
+		String result = stringWriter.toString();
+		stringWriter.flush();
+		stringWriter.close();
+		return result;
+	}
 }

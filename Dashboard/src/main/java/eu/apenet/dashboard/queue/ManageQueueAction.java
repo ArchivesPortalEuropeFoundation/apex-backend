@@ -111,10 +111,11 @@ public class ManageQueueAction extends AbstractAction {
 					displayItem.setEadidOrFilename(upFile.getPath() + upFile.getFilename());
 					displayItem.setArchivalInstitution(upFile.getArchivalInstitution().getAiname());
 				}
-				if (QueueAction.USE_PROFILE.equals(queueItem.getAction())) {
-					Properties preferences = EadService.readProperties(queueItem.getPreferences());
+				if (QueueAction.USE_PROFILE.equals(queueItem.getAction())
+						&& queueItem.getUpFile() != null) {
+					Properties preferences = EadService.readProperties(queueItem.getUpFile().getPreferences());
 					IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction
-							.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+							.getUploadAction(preferences.getProperty(UpFile.UPLOAD_ACTION));
 					displayItem.setAction(displayItem.getAction() + " ("
 							+ getText(ingestionprofileDefaultUploadAction.getResourceName()) + ")");
 				}
