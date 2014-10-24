@@ -346,10 +346,6 @@
         <action name="saveFtpFiles" class="eu.apenet.dashboard.manual.UploadContentAction" method="saveFtpFiles">
             <result name="success" type="tiles">viewresult</result>
             <result name="profile" type="tiles">successprofileupload</result>
-            <result name="redirect" type="redirectAction">
-                <param name="actionName">checkfilesuploaded</param>
-            </result>
-            <result name="noFile" type="tiles">viewftpfiles</result>
         </action>
         <!-- Upload: HTTP file upload -->
         <action name="httpUpload" class="eu.apenet.dashboard.manual.UploadContentAction" method="httpUpload">
