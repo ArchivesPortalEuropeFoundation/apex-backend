@@ -271,7 +271,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         uploadedFileActions.add(new SelectItem("0", getText("ingestionprofiles.upload.nothing")));
         existingFileActions.add(new SelectItem("1", getText("ingestionprofiles.existing.overwrite")));
         existingFileActions.add(new SelectItem("0", getText("ingestionprofiles.existing.keep")));
-        existingFileActions.add(new SelectItem("2", getText("ingestionprofiles.existing.ask")));
         noEadidActions.add(new SelectItem("0", getText("ingestionprofiles.noeadid.remove")));
         noEadidActions.add(new SelectItem("1", getText("ingestionprofiles.noeadid.addLater")));
         daoTypes.add(new SelectItem("1", getText("ingestionprofiles.dao.text")));

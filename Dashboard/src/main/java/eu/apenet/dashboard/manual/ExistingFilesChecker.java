@@ -324,13 +324,7 @@ public class ExistingFilesChecker {
                     } else {
 
                         try {
-                        	boolean useProfile = false;
-                        	if (upFileDao.findById(fileUnit.getFileId()) != null
-                        			&& upFileDao.findById(fileUnit.getFileId()).getPreferences() != null) {
-                        		useProfile = true;
-                        	}
-
-                            EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId, useProfile);
+                            EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
                         } catch (Exception e) {
                             LOG.error("The " + xmlType.getName() + " which eadid is " + eadid + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage(), e);
                             dataBaseCommitError = true;
@@ -431,13 +425,7 @@ public class ExistingFilesChecker {
                 result = STATUS_EXISTS;
             } else {
                 try {
-                	boolean useProfile = false;
-                	if (upFileDao.findById(fileUnit.getFileId()) != null
-                			&& upFileDao.findById(fileUnit.getFileId()).getPreferences() != null) {
-                		useProfile = true;
-                	}
-
-                    EacCpfService.create(XmlType.EAC_CPF, upFile, archivalInstitutionId, useProfile);
+                    EacCpfService.create(XmlType.EAC_CPF, upFile, archivalInstitutionId);
                 } catch (Exception e) {
                     LOG.error("The " + XmlType.EAC_CPF.getName() + " which recordId is " + cpfId + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage(), e);
                     dataBaseCommitError = true;
@@ -763,16 +751,10 @@ public class ExistingFilesChecker {
 
                             //Ead ead = instantiateCorrectEadType(xmlType);
                             try {
-                            	boolean useProfile = false;
-                            	if (upFileDao.findById(fileUnit.getFileId()) != null
-                            			&& upFileDao.findById(fileUnit.getFileId()).getPreferences() != null) {
-                            		useProfile = true;
-                            	}
-
                                 if (fileType.equals(XmlType.EAC_CPF.getName())) {
-                                    EacCpfService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId, useProfile);
+                                    EacCpfService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
                                 } else {
-                                    EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId, useProfile);
+                                    EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
                                 }
                             } catch (Exception e) {
                                 LOG.error("The file which identifier is '" + identifier + "' could not be stored in table [Database Rollback]. Error:" + e.getMessage());
@@ -868,9 +850,9 @@ public class ExistingFilesChecker {
 
         try {
             if (eac) {
-                oldIdentifier = ExistingFilesChecker.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true, true).trim();
+                oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true, true).trim();
             } else {
-                oldIdentifier = ExistingFilesChecker.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true, false).trim();
+                oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true, false).trim();
             }
 
             // Creates a copy of the current uploaded file.
