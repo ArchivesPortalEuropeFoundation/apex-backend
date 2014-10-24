@@ -28,7 +28,6 @@ import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ResumptionToken;
-import eu.apenet.persistence.vo.UpFile;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class QueueTask implements Runnable {
@@ -163,10 +162,10 @@ public class QueueTask implements Runnable {
                             hasItems = true;
                         }
                     } else {
-                        if(queueItem.getUpFileId() != null && !queueItem.getUpFile().getPreferences().isEmpty()){
-                            Properties preferences = EadService.readProperties(queueItem.getUpFile().getPreferences());
-                            if(preferences.containsKey(UpFile.XML_TYPE)){
-                                String xmlType = preferences.getProperty(UpFile.XML_TYPE);
+                        if(queueItem.getUpFileId() != null && !queueItem.getPreferences().isEmpty()){
+                            Properties preferences = EadService.readProperties(queueItem.getPreferences());
+                            if(preferences.containsKey(QueueItem.XML_TYPE)){
+                                String xmlType = preferences.getProperty(QueueItem.XML_TYPE);
                                 if(Integer.parseInt(xmlType) == XmlType.EAC_CPF.getIdentifier()){
                                     EacCpfService.processQueueItem(queueItem);
                                 } else {
