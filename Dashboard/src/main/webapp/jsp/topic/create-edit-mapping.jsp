@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div>
 		<s:actionerror />
 	<s:form action="createEditTopicMapping" method="post" theme="simple">
@@ -23,7 +24,7 @@
 		
 		<tr>
 			<td class="inputLabel"><s:label key="topicmapping.keywords.label" for="keywords" /> &lt;controlaccess&gt;&lt;subject&gt;:</td>
-			<td><s:textfield id="keywords" name="keywords" cssClass="large" maxlength="255"/><s:fielderror fieldName="keywords"/></td>
+			<td><textarea id="keywords" rows="" cols="" maxlength="255" name="keywords"><c:out value="${keywords}"/></textarea></td>
 		</tr>
 	</table>
 	<table>
