@@ -226,12 +226,11 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			whereClause.add(criteriaBuilder.or(orPredicated.toArray(new Predicate[0])));
 		}
 		if (StringUtils.isNotBlank(eadSearchOptions.getSearchTerms())) {
-
 			String[] searchTerms = StringUtils.split(eadSearchOptions.getSearchTerms(), " ");
 			if ("eadid".equals(eadSearchOptions.getSearchTermsField())) {
-				for (String searchTerm : searchTerms) {
-					whereClause.add(criteriaBuilder.like(from.<String> get("eadid"), "%" + searchTerm + "%"));
-				}
+				String searchTerm = eadSearchOptions.getSearchTerms().trim();
+				searchTerm = searchTerm.replaceAll("\\*", "%");
+				whereClause.add(criteriaBuilder.like(from.<String> get("eadid"), searchTerm));
 			} else if ("title".equals(eadSearchOptions.getSearchTermsField())) {
 				for (String searchTerm : searchTerms) {
 					whereClause.add(criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%"));
@@ -239,12 +238,14 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			}else if ("path".equals(eadSearchOptions.getSearchTermsField())) {
 				whereClause.add(criteriaBuilder.equal(from.<String> get("pathApenetead"), eadSearchOptions.getSearchTerms() ));
 			} else {
+				String searchTermId = eadSearchOptions.getSearchTerms().trim();
+				searchTermId = searchTermId.replaceAll("\\*", "%");
+				Predicate identifierPredicate =  criteriaBuilder.like(from.<String> get("eadid"), searchTermId);				
+				List<Predicate> titleAndPredicated = new ArrayList<Predicate>();
 				for (String searchTerm : searchTerms) {
-					Predicate titlePredicate = criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%");
-					Predicate eadidPredicate = criteriaBuilder.like(from.<String> get("eadid"), "%" + searchTerm + "%");
-					whereClause.add(criteriaBuilder.or(titlePredicate, eadidPredicate));
+					titleAndPredicated.add(criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%"));
 				}
-
+				whereClause.add(criteriaBuilder.or(criteriaBuilder.and(titleAndPredicated.toArray(new Predicate[0])), identifierPredicate));
 			}
 		}
 

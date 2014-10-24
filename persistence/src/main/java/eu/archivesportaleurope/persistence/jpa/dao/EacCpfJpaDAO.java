@@ -207,20 +207,22 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
 
             String[] searchTerms = StringUtils.split(contentSearchOptions.getSearchTerms(), " ");
             if ("identifier".equals(contentSearchOptions.getSearchTermsField())) {
-                for (String searchTerm : searchTerms) {
-                    whereClause.add(criteriaBuilder.like(from.<String>get("identifier"), "%" + searchTerm + "%"));
-                }
+				String searchTerm = contentSearchOptions.getSearchTerms().trim();
+				searchTerm = searchTerm.replaceAll("\\*", "%");
+				whereClause.add(criteriaBuilder.like(from.<String> get("identifier"), searchTerm));
             } else if ("title".equals(contentSearchOptions.getSearchTermsField())) {
                 for (String searchTerm : searchTerms) {
                     whereClause.add(criteriaBuilder.like(from.<String>get("title"), "%" + searchTerm + "%"));
                 }
             } else {
-                for (String searchTerm : searchTerms) {
-                    Predicate titlePredicate = criteriaBuilder.like(from.<String>get("title"), "%" + searchTerm + "%");
-                    Predicate eadidPredicate = criteriaBuilder.like(from.<String>get("identifier"), "%" + searchTerm + "%");
-                    whereClause.add(criteriaBuilder.or(titlePredicate, eadidPredicate));
-                }
-
+				String searchTermId = contentSearchOptions.getSearchTerms().trim();
+				searchTermId = searchTermId.replaceAll("\\*", "%");
+				Predicate identifierPredicate =  criteriaBuilder.like(from.<String> get("identifier"), searchTermId);				
+				List<Predicate> titleAndPredicated = new ArrayList<Predicate>();
+				for (String searchTerm : searchTerms) {
+					titleAndPredicated.add(criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%"));
+				}
+				whereClause.add(criteriaBuilder.or(criteriaBuilder.and(titleAndPredicated.toArray(new Predicate[0])), identifierPredicate));
             }
         }
 
