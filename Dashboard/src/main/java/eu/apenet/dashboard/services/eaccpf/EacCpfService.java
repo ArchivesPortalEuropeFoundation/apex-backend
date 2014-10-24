@@ -41,23 +41,6 @@ public class EacCpfService {
     private static final String CURRENT_LANGUAGE_KEY = "currentLanguage";
     // private static final long NOT_USED_TIME = 60 * 60 * 24 * 7;
 
-	// Variable for the errors while processing with profile.
-	private static String error = "";
-
-	/**
-	 * @return the error
-	 */
-	public static String getError() {
-		return EacCpfService.error;
-	}
-
-	/**
-	 * @param err the error to set
-	 */
-	public static void setError(String error) {
-		EacCpfService.error = error;
-	}
-
 	public static void updateEverything(ContentSearchOptions eadSearchOptions, QueueAction queueAction) throws IOException {
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
@@ -208,20 +191,9 @@ public class EacCpfService {
         return null;
     }
 
-    public static EacCpf create(XmlType xmlType, UpFile upFile, Integer aiId, boolean useProfile) throws Exception {
+    public static EacCpf create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
         SecurityContext.get().checkAuthorized(aiId);
-        Properties preferences = null;
-
-        if (upFile!= null && upFile.getPreferences() != null) {
-            preferences = readProperties(upFile.getPreferences());
-        }
-
         EacCpf eac = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
-
-		if (useProfile) {
-			continueAutomaticTasks(eac, preferences, xmlType);
-		}
-
         DAOFactory.instance().getUpFileDAO().delete(upFile);
         return eac;
     }
@@ -249,9 +221,8 @@ public class EacCpfService {
         QueueItem queueItem = new QueueItem();
         queueItem.setQueueDate(new Date());
         queueItem.setAction(queueAction);
-        if (preferences != null
-        		&& queueItem.getUpFile() != null) {
-            queueItem.getUpFile().setPreferences(writeProperties(preferences));
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
         }
         int priority = basePriority;
         queueItem.setEacCpf(eacCpf);
@@ -293,12 +264,11 @@ public class EacCpfService {
         EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
         QueueAction queueAction = queueItem.getAction();
         Properties preferences = null;
-        if (queueItem.getUpFile() != null
-        		&& queueItem.getUpFile().getPreferences() != null) {
-            preferences = readProperties(queueItem.getUpFile().getPreferences());
+        if (queueItem.getPreferences() != null) {
+            preferences = readProperties(queueItem.getPreferences());
         }
 
-        if (!queueAction.isUseProfileAction() && preferences == null) {
+        if (!queueAction.isUseProfileAction()) {
             EacCpf eac = queueItem.getEacCpf();
             XmlType xmlType = XmlType.getContentType(eac);
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + eac.getIdentifier()
@@ -408,9 +378,11 @@ public class EacCpfService {
                 }
             }
         } else { //USE_PROFILE
-            IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(UpFile.NO_EADID_ACTION));
-            IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(UpFile.EXIST_ACTION));
-            XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(UpFile.XML_TYPE)));
+            IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
+            IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+            IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
+            Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
+            XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
 
             //About existing eac-cpf identifier
             UpFile upFile = queueItem.getUpFile();
@@ -430,9 +402,7 @@ public class EacCpfService {
                 EacCpf eacCpf;
                 EacCpf newEacCpf = null;
                 if ((eacCpf = doesFileExist(upFile, identifier)) != null) {
-                    if (ingestionprofileDefaultExistingFileAction.isOverwrite()
-                    		|| (ingestionprofileDefaultExistingFileAction.isAsk()
-                    				&& queueAction.isOverwriteAction())) {
+                    if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
                         boolean eacCpfDeleted = false;
                         try {
                             queueItem.setEacCpf(null);
@@ -472,10 +442,6 @@ public class EacCpfService {
                         LOGGER.info("File will be removed, because there is already one with the same eadid: " + upFilePath);
                         deleteFromQueue(queueItem, true);
                         continueTask = false;
-                    } else if (ingestionprofileDefaultExistingFileAction.isAsk()) {
-                    	LOGGER.info("Is needed to ask the user the action, because there is already one with the same eadid: " + upFilePath);
-                    	deleteFromQueue(queueItem, false);
-                        continueTask = false;
                     }
                 } else {
                     newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, upFile.getAiId());
@@ -485,14 +451,41 @@ public class EacCpfService {
                 }
 
                 if (continueTask) {
-                	try {
-                		continueAutomaticTasks(newEacCpf, preferences, xmlType);
+                    newEacCpf.setQueuing(QueuingState.BUSY);
+                    eacDAO.store(newEacCpf);
+
+                    Properties conversionProperties = new Properties();
+                    conversionProperties.put("defaultRoleType", "UNSPECIFIED");
+                    conversionProperties.put("useDefaultRoleType", daoTypeCheck);
+
+                    try {
+                        if (ingestionprofileDefaultUploadAction.isConvert()) {
+                            new ConvertTask().execute(newEacCpf, conversionProperties);
+                        } else if (ingestionprofileDefaultUploadAction.isValidate()) {
+                            new ValidateTask().execute(newEacCpf);
+                        } else if (ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                            new ValidateTask().execute(newEacCpf);
+                            new ConvertTask().execute(newEacCpf, conversionProperties);
+                            new ValidateTask().execute(newEacCpf);
+                            new PublishTask().execute(newEacCpf);
+//                            if (ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+//                                Properties europeanaProperties = createEuropeanaProperties(preferences);
+//                                new ConvertToEseEdmTask().execute(newEacCpf, europeanaProperties);
+//                                new DeliverToEuropeanaTask().execute(newEacCpf);
+//                            }
+                        }
+                        newEacCpf.setQueuing(QueuingState.NO);
+                        eacDAO.store(newEacCpf);
                         queueItemDAO.delete(queueItem);
-                	} catch (Exception e) {
-                        queueItem.setErrors(new Date() + " - " + EacCpfService.getError() + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                    } catch (Exception e) {
+                        newEacCpf.setQueuing(QueuingState.ERROR);
+                        eacDAO.store(newEacCpf);
+
+                        String err = "recordId: " + newEacCpf.getIdentifier() + " - id: " + newEacCpf.getId() + " - type: " + xmlType.getName();
+                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                         queueItem.setPriority(0);
                         queueItemDAO.store(queueItem);
-
                         /*
                          * throw exception when solr has problem, so the queue will stop for a while.
                          */
@@ -614,9 +607,8 @@ public class EacCpfService {
         QueueItem queueItem = new QueueItem();
         queueItem.setQueueDate(new Date());
         queueItem.setAction(queueAction);
-        if (preferences != null
-        		&& upFile != null) {
-            upFile.setPreferences(writeProperties(preferences));
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
         }
 
         queueItem.setUpFile(upFile);
@@ -645,64 +637,5 @@ public class EacCpfService {
 		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 		EacCpf eacCpf = eacCpfDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(eacCpf);
-	}
-
-	/**
-     * Method that continues the process in case the Ead is associated to a
-     * profile.
-     *
-	 * @param newEac EAC-CPF associated to the profile.
-     * @param preferences Profile preferences.
-     * @param xmlType EAC-CPF type.
-     *
-     * @throws Exception Exception during the process.
-	 */
-	private static void continueAutomaticTasks(EacCpf newEacCpf, Properties preferences, XmlType xmlType) throws Exception {
-        IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(UpFile.UPLOAD_ACTION));
-        Boolean daoTypeCheck = "true".equals(preferences.getProperty(UpFile.DAO_TYPE_CHECK));
-        EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
-
-        newEacCpf.setQueuing(QueuingState.BUSY);
-        eacDAO.store(newEacCpf);
-
-        Properties conversionProperties = new Properties();
-        conversionProperties.put("defaultRoleType", "UNSPECIFIED");
-        conversionProperties.put("useDefaultRoleType", daoTypeCheck);
-
-        try {
-            if (ingestionprofileDefaultUploadAction.isConvert()) {
-                new ConvertTask().execute(newEacCpf, conversionProperties);
-            } else if (ingestionprofileDefaultUploadAction.isValidate()) {
-                new ValidateTask().execute(newEacCpf);
-            } else if (ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-                new ValidateTask().execute(newEacCpf);
-                new ConvertTask().execute(newEacCpf, conversionProperties);
-                new ValidateTask().execute(newEacCpf);
-                new PublishTask().execute(newEacCpf);
-//                if (ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-//                    Properties europeanaProperties = createEuropeanaProperties(preferences);
-//                    new ConvertToEseEdmTask().execute(newEacCpf, europeanaProperties);
-//                    new DeliverToEuropeanaTask().execute(newEacCpf);
-//                }
-            }
-            newEacCpf.setQueuing(QueuingState.NO);
-            eacDAO.store(newEacCpf);
-        } catch (Exception e) {
-            newEacCpf.setQueuing(QueuingState.ERROR);
-            eacDAO.store(newEacCpf);
-
-            String err = "recordId: " + newEacCpf.getIdentifier() + " - id: " + newEacCpf.getId() + " - type: " + xmlType.getName();
-            EacCpfService.setError(err);
-
-            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
-            /*
-             * throw exception when solr has problem, so the queue will stop for a while.
-             */
-            if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
-                throw (Exception) e;
-
-            }
-        }
-    
 	}
 }
