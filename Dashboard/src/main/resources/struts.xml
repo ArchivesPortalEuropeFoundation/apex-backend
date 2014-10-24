@@ -776,34 +776,30 @@
         <action name="hgTreeCreation" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation">
             <result name="success" type="tiles">hgTreeCreation</result>
         </action>
-
-        <action name="addEadContentData" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addEadContentData">
+        <action name="sgTreeCreation" class="eu.apenet.dashboard.actions.ajax.SourceGuideTreeCreation">
+            <result name="success" type="tiles">sgTreeCreation</result>
+        </action>
+        <action name="addEadContentData" class="eu.apenet.dashboard.actions.ajax.HgSgTreeCreation" method="addEadContentData">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="addCLevelData" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addCLevelData">
+        <action name="addCLevelData" class="eu.apenet.dashboard.actions.ajax.HgSgTreeCreation" method="addCLevelData">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="deleteLevelHG" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="deleteLevelHG">
+        <action name="deleteCLevel" class="eu.apenet.dashboard.actions.ajax.HgSgTreeCreation" method="deleteCLevel">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="createHoldingsGuide" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="createHoldingsGuide">
-            <result type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
 
         <action name="checkCurrentConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsAction" method="checkCurrentConversionOptions">
             <result type="stream">

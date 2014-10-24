@@ -41,7 +41,7 @@
 
             hasCpfReady, displayCpfInformation,
 
-            hgTreeCreation, addEadContentData, addCLevelData,deleteLevelHG,
+            hgTreeCreation, sgTreeCreation, addEadContentData, addCLevelData,deleteCLevel,
             automaticharvestingcreation, automaticharvestingcreationpage2, automaticharvestingcreationpage3, automaticharvestingcreationsave,downloadHarvesterErrorsXml,downloadHarvesterErrorsText,
             <!-- unload -->
             unload;
