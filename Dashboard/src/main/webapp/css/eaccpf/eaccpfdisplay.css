@@ -203,8 +203,12 @@ p {
 	cursor:pointer;
 }
 
-#eacCpfDisplayPortlet .box{
+#alternative{
 	margin-bottom:15px;
+}
+
+.box{
+	margin-bottom: 5px;
 }
 
 #relations .collapsibleIcon {
@@ -265,6 +269,10 @@ p {
     padding-left:25px;
     padding-bottom:8px;
 }
+#printEacDetails a img{
+	border: 0px;
+}
+
 #relations a{
 	background:none;
 }

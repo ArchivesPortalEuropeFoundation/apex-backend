@@ -109,6 +109,10 @@ body {
     border-top-right-radius: 5px;
 }
 
+a {
+	border: 0px;
+}
+
 #eacCpfTabs li a {
     padding: 3px 10px 3px 10px;
     display: block;

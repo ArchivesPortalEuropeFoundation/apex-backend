@@ -1725,6 +1725,7 @@ var clickIdentityAction = function(text, message) {
  *Functions related to second-display EAC-CPF
  **************************************************************************************/
 function init() {
+	drawListDiscs();
     eraseData();
     $(".displayLinkShowLess").addClass("hidden");
     $('.displayLinkShowMore').addClass("hidden");
@@ -1749,6 +1750,11 @@ function init() {
     });
     expandedSection();
     sameHeight();
+}
+function drawListDiscs(){
+	if($("div").find("#eacCpfDisplayPortlet li.item").length==1){
+		$("div").find("#eacCpfDisplayPortlet li.item").css("list-style","none outside none");
+	}
 }
 function initPrint() {
     eraseData();
@@ -1927,7 +1933,10 @@ function sameHeight() {
     $('#eacCpfDisplayPortlet .row').each(function() {
         $(this).css("height", "");
         $(this).children().css("height", "");
-        var height = $(this).css("height");
+        var height = $(this).height();
+        if(height == "auto"){
+        	height = $(this).css("height");
+        }
         $(this).children().css("height", height);
     });
 }
