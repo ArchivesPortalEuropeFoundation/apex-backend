@@ -21,26 +21,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "up_file")
 public class UpFile implements java.io.Serializable {
-    public static final String XML_TYPE = "ape.xmltype";
-    public static final String NO_EADID_ACTION = "ape.noeadidaction";
-    public static final String EXIST_ACTION = "ape.existaction";
-    public static final String DAO_TYPE = "ape.daotype";
-    public static final String DAO_TYPE_CHECK = "ape.daotypecheck";
-    public static final String UPLOAD_ACTION = "ape.uploadaction";
-    public static final String CONVERSION_TYPE = "europeana.conversiontype";
-    public static final String DATA_PROVIDER = "europeana.dataprovider";
-    public static final String DATA_PROVIDER_CHECK = "europeana.dataprovidercheck";
-    public static final String EUROPEANA_DAO_TYPE = "europeana.daotype";
-    public static final String EUROPEANA_DAO_TYPE_CHECK = "europeana.daotypecheck";
-    public static final String LANGUAGES = "europeana.languages";
-    public static final String LANGUAGE_CHECK = "europeana.languagecheck";
-    public static final String LICENSE = "europeana.license";
-    public static final String LICENSE_DETAILS = "europeana.licensedetails";
-    public static final String LICENSE_ADD_INFO = "europeana.licenseaddinfo";
-    public static final String INHERIT_FILE_CHECK = "europeana.inheritfilecheck";
-    public static final String INHERIT_FILE = "europeana.inheritfile";
-    public static final String INHERIT_ORIGINATION_CHECK = "europeana.inheritoriginationcheck";
-    public static final String INHERIT_ORIGINATION = "europeana.inheritorigination";
 
 	/**
 	 * 
@@ -63,7 +43,7 @@ public class UpFile implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY )
 	@JoinColumn(name = "ai_id" , updatable = false, insertable = false)
 	private ArchivalInstitution archivalInstitution;
-	private String preferences;
+
 
 	public int getId() {
 		return this.id;
@@ -88,6 +68,8 @@ public class UpFile implements java.io.Serializable {
 	public void setUploadMethod(UploadMethod uploadMethod) {
 		this.uploadMethod = uploadMethod;
 	}
+
+
 
 	public Integer getAiId() {
 		return aiId;
@@ -119,14 +101,6 @@ public class UpFile implements java.io.Serializable {
 
 	public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
 		this.archivalInstitution = archivalInstitution;
-	}
-
-	public String getPreferences() {
-		return preferences;
-	}
-
-	public void setPreferences(String preferences) {
-		this.preferences = preferences;
 	}
 
 }

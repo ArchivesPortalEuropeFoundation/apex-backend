@@ -19,6 +19,26 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "queue")
 public class QueueItem implements java.io.Serializable {
+    public static final String XML_TYPE = "ape.xmltype";
+    public static final String NO_EADID_ACTION = "ape.noeadidaction";
+    public static final String EXIST_ACTION = "ape.existaction";
+    public static final String DAO_TYPE = "ape.daotype";
+    public static final String DAO_TYPE_CHECK = "ape.daotypecheck";
+    public static final String UPLOAD_ACTION = "ape.uploadaction";
+    public static final String CONVERSION_TYPE = "europeana.conversiontype";
+    public static final String DATA_PROVIDER = "europeana.dataprovider";
+    public static final String DATA_PROVIDER_CHECK = "europeana.dataprovidercheck";
+    public static final String EUROPEANA_DAO_TYPE = "europeana.daotype";
+    public static final String EUROPEANA_DAO_TYPE_CHECK = "europeana.daotypecheck";
+    public static final String LANGUAGES = "europeana.languages";
+    public static final String LANGUAGE_CHECK = "europeana.languagecheck";
+    public static final String LICENSE = "europeana.license";
+    public static final String LICENSE_DETAILS = "europeana.licensedetails";
+    public static final String LICENSE_ADD_INFO = "europeana.licenseaddinfo";
+    public static final String INHERIT_FILE_CHECK = "europeana.inheritfilecheck";
+    public static final String INHERIT_FILE = "europeana.inheritfile";
+    public static final String INHERIT_ORIGINATION_CHECK = "europeana.inheritoriginationcheck";
+    public static final String INHERIT_ORIGINATION = "europeana.inheritorigination";
 
     /**
 	 *
@@ -51,6 +71,7 @@ public class QueueItem implements java.io.Serializable {
 	private Integer priority;
 	@Enumerated(EnumType.STRING)
 	private QueueAction action;
+	private String preferences;
 	
 	public QueueItem() {
 	}
@@ -86,6 +107,8 @@ public class QueueItem implements java.io.Serializable {
 	public void setSourceGuide(SourceGuide sourceGuide) {
 		this.sourceGuide = sourceGuide;
 	}
+	
+
 
 	public EacCpf getEacCpf() {
 		return eacCpf;
@@ -125,6 +148,14 @@ public class QueueItem implements java.io.Serializable {
 
 	public void setAction(QueueAction action) {
 		this.action = action;
+	}
+
+	public String getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(String preferences) {
+		this.preferences = preferences;
 	}
 
 	public AbstractContent getAbstractContent(){
@@ -195,5 +226,7 @@ public class QueueItem implements java.io.Serializable {
 	public void setUpFileId(Integer upFileId) {
 		this.upFileId = upFileId;
 	}
+
+
 
 }

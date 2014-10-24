@@ -11,8 +11,7 @@ package eu.apenet.persistence.vo;
 public enum IngestionprofileDefaultExistingFileAction {
 
     KEEP(0, "ingestionprofiles.existing.keep"),
-    OVERWRITE(1, "ingestionprofiles.existing.overwrite"),
-    ASK(2, "ingestionprofiles.existing.ask");
+    OVERWRITE(1, "ingestionprofiles.existing.overwrite");
 
     private int id;
     private String resourceName;
@@ -28,10 +27,6 @@ public enum IngestionprofileDefaultExistingFileAction {
 
     public boolean isKeep() {
         return KEEP.equals(this);
-    }
-
-    public boolean isAsk() {
-        return ASK.equals(this);
     }
 
     public int getId() {
