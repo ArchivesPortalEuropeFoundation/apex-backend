@@ -96,7 +96,7 @@
  
     function getResponse() {
 	    var node = $("#tree").dynatree("getActiveNode");
-	    $.post("${pageContext.request.contextPath}/deleteLevelHG.action", {key: node.data.key}, function(databack){
+	    $.post("${pageContext.request.contextPath}/deleteCLevel.action", {key: node.data.key}, function(databack){
 	        if(databack.success){
 	            var parent = node.parent;
 	            node.remove();
@@ -118,7 +118,7 @@
         $("#myMenu .delete a").click(function(){
             if(confirmAndDecode('<s:property value="getText('dashboard.hgcreation.areyousuredelete')" />')){
                 var node = $("#tree").dynatree("getActiveNode");
-                $.post("${pageContext.request.contextPath}/deleteLevelHG.action", {key: node.data.key}, function(databack){
+                $.post("${pageContext.request.contextPath}/deleteCLevel.action", {key: node.data.key}, function(databack){
                     if(databack.success){
                         var parent = node.parent;
                         node.remove();
@@ -155,7 +155,7 @@
 
         $("#editBtnSave").click(function(){
             $(this).unbind('click');
-            var params = {name: $("#editTitle").val(), identifier: $("#editIdentifier").val(), desc: $("#editDesc").val()};
+            var params = {name: $("#editTitle").val(), identifier: $("#editIdentifier").val(), desc: $("#editDesc").val(), eadXmlTypeId: "${eadXmlTypeId}"};
             if (!isAddedLevel){
             	params["key"]=node.data.key;
             }

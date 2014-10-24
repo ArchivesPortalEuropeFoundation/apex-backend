@@ -14,11 +14,18 @@
 
 <div id="batchBlock">
     <form id="batchActionsForm">
-        <c:if test="${results.holdingsGuide}">
-            <div class="left">
-                <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
-            </div>
-        </c:if>
+    	<c:choose>
+    		<c:when test="${results.holdingsGuide}">
+	            <div class="left">
+	                <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
+	            </div>    		
+    		</c:when>
+    		<c:when test="${results.sourceGuide}">
+	            <div class="left">
+	                <a href="sgTreeCreation.action"><s:text name="dashboard.sgcreation.title"/></a>
+	            </div>    		
+    		</c:when>    		
+    	</c:choose>
         <div class="right">
             <span class="bold">
                 <s:actionerror />
