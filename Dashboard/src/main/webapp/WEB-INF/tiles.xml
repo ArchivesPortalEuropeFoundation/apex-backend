@@ -925,7 +925,7 @@
     </definition>
     <definition name="hgTreeCreation" extends="DefaultLayout">
         <put-attribute name="title" value="dashboard.hgCreation.title"/>
-        <put-attribute name="body" value="/jsp/hgTreeCreation.jsp" />
+        <put-attribute name="body" value="/jsp/sgHgTreeCreation.jsp" />
         <put-list-attribute name="jsfilesInternal">
 
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
@@ -942,6 +942,25 @@
             <add-attribute type="string" value="/css/hgSgTreeCreation.css"/>
         </put-list-attribute>
     </definition>
+    <definition name="sgTreeCreation" extends="DefaultLayout">
+        <put-attribute name="title" value="dashboard.sgCreation.title"/>
+        <put-attribute name="body" value="/jsp/sgHgTreeCreation.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+
+            <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
+            <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
+            <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
+            <add-attribute type="string" value="/js/hgSgTreeCreation.js"/>
+
+
+        </put-list-attribute>
+        <put-list-attribute name="cssfilesInternal">
+            <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
+            <add-attribute type="string" value="/css/colorbox.css"/>
+            <add-attribute type="string" value="/css/hgSgTreeCreation.css"/>
+        </put-list-attribute>
+    </definition>    
     <definition name="automaticharvestingcreation" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.automaticharvestingcreation" />
         <put-attribute name="menu" value="/jsp/indexDashboard.jsp" />
