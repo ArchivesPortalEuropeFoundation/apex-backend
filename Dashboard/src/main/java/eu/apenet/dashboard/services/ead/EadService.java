@@ -53,23 +53,6 @@ public class EadService {
 	protected static final Logger LOGGER = Logger.getLogger(EadService.class);
 	private static final long NOT_USED_TIME = 60*60*24*7;
 
-	// Variable for the errors while processing with profile.
-	private static String error = "";
-
-	/**
-	 * @return the error
-	 */
-	public static String getError() {
-		return EadService.error;
-	}
-
-	/**
-	 * @param err the error to set
-	 */
-	public static void setError(String error) {
-		EadService.error = error;
-	}
-
 	public static boolean isHarvestingStarted() {
 		return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
 	}
@@ -337,20 +320,9 @@ public class EadService {
 		addToQueue(oldEad, QueueAction.OVERWRITE, null, upFile);
 	}
 
-	public static Ead create(XmlType xmlType, UpFile upFile, Integer aiId, boolean useProfile) throws Exception {
+	public static Ead create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
 		SecurityContext.get().checkAuthorized(aiId);
-        Properties preferences = null;
-
-        if (upFile!= null && upFile.getPreferences() != null) {
-            preferences = readProperties(upFile.getPreferences());
-        }
-
 		Ead ead = new CreateEadTask().execute(xmlType, upFile, aiId);
-
-		if (useProfile) {
-        	continueAutomaticTasks(ead, preferences, xmlType);
-		}
-
 		DAOFactory.instance().getUpFileDAO().delete(upFile);
         return ead;
 	}
@@ -370,12 +342,11 @@ public class EadService {
         EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		QueueAction queueAction = queueItem.getAction();
         Properties preferences = null;
-        if (queueItem.getUpFile()!= null
-        		&& queueItem.getUpFile().getPreferences() != null) {
-            preferences = readProperties(queueItem.getUpFile().getPreferences());
+        if (queueItem.getPreferences() != null) {
+            preferences = readProperties(queueItem.getPreferences());
         }
 
-        if (!queueAction.isUseProfileAction() && preferences == null) {
+        if (!queueAction.isUseProfileAction()) {
             Ead ead = queueItem.getEad();
             XmlType xmlType = XmlType.getContentType(ead);
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
@@ -493,9 +464,12 @@ public class EadService {
                 }
             }
         } else { //USE_PROFILE
-            IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(UpFile.NO_EADID_ACTION));
-            IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(UpFile.EXIST_ACTION));
-            XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(UpFile.XML_TYPE)));
+            IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
+            IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+            IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
+            IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
+            Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
+            XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
 
             //About EADID
             UpFile upFile = queueItem.getUpFile();
@@ -515,9 +489,7 @@ public class EadService {
                 Ead ead;
                 Ead newEad = null;
                 if((ead = doesFileExist(upFile, eadid, xmlType)) != null) {
-                    if(ingestionprofileDefaultExistingFileAction.isOverwrite()
-                		|| (ingestionprofileDefaultExistingFileAction.isAsk()
-            				&& queueAction.isOverwriteAction())) {
+                    if(ingestionprofileDefaultExistingFileAction.isOverwrite()) {
                         boolean eadDeleted = false;
                         try {
                             queueItem.setEad(null);
@@ -559,10 +531,6 @@ public class EadService {
                     	LOGGER.info("File will be removed, because there is already one with the same eadid: " + upFilePath);
                     	deleteFromQueue(queueItem, true);
                         continueTask = false;
-                    } else if (ingestionprofileDefaultExistingFileAction.isAsk()) {
-                    	LOGGER.info("Is needed to ask the user the action, because there is already one with the same eadid: " + upFilePath);
-                    	deleteFromQueue(queueItem, false);
-                        continueTask = false;
                     }
                 } else {
                     newEad = new CreateEadTask().execute(xmlType, upFile, upFile.getAiId());
@@ -572,14 +540,45 @@ public class EadService {
                 }
 
                 if(continueTask) {
-                	try {
-                		continueAutomaticTasks(newEad, preferences, xmlType);
+                    newEad.setQueuing(QueuingState.BUSY);
+                    eadDAO.store(newEad);
+
+                    Properties conversionProperties = new Properties();
+                    if(ingestionprofileDefaultDaoType == null) {
+                        conversionProperties.put("defaultRoleType", "UNSPECIFIED");
+                    } else {
+                        conversionProperties.put("defaultRoleType", ingestionprofileDefaultDaoType.getDaoText());
+                    }
+                    conversionProperties.put("useDefaultRoleType", daoTypeCheck);
+
+                    try {
+                        if(ingestionprofileDefaultUploadAction.isConvert()) {
+                            new ConvertTask().execute(newEad, conversionProperties);
+                        } else if(ingestionprofileDefaultUploadAction.isValidate()) {
+                            new ValidateTask().execute(newEad);
+                        } else if(ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                            new ValidateTask().execute(newEad);
+                            new ConvertTask().execute(newEad, conversionProperties);
+                            new ValidateTask().execute(newEad);
+                            new PublishTask().execute(newEad);
+                            if(ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                                Properties europeanaProperties = createEuropeanaProperties(preferences, newEad);
+                                new ConvertToEseEdmTask().execute(newEad, europeanaProperties);
+                                new DeliverToEuropeanaTask().execute(newEad);
+                            }
+                        }
+                        newEad.setQueuing(QueuingState.NO);
+                        eadDAO.store(newEad);
                         queueItemDAO.delete(queueItem);
-                	} catch (Exception e) {
-                        queueItem.setErrors(new Date() + " - " + EadService.getError() + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                    } catch (Exception e) {
+                        newEad.setQueuing(QueuingState.ERROR);
+                        eadDAO.store(newEad);
+
+                        String err = "eadid: " + newEad.getEadid() + " - id: " + newEad.getId() + " - type: " + xmlType.getName();
+                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                         queueItem.setPriority(0);
                         queueItemDAO.store(queueItem);
-
                         /*
                          * throw exception when solr has problem, so the queue will stop for a while.
                          */
@@ -587,7 +586,7 @@ public class EadService {
                             throw (Exception) e;
 
                         }
-                	}
+                    }
                 }
             }
         }
@@ -784,9 +783,8 @@ public class EadService {
 		QueueItem queueItem = new QueueItem();
 		queueItem.setQueueDate(new Date());
 		queueItem.setAction(queueAction);
-		if (preferences != null
-				&& queueItem.getUpFile() != null) {
-			queueItem.getUpFile().setPreferences(writeProperties(preferences));
+		if (preferences != null) {
+			queueItem.setPreferences(writeProperties(preferences));
 		}
 		int priority = basePriority;
 		if (ead instanceof FindingAid) {
@@ -813,9 +811,8 @@ public class EadService {
         QueueItem queueItem = new QueueItem();
         queueItem.setQueueDate(new Date());
         queueItem.setAction(queueAction);
-        if (preferences != null
-        		&& upFile != null) {
-            upFile.setPreferences(writeProperties(preferences));
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
         }
 
         queueItem.setUpFile(upFile);
@@ -826,31 +823,31 @@ public class EadService {
 
     private static Properties createEuropeanaProperties(Properties preferences, Ead ead) {
     	EdmConfig config = new EdmConfig();
-    	config.setDataProvider(preferences.getProperty(UpFile.DATA_PROVIDER));
-    	config.setUseExistingRepository("true".equals(preferences.getProperty(UpFile.DATA_PROVIDER_CHECK)));
+    	config.setDataProvider(preferences.getProperty(QueueItem.DATA_PROVIDER));
+    	config.setUseExistingRepository("true".equals(preferences.getProperty(QueueItem.DATA_PROVIDER_CHECK)));
     	config.setProvider("Archives Portal Europe");
-        config.setType(IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(UpFile.EUROPEANA_DAO_TYPE)).getDaoText());
-        config.setUseExistingDaoRole("true".equals(preferences.getProperty(UpFile.EUROPEANA_DAO_TYPE_CHECK)));
-        config.setLanguage(preferences.getProperty(UpFile.LANGUAGES));
-        config.setUseExistingLanguage("true".equals(preferences.getProperty(UpFile.LANGUAGE_CHECK)));
+        config.setType(IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE)).getDaoText());
+        config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
+        config.setLanguage(preferences.getProperty(QueueItem.LANGUAGES));
+        config.setUseExistingLanguage("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
     	config.setInheritLanguage(true);
-        if ("europeana".equals(preferences.getProperty(UpFile.LICENSE))){
-    		config.setRights(preferences.getProperty(UpFile.LICENSE_DETAILS));
-    	}else if("cc0".equals(preferences.getProperty(UpFile.LICENSE))){
+        if ("europeana".equals(preferences.getProperty(QueueItem.LICENSE))){
+    		config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
+    	}else if("cc0".equals(preferences.getProperty(QueueItem.LICENSE))){
     		config.setRights("http://creativecommons.org/publicdomain/zero/1.0/");
-    	}else if("cpdm".equals(preferences.getProperty(UpFile.LICENSE))){
+    	}else if("cpdm".equals(preferences.getProperty(QueueItem.LICENSE))){
     		config.setRights("http://creativecommons.org/publicdomain/mark/1.0/");
     	}else {
-    		config.setRights(preferences.getProperty(UpFile.LICENSE_DETAILS));
+    		config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
     	}
-    	config.setRightsAdditionalInformation(preferences.getProperty(UpFile.LICENSE_ADD_INFO));
-    	if ("false".equals(preferences.getProperty(UpFile.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(UpFile.INHERIT_FILE_CHECK)) && "true".equals(preferences.getProperty(UpFile.INHERIT_FILE))) {
-            config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(UpFile.INHERIT_FILE)));
+    	config.setRightsAdditionalInformation(preferences.getProperty(QueueItem.LICENSE_ADD_INFO));
+    	if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE_CHECK)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE))) {
+            config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
         }
-    	if ("false".equals(preferences.getProperty(UpFile.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(UpFile.INHERIT_ORIGINATION_CHECK)) && "true".equals(preferences.getProperty(UpFile.INHERIT_ORIGINATION))) {
-            config.setInheritOrigination("true".equals(preferences.getProperty(UpFile.INHERIT_ORIGINATION)));
+    	if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION_CHECK)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION))) {
+            config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
         }
-        config.setMinimalConversion("true".equals(preferences.getProperty(UpFile.CONVERSION_TYPE)));
+        config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
 
         String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
                             + APEnetUtilities.FILESEPARATOR + "fa"
@@ -862,67 +859,5 @@ public class EadService {
         config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         config.setXmlTypeName("fa");
     	return config.getProperties();
-    }
-
-    /**
-     * Method that continues the process in case the Ead is associated to a
-     * profile.
-     *
-     * @param newEad EAD associated to the profile.
-     * @param preferences Profile preferences.
-     * @param xmlType Type of EAD.
-     *
-     * @throws Exception Exception during the process.
-     */
-    private static void continueAutomaticTasks(Ead newEad, Properties preferences, XmlType xmlType) throws Exception {
-        IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(UpFile.UPLOAD_ACTION));
-        IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(UpFile.DAO_TYPE));
-        Boolean daoTypeCheck = "true".equals(preferences.getProperty(UpFile.DAO_TYPE_CHECK));
-        EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-
-        newEad.setQueuing(QueuingState.BUSY);
-        eadDAO.store(newEad);
-
-        Properties conversionProperties = new Properties();
-        if(ingestionprofileDefaultDaoType == null) {
-            conversionProperties.put("defaultRoleType", "UNSPECIFIED");
-        } else {
-            conversionProperties.put("defaultRoleType", ingestionprofileDefaultDaoType.getDaoText());
-        }
-        conversionProperties.put("useDefaultRoleType", daoTypeCheck);
-
-        try {
-            if(ingestionprofileDefaultUploadAction.isConvert()) {
-                new ConvertTask().execute(newEad, conversionProperties);
-            } else if(ingestionprofileDefaultUploadAction.isValidate()) {
-                new ValidateTask().execute(newEad);
-            } else if(ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-                new ValidateTask().execute(newEad);
-                new ConvertTask().execute(newEad, conversionProperties);
-                new ValidateTask().execute(newEad);
-                new PublishTask().execute(newEad);
-                if(ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-                    Properties europeanaProperties = createEuropeanaProperties(preferences, newEad);
-                    new ConvertToEseEdmTask().execute(newEad, europeanaProperties);
-                    new DeliverToEuropeanaTask().execute(newEad);
-                }
-            }
-            newEad.setQueuing(QueuingState.NO);
-            eadDAO.store(newEad);
-        } catch (Exception e) {
-            newEad.setQueuing(QueuingState.ERROR);
-            eadDAO.store(newEad);
-
-            String err = "eadid: " + newEad.getEadid() + " - id: " + newEad.getId() + " - type: " + xmlType.getName();
-            EadService.setError(err);
-            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
-            /*
-             * throw exception when solr has problem, so the queue will stop for a while.
-             */
-            if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
-                throw (Exception) e;
-
-            }
-        }
     }
 }
