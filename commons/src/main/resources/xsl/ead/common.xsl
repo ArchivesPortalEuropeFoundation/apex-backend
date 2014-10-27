@@ -49,14 +49,16 @@
 		<xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>
 	</xsl:template>
 	<xsl:template match="ead:emph[@render='bold']" mode="#all">
-		<b>
+		<xsl:variable name="emphValue">
 			<xsl:apply-templates mode="#current" />
-		</b>
+		</xsl:variable>
+		<b><xsl:value-of select="fn:normalize-space($emphValue)"/></b>
 	</xsl:template>
 	<xsl:template match="ead:emph[@render='italic']" mode="#all">
-		<i>
+		<xsl:variable name="emphValue">
 			<xsl:apply-templates mode="#current" />
-		</i>
+		</xsl:variable>
+		<i><xsl:value-of select="fn:normalize-space($emphValue)"/></i>
 	</xsl:template>
 	<xsl:template match="ead:list[@type='ordered']" mode="#all">
 		<p>
@@ -73,9 +75,7 @@
 		</p>
 	</xsl:template>
 	<xsl:template match="ead:item" mode="#all">
-		<li>
-			<xsl:apply-templates mode="#current" />
-		</li>
+		<li><xsl:apply-templates mode="#current" /></li>
 	</xsl:template>
 	<xsl:template match="ead:dao"  mode="#all">
 		<xsl:variable name="href" select="./@xlink:href" />
@@ -441,9 +441,7 @@
 		<table>
 			<xsl:if test="./ead:head">
 				<caption>
-					<i>
-						<xsl:apply-templates select="./ead:head/child::node()" mode="#current" />
-					</i>
+					<i><xsl:apply-templates select="./ead:head/child::node()" mode="#current" /></i>
 				</caption>
 			</xsl:if>
 			<xsl:apply-templates mode="#current" />
