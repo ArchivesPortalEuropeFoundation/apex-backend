@@ -1,0 +1,20 @@
+DELETE FROM topic_mapping;
+DELETE FROM topic;
+alter table topic add column position bigint not null;
+
+INSERT INTO topic(property_key, description,position) VALUES ('first.world.war', 'First World War (1914-1918)',1);
+INSERT INTO topic(property_key, description,position) VALUES ('second.world.war', 'Second World War (1939-1945)',2);
+INSERT INTO topic(property_key, description,position) VALUES ('cold.war', 'Cold War',3);
+INSERT INTO topic(property_key, description,position) VALUES ('slavery', 'Slavery',4);
+INSERT INTO topic(property_key, description,position) VALUES ('state.collection', 'State collection',5);
+INSERT INTO topic(property_key, description,position) VALUES ('gdr', 'German Democratic Republic',6);
+INSERT INTO topic(property_key, description,position) VALUES ('medieval.period', 'Medieval period',7);
+INSERT INTO topic(property_key, description,position) VALUES ('politics', 'Politics',8);
+INSERT INTO topic(property_key, description,position) VALUES ('democracy', 'Democracy',9);
+INSERT INTO topic(property_key, description,position) VALUES ('transport', 'Transport',10);
+INSERT INTO topic(property_key, description,position) VALUES ('genealogy', 'Genealogy',11);
+INSERT INTO topic(property_key, description,position) VALUES ('churches', 'Churches',12);
+INSERT INTO topic(property_key, description,position) VALUES ('crime', 'Crime',13);
+INSERT INTO topic(property_key, description,position) VALUES ('taxation', 'Taxation',14);
+INSERT INTO topic(property_key, description,position) VALUES ('econimics', 'Econimics',15);
+INSERT INTO topic(property_key, description,position) VALUES ('national.admin', 'National Administration',16);
