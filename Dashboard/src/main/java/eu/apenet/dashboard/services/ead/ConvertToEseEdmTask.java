@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.ead2ese.CTableXMLHandler;
 import eu.apenet.dpt.utils.ead2edm.DigitalObjectCounter;
 import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.ead2edm.XMLUtil;
@@ -140,8 +139,6 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                         findingAid.setTotalNumberOfChos(new Long(numberOfRecords));
                         findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfWebResource()));
                         findingAid.setEuropeana(EuropeanaState.CONVERTED);
-                        CTableXMLHandler handler = new CTableXMLHandler();
-                        handler.deleteFile(findingAid.getId().toString(), ai.getAiId() + "");
                     } else {
                         edmOutputFile.delete();
                         findingAid.setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);

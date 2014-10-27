@@ -228,7 +228,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	public String execute() throws Exception{
 		EdmConfig config = fillConfig();
 		if (StringUtils.isBlank(batchItems)){
-                    EadService.convertToEseEdm(Integer.parseInt(id), config.getProperties());
+			EadService.convertToEseEdm(Integer.parseInt(id), config.getProperties());
 		}else {
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
 
@@ -255,8 +255,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     }
 
 	protected EdmConfig fillConfig(){
-    	CTableXMLHandler xmlHandler = new CTableXMLHandler();
-        EdmConfig config = new EdmConfig();
+    	EdmConfig config = new EdmConfig();
     	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
 
@@ -315,8 +314,6 @@ public class ConvertAction extends AbstractInstitutionAction {
         config.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
         config.setXmlTypeName("fa");
 
-        xmlHandler.generateFile(id, getAiId().toString());
-        config.setCLevelFileLoc("file:///" + xmlHandler.getFilename());
     	return config;
 	}
 
