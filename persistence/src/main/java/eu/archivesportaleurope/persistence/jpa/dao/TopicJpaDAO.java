@@ -7,7 +7,6 @@ import javax.persistence.TypedQuery;
 import eu.apenet.persistence.dao.TopicDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.Topic;
-import eu.apenet.persistence.vo.TopicMapping;
 
 public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements TopicDAO {
 
@@ -22,6 +21,16 @@ public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements To
 			return null;
 		}
 	}
+
+	
+	@Override
+	public List<Topic> getFirstTopics() {
+		String jpaQuery = "SELECT topic FROM Topic topic ORDER BY position";
+		TypedQuery<Topic> query = getEntityManager().createQuery(jpaQuery, Topic.class);		
+		query.setMaxResults(15);
+		return query.getResultList();
+	}
+
 
 	@Override
 	public List<Topic> getTopicsWithoutMapping(Integer aiId) {
