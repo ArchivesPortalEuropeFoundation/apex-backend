@@ -17,6 +17,7 @@ public class Topic {
 	@Column(name = "property_key")
 	private String propertyKey;
 	private String description;
+	private Long position;
 	public Long getId() {
 		return id;
 	}
@@ -34,6 +35,12 @@ public class Topic {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public Long getPosition() {
+		return position;
+	}
+	public void setPosition(Long position) {
+		this.position = position;
 	}
 
 }
