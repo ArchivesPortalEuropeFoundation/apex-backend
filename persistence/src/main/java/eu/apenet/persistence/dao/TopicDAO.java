@@ -9,4 +9,5 @@ public interface TopicDAO extends GenericDAO<Topic, Long> {
 
 	public String getDescription(String propertyKey);
 	public List<Topic> getTopicsWithoutMapping(Integer aiId);
+	public List<Topic> getFirstTopics();
 }
