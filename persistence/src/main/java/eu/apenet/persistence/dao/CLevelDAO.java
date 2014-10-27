@@ -6,9 +6,9 @@ import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 
 /**
- *
+ * 
  * @author Bastiaan Verhoef
- *
+ * 
  */
 
 public interface CLevelDAO extends GenericDAO<CLevel, Long> {
@@ -42,13 +42,11 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	public List<CLevel> getClevelsFromSgOrHg(Integer aiId, String eadid);
 
 	public List<CLevel> getCLevelsNodes(Long eadContentId);
-
+	
 
 	public Long countCLevels(Class<? extends Ead> clazz, Integer id);
 	public List<CLevel> getCLevels(Class<? extends Ead> clazz, Integer id, int pageNumber, int pageSize);
-
+	
 	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid);
 	public CLevel getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Long id);
-
-        public List<CLevel> getCLevelsWithoutUnitid(Integer id);
 }
