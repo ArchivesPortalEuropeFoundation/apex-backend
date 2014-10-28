@@ -1,27 +1,21 @@
 package eu.apenet.dashboard.actions;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.Breadcrumb;
 import eu.apenet.dashboard.security.PasswordValidator;
 import eu.apenet.dashboard.security.PasswordValidator.ValidationResult;
-import eu.apenet.dashboard.security.SecurityService.LoginResult;
-import eu.apenet.dashboard.security.SecurityService.LoginResult.LoginResultType;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
-import eu.apenet.persistence.dao.UserDAO;
-import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.User;
 
 public class EditAction extends AbstractAction {
@@ -232,9 +226,7 @@ public class EditAction extends AbstractAction {
 			}else if (UserService.exitsEmailUser(this.getEmail().trim()) && !currentEmail.equalsIgnoreCase(this.getEmail().trim())) {
 				addFieldError("email", getText("email.alreadyUsed"));	//the e-mail is already in use
 			}else{
-				String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-	            Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);
-	            Matcher matcher = pattern.matcher(this.getEmail().trim());
+	            Matcher matcher = APEnetUtilities.EMAIL_PATTERN.matcher(this.getEmail().trim());
 	            if(!matcher.matches()){
 	                addFieldError("email", getText("email.valid"));  //it's an invalid e-mail
 	            }
