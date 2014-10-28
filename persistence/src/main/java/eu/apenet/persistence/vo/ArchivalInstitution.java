@@ -69,6 +69,9 @@ public class ArchivalInstitution implements java.io.Serializable {
 	@Column(name = "content_lastmodified_date")
 	private Date contentLastModifiedDate;
 	
+	@Column(name = "feedback_email")
+	private String feedbackEmail;
+	
 	@Column(name = "using_mets")
 	private boolean usingMets;
 	
@@ -289,4 +292,13 @@ public class ArchivalInstitution implements java.io.Serializable {
 	public void setUsingMets(boolean usingMets) {
 		this.usingMets = usingMets;
 	}
+
+	public String getFeedbackEmail() {
+		return feedbackEmail;
+	}
+
+	public void setFeedbackEmail(String feedbackEmail) {
+		this.feedbackEmail = feedbackEmail;
+	}
+	
 }
