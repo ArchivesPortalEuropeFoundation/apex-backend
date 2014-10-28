@@ -16,7 +16,7 @@
             generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
             eacCpfActions, batchEacCpfActions, downloadEacCpf, printEacCpfDetails,
 			manageTopicMappings,displayCreateEditTopicMapping,createEditTopicMapping,deleteTopicMapping,
-            GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
+            GoDashboard, dashboardHome, GoDashboardByInstitutionManager,setFeedbackEmailaddress,displaySetFeedbackEmailaddress,
 
             <!-- EAG -->
             createsimpleeag, createsimpleeagwithmenu, uploadsimpleeag, uploadsimpleeagwithmenu, uploadowneag, eaghttpuploadwithmenu,

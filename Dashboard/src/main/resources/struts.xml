@@ -866,7 +866,18 @@
                 <param name="actionName">manageTopicMappings</param>
             </result>
             <result name="input" type="tiles">createEditTopicMapping</result>
-        </action>      
+        </action>  
+        
+        <action name="displaySetFeedbackEmailaddress" class="eu.apenet.dashboard.actions.SetFeedbackEmailaddressAction" method="input">
+            <result name="input" type="tiles">setFeedbackEmailaddress</result>
+        </action>
+        <action name="setFeedbackEmailaddress" class="eu.apenet.dashboard.actions.SetFeedbackEmailaddressAction">
+            <result name="success" type="redirectAction">
+                <param name="actionName">dashboardHome</param>
+            </result>
+            <result name="input" type="tiles">setFeedbackEmailaddress</result>
+        </action>          
+            
         <action name="deleteTopicMapping" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction" method="deleteTopicMapping">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageTopicMappings</param>
