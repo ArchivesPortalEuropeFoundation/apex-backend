@@ -13,8 +13,10 @@
 		<xsl:param name="dateRange"/>
 		<xsl:param name="dateSet"/>
 		<xsl:param name="mode"/>
-
-		<xsl:if test="(($mode = 'default' or $mode = 'showAll') and ($date or $dateRange or $dateSet))
+		<xsl:param name="langNode"/>
+		
+		
+		<xsl:if test="($mode = 'showAll' and ($date or $dateRange or $dateSet))
 					or ($mode = 'other' and ($date[@xml:lang = $translationLanguage]/text()
 						or $dateRange[eac:fromDate[@xml:lang = $translationLanguage]]/text()
 						or $dateRange[eac:toDate[@xml:lang = $translationLanguage]]/text()
@@ -39,6 +41,71 @@
 						</xsl:if>
 						<!-- when there are only 1 date -->
 						<xsl:if test="$date and $date/text()">
+							<xsl:apply-templates select="$date"/>
+						</xsl:if>
+					</span>
+				</div> 
+			</div>
+		</xsl:if>
+		
+		<xsl:if test="$mode = 'default' and ($date[@xml:lang = $langNode]/text()
+						or $dateRange[eac:fromDate[@xml:lang = $langNode]]/text()
+						or $dateRange[eac:toDate[@xml:lang = $langNode]]/text()
+						or $dateSet[eac:date[@xml:lang = $langNode]]/text()
+						or $dateSet[eac:dateRange[eac:fromDate[@xml:lang = $langNode]]]/text()
+						or $dateSet[eac:dateRange[eac:toDate[@xml:lang = $langNode]]]/text())">
+		    <div class="row">
+		    	<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
+				</div>          
+		        <div class="rightcolumn">
+		        	<span class="nameEtryDates">
+						<!-- when there are only 1 dateSet -->
+						<xsl:if test="$dateSet and (($dateSet/eac:dateRange/eac:fromDate[@xml:lang = $langNode] or $dateSet/eac:dateRange/eac:toDate[@xml:lang = $langNode]) or ($dateSet/eac:date[@xml:lang = $langNode] and $dateSet/eac:date[@xml:lang = $langNode]/text()))">
+							<xsl:apply-templates select="$dateSet">
+				   				<xsl:with-param name="mode" select="$mode"/>
+				   				<xsl:with-param name="langNode" select="$langNode"/>
+							</xsl:apply-templates>
+						</xsl:if>
+						<!-- when there are only 1 dateRange -->
+						<xsl:if test="$dateRange and ($dateRange/eac:fromDate[@xml:lang = $langNode] or $dateRange/eac:toDate[@xml:lang = $langNode])">
+							<xsl:apply-templates select="$dateRange"/>
+						</xsl:if>
+						<!-- when there are only 1 date -->
+						<xsl:if test="$date[@xml:lang = $langNode] and $date[@xml:lang = $langNode]/text()">
+							<xsl:apply-templates select="$date"/>
+						</xsl:if>
+					</span>
+				</div> 
+			</div>
+		</xsl:if>
+		
+		<xsl:if test="$mode = 'default' and $langNode='notLang' and ($date[not(@xml:lang)]/text()
+						or $dateRange[eac:fromDate[not(@xml:lang)]]/text()
+						or $dateRange[eac:toDate[not(@xml:lang)]]/text()
+						or $dateSet[eac:date[not(@xml:lang)]]/text()
+						or $dateSet[eac:dateRange[eac:fromDate[not(@xml:lang)]]]/text()
+						or $dateSet[eac:dateRange[eac:toDate[not(@xml:lang)]]]/text())">
+		    <div class="row">
+		    	<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
+				</div>          
+		        <div class="rightcolumn">
+		        	<xsl:text>date sin lenguaje</xsl:text>
+		        	<span class="nameEtryDates">
+						<!-- when there are only 1 dateSet -->
+						<xsl:if test="$dateSet and (($dateSet/eac:dateRange/eac:fromDate[not(@xml:lang)] or $dateSet/eac:dateRange/eac:toDate[not(@xml:lang)]) or ($dateSet/eac:date[not(@xml:lang)] and $dateSet/eac:date[not(@xml:lang)]/text()))">
+							<xsl:apply-templates select="$dateSet">
+				   				<xsl:with-param name="mode" select="$mode"/>
+				   				<xsl:with-param name="langNode" select="$langNode"/>
+							</xsl:apply-templates>
+						</xsl:if>
+						<!-- when there are only 1 dateRange -->
+						<xsl:if test="$dateRange and ($dateRange/eac:fromDate[not(@xml:lang)] or $dateRange/eac:toDate[not(@xml:lang)])">
+							<xsl:apply-templates select="$dateRange"/>
+						</xsl:if>
+						<!-- when there are only 1 date -->
+						<xsl:if test="$date[not(@xml:lang)] and $date[not(@xml:lang)]/text()">
 							<xsl:apply-templates select="$date"/>
 						</xsl:if>
 					</span>
@@ -98,6 +165,8 @@
 	<!-- template for dateSet -->
 	<xsl:template match="eac:dateSet">
 		<xsl:param name="mode"/>
+		<xsl:param name="langNode"/>
+		
 		<xsl:if test="eac:dateRange or eac:date">
 			<!-- Checks if exists any content in the translation language. -->
 			<xsl:if test="$mode = 'other' and (eac:date[@xml:lang = $translationLanguage] or eac:dateRange[eac:fromDate[@xml:lang = $translationLanguage] or eac:toDate[@xml:lang = $translationLanguage]])">
@@ -145,7 +214,7 @@
 				</xsl:if>
 			</xsl:if>
 			<xsl:if test="$mode = 'default'">
-				<xsl:if test="name(eac:date/parent::node()) = 'existDates' or name(eac:date/parent::node()/parent::node()) = 'existDates'
+	<!-- 			<xsl:if test="name(eac:date/parent::node()) = 'existDates' or name(eac:date/parent::node()/parent::node()) = 'existDates'
 							or name(eac:dateRange/parent::node()) = 'existDates' or name(eac:dateRange/parent::node()/parent::node()) = 'existDates'">
 					<xsl:text> (</xsl:text>
 				</xsl:if>
@@ -162,7 +231,52 @@
 				<xsl:if test="name(eac:date/parent::node()) = 'existDates' or name(eac:date/parent::node()/parent::node()) = 'existDates'
 							or name(eac:dateRange/parent::node()) = 'existDates' or name(eac:dateRange/parent::node()/parent::node()) = 'existDates'">
 					<xsl:text>)</xsl:text>
-				</xsl:if>
+				</xsl:if>-->
+				<xsl:choose>
+					<xsl:when test="name(eac:date/parent::node()) = 'existDates' or name(eac:date/parent::node()/parent::node()) = 'existDates'
+							or name(eac:dateRange/parent::node()) = 'existDates' or name(eac:dateRange/parent::node()/parent::node()) = 'existDates'">
+						<xsl:text> (</xsl:text>
+						<span class="nameEtryDates">
+							<xsl:call-template name="multilanguageDate">
+								<xsl:with-param name="list" select="eac:date"/>
+							</xsl:call-template>
+							<xsl:if test="eac:dateRange/eac:fromDate or eac:dateRange/eac:toDate">
+								<xsl:call-template name="multilanguageDateRange">
+									<xsl:with-param name="list" select="eac:dateRange"/>	
+								</xsl:call-template>
+							</xsl:if>
+						</span>
+						<xsl:text>)</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<span class="nameEtryDates">
+							<xsl:if test="eac:date[@xml:lang = $langNode] and eac:date[@xml:lang = $langNode]/text() and eac:date[@xml:lang = $langNode]/text() != ''">
+								<xsl:call-template name="multilanguageDate">
+									<xsl:with-param name="list" select="eac:date[@xml:lang = $langNode]"/>
+								</xsl:call-template>
+							</xsl:if>
+							<xsl:if test="eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]
+										and eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]/text()
+										and eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]/text() != ''">
+								<xsl:call-template name="multilanguageDateRange">
+									<xsl:with-param name="list" select="eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]"/>	
+								</xsl:call-template>
+							</xsl:if>
+							<xsl:if test="$langNode = 'notLang' and eac:date[not(@xml:lang)] and eac:date[not(@xml:lang)]/text() and eac:date[not(@xml:lang)]/text() != ''">
+								<xsl:call-template name="multilanguageDate">
+									<xsl:with-param name="list" select="eac:date[not(@xml:lang)]"/>
+								</xsl:call-template>
+							</xsl:if>
+							<xsl:if test="$langNode = 'notLang' and eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]
+										and eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]/text()
+										and eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]/text() != ''">
+								<xsl:call-template name="multilanguageDateRange">
+									<xsl:with-param name="list" select="eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]"/>	
+								</xsl:call-template>
+							</xsl:if>
+						</span>
+					</xsl:otherwise> 
+				</xsl:choose>
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>

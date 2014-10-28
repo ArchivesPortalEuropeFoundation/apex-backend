@@ -52,7 +52,9 @@
 				<span class="nameEtryDates">
 					<!-- when there are only 1 dateSet -->
 					<xsl:if test="$existDates/eac:dateSet and (($existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate) or ($existDates/eac:dateSet/eac:date and $existDates/eac:dateSet/eac:date/text()))">
-						<xsl:apply-templates select="$existDates/eac:dateSet"/>
+						<xsl:apply-templates select="$existDates/eac:dateSet">
+							<xsl:with-param name="langNode" select="''"/>
+						</xsl:apply-templates>
 					</xsl:if>
 					<!-- when there are only 1 dateRange -->
 					<xsl:if test="$existDates/eac:dateRange and ($existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate)">
@@ -240,6 +242,92 @@
 			</xsl:if>
 			
 			<!-- location -->
+			<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<localDescriptions>" is a valid
+				 one. -->
+			<xsl:variable name="validHrefLinkPlaces">
+				<xsl:choose>
+					<xsl:when test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places//eac:citation[@xlink:href != '']">
+						<xsl:value-of select="ape:checkHrefValue(string-join(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places//eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="false"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			
+			<xsl:variable name="location" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places"/>
+			<xsl:variable name="langLocation">
+			 	<xsl:variable name="lang" select="$location//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="($location//eac:placeRole[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or $location//eac:placeEntry[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or $location//eac:date[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or $location//eac:fromDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != '' 
+							or $location//eac:toDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or $location//eac:citation[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ($location//eac:citation[@xlink:href != '' and @xml:lang=$language.selected]
+								and $validHrefLinkPlaces = 'true')
+							or $location//eac:citation[@xlink:title != '' and @xml:lang=$language.selected]
+							or $location//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or $location//eac:addressLine[@xml:lang=$language.selected]/text() != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="($location//eac:placeRole[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or $location//eac:placeEntry[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or $location//eac:date[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or $location//eac:fromDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '' 
+							or $location//eac:toDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or $location//eac:citation[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ($location//eac:citation[@xlink:href != '' and @xml:lang=$lang.navigator]
+								and $validHrefLinkPlaces = 'true')
+							or $location//eac:citation[@xlink:title != '' and @xml:lang=$lang.navigator]
+							or $location//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or $location//eac:addressLine[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="($location//eac:placeRole[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or $location//eac:placeEntry[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or $location//eac:date[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or $location//eac:fromDate[@xml:lang=$language.default]/fn:normalize-space(text()) != '' 
+							or $location//eac:toDate[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or $location//eac:citation[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ($location//eac:citation[@xlink:href != '' and @xml:lang=$language.default]
+								and $validHrefLinkPlaces = 'true')
+							or $location//eac:citation[@xlink:title != '' and @xml:lang=$language.default]
+							or $location//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or $location//eac:addressLine[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="($location//eac:placeRole[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or $location//eac:placeEntry[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or $location//eac:date[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or $location//eac:fromDate[not(@xml:lang)]/fn:normalize-space(text()) != '' 
+							or $location//eac:toDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or $location//eac:citation[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ($location//eac:citation[@xlink:href != '' and not(@xml:lang)]
+								and $validHrefLinkPlaces = 'true')
+							or $location//eac:citation[@xlink:title != '' and not(@xml:lang)]
+							or $location//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or $location//eac:addressLine[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
 				<h2 class="title">
 					<xsl:value-of select="translate(ape:resource('eaccpf.description.place'), $smallcase, $uppercase)"/>
@@ -251,6 +339,7 @@
 							 	<xsl:call-template name="placesPriorisation">
 						    		<xsl:with-param name="list" select="./eac:place"/>
 					   				<xsl:with-param name="posParent" select="$posParent"/>
+					    			<xsl:with-param name="langNode" select="$langLocation"/>
 					    		</xsl:call-template>
 
 				     	<!-- descriptiveNote places-->
@@ -261,6 +350,7 @@
 					   			<xsl:with-param name="posParent" select="$posParent"/>
 			    				<xsl:with-param name="posChild" select="''"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.place.note'"/>
+					    		<xsl:with-param name="langNode" select="$langLocation"/>
 					    	 </xsl:call-template>
 				    	 </xsl:if>
 				    </div>
@@ -281,7 +371,74 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-
+			
+			<xsl:variable name="langLocalDescriptions">
+			 	<xsl:variable name="lang" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:term[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:placeEntry[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:date[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:fromDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:toDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:href != '' and @xml:lang=$language.selected]
+								and $validHrefLinkLocalDescription = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:title != '' and @xml:lang=$language.selected]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:term[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:placeEntry[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:date[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:fromDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:toDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:href != '' and @xml:lang=$lang.navigator]
+								and $validHrefLinkLocalDescription = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:title != '' and @xml:lang=$lang.navigator]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:term[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:placeEntry[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:date[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:fromDate[@xml:lang=$language.default]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:toDate[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:href != '' and @xml:lang=$language.default]
+								and $validHrefLinkLocalDescription = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:title != '' and @xml:lang=$language.default]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:term[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:placeEntry[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:date[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:fromDate[not(@xml:lang)]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:toDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:href != '' and not(@xml:lang)]
+								and $validHrefLinkLocalDescription = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:citation[@xlink:title != '' and not(@xml:lang)]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription
 						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:term/text() != ''
 							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:localDescriptions/eac:localDescription/eac:placeEntry/text() != ''
@@ -320,6 +477,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.localDescription'"/>
+							    		<xsl:with-param name="langNode" select="$langLocalDescriptions"/>
 							    	</xsl:call-template>
 
 									<!-- placeEntry in localDescription -->
@@ -329,6 +487,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+							    		<xsl:with-param name="langNode" select="$langLocalDescriptions"/>
 							    	</xsl:call-template>
 
 									<!-- dates in localDescription -->
@@ -336,6 +495,7 @@
 							    		<xsl:with-param name="date" select="./eac:date"/>
 							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
 							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+							    		<xsl:with-param name="langNode" select="$langLocalDescriptions"/>
 							    	</xsl:call-template>
 
 									<!-- citation in localDescription -->
@@ -345,6 +505,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+							    		<xsl:with-param name="langNode" select="$langLocalDescriptions"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in localDescription -->
@@ -354,6 +515,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							    		<xsl:with-param name="langNode" select="$langLocalDescriptions"/>
 							    	</xsl:call-template>
 							    </div>
 							</xsl:if>	
@@ -365,6 +527,7 @@
 					    		<xsl:with-param name="posParent" select="$posParent"/>
 					    		<xsl:with-param name="posChild" select="''"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    	 		<xsl:with-param name="langNode" select="$langLocalDescriptions"/>
 				    	 	</xsl:call-template>
 					</div> 	 	
 				</xsl:for-each>		
@@ -382,6 +545,73 @@
 						<xsl:value-of select="false"/>
 					</xsl:otherwise>
 				</xsl:choose>
+			</xsl:variable>
+			
+			<xsl:variable name="langLegalStatus">
+			 	<xsl:variable name="langLegal" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//@xml:lang"/>
+			    <xsl:variable name="listLangLegal" select="string-join($langLegal,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelectedLegal" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:term[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:placeEntry[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:date[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:fromDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+                            or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:toDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:href != '' and @xml:lang=$language.selected]
+								and $validHrefLinkLegalStatus = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:title != '' and @xml:lang=$language.selected]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigatorLegal" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:term[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:placeEntry[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:date[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:fromDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+                            or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:toDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:href != '' and @xml:lang=$lang.navigator]
+								and $validHrefLinkLegalStatus = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:title != '' and @xml:lang=$lang.navigator]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefaultLegal" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:term[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:placeEntry[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:date[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:fromDate[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+                            or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:toDate[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:href != '' and @xml:lang=$language.default]
+								and $validHrefLinkLegalStatus = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:title != '' and @xml:lang=$language.default]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLangLegal" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:term[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:placeEntry[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:date[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:fromDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+                            or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:toDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:href != '' and not(@xml:lang)]
+								and $validHrefLinkLegalStatus = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:citation[@xlink:title != '' and not(@xml:lang)]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLangLegal,$language.selected) and $conditionLangSelectedLegal">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLangLegal,$lang.navigator) and $conditionLangNavigatorLegal">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLangLegal,$language.default) and $conditionLangDefaultLegal">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLangLegal">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLangLegal,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
 			</xsl:variable>
 
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:legalStatuses/eac:legalStatus
@@ -422,6 +652,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.legalStatus'"/>
+							    		<xsl:with-param name="langNode" select="$langLegalStatus"/>
 							    	</xsl:call-template>
 
 									<!-- placeEntry in legalStatus -->
@@ -431,6 +662,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+							    		<xsl:with-param name="langNode" select="$langLegalStatus"/>
 							    	</xsl:call-template>
 
 									<!-- dates in legalStatus -->
@@ -438,6 +670,7 @@
 							    		<xsl:with-param name="date" select="./eac:date"/>
 							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
 							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+							    		<xsl:with-param name="langNode" select="$langLegalStatus"/>
 							    	</xsl:call-template>
 
 									<!-- citation in legalStatus -->
@@ -447,6 +680,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+							    		<xsl:with-param name="langNode" select="$langLegalStatus"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in legalStatus -->
@@ -456,6 +690,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							    		<xsl:with-param name="langNode" select="$langLegalStatus"/>
 							    	</xsl:call-template>
 							    </div>
 							</xsl:if>	
@@ -467,6 +702,7 @@
 					    		<xsl:with-param name="posParent" select="$posParent"/>
 					    		<xsl:with-param name="posChild" select="''"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+					    	 	<xsl:with-param name="langNode" select="$langLegalStatus"/>
 					    	 </xsl:call-template>
 			    	 </div>
 				</xsl:for-each>		
@@ -486,6 +722,73 @@
 				</xsl:choose>
 			</xsl:variable>
 
+			<xsl:variable name="langFunctions">
+			 	<xsl:variable name="lang" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:term[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:placeEntry[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:date[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:fromDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:toDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:href != '' and @xml:lang=$language.selected]
+								and $validHrefLinkFunction = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:title != '' and @xml:lang=$language.selected]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:term[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:placeEntry[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:date[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:fromDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:toDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:href != '' and @xml:lang=$lang.navigator]
+								and $validHrefLinkFunction = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:title != '' and @xml:lang=$lang.navigator]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:term[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:placeEntry[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:date[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:fromDate[@xml:lang=$language.default]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:toDate[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:href != '' and @xml:lang=$language.default]
+								and $validHrefLinkFunction = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:title != '' and @xml:lang=$language.default]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:term[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:placeEntry[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:date[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:fromDate[not(@xml:lang)]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:toDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:href != '' and not(@xml:lang)]
+								and $validHrefLinkFunction = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:citation[@xlink:title != '' and not(@xml:lang)]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function
 						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:term/text() != ''
 							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:functions/eac:function/eac:placeEntry/text() != ''
@@ -524,6 +827,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.function'"/>
+							    		<xsl:with-param name="langNode" select="$langFunctions"/>
 							    	</xsl:call-template>
 
 									<!-- placeEntry in function-->
@@ -533,6 +837,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+							    		<xsl:with-param name="langNode" select="$langFunctions"/>
 							    	</xsl:call-template>
 
 									<!-- dates in function-->
@@ -540,6 +845,7 @@
 							    		<xsl:with-param name="date" select="./eac:date"/>
 							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
 							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+							    		<xsl:with-param name="langNode" select="$langFunctions"/>
 							    	</xsl:call-template>
 
 									<!-- citation in function -->
@@ -549,6 +855,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+							    		<xsl:with-param name="langNode" select="$langFunctions"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in function-->
@@ -558,6 +865,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							    		<xsl:with-param name="langNode" select="$langFunctions"/>
 							    	</xsl:call-template>
 						    	</div>
 							</xsl:if>
@@ -569,6 +877,7 @@
 					    		<xsl:with-param name="posParent" select="$posParent"/>
 					    		<xsl:with-param name="posChild" select="''"/>
 					    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+					    	 	<xsl:with-param name="langNode" select="$langFunctions"/>
 					    	 </xsl:call-template>
 					</div>	    	 
 				</xsl:for-each>		
@@ -588,6 +897,73 @@
 				</xsl:choose>
 			</xsl:variable>
 		    
+		    <xsl:variable name="langOccupations">
+			 	<xsl:variable name="lang" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:term[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:placeEntry[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:date[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:fromDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:toDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:href != '' and @xml:lang=$language.selected]
+								and $validHrefLinkOccupation = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:title != '' and @xml:lang=$language.selected]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:term[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:placeEntry[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:date[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:fromDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:toDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:href != '' and @xml:lang=$lang.navigator]
+								and $validHrefLinkOccupation = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:title != '' and @xml:lang=$lang.navigator]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:term[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:placeEntry[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:date[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:fromDate[@xml:lang=$language.default]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:toDate[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:href != '' and @xml:lang=$language.default]
+								and $validHrefLinkOccupation = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:title != '' and @xml:lang=$language.default]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:term[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:placeEntry[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:date[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:fromDate[not(@xml:lang)]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:toDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:href != '' and not(@xml:lang)]
+								and $validHrefLinkOccupation = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:citation[@xlink:title != '' and not(@xml:lang)]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation
 						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:term/text() != ''
 							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:occupations/eac:occupation/eac:placeEntry/text() != ''
@@ -626,6 +1002,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.occupation'"/>
+							    		<xsl:with-param name="langNode" select="$langOccupations"/>
 							    	</xsl:call-template>
 
 									<!-- placeEntry in occupation-->
@@ -635,6 +1012,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+							    		<xsl:with-param name="langNode" select="$langOccupations"/>
 							    	</xsl:call-template>
 
 									<!-- dates in occupation-->
@@ -642,6 +1020,7 @@
 							    		<xsl:with-param name="date" select="./eac:date"/>
 							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
 							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+							    		<xsl:with-param name="langNode" select="$langOccupations"/>
 							    	</xsl:call-template>
 
 									<!-- citation in occupation -->
@@ -651,6 +1030,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+							    		<xsl:with-param name="langNode" select="$langOccupations"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in occupation-->
@@ -660,6 +1040,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							    		<xsl:with-param name="langNode" select="$langOccupations"/>
 							    	</xsl:call-template>
 							    </div>
 							</xsl:if>
@@ -671,6 +1052,7 @@
 				    		<xsl:with-param name="posParent" select="$posParent"/>
 				    		<xsl:with-param name="posChild" select="''"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    	 	<xsl:with-param name="langNode" select="$langOccupations"/>
 				    	 </xsl:call-template>
 			    	 </div>
 				</xsl:for-each>		
@@ -689,7 +1071,74 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-
+			
+			<xsl:variable name="langMandates">
+			 	<xsl:variable name="lang" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:term[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:placeEntry[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:date[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:fromDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:toDate[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:href != '' and @xml:lang=$language.selected]
+								and $validHrefLinkMandate = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:title != '' and @xml:lang=$language.selected]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:term[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:placeEntry[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:date[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:fromDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:toDate[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:href != '' and @xml:lang=$lang.navigator]
+								and $validHrefLinkMandate = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:title != '' and @xml:lang=$lang.navigator]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:term[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:placeEntry[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:date[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:fromDate[@xml:lang=$language.default]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:toDate[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:href != '' and @xml:lang=$language.default]
+								and $validHrefLinkMandate = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:title != '' and @xml:lang=$language.default]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:term[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:placeEntry[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:date[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:fromDate[not(@xml:lang)]/fn:normalize-space(text()) != '' 
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:toDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:href != '' and not(@xml:lang)]
+								and $validHrefLinkMandate = 'true')
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:citation[@xlink:title != '' and not(@xml:lang)]
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 		    <xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate
 						and (./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:term/text() != ''
 							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:mandates/eac:mandate/eac:placeEntry/text() != ''
@@ -728,6 +1177,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.mandate'"/>
+							    		<xsl:with-param name="langNode" select="$langMandates"/>
 							    	</xsl:call-template>
 
 									<!-- placeEntry in mandate-->
@@ -737,6 +1187,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.location'"/>
+							    		<xsl:with-param name="langNode" select="$langMandates"/>
 							    	</xsl:call-template>
 
 									<!-- dates in mandate-->
@@ -744,6 +1195,7 @@
 							    		<xsl:with-param name="date" select="./eac:date"/>
 							    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
 							    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+							    		<xsl:with-param name="langNode" select="$langMandates"/>
 							    	</xsl:call-template>
 
 									<!-- citation in mandate -->
@@ -753,6 +1205,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.citation'"/>
+							    		<xsl:with-param name="langNode" select="$langMandates"/>
 							    	</xsl:call-template>
 
 									<!-- descriptiveNote in mandate-->
@@ -762,6 +1215,7 @@
 							    		<xsl:with-param name="posParent" select="$posParent"/>
 							    		<xsl:with-param name="posChild" select="$posChild"/>
 							    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+							    		<xsl:with-param name="langNode" select="$langMandates"/>
 							    	</xsl:call-template>
 							    </div>
 							</xsl:if>	
@@ -773,58 +1227,168 @@
 				    		<xsl:with-param name="posParent" select="$posParent"/>
 				    		<xsl:with-param name="posChild" select="''"/>
 				    		<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+				    		<xsl:with-param name="langNode" select="$langMandates"/>
 				    	 </xsl:call-template>
 			    	 </div>
 				</xsl:for-each>		
 		    </xsl:if>
-
+			
+			<!-- languagesUsed -->
+			<xsl:variable name="languagesUsed">
+			 	<xsl:variable name="lang" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:language[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:script[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:language[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:script[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:language[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:script[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:language[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:script[not(@xml:lang)]/fn:normalize-space(text()) != ''
+							or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 			<!--language -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language/text()">   
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[@xml:lang = $languagesUsed]/text()">   
 				<div class="row">
 						<div class="leftcolumn">
 					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn">
 							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language"/>
+					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[@xml:lang = $languagesUsed]"/>
 					   			<xsl:with-param name="clazz" select="'language'"/>
 					   		</xsl:call-template>
 						</div>
 				</div>
 			</xsl:if>
-
+			<xsl:if test="$languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[not(@xml:lang)]/text()">   
+				<div class="row">
+						<div class="leftcolumn">
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/><xsl:text>:</xsl:text></h2>
+					   	</div>
+					   	<div class="rightcolumn">
+							<xsl:call-template name="multilanguage">
+					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[not(@xml:lang)]"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   		</xsl:call-template>
+						</div>
+				</div>
+			</xsl:if>
+			
 			<!-- script -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script/text()">   
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[@xml:lang = $languagesUsed]/text()">   
 				<div class="row">
 						<div class="leftcolumn">
 					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.scriptUsed')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn">
 							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script"/>
+					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[@xml:lang = $languagesUsed]"/>
 					   			<xsl:with-param name="clazz" select="'script'"/>
 					   		</xsl:call-template>
 						</div>
 				</div>
 			</xsl:if>
-
+			<xsl:if test="$languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[not(@xml:lang)]/text()">   
+				<div class="row">
+						<div class="leftcolumn">
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.scriptUsed')"/><xsl:text>:</xsl:text></h2>
+					   	</div>
+					   	<div class="rightcolumn">
+							<xsl:call-template name="multilanguage">
+					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[not(@xml:lang)]"/>
+					   			<xsl:with-param name="clazz" select="'script'"/>
+					   		</xsl:call-template>
+						</div>
+				</div>
+			</xsl:if>
+			
 			<!--descriptive note inside languagesUsed -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p/text()">   
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[@xml:lang = $languagesUsed]/text()">   
 				<div class="row">
 						<div class="leftcolumn">
 					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
 					   	</div>
 					   	<div class="rightcolumn">
 							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p"/>
+					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[@xml:lang = $languagesUsed]"/>
 					   			<xsl:with-param name="clazz" select="'language'"/>
-<!-- 				    			<xsl:with-param name="title" select="'eaccpf.portal.note'"/> -->
 					   		</xsl:call-template>
 						</div>
 				</div>
 			</xsl:if>
-
+			<xsl:if test="$languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[not(@xml:lang)]/text()">   
+				<div class="row">
+						<div class="leftcolumn">
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
+					   	</div>
+					   	<div class="rightcolumn">
+							<xsl:call-template name="multilanguage">
+					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[not(@xml:lang)]"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   		</xsl:call-template>
+						</div>
+				</div>
+			</xsl:if>
+			
 			<!-- structureOrGenealogy -->
+			<xsl:variable name="langStructureOrGenealogy">
+			 	<xsl:variable name="lang" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level/eac:item/text()">
 				    <xsl:if test="$entityType='person'">
 				    	<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.genealogy'), $smallcase, $uppercase)"/></h2>
@@ -835,57 +1399,98 @@
 					<xsl:if test="$entityType='family'">
 						<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.structureOrGenealogy'), $smallcase, $uppercase)"/></h2>
 				   </xsl:if>
-				<xsl:variable name="firstchild" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/*[1]"/>
-			  	<xsl:if test="name($firstchild)='outline'">
-					   <xsl:call-template name="outlineStructure">
-					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
-					   	 <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>	
-					   	 <xsl:with-param name="entityType" select="$entityType"/>	
-					   </xsl:call-template> 
-					   <xsl:call-template name="p">
-					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
-					  	 <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
-					   </xsl:call-template>
-				</xsl:if>
-				<xsl:if test="name($firstchild)='p'">    
-					    <xsl:call-template name="p">
-					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
-					   	  <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
-					    </xsl:call-template>
-					   <xsl:call-template name="outlineStructure">
-					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy"/>
-					   	 <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>
-					   	 <xsl:with-param name="entityType" select="$entityType"/>
-					   </xsl:call-template> 
-				</xsl:if>
+				
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy">
+					<xsl:variable name="firstchild" select="./*[1]"/>
+				  	<xsl:if test="name($firstchild)='outline'">
+						   <xsl:call-template name="outlineStructure">
+						   	 <xsl:with-param name="list" select="."/>
+						   	 <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>	
+						   	 <xsl:with-param name="entityType" select="$entityType"/>	
+						   </xsl:call-template> 
+						   <xsl:call-template name="p">
+						   	 <xsl:with-param name="list" select="."/>
+						  	 <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
+						  	<xsl:with-param name="langNode" select="$langStructureOrGenealogy"/>
+						   </xsl:call-template>
+					</xsl:if>
+					<xsl:if test="name($firstchild)='p'">    
+						    <xsl:call-template name="p">
+						   	  <xsl:with-param name="list" select="."/>
+						   	  <xsl:with-param name="clazz" select="'structureOrGenealogyNote'"/>	
+						   	  <xsl:with-param name="langNode" select="$langStructureOrGenealogy"/>	
+						    </xsl:call-template>
+						   <xsl:call-template name="outlineStructure">
+						   	 <xsl:with-param name="list" select="."/>
+						   	 <xsl:with-param name="clazz" select="'structureOrGenealogy'"/>
+						   	 <xsl:with-param name="entityType" select="$entityType"/>
+						   </xsl:call-template> 
+					</xsl:if>
+				</xsl:for-each>
 			</xsl:if>
 
 			<!-- generalContext -->
+			<xsl:variable name="langGeneralContext">
+			 	<xsl:variable name="lang" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="(./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+			</xsl:variable>
+			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:outline/eac:level/eac:item/text()">
 			  	<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.generalContext'), $smallcase, $uppercase)"/></h2> 
-				<xsl:variable name="firstchild" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/*[1]"/>
-			  	<xsl:if test="name($firstchild)='outline'">
-					   <xsl:call-template name="outline">
-					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
-					   	 <xsl:with-param name="clazz" select="'generalContext'"/>	
-					  	 <xsl:with-param name="title" select="'eaccpf.portal.generalContext'"/> 
-					   </xsl:call-template>
-					   <xsl:call-template name="p">
-					   	 <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
-					  	 <xsl:with-param name="clazz" select="'generalContextNote'"/>	
-					   </xsl:call-template>
-				</xsl:if>
-				<xsl:if test="name($firstchild)='p'">    
-					    <xsl:call-template name="p">
-					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
-					   	  <xsl:with-param name="clazz" select="'generalContextNote'"/>	
-					    </xsl:call-template>
-					   <xsl:call-template name="outline">
-					   	  <xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext"/>
-					   	  <xsl:with-param name="clazz" select="'generalContext'"/>	
-					  	  <xsl:with-param name="title" select="'eaccpf.portal.generalContext'"/>	
-					   </xsl:call-template>
-				</xsl:if>
+				
+				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext">
+					<xsl:variable name="firstchild" select="./*[1]"/>
+				  	<xsl:if test="name($firstchild)='outline'">
+						   <xsl:call-template name="outline">
+						   	 <xsl:with-param name="list" select="."/>
+						   	 <xsl:with-param name="clazz" select="'generalContext'"/>	
+						  	 <xsl:with-param name="title" select="'eaccpf.portal.generalContext'"/> 
+						   </xsl:call-template>
+						   <xsl:call-template name="p">
+						   	 <xsl:with-param name="list" select="."/>
+						  	 <xsl:with-param name="clazz" select="'generalContextNote'"/>	
+						  	 <xsl:with-param name="langNode" select="$langGeneralContext"/>
+						   </xsl:call-template>
+					</xsl:if>
+					<xsl:if test="name($firstchild)='p'">    
+						    <xsl:call-template name="p">
+						   	  <xsl:with-param name="list" select="."/>
+						   	  <xsl:with-param name="clazz" select="'generalContextNote'"/>	
+						      <xsl:with-param name="langNode" select="$langGeneralContext"/>
+						    </xsl:call-template>
+						   <xsl:call-template name="outline">
+						   	  <xsl:with-param name="list" select="."/>
+						   	  <xsl:with-param name="clazz" select="'generalContext'"/>	
+						  	  <xsl:with-param name="title" select="'eaccpf.portal.generalContext'"/>	
+						   </xsl:call-template>
+					</xsl:if>
+				</xsl:for-each>
 			</xsl:if> 
 
 			<!-- biogHist -->
@@ -940,6 +1545,88 @@
 		<xsl:param name="bioHist"></xsl:param>
 		<xsl:param name="entityType"></xsl:param>
 		
+		<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<biogHist>" is a valid
+				 one. -->
+		<xsl:variable name="validHrefLinkBiogHist">
+			<xsl:choose>
+				<xsl:when test="$bioHist/eac:citation[@xlink:href != '']">
+					<xsl:value-of select="ape:checkHrefValue(string-join($bioHist/eac:citation/@xlink:href, '_HREF_SEPARATOR_'))"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="false"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<!--Set the language to select in biogHist  -->
+		<xsl:variable name="langBiogHist">
+			 	<xsl:variable name="lang" select="$bioHist//@xml:lang"/>
+			    <xsl:variable name="listLang" select="string-join($lang,'')"/>
+			 	
+			 	<xsl:variable name="conditionLangSelected" select="($bioHist//eac:abstract[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:p[@xml:lang=$language.selected]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:citation[@xml:lang=$language.selected]/fn:normalize-space(text())!= ''
+			               or ($bioHist//eac:citation[@xml:lang=$language.selected and @xlink:href != ''] and $validHrefLinkBiogHist = 'true')
+			               or $bioHist//eac:citation[@xml:lang=$language.selected and @xlink:title != '']
+			               or $bioHist//eac:date[@xml:lang = $language.selected]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:fromDate[@xml:lang = $language.selected]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:toDate[@xml:lang = $language.selected]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:placeEntry[@xml:lang = $language.selected]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:event[@xml:lang = $language.selected]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangNavigator" select="($bioHist//eac:abstract[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:p[@xml:lang=$lang.navigator]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:citation[@xml:lang=$lang.navigator]/fn:normalize-space(text())!= ''
+			               or ($bioHist//eac:citation[@xml:lang=$lang.navigator and @xlink:href != ''] and $validHrefLinkBiogHist = 'true')
+			               or $bioHist//eac:citation[@xml:lang=$lang.navigator and @xlink:title != '']
+			               or $bioHist//eac:date[@xml:lang = $lang.navigator]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:fromDate[@xml:lang = $lang.navigator]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:toDate[@xml:lang = $lang.navigator]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:placeEntry[@xml:lang = $lang.navigator]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:event[@xml:lang = $lang.navigator]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	<xsl:variable name="conditionLangDefault" select="($bioHist//eac:abstract[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:p[@xml:lang=$language.default]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:citation[@xml:lang=$language.default]/fn:normalize-space(text())!= ''
+			               or ($bioHist//eac:citation[@xml:lang=$language.default and @xlink:href != ''] and $validHrefLinkBiogHist = 'true')
+			               or $bioHist//eac:citation[@xml:lang=$language.default and @xlink:title != '']
+			               or $bioHist//eac:date[@xml:lang = $language.default]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:fromDate[@xml:lang = $language.default]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:toDate[@xml:lang = $language.default]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:placeEntry[@xml:lang = $language.default]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:event[@xml:lang = $language.default]/fn:normalize-space(text()) != '')"/>
+							
+			 	<xsl:variable name="conditionNotLang" select="($bioHist//eac:abstract[not(@xml:lang)]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:p[not(@xml:lang)]/fn:normalize-space(text()) != ''
+			               or $bioHist//eac:citation[not(@xml:lang)]/fn:normalize-space(text())!= ''
+			               or ($bioHist//eac:citation[not(@xml:lang) and @xlink:href != ''] and $validHrefLinkBiogHist = 'true')
+			               or $bioHist//eac:citation[not(@xml:lang) and @xlink:title != '']
+			               or $bioHist//eac:date[not(@xml:lang)]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:fromDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:toDate[not(@xml:lang)]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:placeEntry[not(@xml:lang)]/fn:normalize-space(text()) != ''
+						   or $bioHist//eac:event[not(@xml:lang)]/fn:normalize-space(text()) != '')"/>
+			 	
+			 	 <xsl:choose>
+			    	<xsl:when test="fn:contains($listLang,$language.selected) and $conditionLangSelected">
+			    	  <xsl:value-of select="$language.selected"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$lang.navigator) and $conditionLangNavigator">
+			    		<xsl:value-of select="$lang.navigator"/>
+			    	</xsl:when>
+			    	<xsl:when test="fn:contains($listLang,$language.default) and $conditionLangDefault">
+			    		<xsl:value-of select="$language.default"/>
+			    	</xsl:when>
+			    	<xsl:when test="$conditionNotLang">
+			    		<xsl:value-of select="'notLang'"/>
+			    	</xsl:when>
+			    	<xsl:otherwise>
+			    	  <xsl:value-of select="substring($listLang,0,4)"/>
+			    	</xsl:otherwise>
+			    </xsl:choose> 
+		</xsl:variable>
+		
 		<!-- bioHist section title -->
 		<xsl:if test="$bioHist/eac:p/text() or $bioHist/eac:citation/text() or $bioHist/eac:chronList/eac:chronItem or $bioHist/eac:abstract/text()">
 			<h2 id="chronListTitle" class="title">
@@ -955,188 +1642,221 @@
 		<!-- Display the information of biogHist in the same order that are in the xml file -->
 		<!-- abstract always goes in the first position -->
 		
-		<!-- biogHist abstract -->
-		<xsl:if test="$bioHist/eac:abstract/text()">
-			<div class="row">
-				<div class="leftcolumn">
-			   		<h2 class="subrow">
-			   			<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
-			   		</h2>
-			   	</div>
-			   	<div class="rightcolumn">
-					<xsl:call-template name="multilanguage">
-			   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:abstract"/>
-			   			<xsl:with-param name="clazz" select="'biogistAbstract'"/>
-			   		</xsl:call-template>
+		<xsl:for-each select="$bioHist">
+			<!-- biogHist abstract -->
+			<xsl:if test="./eac:abstract[@xml:lang=$langBiogHist]/text()">
+				<div class="row">
+					<div class="leftcolumn">
+				   		<h2 class="subrow">
+				   			<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
+				   		</h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguage">
+				   			<xsl:with-param name="list" select="./eac:abstract[@xml:lang=$langBiogHist]"/>
+				   			<xsl:with-param name="clazz" select="'biogistAbstract'"/>
+				   		</xsl:call-template>
+					</div>
 				</div>
-			</div>
-		</xsl:if>
-		
-		<!-- Set the positions of the <citation>, <chronList>, <p> in the xml file-->
-		<xsl:variable name="pPosition">
-			<xsl:choose>
-				<xsl:when test="$bioHist/eac:p">
-					<xsl:for-each select="$bioHist/*">
-			  			<xsl:if test="name() = 'p'">
+			</xsl:if>
+			<xsl:if test="$langBiogHist='notLang' and ./eac:abstract[not(@xml:lang)]/text()">
+				<div class="row">
+					<div class="leftcolumn">
+				   		<h2 class="subrow">
+				   			<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
+				   		</h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguage">
+				   			<xsl:with-param name="list" select="./eac:abstract[not(@xml:lang)]"/>
+				   			<xsl:with-param name="clazz" select="'biogistAbstract'"/>
+				   		</xsl:call-template>
+					</div>
+				</div>
+			</xsl:if>
+			
+			<!-- Set the positions of the <citation>, <chronList>, <p> in the xml file-->
+			<xsl:variable name="pPosition">
+				<xsl:choose>
+					<xsl:when test="./eac:p">
+						<xsl:for-each select="./*">
+				  			<xsl:if test="name() = 'p'">
+								<xsl:value-of select="concat(position(),',')" /> 
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('6',',')" /> 
+					</xsl:otherwise>	
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:variable name="posP" select="number(substring-before($pPosition,',' ))"/>
+			
+			<xsl:variable name="citationPosition">
+				<xsl:choose>
+				<xsl:when test="./eac:citation">
+					<xsl:for-each select="./*">
+			  			<xsl:if test="name() = 'citation'">
 							<xsl:value-of select="concat(position(),',')" /> 
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="concat('6',',')" /> 
+					<xsl:value-of select="concat('6',',')" />
 				</xsl:otherwise>	
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="posP" select="number(substring-before($pPosition,',' ))"/>
-		
-		<xsl:variable name="citationPosition">
-			<xsl:choose>
-			<xsl:when test="$bioHist/eac:citation">
-				<xsl:for-each select="$bioHist/*">
-		  			<xsl:if test="name() = 'citation'">
-						<xsl:value-of select="concat(position(),',')" /> 
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat('6',',')" />
-			</xsl:otherwise>	
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="posCitation" select="number(substring-before($citationPosition,',' ))"/>
-		
-		<xsl:variable name="chronListPosition">
-			<xsl:choose>
-				<xsl:when test="$bioHist/eac:chronList">
-					<xsl:for-each select="$bioHist/*">
-			  			<xsl:if test="name() = 'chronList'">
-							<xsl:value-of select="concat(position(),',')" /> 
-						</xsl:if>
-					</xsl:for-each>
-				</xsl:when>	
-				<xsl:otherwise>
-					<xsl:value-of select="concat('6',',')" /> 
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="posChron" select="number(substring-before($chronListPosition,',' ))"/>
-		
-		<!-- Display the information according to the position of the nodes -->
-		<xsl:choose>
-			<xsl:when test="($posP &lt; $posCitation) and ($posP &lt; $posChron)">
-				<!-- biogHist p -->
-				<xsl:call-template name="templateBiogHistP">
-					<xsl:with-param name="bioHist" select="$bioHist"/>
-					<xsl:with-param name="entityType" select="$entityType"/>
-				</xsl:call-template>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:variable name="posCitation" select="number(substring-before($citationPosition,',' ))"/>
+			
+			<xsl:variable name="chronListPosition">
 				<xsl:choose>
-					<xsl:when test="$posCitation &lt; $posChron">
-						<!-- biogHist citation --> 
-						<xsl:call-template name="templateBiogHistCitation">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
-						</xsl:call-template>	
-						<!-- biogHist chronList -->
-						<xsl:if test="$bioHist/eac:chronList/eac:chronItem">
-							<xsl:call-template name="chronListMultilanguage">
-								<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:chronList"></xsl:with-param>
-							</xsl:call-template>
-						</xsl:if>
-					</xsl:when>
+					<xsl:when test="./eac:chronList">
+						<xsl:for-each select="./*">
+				  			<xsl:if test="name() = 'chronList'">
+								<xsl:value-of select="concat(position(),',')" /> 
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>	
 					<xsl:otherwise>
-						<!-- biogHist chronList -->
-						<xsl:if test="$bioHist/eac:chronList/eac:chronItem">
-							<xsl:call-template name="chronListMultilanguage">
-								<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:chronList"></xsl:with-param>
-							</xsl:call-template>
-						</xsl:if>
-						<!-- biogHist citation --> 
-						<xsl:call-template name="templateBiogHistCitation">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
-						</xsl:call-template>	
+						<xsl:value-of select="concat('6',',')" /> 
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:when>
-			<xsl:when test="($posCitation &lt; $posP) and ($posCitation &lt; $posChron)">
-				<!-- biogHist citation --> 
-				<xsl:call-template name="templateBiogHistCitation">
-					<xsl:with-param name="bioHist" select="$bioHist"/>
-					<xsl:with-param name="entityType" select="$entityType"/>
-				</xsl:call-template>	
-				<xsl:choose>
-					<xsl:when test="$posP &lt; $posChron">
-						<!-- biogHist p -->
-						<xsl:call-template name="templateBiogHistP">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
-						</xsl:call-template>
-						<!-- biogHist chronList -->
-						<xsl:if test="$bioHist/eac:chronList/eac:chronItem">
-							<xsl:call-template name="chronListMultilanguage">
-								<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:chronList"></xsl:with-param>
-							</xsl:call-template>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<!-- biogHist chronList -->
-						<xsl:if test="$bioHist/eac:chronList/eac:chronItem">
-							<xsl:call-template name="chronListMultilanguage">
-								<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:chronList"></xsl:with-param>
-							</xsl:call-template>
-						</xsl:if>
-						<!-- biogHist p -->
-						<xsl:call-template name="templateBiogHistP">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:when test="($posChron &lt; $posP) and ($posChron &lt; $posCitation)">
-				<!-- biogHist chronList -->
-				<xsl:if test="$bioHist/eac:chronList/eac:chronItem">
-					<xsl:call-template name="chronListMultilanguage">
-						<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:chronList"></xsl:with-param>
+			</xsl:variable>
+			<xsl:variable name="posChron" select="number(substring-before($chronListPosition,',' ))"/>
+			
+			<!-- Display the information according to the position of the nodes -->
+			<xsl:choose>
+				<xsl:when test="($posP &lt; $posCitation) and ($posP &lt; $posChron)">
+					<!-- biogHist p -->
+					<xsl:call-template name="templateBiogHistP">
+						<xsl:with-param name="bioHist" select="."/>
+						<xsl:with-param name="entityType" select="$entityType"/>
+						<xsl:with-param name="langNode" select="$langBiogHist"/>
 					</xsl:call-template>
-				</xsl:if>
-				<xsl:choose>
-					<xsl:when test="$posP &lt; $posCitation">
-						<!-- biogHist p -->
-						<xsl:call-template name="templateBiogHistP">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
+					<xsl:choose>
+						<xsl:when test="$posCitation &lt; $posChron">
+							<!-- biogHist citation --> 
+							<xsl:call-template name="templateBiogHistCitation">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>	
+							<!-- biogHist chronList -->
+							<xsl:if test="./eac:chronList/eac:chronItem">
+								<xsl:call-template name="chronListMultilanguage">
+									<xsl:with-param name="list" select="./eac:chronList"></xsl:with-param>
+									<xsl:with-param name="langNode" select="$langBiogHist"/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<!-- biogHist chronList -->
+							<xsl:if test="./eac:chronList/eac:chronItem">
+								<xsl:call-template name="chronListMultilanguage">
+									<xsl:with-param name="list" select="./eac:chronList"></xsl:with-param>
+									<xsl:with-param name="langNode" select="$langBiogHist"/>
+								</xsl:call-template>
+							</xsl:if>
+							<!-- biogHist citation --> 
+							<xsl:call-template name="templateBiogHistCitation">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>	
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:when test="($posCitation &lt; $posP) and ($posCitation &lt; $posChron)">
+					<!-- biogHist citation --> 
+					<xsl:call-template name="templateBiogHistCitation">
+						<xsl:with-param name="bioHist" select="."/>
+						<xsl:with-param name="entityType" select="$entityType"/>
+						<xsl:with-param name="langNode" select="$langBiogHist"/>
+					</xsl:call-template>	
+					<xsl:choose>
+						<xsl:when test="$posP &lt; $posChron">
+							<!-- biogHist p -->
+							<xsl:call-template name="templateBiogHistP">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>
+							<!-- biogHist chronList -->
+							<xsl:if test="$bioHist/eac:chronList/eac:chronItem">
+								<xsl:call-template name="chronListMultilanguage">
+									<xsl:with-param name="list" select="./eac:chronList"></xsl:with-param>
+									<xsl:with-param name="langNode" select="$langBiogHist"/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<!-- biogHist chronList -->
+							<xsl:if test="./eac:chronList/eac:chronItem">
+								<xsl:call-template name="chronListMultilanguage">
+									<xsl:with-param name="list" select="./eac:chronList"></xsl:with-param>
+									<xsl:with-param name="langNode" select="$langBiogHist"/>
+								</xsl:call-template>
+							</xsl:if>
+							<!-- biogHist p -->
+							<xsl:call-template name="templateBiogHistP">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:when test="($posChron &lt; $posP) and ($posChron &lt; $posCitation)">
+					<!-- biogHist chronList -->
+					<xsl:if test="./eac:chronList/eac:chronItem">
+						<xsl:call-template name="chronListMultilanguage">
+							<xsl:with-param name="list" select="./eac:chronList"></xsl:with-param>
+							<xsl:with-param name="langNode" select="$langBiogHist"/>
 						</xsl:call-template>
-						<!-- biogHist citation --> 
-						<xsl:call-template name="templateBiogHistCitation">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
-						</xsl:call-template>	
-					</xsl:when>
-					<xsl:otherwise>
-						<!-- biogHist citation --> 
-						<xsl:call-template name="templateBiogHistCitation">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
-						</xsl:call-template>	
-						<!-- biogHist p -->
-						<xsl:call-template name="templateBiogHistP">
-							<xsl:with-param name="bioHist" select="$bioHist"/>
-							<xsl:with-param name="entityType" select="$entityType"/>
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>	
-			<xsl:otherwise/>
-		</xsl:choose>
+					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="$posP &lt; $posCitation">
+							<!-- biogHist p -->
+							<xsl:call-template name="templateBiogHistP">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>
+							<!-- biogHist citation --> 
+							<xsl:call-template name="templateBiogHistCitation">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>	
+						</xsl:when>
+						<xsl:otherwise>
+							<!-- biogHist citation --> 
+							<xsl:call-template name="templateBiogHistCitation">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>	
+							<!-- biogHist p -->
+							<xsl:call-template name="templateBiogHistP">
+								<xsl:with-param name="bioHist" select="."/>
+								<xsl:with-param name="entityType" select="$entityType"/>
+								<xsl:with-param name="langNode" select="$langBiogHist"/>
+							</xsl:call-template>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>	
+				<xsl:otherwise/>
+			</xsl:choose>
+		</xsl:for-each>
 	</xsl:template>
 	
 	<!-- Template to display biogHist citation -->
 	<xsl:template name="templateBiogHistCitation">
 		<xsl:param name="bioHist"/>
 		<xsl:param name="entityType"/>
+		<xsl:param name="langNode"/>
 		
-		<xsl:if test="$bioHist/eac:citation/text()">   
+		<xsl:if test="$bioHist/eac:citation[@xml:lang=$langNode]/text()">   
 			<div class="row">
 				<div class="leftcolumn">
 			   		<h2 class="subrow">
@@ -1151,9 +1871,41 @@
 			   		</h2>
 			   	</div>
 			   	<div class="rightcolumn">
-					<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist"> 
+					<xsl:for-each select="$bioHist"> 
 						<xsl:variable name="posParent" select="position()"/>
-						<xsl:for-each select="./eac:citation">
+						<xsl:for-each select="./eac:citation[@xml:lang=$langNode]">
+							<xsl:variable name="posChild" select="position()"/>								
+							<p>
+								<xsl:call-template name="citationHref">
+									<xsl:with-param name="link" select="./@xlink:href"/>
+									<xsl:with-param name="title" select="./@xlink:title" />
+									<xsl:with-param name="content" select="./text()"/>
+									<xsl:with-param name="section" select="current()"/>
+								</xsl:call-template>
+							</p>
+					     </xsl:for-each>
+				    </xsl:for-each> 	
+				</div>
+			</div>
+		</xsl:if>
+		<xsl:if test="$langNode='notLang' and $bioHist/eac:citation[not(@xml:lang)]/text()">   
+			<div class="row">
+				<div class="leftcolumn">
+			   		<h2 class="subrow">
+			   			<!--<xsl:if test="$entityType='corporateBody'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
+			   			</xsl:if>
+			   			<xsl:if test="$entityType='person' or $entityType='family'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
+			   			</xsl:if> -->
+			   			<xsl:value-of select="ape:resource('eaccpf.portal.citation')"/>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			   	<div class="rightcolumn">
+					<xsl:for-each select="$bioHist"> 
+						<xsl:variable name="posParent" select="position()"/>
+						<xsl:for-each select="./eac:citation[not(@xml:lang)]">
 							<xsl:variable name="posChild" select="position()"/>								
 							<p>
 								<xsl:call-template name="citationHref">
@@ -1174,8 +1926,9 @@
 	<xsl:template name="templateBiogHistP">
 		<xsl:param name="bioHist"/>
 		<xsl:param name="entityType"/>
+		<xsl:param name="langNode"/>
 		
-		<xsl:if test="$bioHist/eac:p/text()">   
+		<xsl:if test="$bioHist/eac:p[@xml:lang=$langNode]/text()">   
 			<div class="row">
 				<div class="leftcolumn">
 			   		<h2 class="subrow">
@@ -1190,7 +1943,28 @@
 			   	</div>
 			   	<div class="rightcolumn">
 					<xsl:call-template name="multilanguage">
-			   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist/eac:p"/>
+			   			<xsl:with-param name="list" select="$bioHist/eac:p[@xml:lang=$langNode]"/>
+			   			<xsl:with-param name="clazz" select="'biogist'"/>
+			   		</xsl:call-template>
+				</div>
+			</div>
+		</xsl:if>
+		<xsl:if test="$langNode='notLang' and $bioHist/eac:p[not(@xml:lang)]/text()">   
+			<div class="row">
+				<div class="leftcolumn">
+			   		<h2 class="subrow">
+			   			<xsl:if test="$entityType='corporateBody'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
+			   			</xsl:if>
+			   			<xsl:if test="$entityType='person' or $entityType='family'">
+			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
+			   			</xsl:if>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			   	<div class="rightcolumn">
+					<xsl:call-template name="multilanguage">
+			   			<xsl:with-param name="list" select="$bioHist/eac:p[not(@xml:lang)]"/>
 			   			<xsl:with-param name="clazz" select="'biogist'"/>
 			   		</xsl:call-template>
 				</div>
@@ -1199,56 +1973,124 @@
 	</xsl:template>
 	
 	<xsl:template name="chronListMultilanguage">
-		<xsl:param name="list"></xsl:param>
+		<xsl:param name="list"/>
+		<xsl:param name="langNode"/>
+		
 		<xsl:if test="$list/eac:chronItem or $list/eac:placeEntry or $list/eac:event">
-			<xsl:for-each select="$list" >
-				<div class="blockPlural">
-				<xsl:for-each select="./eac:chronItem" >
-					<div class="blockSingular">
-					    <xsl:if test="./eac:date or ./eac:dateRange or ./eac:dateSet">
-					    <div id="chronListItemContent" >
-							<xsl:call-template name="commonDates">
-					    		<xsl:with-param name="date" select="./eac:date"/>
-					    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-					    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-					    	</xsl:call-template>
-					    </div>
-					    </xsl:if>
-						<xsl:if test="./eac:placeEntry">
-						<div id="chronListItemContent" class="row">
-							<div class="leftcolumn">
-						   		<h2 class="subrow">
-						   			<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
-						   			<xsl:text>:</xsl:text>
-						   		</h2>
-						   	</div> 
-						    <div class="rightcolumn"> 
-								<xsl:call-template name="multilanguagePlaceEntry">
-						  			<xsl:with-param name="list" select="./eac:placeEntry"/>
-						  		</xsl:call-template>
-					  		</div>
-					  	</div>		
-						</xsl:if>
-						<xsl:if test="./eac:event/text()">
+			
+			<xsl:if test="$list/eac:chronItem/eac:date[@xml:lang=$langNode]/text()
+							or $list/eac:chronItem/eac:dateRange/eac:fromDate[@xml:lang=$langNode]/text()
+							or $list/eac:chronItem/eac:dateRange/eac:toDate[@xml:lang=$langNode]/text()
+							or $list/eac:chronItem/eac:placeEntry[@xml:lang=$langNode]/text()
+							or $list/eac:chronItem/eac:event[@xml:lang=$langNode]/text()">
+				<xsl:for-each select="$list" >
+					<div class="blockPlural">
+					<xsl:for-each select="./eac:chronItem" >
+						<div class="blockSingular">
+						    <xsl:if test="./eac:date or ./eac:dateRange or ./eac:dateSet">
+						    <div id="chronListItemContent" >
+								<xsl:call-template name="commonDates">
+						    		<xsl:with-param name="date" select="./eac:date"/>
+						    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+						    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+						    		<xsl:with-param name="langNode" select="$langNode"/>
+						    	</xsl:call-template>
+						    </div>
+						    </xsl:if>
+							<xsl:if test="./eac:placeEntry[@xml:lang=$langNode]">
 							<div id="chronListItemContent" class="row">
 								<div class="leftcolumn">
 							   		<h2 class="subrow">
-							   			<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
+							   			<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
 							   			<xsl:text>:</xsl:text>
 							   		</h2>
 							   	</div> 
 							    <div class="rightcolumn"> 
-									<xsl:call-template name="multilanguageNoP"> <!-- multilanguageEvent -->
-							  			<xsl:with-param name="list" select="./eac:event"/>
-							  			<xsl:with-param name="clazz" select="'language'"/>
+									<xsl:call-template name="multilanguagePlaceEntry">
+							  			<xsl:with-param name="list" select="./eac:placeEntry[@xml:lang=$langNode]"/>
 							  		</xsl:call-template>
 						  		</div>
-					  		</div>
-						</xsl:if>
+						  	</div>		
+							</xsl:if>
+							<xsl:if test="./eac:event[@xml:lang=$langNode]/text()">
+								<div id="chronListItemContent" class="row">
+									<div class="leftcolumn">
+								   		<h2 class="subrow">
+								   			<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
+								   			<xsl:text>:</xsl:text>
+								   		</h2>
+								   	</div> 
+								    <div class="rightcolumn"> 
+										<xsl:call-template name="multilanguageNoP"> <!-- multilanguageEvent -->
+								  			<xsl:with-param name="list" select="./eac:event[@xml:lang=$langNode]"/>
+								  			<xsl:with-param name="clazz" select="'language'"/>
+								  		</xsl:call-template>
+							  		</div>
+						  		</div>
+							</xsl:if>
+						</div>
+					</xsl:for-each>
 					</div>
 				</xsl:for-each>
-				</div>
-			</xsl:for-each>
+			</xsl:if>
+			
+			<xsl:if test="$langNode='notLang'
+							and ($list/eac:chronItem/eac:date[not(@xml:lang)]/text()
+							or $list/eac:chronItem/eac:dateRange/eac:fromDate[not(@xml:lang)]/text()
+							or $list/eac:chronItem/eac:dateRange/eac:toDate[not(@xml:lang)]/text()
+							or $list/eac:chronItem/eac:placeEntry[not(@xml:lang)]/text()
+							or $list/eac:chronItem/eac:event[not(@xml:lang)]/text())">
+				
+				<xsl:for-each select="$list" >
+					<div class="blockPlural">
+					<xsl:for-each select="./eac:chronItem" >
+						<div class="blockSingular">
+						    <xsl:if test="./eac:date or ./eac:dateRange or ./eac:dateSet">
+						    <div id="chronListItemContent" >
+								<xsl:call-template name="commonDates">
+						    		<xsl:with-param name="date" select="./eac:date"/>
+						    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+						    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+						    		<xsl:with-param name="langNode" select="$langNode"/>
+						    	</xsl:call-template>
+						    </div>
+						    </xsl:if>
+							<xsl:if test="./eac:placeEntry[not(@xml:lang)]">
+							<div id="chronListItemContent" class="row">
+								<div class="leftcolumn">
+							   		<h2 class="subrow">
+							   			<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
+							   			<xsl:text>:</xsl:text>
+							   		</h2>
+							   	</div> 
+							    <div class="rightcolumn"> 
+									<xsl:call-template name="multilanguagePlaceEntry">
+							  			<xsl:with-param name="list" select="./eac:placeEntry[not(@xml:lang)]"/>
+							  		</xsl:call-template>
+						  		</div>
+						  	</div>		
+							</xsl:if>
+							<xsl:if test="./eac:event[not(@xml:lang)]/text()">
+								<div id="chronListItemContent" class="row">
+									<div class="leftcolumn">
+								   		<h2 class="subrow">
+								   			<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
+								   			<xsl:text>:</xsl:text>
+								   		</h2>
+								   	</div> 
+								    <div class="rightcolumn"> 
+										<xsl:call-template name="multilanguageNoP"> <!-- multilanguageEvent -->
+								  			<xsl:with-param name="list" select="./eac:event[not(@xml:lang)]"/>
+								  			<xsl:with-param name="clazz" select="'language'"/>
+								  		</xsl:call-template>
+							  		</div>
+						  		</div>
+							</xsl:if>
+						</div>
+					</xsl:for-each>
+					</div>
+				</xsl:for-each>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	
@@ -1333,6 +2175,7 @@
 	<xsl:template name="placesPriorisation">
 		<xsl:param name="list"/>
 		<xsl:param name="posParent"/>
+		<xsl:param name="langNode"/>
 		
 		<!-- Checks the attribute "@localType". -->
 		<!-- localType = birth -->
@@ -1344,6 +2187,7 @@
 						<xsl:with-param name="list" select="."/>
 					  	<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="langNode" select="$langNode"/>
 					</xsl:call-template>
 				</xsl:if>
 			</xsl:for-each>
@@ -1358,6 +2202,7 @@
 						<xsl:with-param name="list" select="."/>
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="langNode" select="$langNode"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -1372,6 +2217,7 @@
 						<xsl:with-param name="list" select="."/>
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="langNode" select="$langNode"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -1387,6 +2233,7 @@
 						<xsl:with-param name="list" select="."/>
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="langNode" select="$langNode"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -1402,6 +2249,7 @@
 						<xsl:with-param name="list" select="."/>
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="langNode" select="$langNode"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -1418,6 +2266,7 @@
 						<xsl:with-param name="list" select="."/>
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="langNode" select="$langNode"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -1438,6 +2287,7 @@
 						<xsl:with-param name="list" select="."/>
 						<xsl:with-param name="posChild" select="$posChild"/>
 						<xsl:with-param name="posParent" select="$posParent"/>
+						<xsl:with-param name="langNode" select="$langNode"/>
 					</xsl:call-template>	
 				</xsl:if>
 			</xsl:for-each>
@@ -1449,6 +2299,7 @@
 		<xsl:param name="list"/>
 		<xsl:param name="posChild"/>
 		<xsl:param name="posParent"/>
+		<xsl:param name="langNode"/>
 			
 			<div class="blockSingular">	
 				
@@ -1457,10 +2308,11 @@
 		    		<xsl:with-param name="list" select="$list"/>
 	   				<xsl:with-param name="posParent" select="$posParent"/>
 	   				<xsl:with-param name="posChild" select="$posChild"/>
+	    			<xsl:with-param name="langNode" select="$langNode"/>
 	    		</xsl:call-template>
 	
 		      <!--   placeRole  -->
-		        <xsl:if test="$list/eac:placeRole/text() and $list/eac:placeEntry/text()">
+		        <xsl:if test="$list/eac:placeRole[@xml:lang=$langNode]/text() and $list/eac:placeEntry[@xml:lang=$langNode]/text()">
 			        <div class="row">
 					    <div class="leftcolumn">
 				   			<h2 class="subrow">
@@ -1470,7 +2322,25 @@
 				   	    </div>
 				     	<div class="rightcolumn">
 				     		<xsl:call-template name="multilanguageWithVocabularySource">
-	  								<xsl:with-param name="list" select="$list/eac:placeRole"/>
+	  								<xsl:with-param name="list" select="$list/eac:placeRole[@xml:lang=$langNode]"/>
+				   				<xsl:with-param name="clazz" select="'placeRole_'"/>
+				   				<xsl:with-param name="posParent" select="$posParent"/>
+				   				<xsl:with-param name="posChild" select="$posChild"/>
+				   			</xsl:call-template>
+					    </div>
+			        </div>
+			    </xsl:if> 
+			    <xsl:if test="$langNode='notLang' and $list/eac:placeRole[not(@xml:lang)]/text() and $list/eac:placeEntry[not(@xml:lang)]/text()">
+			        <div class="row">
+					    <div class="leftcolumn">
+				   			<h2 class="subrow">
+				   				<xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/>
+				   				<xsl:text>:</xsl:text>
+				   			</h2>
+				   	    </div>
+				     	<div class="rightcolumn">
+				     		<xsl:call-template name="multilanguageWithVocabularySource">
+	  								<xsl:with-param name="list" select="$list/eac:placeRole[not(@xml:lang)]"/>
 				   				<xsl:with-param name="clazz" select="'placeRole_'"/>
 				   				<xsl:with-param name="posParent" select="$posParent"/>
 				   				<xsl:with-param name="posChild" select="$posChild"/>
@@ -1481,7 +2351,7 @@
 			    
 	    		<!--  addressLine  -->
 				<!--  Tittle for the address section.-->
-				<xsl:if test="$list/eac:address/eac:addressLine/text()">
+				<xsl:if test="$list/eac:address/eac:addressLine[@xml:lang=$langNode]/text() or ($langNode='notLang' and $list/eac:address/eac:addressLine[not(@xml:lang)]/text())">
 					<div class="row">
 					    <div class="leftcolumn">
 				   			<h2 class="subrow">
@@ -1511,6 +2381,7 @@
 			   			<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 			    		<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.street'"/>
+			    		<xsl:with-param name="langNode" select="$langNode"/>
 			    	</xsl:call-template>
 				</xsl:if>
 				<!--  addressLine @localType="postalcode"  -->
@@ -1521,6 +2392,7 @@
 			   			<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 		    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.postalcode'"/>
+	    				<xsl:with-param name="langNode" select="$langNode"/>
 	    			</xsl:call-template>
 			    </xsl:if>
 				 <!--  addressLine @localType="firstdem" -->
@@ -1531,6 +2403,7 @@
 			   			<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 		    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.firstdem'"/>
+		    			<xsl:with-param name="langNode" select="$langNode"/>
 		    		</xsl:call-template>
 				</xsl:if>
 			 	<!--  addressLine @localType="secondem" -->
@@ -1541,6 +2414,7 @@
 			   			<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 		    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.secondem'"/>
+		    			<xsl:with-param name="langNode" select="$langNode"/>
 		    		</xsl:call-template>
 				</xsl:if>
 				 <!--  addressLine @localType="localentity" -->
@@ -1551,6 +2425,7 @@
 			   			<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 		    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.localentity'"/>
+		    			<xsl:with-param name="langNode" select="$langNode"/>
 		    		</xsl:call-template>
 				</xsl:if>
 				 <!-- addressLine @localType="other" -->
@@ -1561,6 +2436,7 @@
 			   			<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 		    			<xsl:with-param name="title" select="'eaccpf.portal.place.address.information'"/>
+		    			<xsl:with-param name="langNode" select="$langNode"/>
 		    		</xsl:call-template>
 				</xsl:if>
 				<!-- addressLine @localType="country" -->
@@ -1571,6 +2447,7 @@
 			   			<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 		    			<xsl:with-param name="title" select="'eaccpf.description.combo.address.component.country'"/>
+		    			<xsl:with-param name="langNode" select="$langNode"/>
 		    		</xsl:call-template>
 				</xsl:if>
 	
@@ -1579,6 +2456,7 @@
 		    		<xsl:with-param name="date" select="$list/eac:date"/>
 		    		<xsl:with-param name="dateRange" select="$list/eac:dateRange"/>
 		    		<xsl:with-param name="dateSet" select="$list/eac:dateSet"/>
+		    		<xsl:with-param name="langNode" select="$langNode"/>
 		    	</xsl:call-template>
 	
 				<!--  descriptive note place -->
@@ -1589,6 +2467,7 @@
 		   				<xsl:with-param name="posParent" select="$posParent"/>
     					<xsl:with-param name="posChild" select="$posChild"/>
 		    			<xsl:with-param name="title" select="'eaccpf.portal.note'"/>
+	    				<xsl:with-param name="langNode" select="$langNode"/>
 	    			</xsl:call-template>
 			    </xsl:if>
 	
@@ -1599,6 +2478,7 @@
 		    		<xsl:with-param name="posParent" select="$posParent"/>
 		    		<xsl:with-param name="posChild" select="$posChild"/>
 		    		<xsl:with-param name="title" select="'eaccpf.relations.link'"/>
+		    		<xsl:with-param name="langNode" select="$langNode"/>
 		    	</xsl:call-template>
 	    	</div>
 	</xsl:template>
@@ -1609,6 +2489,7 @@
 		<xsl:param name="list"/>
 		<xsl:param name="posParent"/>
 		<xsl:param name="posChild"/>
+		<xsl:param name="langNode"/>
 
 		<!-- Checks the attribute "@localType". -->
 		<!-- localType = birth -->
@@ -1619,6 +2500,7 @@
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="title" select="'eaccpf.description.combo.place.role.birth'"/>
+   				<xsl:with-param name="langNode" select="$langNode"/>
    			</xsl:call-template>
 		</xsl:if>
 
@@ -1630,6 +2512,7 @@
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="title" select="'eaccpf.description.combo.place.role.foundation'"/>
+   				<xsl:with-param name="langNode" select="$langNode"/>
    			</xsl:call-template>
 		</xsl:if>
 
@@ -1641,6 +2524,7 @@
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="title" select="'eaccpf.description.combo.place.role.private-residence'"/>
+   				<xsl:with-param name="langNode" select="$langNode"/>
    			</xsl:call-template>
 		</xsl:if>
 
@@ -1652,6 +2536,7 @@
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="title" select="'eaccpf.description.combo.place.role.business-residence'"/>
+   				<xsl:with-param name="langNode" select="$langNode"/>
    			</xsl:call-template>
 		</xsl:if>
 
@@ -1663,6 +2548,7 @@
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="title" select="'eaccpf.description.combo.place.role.death'"/>
+   				<xsl:with-param name="langNode" select="$langNode"/>
    			</xsl:call-template>
 		</xsl:if>
 
@@ -1674,6 +2560,7 @@
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="title" select="'eaccpf.description.combo.place.role.suppression'"/>
+   				<xsl:with-param name="langNode" select="$langNode"/>
    			</xsl:call-template>
 		</xsl:if>
 
@@ -1688,6 +2575,7 @@
    				<xsl:with-param name="posParent" select="$posParent"/>
    				<xsl:with-param name="posChild" select="$posChild"/>
 				<xsl:with-param name="title" select="'eaccpf.description.place'"/>
+				<xsl:with-param name="langNode" select="$langNode"/>
 			</xsl:call-template> 
 		</xsl:if>
 	</xsl:template>
@@ -1699,22 +2587,44 @@
 	    <xsl:param name="posParent"/>
 	    <xsl:param name="posChild"/>
 	    <xsl:param name="title"/>
-		<div class="row locationPlace">
-		 	<div class="leftcolumn">
-		   		<h2 class="subrow">
-		   			<xsl:value-of select="ape:resource($title)"/>
-		   			<xsl:text>:</xsl:text>
-		   		</h2>
-		   	</div>
-		    <div class="rightcolumn">
-				<xsl:call-template name="multilanguagePlaceEntrySeveral">
-	   				<xsl:with-param name="list" select="$list"/>
-	   				<xsl:with-param name="clazz" select="$clazz"/>
-	   				<xsl:with-param name="posParent" select="$posParent"/>
-	   				<xsl:with-param name="posChild" select="$posChild"/>
-	   			</xsl:call-template>
-		 	</div>
-		</div>
+	    <xsl:param name="langNode"/>
+	    
+	    <xsl:if test="$list[@xml:lang = $langNode]/text()">
+			<div class="row locationPlace">
+			 	<div class="leftcolumn">
+			   		<h2 class="subrow">
+			   			<xsl:value-of select="ape:resource($title)"/>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			    <div class="rightcolumn">
+					<xsl:call-template name="multilanguagePlaceEntrySeveral">
+		   				<xsl:with-param name="list" select="$list[@xml:lang = $langNode]"/>
+		   				<xsl:with-param name="clazz" select="$clazz"/>
+		   				<xsl:with-param name="posParent" select="$posParent"/>
+		   				<xsl:with-param name="posChild" select="$posChild"/>
+		   			</xsl:call-template>
+			 	</div>
+			</div>
+		</xsl:if>
+		<xsl:if test="$langNode='notLang' and $list[not(@xml:lang)]/text()">
+			<div class="row locationPlace">
+			 	<div class="leftcolumn">
+			   		<h2 class="subrow">
+			   			<xsl:value-of select="ape:resource($title)"/>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			    <div class="rightcolumn">
+					<xsl:call-template name="multilanguagePlaceEntrySeveral">
+		   				<xsl:with-param name="list" select="$list[not(@xml:lang)]"/>
+		   				<xsl:with-param name="clazz" select="$clazz"/>
+		   				<xsl:with-param name="posParent" select="$posParent"/>
+		   				<xsl:with-param name="posChild" select="$posChild"/>
+		   			</xsl:call-template>
+			 	</div>
+			</div>
+		</xsl:if>	
 	</xsl:template>
 
 	<!-- template term -->
@@ -1724,7 +2634,9 @@
 		<xsl:param name="posParent"/>
 		<xsl:param name="posChild"/>
 		<xsl:param name="title"/>
-		<xsl:if test="$list/text()">
+		<xsl:param name="langNode"/>
+		
+		<xsl:if test="$list[@xml:lang=$langNode]/text()">
 			<div class="row subrow">
 					<div class="leftcolumn">
 				   		<h2><xsl:value-of select="ape:resource($title)"/>
@@ -1738,7 +2650,29 @@
 				   	</div>
 				   	<div class="rightcolumn">
 						<xsl:call-template name="multilanguageWithVocabularySource">
-			   				<xsl:with-param name="list" select="$list"/>
+			   				<xsl:with-param name="list" select="$list[@xml:lang=$langNode]"/>
+			   				<xsl:with-param name="clazz" select="$clazz"/>
+			   				<xsl:with-param name="posParent" select="$posParent"/>
+			   				<xsl:with-param name="posChild" select="$posChild"/>
+			   			</xsl:call-template>
+					</div>
+			</div>
+		</xsl:if>
+		<xsl:if test="$langNode='notLang' and $list[not(@xml:lang)]/text()">
+			<div class="row subrow">
+					<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource($title)"/>
+				   			<xsl:if test="$list/parent::node()/@localType">
+					   			<xsl:text> (</xsl:text>
+					   			<xsl:value-of select="$list/parent::node()/@localType"/>
+					   			<xsl:text>)</xsl:text>
+					   		</xsl:if>	
+				   			<xsl:text>:</xsl:text>
+				   		</h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguageWithVocabularySource">
+			   				<xsl:with-param name="list" select="$list[not(@xml:lang)]"/>
 			   				<xsl:with-param name="clazz" select="$clazz"/>
 			   				<xsl:with-param name="posParent" select="$posParent"/>
 			   				<xsl:with-param name="posChild" select="$posChild"/>
@@ -1754,8 +2688,10 @@
 	    <xsl:param name="clazz"/>
 	    <xsl:param name="posParent"/>
 	    <xsl:param name="posChild"/>
-	    <xsl:param name="title"/>	    
-		<xsl:if test="$list/text() or name($list[1])='citation'">	 
+	    <xsl:param name="title"/>
+	    <xsl:param name="langNode"/>
+	    	    
+		<xsl:if test="$list[@xml:lang=$langNode]/text() or (name($list[1])='citation' and $list[1][@xml:lang = $langNode]/text())">	 
 			<div class="row">
 					<div class="leftcolumn">
 				   		<h2 class="subrow">
@@ -1765,7 +2701,29 @@
 				   	</div>
 				   	<div class="rightcolumn">
 						<xsl:call-template name="multilanguageWithVocabularySource">
-			   				<xsl:with-param name="list" select="$list"/>
+			   				<xsl:with-param name="list" select="$list[@xml:lang=$langNode]"/>
+			   				<xsl:with-param name="clazz" select="$clazz"/>
+			   				<xsl:with-param name="posParent" select="$posParent"/>
+			   				<xsl:with-param name="posChild" select="$posChild"/>
+			   			</xsl:call-template>
+					</div>
+			</div>
+			<xsl:if test="@href">
+				<xsl:variable name="href" select="./@href"/>
+				<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+			</xsl:if>
+		</xsl:if>
+		<xsl:if test="$langNode='notLang' and ($list[not(@xml:lang)]/text() or (name($list[1])='citation' and $list[1][not(@xml:lang)]/text()))">	 
+			<div class="row">
+					<div class="leftcolumn">
+				   		<h2 class="subrow">
+				   			<xsl:value-of select="ape:resource($title)"/>
+				   			<xsl:text>:</xsl:text>
+				   		</h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguageWithVocabularySource">
+			   				<xsl:with-param name="list" select="$list[not(@xml:lang)]"/>
 			   				<xsl:with-param name="clazz" select="$clazz"/>
 			   				<xsl:with-param name="posParent" select="$posParent"/>
 			   				<xsl:with-param name="posChild" select="$posChild"/>
@@ -1784,7 +2742,15 @@
 		<xsl:param name="date"/>
 		<xsl:param name="dateRange"/>
 		<xsl:param name="dateSet"/>
-		<xsl:if test="$date or $dateRange or $dateSet">
+		<xsl:param name="langNode"/>
+		
+		<xsl:if test="$date[@xml:lang = $langNode]/text()
+						or $dateRange[eac:fromDate[@xml:lang = $langNode]]/text()
+						or $dateRange[eac:toDate[@xml:lang = $langNode]]/text()
+						or $dateSet[eac:date[@xml:lang = $langNode]]/text()
+						or $dateSet[eac:dateRange[eac:fromDate[@xml:lang = $langNode]]]/text()
+						or $dateSet[eac:dateRange[eac:toDate[@xml:lang = $langNode]]]/text()">
+						
 		    <div class="row">
 		    	<div class="leftcolumn">
 				   		<h2 class="subrow">
@@ -1795,15 +2761,51 @@
 		        <div class="rightcolumn">
 		        	<span class="nameEtryDates">
 						<!-- when there are only 1 dateSet -->
-						<xsl:if test="$dateSet and (($dateSet/eac:dateRange/eac:fromDate or $dateSet/eac:dateRange/eac:toDate) or ($dateSet/eac:date and $dateSet/eac:date/text()))">
-							<xsl:apply-templates select="$dateSet"/>
+						<xsl:if test="$dateSet and (($dateSet/eac:dateRange/eac:fromDate[@xml:lang = $langNode] or $dateSet/eac:dateRange/eac:toDate[@xml:lang = $langNode]) or ($dateSet/eac:date[@xml:lang = $langNode] and $dateSet/eac:date[@xml:lang = $langNode]/text()))">
+							<xsl:apply-templates select="$dateSet">
+				   				<xsl:with-param name="langNode" select="$langNode"/>
+							</xsl:apply-templates>
 						</xsl:if>
 						<!-- when there are only 1 dateRange -->
-						<xsl:if test="$dateRange and ($dateRange/eac:fromDate or $dateRange/eac:toDate)">
+						<xsl:if test="$dateRange and ($dateRange/eac:fromDate[@xml:lang = $langNode] or $dateRange/eac:toDate[@xml:lang = $langNode])">
 							<xsl:apply-templates select="$dateRange"/>
 						</xsl:if>
 						<!-- when there are only 1 date -->
-						<xsl:if test="$date and $date/text()">
+						<xsl:if test="$date[@xml:lang = $langNode] and $date[@xml:lang = $langNode]/text()">
+							<xsl:apply-templates select="$date"/>
+						</xsl:if>
+					</span>
+				</div> 
+			</div>
+		</xsl:if>
+		<xsl:if test="$langNode='notLang' and ($date[not(@xml:lang)]/text()
+						or $dateRange[eac:fromDate[not(@xml:lang)]]/text()
+						or $dateRange[eac:toDate[not(@xml:lang)]]/text()
+						or $dateSet[eac:date[not(@xml:lang)]]/text()
+						or $dateSet[eac:dateRange[eac:fromDate[not(@xml:lang)]]]/text()
+						or $dateSet[eac:dateRange[eac:toDate[not(@xml:lang)]]]/text())">
+						
+		    <div class="row">
+		    	<div class="leftcolumn">
+				   		<h2 class="subrow">
+				   			<xsl:value-of select="ape:resource('eaccpf.portal.date')"/>
+				   			<xsl:text>:</xsl:text>
+				   		</h2>
+				</div>          
+		        <div class="rightcolumn">
+		        	<span class="nameEtryDates">
+						<!-- when there are only 1 dateSet -->
+						<xsl:if test="$dateSet and (($dateSet/eac:dateRange/eac:fromDate[not(@xml:lang)] or $dateSet/eac:dateRange/eac:toDate[not(@xml:lang)]) or ($dateSet/eac:date[not(@xml:lang)] and $dateSet/eac:date[not(@xml:lang)]/text()))">
+							<xsl:apply-templates select="$dateSet">
+				   				<xsl:with-param name="langNode" select="$langNode"/>
+							</xsl:apply-templates>
+						</xsl:if>
+						<!-- when there are only 1 dateRange -->
+						<xsl:if test="$dateRange and ($dateRange/eac:fromDate[not(@xml:lang)] or $dateRange/eac:toDate[not(@xml:lang)])">
+							<xsl:apply-templates select="$dateRange"/>
+						</xsl:if>
+						<!-- when there are only 1 date -->
+						<xsl:if test="$date[not(@xml:lang)] and $date[not(@xml:lang)]/text()">
 							<xsl:apply-templates select="$date"/>
 						</xsl:if>
 					</span>
@@ -2747,7 +3749,9 @@
 
 	<!-- template for dateSet -->
 	<xsl:template match="eac:dateSet">
-		<xsl:if test="eac:dateRange or eac:date">
+		<xsl:param name="langNode"/>
+		
+ 	  	<xsl:if test="$langNode='' and eac:dateRange or eac:date">
 			<xsl:call-template name="multilanguageDate">
 				<xsl:with-param name="list" select="eac:date"/>
 			</xsl:call-template>
@@ -2756,6 +3760,31 @@
 					<xsl:with-param name="list" select="eac:dateRange"/>	
 				</xsl:call-template>
 			</xsl:if>
+		</xsl:if>
+		
+		<xsl:if test="eac:date[@xml:lang = $langNode] and eac:date[@xml:lang = $langNode]/text() and eac:date[@xml:lang = $langNode]/text() != ''">
+			<xsl:call-template name="multilanguageDate">
+				<xsl:with-param name="list" select="eac:date[@xml:lang = $langNode]"/>
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:if test="eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]
+					and eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]/text()
+					and eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]/text() != ''">
+			<xsl:call-template name="multilanguageDateRange">
+				<xsl:with-param name="list" select="eac:dateRange[eac:fromDate[@xml:lang = $langNode] or eac:toDate[@xml:lang = $langNode]]"/>	
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:if test="$langNode = 'notLang' and eac:date[not(@xml:lang)] and eac:date[not(@xml:lang)]/text() and eac:date[not(@xml:lang)]/text() != ''">
+			<xsl:call-template name="multilanguageDate">
+				<xsl:with-param name="list" select="eac:date[not(@xml:lang)]"/>
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:if test="$langNode = 'notLang' and eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]
+					and eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]/text()
+					and eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]/text() != ''">
+			<xsl:call-template name="multilanguageDateRange">
+				<xsl:with-param name="list" select="eac:dateRange[eac:fromDate[not(@xml:lang)] or eac:toDate[not(@xml:lang)]]"/>	
+			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
 
@@ -3499,7 +4528,9 @@
 	<xsl:template name="p">
 		<xsl:param name="list"/>
 		<xsl:param name="clazz"/>
-		<xsl:if test="$list/eac:p/text()">
+		<xsl:param name="langNode"/>
+		
+		<xsl:if test="$list/eac:p[@xml:lang=$langNode]/text()">
 	    	<div class="row">
 					<div class="leftcolumn">
 				   		<h2 class="subrow">
@@ -3509,7 +4540,23 @@
 				   	</div>
 				   	<div class="rightcolumn">
 						<xsl:call-template name="multilanguage">
-				   			<xsl:with-param name="list" select="$list/eac:p"/>
+				   			<xsl:with-param name="list" select="$list/eac:p[@xml:lang=$langNode]"/>
+				   			<xsl:with-param name="clazz" select="$clazz"/>
+				   		</xsl:call-template>
+					</div>
+			</div>
+	    </xsl:if>
+	    <xsl:if test="$langNode='notLang' and $list/eac:p[not(@xml:lang)]/text()">
+	    	<div class="row">
+					<div class="leftcolumn">
+				   		<h2 class="subrow">
+					   		<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
+					   		<xsl:text>:</xsl:text>
+				   		</h2>
+				   	</div>
+				   	<div class="rightcolumn">
+						<xsl:call-template name="multilanguage">
+				   			<xsl:with-param name="list" select="$list/eac:p[not(@xml:lang)]"/>
 				   			<xsl:with-param name="clazz" select="$clazz"/>
 				   		</xsl:call-template>
 					</div>
