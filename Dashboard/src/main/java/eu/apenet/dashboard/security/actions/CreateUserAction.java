@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.UserService;
@@ -119,10 +120,7 @@ public class CreateUserAction extends AbstractAction {
 						addFieldError("email", getText("email.notAvailable"));
 					}
 					else {
-                        //RFC regexp for emails
-                        String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-			            Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);
-			            Matcher matcher = pattern.matcher(email);
+			            Matcher matcher = APEnetUtilities.EMAIL_PATTERN.matcher(email);
 			            if(!matcher.matches())
 			                addFieldError("email", getText("email.valid"));
 					}
