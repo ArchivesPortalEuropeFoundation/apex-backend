@@ -93,6 +93,7 @@ function sendAlternativeNames(){
 	var aiId = activeNode.data.key;
 	var lang = $("select#selectedLangTranslations option:selected").val();
 	var text = $("input#target").val();
+	hideAlternativeNameButtons();
 	$.post("launchALActions.action",{"action":"create_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
 //			showInformation(d.info);
@@ -101,6 +102,7 @@ function sendAlternativeNames(){
 			displayNode(activeNode,d.info,true);
 		}else if(d.error){
 			showInformation(d.error,true);
+			recoverAlternativeName();
 		}
 	});
 }
@@ -114,6 +116,7 @@ function hideAll(){
 	$("#divGroupNodesContainer").hide();
 	$("#editLanguagesDiv").hide();
 	$("input#textAL").val("");
+	hideAlternativeNameButtons();
 }
 
 function alternativeNameSelected(){
@@ -511,19 +514,26 @@ function deleteAlternativeNames() {
 	var aiId = activeNode.data.key;
 	var lang = $("select#selectedLangTranslations option:selected").val();
 	var text = $("input#target").val();
+	hideAlternativeNameButtons();
 	$.post("launchALActions.action",{"action":"delete_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
 			//showInformation(d.info);
+			//showAlternativeNameButtons();
 			hideAll();
 			dynatree.reload();
 			displayNode(activeNode,d.info,true); //in this case old parents are the same, so reuse that information
 		}else if(d.error){
 			showInformation(d.error,true);
+			recoverAlternativeName();
 		}
 	});
 }
 
-
+function hideAlternativeNameButtons(){
+	$("#editTargetSubmitDiv").hide();
+	$("#deleteTargetSubmitDiv").hide();
+	$("#editTargetCancelDiv").hide();
+}
 
 function checkPossibleAlternativeNamesActions(lang) {
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
