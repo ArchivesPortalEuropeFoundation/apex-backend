@@ -66,7 +66,7 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 
 	@Override
 	public final String getRealm() {
-		return "Dashboard Archives Portal Europe";
+		return "Files at Archives Portal Europe";
 	}
 
 	protected File getFile() {
