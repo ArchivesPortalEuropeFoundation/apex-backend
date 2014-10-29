@@ -10,6 +10,7 @@
 	<packaging>war</packaging>
 	<name>Webdav file browser</name>
 	<build>
+		<finalName>files</finalName>
 		<plugins>
 				<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

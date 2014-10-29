@@ -251,21 +251,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.ettrema</groupId>
-			<artifactId>milton-servlet</artifactId>
-			<version>1.7.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring-webmvc</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.odftoolkit</groupId>
 			<artifactId>simple-odf</artifactId>
 			<version>0.7-incubating</version>
