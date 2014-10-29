@@ -16,66 +16,65 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Map;
 
-public class FileResource extends AbstractResource implements GetableResource,PropFindableResource  {
-    
-
+public class FileResource extends AbstractResource implements GetableResource, PropFindableResource {
 
 	public FileResource(File file, String url) {
 		super(file, url);
 	}
 
 	@Override
-    public String getUniqueId() {
-        return getUrl().hashCode() + "";
-    }
-    
-    public int compareTo(Resource res) {
-        return this.getName().compareTo(res.getName());
-    }    
-    
-	@Override
-    public void sendContentInternal(OutputStream out, Range range, Map<String, String> params, String contentType) throws IOException {
-        FileInputStream fis = new FileInputStream(getFile());
-        BufferedInputStream bin = new BufferedInputStream(fis);
-        final byte[] buffer = new byte[ 1024 ];
-        int n = 0;
-        while( -1 != (n = bin.read( buffer )) ) {
-            out.write( buffer, 0, n );
-        }
-        fis.close();
-    }
+	public String getUniqueId() {
+		return getUrl().hashCode() + "";
+	}
+
+	public int compareTo(Resource res) {
+		return this.getName().compareTo(res.getName());
+	}
 
 	@Override
-    public String getName() {
-        return getFile().getName();
-    }
-
+	public void sendContentInternal(OutputStream out, Range range, Map<String, String> params, String contentType)
+			throws IOException {
+		if (getFile().exists()) {
+			FileInputStream fis = new FileInputStream(getFile());
+			BufferedInputStream bin = new BufferedInputStream(fis);
+			final byte[] buffer = new byte[1024];
+			int n = 0;
+			while (-1 != (n = bin.read(buffer))) {
+				out.write(buffer, 0, n);
+			}
+			fis.close();
+		}
+	}
 
 	@Override
-    public Date getModifiedDate() {        
-       return new Date(getFile().lastModified());
-    }
+	public String getName() {
+		return getFile().getName();
+	}
 
 	@Override
-    public Long getContentLength() {
-        return getFile().length();
-    }
+	public Date getModifiedDate() {
+		return new Date(getFile().lastModified());
+	}
 
 	@Override
-    public String getContentType(String preferredList) {
+	public Long getContentLength() {
+		return getFile().length();
+	}
+
+	@Override
+	public String getContentType(String preferredList) {
 		return WebDavResourceFactory.getContentType(getFile());
-    }
+	}
 
-    public String checkRedirect(Request request) {
-        return null;
-    }
+	public String checkRedirect(Request request) {
+		return null;
+	}
 
-    public Long getMaxAgeSeconds(Auth auth) {
-        return 1l;
-    }
+	public Long getMaxAgeSeconds(Auth auth) {
+		return 1l;
+	}
 
-	public LockToken getLockToken()
-	{
+	public LockToken getLockToken() {
 		return null;
 	}
 
