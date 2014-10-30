@@ -9,3 +9,69 @@ table {
 .tdVertical {
 	vertical-align: middle;
 }
+
+.titleLabel {
+	font: 1.1em Arial,sans-serif;
+	font-weight: bold;
+	border-bottom: 1px solid #00a0df;
+}
+
+#conversionToEDMForm td {
+	padding-top: 15px;
+}
+
+input[type="radio"] {
+	margin-right: 6px;
+	vertical-align: middle;
+}
+
+input[type="checkbox"] {
+	margin-right: 6px;
+	margin-left: 12px;
+}
+
+#licenseAdditionalInformation {
+	height: 100px;
+	width: 75%;
+}
+
+#conversionToEDMForm input {
+	font-family: "Arial",sans-serif;
+	font-size: 12px; 
+}
+
+#cancelEDMConvert {
+	background: url("../../images/otherbutton.gif") repeat-x scroll right top #FFFFFF;
+	border: 1px solid #00A0DF;
+	color: #00384D;
+	margin-left: 5px;
+	margin-top: 5px;
+	border-radius: 3px 3px 3px 3px;
+	font-weight: bold;
+	overflow: visible;
+	padding: 5px;
+	text-shadow: 1px 1px #FFFFFF;
+	width: auto;
+	cursor: pointer;
+	line-height: normal;
+	vertical-align: baseline;
+}
+
+#processEDMConvert {
+	margin-right: 20px;
+	margin-bottom: 5px;
+	background: url("../../images/mainbutton.jpg") repeat-x scroll right top #FFFFFF;
+    border: 1px solid #00A0DF;
+    color: #00384D;
+    margin-left: 5px;
+    margin-top: 5px;
+    border-radius: 3px 3px 3px 3px;
+    font-weight: bold;
+    overflow: visible;
+    padding: 5px;
+    text-shadow: 1px 1px #FFFFFF;
+    width: auto;
+    cursor: pointer;
+    line-height: normal;
+    vertical-align: baseline;
+}

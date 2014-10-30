@@ -39,6 +39,7 @@ public class QueueItem implements java.io.Serializable {
     public static final String INHERIT_FILE = "europeana.inheritfile";
     public static final String INHERIT_ORIGINATION_CHECK = "europeana.inheritoriginationcheck";
     public static final String INHERIT_ORIGINATION = "europeana.inheritorigination";
+    public static final String SOURCE_OF_IDENTIFIERS = "europeana.sourceOfIdentifiers";
 
     /**
 	 *

@@ -70,6 +70,8 @@ public class Ingestionprofile implements Serializable {
     private Boolean europeanaInheritOriginCheck = true;
     @Column(name = "europeana_inh_origin")
     private Boolean europeanaInheritOrigin = false;
+    @Column(name = "source_of_identifiers")
+    private String sourceOfIdentifiers;
 
     public Ingestionprofile() {
     }
@@ -271,4 +273,18 @@ public class Ingestionprofile implements Serializable {
     public void setEuropeanaInheritOrigin(Boolean europeanaInheritOrigin) {
         this.europeanaInheritOrigin = europeanaInheritOrigin;
     }
+
+	/**
+	 * @return the sourceOfIdentifiers
+	 */
+	public String getSourceOfIdentifiers() {
+		return this.sourceOfIdentifiers;
+	}
+
+	/**
+	 * @param sourceOfIdentifiers the sourceOfIdentifiers to set
+	 */
+	public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
+		this.sourceOfIdentifiers = sourceOfIdentifiers;
+	}
 }

@@ -145,12 +145,35 @@
 </script>
 
 <s:form method="POST" theme="simple">
-	<table>
+	<table id="conversionToEDMForm">
 		<tr>
-			<td colspan="2" class="inputLabel" style="text-align: center;">
-				<s:label key="ead2ese.label.choose.conversion.type" />:
-				<s:radio name="conversionType" id="conversionType" list="conversionTypeSet" listKey="value" listValue="content" required="true"></s:radio>
-				<br/><br/>
+			<td colspan="2" class="titleLabel">
+				<s:label key="ead2ese.label.general.settings" />
+			</td>
+		</tr>
+		<tr>
+			<td class="inputLabel">
+				<s:label key="ead2ese.label.choose.conversion.type"  for="conversionType" />:
+			</td>
+			<td>
+				<s:iterator value="conversionTypeSet">
+					<s:radio name="conversionType" id="conversionType" list="top" listKey="value" listValue="content"></s:radio><br/>
+				</s:iterator>
+			</td>
+		</tr>
+		<tr>
+			<td class="inputLabel">
+				<s:label key="ead2ese.label.specify.idsource"  for="sourceOfIdentifiers" />:
+			</td>
+			<td>
+				<s:iterator value="sourceOfIdentifiersSet">
+					<s:radio name="sourceOfIdentifiers" id="sourceOfIdentifiers" list="top" listKey="value" listValue="content"></s:radio><br/>
+				</s:iterator>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="titleLabel">
+				<s:label key="ead2ese.label.specific.settings" />
 			</td>
 		</tr>
 		<tr>
@@ -182,8 +205,11 @@
 				<td class="inputLabel">
 					<s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:
 				</td>
-				<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content" required="true" onchange="setMandatoryField();">
-					</s:radio><s:fielderror fieldName="inheritLanguage"/>
+				<td>
+					<s:iterator value="inheritLanguageSet">
+						<s:radio name="inheritLanguage" id="inheritLanguage" list="top" listKey="value" listValue="content"></s:radio><br/>
+					</s:iterator>
+					<s:fielderror fieldName="inheritLanguage"/>
 				</td>
 			</tr>
 		</s:if>
@@ -215,8 +241,11 @@
 
 		<tr>
 			<td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
-			<td><s:radio name="license" id="license" list="licenseSet" listKey="value" listValue="content"></s:radio>
-			<br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
+			<td>
+				<s:iterator value="licenseSet">
+					<s:radio name="license" id="license" list="top" listKey="value" listValue="content"></s:radio><br/>
+				</s:iterator>
+				(<s:label key="ead2ese.content.license.moreinfo"/> <s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
 			</td>
 		</tr>
 		<s:if test="license=='cc0' || license=='cpdm' || license=='europeana' || license=='outofcopyright'">
@@ -250,7 +279,10 @@
 				<s:checkbox name="inheritFileParentCheck" id="inheritFileParentCheck" value="true" onchange="changeInheritFileParentCheckState();"></s:checkbox>
 				<s:label key="ead2ese.label.inherit.parent" for="inheritFileParent" />:
 			</td>
-			<td><s:radio name="inheritFileParent" list="yesNoSet" listKey="value" listValue="content" id="inheritFileParent"></s:radio>
+			<td>
+				<s:iterator value="yesNoSet">
+					<s:radio name="inheritFileParent" id="inheritFileParent" list="top" listKey="value" listValue="content"></s:radio><br/>
+				</s:iterator>
 			</td>
 		</tr>
 		<tr id="hiddenInheritOrigination" ${showMinimal}>
@@ -258,19 +290,20 @@
 				<s:checkbox name="inheritOriginationCheck" id="inheritOriginationCheck" value="true" onchange="changeInheritOriginationCheckState();"></s:checkbox>
 				<s:label key="ead2ese.label.inherit.origination" for="inheritOrigination" />:
 			</td>
-			<td><s:radio name="inheritOrigination" list="yesNoSet" listKey="value" listValue="content"></s:radio>
+			<td>
+				<s:iterator value="yesNoSet">
+					<s:radio name="inheritOrigination" id="inheritOrigination" list="top" listKey="value" listValue="content"></s:radio><br/>
+				</s:iterator>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				<br/><br/>
-				<s:submit action="processEseConvert" key="ead2ese.label.next" cssClass="mainButton"/>
-				<s:submit action="contentmanager" key="ead2ese.label.cancel" />
+				<s:submit id="processEDMConvert" action="processEseConvert" key="ead2ese.label.next" cssClass="mainButton"/>
+				<s:submit id="cancelEDMConvert" action="contentmanager" key="ead2ese.label.cancel" />
 			</td>
 		</tr>
 	</table>
-	<br></br>
-	<br></br>
+
 	<s:hidden name="batchItems" />
 	<s:hidden name="batchConversion" />
 	<s:hidden name="id" />
