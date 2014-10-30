@@ -234,14 +234,14 @@
 #buildingLabel,#holdingLabel,#usedLanguagesLabel,#usedRulesLabel,#resourceLabel,
 #institutionLabel,#searchroomLabel,#libraryLabel,#internetAccessLabel,#technicalServicesLabel,
 #restaurationLabLabel,#reproductionServiceLabel,#recreationalServiceLabel,
-#yourInstitutionLabel,#yiPostalAddressLabel {
+#yourInstitutionLabel,#yiPostalAddressLabel, #yourInstitutionAddRepositoryLabelTd {
 	font-weight: bold;
 }
 
 #visitorAdressLabel,#yourInstitutionLabel,#postalAddressLabel,#repositoryLabel,
 #administrativeLabel,#buildingLabel,#holdingLabel,#usedLanguagesLabel,#usedRulesLabel,
 #resourceLabel,#institutionLabel,#searchroomLabel,#technicalServicesLabel,
-#recreationalServiceLabel {
+#recreationalServiceLabel, #yourInstitutionAddRepositoryLabelTd {
 	border-bottom: 1px solid #00a0df;
 }
 textarea {
