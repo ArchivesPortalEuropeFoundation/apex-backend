@@ -426,9 +426,6 @@
 						</s:iterator>
 					</s:if>
 					<s:else>
-						<tr>
-			         		<td class="orangeLine" colspan="4"></td>
-						</tr>
 						<tr id="trFaxOfTheInstitution_1">
 							<td id="tdFaxOfTheInstitution_1">
 								<label for="textContactFaxOfTheInstitution_1"><s:property value="getText('eag2012.contact.fax')" />:</label>
@@ -443,9 +440,6 @@
 					</s:else>
 				</s:if>
 				<s:else>
-					<tr>
-			         	<td class="orangeLine" colspan="4"></td>
-					</tr>
 					<tr id="trFaxOfTheInstitution_1">
 						<td id="tdFaxOfTheInstitution_1">
 							<label for="textContactFaxOfTheInstitution_1"><s:property value="getText('eag2012.contact.fax')" />:</label>
@@ -823,9 +817,6 @@
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("eag2012.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 			</td>
-		</tr>
-		<tr>
-         	<td class="orangeLine" colspan="4"></td>
 		</tr>
 		<tr id="trFaxOfTheInstitution_1">
 			<td id="tdFaxOfTheInstitution_1">

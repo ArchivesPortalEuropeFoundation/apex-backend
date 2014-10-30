@@ -185,9 +185,6 @@
 							<td colspan="2">
 							</td>
 						</tr>
-						<tr>
-							<td class="orangeLine" colspan="4"></td>
-						</tr>
 					</table>
 				
 					<s:if test="%{loader.nonpreform.size() > 0}">
@@ -291,9 +288,6 @@
 							</td>
 							<td colspan="2">
 							</td>
-						</tr>
-						<tr>
-							<td class="orangeLine" colspan="4"></td>
 						</tr>
 					</table>
 				

@@ -166,7 +166,7 @@
 	width: 100%;
 }
 #eag2012Div table td.orangeLine{
-	border-bottom:2px solid #E6BB5F;
+	border-bottom:1px solid #00a0df;
 }
 .tablePadding {
 	padding-right: 18px;
@@ -242,7 +242,7 @@
 #administrativeLabel,#buildingLabel,#holdingLabel,#usedLanguagesLabel,#usedRulesLabel,
 #resourceLabel,#institutionLabel,#searchroomLabel,#technicalServicesLabel,
 #recreationalServiceLabel, #yourInstitutionAddRepositoryLabelTd {
-	border-bottom: 1px solid #00a0df;
+	border-bottom: 2px solid #00a0df;
 }
 textarea {
 	height:60px;
