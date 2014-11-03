@@ -166,7 +166,7 @@
 	width: 100%;
 }
 #eag2012Div table td.orangeLine{
-	border-bottom:1px solid #00a0df;
+	border-bottom:2px solid #E6BB5F;
 }
 .tablePadding {
 	padding-right: 18px;
@@ -234,15 +234,15 @@
 #buildingLabel,#holdingLabel,#usedLanguagesLabel,#usedRulesLabel,#resourceLabel,
 #institutionLabel,#searchroomLabel,#libraryLabel,#internetAccessLabel,#technicalServicesLabel,
 #restaurationLabLabel,#reproductionServiceLabel,#recreationalServiceLabel,
-#yourInstitutionLabel,#yiPostalAddressLabel, #yourInstitutionAddRepositoryLabelTd {
+#yourInstitutionLabel,#yiPostalAddressLabel {
 	font-weight: bold;
 }
 
 #visitorAdressLabel,#yourInstitutionLabel,#postalAddressLabel,#repositoryLabel,
 #administrativeLabel,#buildingLabel,#holdingLabel,#usedLanguagesLabel,#usedRulesLabel,
 #resourceLabel,#institutionLabel,#searchroomLabel,#technicalServicesLabel,
-#recreationalServiceLabel, #yourInstitutionAddRepositoryLabelTd {
-	border-bottom: 2px solid #00a0df;
+#recreationalServiceLabel {
+	border-bottom: 1px solid #00a0df;
 }
 textarea {
 	height:60px;

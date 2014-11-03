@@ -1,15 +1,4 @@
-package eu.archivesportaleurope.webdav;
-
-import io.milton.http.Auth;
-import io.milton.http.Range;
-import io.milton.http.Request;
-import io.milton.http.Request.Method;
-import io.milton.http.exceptions.BadRequestException;
-import io.milton.http.exceptions.NotAuthorizedException;
-import io.milton.http.exceptions.NotFoundException;
-import io.milton.resource.GetableResource;
-import io.milton.resource.PropFindableResource;
-import io.milton.servlet.MiltonServlet;
+package eu.apenet.dashboard.webdav;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +10,23 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import com.bradmcevoy.common.Path;
+import com.bradmcevoy.http.Auth;
+import com.bradmcevoy.http.GetableResource;
+import com.bradmcevoy.http.MiltonServlet;
+import com.bradmcevoy.http.PropFindableResource;
+import com.bradmcevoy.http.Range;
+import com.bradmcevoy.http.Request;
+import com.bradmcevoy.http.Request.Method;
+import com.bradmcevoy.http.exceptions.BadRequestException;
+import com.bradmcevoy.http.exceptions.NotAuthorizedException;
+import com.bradmcevoy.http.exceptions.NotFoundException;
+
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.archivesportaleurope.webdav.security.SecurityContext;
-import eu.archivesportaleurope.webdav.security.SecurityService;
-import eu.archivesportaleurope.webdav.security.SecurityService.LoginResult;
+import eu.apenet.dashboard.exception.DashboardAPEnetException;
+import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.security.SecurityService;
+import eu.apenet.dashboard.security.SecurityService.LoginResult;
 
 public abstract class AbstractResource implements PropFindableResource, GetableResource {
 	protected final Logger logger = Logger.getLogger(this.getClass());
@@ -48,7 +50,7 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 			}
 			return securityContext;
 
-		} catch (NotAuthorizedException e) {
+		} catch (DashboardAPEnetException e) {
 			logger.error("Error while trying to login with name: " + user);
 			return null;
 		}
@@ -57,7 +59,9 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 
 	@Override
 	public final boolean authorise(Request request, Method method, Auth auth) {
-		 if (auth != null && auth.getTag() != null) {
+		if (Method.OPTIONS.equals(method)) {
+			return true;
+		} else if (auth != null && auth.getTag() != null) {
 			logger.info(auth.getUser() + " " + method);
 			return true;
 		}
@@ -66,7 +70,7 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 
 	@Override
 	public final String getRealm() {
-		return "Files at Archives Portal Europe";
+		return "Dashboard Archives Portal Europe";
 	}
 
 	protected File getFile() {
@@ -89,8 +93,8 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 		} else {
 			// make relative path
 			String path = file.getAbsolutePath();
-			if (path.startsWith(APEnetUtilities.getConfig().getRepoDirPath())) {
-				path = path.substring(APEnetUtilities.getConfig().getRepoDirPath().length());
+			if (path.startsWith(APEnetUtilities.getDashboardConfig().getRepoDirPath())) {
+				path = path.substring(APEnetUtilities.getDashboardConfig().getRepoDirPath().length());
 			}
 			// everyone authenticated user may see the base dir.
 			if (path.length() == 0) {
@@ -122,27 +126,15 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 		return false;
 	}
 
-//	@Override
-//	public final void sendContent(OutputStream out, Range range, Map<String, String> params, String contentType)
-//			throws IOException, NotAuthorizedException, BadRequestException, NotFoundException {
-//		if (acceptRead(getFile())) {
-//			sendContentInternal(out, range, params, contentType);
-//		} else {
-//			throw new NotFoundException("not found");
-//		}
-//
-//	}
-
 	@Override
-	public void sendContent(OutputStream out, Range range, Map<String, String> params, String contentType)
-			throws IOException, io.milton.http.exceptions.NotAuthorizedException, BadRequestException,
-			NotFoundException {
+	public final void sendContent(OutputStream out, Range range, Map<String, String> params, String contentType)
+			throws IOException, NotAuthorizedException, BadRequestException, NotFoundException {
 		if (acceptRead(getFile())) {
-		sendContentInternal(out, range, params, contentType);
-	} else {
-		throw new NotFoundException("not found");
-	}
-		
+			sendContentInternal(out, range, params, contentType);
+		} else {
+			throw new NotFoundException("not found");
+		}
+
 	}
 
 	protected abstract void sendContentInternal(OutputStream out, Range range, Map<String, String> params,

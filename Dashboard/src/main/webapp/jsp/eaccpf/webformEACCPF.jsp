@@ -66,9 +66,13 @@
 <div id="dialog-saveOnQuit">
     <div>
         <p id="DlgContent"><s:property value="getText('eaccpf.commons.exitConfirm')" /></p>
-        <input id="btnYes" type="button" value="<s:property value="getText('content.message.yes')" />" 
-        	onclick="clickSaveAction(false, '<s:property value="getText('eaccpf.identity.error.empty.name.label')" />', '<s:property value="getText('eaccpf.identity.error.empty.date.label')" />', '<s:property value="getText('eaccpf.commons.error.empty.from.date')" />', '<s:property value="getText('eaccpf.commons.error.empty.to.date')" />', '<s:property value="getText('eaccpf.relations.error.typemissing.cpf')" />', '<s:property value="getText('eaccpf.relations.error.typemissing.resource')" />', '<s:property value="getText('eaccpf.relations.error.typemissing.function')" />', '<s:property value="getText('eaccpf.control.error.emptylanguage.popup')" />', '<s:property value="getText('eaccpf.control.error.emptyscript.popup')" />');" />
-        <input id="btnNo" type="button" value="<s:property value="getText('content.message.no')" />" 
-        	onclick="clickExitWithoutSaveAction();" />
+        <input id="btnYes"
+               type="button"
+               value="Yes"
+               onclick="clickSaveAction(false, '<s:property value="getText('eaccpf.identity.error.empty.name.label')" />', '<s:property value="getText('eaccpf.identity.error.empty.date.label')" />', '<s:property value="getText('eaccpf.commons.error.empty.from.date')" />', '<s:property value="getText('eaccpf.commons.error.empty.to.date')" />', '<s:property value="getText('eaccpf.relations.error.typemissing.cpf')" />', '<s:property value="getText('eaccpf.relations.error.typemissing.resource')" />', '<s:property value="getText('eaccpf.relations.error.typemissing.function')" />', '<s:property value="getText('eaccpf.control.error.emptylanguage.popup')" />', '<s:property value="getText('eaccpf.control.error.emptyscript.popup')" />');" />
+        <input id="btnNo"
+               type="button"
+               value="No"
+               onclick="clickExitWithoutSaveAction();" />
     </div>
 </div>

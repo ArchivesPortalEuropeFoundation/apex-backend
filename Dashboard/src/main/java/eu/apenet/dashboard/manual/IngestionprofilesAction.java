@@ -42,9 +42,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private static final String EUROPEANA = "europeana";
     private static final String INHERITLANGUAGE_PROVIDE = "provide";
 	private static final String OUT_OF_COPYRIGHT = "outofcopyright";
-	// Source of identifiers.
-	private static final String OPTION_UNITID = "unitid";
-	private static final String OPTION_CID = "cid";
 
     //Collections for basic tab
     private Set<SelectItem> ingestionprofiles = new LinkedHashSet<SelectItem>();
@@ -56,7 +53,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     //Collections for Europeana tab
     private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> sourceOfIdentifiersSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> typeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
@@ -76,7 +72,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     //fields for Europeana tab components
     private String conversiontype;
-    private String sourceOfIdentifiers;
     private String textDataProvider;
     private String dataProviderCheck;
     private String europeanaDaoType;
@@ -125,7 +120,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
 
             conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
-            sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
             textDataProvider = ingestionprofile.getEuropeanaDataProvider();
             dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
             europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
@@ -169,7 +163,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
 
         profile.setEuropeanaConversionType(Boolean.parseBoolean(conversiontype));
-        profile.setSourceOfIdentifiers(sourceOfIdentifiers);
         profile.setEuropeanaDataProvider(textDataProvider);
         profile.setEuropeanaDataProviderFromFile(Boolean.parseBoolean(dataProviderCheck));
         if (europeanaDaoType == null || europeanaDaoType.isEmpty()) {
@@ -242,7 +235,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         daoTypeCheck = Boolean.toString(true);
 
         conversiontype = "1";
-        sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
         textDataProvider = getAiname();
         dataProviderCheck = Boolean.toString(true);
         europeanaDaoType = "";
@@ -291,8 +283,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         //Europeana preferences
         conversiontypeSet.add(new SelectItem("true", this.getText("ead2ese.label.minimal.conversion")));
         conversiontypeSet.add(new SelectItem("false", this.getText("ead2ese.label.full.conversion")));
-        sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<","&#60;")));
-        sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<","&#60;")));
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
@@ -384,21 +374,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.conversiontypeSet = conversiontypeSet;
     }
 
-    /**
-	 * @return the sourceOfIdentifiersSet
-	 */
-	public Set<SelectItem> getSourceOfIdentifiersSet() {
-		return this.sourceOfIdentifiersSet;
-	}
-
-	/**
-	 * @param sourceOfIdentifiersSet the sourceOfIdentifiersSet to set
-	 */
-	public void setSourceOfIdentifiersSet(Set<SelectItem> sourceOfIdentifiersSet) {
-		this.sourceOfIdentifiersSet = sourceOfIdentifiersSet;
-	}
-
-	public Set<SelectItem> getTypeSet() {
+    public Set<SelectItem> getTypeSet() {
         return typeSet;
     }
 
@@ -510,21 +486,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.conversiontype = conversiontype;
     }
 
-    /**
-	 * @return the sourceOfIdentifiers
-	 */
-	public String getSourceOfIdentifiers() {
-		return this.sourceOfIdentifiers;
-	}
-
-	/**
-	 * @param sourceOfIdentifiers the sourceOfIdentifiers to set
-	 */
-	public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
-		this.sourceOfIdentifiers = sourceOfIdentifiers;
-	}
-
-	public String getTextDataProvider() {
+    public String getTextDataProvider() {
         return textDataProvider;
     }
 

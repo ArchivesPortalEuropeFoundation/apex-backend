@@ -102,12 +102,19 @@
 				<!--  <textarea id="textYINameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutformEscaped}');">${loader.autform}</textarea>-->
 			</td>
 			<td>
-				<label class="language" for="selectYINOTISelectLanguage"><s:property value="getText('eag2012.commons.selectLanguage')"/>*:</label>
+				<label class="language" for="selectYINOTISelectLanguage"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			  	<select id="selectYINOTISelectLanguage" onchange="nameOfInstitutionLanguageChanged();" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.autformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 						</s:iterator>
 				</select> 
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+			</td>
+			<td>
+				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('eag2012.yourinstitution.addRepositoryTabButton')" />"  onclick="addRepositories('<s:property value="getText('eag2012.yourinstitution.institution')" />','<s:property value="getText('eag2012.tab.extraRepository')" />','<s:property value="getText('eag2012.commons.nameOfRepository')" />','<s:property value="getText('eag2012.commons.roleOfRepository')" />','<s:property value="getText('eag2012.options.role.headquarters')" />','<s:property value="getText('eag2012.options.role.branch')" />','<s:property value="getText('eag2012.options.role.interimArchive')" />','<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')" />','<s:property value="getText('eag2012.commons.street')" />','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />','<s:property value="getText('eag2012.commons.deleteRepository')" />');" />
 			</td>
 		</tr>
 		<tr>
@@ -142,17 +149,6 @@
 				</select>
 			</td>
 			<td>
-			</td>
-		</tr>
-		
-		<tr>
-			<td id="yourInstitutionAddRepositoryLabelTd" colspan="4">
-				<s:property value="getText('eag2012.yourinstitution.addRepositoryTabLabel')" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('eag2012.yourinstitution.addRepositoryTabButton')" />"  onclick="addRepositories('<s:property value="getText('eag2012.yourinstitution.institution')" />','<s:property value="getText('eag2012.tab.extraRepository')" />','<s:property value="getText('eag2012.commons.nameOfRepository')" />','<s:property value="getText('eag2012.commons.roleOfRepository')" />','<s:property value="getText('eag2012.options.role.headquarters')" />','<s:property value="getText('eag2012.options.role.branch')" />','<s:property value="getText('eag2012.options.role.interimArchive')" />','<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')" />','<s:property value="getText('eag2012.commons.street')" />','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />','<s:property value="getText('eag2012.commons.deleteRepository')" />');" />
 			</td>
 		</tr>
 	</table>

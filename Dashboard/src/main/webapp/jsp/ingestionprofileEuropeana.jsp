@@ -106,35 +106,13 @@
 </div>
 
 <div id="europeanaTabContent">
-	<table id="conversionToEDMForm">
-		<tr>
-			<td colspan="2" class="titleLabel">
-				<s:label key="ead2ese.label.general.settings" />
-			</td>
-		</tr>
+    <table>
         <tr id="conversionMode">
             <td class="inputLabel"><s:label key="ead2ese.label.choose.conversion.type" for="conversionType" />:</td>
             <td>
-				<s:iterator value="conversiontypeSet">
-					<s:radio name="conversiontype" id="radioConversiontype" list="top" listKey="value" listValue="content"></s:radio><br/>
-				</s:iterator>
+                <s:radio id="radioConversiontype" name="conversiontype" list="conversiontypeSet" listKey="value" listValue="content" />
             </td>
         </tr>
-		<tr>
-			<td class="inputLabel">
-				<s:label key="ead2ese.label.specify.idsource"  for="sourceOfIdentifiers" />:
-			</td>
-			<td>
-				<s:iterator value="sourceOfIdentifiersSet">
-					<s:radio name="sourceOfIdentifiers" id="sourceOfIdentifiers" list="top" listKey="value" listValue="content"></s:radio><br/>
-				</s:iterator>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="titleLabel">
-				<s:label key="ead2ese.label.specific.settings" />
-			</td>
-		</tr>
         <tr id="trDataProvider">
             <td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="textDataProvider" />*:</td>
             <td>
@@ -162,13 +140,10 @@
         </tr>
         <tr>
             <td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
-            <td>
-				<s:iterator value="licenseSet">
-					<s:radio name="license" id="license" list="top" listKey="value" listValue="content"></s:radio><br/>
-				</s:iterator>
-                (<s:label key="ead2ese.content.license.moreinfo"/> <s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
-            </td>
-        </tr>
+            <td><s:radio name="license" id="license" list="licenseSet" listKey="value" listValue="content" />
+                <br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
+                </td>
+            </tr>
         <s:if test="license=='cc0' || license=='cpdm' || license=='europeana' || license=='outofcopyright'">
             <c:set var="creativeCommonsInvisible" value="style=\"display: none;\""></c:set>
         </s:if>
@@ -200,21 +175,15 @@
                 <s:checkbox name="inheritFileParentCheck" id="inheritFileParentCheck" value="true" onchange="changeInheritFileParentCheckState();"></s:checkbox>
                 <s:label key="ead2ese.label.inherit.parent" for="inheritFileParent" />:
             </td>
-            <td>
-				<s:iterator value="yesNoSet">
-					<s:radio name="inheritFileParent" id="inheritFileParent" list="top" listKey="value" listValue="content"></s:radio><br/>
-				</s:iterator>
-            </td>
+            <td><s:radio name="inheritFileParent" list="yesNoSet" listKey="value" listValue="content" id="inheritFileParent"></s:radio>
+                </td>
         </tr>
         <tr id="hiddenInheritOrigination" ${showMinimal}>
             <td class="inputLabel">
                 <s:checkbox name="inheritOriginationCheck" id="inheritOriginationCheck" value="true" onchange="changeInheritOriginationCheckState();"></s:checkbox>
                 <s:label key="ead2ese.label.inherit.origination" for="inheritOrigination" />:
             </td>
-            <td>
-				<s:iterator value="yesNoSet">
-					<s:radio name="inheritOrigination" id="inheritOrigination" list="top" listKey="value" listValue="content"></s:radio><br/>
-				</s:iterator>
+            <td><s:radio name="inheritOrigination" list="yesNoSet" listKey="value" listValue="content" id="inheritOrigination"></s:radio>
             </td>
         </tr>
     </table>

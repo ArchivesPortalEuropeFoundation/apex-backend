@@ -53,9 +53,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 	// Conversion type.
 	private static final String OPTION_FULL = "full"; // Constant for value "full".
 	private static final String OPTION_MINIMAL = "minimal"; // Constant for value "minimal".
-	// Source of identifiers.
-	private static final String OPTION_UNITID = "unitid";
-	private static final String OPTION_CID = "cid";
 	// Europeana licences.
 	private static final String EUROPEANA_FREE = "http://www.europeana.eu/rights/rr-f/"; // Constant for link to europeana free license.
 	private static final String EUROPEANA_NON_COMMERCIAL = "http://www.europeana.eu/rights/out-of-copyright-non-commercial/"; // Constant for link to europeana non-commercial license.
@@ -72,7 +69,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 	private String provider = "Archives Portal Europe";
 	private String daoType;
     private Set<SelectItem> conversionTypeSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> sourceOfIdentifiersSet = new TreeSet<SelectItem>();
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
@@ -87,7 +83,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     private Map<String, String> dateMappings;
     private String filename;
     private String conversionType = ConvertAction.OPTION_MINIMAL;
-    private String sourceOfIdentifiers = ConvertAction.OPTION_UNITID;
     private String validateLinks = ConvertAction.OPTION_NO;
     private String inheritLanguage = ConvertAction.OPTION_NO;
     //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
@@ -170,8 +165,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 
 		this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_FULL, this.getText("ead2ese.label.full.conversion")));
 		this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_MINIMAL, this.getText("ead2ese.label.minimal.conversion")));
-		this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<","&#60;")));
-		this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<","&#60;")));
 		//list="#{'IMAGE':'Image', 'TEXT':'Text', 'SOUND':'Sound', 'VIDEO':'Video'}"
 		this.typeSet.add(new SelectItem("", this.getText("ead2ese.content.selectone")));
 		this.typeSet.add(new SelectItem(ConvertAction.TYPE_3D, this.getText("ead2ese.content.type.3D")));
@@ -305,13 +298,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     		config.setMinimalConversion(true);
     	} else {
     		config.setMinimalConversion(false);
-    	}
-
-    	// Set the source of identifiers.
-    	if (ConvertAction.OPTION_UNITID.equalsIgnoreCase(this.getSourceOfIdentifiers())) {
-    		config.setIdSource(ConvertAction.OPTION_UNITID);
-    	} else {
-    		config.setIdSource(ConvertAction.OPTION_CID);
     	}
 
         //if id is not empty, oaiIdentifier and repositoryCode will be filled here; otherwise this is done in EadService
@@ -586,20 +572,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 	}
 
 	/**
-	 * @return the sourceOfIdentifiersSet
-	 */
-	public Set<SelectItem> getSourceOfIdentifiersSet() {
-		return this.sourceOfIdentifiersSet;
-	}
-
-	/**
-	 * @param sourceOfIdentifiersSet the sourceOfIdentifiersSet to set
-	 */
-	public void setSourceOfIdentifiersSet(Set<SelectItem> sourceOfIdentifiersSet) {
-		this.sourceOfIdentifiersSet = sourceOfIdentifiersSet;
-	}
-
-	/**
 	 * @return the conversionType
 	 */
 	public String getConversionType() {
@@ -611,20 +583,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 */
 	public void setConversionType(String conversionType) {
 		this.conversionType = conversionType;
-	}
-
-	/**
-	 * @param sourceOfIdentifiers the sourceOfIdentifiers to set
-	 */
-	public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
-		this.sourceOfIdentifiers = sourceOfIdentifiers;
-	}
-
-	/**
-	 * @return the sourceOfIdentifiers
-	 */
-	public String getSourceOfIdentifiers() {
-		return this.sourceOfIdentifiers;
 	}
 
 	/**

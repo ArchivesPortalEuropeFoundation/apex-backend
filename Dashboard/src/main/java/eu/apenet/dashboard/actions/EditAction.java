@@ -122,10 +122,7 @@ public class EditAction extends AbstractAction {
 	private boolean relog(String email, String passw, User userToUpdate, boolean changePwd) throws Exception
 	{
 		log.trace("relog() method is called");
-		Integer aiId = null;
-		if (SecurityContext.get().getSelectedInstitution() != null) {
-			aiId = SecurityContext.get().getSelectedInstitution().getId();
-		}
+		Integer aiId = SecurityContext.get().getSelectedInstitution().getId();
 		try {
 			//if the user has changed the password is needed to check usertoupdate password
 			if (changePwd){

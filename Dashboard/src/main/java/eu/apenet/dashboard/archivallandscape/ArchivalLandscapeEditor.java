@@ -443,69 +443,69 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		if(aiId!=null){
 			// Store in data base the operation, the archival institutions
 			JpaUtil.beginDatabaseTransaction();
-			ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-			ArchivalInstitution ai = aiDao.findById(new Integer(aiId));
-			//update the rest of the orders (all siblings are inconsistents)
-			int oldOrder = ai.getAlorder();
-			ArchivalInstitution parent = ai.getParent();
-			Iterator<ArchivalInstitution> childrenIt = null; 
-			if(parent!=null){
-				Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parent.getChildArchivalInstitutions());
-				childrenIt = children.iterator();
-			}else{ //parent is country
-				List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(), true);
-				childrenIt = children.iterator();
-			}
-			while(childrenIt.hasNext()){
-				ArchivalInstitution childArchivalInstitution = childrenIt.next();
-				if (childArchivalInstitution != null) {
-					if(childArchivalInstitution.getAlorder()>oldOrder){ //reduce one
-						childArchivalInstitution.setAlorder(childArchivalInstitution.getAlorder()-1);
-						aiDao.updateSimple(childArchivalInstitution); //updateSimple
-					}
+				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+				ArchivalInstitution ai = aiDao.findById(new Integer(aiId));
+				//update the rest of the orders (all siblings are inconsistents)
+				int oldOrder = ai.getAlorder();
+				ArchivalInstitution parent = ai.getParent();
+				Iterator<ArchivalInstitution> childrenIt = null; 
+				if(parent!=null){
+					Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parent.getChildArchivalInstitutions());
+					childrenIt = children.iterator();
+				}else{ //parent is country
+					List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(), true);
+					childrenIt = children.iterator();
 				}
-			}
-			boolean rollback = false;
-			if(!ContentUtils.containsEads(ai) && !ContentUtils.containsEacs(ai)){
-				if(ai.isGroup()){
-					Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
-					if(children!=null && children.size()>0){
-						// #981: Check if childrens has content.
-						if (ai.isContainSearchableItems()) {
-							messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
-							rollback = true;
+				while(childrenIt.hasNext()){
+					ArchivalInstitution childArchivalInstitution = childrenIt.next();
+					if (childArchivalInstitution != null) {
+						if(childArchivalInstitution.getAlorder()>oldOrder){ //reduce one
+							childArchivalInstitution.setAlorder(childArchivalInstitution.getAlorder()-1);
+							aiDao.updateSimple(childArchivalInstitution); //updateSimple
 						}
 					}
 				}
-				if(!rollback){
-					// Recover each child to delete the EAG file.
-					if (ai.isGroup() 
-							&& ai.getChildArchivalInstitutions() != null
-							&& !ai.getChildArchivalInstitutions().isEmpty()) {
-						this.deleteAIChild(ai);
-					} else {
-						String path = ArchivalLandscapeUtils.deleteContent(ai);
-						if(path!=null){
-							if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
-							this.pathsToBeDeleted.add(path);
+				boolean rollback = false;
+				if(!ContentUtils.containsEads(ai) && !ContentUtils.containsEacs(ai)){
+					if(ai.isGroup()){
+						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
+						if(children!=null && children.size()>0){
+							// #981: Check if childrens has content.
+							if (ai.isContainSearchableItems()) {
+								messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
+								rollback = true;
+							}
 						}
 					}
+					if(!rollback){
+						// Recover each child to delete the EAG file.
+						if (ai.isGroup() 
+								&& ai.getChildArchivalInstitutions() != null
+								&& !ai.getChildArchivalInstitutions().isEmpty()) {
+							this.deleteAIChild(ai);
+						} else {
+							String path = ArchivalLandscapeUtils.deleteContent(ai);
+							if(path!=null){
+								if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
+								this.pathsToBeDeleted.add(path);
+							}
+						}
 //						aiDao.deleteSimple(ai); //deleteSimple institution
-					messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
+						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
+					}
+				}else{
+					messenger.append(buildNode("error",getText("al.message.institutionhascontentnotdeleted")));
+					rollback = true;
 				}
-			}else{
-				messenger.append(buildNode("error",getText("al.message.institutionhascontentnotdeleted")));
-				rollback = true;
-			}
-			if(!rollback){ // The final commits
-				if(!JpaUtil.noTransaction()){
-					JpaUtil.commitDatabaseTransaction();	
+				if(!rollback){ // The final commits
+					if(!JpaUtil.noTransaction()){
+						JpaUtil.commitDatabaseTransaction();	
+					}
+					removePathsToBeDeleted();
+				}else{ //undo changes
+					JpaUtil.rollbackDatabaseTransaction();
+					rollbackDeletedPaths();
 				}
-				removePathsToBeDeleted();
-			}else{ //undo changes
-				JpaUtil.rollbackDatabaseTransaction();
-				rollbackDeletedPaths();
-			}
 		}
 		return messenger.toString();
 	}

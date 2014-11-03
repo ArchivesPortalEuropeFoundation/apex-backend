@@ -54,8 +54,31 @@
         <param-name>org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG</param-name>
         <param-value>/WEB-INF/tiles.xml, /WEB-INF/tiles-ead2ese.xml</param-value>
     </context-param>
-    
+	<servlet>
+        <servlet-name>milton</servlet-name>
+        <servlet-class>com.bradmcevoy.http.MiltonServlet</servlet-class>        
+        <init-param>
+            <param-name>resource.factory.class</param-name>
+            <param-value>eu.apenet.dashboard.webdav.WebDavResourceFactory</param-value>
+        </init-param>
+        <init-param>
+            <param-name>authentication.handler.classes</param-name>
+            <param-value>com.bradmcevoy.http.http11.auth.BasicAuthHandler</param-value>
+        </init-param>      
 
+        <init-param>
+            <param-name>not.found.url</param-name>
+            <param-value>/jsp/errors/404.html</param-value>
+        </init-param>    
+
+        
+		<load-on-startup>0</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>milton</servlet-name>
+        <url-pattern>/webdav/*</url-pattern>
+    </servlet-mapping>      
 
     <security-constraint>
         <display-name>SSL Is Required</display-name>

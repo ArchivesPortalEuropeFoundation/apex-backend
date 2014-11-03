@@ -157,10 +157,9 @@ function clickExitAction() {
     }
 
     // Display the dialog box.
-    displayExitDialog($("#DlgContent").text(),$("input#btnYes").val(),$("input#btnNo").val());
-//    $("#eacCpfDiv :input").attr("readonly", true);
-//    var Dlg = document.getElementById("dialog-saveOnQuit");
-//    Dlg.style.visibility = "visible";
+    $("#eacCpfDiv :input").attr("readonly", true);
+    var Dlg = document.getElementById("dialog-saveOnQuit");
+    Dlg.style.visibility = "visible";
 
 // Ask user for the action.
 //    if (confirmAndDecode(question)) {
@@ -186,76 +185,15 @@ function clickExitAction() {
 //    });
 }
 
-function displayExitDialog(dialogText,dialogYes,dialogNo){
-	dialogText = HTMLDecode(dialogText);
-	dialogYes = HTMLDecode(dialogYes);
-	dialogNo = HTMLDecode(dialogNo);
-	if($(".ui-dialog").length>0){
-		$(".ui-dialog").remove();
-	}
-	$("body").unbind("click");
-	var dialog = $("<p id=\"pAlertExitDialog\">"+dialogText+"</p>").dialog({
-		closeOnEscape : true,
-        buttons: 
-    	[{
-        	text: dialogYes,
-        	click : function() {
-        		$(this).dialog("close");
-        		$("input#btnYes").trigger("click");
-        		/*$("input#saveOrExit").attr("value", "save_exit");
-                $('#webformEacCpf').submit();*/
-        	}
-    	},{
-        	text : dialogNo,
-        	click :  function() {
-        		$(this).dialog("close");
-        		$("input#btnNo").trigger("click");
-        		/*$("input#saveOrExit").attr("value", "exit");
-                $('#webformEacCpf').submit();*/
-        	}
-    	}]
-	});
-	setTimeout("putClickOutsideCloseDialog();","100");
-}
-
-function displayAlertDialog(message){
-	message = HTMLDecode(message);
-	if($(".ui-dialog").length>0){
-		$(".ui-dialog").remove();
-	}
-	$("body").unbind("click");
-	var dialog = $("<p id=\"pAlertExitDialog\">"+message+"</p>").dialog({
-		closeOnEscape : true,
-        buttons: {
-        	"OK" : function() {
-        		$("body").unbind("click");
-        		$(this).dialog("close");
-        	}
-    	}
-	});
-	setTimeout("putClickOutsideCloseDialog();","100");
-}
-
-function putClickOutsideCloseDialog(){
-	$("body").bind("click",function(e){
-		if($("#pAlertExitDialog").dialog("isOpen")
-				&& !jQuery(e.target).is(".ui-dialog")
-				&& !jQuery(e.target).closest(".ui-dialog").length ){
-			$('#pAlertExitDialog').dialog("close");
-			$("body").unbind("click");
-		}
-	});
-}
-
 /**************************************
  * Exit button function, ask the user to save
  * the contents or leaves the form without
  * saving them
  **************************************/
 function clickExitWithoutSaveAction() {
-    var Dlg = document.getElementById("dialog-saveOnQuit");
-    Dlg.style.visibility = "hidden";
-    $("input#saveOrExit").attr("value", "exit");
+    var Dlg = document.getElementById('dialog-saveOnQuit');
+    Dlg.style.visibility = 'hidden';
+    $('input#saveOrExit').attr('value', 'exit');
     $('#webformEacCpf').submit();
 }
 
@@ -486,11 +424,11 @@ function checkWebpages(target, message) {
 }
 
 function alertEmptyFields(text1) {
-	displayAlertDialog(text1);
+	alertAndDecode(text1);
 }
 
 function alertFillFieldsBeforeChangeTab(text) {
-	displayAlertDialog(text);
+	alertAndDecode(text);
 }
 
 /**************************************
@@ -776,7 +714,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMe
         }
         var date = new Date(year, month - 1, day);
         if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
-        	displayAlertDialog(year + "-" + month + "-" + day + ": " + invalidDateMessage);
+        	alertAndDecode(year + "-" + month + "-" + day + ": " + invalidDateMessage);
             return;
         }
     }
@@ -826,7 +764,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMe
         date2 = new Date(year, month - 1, day);
     }
     if (date1 > date2) {
-    	displayAlertDialog(invalidRangeMessage);
+    	alertAndDecode(invalidRangeMessage);
         return;
     }
     return "ok";
@@ -1776,11 +1714,11 @@ function addLocalId(fieldsMissing) {
  * Tab validation functions
  ****************************************************/
 var clickChooseTypeAction = function(text1) {
-	displayAlertDialog(text);
+	alertAndDecode(text);
 }
 
 var clickIdentityAction = function(text, message) {
-	displayAlertDialog(text + '; ' + message);
+	alertAndDecode(text + '; ' + message);
 }
 
 /*************************************************************************************
@@ -1814,11 +1752,8 @@ function init() {
     sameHeight();
 }
 function drawListDiscs(){
-	if($("div#structureOrGenealogy").find("li.item").length==1){
-		$("div#structureOrGenealogy").find("li.item").css("list-style","none outside none");
-	}
-	if($("div#generalContext").find("li.item").length==1){
-		$("div#generalContext").find("li.item").css("list-style","none outside none");
+	if($("div").find("#eacCpfDisplayPortlet li.item").length==1){
+		$("div").find("#eacCpfDisplayPortlet li.item").css("list-style","none outside none");
 	}
 }
 function initPrint() {

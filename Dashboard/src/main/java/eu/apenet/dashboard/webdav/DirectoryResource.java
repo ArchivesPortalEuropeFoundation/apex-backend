@@ -1,15 +1,4 @@
-package eu.archivesportaleurope.webdav;
-
-import io.milton.http.Auth;
-import io.milton.http.Range;
-import io.milton.http.Request;
-import io.milton.http.exceptions.BadRequestException;
-import io.milton.http.exceptions.NotAuthorizedException;
-import io.milton.http.exceptions.NotFoundException;
-import io.milton.resource.CollectionResource;
-import io.milton.resource.GetableResource;
-import io.milton.resource.PropFindableResource;
-import io.milton.resource.Resource;
+package eu.apenet.dashboard.webdav;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -21,43 +10,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
+import com.bradmcevoy.http.Auth;
+import com.bradmcevoy.http.CollectionResource;
+import com.bradmcevoy.http.GetableResource;
+import com.bradmcevoy.http.PropFindableResource;
+import com.bradmcevoy.http.Range;
+import com.bradmcevoy.http.Request;
+import com.bradmcevoy.http.Resource;
+import com.bradmcevoy.http.exceptions.BadRequestException;
+import com.bradmcevoy.http.exceptions.NotAuthorizedException;
+import com.bradmcevoy.http.exceptions.NotFoundException;
 
 public class DirectoryResource extends AbstractResource implements PropFindableResource, CollectionResource,
 		GetableResource {
 
 	private File[] childs = null;
-	private String name;
 	public DirectoryResource(File file, String url) {
 		super(file, url);
-		name = getName(file);
-	}
-	private String getName(File file){
-		if (file.isDirectory() && StringUtils.isNumeric(file.getName())){
-			// make relative path
-			String path = file.getAbsolutePath();
-			if (path.startsWith(APEnetUtilities.getConfig().getRepoDirPath())) {
-				path = path.substring(APEnetUtilities.getConfig().getRepoDirPath().length());
-			}
-			if (path.length() > 0) {
-				path = path.substring(1);
-				if (path.split(APEnetUtilities.FILESEPARATOR).length == 2){
-					Integer aiId = Integer.parseInt(file.getName());
-					ArchivalInstitution ai = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(aiId);
-					if (ai != null){
-						return file.getName() + "-" + APEnetUtilities.convertToFilename(ai.getAiname());
-					}
-				}
-
-			}
-		}
-
-
-		return file.getName();
 	}
 
 	@Override
@@ -95,7 +64,7 @@ public class DirectoryResource extends AbstractResource implements PropFindableR
 
 	@Override
 	public String getName() {
-		return name;
+		return getFile().getName();
 	}
 
 	@Override
@@ -131,18 +100,13 @@ public class DirectoryResource extends AbstractResource implements PropFindableR
 			throws IOException, NotAuthorizedException, BadRequestException, NotFoundException {
 		PrintWriter printWriter = new PrintWriter(out);
 		printWriter.append("<html><body><table  border=\"1\" cellpadding=\"10\"><tr><th>Name</th><th>Type</th><th>Last modified</th><th>Size</th></tr>");
-		String baseUrl = getUrl();
-		if (!getUrl().endsWith("/")){
-			baseUrl = baseUrl + "/";
-		}
 		for (File child : getChilds()) {
-			String name = getName(child);
-				String uri =baseUrl + name;
+				String uri = getUrl() + "/" + child.getName();
 				if (child.isDirectory()) {
-					printWriter.append("<tr><td><b><a href=\"" + uri + "\"/>" + name
+					printWriter.append("<tr><td><b><a href=\"" + uri + "\"/>" + child.getName()
 							+ "</a></b></td><td>Directory</td><td>" + new Date(child.lastModified()) + "</td><td></td></tr>");
 				} else {
-					printWriter.append("<tr><td><a href=\"" + uri + "\"/>" + name + "</a></td><td>File</td><td>"
+					printWriter.append("<tr><td><a href=\"" + uri + "\"/>" + child.getName() + "</a></td><td>File</td><td>"
 							+ new Date(child.lastModified()) + "</td><td  ALIGN=\"right\">" + toFileSize(child.length()) + "</td></tr>");
 				}
 	

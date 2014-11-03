@@ -63,8 +63,8 @@ function eraseDuplicatedArchivalLi(){
 	});
 	
 	var textToBeChanged = $("div#archives .boxtitle").find("span.text").text();
-	if (textToBeChanged.indexOf("(") != -1 && textToBeChanged.indexOf(")") != -1) {
-		textToBeChanged = textToBeChanged.substring(0, textToBeChanged.indexOf("("));
+	if($.inArray("(",textToBeChanged) && $.inArray(")",textToBeChanged)){
+		textToBeChanged = textToBeChanged.substring(0,$.inArray("(",textToBeChanged));
 		textToBeChanged += "("+$("div#archives").find("li").length+")";
 		$("div#archives .boxtitle").find("span.text").html(textToBeChanged);
 	}
@@ -159,8 +159,7 @@ function eraseList(){
 function eraseEmptyTitleSection(){
 	
 	$(".blockPlural").find(".blockSingular:empty").each(function(){
-		//removeNodeAndTitle($(this));
-		$(this).remove();
+		removeNodeAndTitle($(this));
 	});
 	
 	$(".section").each(function(){

@@ -297,7 +297,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 	deleteChecks();
 
 	// Mandatory elements
-	var yiMandatoryElements = new Array("textYIInstitutionCountryCode","textYIIdentifierOfTheInstitution","textYINameOfTheInstitution","selectYINOTISelectLanguage");
+	var yiMandatoryElements = new Array("textYIInstitutionCountryCode","textYIIdentifierOfTheInstitution","textYINameOfTheInstitution");
 
 	var jsonData = "{";
 	// Common part.

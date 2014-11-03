@@ -848,7 +848,6 @@ public class EadService {
             config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
         }
         config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
-        config.setIdSource(preferences.getProperty(QueueItem.SOURCE_OF_IDENTIFIERS));
 
         String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
                             + APEnetUtilities.FILESEPARATOR + "fa"
