@@ -91,7 +91,6 @@
 				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.date')"/><xsl:text>:</xsl:text></h2>
 				</div>          
 		        <div class="rightcolumn">
-		        	<xsl:text>date sin lenguaje</xsl:text>
 		        	<span class="nameEtryDates">
 						<!-- when there are only 1 dateSet -->
 						<xsl:if test="$dateSet and (($dateSet/eac:dateRange/eac:fromDate[not(@xml:lang)] or $dateSet/eac:dateRange/eac:toDate[not(@xml:lang)]) or ($dateSet/eac:date[not(@xml:lang)] and $dateSet/eac:date[not(@xml:lang)]/text()))">

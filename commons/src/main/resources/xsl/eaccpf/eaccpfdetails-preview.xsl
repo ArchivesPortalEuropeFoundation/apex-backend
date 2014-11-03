@@ -41,209 +41,9 @@
 				</xsl:otherwise>
 			</xsl:choose>
    		</xsl:variable>
-		<h1 class="titleproperEac {$iconType}">
-		    <!-- nameEntry -->
-	      	<xsl:call-template name="namePriorisation">
-	      		<xsl:with-param name="list" select="//eac:nameEntry"/>
-		    </xsl:call-template> 
-			<!-- dates -->
-			<xsl:if test="$existDates/eac:date/text() or $existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate or $existDates/eac:dateSet/eac:date/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate">
-				<xsl:text> (</xsl:text>
-				<span class="nameEtryDates">
-					<!-- when there are only 1 dateSet -->
-					<xsl:if test="$existDates/eac:dateSet and (($existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate) or ($existDates/eac:dateSet/eac:date and $existDates/eac:dateSet/eac:date/text()))">
-						<xsl:apply-templates select="$existDates/eac:dateSet">
-							<xsl:with-param name="langNode" select="''"/>
-						</xsl:apply-templates>
-					</xsl:if>
-					<!-- when there are only 1 dateRange -->
-					<xsl:if test="$existDates/eac:dateRange and ($existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate)">
-						<xsl:apply-templates select="$existDates/eac:dateRange"/>
-					</xsl:if>
-					<!-- when there are only 1 date -->
-					<xsl:if test="$existDates/eac:date and $existDates/eac:date/text()">
-						<xsl:apply-templates select="$existDates/eac:date"/>
-					</xsl:if>
-				</span>
-				<xsl:text>)</xsl:text>
-			</xsl:if>
-		<!-- 	<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
-				<xsl:text> </xsl:text>
-				<span id="entityType">
-					<xsl:if test="$entityType='person'">
-					   <xsl:value-of select="ape:resource('eaccpf.portal.person')"/>
-					</xsl:if>
-					<xsl:if test="$entityType='corporateBody'">
-					   <xsl:value-of select="ape:resource('eaccpf.portal.corporateBody')"/>
-					</xsl:if>
-					<xsl:if test="$entityType='family'">
-					   <xsl:value-of select="ape:resource('eaccpf.portal.family')"/>
-					</xsl:if>
-				</span>
-			</xsl:if>-->
-		</h1>
-		<div id="details">	
-			<!-- Dates -->
-			<!-- dateRange fromDate -->
-			<xsl:if test="$existDates/eac:dateRange/eac:fromDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']/text()
-			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']/text()">
-				<div class="row">
-						<div class="leftcolumn">
-							<h2>
-								<xsl:if test="$entityType = 'person' or $entityType = 'family'">
-									<xsl:value-of select="ape:resource('eaccpf.portal.birthDate')"/>
-								</xsl:if>
-								<xsl:if test="$entityType = 'corporateBody'">
-									<xsl:value-of select="ape:resource('eaccpf.portal.foundationDate')"/>
-								</xsl:if>	
-								<xsl:text>:</xsl:text>
-							</h2>	
-						</div>
-						<div class="rightcolumn">
-							<xsl:if test="$existDates/eac:dateRange">
-									<xsl:call-template name="dateUnknow">
-										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:fromDate"/>
-									</xsl:call-template>
-								</xsl:if> 
-								<xsl:if test="$existDates/eac:dateSet/eac:dateRange/eac:fromDate">
-									<xsl:call-template name="multilanguageOneDate">
-										<xsl:with-param name="list" select="$existDates/eac:dateSet/eac:dateRange/eac:fromDate"/>
-									</xsl:call-template>	
-							</xsl:if>
-							<xsl:if test="$entityType = 'person' or $entityType = 'family'">
-								<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']/text()">
-							  		<xsl:text>, </xsl:text>
-							  		<xsl:call-template name="multilanguagePlaceEntry">
-							  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']"/>
-							  		</xsl:call-template>		
-							    </xsl:if>
-							</xsl:if>
-							<xsl:if test="$entityType = 'corporateBody'">
-								<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']/text()">
-							  		<xsl:text>, </xsl:text>
-							  		<xsl:call-template name="multilanguagePlaceEntry">
-							  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']"/>
-							  		</xsl:call-template>		
-							    </xsl:if>
-							</xsl:if>
-						</div>
-				</div>
-			</xsl:if>
-			<!-- dateRange toDate -->
-			<xsl:if test="($existDates/eac:dateRange/eac:toDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:toDate/text()
-						  or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']/text()
-			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']/text())
-						  and ($existDates/eac:dateRange[1][@localType!='open'] or $existDates/eac:dateSet/eac:dateRange[1][@localType!='open']
-						  	or $existDates/eac:dateRange[1][not(@localType)] or $existDates/eac:dateSet/eac:dateRange[1][not(@localType)])">
-					<div class="row">
-							<div class="leftcolumn">
-						   		<h2>
-						   		<xsl:if test="$entityType = 'person' or $entityType = 'family'">
-									<xsl:value-of select="ape:resource('eaccpf.portal.deathDate')"/>
-								</xsl:if>
-								<xsl:if test="$entityType = 'corporateBody'">
-									<xsl:value-of select="ape:resource('eaccpf.portal.closingDate')"/>
-								</xsl:if>
-						   		<xsl:text>:</xsl:text>
-						   		</h2>
-						   	</div>
-						   	<div class="rightcolumn">
-						   	    <xsl:if test="$existDates/eac:dateRange">
-									<xsl:call-template name="dateUnknow">
-										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:toDate"/>
-									</xsl:call-template>	
-								</xsl:if> 
-								<xsl:if test="$existDates/eac:dateSet/eac:dateRange/eac:toDate">
-									<xsl:call-template name="multilanguageOneDate">
-										<xsl:with-param name="list" select="$existDates/eac:dateSet/eac:dateRange/eac:toDate"/>
-									</xsl:call-template>		
-								</xsl:if>	
-							    <xsl:if test="$entityType = 'person' or $entityType = 'family'">
-									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']/text()">
-								  		<xsl:text>, </xsl:text>
-								  		<xsl:call-template name="multilanguagePlaceEntry">
-								  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']"/>
-								  		</xsl:call-template>		
-								    </xsl:if>
-								</xsl:if>
-								<xsl:if test="$entityType = 'corporateBody'">
-									<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']/text()">
-								  		<xsl:text>, </xsl:text>
-								  		<xsl:call-template name="multilanguagePlaceEntry">
-								  			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']"/>
-								  		</xsl:call-template>		
-								    </xsl:if>
-								</xsl:if>
-							</div>
-					</div>
-			</xsl:if>
-			<!-- Date -->
-			<xsl:if test="($existDates/eac:date/text() or $existDates/eac:dateSet/eac:date/text())
-						and (not($existDates/eac:dateRange/eac:fromDate/text()) and not($existDates/eac:dateSet/eac:dateRange/eac:fromDate/text()) and not($existDates/eac:dateRange/eac:toDate/text()) and not($existDates/eac:dateSet/eac:dateRange/eac:toDate/text()))">
-					<div class="row">
-							<div class="leftcolumn">
-						   		<h2>
-									<xsl:value-of select="ape:resource('eaccpf.portal.date')"/>
-						   			<xsl:text>:</xsl:text>
-						   		</h2>
-						   	</div>
-						   	<div class="rightcolumn">
-						   		<xsl:if test="$existDates/eac:date/text()">
-									<xsl:apply-templates select="$existDates/eac:date"/>
-								</xsl:if>
-						   		<xsl:if test="$existDates/eac:dateSet/eac:date/text()">
-									<xsl:apply-templates select="$existDates/eac:dateSet/eac:date[1]"/>
-								</xsl:if>
-							</div>
-					</div>
-			</xsl:if>
-			<!-- descriptiveNote of the existDates element. -->
-			<xsl:if test="$existDates/eac:descriptiveNote/eac:p/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="$existDates/eac:descriptiveNote/eac:p"/>
-					   			<xsl:with-param name="clazz" select="'language'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
-			</xsl:if>
-
-			<!-- alternative names -->
-			<xsl:if test="count(//eac:nameEntry) > 1">
-				<div class="row" id="titleAlternativeName">
-					<div class="leftcolumn">
-				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.alternativeForms')"/><xsl:text>:</xsl:text></h2>
-				   	</div>
-				   	<div class="rightcolumn">
-				   			<xsl:call-template name="alternativeNamePriorisation">
-				   				<xsl:with-param name="list" select="//eac:nameEntry"/>
-				   				<xsl:with-param name="clazz" select="'alternativeName'"/>
-				   			</xsl:call-template>  
-					</div>
-				</div>
-			</xsl:if>
-			<!--descriptive note inside identity -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:descriptiveNote/eac:p/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:descriptiveNote/eac:p"/>
-					   			<xsl:with-param name="clazz" select="'language'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
-			</xsl:if>
-			
-			<!-- location -->
-			<!-- Set the variable which checks if at least one of the links in
-				 "<citation>" element inside "<localDescriptions>" is a valid
+   		
+   		<!-- Set the variable which checks if at least one of the links in
+				 "<citation>" element inside "<places>" is a valid
 				 one. -->
 			<xsl:variable name="validHrefLinkPlaces">
 				<xsl:choose>
@@ -256,6 +56,7 @@
 				</xsl:choose>
 			</xsl:variable>
 			
+			<!-- variable of location -->
 			<xsl:variable name="location" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places"/>
 			<xsl:variable name="langLocation">
 			 	<xsl:variable name="lang" select="$location//@xml:lang"/>
@@ -327,6 +128,252 @@
 			    	</xsl:otherwise>
 			    </xsl:choose> 
 			</xsl:variable>
+			
+		<h1 class="titleproperEac {$iconType}">
+		    <!-- nameEntry -->
+	      	<xsl:call-template name="namePriorisation">
+	      		<xsl:with-param name="list" select="//eac:nameEntry"/>
+		    </xsl:call-template> 
+			<!-- dates -->
+			<xsl:if test="$existDates/eac:date/text() or $existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate or $existDates/eac:dateSet/eac:date/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate">
+				<xsl:text> (</xsl:text>
+				<span class="nameEtryDates">
+					<!-- when there are only 1 dateSet -->
+					<xsl:if test="$existDates/eac:dateSet and (($existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate) or ($existDates/eac:dateSet/eac:date and $existDates/eac:dateSet/eac:date/text()))">
+						<xsl:apply-templates select="$existDates/eac:dateSet">
+							<xsl:with-param name="langNode" select="''"/>
+						</xsl:apply-templates>
+					</xsl:if>
+					<!-- when there are only 1 dateRange -->
+					<xsl:if test="$existDates/eac:dateRange and ($existDates/eac:dateRange/eac:fromDate or $existDates/eac:dateRange/eac:toDate)">
+						<xsl:apply-templates select="$existDates/eac:dateRange"/>
+					</xsl:if>
+					<!-- when there are only 1 date -->
+					<xsl:if test="$existDates/eac:date and $existDates/eac:date/text()">
+						<xsl:apply-templates select="$existDates/eac:date"/>
+					</xsl:if>
+				</span>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+		<!-- 	<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
+				<xsl:text> </xsl:text>
+				<span id="entityType">
+					<xsl:if test="$entityType='person'">
+					   <xsl:value-of select="ape:resource('eaccpf.portal.person')"/>
+					</xsl:if>
+					<xsl:if test="$entityType='corporateBody'">
+					   <xsl:value-of select="ape:resource('eaccpf.portal.corporateBody')"/>
+					</xsl:if>
+					<xsl:if test="$entityType='family'">
+					   <xsl:value-of select="ape:resource('eaccpf.portal.family')"/>
+					</xsl:if>
+				</span>
+			</xsl:if>-->
+		</h1>
+		<div id="details">	
+			<!-- Dates -->
+			<!-- dateRange fromDate -->
+			<xsl:if test="$existDates/eac:dateRange/eac:fromDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:fromDate/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']/text()
+			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']/text()">
+				<div class="row">
+						<div class="leftcolumn">
+							<h2>
+								<xsl:if test="$entityType = 'person' or $entityType = 'family'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.birthDate')"/>
+								</xsl:if>
+								<xsl:if test="$entityType = 'corporateBody'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.foundationDate')"/>
+								</xsl:if>	
+								<xsl:text>:</xsl:text>
+							</h2>	
+						</div>
+						<div class="rightcolumn">
+							<xsl:if test="$existDates/eac:dateRange">
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:fromDate"/>
+									</xsl:call-template>
+								</xsl:if> 
+								<xsl:if test="$existDates/eac:dateSet/eac:dateRange/eac:fromDate">
+									<xsl:call-template name="multilanguageOneDate">
+										<xsl:with-param name="list" select="$existDates/eac:dateSet/eac:dateRange/eac:fromDate"/>
+									</xsl:call-template>	
+							</xsl:if>
+							<xsl:if test="$entityType = 'person' or $entityType = 'family'">
+								<xsl:if test="($langLocation='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth'][not(@xml:lang)]/text()) 
+									 or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth'][@xml:lang=$langLocation]/text() 
+					                 or ($searchTerms!='' and 
+					                 	(
+						                 	./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth'][@xml:lang != $langLocation][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+							      		 	or (
+							      		 		$langLocation!='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth'][not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+						      		 		)
+						      		 	)
+						      		 )
+								">
+									<xsl:text>, </xsl:text>
+									<xsl:call-template name="showDetailsPlaceEntry">
+										<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='birth']"/>
+										<xsl:with-param name="langNode" select="$langLocation"/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:if>
+							<xsl:if test="$entityType = 'corporateBody'">
+								<xsl:if test="($langLocation='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation'][not(@xml:lang)]/text()) 
+									 or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation'][@xml:lang=$langLocation]/text() 
+					                 or ($searchTerms!='' and 
+					                 	(
+						                 	./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation'][@xml:lang != $langLocation][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+							      		 	or (
+							      		 		$langLocation!='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation'][not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+						      		 		)
+						      		 	)
+						      		 )
+								">
+									<xsl:text>, </xsl:text>
+									<xsl:call-template name="showDetailsPlaceEntry">
+										<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='foundation']"/>
+										<xsl:with-param name="langNode" select="$langLocation"/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:if>
+						</div>
+				</div>
+			</xsl:if>
+			<!-- dateRange toDate -->
+			<xsl:if test="($existDates/eac:dateRange/eac:toDate/text() or $existDates/eac:dateSet/eac:dateRange/eac:toDate/text()
+						  or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']/text()
+			              or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']/text())
+						  and ($existDates/eac:dateRange[1][@localType!='open'] or $existDates/eac:dateSet/eac:dateRange[1][@localType!='open']
+						  	or $existDates/eac:dateRange[1][not(@localType)] or $existDates/eac:dateSet/eac:dateRange[1][not(@localType)])">
+					<div class="row">
+							<div class="leftcolumn">
+						   		<h2>
+						   		<xsl:if test="$entityType = 'person' or $entityType = 'family'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.deathDate')"/>
+								</xsl:if>
+								<xsl:if test="$entityType = 'corporateBody'">
+									<xsl:value-of select="ape:resource('eaccpf.portal.closingDate')"/>
+								</xsl:if>
+						   		<xsl:text>:</xsl:text>
+						   		</h2>
+						   	</div>
+						   	<div class="rightcolumn">
+						   	    <xsl:if test="$existDates/eac:dateRange">
+									<xsl:call-template name="dateUnknow">
+										<xsl:with-param name="dateUnknow" select="$existDates/eac:dateRange/eac:toDate"/>
+									</xsl:call-template>	
+								</xsl:if> 
+								<xsl:if test="$existDates/eac:dateSet/eac:dateRange/eac:toDate">
+									<xsl:call-template name="multilanguageOneDate">
+										<xsl:with-param name="list" select="$existDates/eac:dateSet/eac:dateRange/eac:toDate"/>
+									</xsl:call-template>		
+								</xsl:if>	
+							    <xsl:if test="$entityType = 'person' or $entityType = 'family'">
+									<xsl:if test="($langLocation='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death'][not(@xml:lang)]/text()) 
+													 or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death'][@xml:lang=$langLocation]/text() 
+									                 or ($searchTerms!='' and 
+									                 	(
+										                 	./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death'][@xml:lang != $langLocation][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+											      		 	or (
+											      		 		$langLocation!='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death'][not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+										      		 		)
+										      		 	)
+										      		 )
+												">
+									<xsl:text>, </xsl:text>
+									<xsl:call-template name="showDetailsPlaceEntry">
+										<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='death']"/>
+										<xsl:with-param name="langNode" select="$langLocation"/>
+									</xsl:call-template>
+								</xsl:if>
+								</xsl:if>
+								<xsl:if test="$entityType = 'corporateBody'">
+									<xsl:if test="($langLocation='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression'][not(@xml:lang)]/text()) 
+													 or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression'][@xml:lang=$langLocation]/text() 
+									                 or ($searchTerms!='' and 
+									                 	(
+										                 	./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression'][@xml:lang != $langLocation][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+											      		 	or (
+											      		 		$langLocation!='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression'][not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+										      		 		)
+										      		 	)
+										      		 )
+												">
+									<xsl:text>, </xsl:text>
+									<xsl:call-template name="showDetailsPlaceEntry">
+										<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place/eac:placeEntry[@localType='suppression']"/>
+										<xsl:with-param name="langNode" select="$langLocation"/>
+									</xsl:call-template>
+								</xsl:if>
+								</xsl:if>
+							</div>
+					</div>
+			</xsl:if>
+			<!-- Date -->
+			<xsl:if test="($existDates/eac:date/text() or $existDates/eac:dateSet/eac:date/text())
+						and (not($existDates/eac:dateRange/eac:fromDate/text()) and not($existDates/eac:dateSet/eac:dateRange/eac:fromDate/text()) and not($existDates/eac:dateRange/eac:toDate/text()) and not($existDates/eac:dateSet/eac:dateRange/eac:toDate/text()))">
+					<div class="row">
+							<div class="leftcolumn">
+						   		<h2>
+									<xsl:value-of select="ape:resource('eaccpf.portal.date')"/>
+						   			<xsl:text>:</xsl:text>
+						   		</h2>
+						   	</div>
+						   	<div class="rightcolumn">
+						   		<xsl:if test="$existDates/eac:date/text()">
+									<xsl:apply-templates select="$existDates/eac:date"/>
+								</xsl:if>
+						   		<xsl:if test="$existDates/eac:dateSet/eac:date/text()">
+									<xsl:apply-templates select="$existDates/eac:dateSet/eac:date[1]"/>
+								</xsl:if>
+							</div>
+					</div>
+			</xsl:if>
+			<!-- descriptiveNote of the existDates element. -->
+			<xsl:if test="$existDates/eac:descriptiveNote/eac:p/text()">   
+				<div class="row">
+						<div class="leftcolumn">
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
+					   	</div>
+					   	<div class="rightcolumn">
+							<xsl:call-template name="multilanguage">
+					   			<xsl:with-param name="list" select="$existDates/eac:descriptiveNote/eac:p"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   		</xsl:call-template>
+						</div>
+				</div>
+			</xsl:if>
+
+			<!-- alternative names -->
+			<xsl:if test="count(//eac:nameEntry) > 1">
+				<div class="row" id="titleAlternativeName">
+					<div class="leftcolumn">
+				   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.alternativeForms')"/><xsl:text>:</xsl:text></h2>
+				   	</div>
+				   	<div class="rightcolumn">
+				   			<xsl:call-template name="alternativeNamePriorisation">
+				   				<xsl:with-param name="list" select="//eac:nameEntry"/>
+				   				<xsl:with-param name="clazz" select="'alternativeName'"/>
+				   			</xsl:call-template>  
+					</div>
+				</div>
+			</xsl:if>
+			<!--descriptive note inside identity -->
+			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:descriptiveNote/eac:p/text()">   
+				<div class="row">
+						<div class="leftcolumn">
+					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
+					   	</div>
+					   	<div class="rightcolumn">
+							<xsl:call-template name="multilanguage">
+					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:descriptiveNote/eac:p"/>
+					   			<xsl:with-param name="clazz" select="'language'"/>
+					   		</xsl:call-template>
+						</div>
+				</div>
+			</xsl:if>
+			
+			<!-- location -->
 			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:places/eac:place">
 				<h2 class="title">
@@ -1274,87 +1321,93 @@
 			</xsl:variable>
 			
 			<!--language -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[@xml:lang = $languagesUsed]/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[@xml:lang = $languagesUsed]"/>
-					   			<xsl:with-param name="clazz" select="'language'"/>
-					   		</xsl:call-template>
-						</div>
+			<xsl:if test="($languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[not(@xml:lang)]/text()) 
+								 or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[@xml:lang=$languagesUsed]/text() 
+				                 or ($searchTerms!='' and 
+				                 	(
+					                 	./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[@xml:lang != $languagesUsed][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+						      		 	or (
+						      		 		$languagesUsed!='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+					      		 		)
+					      		 	)
+					      		 )
+							">
+			
+			<div class="row">
+				<div class="leftcolumn">
+					<h2>
+						<xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/>
+						<xsl:text>:</xsl:text>
+					</h2>
 				</div>
-			</xsl:if>
-			<xsl:if test="$languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[not(@xml:lang)]/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.languagesUsed')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language[not(@xml:lang)]"/>
-					   			<xsl:with-param name="clazz" select="'language'"/>
-					   		</xsl:call-template>
-						</div>
+				<div class="rightcolumn">
+				 	<xsl:call-template name="showDetailsDescriptiveNote">
+			   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:language"/>
+			   			<xsl:with-param name="clazz" select="'language'"/>
+			   			<xsl:with-param name="langNode" select="$languagesUsed"/>
+			   		</xsl:call-template>
 				</div>
-			</xsl:if>
+			</div>	
+		</xsl:if>
 			
 			<!-- script -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[@xml:lang = $languagesUsed]/text()">   
+			<xsl:if test="($languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[not(@xml:lang)]/text()) 
+								 or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[@xml:lang=$languagesUsed]/text() 
+				                 or ($searchTerms!='' and 
+				                 	(
+					                 	./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[@xml:lang != $languagesUsed][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+						      		 	or (
+						      		 		$languagesUsed!='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+					      		 		)
+					      		 	)
+					      		 )
+							">
+			
 				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.scriptUsed')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[@xml:lang = $languagesUsed]"/>
-					   			<xsl:with-param name="clazz" select="'script'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
-			</xsl:if>
-			<xsl:if test="$languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[not(@xml:lang)]/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.scriptUsed')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script[not(@xml:lang)]"/>
-					   			<xsl:with-param name="clazz" select="'script'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
+					<div class="leftcolumn">
+						<h2>
+							<xsl:value-of select="ape:resource('eaccpf.portal.scriptUsed')"/>
+							<xsl:text>:</xsl:text>
+						</h2>
+					</div>
+					<div class="rightcolumn">
+					 	<xsl:call-template name="showDetailsDescriptiveNote">
+				   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:languageUsed/eac:script"/>
+				   			<xsl:with-param name="clazz" select="'script'"/>
+				   			<xsl:with-param name="langNode" select="$languagesUsed"/>
+				   		</xsl:call-template>
+					</div>
+				</div>	
 			</xsl:if>
 			
 			<!--descriptive note inside languagesUsed -->
-			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[@xml:lang = $languagesUsed]/text()">   
+			<xsl:if test="($languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[not(@xml:lang)]/text()) 
+								 or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[@xml:lang=$languagesUsed]/text() 
+				                 or ($searchTerms!='' and 
+				                 	(
+					                 	./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[@xml:lang != $languagesUsed][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+						      		 	or (
+						      		 		$languagesUsed!='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+					      		 		)
+					      		 	)
+					      		 )
+							">
+			
 				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[@xml:lang = $languagesUsed]"/>
-					   			<xsl:with-param name="clazz" select="'language'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
-			</xsl:if>
-			<xsl:if test="$languagesUsed='notLang' and ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[not(@xml:lang)]/text()">   
-				<div class="row">
-						<div class="leftcolumn">
-					   		<h2><xsl:value-of select="ape:resource('eaccpf.portal.note')"/><xsl:text>:</xsl:text></h2>
-					   	</div>
-					   	<div class="rightcolumn">
-							<xsl:call-template name="multilanguage">
-					   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p[not(@xml:lang)]"/>
-					   			<xsl:with-param name="clazz" select="'language'"/>
-					   		</xsl:call-template>
-						</div>
-				</div>
+					<div class="leftcolumn">
+						<h2>
+							<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
+							<xsl:text>:</xsl:text>
+						</h2>
+					</div>
+					<div class="rightcolumn">
+					 	<xsl:call-template name="showDetailsDescriptiveNote">
+				   			<xsl:with-param name="list" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:languagesUsed/eac:descriptiveNote/eac:p"/>
+				   			<xsl:with-param name="clazz" select="'languagesUsedDescription'"/>
+				   			<xsl:with-param name="langNode" select="$languagesUsed"/>
+				   		</xsl:call-template>
+					</div>
+				</div>	
 			</xsl:if>
 			
 			<!-- structureOrGenealogy -->
@@ -1391,13 +1444,13 @@
 			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy/eac:outline/eac:level/eac:item/text()">
 				    <xsl:if test="$entityType='person'">
-				    	<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.genealogy'), $smallcase, $uppercase)"/></h2>
+				    	<h2><xsl:value-of select="translate(ape:resource('eaccpf.portal.genealogy'), $smallcase, $uppercase)"/></h2>
 					</xsl:if>
 					<xsl:if test="$entityType='corporateBody'">
-						<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.structure'), $smallcase, $uppercase)"/></h2>
+						<h2><xsl:value-of select="translate(ape:resource('eaccpf.portal.structure'), $smallcase, $uppercase)"/></h2>
 					</xsl:if>
 					<xsl:if test="$entityType='family'">
-						<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.structureOrGenealogy'), $smallcase, $uppercase)"/></h2>
+						<h2><xsl:value-of select="translate(ape:resource('eaccpf.portal.structureOrGenealogy'), $smallcase, $uppercase)"/></h2>
 				   </xsl:if>
 				
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:structureOrGenealogy">
@@ -1462,7 +1515,7 @@
 			</xsl:variable>
 			
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:p/text() or ./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext/eac:outline/eac:level/eac:item/text()">
-			  	<h2 class="title"><xsl:value-of select="translate(ape:resource('eaccpf.portal.generalContext'), $smallcase, $uppercase)"/></h2> 
+			  	<h2><xsl:value-of select="translate(ape:resource('eaccpf.portal.generalContext'), $smallcase, $uppercase)"/></h2> 
 				
 				<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:generalContext">
 					<xsl:variable name="firstchild" select="./*[1]"/>
@@ -1496,7 +1549,7 @@
 			<!-- biogHist -->
 			<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist">   
 				<xsl:call-template name="bioHistMultilanguage">
-					<xsl:with-param name="bioHist" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist"></xsl:with-param>
+					<xsl:with-param name="bioHist" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:biogHist"/>
 					<xsl:with-param name="entityType" select="$entityType"></xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
@@ -1541,7 +1594,7 @@
 	</div>
 	</xsl:template>
 	
-	<xsl:template name="bioHistMultilanguage" >
+	<xsl:template name="bioHistMultilanguage">
 		<xsl:param name="bioHist"></xsl:param>
 		<xsl:param name="entityType"></xsl:param>
 		
@@ -1628,8 +1681,8 @@
 		</xsl:variable>
 		
 		<!-- bioHist section title -->
-		<xsl:if test="$bioHist/eac:p/text() or $bioHist/eac:citation/text() or $bioHist/eac:chronList/eac:chronItem or $bioHist/eac:abstract/text()">
-			<h2 id="chronListTitle" class="title">
+		<xsl:if test="$bioHist//eac:p/text() or $bioHist//eac:citation or $bioHist//eac:chronList/eac:chronItem or $bioHist//eac:abstract/text()">
+			<h2 id="chronListTitle">
 				<xsl:if test="$entityType='corporateBody'">
 	   				<xsl:value-of select="translate(ape:resource('eaccpf.portal.historicalNote'), $smallcase, $uppercase)"/>
 	   			</xsl:if>
@@ -1644,35 +1697,33 @@
 		
 		<xsl:for-each select="$bioHist">
 			<!-- biogHist abstract -->
-			<xsl:if test="./eac:abstract[@xml:lang=$langBiogHist]/text()">
-				<div class="row">
-					<div class="leftcolumn">
-				   		<h2 class="subrow">
-				   			<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguage">
-				   			<xsl:with-param name="list" select="./eac:abstract[@xml:lang=$langBiogHist]"/>
-				   			<xsl:with-param name="clazz" select="'biogistAbstract'"/>
-				   		</xsl:call-template>
+		
+			<xsl:if test="($langBiogHist='notLang' and ./eac:abstract[not(@xml:lang)]/text()) 
+								 or ./eac:abstract[@xml:lang=$langBiogHist]/text() 
+				                 or ($searchTerms!='' and 
+				                 	(
+					                 	./eac:abstract[@xml:lang != $langBiogHist][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+						      		 	or (
+						      		 		$langBiogHist!='notLang' and ./eac:abstract[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+					      		 		)
+					      		 	)
+					      		 )
+							">
+							
+					<div class="row">
+						<div class="leftcolumn">
+							<h2>
+								<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
+							</h2>
+						</div>
+						<div class="rightcolumn">
+							<xsl:call-template name="showDetailsDescriptiveNote">
+					   			<xsl:with-param name="list" select="./eac:abstract"/>
+					   			<xsl:with-param name="clazz" select="'biogistAbstract'"/>
+					   			<xsl:with-param name="langNode" select="$langBiogHist"/>
+					   		</xsl:call-template>
+						</div>
 					</div>
-				</div>
-			</xsl:if>
-			<xsl:if test="$langBiogHist='notLang' and ./eac:abstract[not(@xml:lang)]/text()">
-				<div class="row">
-					<div class="leftcolumn">
-				   		<h2 class="subrow">
-				   			<xsl:value-of select="ape:resource('eaccpf.portal.abstract')"/><xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguage">
-				   			<xsl:with-param name="list" select="./eac:abstract[not(@xml:lang)]"/>
-				   			<xsl:with-param name="clazz" select="'biogistAbstract'"/>
-				   		</xsl:call-template>
-					</div>
-				</div>
 			</xsl:if>
 			
 			<!-- Set the positions of the <citation>, <chronList>, <p> in the xml file-->
@@ -1856,70 +1907,53 @@
 		<xsl:param name="entityType"/>
 		<xsl:param name="langNode"/>
 		
-		<xsl:if test="$bioHist/eac:citation[@xml:lang=$langNode]/text()">   
+		<xsl:variable name="condSearchTermLang" select="$bioHist/eac:citation[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]"/>
+		<xsl:variable name="condSearchTermNoLang" select="$langNode!='notLang' and $bioHist/eac:citation[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]"/>
+		<xsl:variable name="condCitationText" select="$bioHist/eac:citation[fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]"/>
+		<xsl:variable name="titleCitation" select="$bioHist/eac:citation/@xlink:title"/>
+		<xsl:variable name="condCitationNoText" select="not($bioHist/eac:citation/text()) and $bioHist/eac:citation[fn:contains(fn:upper-case($titleCitation),fn:upper-case($searchTerms))]"/>	
+		
+		<xsl:if test="($langNode='notLang' and $bioHist/eac:citation[not(@xml:lang)]/text()) or $bioHist/eac:citation[@xml:lang=$langNode]/text() 
+		               or ($searchTerms!='' and ($condSearchTermLang or $condSearchTermNoLang  or $condCitationText or $condCitationNoText))">
+		
 			<div class="row">
 				<div class="leftcolumn">
 			   		<h2 class="subrow">
-			   			<!--<xsl:if test="$entityType='corporateBody'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
-			   			</xsl:if>
-			   			<xsl:if test="$entityType='person' or $entityType='family'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
-			   			</xsl:if> -->
 			   			<xsl:value-of select="ape:resource('eaccpf.portal.citation')"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
 			   	</div>
 			   	<div class="rightcolumn">
-					<xsl:for-each select="$bioHist"> 
-						<xsl:variable name="posParent" select="position()"/>
-						<xsl:for-each select="./eac:citation[@xml:lang=$langNode]">
-							<xsl:variable name="posChild" select="position()"/>								
-							<p>
-								<xsl:call-template name="citationHref">
-									<xsl:with-param name="link" select="./@xlink:href"/>
-									<xsl:with-param name="title" select="./@xlink:title" />
-									<xsl:with-param name="content" select="./text()"/>
-									<xsl:with-param name="section" select="current()"/>
-								</xsl:call-template>
-							</p>
-					     </xsl:for-each>
-				    </xsl:for-each> 	
+					<xsl:for-each select="./eac:citation">						
+						<xsl:choose>
+							<xsl:when test=".[@xml:lang=$langNode]/text() or ($langNode='notLang' and .[not(@xml:lang)]/text())">
+								<p>
+									<xsl:call-template name="citationHref">
+										<xsl:with-param name="link" select="./@xlink:href"/>
+										<xsl:with-param name="title" select="./@xlink:title" />
+										<xsl:with-param name="content" select="./text()"/>
+										<xsl:with-param name="section" select="current()"/>
+									</xsl:call-template>
+								</p>
+							</xsl:when>
+							<xsl:when test="$searchTerms != '' and (fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))
+									                        or (not(./text()) and fn:contains(fn:upper-case(./@xlink:title),fn:upper-case($searchTerms))))">
+				    
+				    			<p>
+									<xsl:call-template name="citationHref">
+										<xsl:with-param name="link" select="./@xlink:href"/>
+										<xsl:with-param name="title" select="./@xlink:title" />
+										<xsl:with-param name="content" select="./text()"/>
+										<xsl:with-param name="section" select="current()"/>
+									</xsl:call-template>
+								</p>
+				    		</xsl:when>
+				    		<xsl:otherwise/>
+				    	</xsl:choose>	
+				     </xsl:for-each>
 				</div>
 			</div>
-		</xsl:if>
-		<xsl:if test="$langNode='notLang' and $bioHist/eac:citation[not(@xml:lang)]/text()">   
-			<div class="row">
-				<div class="leftcolumn">
-			   		<h2 class="subrow">
-			   			<!--<xsl:if test="$entityType='corporateBody'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
-			   			</xsl:if>
-			   			<xsl:if test="$entityType='person' or $entityType='family'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
-			   			</xsl:if> -->
-			   			<xsl:value-of select="ape:resource('eaccpf.portal.citation')"/>
-			   			<xsl:text>:</xsl:text>
-			   		</h2>
-			   	</div>
-			   	<div class="rightcolumn">
-					<xsl:for-each select="$bioHist"> 
-						<xsl:variable name="posParent" select="position()"/>
-						<xsl:for-each select="./eac:citation[not(@xml:lang)]">
-							<xsl:variable name="posChild" select="position()"/>								
-							<p>
-								<xsl:call-template name="citationHref">
-									<xsl:with-param name="link" select="./@xlink:href"/>
-									<xsl:with-param name="title" select="./@xlink:title" />
-									<xsl:with-param name="content" select="./text()"/>
-									<xsl:with-param name="section" select="current()"/>
-								</xsl:call-template>
-							</p>
-					     </xsl:for-each>
-				    </xsl:for-each> 	
-				</div>
-			</div>
-		</xsl:if>
+		</xsl:if>	
 	</xsl:template>
 	
 	<!-- Template to display biogHist p -->
@@ -1928,170 +1962,143 @@
 		<xsl:param name="entityType"/>
 		<xsl:param name="langNode"/>
 		
-		<xsl:if test="$bioHist/eac:p[@xml:lang=$langNode]/text()">   
+		
+		<xsl:if test="($langNode='notLang' and $bioHist/eac:p[not(@xml:lang)]/text()) 
+				 or $bioHist/eac:p[@xml:lang=$langNode]/text() 
+                 or ($searchTerms!='' and 
+                 	(
+	                 	$bioHist/eac:p[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+		      		 	or (
+		      		 		$langNode!='notLang' and $bioHist/eac:p[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+	      		 		)
+	      		 	)
+	      		 )
+			">
+			
 			<div class="row">
 				<div class="leftcolumn">
-			   		<h2 class="subrow">
-			   			<xsl:if test="$entityType='corporateBody'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
-			   			</xsl:if>
-			   			<xsl:if test="$entityType='person' or $entityType='family'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
-			   			</xsl:if>
-			   			<xsl:text>:</xsl:text>
-			   		</h2>
-			   	</div>
-			   	<div class="rightcolumn">
-					<xsl:call-template name="multilanguage">
-			   			<xsl:with-param name="list" select="$bioHist/eac:p[@xml:lang=$langNode]"/>
+					<h2>
+						<xsl:if test="$entityType='corporateBody'">
+							<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
+						</xsl:if>
+						<xsl:if test="$entityType='person' or $entityType='family'">
+							<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
+						</xsl:if>
+						<xsl:text>:</xsl:text>
+					</h2>
+				</div>
+				<div class="rightcolumn">
+					<xsl:call-template name="showDetailsDescriptiveNote">
+			   			<xsl:with-param name="list" select="$bioHist/eac:p"/>
 			   			<xsl:with-param name="clazz" select="'biogist'"/>
+			   			<xsl:with-param name="langNode" select="$langNode"/>
 			   		</xsl:call-template>
 				</div>
 			</div>
-		</xsl:if>
-		<xsl:if test="$langNode='notLang' and $bioHist/eac:p[not(@xml:lang)]/text()">   
-			<div class="row">
-				<div class="leftcolumn">
-			   		<h2 class="subrow">
-			   			<xsl:if test="$entityType='corporateBody'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.historicalNote')"/>
-			   			</xsl:if>
-			   			<xsl:if test="$entityType='person' or $entityType='family'">
-			   				<xsl:value-of select="ape:resource('eaccpf.portal.biogHist')"/>
-			   			</xsl:if>
-			   			<xsl:text>:</xsl:text>
-			   		</h2>
-			   	</div>
-			   	<div class="rightcolumn">
-					<xsl:call-template name="multilanguage">
-			   			<xsl:with-param name="list" select="$bioHist/eac:p[not(@xml:lang)]"/>
-			   			<xsl:with-param name="clazz" select="'biogist'"/>
-			   		</xsl:call-template>
-				</div>
-			</div>
-		</xsl:if>
+		</xsl:if>	
 	</xsl:template>
 	
 	<xsl:template name="chronListMultilanguage">
 		<xsl:param name="list"/>
 		<xsl:param name="langNode"/>
 		
-		<xsl:if test="$list/eac:chronItem or $list/eac:placeEntry or $list/eac:event">
+	
+	 	<xsl:if test="$list/eac:chronItem or $list/eac:placeEntry or $list/eac:event">
 			
-			<xsl:if test="$list/eac:chronItem/eac:date[@xml:lang=$langNode]/text()
-							or $list/eac:chronItem/eac:dateRange/eac:fromDate[@xml:lang=$langNode]/text()
-							or $list/eac:chronItem/eac:dateRange/eac:toDate[@xml:lang=$langNode]/text()
-							or $list/eac:chronItem/eac:placeEntry[@xml:lang=$langNode]/text()
-							or $list/eac:chronItem/eac:event[@xml:lang=$langNode]/text()">
+			<xsl:if test="($langNode='notLang' and ($list/eac:chronItem/eac:date[not(@xml:lang)]/text()
+										or $list/eac:chronItem/eac:dateRange/eac:fromDate[not(@xml:lang)]/text()
+										or $list/eac:chronItem/eac:dateRange/eac:toDate[not(@xml:lang)]/text()
+										or $list/eac:chronItem/eac:placeEntry[not(@xml:lang)]/text()
+										or $list/eac:chronItem/eac:event[not(@xml:lang)]/text())) 
+							 or ($list/eac:chronItem/eac:date[@xml:lang=$langNode]/text()
+										or $list/eac:chronItem/eac:dateRange/eac:fromDate[@xml:lang=$langNode]/text()
+										or $list/eac:chronItem/eac:dateRange/eac:toDate[@xml:lang=$langNode]/text()
+										or $list/eac:chronItem/eac:placeEntry[@xml:lang=$langNode]/text()
+										or $list/eac:chronItem/eac:event[@xml:lang=$langNode]/text()) 
+			                 or ($searchTerms!='' and 
+			                 	(
+				                 	$list/eac:chronItem/eac:placeEntry[@xml:lang!=$langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+										or $list/eac:chronItem/eac:event[@xml:lang!=$langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]  
+					      		 	or (
+					      		 		$langNode!='notLang' and ($list/eac:chronItem/eac:placeEntry[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+										or $list/eac:chronItem/eac:event[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))])
+				      		 		)
+				      		 	)
+				      		 )
+						">
+					
 				<xsl:for-each select="$list" >
 					<div class="blockPlural">
-					<xsl:for-each select="./eac:chronItem" >
-						<div class="blockSingular">
-						    <xsl:if test="./eac:date or ./eac:dateRange or ./eac:dateSet">
-						    <div id="chronListItemContent" >
-								<xsl:call-template name="commonDates">
-						    		<xsl:with-param name="date" select="./eac:date"/>
-						    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-						    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-						    		<xsl:with-param name="langNode" select="$langNode"/>
-						    	</xsl:call-template>
-						    </div>
-						    </xsl:if>
-							<xsl:if test="./eac:placeEntry[@xml:lang=$langNode]">
-							<div id="chronListItemContent" class="row">
-								<div class="leftcolumn">
-							   		<h2 class="subrow">
-							   			<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
-							   			<xsl:text>:</xsl:text>
-							   		</h2>
-							   	</div> 
-							    <div class="rightcolumn"> 
-									<xsl:call-template name="multilanguagePlaceEntry">
-							  			<xsl:with-param name="list" select="./eac:placeEntry[@xml:lang=$langNode]"/>
-							  		</xsl:call-template>
-						  		</div>
-						  	</div>		
-							</xsl:if>
-							<xsl:if test="./eac:event[@xml:lang=$langNode]/text()">
-								<div id="chronListItemContent" class="row">
-									<div class="leftcolumn">
-								   		<h2 class="subrow">
-								   			<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
-								   			<xsl:text>:</xsl:text>
-								   		</h2>
-								   	</div> 
-								    <div class="rightcolumn"> 
-										<xsl:call-template name="multilanguageNoP"> <!-- multilanguageEvent -->
-								  			<xsl:with-param name="list" select="./eac:event[@xml:lang=$langNode]"/>
-								  			<xsl:with-param name="clazz" select="'language'"/>
-								  		</xsl:call-template>
-							  		</div>
-						  		</div>
-							</xsl:if>
-						</div>
-					</xsl:for-each>
+						<xsl:for-each select="./eac:chronItem" >
+							<div class="blockSingular">
+								<xsl:if test="./eac:date or ./eac:dateRange or ./eac:dateSet">
+									<div id="chronListItemContent" >
+										<xsl:call-template name="commonDates">
+											<xsl:with-param name="date" select="./eac:date"/>
+											<xsl:with-param name="dateRange" select="./eac:dateRange"/>
+											<xsl:with-param name="dateSet" select="./eac:dateSet"/>
+											<xsl:with-param name="langNode" select="$langNode"/>
+										</xsl:call-template>
+									</div>
+								</xsl:if>
+
+								<xsl:if test="($langNode='notLang' and ./eac:placeEntry[not(@xml:lang)]/text()) 
+												 or ./eac:placeEntry[@xml:lang=$langNode]/text() 
+								                 or ($searchTerms!='' and 
+								                 	(./eac:placeEntry[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+										      		 	or (
+										      		 		$langNode!='notLang' and ./eac:placeEntry[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+									      		 		)
+									      		 	)
+									      		 )
+											">
+									<div id="chronListItemContent" class="row">
+										<div class="leftcolumn">
+											<h2>
+												<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
+												<xsl:text>:</xsl:text>
+											</h2>
+										</div>
+										<div class="rightcolumn">
+											<xsl:call-template name="showDetailsPlaceEntry">
+												<xsl:with-param name="list" select="./eac:placeEntry"/>
+												<xsl:with-param name="langNode" select="$langNode"/>
+											</xsl:call-template>
+										</div>
+									</div>
+								</xsl:if>
+
+								<xsl:if test="($langNode='notLang' and ./eac:event[not(@xml:lang)]/text()) 
+												 or ./eac:event[@xml:lang=$langNode]/text() 
+								                 or ($searchTerms!='' and 
+								                 	(./eac:event[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+										      		 	or (
+										      		 		$langNode!='notLang' and ./eac:event[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+									      		 		)
+									      		 	)
+									      		 )
+											">
+									<div id="chronListItemContent" class="row">
+										<div class="leftcolumn">
+											<h2>
+												<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
+												<xsl:text>:</xsl:text>
+											</h2>
+										</div> 
+										<div class="rightcolumn"> 
+											<xsl:call-template name="showDetailsNoP"> <!-- multilanguageEvent -->
+												<xsl:with-param name="list" select="./eac:event"/>
+												<xsl:with-param name="langNode" select="$langNode"/>
+											</xsl:call-template>
+										</div>
+									</div>
+								</xsl:if>
+							</div>
+						</xsl:for-each>
 					</div>
 				</xsl:for-each>
 			</xsl:if>
-			
-			<xsl:if test="$langNode='notLang'
-							and ($list/eac:chronItem/eac:date[not(@xml:lang)]/text()
-							or $list/eac:chronItem/eac:dateRange/eac:fromDate[not(@xml:lang)]/text()
-							or $list/eac:chronItem/eac:dateRange/eac:toDate[not(@xml:lang)]/text()
-							or $list/eac:chronItem/eac:placeEntry[not(@xml:lang)]/text()
-							or $list/eac:chronItem/eac:event[not(@xml:lang)]/text())">
-				
-				<xsl:for-each select="$list" >
-					<div class="blockPlural">
-					<xsl:for-each select="./eac:chronItem" >
-						<div class="blockSingular">
-						    <xsl:if test="./eac:date or ./eac:dateRange or ./eac:dateSet">
-						    <div id="chronListItemContent" >
-								<xsl:call-template name="commonDates">
-						    		<xsl:with-param name="date" select="./eac:date"/>
-						    		<xsl:with-param name="dateRange" select="./eac:dateRange"/>
-						    		<xsl:with-param name="dateSet" select="./eac:dateSet"/>
-						    		<xsl:with-param name="langNode" select="$langNode"/>
-						    	</xsl:call-template>
-						    </div>
-						    </xsl:if>
-							<xsl:if test="./eac:placeEntry[not(@xml:lang)]">
-							<div id="chronListItemContent" class="row">
-								<div class="leftcolumn">
-							   		<h2 class="subrow">
-							   			<xsl:value-of select="ape:resource('eaccpf.description.place')"/>
-							   			<xsl:text>:</xsl:text>
-							   		</h2>
-							   	</div> 
-							    <div class="rightcolumn"> 
-									<xsl:call-template name="multilanguagePlaceEntry">
-							  			<xsl:with-param name="list" select="./eac:placeEntry[not(@xml:lang)]"/>
-							  		</xsl:call-template>
-						  		</div>
-						  	</div>		
-							</xsl:if>
-							<xsl:if test="./eac:event[not(@xml:lang)]/text()">
-								<div id="chronListItemContent" class="row">
-									<div class="leftcolumn">
-								   		<h2 class="subrow">
-								   			<xsl:value-of select="ape:resource('eaccpf.portal.event')"/>
-								   			<xsl:text>:</xsl:text>
-								   		</h2>
-								   	</div> 
-								    <div class="rightcolumn"> 
-										<xsl:call-template name="multilanguageNoP"> <!-- multilanguageEvent -->
-								  			<xsl:with-param name="list" select="./eac:event[not(@xml:lang)]"/>
-								  			<xsl:with-param name="clazz" select="'language'"/>
-								  		</xsl:call-template>
-							  		</div>
-						  		</div>
-							</xsl:if>
-						</div>
-					</xsl:for-each>
-					</div>
-				</xsl:for-each>
-			</xsl:if>
-		</xsl:if>
+		</xsl:if> 
 	</xsl:template>
 	
 	<!-- Template for select the correct order to display the alternative names
@@ -2312,42 +2319,35 @@
 	    		</xsl:call-template>
 	
 		      <!--   placeRole  -->
-		        <xsl:if test="$list/eac:placeRole[@xml:lang=$langNode]/text() and $list/eac:placeEntry[@xml:lang=$langNode]/text()">
-			        <div class="row">
+		        <xsl:if test="(	$langNode='notLang' and $list/eac:placeRole[not(@xml:lang)]/text()) 
+								 or $list/eac:placeRole[@xml:lang=$langNode]/text() 
+				                 or ($searchTerms!='' and 
+				                 	(
+					                 	$list/eac:placeRole[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+						      		 	or (
+						      		 		$langNode!='notLang' and $list/eac:placeRole[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+					      		 		)
+					      		 	)
+					      		 )
+							">
+
+			
+					<div class="row">
 					    <div class="leftcolumn">
-				   			<h2 class="subrow">
+				   			<h2>
 				   				<xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/>
 				   				<xsl:text>:</xsl:text>
 				   			</h2>
 				   	    </div>
 				     	<div class="rightcolumn">
-				     		<xsl:call-template name="multilanguageWithVocabularySource">
-	  								<xsl:with-param name="list" select="$list/eac:placeRole[@xml:lang=$langNode]"/>
+				     		<xsl:call-template name="showDetails">
+	  							<xsl:with-param name="list" select="$list/eac:placeRole"/>
 				   				<xsl:with-param name="clazz" select="'placeRole_'"/>
-				   				<xsl:with-param name="posParent" select="$posParent"/>
-				   				<xsl:with-param name="posChild" select="$posChild"/>
+				   				<xsl:with-param name="langNode" select="$langNode"/>
 				   			</xsl:call-template>
 					    </div>
 			        </div>
-			    </xsl:if> 
-			    <xsl:if test="$langNode='notLang' and $list/eac:placeRole[not(@xml:lang)]/text() and $list/eac:placeEntry[not(@xml:lang)]/text()">
-			        <div class="row">
-					    <div class="leftcolumn">
-				   			<h2 class="subrow">
-				   				<xsl:value-of select="ape:resource('eaccpf.portal.roleOfLocation')"/>
-				   				<xsl:text>:</xsl:text>
-				   			</h2>
-				   	    </div>
-				     	<div class="rightcolumn">
-				     		<xsl:call-template name="multilanguageWithVocabularySource">
-	  								<xsl:with-param name="list" select="$list/eac:placeRole[not(@xml:lang)]"/>
-				   				<xsl:with-param name="clazz" select="'placeRole_'"/>
-				   				<xsl:with-param name="posParent" select="$posParent"/>
-				   				<xsl:with-param name="posChild" select="$posChild"/>
-				   			</xsl:call-template>
-					    </div>
-			        </div>
-			    </xsl:if> 
+				</xsl:if>
 			    
 	    		<!--  addressLine  -->
 				<!--  Tittle for the address section.-->
@@ -2589,42 +2589,37 @@
 	    <xsl:param name="title"/>
 	    <xsl:param name="langNode"/>
 	    
-	    <xsl:if test="$list[@xml:lang = $langNode]/text()">
+	    
+		<xsl:if test="($langNode='notLang' and $list[not(@xml:lang)]/text()) 
+						 or $list[@xml:lang=$langNode]/text() 
+		                 or ($searchTerms!='' and 
+		                 	(
+			                 	$list[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+				      		 	or (
+				      		 		$langNode!='notLang' and $list[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+			      		 		)
+			      		 	)
+			      		 )
+					">
+			
 			<div class="row locationPlace">
 			 	<div class="leftcolumn">
-			   		<h2 class="subrow">
+			   		<h2>
 			   			<xsl:value-of select="ape:resource($title)"/>
 			   			<xsl:text>:</xsl:text>
 			   		</h2>
 			   	</div>
-			    <div class="rightcolumn">
-					<xsl:call-template name="multilanguagePlaceEntrySeveral">
-		   				<xsl:with-param name="list" select="$list[@xml:lang = $langNode]"/>
+			   	<div class="rightcolumn">
+					<xsl:call-template name="showDetailsPlaceEntrySeveral">
+		   				<xsl:with-param name="list" select="$list"/>
 		   				<xsl:with-param name="clazz" select="$clazz"/>
 		   				<xsl:with-param name="posParent" select="$posParent"/>
 		   				<xsl:with-param name="posChild" select="$posChild"/>
+		   				<xsl:with-param name="langNode" select="$langNode"/>
 		   			</xsl:call-template>
-			 	</div>
+				</div>
 			</div>
 		</xsl:if>
-		<xsl:if test="$langNode='notLang' and $list[not(@xml:lang)]/text()">
-			<div class="row locationPlace">
-			 	<div class="leftcolumn">
-			   		<h2 class="subrow">
-			   			<xsl:value-of select="ape:resource($title)"/>
-			   			<xsl:text>:</xsl:text>
-			   		</h2>
-			   	</div>
-			    <div class="rightcolumn">
-					<xsl:call-template name="multilanguagePlaceEntrySeveral">
-		   				<xsl:with-param name="list" select="$list[not(@xml:lang)]"/>
-		   				<xsl:with-param name="clazz" select="$clazz"/>
-		   				<xsl:with-param name="posParent" select="$posParent"/>
-		   				<xsl:with-param name="posChild" select="$posChild"/>
-		   			</xsl:call-template>
-			 	</div>
-			</div>
-		</xsl:if>	
 	</xsl:template>
 
 	<!-- template term -->
@@ -2636,49 +2631,41 @@
 		<xsl:param name="title"/>
 		<xsl:param name="langNode"/>
 		
-		<xsl:if test="$list[@xml:lang=$langNode]/text()">
-			<div class="row subrow">
-					<div class="leftcolumn">
-				   		<h2><xsl:value-of select="ape:resource($title)"/>
-				   			<xsl:if test="$list/parent::node()/@localType">
-					   			<xsl:text> (</xsl:text>
-					   			<xsl:value-of select="$list/parent::node()/@localType"/>
-					   			<xsl:text>)</xsl:text>
-					   		</xsl:if>	
-				   			<xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguageWithVocabularySource">
-			   				<xsl:with-param name="list" select="$list[@xml:lang=$langNode]"/>
-			   				<xsl:with-param name="clazz" select="$clazz"/>
-			   				<xsl:with-param name="posParent" select="$posParent"/>
-			   				<xsl:with-param name="posChild" select="$posChild"/>
-			   			</xsl:call-template>
-					</div>
+		<xsl:if test="($langNode='notLang' and $list[not(@xml:lang)]/text()) 
+				 or $list[@xml:lang=$langNode]/text() 
+                 or ($searchTerms!='' and 
+                 	(
+	                 	$list[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+		      		 	or (
+		      		 		$langNode!='notLang' and $list[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+	      		 		)
+	      		 	)
+	      		 )
+			">
+			<div class="row">
+				<div class="leftcolumn">
+			   		<h2>
+			   			<xsl:value-of select="ape:resource($title)"/>
+			   			<xsl:if test="$list/parent::node()/@localType">
+				   			<xsl:text> (</xsl:text>
+				   			<xsl:value-of select="$list/parent::node()/@localType"/>
+				   			<xsl:text>)</xsl:text>
+				   		</xsl:if>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			   	<div class="rightcolumn">
+			   		<xsl:call-template name="showDetails">
+		   				<xsl:with-param name="list" select="$list"/>
+		   				<xsl:with-param name="clazz" select="$clazz"/>
+		   				<xsl:with-param name="langNode" select="$langNode"/>
+		   			</xsl:call-template>
+				</div>
 			</div>
-		</xsl:if>
-		<xsl:if test="$langNode='notLang' and $list[not(@xml:lang)]/text()">
-			<div class="row subrow">
-					<div class="leftcolumn">
-				   		<h2><xsl:value-of select="ape:resource($title)"/>
-				   			<xsl:if test="$list/parent::node()/@localType">
-					   			<xsl:text> (</xsl:text>
-					   			<xsl:value-of select="$list/parent::node()/@localType"/>
-					   			<xsl:text>)</xsl:text>
-					   		</xsl:if>	
-				   			<xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguageWithVocabularySource">
-			   				<xsl:with-param name="list" select="$list[not(@xml:lang)]"/>
-			   				<xsl:with-param name="clazz" select="$clazz"/>
-			   				<xsl:with-param name="posParent" select="$posParent"/>
-			   				<xsl:with-param name="posChild" select="$posChild"/>
-			   			</xsl:call-template>
-					</div>
-			</div>
+			<xsl:if test="@href">
+				<xsl:variable name="href" select="./@href"/>
+				<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	
@@ -2691,50 +2678,35 @@
 	    <xsl:param name="title"/>
 	    <xsl:param name="langNode"/>
 	    	    
-		<xsl:if test="$list[@xml:lang=$langNode]/text() or (name($list[1])='citation' and $list[1][@xml:lang = $langNode]/text())">	 
+		<xsl:variable name="condSearchTermLang" select="$list[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]"/>
+		<xsl:variable name="condSearchTermNoLang" select="$langNode!='notLang' and $list[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]"/>
+		<xsl:variable name="condCitationText" select="name($list[1])='citation' and $list[fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]"/>
+		<xsl:variable name="titleCitation" select="$list/@xlink:title"/>
+		<xsl:variable name="condCitationNoText" select="name($list[1])='citation' and not($list/text()) and $list[fn:contains(fn:upper-case($titleCitation),fn:upper-case($searchTerms))]"/>	
+		
+		<xsl:if test="($langNode='notLang' and $list[not(@xml:lang)]/text()) or $list[@xml:lang=$langNode]/text() or (name($list[1]) ='citation' and (($langNode='notLang' and $list[not(@xml:lang)]) or $list[@xml:lang=$langNode]))
+		                                     or ($searchTerms!='' and ($condSearchTermLang or $condSearchTermNoLang  or $condCitationText or $condCitationNoText))">
+																  
 			<div class="row">
-					<div class="leftcolumn">
-				   		<h2 class="subrow">
-				   			<xsl:value-of select="ape:resource($title)"/>
-				   			<xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguageWithVocabularySource">
-			   				<xsl:with-param name="list" select="$list[@xml:lang=$langNode]"/>
-			   				<xsl:with-param name="clazz" select="$clazz"/>
-			   				<xsl:with-param name="posParent" select="$posParent"/>
-			   				<xsl:with-param name="posChild" select="$posChild"/>
-			   			</xsl:call-template>
-					</div>
+				<div class="leftcolumn">
+			   		<h2 class="subrow">
+			   			<xsl:value-of select="ape:resource($title)"/>
+			   			<xsl:text>:</xsl:text>
+			   		</h2>
+			   	</div>
+			   	<div class="rightcolumn">
+					<xsl:call-template name="showDetails">
+		   				<xsl:with-param name="list" select="$list"/>
+		   				<xsl:with-param name="clazz" select="$clazz"/>
+		   				<xsl:with-param name="langNode" select="$langNode"/>
+		   			</xsl:call-template>
+				</div>
 			</div>
 			<xsl:if test="@href">
 				<xsl:variable name="href" select="./@href"/>
 				<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
 			</xsl:if>
-		</xsl:if>
-		<xsl:if test="$langNode='notLang' and ($list[not(@xml:lang)]/text() or (name($list[1])='citation' and $list[1][not(@xml:lang)]/text()))">	 
-			<div class="row">
-					<div class="leftcolumn">
-				   		<h2 class="subrow">
-				   			<xsl:value-of select="ape:resource($title)"/>
-				   			<xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguageWithVocabularySource">
-			   				<xsl:with-param name="list" select="$list[not(@xml:lang)]"/>
-			   				<xsl:with-param name="clazz" select="$clazz"/>
-			   				<xsl:with-param name="posParent" select="$posParent"/>
-			   				<xsl:with-param name="posChild" select="$posChild"/>
-			   			</xsl:call-template>
-					</div>
-			</div>
-			<xsl:if test="@href">
-				<xsl:variable name="href" select="./@href"/>
-				<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-			</xsl:if>
-		</xsl:if>
+		</xsl:if>	
 	</xsl:template>
 	
 	<!-- template for commons dates -->
@@ -3134,182 +3106,6 @@
 		</xsl:if>	
 	</xsl:template>	
 	
-	<!-- template for nodes with attribute @vocabularySource or not and several elements-->
-	<xsl:template name="multilanguageWithVocabularySource">
-		<xsl:param name="list"/>
-		<xsl:param name="clazz"/>
-		<xsl:param name="posParent"/>
-		<xsl:param name="posChild"/>
-		<xsl:choose>
-			<xsl:when test="count($list) > 1">
-			<div id="{$clazz}{$posParent}{$posChild}" class= "moreDisplay">
-				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $language.selected) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:when test="name(current()) = 'citation'">
-											<xsl:call-template name="citationHref">
-												<xsl:with-param name="link" select="./@xlink:href"/>
-												<xsl:with-param name="title" select="./@xlink:title" />
-												<xsl:with-param name="content" select="./text()"/>
-												<xsl:with-param name="section" select="$list"/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-								</p>
-							</xsl:if>		
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang =  $lang.navigator]/text() and $list[@xml:lang =  $lang.navigator]/text() != ''">
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $lang.navigator) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">	
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:when test="name(current()) = 'citation'">
-											<xsl:call-template name="citationHref">
-												<xsl:with-param name="link" select="./@xlink:href"/>
-												<xsl:with-param name="title" select="./@xlink:title" />
-												<xsl:with-param name="content" select="./text()"/>
-												<xsl:with-param name="section" select="$list"/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-								</p>
-							</xsl:if>		
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $language.default) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">	
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:when test="name(current()) = 'citation'">
-											<xsl:call-template name="citationHref">
-												<xsl:with-param name="link" select="./@xlink:href"/>
-												<xsl:with-param name="title" select="./@xlink:title" />
-												<xsl:with-param name="content" select="./text()"/>
-												<xsl:with-param name="section" select="$list"/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-										 <xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-								</p>
-							</xsl:if>		
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-						 <xsl:for-each select="$list">
-						   <xsl:if test="not(@xml:lang) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))"> 	 
-						 	  <p>
-								 <xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:when test="name(current()) = 'citation'">
-										<xsl:call-template name="citationHref">
-											<xsl:with-param name="link" select="./@xlink:href"/>
-											<xsl:with-param name="title" select="./@xlink:title" />
-											<xsl:with-param name="content" select="./text()"/>
-											<xsl:with-param name="section" select="$list"/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-									 <xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-							  </p> 
-						  </xsl:if>	    
-					   	</xsl:for-each> 
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:variable name="currentText" select="current()/text()"></xsl:variable>
-							<xsl:if test="(($currentLang = $language.first) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-										    <xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:when test="name(current()) = 'citation'">
-											<xsl:call-template name="citationHref">
-												<xsl:with-param name="link" select="./@xlink:href"/>
-												<xsl:with-param name="title" select="./@xlink:title" />
-												<xsl:with-param name="content" select="./text()"/>
-												<xsl:with-param name="section" select="$list"/>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-										 	<xsl:apply-templates select="$currentText" mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-								</p>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:for-each select="$list">
-					<p>
-						<xsl:choose>
-							<xsl:when test="@vocabularySource">
-								<xsl:call-template name="vocabularySource">
-									<xsl:with-param name="node" select="."/>
-								</xsl:call-template>
-							</xsl:when>
-							<xsl:when test="name(current()) = 'citation'">
-								<xsl:call-template name="citationHref">
-									<xsl:with-param name="link" select="./@xlink:href"/>
-									<xsl:with-param name="title" select="./@xlink:title" />
-									<xsl:with-param name="content" select="./text()"/>
-									<xsl:with-param name="section" select="$list"/>
-								</xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>
-							 	<xsl:apply-templates select="." mode="other"/> 
-							</xsl:otherwise>
-						</xsl:choose>
-					</p>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 	<xsl:template name="citationHrefTitle">
 		<xsl:param name="content"/>
 		<xsl:param name="section" />
@@ -3317,10 +3113,10 @@
 		<xsl:variable name="name" select="name($section/parent::node())"/>
 		<xsl:choose>
 			<xsl:when test="$content != '' ">
-				<xsl:value-of select="$content"/>
+				<xsl:apply-templates select="$content" mode="other"/>
 			</xsl:when>
 			<xsl:when test="$title != ''">
-				<xsl:value-of select="$title"/>
+				<xsl:value-of select="fn:normalize-space(ape:highlight($title, 'other'))" disable-output-escaping="yes" />
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="ape:resource('eaccpf.portal.seeCitation')"/>
@@ -3403,281 +3199,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
-	<!-- template for language only one element -->
-	<xsl:template name="multilanguagePlaceEntry">
-		<xsl:param name="list"/>
-		<xsl:choose>
-			<xsl:when test="count($list) > 1">
-				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							<xsl:if test="position() = 1">
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>	
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $lang.navigator]">
-							<xsl:if test="position() = 1">
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>	
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $language.default]">
-							<xsl:if test="position() = 1">
-								<xsl:choose>
-									<xsl:when test="@vocabularySource">
-										<xsl:call-template name="vocabularySource">
-											<xsl:with-param name="node" select="."/>
-										</xsl:call-template>
-									</xsl:when>
-									<xsl:otherwise>
-									 <xsl:apply-templates select="." mode="other"/> 
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-						  	<xsl:for-each select="$list[not(@xml:lang)]">
-							 	  <xsl:if test="position()=1"> 
-									 <xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-										    </xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-										 <xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-							  	 </xsl:if>
-						   	</xsl:for-each> 
-						</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:variable name="currentText" select="current()/text()"></xsl:variable>
-									<xsl:if test="$currentLang = $language.first">
-										<xsl:if test="position() = 1">
-											<xsl:choose>
-												<xsl:when test="@vocabularySource">
-													<xsl:call-template name="vocabularySource">
-														<xsl:with-param name="node" select="."/>
-										   		    </xsl:call-template>
-												</xsl:when>
-												<xsl:otherwise>
-												 <xsl:apply-templates select="$currentText" mode="other"/> 
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:if>
-									</xsl:if>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:for-each select="$list">
-					<xsl:choose>
-						<xsl:when test="$list[@vocabularySource]">
-							<xsl:call-template name="vocabularySource">
-								<xsl:with-param name="node" select="."/>
-				   		    </xsl:call-template>
-						</xsl:when>
-						<xsl:otherwise>
-						 <xsl:apply-templates select="." mode="other"/> 
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
 	
-	<!-- template for several elements placeEntry in places/place/placeEntry-->
-	<xsl:template name="multilanguagePlaceEntrySeveral">
-		<xsl:param name="list"/>
-		<xsl:param name="clazz"/>
-		<xsl:param name="posParent"/>
-		<xsl:param name="posChild"/>
-		<xsl:choose>
-			<xsl:when test="count($list) > 1">
-			<div id="{$clazz}{$posParent}{$posChild}" class= "moreDisplay">
-				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $language.selected) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">	
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-					   		   			    </xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-	
-									<xsl:if test="@countryCode">
-										<xsl:call-template name="countryName">
-											<xsl:with-param name="countryCode" select="./@countryCode"/>
-					   			        </xsl:call-template>
-				   			        </xsl:if>
-								</p>
-							</xsl:if>	
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $lang.navigator] and $list[@xml:lang = $lang.navigator]/text() and $list[@xml:lang = $lang.navigator]/text() != ''">
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $lang.navigator) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">		
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-					   		   			    </xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-	
-									<xsl:if test="@countryCode">
-										<xsl:call-template name="countryName">
-											<xsl:with-param name="countryCode" select="./@countryCode"/>
-					   			        </xsl:call-template>
-				   			        </xsl:if>
-								</p>
-							</xsl:if>	
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="($list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != '')">
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(($currentLang = $language.default) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">			
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-					   		   			    </xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-										 <xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-	
-									<xsl:if test="@countryCode">
-										<xsl:call-template name="countryName">
-											<xsl:with-param name="countryCode" select="./@countryCode"/>
-					   			        </xsl:call-template>
-				   			        </xsl:if>
-								</p>
-							</xsl:if>	
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[not(@xml:lang)] and $list[not(@xml:lang)]/text() and $list[not(@xml:lang)]/text() != ''">
-						<xsl:for-each select="$list">
-						   <xsl:if test="not(@xml:lang) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))"> 	 
-								<p>
-									 <xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-				   		   			        </xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-										 <xsl:apply-templates select="." mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-	
-									<xsl:if test="@countryCode">
-										<xsl:call-template name="countryName">
-											<xsl:with-param name="countryCode" select="./@countryCode"/>
-					   			        </xsl:call-template>
-				   			        </xsl:if>
-								</p>
-							</xsl:if>	
-					   	</xsl:for-each> 
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:for-each select="$list">
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:variable name="currentText" select="current()/text()"></xsl:variable>
-							<xsl:if test="(($currentLang = $language.first) or fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms)))">
-								<p>
-									<xsl:choose>
-										<xsl:when test="@vocabularySource">
-											<xsl:call-template name="vocabularySource">
-												<xsl:with-param name="node" select="."/>
-				   		   			        </xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-										 <xsl:apply-templates select="$currentText" mode="other"/> 
-										</xsl:otherwise>
-									</xsl:choose>
-
-									<xsl:if test="@countryCode">
-										<xsl:call-template name="countryName">
-											<xsl:with-param name="countryCode" select="./@countryCode"/>
-					   			        </xsl:call-template>
-				   			        </xsl:if>
-								</p>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:for-each select="$list">
-					<p>
-						<xsl:choose>
-							<xsl:when test="@vocabularySource">
-								<xsl:call-template name="vocabularySource">
-									<xsl:with-param name="node" select="."/>
-			   			        </xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>
-							    <xsl:apply-templates select="." mode="other"/> 
-							</xsl:otherwise>
-						</xsl:choose>
-
-						<xsl:if test="@countryCode">
-							<xsl:call-template name="countryName">
-								<xsl:with-param name="countryCode" select="./@countryCode"/>
-		   			        </xsl:call-template>
-	   			        </xsl:if>
-					</p>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 	<!-- Template to display de country name from country code. -->
 	<xsl:template name="countryName">
 		<xsl:param name="countryCode"/>
@@ -4488,18 +4010,10 @@
 						<h2 class="subrow"><xsl:value-of select="ape:resource('eaccpf.portal.structureOrGenealogy')"/><xsl:text>:</xsl:text></h2>
 				   </xsl:if>
 			   	</div>
-			   	<div class="rightcolumn moreDisplay" id="{$clazz}">
+			   	<div class="rightcolumn" id="{$clazz}">
 			   		<xsl:call-template name="multilanguageOutline">
 			   			<xsl:with-param name="list" select="$list/eac:outline/eac:level"/>
 			   		</xsl:call-template>
-			   		<div class="linkMore">
-						<a class="displayLinkShowMore linkShow" href="javascript:showMore('{$clazz}', 'pre');">
-							<xsl:value-of select="ape:resource('eaccpf.portal.showmore')"/>
-						</a>
-						<a class="displayLinkShowLess linkShow" href="javascript:showLess('{$clazz}', 'pre');">
-							<xsl:value-of select="ape:resource('eaccpf.portal.showless')"/>
-						</a>
-					</div>
 				</div>
 		  </div>
 		</xsl:if>
@@ -4515,7 +4029,7 @@
 				<div class="leftcolumn">
 			   		<h2 class="subrow"><xsl:value-of select="ape:resource($title)"/><xsl:text>:</xsl:text></h2>
 			   	</div>
-			   	<div class="rightcolumn moreDisplay" id="{$clazz}">
+			   	<div class="rightcolumn" id="{$clazz}">
 			   		<xsl:call-template name="multilanguageOutline">
 			   			<xsl:with-param name="list" select="$list/eac:outline/eac:level"/>
 			   		</xsl:call-template>
@@ -4530,38 +4044,35 @@
 		<xsl:param name="clazz"/>
 		<xsl:param name="langNode"/>
 		
-		<xsl:if test="$list/eac:p[@xml:lang=$langNode]/text()">
-	    	<div class="row">
-					<div class="leftcolumn">
-				   		<h2 class="subrow">
-					   		<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
-					   		<xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguage">
-				   			<xsl:with-param name="list" select="$list/eac:p[@xml:lang=$langNode]"/>
-				   			<xsl:with-param name="clazz" select="$clazz"/>
-				   		</xsl:call-template>
-					</div>
+		 <xsl:if test="($langNode='notLang' and $list/eac:p[not(@xml:lang)]/text()) 
+						 or $list/eac:p[@xml:lang=$langNode]/text() 
+		                 or ($searchTerms!='' and 
+		                 	(
+			                 	$list/eac:p[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+				      		 	or (
+				      		 		$langNode!='notLang' and $list/eac:p[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+			      		 		)
+			      		 	)
+			      		 )
+					">
+	
+			<div class="row">
+				<div class="leftcolumn">
+			   		<h2>
+			   			<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
+			   			<xsl:text>:</xsl:text>
+		   			</h2>
+			   	</div>
+			   	<div class="rightcolumn">
+					
+					<xsl:call-template name="showDetailsDescriptiveNote">
+			   			<xsl:with-param name="list" select="$list/eac:p"/>
+			   			<xsl:with-param name="clazz" select="$clazz"/>
+			   			<xsl:with-param name="langNode" select="$langNode"/>
+			   		</xsl:call-template>
+				</div>
 			</div>
-	    </xsl:if>
-	    <xsl:if test="$langNode='notLang' and $list/eac:p[not(@xml:lang)]/text()">
-	    	<div class="row">
-					<div class="leftcolumn">
-				   		<h2 class="subrow">
-					   		<xsl:value-of select="ape:resource('eaccpf.portal.note')"/>
-					   		<xsl:text>:</xsl:text>
-				   		</h2>
-				   	</div>
-				   	<div class="rightcolumn">
-						<xsl:call-template name="multilanguage">
-				   			<xsl:with-param name="list" select="$list/eac:p[not(@xml:lang)]"/>
-				   			<xsl:with-param name="clazz" select="$clazz"/>
-				   		</xsl:call-template>
-					</div>
-			</div>
-	    </xsl:if>
+		</xsl:if>
 	</xsl:template>
 	
 	<!-- template for outline -->
@@ -4636,5 +4147,272 @@
 					</xsl:for-each> 
 				</xsl:for-each> 
  		</ul>
+	</xsl:template>
+	<!-- Template to show the information according with the language and the search term  -->
+	<xsl:template name="showDetails">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+		<xsl:param name="langNode"/>
+		
+	  	<div id="{$clazz}">
+			<xsl:for-each select="$list">
+				<xsl:choose>
+					<xsl:when test=".[@xml:lang=$langNode]/text() or ($langNode='notLang' and .[not(@xml:lang)]/text()) or (name(.)='citation'and (@xml:lang=$langNode) or ($langNode='notLang' and not(@xml:lang)))">
+						<p>
+							<xsl:choose>
+								<xsl:when test="@vocabularySource">
+									<xsl:call-template name="vocabularySource">
+										<xsl:with-param name="node" select="."/>
+									</xsl:call-template>
+								</xsl:when>
+								<xsl:when test="name(current()) = 'citation'">
+									<xsl:call-template name="citationHref">
+										<xsl:with-param name="link" select="./@xlink:href"/>
+										<xsl:with-param name="title" select="./@xlink:title" />
+										<xsl:with-param name="content" select="./text()"/>
+										<xsl:with-param name="section" select="$list"/>
+									</xsl:call-template>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="other"/> 
+								</xsl:otherwise>
+							</xsl:choose>
+						</p>
+					</xsl:when>
+					<xsl:when test="$searchTerms != '' and (fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))
+									                        or (name(.)='citation' and not(./text()) and fn:contains(fn:upper-case(./@xlink:title),fn:upper-case($searchTerms))))">
+						<p>
+
+							<xsl:choose>
+								<xsl:when test="@vocabularySource">
+									<xsl:call-template name="vocabularySource">
+										<xsl:with-param name="node" select="."/>
+									</xsl:call-template>
+								</xsl:when>
+								<xsl:when test="name(current()) = 'citation'">
+									<xsl:call-template name="citationHref">
+										<xsl:with-param name="link" select="./@xlink:href"/>
+										<xsl:with-param name="title" select="./@xlink:title" />
+										<xsl:with-param name="content" select="./text()"/>
+										<xsl:with-param name="section" select="$list"/>
+									</xsl:call-template>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="other"/> 
+								</xsl:otherwise>
+							</xsl:choose>
+						</p>
+					</xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>	
+			</xsl:for-each>
+		 </div> 
+	</xsl:template>
+	
+	<!--Template to show the information about placeEntry  -->
+		<xsl:template name="showDetailsPlaceEntrySeveral">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+		<xsl:param name="posParent"/>
+		<xsl:param name="posChild"/>
+		<xsl:param name="langNode"/>
+		
+		<div id="{$clazz}{$posParent}{$posChild}" class= "moreDisplay">
+			<xsl:for-each select="$list">
+				<xsl:choose>
+					<xsl:when test=".[@xml:lang=$langNode]/text() or ($langNode='notLang' and .[not(@xml:lang)]/text())">
+						<p>
+							<xsl:choose>
+								<xsl:when test="@vocabularySource">
+									<xsl:call-template name="vocabularySource">
+										<xsl:with-param name="node" select="."/>
+			   		   			    </xsl:call-template>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="other"/>
+								</xsl:otherwise>
+							</xsl:choose>
+		
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
+						</p>
+					</xsl:when>
+					<xsl:when test="$searchTerms != '' and fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))">
+						<p>
+							<xsl:choose>
+								<xsl:when test="@vocabularySource">
+									<xsl:call-template name="vocabularySource">
+										<xsl:with-param name="node" select="."/>
+			   		   			    </xsl:call-template>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="other"/>
+								</xsl:otherwise>
+							</xsl:choose>
+		
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
+						</p>
+					</xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>	
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="showDetailsDescriptiveNote">
+		<xsl:param name="list"/>
+		<xsl:param name="clazz"/>
+		<xsl:param name="langNode"/>
+
+		<div id="{$clazz}">
+			<xsl:for-each select="$list">
+				<xsl:choose>
+					<xsl:when test=".[@xml:lang=$langNode]/text() or ($langNode='notLang' and .[not(@xml:lang)]/text())">
+						<p>
+							<xsl:apply-templates select="." mode="other"/>
+							<xsl:if test="name(current()) = 'language'">
+								<xsl:call-template  name="descriptiveNoteNoP">
+									<xsl:with-param name="element" select="current()"/>
+									<xsl:with-param name="clazz" select="'language'"/>
+									<xsl:with-param name="langNode" select="$langNode"/>								
+								</xsl:call-template>
+							</xsl:if>
+						</p>
+					</xsl:when>
+					<xsl:when test="$searchTerms != '' and fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))">
+						<p>
+							<xsl:apply-templates select="." mode="other"/>
+							<xsl:if test="name(current()) = 'language'">
+								<xsl:call-template  name="descriptiveNoteNoP">
+									<xsl:with-param name="element" select="current()"/>
+									<xsl:with-param name="clazz" select="'language'"/>
+									<xsl:with-param name="langNode" select="$langNode"/>
+								</xsl:call-template>
+							</xsl:if>
+						</p>
+					</xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>	
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	
+	<!-- Template to display correctly the details of the "<descriptiveNote>"
+		 element inside "<languageUsed>" element. -->
+	<xsl:template name="descriptiveNoteNoP">
+		<xsl:param name="element"/>
+		<xsl:param name="clazz"/>
+		<xsl:param name="langNode"/>
+		
+		<!-- Try to select the 'default' mode. -->
+		<xsl:if test="($langNode='notLang' and $element/parent::node()/eac:descriptiveNote/eac:p[not(@xml:lang)]/text()) 
+				 or $element/parent::node()/eac:descriptiveNote/eac:p[@xml:lang=$langNode]/text() 
+                 or ($searchTerms!='' and 
+                 	(
+	                 	$element/parent::node()/eac:descriptiveNote/eac:p[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+		      		 	or (
+		      		 		$langNode!='notLang' and $element/parent::node()/eac:descriptiveNote/eac:p[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]
+	      		 		)
+	      		 	)
+	      		 )
+			">
+			
+			<xsl:text> (</xsl:text>
+			<xsl:call-template  name="showDetailsNoP">
+				<xsl:with-param name="list" select="$element/parent::node()/eac:descriptiveNote/eac:p"/>
+				<xsl:with-param name="langNode" select="$langNode"/>
+			</xsl:call-template>
+			<xsl:text>)</xsl:text>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- template for show details in descriptiveNote -->
+	<xsl:template name="showDetailsNoP">
+		<xsl:param name="list"/>
+		<xsl:param name="langNode"/>
+		
+		<xsl:for-each select="$list">
+			<xsl:choose>
+				<xsl:when test=".[@xml:lang=$langNode]/text() or ($langNode='notLang' and .[not(@xml:lang)]/text())">
+					<xsl:if test="position() > 1">
+						<xsl:text> </xsl:text>
+					</xsl:if>
+					<xsl:apply-templates mode="other"/>
+				</xsl:when>
+				<xsl:when test="$searchTerms != '' and fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))">
+					<xsl:if test="position() > 1">
+						<xsl:text> </xsl:text>
+					</xsl:if>
+					<xsl:apply-templates mode="other"/>
+				</xsl:when>
+				<xsl:otherwise/>
+				</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<!-- Template that will show the information in biogHist placeEntry -->
+	<xsl:template name="showDetailsPlaceEntry">
+		<xsl:param name="list"/>
+		<xsl:param name="langNode"/>
+		
+			<xsl:choose>
+				<xsl:when test="$list[@xml:lang=$langNode]/text()">
+					<xsl:for-each select="$list[@xml:lang=$langNode]">
+						<xsl:if test="position() = 1">
+							<xsl:choose>
+								<xsl:when test="@vocabularySource">
+									<xsl:call-template name="vocabularySource">
+										<xsl:with-param name="node" select="."/>
+									</xsl:call-template>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="other"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:when>	
+				<xsl:when test="$langNode='notLang' and $list[not(@xml:lang)]/text()">
+					<xsl:for-each select="$list[not(@xml:lang)]">
+						<xsl:if test="position() =1 and $langNode = 'notLang'">
+							<xsl:choose>
+								<xsl:when test="@vocabularySource">
+									<xsl:call-template name="vocabularySource">
+										<xsl:with-param name="node" select="."/>
+									</xsl:call-template>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="other"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:when test="$searchTerms != '' and ($list[@xml:lang != $langNode][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] 
+														or ($list[not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))] and $langNode!='notLang'))">
+					
+					<xsl:for-each select="$list[@xml:lang != $langNode or not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]">
+						<xsl:if test="position()=1 and $langNode!='notLang'"> 
+							<xsl:choose>
+							<xsl:when test="@vocabularySource">
+								<xsl:call-template name="vocabularySource">
+									<xsl:with-param name="node" select="."/>
+								</xsl:call-template>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="." mode="other"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise/>
+			</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>

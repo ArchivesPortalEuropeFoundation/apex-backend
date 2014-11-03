@@ -1814,11 +1814,21 @@ function init() {
     sameHeight();
 }
 function drawListDiscs(){
-	if($("div#structureOrGenealogy").find("li.item").length==1){
-		$("div#structureOrGenealogy").find("li.item").css("list-style","none outside none");
+	if($("div[id^='structureOrGenealogy']").length>0){
+		$("div[id^='structureOrGenealogy']").each(function(){
+			checkNodesLiDisc($(this));
+		});
 	}
-	if($("div#generalContext").find("li.item").length==1){
-		$("div#generalContext").find("li.item").css("list-style","none outside none");
+	if($("div[id^='generalContext']").length>0){
+		$("div[id^='generalContext']").each(function(){
+			checkNodesLiDisc($(this));
+		});
+	}
+}
+
+function checkNodesLiDisc(jDiv){
+	if(jDiv.find("li.item").length==1){
+		jDiv.find("li.item").css("list-style","none outside none");
 	}
 }
 function initPrint() {
