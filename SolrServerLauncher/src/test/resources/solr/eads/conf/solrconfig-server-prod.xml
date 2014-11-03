@@ -7,9 +7,10 @@
 
 	<!-- <indexConfig> section could go here, but we want the defaults -->
 	<indexConfig>
-		<ramBufferSizeMB>500</ramBufferSizeMB>
+		<ramBufferSizeMB>100</ramBufferSizeMB>
 		<mergeFactor>20</mergeFactor>
 	</indexConfig>
+
 	<!-- the default high-performance update handler -->
 	<updateHandler class="solr.DirectUpdateHandler2">
 		<autoSoftCommit>
@@ -51,20 +52,7 @@
 
 		<listener event="newSearcher" class="solr.QuerySenderListener">
 			<arr name="queries">
-				<lst>
-					<str name="q">solr</str>
-					<str name="start">0</str>
-					<str name="rows">10</str>
-				</lst>
-				<lst>
-					<str name="q">rocks</str>
-					<str name="start">0</str>
-					<str name="rows">10</str>
-				</lst>
-				<lst>
-					<str name="q">static newSearcher warming query from solrconfig.xml
-					</str>
-				</lst>
+
 			</arr>
 		</listener>
 
