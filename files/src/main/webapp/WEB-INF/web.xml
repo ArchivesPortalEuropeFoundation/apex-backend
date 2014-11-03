@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         id="WebApp_ID" version="2.5">
+    <filter>
+        <filter-name>JpaFilter</filter-name>
+        <filter-class>eu.archivesportaleurope.persistence.jpa.web.JpaFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>JpaFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>MiltonFilter</filter-name>
+        <filter-class>io.milton.servlet.MiltonFilter</filter-class>
+        
+        <init-param>
+            <param-name>milton.configurator</param-name>
+            <param-value>eu.archivesportaleurope.webdav.ApeMiltonConfigurator</param-value>
+        </init-param>        
+        <init-param>
+            <param-name>resource.factory.class</param-name>
+            <param-value>eu.archivesportaleurope.webdav.WebDavResourceFactory</param-value>
+        </init-param>
+      <init-param>
+            <param-name>authenticationHandlers</param-name>
+            <param-value>io.milton.http.http11.auth.BasicAuthHandler</param-value>
+        </init-param>      
+    </filter>
+
+    <filter-mapping>
+        <filter-name>MiltonFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class>eu.apenet.commons.listener.APEnetConfigListener</listener-class>
+    </listener> 
+    <listener>
+        <listener-class>eu.archivesportaleurope.persistence.jpa.web.JpaListener</listener-class>
+    </listener>
+    <security-constraint>
+        <display-name>SSL Is Required</display-name>
+        <web-resource-collection>
+            <web-resource-name>Match All - SSL Is Required</web-resource-name>
+            <description/>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+
+        <user-data-constraint>
+            <description>SSL is required</description>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>    
+    <resource-env-ref>
+        <resource-env-ref-name>jdbc/APEnetDatabaseDashboard</resource-env-ref-name>
+        <resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+    </resource-env-ref>
+    <context-param>
+        <param-name>APENET_DATASOURCE_VALUE</param-name>
+        <param-value>jdbc/APEnetDatabaseDashboard</param-value>
+    </context-param>           
+</web-app>
