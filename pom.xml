@@ -149,6 +149,7 @@
 		<module>stopwords</module>
 		<module>database-mock</module>
 		<module>PortugalHarvesterConverter</module>
+		<module>files</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
