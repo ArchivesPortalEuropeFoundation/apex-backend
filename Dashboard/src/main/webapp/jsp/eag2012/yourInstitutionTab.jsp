@@ -102,7 +102,7 @@
 				<!--  <textarea id="textYINameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutformEscaped}');">${loader.autform}</textarea>-->
 			</td>
 			<td>
-				<label class="language" for="selectYINOTISelectLanguage"><s:property value="getText('eag2012.commons.selectLanguage')"/>*:</label>
+				<label class="language" for="selectYINOTISelectLanguage"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			  	<select id="selectYINOTISelectLanguage" onchange="nameOfInstitutionLanguageChanged();" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.autformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
