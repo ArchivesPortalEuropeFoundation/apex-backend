@@ -39,7 +39,7 @@ public class HarvesterDaemon {
             if(HarvesterDaemon.processOnceADay) {
                 Calendar currentDate = GregorianCalendar.getInstance();
         	    int currentTimeInSeconds = convertToSeconds(currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), currentDate.get(Calendar.SECOND));
-        	    int startTime = convertToSeconds(20,0,0);
+        	    int startTime = convertToSeconds(22,0,0);
         	    int intDelayInSeconds = calculateDelaySeconds(currentTimeInSeconds, startTime);
         	    LOGGER.info("Daily harvesting started. Next harvester task will be started at " + convertNumberToDuration(startTime) + ", so task have to wait " + convertNumberToDuration(intDelayInSeconds));
                 scheduler.scheduleAtFixedRate(new HarvesterTask(scheduler,DAILY_HARVESTING_DURATION), intDelayInSeconds, DAY_IN_SECONDS, TimeUnit.SECONDS);
