@@ -55,8 +55,6 @@ public class MaintenanceDaemon {
 		maintentanceDate.set(GregorianCalendar.HOUR_OF_DAY,2);
 		maintentanceDate.set(GregorianCalendar.MINUTE,0);
 		maintentanceDate.set(GregorianCalendar.SECOND,0);
-
-		System.out.println(currentDate.getTime() + " -> " + maintentanceDate.getTime());
 		long timeToWait = maintentanceDate.getTimeInMillis() -currentDate.getTimeInMillis();
 		return (int) (timeToWait / 1000);
 	}
