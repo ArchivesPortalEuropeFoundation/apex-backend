@@ -117,10 +117,10 @@ public abstract class AbstractSolrServerHolder {
 				query.set("spellcheck", "on");
 				query.set("spellcheck.build", "true");
 				query.set("spellcheck.count", "0");
-				solrServer.setConnectionTimeout(HTTP_LONG_TIMEOUT);
-				solrServer.setSoTimeout(HTTP_LONG_TIMEOUT);				
+				solrServer.setConnectionTimeout(INFINITY_TIMEOUT);
+				solrServer.setSoTimeout(INFINITY_TIMEOUT);				
 				solrServer.query(query);
-				LOGGER.info("rebuild spellchecker of " + getSolrUrl() + ": " + (System.currentTimeMillis() - startTime) + "ms");
+				LOGGER.info("rebuild spellchecker: " + (System.currentTimeMillis() - startTime) + "ms");
 				return System.currentTimeMillis() - startTime;
 		} else {
 			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
