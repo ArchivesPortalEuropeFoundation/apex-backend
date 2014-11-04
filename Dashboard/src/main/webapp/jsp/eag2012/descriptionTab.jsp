@@ -541,9 +541,6 @@
 					</td>
 				</tr>
 				<tr>
-    				<td class="orangeLine" colspan="4"></td>
-				</tr>
-				<tr>
 					<td colspan="4">
 						<s:property value="getText('eag2012.description.yearsOfTheHoldings')" />
 					</td>
@@ -626,9 +623,6 @@
 					</td>
 				</tr>
 				<tr>
-    				<td class="orangeLine" colspan="4"></td>
-				</tr>
-				<tr>
 					<td id="tdExtent">
 						<label for="textExtent"><s:property value="getText('eag2012.description.extent')" />:</label>
 					</td>
@@ -648,7 +642,6 @@
 					</td>
 					<td colspan="2"></td>
 				</tr>
-
 				<tr>
 					<td id="tdButtonsDescriptionTab" colspan="4">
 						<s:if test="%{#counter == 0}">

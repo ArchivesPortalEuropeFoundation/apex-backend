@@ -338,7 +338,7 @@ p.fieldRequired {
 	width: 200px;
 }
 
-#selectTypeOfTheInstitution option {
+#selectTypeOfTheInstitution option, #textYISelectParallelNameOfTheInstitution option {
 	width: 610px;
 }
 

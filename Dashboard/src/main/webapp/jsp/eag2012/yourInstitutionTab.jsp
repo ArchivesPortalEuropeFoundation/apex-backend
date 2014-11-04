@@ -130,7 +130,7 @@
 			<td>
 				<label for="textYISelectParallelNameOfTheInstitution"><s:property value="getText('eag2012.identity.selectType')" />:</label>
 			</td>
-			<td colspan="2">
+			<td class="textContact" colspan="2">
 				<select id="textYISelectParallelNameOfTheInstitution" size="4" multiple="multiple" class="selectControlTab" onclick="selectTypeOfInstitutionOptionsIntoIdTab()">
 					<s:iterator value="typeOfInstitutionList" var="type"> 
 						<option value="<s:property value="#type.key" />"

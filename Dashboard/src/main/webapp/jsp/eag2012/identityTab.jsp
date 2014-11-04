@@ -116,9 +116,6 @@
 							<td>
 							</td>
 						</tr>
-						<tr>
-							<td class="orangeLine" colspan="4"></td>
-						</tr>
 					</table>
 				
 				

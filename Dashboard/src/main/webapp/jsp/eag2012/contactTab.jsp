@@ -219,9 +219,6 @@
 						<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("eag2012.commons.addVisitorTranslationAddress")' />" onclick="contactAddVisitorsAddressTranslation('<s:property value="getText('eag2012.commons.pleaseFillDataAddress')" />');" />
 					</td>
 				</tr>
-		 		<tr id="orangeLineContactVisitorsAddressTranslation">
-					<td class="orangeLine" colspan="4"></td>
-				</tr> 
 				<s:set var="numberOfPostalAddress" value="loader.contactNumberOfPostalAddress[#counter]"/>
 				<s:if test="%{#numberOfPostalAddress.size() > 0}">
 					<s:set var="internalCounter" value="0"/>
@@ -770,16 +767,10 @@
 				<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("eag2012.commons.addVisitorTranslationAddress")' />" onclick="contactAddVisitorsAddressTranslation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
-	 	<tr id="orangeLineContactVisitorsAddressTranslation">
-			<td class="orangeLine" colspan="4"></td>
-		</tr> 
 		<tr id="trButtonContactAddPostalAddressIfDifferent">
 			<td colspan="4">
 				<input type="button" id="buttonContactAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>','<s:property value="getText('eag2012.commons.pleaseFillDataAddress')"/>');" />
 			</td>
-		</tr>
-		<tr id="#orangeLineContactAddPostalAddressIfDifferent">
-			<td class="orangeLine" colspan="4"></td>
 		</tr>
 		<tr id="trButtonContacPostalAddressTranslation" style="display:none;">
 			<td colspan="2">

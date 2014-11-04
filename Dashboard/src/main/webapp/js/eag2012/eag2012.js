@@ -2899,7 +2899,6 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	}
     
 	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
-	$("table#contactTable"+currentTab+" tr#orangeLineContactAddPostalAddressIfDifferent").hide();
 	$("table#contactTable"+currentTab+" tr#trButtonContactAddPostalAddressIfDifferent").after('<tr><td colspan="4"><table id="contactTablePostalAddress_1">'+
 		'<tr id="trContactPostalAddressLabel">'+
 			'<td id="postalAddressLabel" colspan="4">'+property1+
@@ -2926,7 +2925,6 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 
 	$("table#contactTable"+currentTab+" tr#trButtonContacPostalAddressTranslation").show();
 	$("table#contactTable"+currentTab+" tr#orangeLineContacPostalAddressTranslation").show();
-	$("table#contactTable"+currentTab+" tr#orangeLineContactVisitorsAddressTranslation").hide();
 	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress").attr("value","none");
 	if(!control && currentTab == "_1"){
 		control=true;
