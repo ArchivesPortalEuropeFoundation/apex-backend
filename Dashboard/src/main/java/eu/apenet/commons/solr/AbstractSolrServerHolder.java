@@ -14,6 +14,7 @@ import eu.apenet.dashboard.utils.PropertiesUtil;
 
 public abstract class AbstractSolrServerHolder {
 
+	private static final int INFINITY_TIMEOUT = 0;
 	private final static Logger LOGGER = Logger.getLogger(AbstractSolrServerHolder.class);
 	private final static Integer HTTP_TIMEOUT = PropertiesUtil.getInt(PropertiesKeys.APE_SOLR_HTTP_TIMEOUT);
 	private final static Integer HTTP_LONG_TIMEOUT = PropertiesUtil.getInt(PropertiesKeys.APE_SOLR_HTTP_LONG_TIMEOUT);
@@ -58,6 +59,24 @@ public abstract class AbstractSolrServerHolder {
 			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
 		}
 	}
+	
+	public long optimize() throws SolrServerException {
+		if (isAvailable()) {
+			try {
+				long startTime = System.currentTimeMillis();
+				solrServer.setConnectionTimeout(INFINITY_TIMEOUT);
+				solrServer.setSoTimeout(INFINITY_TIMEOUT);		
+				solrServer.optimize(true, true);
+				LOGGER.info("optimize: " + (System.currentTimeMillis() - startTime) + "ms");
+				return System.currentTimeMillis() - startTime;
+			} catch (IOException e) {
+				throw new SolrServerException("Could not optimize", e);
+			}
+		} else {
+			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
+		}
+	}
+	
 
 	public long hardCommit() throws SolrServerException {
 		if (isAvailable()) {
