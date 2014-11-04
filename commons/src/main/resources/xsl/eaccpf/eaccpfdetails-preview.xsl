@@ -4177,6 +4177,11 @@
 									<xsl:apply-templates select="." mode="other"/> 
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</p>
 					</xsl:when>
 					<xsl:when test="$searchTerms != '' and (fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))
@@ -4201,6 +4206,11 @@
 									<xsl:apply-templates select="." mode="other"/> 
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</p>
 					</xsl:when>
 					<xsl:otherwise/>
@@ -4375,6 +4385,11 @@
 									<xsl:apply-templates select="." mode="other"/>
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>	
@@ -4391,6 +4406,11 @@
 									<xsl:apply-templates select="." mode="other"/>
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
@@ -4400,15 +4420,20 @@
 					<xsl:for-each select="$list[@xml:lang != $langNode or not(@xml:lang)][fn:contains(fn:upper-case(text()),fn:upper-case($searchTerms))]">
 						<xsl:if test="position()=1 and $langNode!='notLang'"> 
 							<xsl:choose>
-							<xsl:when test="@vocabularySource">
-								<xsl:call-template name="vocabularySource">
-									<xsl:with-param name="node" select="."/>
-								</xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:apply-templates select="." mode="other"/>
-							</xsl:otherwise>
-						</xsl:choose>
+								<xsl:when test="@vocabularySource">
+									<xsl:call-template name="vocabularySource">
+										<xsl:with-param name="node" select="."/>
+									</xsl:call-template>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="other"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>

@@ -4433,6 +4433,11 @@
 							<xsl:apply-templates select="." mode="other"/> 
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:if test="@countryCode">
+						<xsl:call-template name="countryName">
+							<xsl:with-param name="countryCode" select="./@countryCode"/>
+	   			        </xsl:call-template>
+   			        </xsl:if>
 				</p>	
 			</xsl:for-each>
 			<div class="linkMore">
@@ -4529,6 +4534,11 @@
 									<xsl:apply-templates select="." mode="other"/> 
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</p>
 					</xsl:when>
 					<xsl:when test="$searchTerms != '' and (fn:contains(fn:upper-case(./text()),fn:upper-case($searchTerms))
@@ -4553,6 +4563,11 @@
 									<xsl:apply-templates select="." mode="other"/> 
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</p>
 					</xsl:when>
 					<xsl:otherwise/>
@@ -4943,7 +4958,12 @@
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/> 
 									</xsl:otherwise>
-								</xsl:choose>	
+								</xsl:choose>
+								<xsl:if test="@countryCode">
+									<xsl:call-template name="countryName">
+										<xsl:with-param name="countryCode" select="./@countryCode"/>
+				   			        </xsl:call-template>
+			   			        </xsl:if>	
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:when>
@@ -4959,7 +4979,12 @@
 									<xsl:otherwise>
 										<xsl:apply-templates select="." mode="other"/> 
 									</xsl:otherwise>
-								</xsl:choose>	
+								</xsl:choose>
+								<xsl:if test="@countryCode">
+									<xsl:call-template name="countryName">
+										<xsl:with-param name="countryCode" select="./@countryCode"/>
+				   			        </xsl:call-template>
+			   			        </xsl:if>	
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:when>
@@ -4976,6 +5001,11 @@
 									 <xsl:apply-templates select="." mode="other"/> 
 									</xsl:otherwise>
 								</xsl:choose>
+								<xsl:if test="@countryCode">
+									<xsl:call-template name="countryName">
+										<xsl:with-param name="countryCode" select="./@countryCode"/>
+				   			        </xsl:call-template>
+			   			        </xsl:if>
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:when>
@@ -4992,6 +5022,11 @@
 										 <xsl:apply-templates select="." mode="other"/> 
 										</xsl:otherwise>
 									</xsl:choose>
+									<xsl:if test="@countryCode">
+										<xsl:call-template name="countryName">
+											<xsl:with-param name="countryCode" select="./@countryCode"/>
+					   			        </xsl:call-template>
+				   			        </xsl:if>
 							  	 </xsl:if>
 						   	</xsl:for-each> 
 						</xsl:when>
@@ -5012,6 +5047,11 @@
 												 <xsl:apply-templates select="$currentText" mode="other"/> 
 												</xsl:otherwise>
 											</xsl:choose>
+											<xsl:if test="@countryCode">
+												<xsl:call-template name="countryName">
+													<xsl:with-param name="countryCode" select="./@countryCode"/>
+							   			        </xsl:call-template>
+						   			        </xsl:if>
 										</xsl:if>
 									</xsl:if>
 						</xsl:for-each>
@@ -5030,6 +5070,11 @@
 						 <xsl:apply-templates select="." mode="other"/> 
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:if test="@countryCode">
+						<xsl:call-template name="countryName">
+							<xsl:with-param name="countryCode" select="./@countryCode"/>
+	   			        </xsl:call-template>
+   			        </xsl:if>
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -5052,11 +5097,16 @@
 						<xsl:apply-templates select="." mode="other"/>
 					</xsl:otherwise>
 				</xsl:choose>
+				<xsl:if test="@countryCode">
+					<xsl:call-template name="countryName">
+						<xsl:with-param name="countryCode" select="./@countryCode"/>
+   			        </xsl:call-template>
+		        </xsl:if>
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 	
-	<!-- Template that will show the information in biogHist placeEntry (only first)-->
+	<!-- Template that will show the information in placeEntry (only first)-->
 	<xsl:template name="showDetailsPlaceEntry">
 		<xsl:param name="list"/>
 		<xsl:param name="langNode"/>
@@ -5075,6 +5125,11 @@
 									<xsl:apply-templates select="." mode="other"/>
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>	
@@ -5091,6 +5146,11 @@
 									<xsl:apply-templates select="." mode="other"/>
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="@countryCode">
+								<xsl:call-template name="countryName">
+									<xsl:with-param name="countryCode" select="./@countryCode"/>
+			   			        </xsl:call-template>
+		   			        </xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
@@ -5109,6 +5169,11 @@
 								<xsl:apply-templates select="." mode="other"/>
 							</xsl:otherwise>
 						</xsl:choose>
+						<xsl:if test="@countryCode">
+							<xsl:call-template name="countryName">
+								<xsl:with-param name="countryCode" select="./@countryCode"/>
+		   			        </xsl:call-template>
+	   			        </xsl:if>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
