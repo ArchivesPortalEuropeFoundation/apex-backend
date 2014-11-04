@@ -40,6 +40,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 				MaintenanceTask maintenanceTask = new MaintenanceTask();
 				maintenanceTask.start();
 			}
+            MaintenanceDaemon.start();
 			if (apeConfig.isDefaultQueueProcessing()){
 				QueueDaemon.start();
 			}
@@ -48,6 +49,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
             } else {
                 HarvesterDaemon.start(false);
             }
+
 		} catch (RuntimeException e) {
 			log.fatal("Fatal error while initializing: " + e.getMessage(), e);
 			throw e;
