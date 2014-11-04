@@ -180,6 +180,21 @@ public class ManageQueueAction extends AbstractAction {
 		return SUCCESS;
 	}
 
+	public String solrOptimize() throws Exception {
+		try {
+			LOGGER.info("Start optimize solr cores");
+			EacCpfSolrServerHolder.getInstance().optimize();
+			LOGGER.info("EAC-CPF optimize finished");
+			EagSolrServerHolder.getInstance().optimize();
+			LOGGER.info("EAG optimize finished");
+			EadSolrServerHolder.getInstance().optimize();
+			LOGGER.info("EAD optimize finished");
+		} catch (Exception de) {
+			LOGGER.error(de.getMessage(), de);
+		}
+		return SUCCESS;
+	}
+	
 	public String republishAllEagFiles(){
 		
 			EagSolrPublisher publisher = new EagSolrPublisher();
