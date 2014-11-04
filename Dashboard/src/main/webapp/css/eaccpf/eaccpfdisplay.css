@@ -229,8 +229,8 @@ p {
     background-repeat: no-repeat;
 }
 #eaccpfcontent{
-	-ms-word-break: break-all;
-	word-break: break-all;
+	-ms-word-wrap: break-word;
+	word-wrap:break-word;
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;
 	hyphens: auto;
@@ -239,8 +239,8 @@ p {
     list-style-type: none;
     margin: 0;
     padding: 0 0 0 5px;
-    -ms-word-break: break-all;
-	word-break: break-all;
+	-ms-word-wrap: break-word;
+	word-wrap:break-word;
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;
 	hyphens: auto;
