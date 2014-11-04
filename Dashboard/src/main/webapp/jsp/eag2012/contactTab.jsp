@@ -303,7 +303,7 @@
 							<input type="button" id="buttonContactAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>','<s:property value="getText('eag2012.commons.pleaseFillDataAddress')"/>');" />
 						</td>
 					</tr>
-					<tr id="orangeLineContactAddPostalAddressIfDifferent">
+					<tr id="orangeLineContactAddPostalAddressIfDifferent" style="display:none;">
 			         	<td class="orangeLine" colspan="4"></td>
 					</tr>
 					<tr id="trButtonContacPostalAddressTranslation" style="display:none;">
@@ -313,7 +313,7 @@
 						<td colspan="2">
 						</td>
 					</tr>
-			  		<tr id="orangeLineContacPostalAddressTranslation" style="display:none;">
+			  		<tr id="orangeLineContacPostalAddressTranslation">
 			         	<td class="orangeLine" colspan="4"></td>
 					</tr>
 				</s:else>
@@ -779,7 +779,7 @@
 			<td colspan="2">
 			</td>
 		</tr>
-	 	<tr id="orangeLineContacPostalAddressTranslation" style="display:none;">
+	 	<tr id="orangeLineContacPostalAddressTranslation">
          	<td class="orangeLine" colspan="4"></td>
 		</tr> 
 		
