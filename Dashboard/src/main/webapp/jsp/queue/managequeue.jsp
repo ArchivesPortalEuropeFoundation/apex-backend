@@ -74,6 +74,9 @@
 		<s:submit value="Force Solr commit"></s:submit>
 	</s:form>
 	<c:if test="${not queueActive}">
+		<s:form action="solrOptimize" theme="simple" method="post">
+			<s:submit value="Solr optimize"></s:submit>
+		</s:form>		
 		<s:form action="republishAllEagFiles" theme="simple" method="post">
 			<s:submit value="Republish all EAG files"></s:submit>
 		</s:form>	
