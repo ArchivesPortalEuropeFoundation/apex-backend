@@ -24,7 +24,7 @@ public class MaintenanceDaemon {
 			scheduler = Executors.newScheduledThreadPool(1);
 			LOGGER.info("Maintenance daemon started");
 			LOGGER.info("-----------------------------");
-			int delaySeconds = 1;
+			int delaySeconds = calculateSeconds();
 			LOGGER.info("Weekly maintenance started. Next maintenance task after " + convertNumberToDuration(delaySeconds));
 			scheduler.schedule(new SolrMaintenanceTask(scheduler), delaySeconds,
 					 TimeUnit.SECONDS);
