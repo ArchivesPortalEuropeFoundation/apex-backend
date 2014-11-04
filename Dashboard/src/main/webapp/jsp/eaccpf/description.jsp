@@ -731,9 +731,9 @@
         <s:iterator var="current" value="loader.genealogies" status="status">
             <table id="genealogyContent_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <td><label for="genealogyDescription"><s:property value="getText('eaccpf.description.description')" /></label></td>
+                    <td><label for="genealogyDescription"><s:property value="getText('eaccpf.description.description')" />:</label></td>
                     <td rowspan="3"><textarea id="genealogyDescription" name="genealogyDescription_<s:property value="#status.index + 1" />"><s:property value="#current.paragraph" /></textarea></td>
-                    <td><label for="genealogyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
+                    <td><label for="genealogyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" />:</label></td>
                     <td>
                         <select id="genealogyLanguage" name="genealogyLanguage_<s:property value="#status.index + 1" />" >
                             <s:iterator value="languages" var="language">
@@ -748,9 +748,9 @@
     <s:else>
         <table id="genealogyContent_1" class="tablePadding">
             <tr>
-                <td><label for="genealogyDescription"><s:property value="getText('eaccpf.description.description')" /></label></td>
+                <td><label for="genealogyDescription"><s:property value="getText('eaccpf.description.description')" />:</label></td>
                 <td rowspan="3"><textarea id="genealogyDescription" name="genealogyDescription_1"></textarea></td>
-                <td><label for="genealogyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
+                <td><label for="genealogyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" />:</label></td>
                 <td>
                     <select id="genealogyLanguage" name="genealogyLanguage_1" >
                         <s:iterator value="languages" var="language">
@@ -775,9 +775,9 @@
         <s:iterator var="current" value="loader.biographies" status="status">
             <table id="biographyContent_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <td><label for="biographyDescription"><s:property value="getText('eaccpf.description.description')" /></label></td>
+                    <td><label for="biographyDescription"><s:property value="getText('eaccpf.description.description')" />:</label></td>
                     <td rowspan="3"><textarea id="biographyDescription" name="biographyDescription_<s:property value="#status.index + 1" />"><s:property value="#current.paragraph" /></textarea></td>
-                    <td><label for="biographyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
+                    <td><label for="biographyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" />:</label></td>
                     <td>
                         <select id="biographyLanguage" name="biographyLanguage_<s:property value="#status.index + 1" />" >
                             <s:iterator value="languages" var="language">
@@ -792,9 +792,9 @@
     <s:else>
         <table id="biographyContent_1" class="tablePadding">
             <tr>
-                <td><label for="biographyDescription"><s:property value="getText('eaccpf.description.description')" /></label></td>
+                <td><label for="biographyDescription"><s:property value="getText('eaccpf.description.description')" />:</label></td>
                 <td rowspan="3"><textarea id="biographyDescription" name="biographyDescription_1"></textarea></td>
-                <td><label for="biographyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" /></label></td>
+                <td><label for="biographyLanguage"><s:property value="getText('eaccpf.description.selectlanguage')" />:</label></td>
                 <td>
                     <select id="biographyLanguage" name="biographyLanguage_1" >
                         <s:iterator value="languages" var="language">
