@@ -12,6 +12,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
+import eu.apenet.commons.solr.SolrUtil;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
@@ -167,19 +168,22 @@ public class ManageQueueAction extends AbstractAction {
 
 	public String forceSolrCommit() throws Exception {
 		try {
-			LOGGER.info("Start hard commit solr cores");
-			EacCpfSolrServerHolder.getInstance().hardCommit();
-			LOGGER.info("EAC-CPF hard commit finished");
-			EagSolrServerHolder.getInstance().hardCommit();
-			LOGGER.info("EAG hard commit finished");
-			EadSolrServerHolder.getInstance().hardCommit();
-			LOGGER.info("EAD hard commit finished");
+			SolrUtil.forceSolrCommit();
 		} catch (Exception de) {
 			LOGGER.error(de.getMessage(), de);
 		}
 		return SUCCESS;
 	}
 
+	public String solrOptimize() throws Exception {
+		try {
+			SolrUtil.solrOptimize();
+		} catch (Exception de) {
+			LOGGER.error(de.getMessage(), de);
+		}
+		return SUCCESS;
+	}
+	
 	public String republishAllEagFiles(){
 		
 			EagSolrPublisher publisher = new EagSolrPublisher();
