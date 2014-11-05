@@ -49,4 +49,8 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	
 	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid);
 	public CLevel getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Long id);
+	public CLevel getTopCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Integer orderId );
+	public Long getTopCLevelId(String repositoryCode, Class<? extends Ead> clazz, String eadid, Integer orderId );
+	public Long getChildCLevelId(Long parentId, Integer orderId);
+	public CLevel getChildCLevel(Long parentId, Integer orderId);
 }
