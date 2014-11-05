@@ -62,9 +62,12 @@ public abstract class AbstractResource implements CopyableResource, DeletableRes
 
 	@Override
 	public final boolean authorise(Request request, Method method, Auth auth) {
-		logger.info(auth.getUser() + " " + method + " " + request.getAbsolutePath());
-		 if (auth != null && auth.getTag() != null) {
+		
+		if (auth != null && auth.getTag() != null) {
+			logger.info(auth.getUser() + " " + method + " " + request.getAbsolutePath());
 			return true;
+		}else {
+			logger.info("anonymous " + method + " " + request.getAbsolutePath());
 		}
 		return false;
 	}
