@@ -34,6 +34,8 @@ public class EacCpfPublishDataFiller {
 	private static final String DATE_UNKNOWN_START = "unknownStart";
 	private static final String DATE_UNKNOWN_END = "unknownEnd";
 	private static final String DATE_UNKNOWN = "unknown";
+	private static final String[] PERSON_PARTS = new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"};
+	private static final String[] OTHER_PARTS = new String[] {"part","part@corpname", "part@famname", "part@persname", "part@patronymic", "part@legalform"};
 	/*
 	 * unitids
 	 */
@@ -270,9 +272,9 @@ public class EacCpfPublishDataFiller {
 		if (namesHandler.getResults().size() > 0){
 			List<String> names = new ArrayList<String>();
 			for (Map<String, List<String>> tempResults: namesHandler.getResults()){
-				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
+				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, PERSON_PARTS,", ");
 				if (StringUtils.isBlank(name)){
-					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part"}, ", ");
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, OTHER_PARTS, ", ");
 				}
 				names.add(name);
 			}
@@ -280,15 +282,15 @@ public class EacCpfPublishDataFiller {
 		}else if (namesParallelHandler.getResults().size() > 0){
 			List<String> names = new ArrayList<String>();
 			for (Map<String, List<String>> tempResults: namesParallelHandler.getResults()){
-				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part@surname","part@birthname", "part@prefix", "part@firstname", "part@suffix", "part@title", "part@alias"},", ");
+				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, PERSON_PARTS,", ");
 				if (StringUtils.isBlank(name)){
-					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, new String[] {"part"},  ", ");
+					name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, OTHER_PARTS,  ", ");
 				}
 				names.add(name);
 			}
 			publishData.setNames(names);			
 		}
-		
+
 
 		publishData.setPlaces(strip(placesHandler.getResultSet()));
 		publishData.setFunctions(strip(functionsHandler.getResultSet()));
