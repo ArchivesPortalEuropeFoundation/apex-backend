@@ -1,11 +1,13 @@
 package eu.archivesportaleurope.webdav;
 
 import io.milton.http.Auth;
+import io.milton.http.FileItem;
 import io.milton.http.LockToken;
 import io.milton.http.Range;
 import io.milton.http.Request;
-import io.milton.resource.GetableResource;
-import io.milton.resource.PropFindableResource;
+import io.milton.http.exceptions.BadRequestException;
+import io.milton.http.exceptions.ConflictException;
+import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.resource.Resource;
 
 import java.io.BufferedInputStream;
@@ -16,7 +18,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Map;
 
-public class FileResource extends AbstractResource implements GetableResource, PropFindableResource {
+public class FileResource extends AbstractResource implements io.milton.resource.FileResource {
 
 	public FileResource(File file, String url) {
 		super(file, url);
@@ -82,6 +84,12 @@ public class FileResource extends AbstractResource implements GetableResource, P
 	public Date getCreateDate() {
 		// TODO Auto-generated method stub
 		return new Date(getFile().lastModified());
+	}
+
+	@Override
+	public String processForm(Map<String, String> parameters, Map<String, FileItem> files) throws BadRequestException,
+			NotAuthorizedException, ConflictException {
+		throw new NotAuthorizedException();
 	}
 
 }

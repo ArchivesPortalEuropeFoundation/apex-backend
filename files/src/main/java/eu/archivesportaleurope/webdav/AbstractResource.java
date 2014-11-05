@@ -5,9 +5,14 @@ import io.milton.http.Range;
 import io.milton.http.Request;
 import io.milton.http.Request.Method;
 import io.milton.http.exceptions.BadRequestException;
+import io.milton.http.exceptions.ConflictException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.http.exceptions.NotFoundException;
+import io.milton.resource.CollectionResource;
+import io.milton.resource.CopyableResource;
+import io.milton.resource.DeletableResource;
 import io.milton.resource.GetableResource;
+import io.milton.resource.MoveableResource;
 import io.milton.resource.PropFindableResource;
 import io.milton.servlet.MiltonServlet;
 
@@ -26,7 +31,7 @@ import eu.archivesportaleurope.webdav.security.SecurityContext;
 import eu.archivesportaleurope.webdav.security.SecurityService;
 import eu.archivesportaleurope.webdav.security.SecurityService.LoginResult;
 
-public abstract class AbstractResource implements PropFindableResource, GetableResource {
+public abstract class AbstractResource implements CopyableResource, DeletableResource, GetableResource, MoveableResource,  PropFindableResource{
 	protected final Logger logger = Logger.getLogger(this.getClass());
 
 	private File file;
@@ -57,8 +62,8 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 
 	@Override
 	public final boolean authorise(Request request, Method method, Auth auth) {
+		logger.info(auth.getUser() + " " + method + " " + request.getAbsolutePath());
 		 if (auth != null && auth.getTag() != null) {
-			logger.info(auth.getUser() + " " + method);
 			return true;
 		}
 		return false;
@@ -122,17 +127,6 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 		return false;
 	}
 
-//	@Override
-//	public final void sendContent(OutputStream out, Range range, Map<String, String> params, String contentType)
-//			throws IOException, NotAuthorizedException, BadRequestException, NotFoundException {
-//		if (acceptRead(getFile())) {
-//			sendContentInternal(out, range, params, contentType);
-//		} else {
-//			throw new NotFoundException("not found");
-//		}
-//
-//	}
-
 	@Override
 	public void sendContent(OutputStream out, Range range, Map<String, String> params, String contentType)
 			throws IOException, io.milton.http.exceptions.NotAuthorizedException, BadRequestException,
@@ -147,5 +141,26 @@ public abstract class AbstractResource implements PropFindableResource, GetableR
 
 	protected abstract void sendContentInternal(OutputStream out, Range range, Map<String, String> params,
 			String contentType) throws IOException, NotAuthorizedException, BadRequestException, NotFoundException;
+
+	@Override
+	public void delete() throws NotAuthorizedException{
+		throw new NotAuthorizedException();
+	}
+
+	@Override
+	public void moveTo(CollectionResource rDest, String name) throws ConflictException, NotAuthorizedException,
+			BadRequestException {
+		throw new NotAuthorizedException();
+		
+	}
+
+	@Override
+	public void copyTo(CollectionResource toCollection, String name) throws NotAuthorizedException,
+			BadRequestException, ConflictException {
+		throw new NotAuthorizedException();
+		
+	}
+	
+	
 
 }

@@ -4,16 +4,17 @@ import io.milton.http.Auth;
 import io.milton.http.Range;
 import io.milton.http.Request;
 import io.milton.http.exceptions.BadRequestException;
+import io.milton.http.exceptions.ConflictException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.http.exceptions.NotFoundException;
 import io.milton.resource.CollectionResource;
-import io.milton.resource.GetableResource;
-import io.milton.resource.PropFindableResource;
+import io.milton.resource.FolderResource;
 import io.milton.resource.Resource;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -27,8 +28,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
-public class DirectoryResource extends AbstractResource implements PropFindableResource, CollectionResource,
-		GetableResource {
+public class DirectoryResource extends AbstractResource implements FolderResource	 {
 
 	private File[] childs = null;
 	private String name;
@@ -185,4 +185,15 @@ public class DirectoryResource extends AbstractResource implements PropFindableR
 		}
 		return childs;
 	}
+	@Override
+	public Resource createNew(String newName, InputStream inputStream, Long length, String contentType)
+			throws IOException, ConflictException, NotAuthorizedException, BadRequestException {
+		throw new NotAuthorizedException();
+	}
+	@Override
+	public CollectionResource createCollection(String newName) throws NotAuthorizedException, ConflictException,
+			BadRequestException {
+		throw new NotAuthorizedException();
+	}
+
 }
