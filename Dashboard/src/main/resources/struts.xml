@@ -1079,23 +1079,40 @@
             <result name="success" type="tiles">automaticharvestingcreation</result>
             <result name="error" type="tiles">error</result>
         </action>
-        <action name="ingestionprofiles" class="eu.apenet.dashboard.manual.IngestionprofilesAction" method="input">
+        <action name="ingestionprofiles" class="eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction" method="input">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">ingestionprofilesMain</result>
         </action>
-        <action name="addIngestionprofile" class="eu.apenet.dashboard.manual.IngestionprofilesAction" method="addIngestionprofile">
+        <action name="addIngestionprofile" class="eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction" method="addIngestionprofile">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">ingestionprofilesMain</result>
         </action>
-        <action name="storeIngestionprofile" class="eu.apenet.dashboard.manual.IngestionprofilesAction">
+        <action name="storeIngestionprofile" class="eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="redirectAction">
                 <param name="actionName">ingestionprofiles</param>
             </result>
         </action>
-        <action name="cancelIngestionprofileEditing" class="eu.apenet.dashboard.manual.IngestionprofilesAction" method="cancel">
+        <action name="cancelIngestionprofileEditing" class="eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction" method="cancel">
             <result name="success" type="redirectAction">
                 <param name="actionName">dashboardHome</param>
+            </result>
+        </action>
+
+		<!-- Action to display the list of applicable profiles. -->
+        <action name="displayProfile" class="eu.apenet.dashboard.manual.ingestionprofile.ApplyProfileAction" method="input">
+            <result name="success" type="tiles">content.profiles</result>
+            <result name="none" type="tiles">content.profiles</result>
+            <result name="error" type="tiles">content.profiles.error</result>
+        </action>
+
+		<!-- Action to process the selected items with the selected profile. -->
+        <action name="applyProfile" class="eu.apenet.dashboard.manual.ingestionprofile.ApplyProfileAction">
+            <result name="success" type="redirectAction">
+                <param name="actionName">contentmanager</param>
+            </result>
+            <result name="error" type="redirectAction">
+                <param name="actionName">contentmanager</param>
             </result>
         </action>
 

@@ -207,6 +207,49 @@
     vertical-align: baseline;
 }
 
+.applyProfileMainButton {
+    font-family: "Arial",sans-serif;
+    font-size: 12px;
+
+	background: url("../images/mainbutton.jpg") repeat-x scroll right top #FFFFFF;
+    border: 1px solid #00A0DF;
+    border-radius: 3px 3px 3px 3px;
+    color: #00384D;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: normal;
+    margin: 5px 20px 5px 5px;
+    overflow: visible;
+    padding: 5px;
+    text-shadow: 1px 1px #FFFFFF;
+    vertical-align: baseline;
+    width: auto;
+
+	display: inline;
+	letter-spacing: 0.8px;
+	text-align: center;
+}
+
+.applyProfileOtherButton {
+    font-family: "Arial",sans-serif;
+    font-size: 12px;
+
+	background: url("../images/otherbutton.gif") repeat-x scroll right top #ffffff;
+    border: 1px solid #00a0df;
+    border-radius: 3px;
+    color: #00384d;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: normal;
+    margin-left: 5px;
+    margin-top: 5px;
+    overflow: visible;
+    padding: 5px;
+    text-shadow: 1px 1px #ffffff;
+    vertical-align: baseline;
+    width: auto;
+}
+
 #ingestionprofiles input {
 	font-family: "Arial",sans-serif;
 	font-size: 12px; 

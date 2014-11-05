@@ -12,5 +12,7 @@ import java.util.List;
  * @author papp
  */
 public interface IngestionprofileDAO extends GenericDAO<Ingestionprofile, Long>{
+    public Ingestionprofile getIngestionprofile(Long id);
     public List<Ingestionprofile> getIngestionprofiles(Integer aiId);
+    public List<Ingestionprofile> getIngestionprofiles(Integer aiId, int fileType);
 }

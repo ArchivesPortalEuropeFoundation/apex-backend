@@ -444,6 +444,21 @@
         <put-list-attribute name="cssfilesInternal"/>
     </definition>
 
+	<!-- Definition for the list of the profiles to inlude. -->
+	<definition name="content.profiles" extends="DefaultLayout">
+		<put-attribute name="title" value="dashboard.applyProfile.title"/>
+		<put-attribute name="body" value="/jsp/contentmanager/selectProfile.jsp"/>
+		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/selectProfile.js"/>
+		</put-list-attribute>
+	</definition>
+
+	<!-- Error page when no select elements to aplly the profile. -->
+	<definition name="content.profiles.error" extends="DefaultLayout">
+		<put-attribute name="title" value="dashboard.applyProfile.title"/>
+		<put-attribute name="body" value="/jsp/contentmanager/errorProfile.jsp"/>
+	</definition>
+
     <definition name="indexEacCpf" extends="webFormEacCpf">
         <put-attribute name="body" value="/jsp/eaccpf/choosetype.jsp" />
         <put-list-attribute name="jsfilesInternal">

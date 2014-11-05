@@ -26,6 +26,10 @@
             <s:text name="content.message.onlysearched" />
             <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
                 id="batchSelectedAction" name="action">
+            	<!-- Option to call the action for apply a profile. -->
+                <option value="displayProfile">
+                    <s:text name="content.message.applyProfile" />
+                </option>
                 <option value="convert_validate_publish">
                     <s:text name="content.message.doitall" />
                 </option>
@@ -262,6 +266,14 @@
 	                                            </option>
                                             </c:if>                                            
                                         </c:if>
+
+                                    	<!-- Option to call the action for apply a profile. -->
+                                        <c:if test="${not eacCpfResult.published and not eacCpfResult.validatedFatalError}">
+	                                        <option value="_self|displayProfile.action">
+	                                            <s:text name="content.message.applyProfile" />
+	                                        </option>
+	                                    </c:if>
+
                                         <c:if test="${eacCpfResult.published}">
                                             <option value="action|unpublish">
                                                 <s:text name="content.message.unpublish" />

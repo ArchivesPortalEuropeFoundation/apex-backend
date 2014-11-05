@@ -189,6 +189,11 @@ function performBatchContentAction(type) {
 		window.open(
 				json['action'] + ".action?batchItems=" + json['batchItems'],
 				"_self");
+	} else if (json['action'] == "displayProfile") {
+		window.open(
+				json['action'] + ".action?batchItems=" + json['batchItems']
+				+ "&xmlTypeId=" + json['xmlTypeId'],
+				"_self");
 	} else {
 		$.post(actionUrl, formData, function(data) {
 			if(data.indexOf("error")>-1){

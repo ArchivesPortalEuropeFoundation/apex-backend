@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apenet.dashboard.manual;
+package eu.apenet.dashboard.manual.ingestionprofile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +14,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.Action;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
@@ -279,6 +281,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         uploadedFileActions.add(new SelectItem("0", getText("ingestionprofiles.upload.nothing")));
         existingFileActions.add(new SelectItem("1", getText("ingestionprofiles.existing.overwrite")));
         existingFileActions.add(new SelectItem("0", getText("ingestionprofiles.existing.keep")));
+        existingFileActions.add(new SelectItem("2", getText("ingestionprofiles.existing.ask")));
         noEadidActions.add(new SelectItem("0", getText("ingestionprofiles.noeadid.remove")));
         noEadidActions.add(new SelectItem("1", getText("ingestionprofiles.noeadid.addLater")));
         daoTypes.add(new SelectItem("1", getText("ingestionprofiles.dao.text")));
@@ -318,6 +321,10 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-f/", getText("ead2ese.content.license.europeana.access.free")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/orphan-work-eu/", this.getText("ead2ese.content.license.europeana.access.orphan")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
+    }
+
+    public String showIngestionProfiles() {
+    	return Action.SUCCESS;
     }
 
     public Set<SelectItem> getIngestionprofiles() {

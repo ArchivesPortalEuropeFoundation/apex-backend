@@ -38,6 +38,10 @@
             <s:text name="content.message.onlysearched" />
             <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
                 id="batchSelectedAction" name="action">
+            	<!-- Option to call the action for apply a profile. -->
+                <option value="displayProfile">
+                    <s:text name="content.message.applyProfile" />
+                </option>
                 <option value="convert_validate_publish">
                     <s:text name="content.message.doitall" />
                 </option>
@@ -328,6 +332,25 @@
                                                 </option>
                                             </c:if>
                                         </c:if>
+
+                                    	<!-- Option to call the action for apply a profile. -->
+                                    	<!-- For finding aids display if is not deliver to Europeana. -->
+                                        <c:if test="${results.findingAid}">
+	                                        <c:if test="${not eadResult.deliveredToEuropeana and not eadResult.validatedFatalError}">
+		                                        <option value="_self|displayProfile.action">
+		                                            <s:text name="content.message.applyProfile" />
+		                                        </option>
+		                                    </c:if>
+	                                    </c:if>
+                                    	<!-- For holdings guides and source guides display if is not published. -->
+                                        <c:if test="${results.holdingsGuide or results.sourceGuide}">
+	                                        <c:if test="${not eadResult.published and not eadResult.validatedFatalError}">
+		                                        <option value="_self|displayProfile.action">
+		                                            <s:text name="content.message.applyProfile" />
+		                                        </option>
+		                                    </c:if>
+                                        </c:if>
+
                                         <c:if test="${eadResult.published}">
                                             <option value="action|unpublish">
                                                 <s:text name="content.message.unpublish" />
