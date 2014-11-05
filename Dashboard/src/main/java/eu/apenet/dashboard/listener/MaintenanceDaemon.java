@@ -1,0 +1,97 @@
+package eu.apenet.dashboard.listener;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.log4j.Logger;
+
+
+public class MaintenanceDaemon {
+	private static final Logger LOGGER = Logger.getLogger(MaintenanceDaemon.class);
+	private static final int MAINTENANCE_DAY = 8;
+	private final static int MINUTE_IN_SECONDS = 60;
+
+	private final static int HOUR_IN_SECONDS = 60 * MINUTE_IN_SECONDS;
+
+	private final static int DAY_IN_SECONDS = 24 * HOUR_IN_SECONDS;
+	private static ScheduledExecutorService scheduler;
+
+	public static synchronized void start() {
+		if (scheduler == null) {
+			scheduler = Executors.newScheduledThreadPool(1);
+			LOGGER.info("Maintenance daemon started");
+			LOGGER.info("-----------------------------");
+			int delaySeconds = calculateSeconds();
+			LOGGER.info("Weekly maintenance started. Next maintenance task after " + convertNumberToDuration(delaySeconds));
+			scheduler.schedule(new SolrMaintenanceTask(scheduler), delaySeconds,
+					 TimeUnit.SECONDS);
+
+			LOGGER.info("-----------------------------");
+		}
+	}
+
+	public static synchronized void stop() {
+		if (MaintenanceDaemon.isActive() && scheduler != null) {
+			scheduler.shutdownNow();
+			scheduler = null;
+			LOGGER.info("Maintenance daemon stopped");
+		}
+	}
+
+	public static boolean isActive() {
+		return scheduler != null;
+	}
+	public static int calculateSeconds(){
+		Calendar currentDate = GregorianCalendar.getInstance();
+		Calendar maintentanceDate = GregorianCalendar.getInstance();
+		int currentDay = maintentanceDate.get(GregorianCalendar.DAY_OF_WEEK);
+		if (MAINTENANCE_DAY == currentDay){
+			maintentanceDate.set(GregorianCalendar.WEEK_OF_YEAR, maintentanceDate.get(GregorianCalendar.WEEK_OF_YEAR)+1);
+		}
+		maintentanceDate.set(GregorianCalendar.DAY_OF_WEEK,MAINTENANCE_DAY);
+		maintentanceDate.set(GregorianCalendar.HOUR_OF_DAY,2);
+		maintentanceDate.set(GregorianCalendar.MINUTE,0);
+		maintentanceDate.set(GregorianCalendar.SECOND,0);
+		long timeToWait = maintentanceDate.getTimeInMillis() -currentDate.getTimeInMillis();
+		return (int) (timeToWait / 1000);
+	}
+
+
+	public static String convertNumberToDuration(int seconds) {
+
+		String result = "";
+		// check if days
+		if (seconds > 0) {
+			int days = seconds / DAY_IN_SECONDS;
+			if (days > 0) {
+				result += days + "D ";
+				seconds = seconds % DAY_IN_SECONDS;
+			}
+			int hours = seconds / HOUR_IN_SECONDS;
+			if (hours > 0) {
+				result += hours + "H ";
+				seconds = seconds % HOUR_IN_SECONDS;
+			} else {
+				result += "00H ";
+			}
+			int minutes = seconds / MINUTE_IN_SECONDS;
+			if (minutes > 0) {
+				result += minutes + "M ";
+				seconds = seconds % MINUTE_IN_SECONDS;
+			} else {
+				result += "00M ";
+			}
+			if (seconds > 0) {
+				result += seconds + "S";
+			} else {
+				result += "00S";
+			}
+		}
+
+		return result;
+
+	}
+}
