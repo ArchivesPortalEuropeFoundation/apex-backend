@@ -17,7 +17,7 @@
 	</appender>
 	<appender name="all" class="eu.archivesportaleurope.commons.logging.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/files-error.log" />
-		<param name="Threshold" value="WARN" />
+		<param name="Threshold" value="ERROR" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %C{1}:%L - %m%n" />
 		</layout>
@@ -28,7 +28,7 @@
 		<appender-ref ref="file" /> 
 	</logger>		
 	<root>
-		<priority value="WARN" />
+		<priority value="ERROR" />
 		<appender-ref ref="all" />
 	</root>
 </log4j:configuration>
