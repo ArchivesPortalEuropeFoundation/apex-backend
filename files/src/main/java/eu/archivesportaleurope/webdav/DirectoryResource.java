@@ -1,6 +1,9 @@
 package eu.archivesportaleurope.webdav;
 
 import io.milton.http.Auth;
+import io.milton.http.LockInfo;
+import io.milton.http.LockTimeout;
+import io.milton.http.LockToken;
 import io.milton.http.Range;
 import io.milton.http.Request;
 import io.milton.http.exceptions.BadRequestException;
@@ -9,6 +12,7 @@ import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.http.exceptions.NotFoundException;
 import io.milton.resource.CollectionResource;
 import io.milton.resource.FolderResource;
+import io.milton.resource.LockingCollectionResource;
 import io.milton.resource.Resource;
 
 import java.io.File;
@@ -28,7 +32,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
-public class DirectoryResource extends AbstractResource implements FolderResource	 {
+public class DirectoryResource extends AbstractResource implements FolderResource, LockingCollectionResource	 {
 
 	private File[] childs = null;
 	private String name;
@@ -193,6 +197,10 @@ public class DirectoryResource extends AbstractResource implements FolderResourc
 	@Override
 	public CollectionResource createCollection(String newName) throws NotAuthorizedException, ConflictException,
 			BadRequestException {
+		throw new NotAuthorizedException();
+	}
+	@Override
+	public LockToken createAndLock(String name, LockTimeout timeout, LockInfo lockInfo) throws NotAuthorizedException {
 		throw new NotAuthorizedException();
 	}
 
