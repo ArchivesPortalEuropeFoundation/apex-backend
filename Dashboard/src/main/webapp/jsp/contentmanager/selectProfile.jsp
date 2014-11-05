@@ -47,7 +47,7 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<s:submit action="contentmanager" key="dashboard.editead.btn.cancelandquit" cssClass="applyProfileMainButton" />
+						<s:submit action="contentmanager" key="dashboard.editead.btn.cancelandquit" />
 					</td>
 				</tr>
 			</table>
