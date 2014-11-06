@@ -18,6 +18,7 @@ import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
+import eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -928,7 +929,12 @@ public class EadService {
             config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
         }
         config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
-        config.setIdSource(preferences.getProperty(QueueItem.SOURCE_OF_IDENTIFIERS));
+        String sourceOfIdentifiers = preferences.getProperty(QueueItem.SOURCE_OF_IDENTIFIERS);
+        if (StringUtils.isNotBlank(sourceOfIdentifiers)) {
+        	config.setIdSource(sourceOfIdentifiers);
+        } else {
+        	config.setIdSource(IngestionprofilesAction.OPTION_UNITID);
+        }
 
         String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
                             + APEnetUtilities.FILESEPARATOR + "fa"

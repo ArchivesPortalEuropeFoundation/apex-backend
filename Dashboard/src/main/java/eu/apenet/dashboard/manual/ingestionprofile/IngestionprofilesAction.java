@@ -45,7 +45,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private static final String INHERITLANGUAGE_PROVIDE = "provide";
 	private static final String OUT_OF_COPYRIGHT = "outofcopyright";
 	// Source of identifiers.
-	private static final String OPTION_UNITID = "unitid";
+	public static final String OPTION_UNITID = "unitid";
 	private static final String OPTION_CID = "cid";
 
     //Collections for basic tab
@@ -128,6 +128,9 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
             conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
             sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
+            if (sourceOfIdentifiers == null || sourceOfIdentifiers.isEmpty()) {
+            	sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
+            }
             textDataProvider = ingestionprofile.getEuropeanaDataProvider();
             dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
             europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
