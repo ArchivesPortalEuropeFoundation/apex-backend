@@ -81,17 +81,8 @@
 			<s:submit value="Republish all EAG files"></s:submit>
 		</s:form>	
 		<s:form action="rebuildAutosuggestion" theme="simple" method="post">
-			<input type="hidden" name="sourceType" value="ead"  />
-			<s:submit value="Build autosuggestion dictionary of EAD files"></s:submit>
-		</s:form>	
-		<s:form action="rebuildAutosuggestion" theme="simple" method="post">
-			<input type="hidden" name="sourceType" value="eac"  />
-			<s:submit value="Build autosuggestion dictionary of EAC-CPF files"></s:submit>
+			<s:submit value="Build autosuggestion dictionaries"></s:submit>
 		</s:form>			
-		<s:form action="rebuildAutosuggestion" theme="simple" method="post">
-			<input type="hidden" name="sourceType" value="eag"  />
-			<s:submit value="Build autosuggestion dictionary of EAG files"></s:submit>
-		</s:form>				
 	</c:if>
 	<c:if test="${!empty firstItems}">
 		<h2>First items:</h2>
