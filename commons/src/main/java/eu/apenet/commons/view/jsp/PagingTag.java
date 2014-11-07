@@ -20,7 +20,7 @@ public class PagingTag extends AbstractPagingTag {
 
 	private static final String PAGE_FIRST = PAGE_PREV + PAGE_PREV;
 
-	private Logger log = Logger.getLogger(PagingTag.class);
+	private final static Logger LOGGER = Logger.getLogger(PagingTag.class);
 
 	private static int MAX_NUMBER_OF_VISIBLE_PAGES = 3;
 
@@ -80,7 +80,7 @@ public class PagingTag extends AbstractPagingTag {
 
 			this.getJspContext().getOut().print(buildPagination());
 		} catch (Exception e) {
-			log.error("Can't create page description: " + e.getMessage(), e);
+			LOGGER.error("Can't create page description: " + e.getMessage(), e);
 			throw new JspException(e);
 		}
 	}
@@ -172,8 +172,10 @@ public class PagingTag extends AbstractPagingTag {
 		builder.append("<li>");
 		builder.append("<a href=\"");
 		if (Boolean.parseBoolean(liferayFriendlyUrl)){
-			builder.append(refreshUrl.replaceAll("\\{" + this.getPageNumberId() + "\\}", pageNumber +""));
+			LOGGER.info("true: " + refreshUrl);
+			builder.append(refreshUrl.replaceAll("%7B" + this.getPageNumberId() + "%7D", pageNumber +""));
 		}else {
+			LOGGER.info("false: " + refreshUrl);
 			HrefObject hrefObject = new HrefObject(refreshUrl);
 			hrefObject.setParameter(this.getPageNumberId(), pageNumber);
 			builder.append(hrefObject.toString());
