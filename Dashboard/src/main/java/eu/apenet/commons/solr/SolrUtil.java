@@ -10,34 +10,34 @@ public final class SolrUtil {
 
 	public static void forceSolrCommit() throws SolrServerException {
 		LOGGER.info("=== Start hard commit solr cores ===");
+		LOGGER.info("EAG hard commit started...");
 		EagSolrServerHolder.getInstance().hardCommit();
-		LOGGER.info("EAG hard commit finished");		
+		LOGGER.info("EAC-CPF hard commit started...");
 		EacCpfSolrServerHolder.getInstance().hardCommit();
-		LOGGER.info("EAC-CPF hard commit finished");
+		LOGGER.info("EAD hard commit started...");		
 		EadSolrServerHolder.getInstance().hardCommit();
-		LOGGER.info("EAD hard commit finished");
 		LOGGER.info("=== Hard commit solr cores finished ===");
 	}
 
 	public static void solrOptimize() throws SolrServerException {
 		LOGGER.info("=== Start optimize solr cores ===");
+		LOGGER.info("EAG optimize started...");
 		EagSolrServerHolder.getInstance().optimize();
-		LOGGER.info("EAG optimize finished");		
+		LOGGER.info("EAC-CPF optimize started...");		
 		EacCpfSolrServerHolder.getInstance().optimize();
-		LOGGER.info("EAC-CPF optimize finished");
+		LOGGER.info("EAD optimize started...");
 		EadSolrServerHolder.getInstance().optimize();
-		LOGGER.info("EAD optimize finished");
 		LOGGER.info("=== Optimize solr cores finished ===");
 	}
 	
 	public static void rebuildAutosuggestion() throws SolrServerException{
 		LOGGER.info("=== Rebuild spellchecker dictionaries ===");
+		LOGGER.info("EAG rebuild spellchecker dictionary started...");	
 		EagSolrServerHolder.getInstance().rebuildSpellchecker();
-		LOGGER.info("EAG rebuild spellchecker dictionary finished");		
+		LOGGER.info("EAC-CPF rebuild spellchecker dictionary started...");
 		EacCpfSolrServerHolder.getInstance().rebuildSpellchecker();
-		LOGGER.info("EAC-CPF rebuild spellchecker dictionary finished");
+		LOGGER.info("EAD rebuild spellchecker dictionary started...");	
 		EadSolrServerHolder.getInstance().rebuildSpellchecker();
-		LOGGER.info("EAD rebuild spellchecker dictionary finished");		
 		LOGGER.info("=== Rebuild spellchecker dictionaries finished ===");
 	}
 }
