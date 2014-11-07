@@ -486,7 +486,7 @@ public class EadService {
         	if (queueItem.getUpFile() != null) {
         		processUpFileWithProfile(queueItem, preferences);
         	} else {
-        		processEadWithProfile(queueItem, preferences);
+        		processEad(queueItem, queueItem.getEad(), preferences);
         	}
         }
 		LOGGER.info("Process queue item finished");
@@ -585,30 +585,6 @@ public class EadService {
             	processEad(queueItem, newEad, preferences);
             }
         }
-	}
-
-	/**
-	 * Method to process the file already in the system using the selected
-	 * profile.
-	 *
-	 * @param queueItem Current item to process.
-	 * @param preferences Profile preferences.
-	 *
-	 * @throws Exception
-	 */
-	private static void processEadWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
-        Ead ead = null;
-
-        // Check the type of EAD to recover.
-        if (queueItem.getFindingAid() != null) {
-        	ead = queueItem.getFindingAid();
-        } else if (queueItem.getHoldingsGuide() != null) {
-        	ead = queueItem.getHoldingsGuide();
-        } else {
-        	ead = queueItem.getSourceGuide();
-        }
-
-    	processEad(queueItem, ead, preferences);
 	}
 
 	/**
