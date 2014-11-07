@@ -9,7 +9,7 @@
 	<xsl:template match="/">
 		<div id="body">
 			<div class="eadid">
-				<xsl:value-of select="/ead:ead/ead:archdesc/ead:did/ead:unitid" />
+				<xsl:value-of select="ape:highlight(/ead:ead/ead:archdesc/ead:did/ead:unitid, 'unitid')" disable-output-escaping="yes" />
 			</div>
 			<xsl:for-each select="/ead:ead/ead:archdesc/ead:did/ead:unittitle">
 				<h1 class="titleproper">
