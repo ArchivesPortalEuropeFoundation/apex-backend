@@ -172,10 +172,8 @@ public class PagingTag extends AbstractPagingTag {
 		builder.append("<li>");
 		builder.append("<a href=\"");
 		if (Boolean.parseBoolean(liferayFriendlyUrl)){
-			LOGGER.info("true: " + refreshUrl);
 			builder.append(refreshUrl.replaceAll("%7B" + this.getPageNumberId() + "%7D", pageNumber +""));
 		}else {
-			LOGGER.info("false: " + refreshUrl);
 			HrefObject hrefObject = new HrefObject(refreshUrl);
 			hrefObject.setParameter(this.getPageNumberId(), pageNumber);
 			builder.append(hrefObject.toString());
