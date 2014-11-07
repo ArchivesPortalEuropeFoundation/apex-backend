@@ -9,9 +9,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
-import eu.apenet.commons.solr.EacCpfSolrServerHolder;
-import eu.apenet.commons.solr.EadSolrServerHolder;
-import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.commons.solr.SolrUtil;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
@@ -35,7 +32,6 @@ public class ManageQueueAction extends AbstractAction {
 	private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 	private Integer queueItemId;
 	private String selectedAction;
-	private String sourceType;
 	/**
 	 * 
 	 */
@@ -59,13 +55,7 @@ public class ManageQueueAction extends AbstractAction {
 	}
 	
 
-	public String getSourceType() {
-		return sourceType;
-	}
 
-	public void setSourceType(String sourceType) {
-		this.sourceType = sourceType;
-	}
 
 	@Override
 	protected void buildBreadcrumbs() {
@@ -206,13 +196,7 @@ public class ManageQueueAction extends AbstractAction {
 		return SUCCESS;
 	}
 	public String rebuildAutosuggestion() throws SolrServerException{
-		if ("ead".equals(sourceType)){
-			EadSolrServerHolder.getInstance().rebuildSpellchecker();
-		}else if ("eac".equals(sourceType)){
-			EacCpfSolrServerHolder.getInstance().rebuildSpellchecker();
-		}else if ("eag".equals(sourceType)){
-			EagSolrServerHolder.getInstance().rebuildSpellchecker();
-		}
+		SolrUtil.rebuildAutosuggestion();
 		return SUCCESS;		
 	}
 	public String changeMaintenanceMode(){
