@@ -48,7 +48,6 @@ function hideAndShow(idPrefix,shown){
 }
 
 function clickExitAction(strSaveMsg,form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, errorspecialcharacter){
-	
 	if (confirmAndDecode(strSaveMsg)) {
 		clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, true, errorspecialcharacter);
 	}else{ 
@@ -241,6 +240,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 		}
 	}
 	if(!exit){
+		createColorboxForProcessing();
 		// Check if almost one of the authorized name of the institution is the same as the institution's name.
 		var nameOfInstitution = checkNameOfInstitution(error8, institutionName);
 		if (!nameOfInstitution) {
@@ -263,7 +263,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 		}
 
 		$('#webformeag2012').append('<textarea name="form" style="display: none;">'+jsonData+'</textarea>');
-		$('#webformeag2012').submit();
+		$('#webformeag2012').submit(); 
 	}
 }
 
@@ -5212,4 +5212,71 @@ function checkAutformIdentity(){
 		}
 	});
 	return errorTab;
-}	
+}
+
+/**
+ * Function to display the processing information.
+ */
+function createColorboxForProcessing() {
+	$("#colorbox_load_finished").each(function(){
+		$(this).remove();
+	});
+	// Create colorbox.
+	$(document).colorbox({
+		html:function(){
+			var htmlCode = $("#processingInfoDiv").html();
+			return htmlCode;
+		},
+		overlayClose:false, // Prevent close the colorbox when clicks on window.
+		escKey:false, // Prevent close the colorbox when hit escape key.
+		innerWidth:"150px",
+		innerHeight:"36px",
+		initialWidth:"0px",
+		initialHeight:"0px",
+		open:true,
+		onLoad:function(){
+			$("#colorbox").show();
+			$("#cboxOverlay").show();
+
+		},
+		onComplete: function(){
+			if(!$("#colorbox_load_finished").length){
+				$("#processingInfoDiv").append("<input type=\"hidden\" id=\"colorbox_load_finished\" value=\"true\" />");
+			}
+        }
+	});
+	
+	// Remove the close button from colorbox.
+	$("#cboxClose").remove();
+
+	// Prevent reload page.
+	$(document).on("keydown", disableReload);
+}
+
+/**
+ * Function to prevent reload the page using F5.
+ */
+function disableReload(e) {
+	if (((e.which || e.keyCode) == 116)
+			|| (((e.ctrlKey && e.which) || (e.ctrlKey && e.keyCode)) == 82)) {
+		e.preventDefault();
+	}
+};
+
+/**
+ * Function to close the processing information.
+ */
+function deleteColorboxForProcessing() {
+	if($("input#colorbox_load_finished").length){
+		//removes flag
+		$("#colorbox_load_finished").each(function(){
+			$(this).remove();
+		});
+		// Close colorbox.
+		$.colorbox.close();
+		// Enable the page reload using F5.
+		$(document).off("keydown", disableReload);
+	}else{
+		setTimeout(function(){deleteColorboxForProcessing();},500);
+	}
+}

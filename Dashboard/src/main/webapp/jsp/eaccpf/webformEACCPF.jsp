@@ -4,6 +4,25 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/eaccpf/eaccpf.css" type="text/css"/>
 
 <div id="eacCpfDiv">
+	<div class="hidden">
+		<div id="processingInfoDiv">
+			<table id="processingInfoTable">
+				<tr>
+					<td>
+						<img id="processingInfoImg" src="images/colorbox/loading.gif" />
+					</td>
+					<td>
+						<label class="bold" id="processingInfoLabel" for="processingInfoImg">
+							<s:text name="al.message.processing" />
+						</label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+	<script type="text/javascript">
+		createColorboxForProcessing();
+	</script>	
     <div id="validationEacCpfErrorsDiv">
         <s:actionmessage id="validationEacCpfErrors" />
     </div>
@@ -37,6 +56,7 @@
                     $("a[href^='#tab-']").click(function() {
                         hideAndShow("tab-", $(this).attr("href").substring(1));
                     });
+                    deleteColorboxForProcessing();
                 });</script>
             <div id="container" class="container">
                 <div id="tab-identity">

@@ -1,12 +1,14 @@
 function initPage() {
-    $(document).on("change", "#profileCb", function() {
-        var params = {profilelist: $("#profileCb").val()};
+    $("#profileCb").off("change").on("change", function() {
+    	var params = {profilelist: $("#profileCb").val()};
         $.get("ingestionprofiles.action", params, function(data) {
-            $("#principal").replaceWith(data);
+        	createColorboxForProcessing();
+        	$("#principal").replaceWith(data);
             $("body meta").remove();
             $("body title").remove();
         });
     });
+   
 }
 
 function hideAndShow(idPrefix, shown) {
@@ -68,4 +70,76 @@ function changeDefaultOptionSet() {
     } else {
         $("#uploadedFileAction option[value='2']").remove();
     }
+}
+
+/**
+ * Function to display the processing information.
+ */
+function createColorboxForProcessing() {
+	$("#colorbox_load_finished").each(function(){
+		$(this).remove();
+	});
+	// Create colorbox.
+	$(document).colorbox({
+		html:function(){
+			var htmlCode = $("#processingInfoDiv").html(); 
+			return htmlCode;
+		},
+		overlayClose:false, // Prevent close the colorbox when clicks on window.
+		escKey:false, // Prevent close the colorbox when hit escape key.
+		innerWidth:"150px",
+		innerHeight:"36px",
+		initialWidth:"0px",
+		initialHeight:"0px",
+		open:true,
+		onLoad:function(){
+			$("#colorbox").show();
+			$("#cboxOverlay").show();
+
+		},
+		onComplete: function(){
+			if(!$("#colorbox_load_finished").length){
+				$("#processingInfoDiv").append("<input type=\"hidden\" id=\"colorbox_load_finished\" value=\"true\" />");
+			}
+        }
+	});
+	
+	// Remove the close button from colorbox.
+	$("#cboxClose").remove();
+	// Prevent reload page.
+	$(document).on("keydown", disableReload);
+}
+/**
+ * Function to prevent reload the page using F5.
+ */
+function disableReload(e) {
+	if (((e.which || e.keyCode) == 116)
+			|| (((e.ctrlKey && e.which) || (e.ctrlKey && e.keyCode)) == 82)) {
+		e.preventDefault();
+	}
+};
+
+/**
+ * Function to close the processing information.
+ */
+function deleteColorboxForProcessing() {
+	if($("input#colorbox_load_finished").length){
+		//removes flag
+		$("#colorbox_load_finished").each(function(){
+			$(this).remove(); 
+		});
+		// Close colorbox.
+		$.colorbox.close(); 
+		// Enable the page reload using F5.
+		$(document).off("keydown", disableReload);
+	}else{
+		setTimeout(function(){deleteColorboxForProcessing();},500);
+	}
+	$("div[id='cboxOverlay']").each(function(i) {
+		$(this).fadeOut(1000);
+		
+	});
+	$("div[id='colorbox']").each(function(i) {
+		$(this).fadeOut(1000);
+	});
 }

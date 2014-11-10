@@ -4,17 +4,36 @@
 <script type='text/javascript'>
     $(document).ready(function() {
         initPage();
-
         hideAndShow("tab-", "tab-basic");
         $("#currentTab").attr("value", "tab-basic");
         $("a[href^='#tab-']").click(function() {
             hideAndShow("tab-", $(this).attr("href").substring(1));
-        });
+         });
+      deleteColorboxForProcessing();
     });
-
 </script>
 
 <div id="ingestionprofiles">
+     <div class="hidden">
+		<div id="processingInfoDiv">
+			<table id="processingInfoTable">
+				<tr>
+					<td>
+						<img id="processingInfoImg" src="images/colorbox/loading.gif" />
+					</td>
+					<td>
+						<label class="bold" id="processingInfoLabel" for="processingInfoImg">
+							<s:text name="al.message.processing" />
+						</label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<script type='text/javascript'>
+    	createColorboxForProcessing(); 
+	</script>
+	
     <s:form id="webformIngestionprofile" method="POST" theme="simple" action="storeIngestionprofile">
         <s:actionerror />
         <table>

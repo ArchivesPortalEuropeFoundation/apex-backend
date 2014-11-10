@@ -4,6 +4,25 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/eag2012/eag2012.css" type="text/css"/>
 
 <div id="eag2012Div">
+	<div class="hidden">
+		<div id="processingInfoDiv">
+			<table id="processingInfoTable">
+				<tr>
+					<td>
+						<img id="processingInfoImg" src="images/colorbox/loading.gif" />
+					</td>
+					<td>
+						<label class="bold" id="processingInfoLabel" for="processingInfoImg">
+							<s:text name="al.message.processing" />
+						</label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+	<script type="text/javascript">
+		createColorboxForProcessing();
+	</script>			
 	<div id="validationEAG2012ErrorsDiv">
 		<s:actionmessage id="validationEAG2012Errors" />
 	</div>
@@ -123,6 +142,8 @@
 				//			checkName(textSpecialCharacters, $(this));
 				//		});
 				//	});
+
+					deleteColorboxForProcessing();
 				});
 			</script>
 			<div id="container">
@@ -168,4 +189,5 @@
 	
 	</form>
 	<div id="divTempContainter" style="display:none;"></div>
+	
 </div>
