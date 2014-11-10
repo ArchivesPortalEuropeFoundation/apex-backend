@@ -1076,7 +1076,7 @@
 
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
-        <add-attribute type="string" value="/css/tablesorter.css"/>
+        	<add-attribute type="string" value="/css/jquery/theme.tablesorter.css"/>
         </put-list-attribute>
     </definition>
     <definition name="sessionManagement" extends="DefaultLayout" >
@@ -1143,10 +1143,30 @@
 
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
-        <add-attribute type="string" value="/css/tablesorter.css"/>
+        	<add-attribute type="string" value="/css/jquery/theme.tablesorter.css"/>
         </put-list-attribute>
     </definition>
-     <definition name="manageTopicMappings" extends="dashboardLayout" >
+    
+    <definition name="adminTopic" extends="AdminLayout" >
+        <put-attribute name="title" value="admin.topic.management" />
+        <put-attribute name="body" value="/jsp/topic/admin-topics.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery.tablesorter.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery.tablesorter.pager.js"/>
+            <add-attribute type="string" value="/js/admin-topics.js"/>
+        </put-list-attribute>
+        <put-list-attribute name="cssfilesInternal">
+        	<add-attribute type="string" value="/css/jquery/theme.tablesorter.css"/>
+        	<add-attribute type="string" value="/css/admin-topics.css"/>
+        </put-list-attribute>
+    </definition>
+    
+    <definition name="adminTopicCreateEdit" extends="AdminLayout" >
+        <put-attribute name="title" value="admin.topic.management" />
+        <put-attribute name="body" value="/jsp/topic/admin-create-topic.jsp" />
+    </definition>
+    
+    <definition name="manageTopicMappings" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.topic.mappings" />
         <put-attribute name="body" value="/jsp/topic/manage-mappings.jsp" />
         <put-list-attribute name="jsfilesInternal">
@@ -1156,7 +1176,7 @@
 
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
-        <add-attribute type="string" value="/css/tablesorter.css"/>
+        	<add-attribute type="string" value="/css/jquery/theme.tablesorter.css"/>
         </put-list-attribute>
     </definition>
      <definition name="createEditTopicMapping" extends="dashboardLayout" >

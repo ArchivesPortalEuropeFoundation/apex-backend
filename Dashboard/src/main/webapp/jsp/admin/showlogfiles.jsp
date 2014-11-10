@@ -7,9 +7,10 @@
 	<script type="text/javascript">
 	
 	$(function() {
-		$("table").tablesorter({debug: false});
-
-		
+		$("table").tablesorter({
+			debug: false,
+			theme : 'tablesorter' 
+		});
 	});
 	</script>	
 <div id="showLogFiles">

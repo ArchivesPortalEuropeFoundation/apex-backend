@@ -1,0 +1,62 @@
+.first, .prev, .next, .last {
+    border: 1px solid #bfbfbf;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-weight: bold;
+    min-width: 20px;
+    padding-left: 4px;
+    padding-right: 4px;
+    text-align: center;
+    background-color: white;
+    color: gray;
+    opacity: 0.7;
+    font-size: 11px;
+    margin-top: 1px;
+    margin-left: 1px;
+    margin-right: 1px;
+    float: right;
+}
+.pager{
+	float: left;
+	background-color: #e6EEEE;
+}
+.pager .pagedisplay{
+	float: right;
+	font-size: 8pt;
+}
+.pagesize{
+	font-size: 9px;
+	padding: 1px;
+	border-color: #bfbfbf #dedede #dedede #bfbfbf;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    width: auto;
+    padding-top: 2px;
+    margin-left: 5px;
+    float:left;
+}
+.pageDisplayLabel{
+	float:left;
+	font-weight: bold;
+	font-size: 8pt;
+	padding-top: 2px;
+	margin-left: 2px;
+}
+input[type='text']{
+	background: none repeat scroll 0 0 transparent;
+    border: 0 none transparent;
+    color: black;
+    max-width: 110px;
+    width: auto;
+    text-align: center;
+    padding-top: 2px;
+}
+#topicFooterButton{
+	float:left;
+	width:100%;
+	padding-top: 5px;
+	margin-bottom: 5px;
+}

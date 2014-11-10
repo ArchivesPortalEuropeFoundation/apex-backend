@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+
 import eu.apenet.persistence.dao.TopicDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.Topic;
@@ -21,7 +24,6 @@ public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements To
 			return null;
 		}
 	}
-
 	
 	@Override
 	public List<Topic> getFirstTopics() {
@@ -30,7 +32,6 @@ public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements To
 		query.setMaxResults(15);
 		return query.getResultList();
 	}
-
 
 	@Override
 	public List<Topic> getTopicsWithoutMapping(Integer aiId) {
@@ -41,5 +42,15 @@ public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements To
 		return query.getResultList();
 	}
 
-
+	@Override
+	public Topic getTopicByDescription(String topicDescription){
+		Topic result = null;
+		if(topicDescription!=null){
+			Criteria criteria = getSession().createCriteria(getPersistentClass(), "topic");
+			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			criteria.add(Restrictions.eq("topic.description", topicDescription));
+			result = (Topic) criteria.uniqueResult();
+		}
+		return result;
+	}
 }

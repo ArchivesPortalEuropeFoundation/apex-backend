@@ -855,6 +855,31 @@
             <result name="error" type="tiles">blank</result>
         </action>
 
+        <action name="adminTopic" class="eu.apenet.dashboard.actions.TopicsAction">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">adminTopic</result>
+            <result name="error" type="tiles">login</result>
+        </action>
+        
+        <action name="adminDeleteTopic" class="eu.apenet.dashboard.actions.TopicsAction" method="delete">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">adminTopic</result>
+            <result name="error" type="tiles">login</result>
+        </action>
+        
+        <action name="adminEditTopic" class="eu.apenet.dashboard.actions.TopicsAction" method="createOrEdit">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">adminTopicCreateEdit</result>
+            <result name="error" type="tiles">login</result>
+        </action>
+        
+        <action name="adminStoreTopic" class="eu.apenet.dashboard.actions.TopicsAction" method="store">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">adminTopic</result>
+            <result name="input" type="tiles">adminTopicCreateEdit</result>
+            <result name="error" type="tiles">login</result>
+        </action>
+        
         <action name="manageTopicMappings" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction">
             <result name="success" type="tiles">manageTopicMappings</result>
         </action>
