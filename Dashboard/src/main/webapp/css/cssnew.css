@@ -1067,6 +1067,7 @@ table.defaultlayout {
 }
 #content_div_table td, table.defaultlayout td{
 	 border: 1px solid #DBDBDB;
+	 word-wrap: break-word;
 }
 
 #content_div_table th, table.defaultlayout th {
