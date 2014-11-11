@@ -391,7 +391,7 @@
             </li>
             <li class="separator"></li>
             <li class="cancel">
-                <a href="#cancel" id="hrefCancel"><s:property value="getText('dashboard.hgcreation.quit')" /></a>
+                <a href="#cancel" id="hrefCancel"><s:property value="getText('dashboard.sgcreation.quit')" /></a>
             </li>
         </ul>
     </div>
