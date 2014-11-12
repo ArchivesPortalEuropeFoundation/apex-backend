@@ -8,11 +8,11 @@
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
 	<xsl:template match="/">
 		<div id="body">
-			<div class="eadid">
 				<xsl:for-each select="ape:highlight(/ead:ead/ead:archdesc/ead:did/ead:unitid">
+				<div class="eadid">
 					<xsl:value-of select="ape:highlight(., 'unitid')" disable-output-escaping="yes" />
+				</div>
 				</xsl:for-each>
-			</div>
 			<xsl:for-each select="/ead:ead/ead:archdesc/ead:did/ead:unittitle">
 				<h1 class="titleproper">
 					<xsl:apply-templates mode="title"/>
