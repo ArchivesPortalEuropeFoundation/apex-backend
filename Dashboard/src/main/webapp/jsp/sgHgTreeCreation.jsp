@@ -391,7 +391,8 @@
             </li>
             <li class="separator"></li>
             <li class="cancel">
-                <a href="#cancel" id="hrefCancel"><s:property value="getText('dashboard.sgcreation.quit')" /></a>
+			 	<s:if test="%{eadXmlTypeId==1}"><a href="#cancel" id="hrefCancel"><s:property value="getText('dashboard.hgcreation.quit')" /></a></s:if>
+				<s:if test="%{eadXmlTypeId==3}"><a href="#cancel" id="hrefCancel"><s:property value="getText('dashboard.sgcreation.quit')" /></a></s:if> 
             </li>
         </ul>
     </div>

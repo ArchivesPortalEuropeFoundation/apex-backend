@@ -17,7 +17,8 @@ public class HoldingsGuideTreeCreation extends HgSgTreeCreation {
 	
     @Override
 	public String execute() {
-    	getServletRequest().setAttribute(EAD_XML_TYPE, XmlType.EAD_HG.getIdentifier());
+    	//getServletRequest().setAttribute(EAD_XML_TYPE, XmlType.EAD_HG.getIdentifier());
+    	this.eadXmlTypeId = XmlType.EAD_HG.getIdentifier();
 		return SUCCESS;
 	}
 

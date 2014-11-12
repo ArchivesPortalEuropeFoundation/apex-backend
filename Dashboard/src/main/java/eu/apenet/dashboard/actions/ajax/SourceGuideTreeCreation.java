@@ -16,7 +16,8 @@ public class SourceGuideTreeCreation extends HgSgTreeCreation {
 
     @Override
 	public String execute() {
-    	getServletRequest().setAttribute(EAD_XML_TYPE, XmlType.EAD_SG.getIdentifier());
+    	//getServletRequest().setAttribute(EAD_XML_TYPE, XmlType.EAD_SG.getIdentifier());
+    	this.eadXmlTypeId = XmlType.EAD_SG.getIdentifier();
 		return SUCCESS;
 	}
 

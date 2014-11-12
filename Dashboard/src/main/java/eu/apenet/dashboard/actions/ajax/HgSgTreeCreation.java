@@ -46,7 +46,7 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
     protected static final String EAD_XML_TYPE = "eadXmlTypeId";
     private String cId;
     private String id;
-    private Integer eadXmlTypeId;
+    protected Integer eadXmlTypeId;
 
 
 
