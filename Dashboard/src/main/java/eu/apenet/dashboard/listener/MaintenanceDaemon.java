@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 public class MaintenanceDaemon {
 	private static final Logger LOGGER = Logger.getLogger(MaintenanceDaemon.class);
-	private static final int MAINTENANCE_DAY = 8;
+	private static final int MAINTENANCE_DAY = 1;
 	private final static int MINUTE_IN_SECONDS = 60;
 
 	private final static int HOUR_IN_SECONDS = 60 * MINUTE_IN_SECONDS;
@@ -46,16 +46,18 @@ public class MaintenanceDaemon {
 	}
 	public static int calculateSeconds(){
 		Calendar currentDate = GregorianCalendar.getInstance();
-		Calendar maintentanceDate = GregorianCalendar.getInstance();
-		int currentDay = maintentanceDate.get(GregorianCalendar.DAY_OF_WEEK);
-		if (MAINTENANCE_DAY == currentDay){
-			maintentanceDate.set(GregorianCalendar.WEEK_OF_YEAR, maintentanceDate.get(GregorianCalendar.WEEK_OF_YEAR)+1);
+		Calendar maintenanceDate = GregorianCalendar.getInstance();
+		int currentDay = maintenanceDate.get(GregorianCalendar.DAY_OF_WEEK);
+
+		maintenanceDate.set(GregorianCalendar.DAY_OF_WEEK,MAINTENANCE_DAY);
+		maintenanceDate.set(GregorianCalendar.HOUR_OF_DAY,2);
+		maintenanceDate.set(GregorianCalendar.MINUTE,0);
+		maintenanceDate.set(GregorianCalendar.SECOND,0);
+		if (MAINTENANCE_DAY == currentDay || maintenanceDate.before(currentDate) ){
+			maintenanceDate.set(GregorianCalendar.WEEK_OF_YEAR, maintenanceDate.get(GregorianCalendar.WEEK_OF_YEAR)+1);
 		}
-		maintentanceDate.set(GregorianCalendar.DAY_OF_WEEK,MAINTENANCE_DAY);
-		maintentanceDate.set(GregorianCalendar.HOUR_OF_DAY,2);
-		maintentanceDate.set(GregorianCalendar.MINUTE,0);
-		maintentanceDate.set(GregorianCalendar.SECOND,0);
-		long timeToWait = maintentanceDate.getTimeInMillis() -currentDate.getTimeInMillis();
+		LOGGER.info(maintenanceDate.getTime());
+		long timeToWait = maintenanceDate.getTimeInMillis() -currentDate.getTimeInMillis();
 		return (int) (timeToWait / 1000);
 	}
 
