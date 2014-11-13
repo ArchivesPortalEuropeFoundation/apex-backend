@@ -37,8 +37,8 @@
 			</c:if>
 			</div>
 			<div>
-				<div>
-					<label for="adminTopicPropertyKey"><s:property value="getText('topic.property')" /></label>
+				<div class="margin">
+					<label for="adminTopicPropertyKey"><s:property value="getText('topic.property')" />*</label>
 					<s:fielderror fieldName="adminTopicPropertyKey"/>
 				</div>
 				<div>
@@ -46,8 +46,8 @@
 				</div>
 			</div>
 			<div>
-				<div>
-					<label for="adminTopicDescription"><s:property value="getText('topic.description')" /></label>
+				<div class="margin">
+					<label for="adminTopicDescription"><s:property value="getText('topic.description')" />*</label>
 					<s:fielderror fieldName="adminTopicDescription"/>
 				</div>
 				<div>
@@ -55,8 +55,8 @@
 				</div>
 			</div>
 			<div>
-				<div>
-					<label for="adminTopicPosition"><s:property value="getText('admin.topic.position')" /></label>
+				<div class="margin">
+					<label for="adminTopicPosition"><s:property value="getText('admin.topic.position')" />*</label>
 					<s:fielderror fieldName="adminTopicPosition"/>	
 				</div>
 				<div>
@@ -64,12 +64,8 @@
 				</div>
 			</div>
 		</div>
-		<s:if test="%{adminTopicId==0}">
-			<s:submit key="usermanagement.create" name="add"/>
-		</s:if>
-		<s:else>
-			<s:submit key="dashboard.edit.title" name="add"/>
-		</s:else>
+		<s:submit key="ingestionprofiles.save" name="add" theme="simple" />
+		<input type="button" value="<s:property value="getText('ingestionprofiles.cancel')" />" onclick="location.href='adminTopic.action'" />
 	</s:form>
 </div>
 

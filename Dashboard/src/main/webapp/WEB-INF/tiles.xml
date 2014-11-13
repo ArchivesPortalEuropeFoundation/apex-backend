@@ -1164,6 +1164,9 @@
     <definition name="adminTopicCreateEdit" extends="AdminLayout" >
         <put-attribute name="title" value="admin.topic.management" />
         <put-attribute name="body" value="/jsp/topic/admin-create-topic.jsp" />
+        <put-list-attribute name="cssfilesInternal">
+        	<add-attribute type="string" value="/css/admin-topic-create.css"/>
+        </put-list-attribute>
     </definition>
     
     <definition name="manageTopicMappings" extends="dashboardLayout" >
