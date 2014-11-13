@@ -214,7 +214,8 @@ public class ApplyProfileAction extends AbstractInstitutionAction {
 			// Check the type of document.
 			if (this.getXmlTypeId().equals(Integer.toString(XmlType.EAC_CPF.getIdentifier()))) {
 				LOG.debug("Process all EAC-CPFs.");
-				
+
+				EacCpfService.addBatchToQueue(null, this.getAiId(), QueueAction.USE_PROFILE, retrieveProperties(ingestionprofile));
 			} else {
 				LOG.debug("Process all EADs.");
 
@@ -239,7 +240,7 @@ public class ApplyProfileAction extends AbstractInstitutionAction {
 			LOG.debug("Try to add the queue the item with id: " + this.getId() + " of the XMLType: " + XmlType.getType(Integer.parseInt(this.getXmlTypeId())).getName() + " using the profile: " + ingestionprofile.getNameProfile());
 
 			// Check the type of document.
-			if (this.getXmlTypeId().equals(XmlType.EAC_CPF.getIdentifier())) {
+			if (this.getXmlTypeId().equals(Integer.toString(XmlType.EAC_CPF.getIdentifier()))) {
 				EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 				EacCpf eacCpf = eacCpfDAO.findById(this.getId());
 				EacCpfService.useProfileAction(eacCpf, retrieveProperties(ingestionprofile));

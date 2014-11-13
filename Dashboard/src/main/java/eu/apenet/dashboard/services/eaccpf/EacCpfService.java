@@ -24,13 +24,17 @@ import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EacCpf;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -627,15 +631,29 @@ public class EacCpfService {
         List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(eacCpfSearchOptions);
         int size = 0;
         while ((size = eacCpfs.size()) > 0) {
-            EacCpf eacCpf = eacCpfs.get(size - 1);
-            QueueItem queueItem = fillQueueItem(eacCpf, queueAction, preferences);
-            eacCpf.setQueuing(QueuingState.READY);
-            eacCpfDAO.updateSimple(eacCpf);
+        	EacCpf eacCpf = eacCpfs.get(size - 1);
+        	if(validState(eacCpf,preferences,queueAction)){
+                QueueItem queueItem = fillQueueItem(eacCpf, queueAction, preferences);
+                eacCpf.setQueuing(QueuingState.READY);
+                eacCpfDAO.updateSimple(eacCpf);
+                indexqueueDao.updateSimple(queueItem);
+        	}
             eacCpfs.remove(size - 1);
-            indexqueueDao.updateSimple(queueItem);
         }
         JpaUtil.commitDatabaseTransaction();
     }
+    
+    private static boolean validState(EacCpf eac,Properties preferences,QueueAction queueAction){
+		boolean state = !queueAction.isUseProfileAction();
+		if(!state){
+			String property = preferences.getProperty(QueueItem.UPLOAD_ACTION);
+			//each condition returns true if the state and the profile future action are rights
+			state = (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT.getId())) && !eac.isConverted()) ||
+				(property.equals(Integer.toString(IngestionprofileDefaultUploadAction.VALIDATE.getId())) && !eac.getValidated().equals(ValidatedState.VALIDATED)) || 
+				(property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH.getId())) && !eac.isPublished());
+		}
+		return state;
+	}
 
     public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId) throws IOException {
         ContentSearchOptions eacCpfSearchOptions = new ContentSearchOptions();

@@ -336,7 +336,7 @@
                                     	<!-- Option to call the action for apply a profile. -->
                                     	<!-- For finding aids display if is not deliver to Europeana. -->
                                         <c:if test="${results.findingAid}">
-	                                        <c:if test="${not eadResult.deliveredToEuropeana and not eadResult.validatedFatalError}">
+	                                        <c:if test="${(not eadResult.deliveredToEuropeana and not eadResult.validatedFatalError) or not eadResult.published}">
 		                                        <option value="_self|displayProfile.action">
 		                                            <s:text name="content.message.applyProfile" />
 		                                        </option>
