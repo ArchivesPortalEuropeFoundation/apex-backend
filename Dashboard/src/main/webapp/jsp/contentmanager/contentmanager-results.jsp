@@ -287,7 +287,7 @@
                                 <c:otherwise>
 
                                     <select class="selectedAction" name="selectedAction">
-                                        <c:if test="${not eadResult.validated}">
+                                        <c:if test="${not eadResult.converted and not eadResult.validated}">
                                             <option value="action|convert">
                                                 <s:text name="content.message.convert" />
                                             </option>
