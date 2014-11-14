@@ -35,8 +35,8 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	private List<FileUnit> filesWithEmptyEadid;		//This attribute contains all the files with empty EADID.
 	private List<FileUnit> filesNotUploaded;	//This attribute contains all the files not uploaded to APEnet
 	private List<FileUnit> filesBlocked;		//This attribute contains all the files blocked because of Europeana is harvesting and those files are FAs which have ESE files published
-	private Map<String, String> existingFilesChoice; //This list contains all the possible actions a user can do when a file is already stored in his Dashboard
-	private Map<String, String> existingFilesChoiceAddEADID; //This list contains all the possible actions a user can do when a file contains empty EADID
+	private Map<String, String> existingFilesChoice = new LinkedHashMap<String, String>(); //This list contains all the possible actions a user can do when a file is already stored in his Dashboard
+	private Map<String, String> existingFilesChoiceAddEADID = new LinkedHashMap<String, String>(); //This list contains all the possible actions a user can do when a file contains empty EADID
 	private Map<String, String> existingFilesChoiceOverwriteCancelEADID; //This list contains all the possible actions a user can do when the EADID is repeated and he doesn't want to add a new one.
 	private Map<String, String> existingEADIDAnswersChoice; //This list contains all the possible answer that the action of saving the change of EADID has returned.
     private String[] filesTypeAnswers; //This array contains all the answers typed by the user regarding to the decision about if a file is a Finding Aid or a Holdings Guide
@@ -105,7 +105,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		return filesTypeAnswers;
 	}
 
-    public Map<String, String> getExistingFilesChoice() {
+	public Map<String, String> getExistingFilesChoice() {
 		return existingFilesChoice;
 	}
 
@@ -246,13 +246,6 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 
     //Constructor
     public ExistingFilesAction(){
-        this.existingFilesChoice = new LinkedHashMap<String, String>();
-        this.existingFilesChoice.put(OVERWRITE, this.getText("existingFiles.overwrite"));
-        this.existingFilesChoice.put(CHANGE, this.getText("existingFiles.change"));
-        this.existingFilesChoice.put(CANCEL, this.getText("existingFiles.cancel"));
-        this.existingFilesChoiceAddEADID = new LinkedHashMap<String, String>();
-        this.existingFilesChoiceAddEADID.put(CANCEL, this.getText("existingFiles.cancel"));
-        this.existingFilesChoiceAddEADID.put(ADD, this.getText("existingFiles.add"));
         this.existingFilesChoiceOverwriteCancelEADID = new LinkedHashMap<String, String>();
         this.existingFilesChoiceOverwriteCancelEADID.put(OVERWRITE, this.getText("existingFiles.overwrite"));
         this.existingFilesChoiceOverwriteCancelEADID.put(CANCEL, this.getText("existingFiles.cancel"));
@@ -267,11 +260,8 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		this.existingFiles = new ArrayList<FileUnit>();
 		this.filesNotUploaded = new ArrayList<FileUnit>();
 		this.filesBlocked = new ArrayList<FileUnit>();
-		typeSet.add(new SelectItem("0", getText("content.message.fa")));
-		typeSet.add(new SelectItem("1", getText("content.message.hg")));
-		typeSet.add(new SelectItem("3", getText("content.message.sg")));
-		typeSet.add(new SelectItem("2", getText("content.message.cpf")));
     }
+    
 	@Override
 	protected void buildBreadcrumbs() {
 		super.buildBreadcrumbs();
@@ -279,8 +269,14 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	}
 
     //Methods
+	@Override
 	public String execute() throws Exception{
-
+		
+		typeSet.add(new SelectItem("0", getText("content.message.fa")));
+		typeSet.add(new SelectItem("1", getText("content.message.hg")));
+		typeSet.add(new SelectItem("3", getText("content.message.sg")));
+		typeSet.add(new SelectItem("2", getText("content.message.cpf")));
+		
 		ExistingFilesChecker checker = new ExistingFilesChecker(this.getAiId());
 		checker.retrieveUploadedFiles(this.existingNewXmlFilesUploaded, this.existingNewXslFilesUploaded);
 		long totalNumberOfFiles = DAOFactory.instance().getUpFileDAO().countNewUpFiles(this.getAiId(), FileType.XML);
@@ -402,7 +398,13 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	}
 
 	public String checkExistingFiles() {
-
+		
+		this.existingFilesChoice.put(OVERWRITE, this.getText("existingFiles.overwrite"));
+	    this.existingFilesChoice.put(CHANGE, this.getText("existingFiles.change"));
+	    this.existingFilesChoice.put(CANCEL, this.getText("existingFiles.cancel"));
+	    this.existingFilesChoiceAddEADID.put(CANCEL, this.getText("existingFiles.cancel"));
+        this.existingFilesChoiceAddEADID.put(ADD, this.getText("existingFiles.add"));
+        
 		FileUnit fileUnit = new FileUnit();
 		ExistingFilesChecker checker = new ExistingFilesChecker(this.getAiId());
 
@@ -522,6 +524,13 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 
 	public Set<SelectItem> getTypeSet() {
 		return typeSet;
+	}
+
+	/**
+	 * @param typeSet the typeSet to set
+	 */
+	public void setTypeSet(Set<SelectItem> typeSet) {
+		this.typeSet = typeSet;
 	}
 
 	public boolean isFilesLeft() {
