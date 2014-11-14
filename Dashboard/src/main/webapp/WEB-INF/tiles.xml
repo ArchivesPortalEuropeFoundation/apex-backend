@@ -427,9 +427,11 @@
             <add-attribute type="string" value="/js/httpupload.js"/>
             <add-attribute type="string" value="/js/ingestionprofile.js"/>
 			<add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
+			<add-attribute type="string" value="/js/jquery/jquery-ui.min.js"/>
          </put-list-attribute>
          <put-list-attribute name="cssfilesInternal">
           <add-attribute type="string" value="/css/colorbox.css"/>
+          <add-attribute type="string" value="/css/jquery/jquery-ui-1.8.14.custom.css"/>
       </put-list-attribute>
      </definition>
 

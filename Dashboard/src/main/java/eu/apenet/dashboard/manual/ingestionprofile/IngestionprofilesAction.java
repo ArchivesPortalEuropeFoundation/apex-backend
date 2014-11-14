@@ -211,8 +211,10 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setEuropeanaInheritOrigin(Boolean.parseBoolean(inheritOrigination));
         if (profilelist.equals("-1")) {
             profileDAO.store(profile);
+            addActionMessage(getText("ingestionprofiles.profilessaved"));
         } else {
             profileDAO.update(profile);
+            addActionMessage(getText("ingestionprofiles.profilesupdated"));
         }
         return SUCCESS;
     }

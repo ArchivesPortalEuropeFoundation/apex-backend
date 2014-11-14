@@ -1,4 +1,5 @@
 function initPage() {
+	checkActionMessages();
     $("#profileCb").off("change").on("change", function() {
     	var params = {profilelist: $("#profileCb").val()};
         $.get("ingestionprofiles.action", params, function(data) {
@@ -9,6 +10,17 @@ function initPage() {
         });
     });
    
+}
+
+function checkActionMessages(){
+	if($("#actionMessages span").length==1){
+		var text = $("#actionMessages span").text();
+		if(text.length>0 && text.substring(0,1)=='[' && text.substring(text.length-1)==']'){
+			text = text.substring(1,text.length-1);
+			$("#actionMessages").text(text);
+		}
+		setTimeout('$("#actionMessages").fadeOut("slow");',"5000");
+	}
 }
 
 function hideAndShow(idPrefix, shown) {
@@ -22,10 +34,12 @@ function hideAndShow(idPrefix, shown) {
     $("ul#ingestionprofileTabsContainer li a[href='#" + shown + "']").addClass("ingestionprofileCurrenttab");
 }
 
-function validateAndSave(profileNameError, dataProviderError, edmDaoError, languageError, europeanaLicenseError) {
+function validateAndSave(profileNameError, dataProviderError, edmDaoError, languageError, europeanaLicenseError, ingestionProfileSaveMessage,yesText,noText) {
+	avoidCancellations();
     var profilename = $("#profilename").attr("value");
     if (profilename == null || profilename == "") {
     	alertAndDecode(profileNameError);
+    	enableButtons();
         return;
     }
     var upFileAction = $("#uploadedFileAction").attr("value");
@@ -33,16 +47,19 @@ function validateAndSave(profileNameError, dataProviderError, edmDaoError, langu
         var dataProvider = $("#textDataProvider").attr("value");
         if (dataProvider == null || dataProvider == "") {
         	alertAndDecode(dataProviderError);
+        	enableButtons();
             return;
         }
         var edmDaoType = $("#edmDaoType").attr("value");
         if (edmDaoType == null || edmDaoType == "") {
         	alertAndDecode(edmDaoError);
+        	enableButtons();
             return;
         }
         var languageSelection = $("#languageselection").attr("value");
         if (languageSelection == null || languageSelection == "") {
         	alertAndDecode(languageError);
+        	enableButtons();
             return;
         }
         var license = $("#licenseeuropeana").attr("checked");
@@ -50,12 +67,22 @@ function validateAndSave(profileNameError, dataProviderError, edmDaoError, langu
             var europeanaLicense = $("#europeanaLicense").attr("value");
             if (europeanaLicense == null || europeanaLicense == "") {
             	alertAndDecode(europeanaLicenseError);
+            	enableButtons();
                 return;
             }
         }
     }
-    $('#ingestionprofilesSave').attr("disabled", "disabled");
     $('#webformIngestionprofile').submit();
+}
+
+function avoidCancellations(){
+	$('#ingestionprofilesSave').attr("disabled", "disabled");
+	$('#ingestionprofilesCancel').attr("disabled", "disabled");
+}
+
+function enableButtons(){
+	$('#ingestionprofilesSave').removeAttr("disabled");
+	$('#ingestionprofilesCancel').removeAttr("disabled");
 }
 
 function changeDefaultOptionSet() {
