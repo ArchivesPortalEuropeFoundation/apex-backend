@@ -217,10 +217,11 @@ public class StatisticsAction extends AbstractAction {
 		int rowNumber = 0;
 
 		public InstitutionsStatisticsDocumentWriter() throws Exception {
-
 			int colNumber = 0;
-			fillHeaderCell(colNumber, rowNumber, "Country");
-			colNumber++;
+            fillHeaderCell(colNumber, rowNumber, "Date of export: " + SIMPLE_DATE_FORMAT.format(new Date()));
+            rowNumber++;
+            fillHeaderCell(colNumber, rowNumber, "Country");
+            colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "Institution");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "Identifier of the institution");
@@ -244,7 +245,6 @@ public class StatisticsAction extends AbstractAction {
 			fillHeaderCell(colNumber, rowNumber, "#EDM(providedCHOs)");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
-			colNumber++;
 			rowNumber++;
 		}
 
@@ -286,7 +286,6 @@ public class StatisticsAction extends AbstractAction {
 			fillCell(colNumber, rowNumber, institutionStatistics.totalChos);
 			colNumber++;
 			fillCell(colNumber, rowNumber, institutionStatistics.totalChosDeliveredToEuropeana);
-			colNumber++;
 			rowNumber++;
 		}
 
@@ -335,8 +334,9 @@ public class StatisticsAction extends AbstractAction {
 		int rowNumber = 0;
 
 		public CountriesStatisticsDocumentWriter() throws Exception {
-
 			int colNumber = 0;
+			fillHeaderCell(colNumber, rowNumber, "Date of export: " + SIMPLE_DATE_FORMAT.format(new Date()));
+            rowNumber++;
 			fillHeaderCell(colNumber, rowNumber, "Country");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Institutions");
@@ -360,7 +360,6 @@ public class StatisticsAction extends AbstractAction {
 			fillHeaderCell(colNumber, rowNumber, "#EDM(providedCHOs)");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
-			colNumber++;
 			rowNumber++;
 		}
 
@@ -389,7 +388,6 @@ public class StatisticsAction extends AbstractAction {
 			fillCell(colNumber, rowNumber, countryStatistics.totalChos);
 			colNumber++;
 			fillCell(colNumber, rowNumber, countryStatistics.totalChosDeliveredToEuropeana);
-			colNumber++;
 			rowNumber++;
 		}
 
