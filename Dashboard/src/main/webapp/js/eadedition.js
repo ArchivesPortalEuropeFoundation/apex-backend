@@ -866,11 +866,6 @@ function addOnChangeValue() {
 			$("div#right-pane input#changed").val("true");
 		});
 	});
-	$("p#editionFormContainer select[name^='c_level']").each(function(){
-		$(this).on('change', function() {
-			$("div#right-pane input#changed").val("true");
-		});
-	});
 }
 
 /**
