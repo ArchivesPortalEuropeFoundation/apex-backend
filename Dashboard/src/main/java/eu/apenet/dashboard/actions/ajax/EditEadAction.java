@@ -56,7 +56,6 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
 	// Constants for the names of only editable elements.
 //	private static final String ARCHDESC_LEVEL = "archdesc_level"; // Name of attibute "@level" in element <archdesc>.
-	private static final String C_LEVEL = "c_level"; // Name of attibute "@level" in element <c>.
 	private static final String TITLEPROPER = "titleproper"; // Name of element <titleproper>.
 
 	// Constants for the names of editable and appendable elements.
@@ -430,9 +429,6 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 //				} else if (key.startsWith(EditEadAction.ARCHDESC_LEVEL)) {
 //					// Keys for <archdesc@level>.
 //					archdescLevelSet.add(key);
-				} else if (key.startsWith(EditEadAction.C_LEVEL)) {
-					// Keys for <c@level>.
-					cLevelSet.add(key);
 				} else if (key.startsWith(EditEadAction.EADID_COUNTRYCODE)) {
 					// Keys for <eadid@countrycode>.
 					eadIdCountryCodeSet.add(key);
@@ -990,7 +986,6 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     public enum EditableFields {
     	TITLEPROPER(EditEadAction.TITLEPROPER),
 //    	ARCHDESC_LEVEL(EditEadAction.ARCHDESC_LEVEL),
-    	C_LEVEL(EditEadAction.C_LEVEL),
     	EADID(EditEadAction.EADID),
     	EADID_COUNTRYCODE(EditEadAction.EADID_COUNTRYCODE),
     	EADID_MAINAGENCYCODE(EditEadAction.EADID_MAINAGENCYCODE),
@@ -1020,6 +1015,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
      */
     public enum UndisplayableFields {
         ENCODINGANALOG("encodinganalog"),
+        LEVEL("level"),
         DID("did"),
         ID("id"),
         ERA("era"),
