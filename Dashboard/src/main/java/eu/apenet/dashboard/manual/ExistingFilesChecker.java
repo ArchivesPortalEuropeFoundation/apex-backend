@@ -833,7 +833,7 @@ public class ExistingFilesChecker {
         UpFile upfile = upFileDao.findById(fileUnit.getFileId());
         String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
         String filePath = path + upfile.getPath() + upfile.getFilename();
-        String oldFilePath = filePath.replace(".xml", "_old.xml");
+        String oldFilePath = filePath.replace(filePath.substring(filePath.lastIndexOf(".")), "_old.xml");
         File file = new File(filePath);
         File oldFile = new File(oldFilePath);
 
