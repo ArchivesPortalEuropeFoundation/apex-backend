@@ -7,7 +7,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         //${securityContext.refresh_interval} is defined in SecurityContext.java to store in session the refresh timeout.
-        initResultsHandlers(${securityContext.refresh_interval});
+        initResultsHandlers(${securityContext.refresh_interval}, '<s:property value="getText('content.message.please.select.rights.statement')" />');
         drawColumns(${results.findingAid}, ${results.holdingsGuide}, ${results.sourceGuide}, false);
 	});
 </script>
@@ -449,36 +449,7 @@
     </s:form>
     <div class="hidden">
         <div id="conversionOptsDiv">
-            <form action="">
-                <table>
-                    <tr>
-                        <td><s:text name="content.message.roletype.useexisting"/> <input type="checkbox" name="useExistingRole" id="useExistingRole" value="useExistingRole" /></td>
-                        <td><s:text name="content.message.roletype.defaultrole"/></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="IMAGE" />IMAGE</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="VIDEO" />VIDEO</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="SOUND" />SOUND</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="TEXT" />TEXT</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="UNSPECIFIED" />UNSPECIFIED</td>
-                    </tr>
-                </table>
-                <input type="button" id="submitBtnRoleType" value="Submit"/>
-                <input type="button" id="cancelBtnRoleType" value="Cancel"/>
-            </form>
+			<jsp:include page="conversionOptions.jsp" />
         </div>
     </div>
 </div>

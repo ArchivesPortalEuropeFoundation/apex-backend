@@ -16,6 +16,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -24,17 +25,13 @@ import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EacCpf;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
-import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -535,8 +532,8 @@ public class EacCpfService {
         eacDAO.store(newEacCpf);
 
         Properties conversionProperties = new Properties();
-        conversionProperties.put("defaultRoleType", "UNSPECIFIED");
-        conversionProperties.put("useDefaultRoleType", daoTypeCheck);
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, "UNSPECIFIED");
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, daoTypeCheck);
 
         try {
             if (ingestionprofileDefaultUploadAction.isConvert()) {

@@ -1,13 +1,16 @@
 package eu.apenet.dashboard.actions.content;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.actions.content.eaccpf.EacCpfContentManagerResults;
 import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
-import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ContentSearchOptions;
@@ -32,6 +35,16 @@ public class ContentManagerAction extends AbstractInstitutionAction {
 
     protected static final String CONTENT_MESSAGE_ERROR = "content.message.fatalerror";
     protected static final String SUCCESS_AJAX = "success_ajax";
+
+    // Constants for the selects in the "Convert options" colorBox.
+	// DAO role.
+	private static final String TYPE_3D = "3D"; // Constant for type "3D".
+	private static final String TYPE_IMAGE = "IMAGE"; // Constant for type "image".
+	private static final String TYPE_SOUND = "TEXT"; // Constant for type "sound".
+	private static final String TYPE_TEXT = "TEXT"; // Constant for type "text".
+	private static final String TYPE_UNSPECIFIED = "UNSPECIFIED"; // Constant for type "unspecified".
+	private static final String TYPE_VIDEO = "VIDEO"; // Constant for type "video".
+
     /**
      *
      */
@@ -66,6 +79,14 @@ public class ContentManagerAction extends AbstractInstitutionAction {
     private boolean ajax = false;
     private boolean errorLinkHgSg = false;
 
+    // Values for selects in the "Convert options" colorBox.
+    private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>(); // DAO types.
+    private Set<SelectItem> rightsDigitalObjects = new LinkedHashSet<SelectItem>(); // Rights for digital objects.
+    private Set<SelectItem> rightsEadData = new LinkedHashSet<SelectItem>(); // Rights for EAD data.
+
+    // Select or not the check for the DAO type.
+    private boolean daoTypeCheck = true;
+
     public ContentManagerAction() {
     }
 
@@ -99,6 +120,47 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         searchTermsFieldList.put("", getText("content.message.all"));
         searchTermsFieldList.put("eadid", getText("content.message.id"));
         searchTermsFieldList.put("title", getText("content.message.title"));
+
+        // Fill list related to the "Convert options" colorBox.
+        // DAO types.
+        this.getDaoTypes().add(new SelectItem(ContentManagerAction.TYPE_UNSPECIFIED, getText("ead2ese.content.type.unspecified")));
+        this.getDaoTypes().add(new SelectItem(ContentManagerAction.TYPE_3D, getText("ead2ese.content.type.3D")));
+        this.getDaoTypes().add(new SelectItem(ContentManagerAction.TYPE_IMAGE, getText("ead2ese.content.type.image")));
+        this.getDaoTypes().add(new SelectItem(ContentManagerAction.TYPE_SOUND, getText("ead2ese.content.type.sound")));
+        this.getDaoTypes().add(new SelectItem(ContentManagerAction.TYPE_TEXT, getText("ead2ese.content.type.text")));
+        this.getDaoTypes().add(new SelectItem(ContentManagerAction.TYPE_VIDEO, getText("ead2ese.content.type.video")));
+        // Set of available permissions.
+        Set<SelectItem> rightsSet = this.addRightsOptions();
+        // Rights for digital objects.
+        this.getRightsDigitalObjects().addAll(rightsSet);
+        // Rights for EAD data.
+        this.getRightsEadData().addAll(rightsSet);
+        
+    }
+
+    /**
+     * Method to create the set with all the available rights statements for EAD data.
+     *
+     * @return Set with all the available rights statements for EAD data.
+     */
+    private Set<SelectItem> addRightsOptions() {
+    	Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
+    	rightsSet.add(new SelectItem("---", "---"));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES, getText("content.message.rights.creative.attribution.no.derivates")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
+
+    	return rightsSet;
     }
 
     public Integer getPageNumber() {
@@ -555,5 +617,61 @@ public class ContentManagerAction extends AbstractInstitutionAction {
     public void setErrorLinkHgSg(boolean errorLinkHgSg) {
         this.errorLinkHgSg = errorLinkHgSg;
     }
+
+	/**
+	 * @return the daoTypes
+	 */
+	public Set<SelectItem> getDaoTypes() {
+		return this.daoTypes;
+	}
+
+	/**
+	 * @param daoTypes the daoTypes to set
+	 */
+	public void setDaoTypes(Set<SelectItem> daoTypes) {
+		this.daoTypes = daoTypes;
+	}
+
+	/**
+	 * @return the rightsDigitalObjects
+	 */
+	public Set<SelectItem> getRightsDigitalObjects() {
+		return this.rightsDigitalObjects;
+	}
+
+	/**
+	 * @param rightsDigitalObjects the rightsDigitalObjects to set
+	 */
+	public void setRightsDigitalObjects(Set<SelectItem> rightsDigitalObjects) {
+		this.rightsDigitalObjects = rightsDigitalObjects;
+	}
+
+	/**
+	 * @return the rightsEadData
+	 */
+	public Set<SelectItem> getRightsEadData() {
+		return this.rightsEadData;
+	}
+
+	/**
+	 * @param rightsEadData the rightsEadData to set
+	 */
+	public void setRightsEadData(Set<SelectItem> rightsEadData) {
+		this.rightsEadData = rightsEadData;
+	}
+
+	/**
+	 * @return the daoTypeCheck
+	 */
+	public boolean isDaoTypeCheck() {
+		return this.daoTypeCheck;
+	}
+
+	/**
+	 * @param daoTypeCheck the daoTypeCheck to set
+	 */
+	public void setDaoTypeCheck(boolean daoTypeCheck) {
+		this.daoTypeCheck = daoTypeCheck;
+	}
 
 }

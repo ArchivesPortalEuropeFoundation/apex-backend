@@ -1,9 +1,11 @@
 package eu.apenet.dashboard.actions.content.ead;
 
-import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
-import eu.apenet.dashboard.actions.content.AbstractTypeActions;
 import java.util.Properties;
+
 import javax.servlet.http.HttpSession;
+
+import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
+import eu.apenet.dashboard.actions.content.AbstractTypeActions;
 
 public abstract class AbstractEadActions extends AbstractTypeActions {
 
@@ -63,18 +65,132 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
     @Override
     protected Properties getConversionParameters() {
         Properties parameters = new Properties();
+
+        // Recover the conversion options from session.
         HttpSession session = getServletRequest().getSession();
-        String option_default = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
-        String option_use_existing = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
+    	// Options related to DAO type.
+        this.fillDaoTypePrarameters(session, parameters);
+
+        // Options related to rights statement for digital objects.
+        this.fillRightsDigitalObjectPrarameters(session, parameters);
+
+        // Options related to rights statement for EAD data.
+        this.fillRightsEadDataPrarameters(session, parameters);
+
+        return parameters;
+    }
+
+    /**
+     * Method to recover the DAO type preferences from session and added them
+     * as conversion parameters.
+     *
+     * If the default option is not set, the default value "UNSPECIFIED" is
+     * assigned.
+     *
+     * By default the value for use existing DAO type is "TRUE".
+     *
+     * @param session Current <HttpSession>.
+     * @param parameters The <Properties> that store the conversion parameters.
+     */
+    private void fillDaoTypePrarameters(HttpSession session, Properties parameters) {
+        // Recover the options related to DAO type.
+        String option_default = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT);
+        String option_use_existing = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_USE_EXISTING);
+
+        // Check the values recovered.
+        // Selected value for use existing DAO type.
         boolean option_use_existing_bool = true;
         if (option_use_existing != null) {
             option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
         }
+
+        // Selected value for default DAO type.
         if (option_default == null) {
             option_default = "UNSPECIFIED";
         }
-        parameters.put("defaultRoleType", option_default);
-        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
-        return parameters;
+
+        // Add the conversion options related to DAO type to the properties.
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, option_default);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, Boolean.toString(option_use_existing_bool));
+    }
+
+    /**
+     * Method to recover the rights statement, description and holder for
+     * digital objects from session and added them as conversion parameters.
+     *
+     * If the rights statement is not filled, the description and holder are
+     * also set as empty values.
+     *
+     * @param session Current <HttpSession>.
+     * @param parameters The <Properties> that store the conversion parameters.
+     */
+    private void fillRightsDigitalObjectPrarameters(HttpSession session, Properties parameters) {
+        // Recover the options related to rights statement for digital objects.
+        String option_default_rights_digital = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_DIGITAL);
+        String option_rights_digital_description = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_DESCRIPTION);
+        String option_rights_digital_holder = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_HOLDER);
+
+        // Check the values recovered.
+        // Selected rights statement for digital objects.
+        if (option_default_rights_digital == null
+        		|| option_default_rights_digital.equalsIgnoreCase("---")) {
+        	option_default_rights_digital = "";
+        }
+
+        // Description added for the rights statement for digital objects.
+        if (option_rights_digital_description == null || option_default_rights_digital.isEmpty()) {
+        	option_rights_digital_description = "";
+        }
+
+        // Rights holder added for the rights statement for digital objects.
+        if (option_rights_digital_holder == null || option_default_rights_digital.isEmpty()) {
+        	option_rights_digital_holder = "";
+        }
+
+        // Add the conversion options related to rights statement for digital
+        // objects to the properties.
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, option_default_rights_digital);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, option_rights_digital_description);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, option_rights_digital_holder);
+    }
+
+    /**
+     * Method to recover the rights statement, description and holder for
+     * EAD data from session and added them as conversion parameters.
+     *
+     * If the rights statement is not filled, the description and holder are
+     * also set as empty values.
+     *
+     * @param session Current <HttpSession>.
+     * @param parameters The <Properties> that store the conversion parameters.
+     */
+    private void fillRightsEadDataPrarameters(HttpSession session, Properties parameters) {
+        // Recover the options related to rights statement for EAD data.
+        String option_default_rights_ead = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_EAD);
+        String option_rights_ead_description = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_DESCRIPTION);
+        String option_rights_ead_holder = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_HOLDER);
+
+        // Check the values recovered.
+        // Selected rights statement for EAD data.
+        if (option_default_rights_ead == null
+        		|| option_default_rights_ead.equalsIgnoreCase("---")) {
+        	option_default_rights_ead = "";
+        }
+
+        // Description added for the rights statement for EAD data.
+        if (option_rights_ead_description == null || option_default_rights_ead.isEmpty()) {
+        	option_rights_ead_description = "";
+        }
+
+        // Rights holder added for the rights statement for EAD data.
+        if (option_rights_ead_holder == null || option_default_rights_ead.isEmpty()) {
+        	option_rights_ead_holder = "";
+        }
+
+        // Add the conversion options related to rights statement for EAD data
+        // to the properties.
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, option_default_rights_ead);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, option_rights_ead_description);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, option_rights_ead_holder);
     }
 }

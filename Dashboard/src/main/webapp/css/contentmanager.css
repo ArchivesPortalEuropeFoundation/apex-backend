@@ -212,3 +212,122 @@ div.searchOptionsContent .typeRadio{
 .tdNextConverted{
 	margin-right:15px;
 }
+
+/* Styles for conversion options colorBox */
+#conversionOptsDiv {
+	text-align: left;
+	width: 100%;
+}
+
+#conversionOptsDiv form {
+	width: 100%;
+}
+
+#conversionOptsDiv form table {
+	width: 100%;
+}
+
+#conversionOptsDiv form table tr {
+	width: 100%;
+}
+
+#conversionOptsDiv form table tr td input[type="text"] {
+	width: 98%
+}
+
+#conversionOptsDiv form table tr td input[type="checkbox"] {
+	margin-left: 20px;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+#conversionOptsDiv form table tr td label {
+	vertical-align: middle;
+}
+
+#conversionOptsDiv form table tr td select {
+	vertical-align: middle;
+}
+
+#conversionOptsDiv form table tr td textarea {
+	height: 60px;
+	width: 98%
+}
+
+#conversionOptsDiv #buttonsDiv {
+	padding-top: 10px;
+}
+
+.optionsWizardLabels {
+	font-weight: bold;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-top: 5px;
+	width: 30%;
+}
+
+.optionsWizardSubLabels {
+	font-weight: bold;
+	padding-bottom: 5px;
+	padding-left: 20px;
+	padding-top: 5px;
+	width: 30%;
+}
+
+.optionsWizardContents {
+	padding-bottom: 5px;
+	padding-top: 5px;
+	width: 70%;
+}
+
+.mainButton {
+    font-family: "Arial",sans-serif;
+    font-size: 12px;
+
+	background: url("../images/mainbutton.jpg") repeat-x scroll right top #FFFFFF;
+    border: 1px solid #00A0DF;
+    border-radius: 3px 3px 3px 3px;
+    color: #00384D;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: normal;
+    margin: 5px 20px 5px 5px;
+    overflow: visible;
+    padding: 5px;
+    text-shadow: 1px 1px #FFFFFF;
+    vertical-align: baseline;
+    width: auto;
+
+	display: inline;
+	letter-spacing: 0.8px;
+	text-align: center;
+}
+
+.otherButton {
+    font-family: "Arial",sans-serif;
+    font-size: 12px;
+
+	background: url("../images/otherbutton.gif") repeat-x scroll right top #ffffff;
+    border: 1px solid #00a0df;
+    border-radius: 3px;
+    color: #00384d;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: normal;
+    margin-left: 5px;
+    margin-top: 5px;
+    overflow: visible;
+    padding: 5px;
+    text-shadow: 1px 1px #ffffff;
+    vertical-align: baseline;
+    width: auto;
+}
+
+p.fieldRequired {
+	color: red;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	font-weight: bold;
+}
+
+/* End styles for conversion options colorBox */

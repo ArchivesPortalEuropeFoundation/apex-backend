@@ -19,13 +19,41 @@ public class AjaxConversionOptionsAction extends AjaxControllerAbstractAction {
         try {
             Writer writer = openOutputWriter();
             try {
+            	// Get the conversion options from the session.
                 HttpSession session = getServletRequest().getSession();
-                String option_default = (String)session.getAttribute(OPTIONS_DEFAULT);
-                String option_use_existing = (String)session.getAttribute(OPTIONS_USE_EXISTING);
+            	// Options related to DAO type.
+                String option_default = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT);
+                String option_use_existing = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_USE_EXISTING);
+                // Options related to rights statement for digital objects.
+                String option_default_rights_digital = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_DIGITAL);
+                String option_rights_digital_description = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_DESCRIPTION);
+                String option_rights_digital_holder = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_HOLDER);
+                // Options related to rights statement for EAD data.
+                String option_default_rights_ead = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_EAD);
+                String option_rights_ead_description = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_DESCRIPTION);
+                String option_rights_ead_holder = (String)session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_HOLDER);
 
-                if(option_default != null && option_use_existing != null){
+                // Try to add  the options to the response JSON.
+                if(option_default != null && option_use_existing != null
+                		&& option_default_rights_digital != null
+                		&& option_rights_digital_description != null
+                		&& option_rights_digital_holder != null
+                		&& option_default_rights_ead != null
+                		&& option_rights_ead_description != null
+                		&& option_rights_ead_holder != null){
                     JSONObject obj = new JSONObject();
-                    obj.put(OPTIONS_DEFAULT, option_default).put(OPTIONS_USE_EXISTING, option_use_existing);
+
+                	// Options related to DAO type.
+                    obj.put(AjaxConversionOptionsConstants.OPTIONS_DEFAULT, option_default).put(AjaxConversionOptionsConstants.OPTIONS_USE_EXISTING, option_use_existing);
+                    // Options related to rights statement for digital objects.
+                    obj.put(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_DIGITAL, option_default_rights_digital);
+                    obj.put(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_DESCRIPTION, option_rights_digital_description);
+                    obj.put(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_HOLDER, option_rights_digital_holder);
+                    // Options related to rights statement for EAD data.
+                    obj.put(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_EAD, option_default_rights_ead);
+                    obj.put(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_DESCRIPTION, option_rights_ead_description);
+                    obj.put(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_HOLDER, option_rights_ead_holder);
+
                     writer.append(obj.toString());
                 } else
                     throw new APEnetException();
@@ -46,11 +74,32 @@ public class AjaxConversionOptionsAction extends AjaxControllerAbstractAction {
         try {
             Writer writer = openOutputWriter();
             try {
-                String option_default = getServletRequest().getParameter(OPTIONS_DEFAULT);
-                String option_use_existing = getServletRequest().getParameter(OPTIONS_USE_EXISTING);
+            	// Get the conversion options from the request.
+            	// Options related to DAO type.
+                String option_default = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_DEFAULT);
+                String option_use_existing = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_USE_EXISTING);
+                // Options related to rights statement for digital objects.
+                String option_default_rights_digital = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_DIGITAL);
+                String option_rights_digital_description = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_DESCRIPTION);
+                String option_rights_digital_holder = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_HOLDER);
+                // Options related to rights statement for EAD data.
+                String option_default_rights_ead = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_EAD);
+                String option_rights_ead_description = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_DESCRIPTION);
+                String option_rights_ead_holder = getServletRequest().getParameter(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_HOLDER);
+
+                // Add the conversion options to the session.
                 HttpSession session = getServletRequest().getSession();
-                session.setAttribute(OPTIONS_DEFAULT, option_default);
-                session.setAttribute(OPTIONS_USE_EXISTING, option_use_existing);
+            	// Options related to DAO type
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT, option_default);
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_USE_EXISTING, option_use_existing);
+                // Options related to rights statement for digital objects.
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_DIGITAL, option_default_rights_digital);
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_DESCRIPTION, option_rights_digital_description);
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_HOLDER, option_rights_digital_holder);
+                // Options related to rights statement for EAD data.
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_EAD, option_default_rights_ead);
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_DESCRIPTION, option_rights_ead_description);
+                session.setAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_HOLDER, option_rights_ead_holder);
 
                 JSONObject obj = new JSONObject();
                 obj.put("error", false);

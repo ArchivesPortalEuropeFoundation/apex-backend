@@ -1,4 +1,4 @@
-var globalRefresh_interval, globalIndex, globalRefresh;
+var globalRefresh_interval, globalIndex, globalRefresh, globalAlertMessage;
 
 function initContentManager(xmlTypeId) {
 	selectSelected(xmlTypeId);
@@ -267,8 +267,9 @@ function updatePageNumber(url) {
  *
  * @param refresh_interval defined in SecurityContext.java, this var stores in the session the timeout refresh, 5 secs by default.
  */
-function initResultsHandlers(refresh_interval) {
+function initResultsHandlers(refresh_interval, alertMessage) {
 	globalRefresh_interval = refresh_interval;
+	globalAlertMessage = alertMessage;
 	$("#updateCurrentSearch_resultPerPage").change(function(event) {
 		$("#updateCurrentSearch_pageNumber").attr("value", "1");
 		//do not update wrong the timeout, if there is an active refresh, do not refresh again and again.
@@ -292,11 +293,13 @@ function hideOrShowSelectAllFAsWindow() {
 function createColorboxForConversionOptions() {
     $("#conversionOpts").colorbox(
         {
-            width:"80%",
-            height:"200px",
+            width:"70%",
             inline:true,
             overlayClose:false,
             onLoad:function(){ checkCurrentOpts(); },
+            onComplete: function() {
+            	$(this).colorbox.resize();
+            },
             href: "#conversionOptsDiv"
         }
     );
@@ -310,12 +313,33 @@ function checkCurrentOpts() {
                 $("input:radio[name=roleType]").val(["UNSPECIFIED"]);
                 $("input:checkbox[name=useExistingRole]").val(["useExistingRole"]);
             } else {
-                $("input:radio[name=roleType]").val([databack.optsDefault]);
+                // Set value for DAO type.
+                $("select#daoType option[value='" + [databack.optsDefault] + "']").attr("selected","true");
+
+                // Set value for use existing DAO.
                 if(databack.optsUseExisting == 'true') {
                     $("input:checkbox[name=useExistingRole]").val(["useExistingRole"]);
                 } else {
                     $("input:checkbox[name=useExistingRole]").removeAttr("checked");
                 }
+
+                // Set value for default rights statement for digital objects.
+                $("select#rightDigitalObjects option[value='" + [databack.optsDefaultRightsDigitalObjects] + "']").attr("selected","true");
+
+                // Set value for description of rights statement for digital objects.
+                $("textarea#descriptionRightForDigitalObject").val([databack.optsRightsDigitalDesription]);
+
+                // Set value for rights holder of rights statement for digital objects.
+                $("input#textHolderRightForDigitalObject").val([databack.optsRightsDigitalHolder]);
+
+                // Set value for default rights statement for EAD data.
+                $("select#rightEadData option[value='" + [databack.optsDefaultRightsEadData] + "']").attr("selected","true");
+
+                // Set value for description of rights statement for EAD data.
+                $("textarea#descriptionRightForEADData").val([databack.optsRightsEadDesription]);
+
+                // Set value for rights holder of rights statement for EAD data.
+                $("input#textHolderRightForEADData").val([databack.optsRightsEadHolder]);
             }
         }
     }, 'json');
@@ -325,22 +349,116 @@ function prepareSubmitAndCancelBtns() {
     $("#submitBtnRoleType").unbind();
     $("#cancelBtnRoleType").unbind();
     $("#submitBtnRoleType").bind("click", function(){
-        var loadUrl = "saveConversionOptions.action";
-        var data = {optsUseExisting: $("#useExistingRole").is(":checked"), optsDefault: $("input:radio[name=roleType]:checked").val()};
-        $.post(loadUrl, data, function(databack){
-            if(databack){
-                if(databack.error){
-                    console.log("ERROR");
-                } else {
-                    $.fn.colorbox.close();
-                }
-            }
-        }, 'json');
+    	// First of all delete the old checks.
+    	deleteChecks();
+
+    	// Second check the filled options.
+    	if (!checkFilledConversionOptions()) {
+    		return;
+    	}
+    	
+    	// Submit the form if all is correct.
+    	submitConversionOptions();
     });
     $("#cancelBtnRoleType").bind("click", function(){
+    	// Delete the old checks.
+    	deleteChecks();
+
         $.fn.colorbox.close();
     });
 }
+
+/**
+ * Function to remove the old pending messages.
+ */
+function deleteChecks() {
+	$('.fieldRequired').remove();
+
+	$.fn.colorbox.resize();
+}
+
+/**
+ * Function to remove the message associated to the passed element.
+ */
+function deleteMessage(element) {
+	var id = $(element).attr("id");
+	
+	$("p#" + id + "_required").remove();
+
+	$.fn.colorbox.resize();
+}
+
+/**
+ * Function to check if the user has filled the description and/or the rights
+ * holder but not the rights statement for both digital objects and EAD data.
+ *
+ * @returns Result of the check. If TRUE fields filled correctly, if FALSE
+ * some needed field is not filled.
+ */
+function checkFilledConversionOptions() {
+	var result = true;
+
+	// Check the filled status for rights for digital objects section.
+	if (($("textarea#descriptionRightForDigitalObject").val() != ''
+			|| $("input#textHolderRightForDigitalObject").val() != '')
+			&& $("select#rightDigitalObjects").val() == '---') {
+		addWarnignMessage($("select#rightDigitalObjects").attr("id"));
+		result = false;
+	}
+
+	// Check the filled status for rights for EAD data section.
+	if (($("textarea#descriptionRightForEADData").val() != ''
+			|| $("input#textHolderRightForEADData").val() != '')
+			&& $("select#rightEadData").val() == '---') {
+		addWarnignMessage($("select#rightEadData").attr("id"));
+		result = false;
+	}
+
+	$.fn.colorbox.resize();
+
+	return result;
+}
+
+/**
+ * Function to create a new warning message under the field in which exits the
+ * problem.
+ *
+ * @param fieldId Field with the problem described in the warning message.
+ */
+function addWarnignMessage(fieldId) {
+	var element = document.getElementById(fieldId);
+	var subelement = document.createElement('p');
+	subelement.appendChild(document.createTextNode(globalAlertMessage));
+	subelement.id = fieldId + '_required';
+	subelement.className="fieldRequired";
+	element.parentNode.insertBefore(subelement, element.nextSibling);
+	
+}
+
+function submitConversionOptions() {
+    var loadUrl = "saveConversionOptions.action";
+
+    var data = {optsDefault: $("select#daoType").val(),
+    			optsUseExisting: $("#daoTypeCheck").is(":checked"),
+    			optsDefaultRightsDigitalObjects: $("select#rightDigitalObjects").val(),
+    			optsRightsDigitalDesription: $("textarea#descriptionRightForDigitalObject").val(),
+    			optsRightsDigitalHolder: $("input#textHolderRightForDigitalObject").val(),
+    			optsDefaultRightsEadData: $("select#rightEadData").val(),
+    			optsRightsEadDesription: $("textarea#descriptionRightForEADData").val(),
+    			optsRightsEadHolder: $("input#textHolderRightForEADData").val(),
+    			};
+
+    $.post(loadUrl, data, function(databack){
+        if(databack){
+            if(databack.error){
+                console.log("ERROR");
+            } else {
+                $.fn.colorbox.close();
+            }
+        }
+    }, 'json');
+}
+
 function refreshIntervalFunc(lastIndex, execute) {
 	var list = $("select#refreshInterval");
 	var index=lastIndex;// keeps the last index

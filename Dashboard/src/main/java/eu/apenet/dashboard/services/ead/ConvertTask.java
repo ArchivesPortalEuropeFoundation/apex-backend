@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -174,11 +175,36 @@ public class ConvertTask extends AbstractEadTask {
         if(properties == null)
             return new HashMap<String, String>();
         Map<String, String> parameters = new HashMap<String, String>();
-        String option_default = properties.getProperty("defaultRoleType");
-        String option_use_existing = properties.getProperty("useDefaultRoleType");
+
+        // Recover the values from the properties.
+        // Parse the conversion options related to DAO type.
+        String option_default = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_DEFAULT);
+        String option_use_existing = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING);
         boolean option_use_existing_bool = Boolean.parseBoolean(option_use_existing);
-        parameters.put("defaultRoleType", option_default);
-        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
+        // Parse the conversion options related to rights statement for digital
+        // objects.
+        String option_default_rights_digital = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL);
+        String option_rights_digital_description = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION);
+        String option_rights_digital_holder = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER);
+        // Parse the conversion options related to rights statement for EAD
+        // data.
+        String option_default_rights_ead = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD);
+        String option_rights_ead_description = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION);
+        String option_rights_ead_holder = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER);
+
+        // Add the values to the map.
+        // Add options related to DAO type.
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, option_default);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, Boolean.toString(option_use_existing_bool));
+        // Add options related to rights statement for digital objects.
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, option_default_rights_digital);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, option_rights_digital_description);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, option_rights_digital_holder);
+        // Add options related to rights statement for EAD data.
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, option_default_rights_ead);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, option_rights_ead_description);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, option_rights_ead_holder);
+
         return parameters;
     }
 }

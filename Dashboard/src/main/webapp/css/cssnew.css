@@ -976,31 +976,6 @@ input.inputButtonSubmitAL{
 	text-align: justify;
 }
 
-#conversionOptsDiv {
-	text-align: left;
-	width: 100%;
-}
-
-#conversionOptsDiv form {
-	width: 100%;
-}
-
-#conversionOptsDiv form table {
-	width: 100%;
-}
-
-#conversionOptsDiv form table tr {
-	width: 100%;
-}
-
-#conversionOptsDiv form table tr td {
-	width: 50%;
-}
-
-#conversionOptsDiv form table tr td input {
-	margin-right: 5px;
-}
-
 .eagLink {
 	text-decoration: underline;
 	cursor: pointer;
