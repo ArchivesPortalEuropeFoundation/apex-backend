@@ -1117,6 +1117,7 @@
             <result name="success" type="redirectAction">
                 <param name="actionName">ingestionprofiles</param>
                 <param name="actionMessages">${actionMessages}</param>
+                <param name="lastSelection">${lastSelection}</param>
             </result>
         </action>
         <action name="cancelIngestionprofileEditing" class="eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction" method="cancel">

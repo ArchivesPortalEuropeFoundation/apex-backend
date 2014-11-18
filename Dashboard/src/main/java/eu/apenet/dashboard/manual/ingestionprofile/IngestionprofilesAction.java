@@ -96,6 +96,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     //other fields
     private static final Logger LOG = Logger.getLogger(IngestionprofilesAction.class);
+    
+    private String lastSelection; //See #1718 description
 
     @Override
     public String input() {
@@ -106,50 +108,59 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
             if (profilelist == null) {
-                profilelist = ingestionprofiles.iterator().next().getValue();
+            	if(this.lastSelection!=null){
+            		this.profilelist = this.lastSelection;
+            	}else{
+            		profilelist = ingestionprofiles.iterator().next().getValue();
+            	}
+            }else{
+            	this.lastSelection = this.profilelist;
             }
         }
 
         if (StringUtils.isNotBlank(profilelist)) {
+        	
             Long profilelistLong = Long.parseLong(profilelist);
             Ingestionprofile ingestionprofile = profileDAO.findById(profilelistLong);
-            profileName = ingestionprofile.getNameProfile();
-            associatedFiletype = ingestionprofile.getFileType().toString();
-            if (!convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)
-                    && ingestionprofile.getUploadAction().getId() == 2) {
-                uploadedFileAction = "1";
-            } else {
-                uploadedFileAction = Integer.toString(ingestionprofile.getUploadAction().getId());
-            }
-            existingFileAction = Integer.toString(ingestionprofile.getExistAction().getId());
-            noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
-            daoType = Integer.toString(ingestionprofile.getDaoType().getId());
-            daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
+            if(ingestionprofile!=null){
+            	profileName = ingestionprofile.getNameProfile();
+                associatedFiletype = ingestionprofile.getFileType().toString();
+                if (!convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)
+                        && ingestionprofile.getUploadAction().getId() == 2) {
+                    uploadedFileAction = "1";
+                } else {
+                    uploadedFileAction = Integer.toString(ingestionprofile.getUploadAction().getId());
+                }
+                existingFileAction = Integer.toString(ingestionprofile.getExistAction().getId());
+                noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
+                daoType = Integer.toString(ingestionprofile.getDaoType().getId());
+                daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
 
-            conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
-            sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
-            if (sourceOfIdentifiers == null || sourceOfIdentifiers.isEmpty()) {
-            	sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
+                conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
+                sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
+                if (sourceOfIdentifiers == null || sourceOfIdentifiers.isEmpty()) {
+                	sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
+                }
+                textDataProvider = ingestionprofile.getEuropeanaDataProvider();
+                dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
+                europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
+                europeanaDaoTypeCheck = Boolean.toString(ingestionprofile.getEuropeanaDaoTypeFromFile());
+                String[] tempLang = ingestionprofile.getEuropeanaLanguages().split(" ");
+                languageSelection.addAll(Arrays.asList(tempLang));
+                languageCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguagesFromFile());
+                license = ingestionprofile.getEuropeanaLicense();
+                if (license.equals(EUROPEANA)) {
+                    europeanaLicense = ingestionprofile.getEuropeanaLicenseDetails();
+                }
+                if (license.equals(CREATIVECOMMONS)) {
+                    cc_js_result_uri = ingestionprofile.getEuropeanaLicenseDetails();
+                }
+                licenseAdditionalInformation = ingestionprofile.getEuropeanaAddRights();
+                inheritFileParentCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritElementsCheck());
+                inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
+                inheritOriginationCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritOriginCheck());
+                inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
             }
-            textDataProvider = ingestionprofile.getEuropeanaDataProvider();
-            dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
-            europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
-            europeanaDaoTypeCheck = Boolean.toString(ingestionprofile.getEuropeanaDaoTypeFromFile());
-            String[] tempLang = ingestionprofile.getEuropeanaLanguages().split(" ");
-            languageSelection.addAll(Arrays.asList(tempLang));
-            languageCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguagesFromFile());
-            license = ingestionprofile.getEuropeanaLicense();
-            if (license.equals(EUROPEANA)) {
-                europeanaLicense = ingestionprofile.getEuropeanaLicenseDetails();
-            }
-            if (license.equals(CREATIVECOMMONS)) {
-                cc_js_result_uri = ingestionprofile.getEuropeanaLicenseDetails();
-            }
-            licenseAdditionalInformation = ingestionprofile.getEuropeanaAddRights();
-            inheritFileParentCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritElementsCheck());
-            inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
-            inheritOriginationCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritOriginCheck());
-            inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
         }
         setUp();
         return SUCCESS;
@@ -209,11 +220,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setEuropeanaInheritElements(Boolean.parseBoolean(inheritFileParent));
         profile.setEuropeanaInheritOriginCheck(Boolean.parseBoolean(inheritOriginationCheck));
         profile.setEuropeanaInheritOrigin(Boolean.parseBoolean(inheritOrigination));
+        
         if (profilelist.equals("-1")) {
-            profileDAO.store(profile);
+            profile = profileDAO.store(profile);
+            this.lastSelection = profile.getId().toString();
             addActionMessage(getText("ingestionprofiles.profilessaved"));
         } else {
             profileDAO.update(profile);
+            this.lastSelection = this.profilelist;
             addActionMessage(getText("ingestionprofiles.profilesupdated"));
         }
         return SUCCESS;
@@ -264,6 +278,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         inheritOriginationCheck = Boolean.toString(true);
         inheritOrigination = Boolean.toString(false);
 
+        this.lastSelection = this.profilelist;
+        
         return SUCCESS;
     }
 
@@ -648,7 +664,15 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.inheritOrigination = inheritOrigination;
     }
 
-    private String convertToString(int identifier) {
+    public String getLastSelection() {
+		return lastSelection;
+	}
+
+	public void setLastSelection(String lastSelection) {
+		this.lastSelection = lastSelection;
+	}
+
+	private String convertToString(int identifier) {
         return identifier + "";
     }
 }

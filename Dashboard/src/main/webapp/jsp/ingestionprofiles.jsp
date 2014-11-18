@@ -47,7 +47,7 @@
             <tr>
                 <td>
                     <s:if test="%{ingestionprofiles.size() > 0}">
-                        <s:select id="profileCb" name="profilelist" list="ingestionprofiles" listKey="value" listValue="content" />
+                        <s:select id="profileCb" name="profilelist" list="ingestionprofiles" listKey="value" listValue="content" value="lastSelection" />
                     </s:if>
                     <s:submit key="ingestionprofiles.createprofile" action="addIngestionprofile" />
                 </td>
