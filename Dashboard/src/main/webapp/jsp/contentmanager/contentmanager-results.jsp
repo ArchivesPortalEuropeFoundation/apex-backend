@@ -398,6 +398,11 @@
                                                 </option>
                                             </c:if>
                                             <c:if test="${eadResult.convertedToEseEdm}">
+                                                <option value="colorbox|showEdmReport.action">
+                                                    <s:text name="content.message.report.edm" />
+                                                </option>
+                                            </c:if>
+                                            <c:if test="${eadResult.convertedToEseEdm}">
                                                 <option value="action|deleteEseEdm">
                                                     <s:text name="content.message.delete.ese" />
                                                 </option>

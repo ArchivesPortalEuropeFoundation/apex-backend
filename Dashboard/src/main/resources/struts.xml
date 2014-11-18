@@ -677,6 +677,9 @@
             </result>
         </action>
 
+        <action name="showEdmReport" class="eu.apenet.dashboard.ead2ese.GenerateReportAction">
+            <result name="success">/jsp/ead2ese/report.jsp</result>
+        </action>
 
         <action name="editEad" class="eu.apenet.dashboard.actions.ajax.EditEadAction">
             <result name="success" type="tiles">eadEdition</result>
