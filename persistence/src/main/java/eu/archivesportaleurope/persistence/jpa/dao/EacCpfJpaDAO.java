@@ -19,7 +19,6 @@ import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.EacCpf;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
@@ -96,7 +95,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     public List<EacCpf> getEacCpfs(ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<EacCpf> cq = criteriaBuilder.createQuery(EacCpf.class);
-        Root<? extends EacCpf> from = (Root<? extends EacCpf>) cq.from(contentSearchOptions.getContentClass());
+        Root<EacCpf> from = cq.from(EacCpf.class);
         cq.where(buildWhere(from, cq, contentSearchOptions));
         cq.select(from);
         /*
@@ -127,7 +126,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     public long countEacCpfs(ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
-        Root<? extends EacCpf> from = (Root<? extends EacCpf>) cq.from(contentSearchOptions.getContentClass());
+        Root<EacCpf> from = cq.from(EacCpf.class);
         cq.where(buildWhere(from, cq, contentSearchOptions));
         cq.select(criteriaBuilder.countDistinct(from));
 
@@ -138,7 +137,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
 	public boolean existEacCpfs(ContentSearchOptions contentSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<EacCpf> cq = criteriaBuilder.createQuery(EacCpf.class);
-        Root<? extends EacCpf> from = (Root<? extends EacCpf>) cq.from(contentSearchOptions.getContentClass());
+        Root<EacCpf> from = cq.from(EacCpf.class);
 		cq.where(buildWhere(from, cq, contentSearchOptions));
 		cq.select(from);
 
