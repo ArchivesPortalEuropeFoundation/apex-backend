@@ -111,4 +111,10 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
     	}
     }
 
+    public List<Object[]> countByArchivalInstitutions(){
+		TypedQuery<Object[]> query = getEntityManager().createQuery(
+				"SELECT archivalInstitution, count(queueItem) FROM QueueItem queueItem JOIN queueItem.archivalInstitution archivalInstitution WHERE priority > 0 GROUP BY archivalInstitution",
+				Object[].class);
+		return query.getResultList();
+    }
 }

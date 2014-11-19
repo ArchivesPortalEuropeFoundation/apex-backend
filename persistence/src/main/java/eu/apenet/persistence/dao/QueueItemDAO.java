@@ -19,5 +19,6 @@ public interface QueueItemDAO extends GenericDAO<QueueItem, Integer> {
 	boolean hasItemsWithErrors(int aiId);
     Long getPositionOfFirstItem(int aiId);
     Long countItems(int aiId);
+    List<Object[]> countByArchivalInstitutions();
 }
 
