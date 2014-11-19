@@ -78,7 +78,7 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
 				.createQuery(
 						"SELECT queueItem.id FROM QueueItem queueItem WHERE priority = 0 AND errors IS NOT NULL AND aiId = :aiId ORDER BY priority desc, id asc",
 						Integer.class);
-		query.setParameter("aiIid", aiId);
+		query.setParameter("aiId", aiId);
 		query.setMaxResults(1);
 		return query.getResultList().size() > 0;
 	}
