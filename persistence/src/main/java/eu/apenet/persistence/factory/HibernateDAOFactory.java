@@ -42,7 +42,6 @@ import eu.apenet.persistence.hibernate.EseStateHibernateDAO;
 import eu.apenet.persistence.hibernate.FindingAidHibernateDAO;
 import eu.apenet.persistence.hibernate.HoldingsGuideHibernateDAO;
 import eu.apenet.persistence.hibernate.LangHibernateDAO;
-import eu.apenet.persistence.hibernate.QueueItemHibernateDAO;
 import eu.apenet.persistence.hibernate.ResumptionTokenHibernateDAO;
 import eu.apenet.persistence.hibernate.SentMailRegisterHibernateDAO;
 import eu.apenet.persistence.hibernate.UploadMethodHibernateDAO;
@@ -53,6 +52,7 @@ import eu.archivesportaleurope.persistence.jpa.dao.ArchivalInstitutionOaiPmhJpaD
 import eu.archivesportaleurope.persistence.jpa.dao.EacCpfJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.HgSgFaRelationJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.IngestionprofileJpaDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.QueueItemJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.TopicJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.TopicMappingJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.UpFileJpaDAO;
@@ -163,7 +163,7 @@ public class HibernateDAOFactory extends DAOFactory {
 	
 	@Override
 	public QueueItemDAO getQueueItemDAO() {		
-		return (QueueItemDAO) instantiateDAO(QueueItemHibernateDAO.class) ;
+		return (QueueItemDAO) instantiateDAO(QueueItemJpaDAO.class) ;
 	}
 	
 	@Override

@@ -52,6 +52,17 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
 		return query.getResultList().get(0);
 	}
 
+	
+	@Override
+	public Long countItems(int aiId) {
+		TypedQuery<Long> query = getEntityManager().createQuery(
+				"SELECT count(queueItem) FROM QueueItem queueItem WHERE priority > 0 AND aiId = :aiId",
+				Long.class);
+		query.setParameter("aiId", aiId);
+		query.setMaxResults(1);
+		return query.getResultList().get(0);
+	}
+
 	public List<QueueItem> getItemsWithErrors() {
 		TypedQuery<QueueItem> query = getEntityManager()
 				.createQuery(
@@ -63,40 +74,41 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
 
 	@Override
 	public boolean hasItemsWithErrors(int aiId) {
-		// TODO: should be a query
-		List<QueueItem> iqList = getItemsWithErrors();
-
-		if (iqList.size() == 0)
-			return false;
-		else {
-			for (int i = 0; i < iqList.size(); i++) {
-				if ((iqList.get(i).getFindingAid() != null)
-						&& (iqList.get(i).getFindingAid().getArchivalInstitution().getAiId() == aiId))
-					return true;
-				if ((iqList.get(i).getHoldingsGuide() != null)
-						&& (iqList.get(i).getHoldingsGuide().getArchivalInstitution().getAiId() == aiId))
-					return true;
-				if ((iqList.get(i).getSourceGuide() != null)
-						&& (iqList.get(i).getSourceGuide().getArchivalInstitution().getAiId() == aiId))
-					return true;
-				if ((iqList.get(i).getEacCpf() != null)
-						&& (iqList.get(i).getEacCpf().getArchivalInstitution().getAiId() == aiId))
-					return true;
-				
-			}
+		TypedQuery<Long> query = getEntityManager()
+				.createQuery(
+						"SELECT queueItem.id FROM QueueItem queueItem WHERE priority = 0 AND errors IS NOT NULL AND aiId = :aiId ORDER BY priority desc, id asc",
+						Long.class);
+		query.setParameter("aiIid", aiId);
+		query.setMaxResults(1);
+		return query.getResultList().size() > 0;
+	}
+	public QueueItem getFirstItem(int aiId) {
+		TypedQuery<QueueItem> query = getEntityManager().createQuery(
+				"SELECT queueItem FROM QueueItem queueItem WHERE priority > 0 AND aiId = :aiId ORDER BY priority desc, id asc",
+				QueueItem.class);
+		query.setParameter("aiId", aiId);
+		query.setMaxResults(1);
+		List<QueueItem> results = query.getResultList();
+		if (results.size() > 0) {
+			return results.get(0);
 		}
-		return false;
+		return null;
 	}
 
     @Override
-    public Long getPositionOfNextItem(int archivalInstitutionId) {
-        TypedQuery<Long> query = getEntityManager()
-                .createQuery(
-                        "SELECT row FROM (SELECT ROW_NUMBER() OVER (ORDER BY priority desc) AS row, queueItem.id, queueItem.aiId, priority FROM QueueItem queueItem where priority > 0 ORDER BY priority desc, id asc) AS EMP WHERE aiId = " + archivalInstitutionId + " ORDER BY row LIMIT 1;",
-                        Long.class);
-        if(query.getSingleResult() == null)
-            return Long.parseLong("-1");
-        return query.getSingleResult();
+    public Long getPositionOfFirstItem(int aiId) {
+    	QueueItem firstQueueItem = getFirstItem(aiId);
+    	if (firstQueueItem == null){
+    		return null;
+    	}else {
+    		TypedQuery<Long> query = getEntityManager().createQuery(
+    				"SELECT count(queueItem) FROM QueueItem queueItem WHERE priority > :priority OR (id < :id AND priority = :priority)",
+    				Long.class);
+    		query.setParameter("id", firstQueueItem.getId());
+    		query.setParameter("priority", firstQueueItem.getPriority());
+    		query.setMaxResults(1);
+    		return query.getResultList().get(0);   		
+    	}
     }
 
 }
