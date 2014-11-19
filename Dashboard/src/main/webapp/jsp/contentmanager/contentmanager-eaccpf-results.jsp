@@ -13,7 +13,7 @@
 </script>
 		<div id="queueSize">
 			<c:if test="${aiItemsInQueue > 0}">Your items in the queue: ${aiItemsInQueue},</c:if> Queue size: ${totalItemsInQueue}
-			<c:if test="${!empty positionInQueue}">, Other items before you: ${positionInQueue}</c:if>
+			<c:if test="${!empty positionInQueue}">, Other items before your items: ${positionInQueue}</c:if>
 		</div>
 <div id="batchBlock">
     <form id="batchActionsForm">
