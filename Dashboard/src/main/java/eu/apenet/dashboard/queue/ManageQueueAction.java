@@ -67,6 +67,7 @@ public class ManageQueueAction extends AbstractAction {
 		QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
 		getServletRequest().setAttribute("numberOfItemsInQueue", queueDAO.countItems());
 		getServletRequest().setAttribute("firstItems", convert(queueDAO.getFirstItems()));
+		getServletRequest().setAttribute("countsByArchivalInstitutions", queueDAO.countByArchivalInstitutions());
 		getServletRequest().setAttribute("disabledItems", convert(queueDAO.getDisabledItems()));
 		getServletRequest().setAttribute("itemsWithErrors", convert(queueDAO.getItemsWithErrors()));
 		getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
