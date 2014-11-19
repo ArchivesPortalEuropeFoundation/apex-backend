@@ -286,7 +286,7 @@ div.searchOptionsContent .typeRadio{
 	width: 70%;
 }
 
-.mainButton {
+.blueButton {
     font-family: "Arial",sans-serif;
     font-size: 12px;
 
@@ -309,7 +309,7 @@ div.searchOptionsContent .typeRadio{
 	text-align: center;
 }
 
-.otherButton {
+.greyButton {
     font-family: "Arial",sans-serif;
     font-size: 12px;
 

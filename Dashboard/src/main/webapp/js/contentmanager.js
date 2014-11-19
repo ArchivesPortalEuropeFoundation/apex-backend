@@ -294,11 +294,12 @@ function createColorboxForConversionOptions() {
     $("#conversionOpts").colorbox(
         {
             width:"70%",
+            height:"500px",
             inline:true,
             overlayClose:false,
             onLoad:function(){ checkCurrentOpts(); },
-            onComplete: function() {
-            	$(this).colorbox.resize();
+            onClosed: function() {
+            	deleteChecks();
             },
             href: "#conversionOptsDiv"
         }
@@ -373,8 +374,6 @@ function prepareSubmitAndCancelBtns() {
  */
 function deleteChecks() {
 	$('.fieldRequired').remove();
-
-	$.fn.colorbox.resize();
 }
 
 /**
@@ -384,8 +383,6 @@ function deleteMessage(element) {
 	var id = $(element).attr("id");
 	
 	$("p#" + id + "_required").remove();
-
-	$.fn.colorbox.resize();
 }
 
 /**
@@ -397,6 +394,9 @@ function deleteMessage(element) {
  */
 function checkFilledConversionOptions() {
 	var result = true;
+
+	// Clean white spaces.
+	trimWitheSpaces();
 
 	// Check the filled status for rights for digital objects section.
 	if (($("textarea#descriptionRightForDigitalObject").val() != ''
@@ -414,9 +414,22 @@ function checkFilledConversionOptions() {
 		result = false;
 	}
 
-	$.fn.colorbox.resize();
-
 	return result;
+}
+
+/**
+ * Function to trim the whitespaces from the textarea and input fields.
+ */
+function trimWitheSpaces() {
+	// Clean white spaces in description of rights for digital objects.
+	$("textarea#descriptionRightForDigitalObject").val($.trim($("textarea#descriptionRightForDigitalObject").val()));
+	// Clean white spaces in holder of rights for digital objects.
+	$("input#textHolderRightForDigitalObject").val($.trim($("input#textHolderRightForDigitalObject").val()));
+
+	// Clean white spaces in description of rights for EAD data.
+	$("textarea#descriptionRightForEADData").val($.trim($("textarea#descriptionRightForEADData").val()));
+	// Clean white spaces in holder of rights for EAD data.
+	$("input#textHolderRightForEADData").val($.trim($("input#textHolderRightForEADData").val()));	
 }
 
 /**

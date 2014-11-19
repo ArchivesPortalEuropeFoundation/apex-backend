@@ -67,7 +67,7 @@
 	</table>
 	
 	<div id="buttonsDiv">
-		<input type="button" id="submitBtnRoleType" value="Submit" class="mainButton"/>
-		<input type="button" id="cancelBtnRoleType" value="Cancel" class="otherButton"/>
+		<input type="button" id="submitBtnRoleType" value="Submit" class="blueButton"/>
+		<input type="button" id="cancelBtnRoleType" value="Cancel" class="greyButton"/>
 	</div>
 </s:form>
