@@ -24,7 +24,7 @@ import eu.apenet.dashboard.actions.content.ead.BatchEadActions;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
-import eu.apenet.dpt.utils.util.Ead2EseInformation;
+import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
@@ -201,11 +201,11 @@ public class ConvertAction extends AbstractInstitutionAction {
 			Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
 			File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
 					ead.getPathApenetead());
-			Ead2EseInformation ead2EseInformation = new Ead2EseInformation(file, "", getAiname());
+			Ead2EdmInformation ead2EseInformation = new Ead2EdmInformation(file, "", getAiname());
 			textDataProvider = ead2EseInformation.getRepository();
 			daoType = ead2EseInformation.getRoleType();
 			if (StringUtils.isBlank(textDataProvider)){
-				Ead2EseInformation ead2EseInformationParent = new Ead2EseInformation(file, "", null);
+				Ead2EdmInformation ead2EseInformationParent = new Ead2EdmInformation(file, "", null);
 				if (ead2EseInformationParent.getArchdescRepository() != null
 						&& !ead2EseInformationParent.getArchdescRepository().isEmpty()) {
 					textDataProvider = ead2EseInformationParent.getArchdescRepository();
