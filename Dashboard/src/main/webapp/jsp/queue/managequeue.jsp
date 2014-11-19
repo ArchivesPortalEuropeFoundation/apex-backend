@@ -84,6 +84,25 @@
 			<s:submit value="Build autosuggestion dictionaries"></s:submit>
 		</s:form>			
 	</c:if>
+	<c:if test="${!empty countsByArchivalInstitutions }">
+		<h2>Number of items per institution:</h2>
+		<table class="defaultlayout">
+			<thead>
+				<tr>
+					<th><s:text name="admin.queuemanagement.institution.name" /></th>
+					<th>Count</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="item" items="${countsByArchivalInstitutions}">
+					<tr>
+						<td><c:out value="${item[0].ainame}" /></td>
+						<td><c:out value="${item[1]}" /></td>		
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</c:if>	
 	<c:if test="${!empty firstItems}">
 		<h2>First items:</h2>
 		<table class="defaultlayout">
