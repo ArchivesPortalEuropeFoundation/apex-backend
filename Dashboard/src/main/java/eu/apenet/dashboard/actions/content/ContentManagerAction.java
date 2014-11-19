@@ -12,10 +12,12 @@ import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.actions.content.eaccpf.EacCpfContentManagerResults;
 import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
 import eu.apenet.dashboard.listener.QueueDaemon;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -388,6 +390,9 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
         getServletRequest().setAttribute("results", results);
         getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
+        QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+        getServletRequest().setAttribute("numberOfItemsInQueue", queueDAO.countItems());
+//        getServletRequest().setAttribute("nextItemPosition", queueDAO.getPositionOfNextItem(SecurityContext.get().getSelectedInstitution().getId()));
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
         if (countResults>0)
         	return SUCCESS;

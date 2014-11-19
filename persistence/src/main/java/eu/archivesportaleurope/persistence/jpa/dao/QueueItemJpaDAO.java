@@ -88,4 +88,15 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
 		return false;
 	}
 
+    @Override
+    public Long getPositionOfNextItem(int archivalInstitutionId) {
+        TypedQuery<Long> query = getEntityManager()
+                .createQuery(
+                        "SELECT row FROM (SELECT ROW_NUMBER() OVER (ORDER BY priority desc) AS row, queueItem.id, queueItem.aiId, priority FROM QueueItem queueItem where priority > 0 ORDER BY priority desc, id asc) AS EMP WHERE aiId = " + archivalInstitutionId + " ORDER BY row LIMIT 1;",
+                        Long.class);
+        if(query.getSingleResult() == null)
+            return Long.parseLong("-1");
+        return query.getSingleResult();
+    }
+
 }

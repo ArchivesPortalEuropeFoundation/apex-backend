@@ -73,6 +73,11 @@ public class QueueItem implements java.io.Serializable {
 	@Enumerated(EnumType.STRING)
 	private QueueAction action;
 	private String preferences;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ai_id")
+    private ArchivalInstitution archivalInstitution;
+    @Column(name = "ai_id", updatable = false, insertable = false)
+    private Integer aiId;
 	
 	public QueueItem() {
 	}
@@ -228,6 +233,20 @@ public class QueueItem implements java.io.Serializable {
 		this.upFileId = upFileId;
 	}
 
+    public ArchivalInstitution getArchivalInstitution() {
+        return archivalInstitution;
+    }
 
+    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+        this.archivalInstitution = archivalInstitution;
+    }
+
+    public Integer getAiId() {
+        return aiId;
+    }
+
+    public void setAiId(Integer aiId) {
+        this.aiId = aiId;
+    }
 
 }

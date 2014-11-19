@@ -79,9 +79,12 @@
 				<c:when test="${harvestingStarted}"><s:text name="content.message.harvesting" /></c:when>
 				<c:when test="${!queueActive}"><s:text name="content.message.queue.stopped.maintenance" /></c:when>
 			</c:choose>
-			
 		</div>
 	</c:if>
+	<div id="queueSize">
+		The current size of the queue is ${numberOfItemsInQueue}.
+		<%--<c:if test="${nextItemPosition > -1}"> Your next item is in the ${nextItemPosition} position.</c:if>--%>
+	</div>
 	<div id="eads">
 		<div id="ead-results-container">
 			<c:choose>

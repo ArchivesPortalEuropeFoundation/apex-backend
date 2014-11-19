@@ -883,6 +883,8 @@ public class EadService {
 			priority += 150;
 		}
 		queueItem.setPriority(priority);
+        queueItem.setAiId(ead.getAiId());
+        queueItem.setArchivalInstitution(ead.getArchivalInstitution());
 		return queueItem;
 	}
 
@@ -901,6 +903,8 @@ public class EadService {
         queueItem.setUpFile(upFile);
 
         queueItem.setPriority(basePriority);
+        queueItem.setAiId(upFile.getAiId());
+        queueItem.setArchivalInstitution(upFile.getArchivalInstitution());
         return queueItem;
     }
 

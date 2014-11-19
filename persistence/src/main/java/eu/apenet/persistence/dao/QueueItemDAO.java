@@ -17,5 +17,6 @@ public interface QueueItemDAO extends GenericDAO<QueueItem, Integer> {
 	List<QueueItem> getDisabledItems();
 	QueueItem getFirstItem();
 	boolean hasItemsWithErrors(int aiId);
+    Long getPositionOfNextItem(int archivalInstitutionId);
 }
 

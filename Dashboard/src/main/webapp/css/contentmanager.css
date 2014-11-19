@@ -190,6 +190,12 @@
     padding-top:20px;
     padding-bottom:20px;
 }
+#contentmanager #queueSize {
+	text-align:center;
+	font-size: 11pt;
+	padding-top:20px;
+	padding-bottom:20px;
+}
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 	div.searchOptionsContent td.nextContentThType input{
 		top: -1.5px;
