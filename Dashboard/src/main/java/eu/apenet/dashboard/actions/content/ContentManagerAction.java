@@ -391,8 +391,9 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         getServletRequest().setAttribute("results", results);
         getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
         QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-        getServletRequest().setAttribute("numberOfItemsInQueue", queueDAO.countItems());
-//        getServletRequest().setAttribute("nextItemPosition", queueDAO.getPositionOfNextItem(SecurityContext.get().getSelectedInstitution().getId()));
+        getServletRequest().setAttribute("totalItemsInQueue", queueDAO.countItems());
+        getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
+        getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
         if (countResults>0)
         	return SUCCESS;
