@@ -6,4 +6,4 @@ update queue set queue.ai_id = source_guide.ai_id FROM queue, source_guide WHERE
 update queue set queue.ai_id = eac_cpf.ai_id FROM queue, eac_cpf WHERE queue.eac_cpf_id = eac_cpf.id;
 update queue set queue.ai_id = up_file.ai_id FROM queue, up_file WHERE queue.uf_id = up_file.id;
 
-alter table queue alter column ai_id integer not null;
+alter table queue alter column ai_id set not null;
