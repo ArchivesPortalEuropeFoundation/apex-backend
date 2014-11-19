@@ -74,10 +74,10 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
 
 	@Override
 	public boolean hasItemsWithErrors(int aiId) {
-		TypedQuery<Long> query = getEntityManager()
+		TypedQuery<Integer> query = getEntityManager()
 				.createQuery(
 						"SELECT queueItem.id FROM QueueItem queueItem WHERE priority = 0 AND errors IS NOT NULL AND aiId = :aiId ORDER BY priority desc, id asc",
-						Long.class);
+						Integer.class);
 		query.setParameter("aiIid", aiId);
 		query.setMaxResults(1);
 		return query.getResultList().size() > 0;
