@@ -33,6 +33,7 @@ public final class AjaxConversionOptionsConstants {
     public static final String SCRIPT_RIGHTS_EAD_HOLDER = "defaultRightsEadDataHolder"; // Default rights holder for EAD data.
 
 	// Rights statements types.
+    public static final String NO_SELECTED = "---"; // No license selected.
     public static final String CREATIVECOMMONS_ATTRIBUTION = "http://creativecommons.org/licenses/by/4.0/"; // "cca";
     public static final String CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES = "http://creativecommons.org/licenses/by-nd/4.0/"; // "ccand";
     public static final String CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL = "http://creativecommons.org/licenses/by-nc/4.0/"; // "ccanc";

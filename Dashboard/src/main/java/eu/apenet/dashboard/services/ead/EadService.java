@@ -17,6 +17,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction;
 import eu.apenet.dashboard.security.SecurityContext;
@@ -600,20 +601,12 @@ public class EadService {
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
         EadDAO eadDAO = DAOFactory.instance().getEadDAO();
         IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
-        IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
-		Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
 		XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
 
 		newEad.setQueuing(QueuingState.BUSY);
         eadDAO.store(newEad);
 
-        Properties conversionProperties = new Properties();
-        if(ingestionprofileDefaultDaoType == null) {
-            conversionProperties.put("defaultRoleType", "UNSPECIFIED");
-        } else {
-            conversionProperties.put("defaultRoleType", ingestionprofileDefaultDaoType.getDaoText());
-        }
-        conversionProperties.put("useDefaultRoleType", daoTypeCheck);
+        Properties conversionProperties = createConversionProperties(preferences);
 
         try {
             if(ingestionprofileDefaultUploadAction.isConvert()) {
@@ -906,6 +899,41 @@ public class EadService {
         queueItem.setAiId(upFile.getAiId());
         queueItem.setArchivalInstitution(upFile.getArchivalInstitution());
         return queueItem;
+    }
+
+    /**
+     * Method to recover only the properties related to the conversion options
+     * from the ingestion profile properties.
+     *
+     * @param preferences All the properties set in the ingestion profile.
+     *
+     * @return Conversion properties from the ingestion profile.
+     */
+    private static Properties createConversionProperties(Properties preferences) {
+    	Properties conversionProperties = new Properties();
+
+    	// Properties related to the DAO type.
+        IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
+        if(ingestionprofileDefaultDaoType == null) {
+            conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, "UNSPECIFIED");
+        } else {
+            conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, ingestionprofileDefaultDaoType.getDaoText());
+        }
+
+		Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, daoTypeCheck);
+
+        // Properties related to the rights statement for digital objects.
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS));
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION));
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER));
+
+        // Properties related to the rights statement for EAD data.
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA));
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION));
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_HOLDER));
+
+    	return conversionProperties;
     }
 
     private static Properties createEuropeanaProperties(Properties preferences, Ead ead) {

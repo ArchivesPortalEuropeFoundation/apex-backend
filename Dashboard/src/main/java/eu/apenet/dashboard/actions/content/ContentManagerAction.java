@@ -147,7 +147,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
      */
     private Set<SelectItem> addRightsOptions() {
     	Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
-    	rightsSet.add(new SelectItem("---", "---"));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
     	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
     	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
     	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));

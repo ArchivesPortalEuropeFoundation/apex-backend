@@ -58,6 +58,7 @@
 	border-left: 1px solid #00A0DF;
 	border-right: 1px solid #00A0DF;
 	float: left;
+	padding-bottom: 15px;
 	width: 97%;
 }
 
@@ -286,7 +287,7 @@
 
 textarea {
 	height:60px;
-	width: 200px;
+	width: 80%;
 	font-weight: bold;
 	overflow: auto;
 }
@@ -327,6 +328,11 @@ input[type="text"] {
 	color: black;
 }
 
+#basicTabContent input[type="text"] {
+	padding: 0;
+	width: 80%;
+}
+
 input[type="radio"] {
 	margin-right: 6px;
 	vertical-align: middle;
@@ -354,4 +360,8 @@ p.fieldRequired {
 	font: 1.1em Arial,sans-serif;
 	font-weight: bold;
 	border-bottom: 1px solid #00a0df;
+}
+
+.optionsSubLabels {
+	padding-left: 20px;
 }

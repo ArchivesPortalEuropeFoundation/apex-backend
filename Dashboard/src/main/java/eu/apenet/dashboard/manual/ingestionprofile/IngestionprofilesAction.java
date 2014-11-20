@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.Action;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ingestionprofile;
@@ -55,6 +56,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private Set<SelectItem> existingFileActions = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> noEadidActions = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>();
+    private Set<SelectItem> rightsDigitalObjects = new LinkedHashSet<SelectItem>(); // Rights for digital objects.
+    private Set<SelectItem> rightsEadData = new LinkedHashSet<SelectItem>(); // Rights for EAD data.
 
     //Collections for Europeana tab
     private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
@@ -75,6 +78,12 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String noEadidAction;
     private String daoType;
     private String daoTypeCheck;
+    private String rightDigitalObjects;
+    private String rightDigitalDescription;
+    private String rightDigitalHolder;
+    private String rightEadData;
+    private String rightEadDescription;
+    private String rightEadHolder;
 
     //fields for Europeana tab components
     private String conversiontype;
@@ -135,6 +144,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
                 daoType = Integer.toString(ingestionprofile.getDaoType().getId());
                 daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
+            // Rights for digital objects.
+            this.setRightDigitalObjects(ingestionprofile.getRightsOfDigitalObjects());
+            this.setRightDigitalDescription(ingestionprofile.getRightsOfDigitalDescription());
+            this.setRightDigitalHolder(ingestionprofile.getRightsOfDigitalHolder());
+            // Rights for EAD data.
+            this.setRightEadData(ingestionprofile.getRightsOfEADData());
+            this.setRightEadDescription(ingestionprofile.getRightsOfEADDescription());
+            this.setRightEadHolder(ingestionprofile.getRightsOfEADHolder());
 
                 conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
                 sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
@@ -183,6 +200,26 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setNoeadidAction(IngestionprofileDefaultNoEadidAction.getExistingFileAction(noEadidAction));
         profile.setDaoType(IngestionprofileDefaultDaoType.getDaoType(daoType));
         profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
+        // Only adds the rights options if file type is an EAD.
+        if (profile.getFileType() != 2) {
+	        // Rights for digital objects.
+	        profile.setRightsOfDigitalObjects(this.getRightDigitalObjects());
+	        profile.setRightsOfDigitalDescription(this.getRightDigitalDescription());
+	        profile.setRightsOfDigitalHolder(this.getRightDigitalHolder());
+	        // Rights for EAD data.
+	        profile.setRightsOfEADData(this.getRightEadData());
+	        profile.setRightsOfEADDescription(this.getRightEadDescription());
+	        profile.setRightsOfEADHolder(this.getRightEadHolder());
+        } else {
+	        // Rights for digital objects.
+	        profile.setRightsOfDigitalObjects("");
+	        profile.setRightsOfDigitalDescription("");
+	        profile.setRightsOfDigitalHolder("");
+	        // Rights for EAD data.
+	        profile.setRightsOfEADData("");
+	        profile.setRightsOfEADDescription("");
+	        profile.setRightsOfEADHolder("");
+        }
 
         profile.setEuropeanaConversionType(Boolean.parseBoolean(conversiontype));
         profile.setSourceOfIdentifiers(sourceOfIdentifiers);
@@ -261,6 +298,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         noEadidAction = "0";
         daoType = "0";
         daoTypeCheck = Boolean.toString(true);
+        // Rights for digital objects.
+        this.setRightDigitalObjects(AjaxConversionOptionsConstants.NO_SELECTED);
+        this.setRightDigitalDescription("");
+        this.setRightDigitalHolder("");
+        // Rights for EAD data.
+        this.setRightEadData(AjaxConversionOptionsConstants.NO_SELECTED);
+        this.setRightEadDescription("");
+        this.setRightEadHolder("");
 
         conversiontype = "1";
         sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
@@ -312,6 +357,13 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         daoTypes.add(new SelectItem("5", getText("ingestionprofiles.dao.3D")));
         daoTypes.add(new SelectItem("0", getText("ingestionprofiles.dao.unspecified")));
 
+        // Set of available permissions.
+        Set<SelectItem> rightsSet = this.addRightsOptions();
+        // Rights for digital objects.
+        this.getRightsDigitalObjects().addAll(rightsSet);
+        // Rights for EAD data.
+        this.getRightsEadData().addAll(rightsSet);
+
         //Europeana preferences
         conversiontypeSet.add(new SelectItem("true", this.getText("ead2ese.label.minimal.conversion")));
         conversiontypeSet.add(new SelectItem("false", this.getText("ead2ese.label.full.conversion")));
@@ -342,6 +394,31 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-f/", getText("ead2ese.content.license.europeana.access.free")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/orphan-work-eu/", this.getText("ead2ese.content.license.europeana.access.orphan")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
+    }
+
+    /**
+     * Method to create the set with all the available rights statements for EAD data.
+     *
+     * @return Set with all the available rights statements for EAD data.
+     */
+    private Set<SelectItem> addRightsOptions() {
+    	Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES, getText("content.message.rights.creative.attribution.no.derivates")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
+    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
+
+    	return rightsSet;
     }
 
     public String showIngestionProfiles() {
@@ -404,7 +481,35 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.daoTypes = daoTypes;
     }
 
-    public Set<SelectItem> getConversiontypeSet() {
+    /**
+	 * @return the rightsDigitalObjects
+	 */
+	public Set<SelectItem> getRightsDigitalObjects() {
+		return this.rightsDigitalObjects;
+	}
+
+	/**
+	 * @param rightsDigitalObjects the rightsDigitalObjects to set
+	 */
+	public void setRightsDigitalObjects(Set<SelectItem> rightsDigitalObjects) {
+		this.rightsDigitalObjects = rightsDigitalObjects;
+	}
+
+	/**
+	 * @return the rightsEadData
+	 */
+	public Set<SelectItem> getRightsEadData() {
+		return this.rightsEadData;
+	}
+
+	/**
+	 * @param rightsEadData the rightsEadData to set
+	 */
+	public void setRightsEadData(Set<SelectItem> rightsEadData) {
+		this.rightsEadData = rightsEadData;
+	}
+
+	public Set<SelectItem> getConversiontypeSet() {
         return conversiontypeSet;
     }
 
@@ -530,7 +635,91 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.daoTypeCheck = daoTypeCheck;
     }
 
-    public String getConversiontype() {
+    /**
+	 * @return the rightDigitalObjects
+	 */
+	public String getRightDigitalObjects() {
+		return this.rightDigitalObjects;
+	}
+
+	/**
+	 * @param rightDigitalObjects the rightDigitalObjects to set
+	 */
+	public void setRightDigitalObjects(String rightDigitalObjects) {
+		this.rightDigitalObjects = rightDigitalObjects;
+	}
+
+	/**
+	 * @return the rightDigitalDescription
+	 */
+	public String getRightDigitalDescription() {
+		return this.rightDigitalDescription;
+	}
+
+	/**
+	 * @param rightDigitalDescription the rightDigitalDescription to set
+	 */
+	public void setRightDigitalDescription(String rightDigitalDescription) {
+		this.rightDigitalDescription = rightDigitalDescription;
+	}
+
+	/**
+	 * @return the rightDigitalHolder
+	 */
+	public String getRightDigitalHolder() {
+		return this.rightDigitalHolder;
+	}
+
+	/**
+	 * @param rightDigitalHolder the rightDigitalHolder to set
+	 */
+	public void setRightDigitalHolder(String rightDigitalHolder) {
+		this.rightDigitalHolder = rightDigitalHolder;
+	}
+
+	/**
+	 * @return the rightEadData
+	 */
+	public String getRightEadData() {
+		return this.rightEadData;
+	}
+
+	/**
+	 * @param rightEadData the rightEadData to set
+	 */
+	public void setRightEadData(String rightEadData) {
+		this.rightEadData = rightEadData;
+	}
+
+	/**
+	 * @return the rightEadDescription
+	 */
+	public String getRightEadDescription() {
+		return this.rightEadDescription;
+	}
+
+	/**
+	 * @param rightEadDescription the rightEadDescription to set
+	 */
+	public void setRightEadDescription(String rightEadDescription) {
+		this.rightEadDescription = rightEadDescription;
+	}
+
+	/**
+	 * @return the rightEadHolder
+	 */
+	public String getRightEadHolder() {
+		return this.rightEadHolder;
+	}
+
+	/**
+	 * @param rightEadHolder the rightEadHolder to set
+	 */
+	public void setRightEadHolder(String rightEadHolder) {
+		this.rightEadHolder = rightEadHolder;
+	}
+
+	public String getConversiontype() {
         return conversiontype;
     }
 

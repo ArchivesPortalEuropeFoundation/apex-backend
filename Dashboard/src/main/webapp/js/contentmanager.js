@@ -445,7 +445,6 @@ function addWarnignMessage(fieldId) {
 	subelement.id = fieldId + '_required';
 	subelement.className="fieldRequired";
 	element.parentNode.insertBefore(subelement, element.nextSibling);
-	
 }
 
 function submitConversionOptions() {

@@ -72,6 +72,18 @@ public class Ingestionprofile implements Serializable {
     private Boolean europeanaInheritOrigin = false;
     @Column(name = "source_of_identifiers")
     private String sourceOfIdentifiers;
+    @Column(name = "rights_of_digital_objects")
+    private String rightsOfDigitalObjects;
+    @Column(name = "rights_of_digital_description")
+    private String rightsOfDigitalDescription;
+    @Column(name = "rights_of_digital_holder")
+    private String rightsOfDigitalHolder;
+    @Column(name = "rights_of_ead_data")
+    private String rightsOfEADData;
+    @Column(name = "rights_of_ead_description")
+    private String rightsOfEADDescription;
+    @Column(name = "rights_of_ead_holder")
+    private String rightsOfEADHolder;
 
     public Ingestionprofile() {
     }
@@ -286,5 +298,89 @@ public class Ingestionprofile implements Serializable {
 	 */
 	public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
 		this.sourceOfIdentifiers = sourceOfIdentifiers;
+	}
+
+	/**
+	 * @return the rightsOfDigitalObjects
+	 */
+	public String getRightsOfDigitalObjects() {
+		return this.rightsOfDigitalObjects;
+	}
+
+	/**
+	 * @param rightsOfDigitalObjects the rightsOfDigitalObjects to set
+	 */
+	public void setRightsOfDigitalObjects(String rightsOfDigitalObjects) {
+		this.rightsOfDigitalObjects = rightsOfDigitalObjects;
+	}
+
+	/**
+	 * @return the rightsOfDigitalDescription
+	 */
+	public String getRightsOfDigitalDescription() {
+		return this.rightsOfDigitalDescription;
+	}
+
+	/**
+	 * @param rightsOfDigitalDescription the rightsOfDigitalDescription to set
+	 */
+	public void setRightsOfDigitalDescription(String rightsOfDigitalDescription) {
+		this.rightsOfDigitalDescription = rightsOfDigitalDescription;
+	}
+
+	/**
+	 * @return the rightsOfDigitalHolder
+	 */
+	public String getRightsOfDigitalHolder() {
+		return this.rightsOfDigitalHolder;
+	}
+
+	/**
+	 * @param rightsOfDigitalHolder the rightsOfDigitalHolder to set
+	 */
+	public void setRightsOfDigitalHolder(String rightsOfDigitalHolder) {
+		this.rightsOfDigitalHolder = rightsOfDigitalHolder;
+	}
+
+	/**
+	 * @return the rightsOfEADData
+	 */
+	public String getRightsOfEADData() {
+		return this.rightsOfEADData;
+	}
+
+	/**
+	 * @param rightsOfEADData the rightsOfEADData to set
+	 */
+	public void setRightsOfEADData(String rightsOfEADData) {
+		this.rightsOfEADData = rightsOfEADData;
+	}
+
+	/**
+	 * @return the rightsOfEADDescription
+	 */
+	public String getRightsOfEADDescription() {
+		return this.rightsOfEADDescription;
+	}
+
+	/**
+	 * @param rightsOfEADDescription the rightsOfEADDescription to set
+	 */
+	public void setRightsOfEADDescription(String rightsOfEADDescription) {
+		this.rightsOfEADDescription = rightsOfEADDescription;
+	}
+
+	/**
+	 * @return the rightsOfEADHolder
+	 */
+	public String getRightsOfEADHolder() {
+		return this.rightsOfEADHolder;
+	}
+
+	/**
+	 * @param rightsOfEADHolder the rightsOfEADHolder to set
+	 */
+	public void setRightsOfEADHolder(String rightsOfEADHolder) {
+		this.rightsOfEADHolder = rightsOfEADHolder;
 	}
 }

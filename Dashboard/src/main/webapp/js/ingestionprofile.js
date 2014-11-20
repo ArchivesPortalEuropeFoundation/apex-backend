@@ -1,4 +1,5 @@
 function initPage() {
+	showHideRightsConversion();
 	checkActionMessages();
     $("#profileCb").off("change").on("change", function() {
     	var params = {profilelist: $("#profileCb").val()};
@@ -34,14 +35,33 @@ function hideAndShow(idPrefix, shown) {
     $("ul#ingestionprofileTabsContainer li a[href='#" + shown + "']").addClass("ingestionprofileCurrenttab");
 }
 
-function validateAndSave(profileNameError, dataProviderError, edmDaoError, languageError, europeanaLicenseError, ingestionProfileSaveMessage,yesText,noText) {
+function validateAndSave(profileNameError, dataProviderError, edmDaoError, languageError, europeanaLicenseError, alertRights) {
 	avoidCancellations();
+
+	var continueCheck = true;
+
     var profilename = $("#profilename").attr("value");
     if (profilename == null || profilename == "") {
     	alertAndDecode(profileNameError);
     	enableButtons();
-        return;
+    	continueCheck = false;
     }
+
+	// First of all delete the old checks over the rights information.
+	deleteChecks();
+
+	// Second check the filled options if the file type is an EAD.
+    var assocType = $("#associatedFiletypeCb").val();
+    if (assocType != 2) {
+    	continueCheck = checkFilledConversionOptions(alertRights);
+    }
+
+	// Check if the checks should continue or not.
+	if (!continueCheck) {
+    	enableButtons();
+		return;
+	}
+
     var upFileAction = $("#uploadedFileAction").attr("value");
     if (upFileAction == "2") {
         var dataProvider = $("#textDataProvider").attr("value");
@@ -85,7 +105,20 @@ function enableButtons(){
 	$('#ingestionprofilesCancel').removeAttr("disabled");
 }
 
-function changeDefaultOptionSet() {
+/**
+ * Function to encapsulate the changes in the available options when the file
+ * type is changed.
+ */
+function changeAvailableOptions() {
+	// Call function that changes the available options for selector of
+	// "Default action for uploaded files".
+	changeDefaultActionsUploadedFiles();
+
+	// Call function that shows or hide the conversion options.
+	showHideRightsConversion();
+}
+
+function changeDefaultActionsUploadedFiles() {
     var assocType = $("#associatedFiletypeCb").val();
     var upFileAct = $("#uploadedFileAction").val();
     if (assocType != "0" && upFileAct == "2") {
@@ -96,6 +129,34 @@ function changeDefaultOptionSet() {
         $('#uploadedFileAction option[value="1"]').after('<option value="2">' + optionText + '</option>');
     } else {
         $("#uploadedFileAction option[value='2']").remove();
+    }
+}
+
+/**
+ * Function to show/hide the rights statements options for conversion based on
+ * the associated file type.
+ *
+ * If file type is EAC-CPF, the options are hidden.
+ *
+ * If file type is any EAD type, the options are shown.
+ */
+function showHideRightsConversion() {
+    var assocType = $("#associatedFiletypeCb").val();
+
+    if (assocType == 2) {
+    	$("tr#trRightForDigitalObject").hide();
+    	$("tr#trDescriptionRightForDigitalObject").hide();
+    	$("tr#trHolderRightForDigitalObject").hide();
+    	$("tr#trRightForEADData").hide();
+    	$("tr#trDescriptionRightForEADData").hide();
+    	$("tr#trHolderRightForEADData").hide();
+    } else {
+    	$("tr#trRightForDigitalObject").show();
+    	$("tr#trDescriptionRightForDigitalObject").show();
+    	$("tr#trHolderRightForDigitalObject").show();
+    	$("tr#trRightForEADData").show();
+    	$("tr#trDescriptionRightForEADData").show();
+    	$("tr#trHolderRightForEADData").show();
     }
 }
 
@@ -169,4 +230,85 @@ function deleteColorboxForProcessing() {
 	$("div[id='colorbox']").each(function(i) {
 		$(this).fadeOut(1000);
 	});
+}
+
+/**
+ * Function to remove the old pending messages.
+ */
+function deleteChecks() {
+	$('.fieldRequired').remove();
+}
+
+/**
+ * Function to remove the message associated to the passed element.
+ */
+function deleteMessage(element) {
+	var id = $(element).attr("id");
+	
+	$("p#" + id + "_required").remove();
+}
+
+/**
+ * Function to check if the user has filled the description and/or the rights
+ * holder but not the rights statement for both digital objects and EAD data.
+ *
+ * @param alertRights Warning message about the rights field.
+ *
+ * @returns Result of the check. If TRUE fields filled correctly, if FALSE
+ * some needed field is not filled.
+ */
+function checkFilledConversionOptions(alertRights) {
+	var result = true;
+
+	// Clean white spaces.
+	trimWitheSpaces();
+
+	// Check the filled status for rights for digital objects section.
+	if (($("textarea#rightDigitalDescription").val() != ''
+			|| $("input#rightDigitalHolder").val() != '')
+			&& $("select#rightDigitalObjects").val() == '---') {
+		addWarnignMessage($("select#rightDigitalObjects").attr("id"), alertRights);
+		result = false;
+	}
+
+	// Check the filled status for rights for EAD data section.
+	if (($("textarea#rightEadDescription").val() != ''
+			|| $("input#rightEadHolder").val() != '')
+			&& $("select#rightEadData").val() == '---') {
+		addWarnignMessage($("select#rightEadData").attr("id"), alertRights);
+		result = false;
+	}
+
+	return result;
+}
+
+/**
+ * Function to trim the whitespaces from the textarea and input fields.
+ */
+function trimWitheSpaces() {
+	// Clean white spaces in description of rights for digital objects.
+	$("textarea#rightDigitalDescription").val($.trim($("textarea#rightDigitalDescription").val()));
+	// Clean white spaces in holder of rights for digital objects.
+	$("input#rightDigitalHolder").val($.trim($("input#rightDigitalHolder").val()));
+
+	// Clean white spaces in description of rights for EAD data.
+	$("textarea#rightEadDescription").val($.trim($("textarea#rightEadDescription").val()));
+	// Clean white spaces in holder of rights for EAD data.
+	$("input#rightEadHolder").val($.trim($("input#rightEadHolder").val()));	
+}
+
+/**
+ * Function to create a new warning message under the field in which exits the
+ * problem.
+ *
+ * @param fieldId Field with the problem described in the warning message.
+ * @param alertRights Warning message about the rights field.
+ */
+function addWarnignMessage(fieldId, alertRights) {
+	var element = document.getElementById(fieldId);
+	var subelement = document.createElement('p');
+	subelement.appendChild(document.createTextNode(alertRights));
+	subelement.id = fieldId + '_required';
+	subelement.className="fieldRequired";
+	element.parentNode.insertBefore(subelement, element.nextSibling);
 }
