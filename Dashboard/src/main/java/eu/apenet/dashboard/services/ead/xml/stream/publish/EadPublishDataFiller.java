@@ -181,7 +181,6 @@ public class EadPublishDataFiller {
 		clevel.setUnitid(publishData.getUnitid());
 		clevel.setUnittitle(publishData.getFirstUnittitle());
 		clevel.setHrefEadid(extrefHandler.getFirstResult());
-		publishData.setLevel(clevel.getLevel());
 
 	}
 

@@ -125,7 +125,7 @@ public class EadSolrPublisher {
 		String alterdate = "";
 		String attributeLevel = "fonds";
 		if (clevel) {
-			attributeLevel = publishData.getLevel();
+			attributeLevel = null;
 		} else {
 			if (StringUtils.isBlank(publishData.getUnitid())) {
 				unitidfond = publishData.getFirstOtherUnitid();

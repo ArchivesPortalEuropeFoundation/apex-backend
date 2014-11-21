@@ -17,7 +17,6 @@ public class EadPublishData extends PublishData {
 	private String unitdateNormal;
 	private String langmaterial;
 	private int numberOfDaos = 0;
-	private String level;
 	private Set<String> roledao = new HashSet<String>();
 	private String globalLanguage;
 	private Set<String> controlAccessSubjects = new HashSet<String>();
@@ -82,12 +81,6 @@ public class EadPublishData extends PublishData {
 	public void setRoledao(Set<String> roledao) {
 		this.roledao = roledao;
 	}
-	public String getLevel() {
-		return level;
-	}
-	public void setLevel(String level) {
-		this.level = level;
-	}
 	public String getGlobalLanguage() {
 		return globalLanguage;
 	}
@@ -113,7 +106,7 @@ public class EadPublishData extends PublishData {
 		return "EadPublishData [unitid=" + unitid + ", otherUnitid=" + otherUnitid + ", firstUnittitle="
 				+ firstUnittitle + ", scopecontent=" + scopecontent + ", otherinfo=" + otherinfo + ", unitdate="
 				+ unitdate + ", unitdateNormal=" + unitdateNormal + ", langmaterial=" + langmaterial
-				+ ", numberOfDaos=" + numberOfDaos + ", level=" + level + ", roledao=" + roledao + ", globalLanguage="
+				+ ", numberOfDaos=" + numberOfDaos + ", roledao=" + roledao + ", globalLanguage="
 				+ globalLanguage + "]";
 	}
 
