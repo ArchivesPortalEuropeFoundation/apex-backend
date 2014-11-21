@@ -161,7 +161,7 @@ public class LinkingService {
 				Ead ead = eads.get(0);
 				InputStream xslIs = TransformationTool.class.getResourceAsStream("/xsl/fa2hg-extended.xsl");
 				Source xsltSource = new StreamSource(xslIs);
-				String filePath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
+				String filePath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPath();
 				InputStream fileIs = FileUtils.openInputStream(new File(filePath));
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("title", titleMethod);
@@ -180,7 +180,6 @@ public class LinkingService {
 
 				CLevel cLevel = new CLevel();
 				cLevel.setLeaf(true);
-				cLevel.setLevel("item");
 				cLevel.setXml(cLevelXml);
 				cLevel.setUnitid(unitidString);
 				cLevel.setUnittitle(unittitleString);
