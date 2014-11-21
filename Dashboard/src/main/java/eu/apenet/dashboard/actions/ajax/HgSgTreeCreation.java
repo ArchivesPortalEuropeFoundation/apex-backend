@@ -231,7 +231,6 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
     private CLevel createDummyCLevel() {
         CLevel cLevel = new CLevel();
         cLevel.setLeaf(false);
-        cLevel.setLevel("series");
         return cLevel;
     }
 
