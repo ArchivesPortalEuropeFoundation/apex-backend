@@ -42,7 +42,8 @@ public class CLevel implements Serializable{
 	private String unitid;
 	@Column(name = "duplicate_unitid")	
 	private boolean duplicateUnitid;
-	private String level;
+	@Column(name = "persistent_id")
+	private String persistentId;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="parent_cl_id", insertable=false, updatable=false)
 	private CLevel parent;
@@ -57,12 +58,6 @@ public class CLevel implements Serializable{
 	
 	private String xml;
 
-	public String getLevel() {
-		return level;
-	}
-	public void setLevel(String level) {
-		this.level = level;
-	}
 	public String getUnittitle() {
 		return unittitle;
 	}
@@ -148,5 +143,12 @@ public class CLevel implements Serializable{
 	public void setDuplicateUnitid(boolean duplicateUnitid) {
 		this.duplicateUnitid = duplicateUnitid;
 	}
+	public String getPersistentId() {
+		return persistentId;
+	}
+	public void setPersistentId(String persistentId) {
+		this.persistentId = persistentId;
+	}
+
     
 }
