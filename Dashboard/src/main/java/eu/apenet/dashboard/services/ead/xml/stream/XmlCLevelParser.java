@@ -30,7 +30,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class XmlCLevelParser extends AbstractParser {
 
 	public static final QName CLEVEL = new QName(APENET_EAD, "c");
-	private static final QName LEVEL = new QName(APENET_EAD, "level");
+	private static final QName PERSISTENT_ID = new QName(APENET_EAD, "id");
 
 	//private static final Logger LOG = Logger.getLogger(CLevelParser.class);
 
@@ -49,7 +49,7 @@ public class XmlCLevelParser extends AbstractParser {
 		//int lastId = ownId;
 		List<LevelInfo> unittitles = new ArrayList<LevelInfo>();
 		unittitles.addAll(upperLevelUnittitles);
-		clevel.setLevel(xmlReader.getAttributeValue(null, LEVEL.getLocalPart()));
+		clevel.setPersistentId(xmlReader.getAttributeValue(null, PERSISTENT_ID.getLocalPart()));
 		StringWriter stringWriter = new StringWriter();
 		XMLStreamWriterHolder xmlWriterHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
 				.createXMLStreamWriter(stringWriter));
