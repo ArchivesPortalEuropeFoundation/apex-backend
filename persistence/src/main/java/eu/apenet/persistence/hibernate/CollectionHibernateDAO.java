@@ -98,7 +98,7 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 				criteria.add(Restrictions.eq("collection.liferayUserId", liferayUserId));
 				criteria.addOrder(Order.desc("modified_date"));
 				criteria.setMaxResults(pageSize);
-				criteria.add(Restrictions.like("collection.title",title, MatchMode.ANYWHERE));
+				criteria.add(Restrictions.ilike("collection.title",title, MatchMode.ANYWHERE));
 			}
 			return criteria.list();
 		}
