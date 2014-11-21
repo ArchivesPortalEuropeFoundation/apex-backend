@@ -968,7 +968,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
     private void writeNewCLevelXmlAndChildren(AddableFields field, CLevel cLevel, String key, boolean onlyLowLevels) throws XMLStreamException, IOException {
         LOG.info("Adding in " + key + ", field " + field.name + "for cLevel id " + cLevel.getClId());
-        if((onlyLowLevels && (cLevel.getLevel().equals("item") || cLevel.getLevel().equals("file"))) || !onlyLowLevels){
+        if(!onlyLowLevels){
             String newXml = new EditParser().addInLevel(field, cLevel.getXml(), formValues.get(key));
             JpaUtil.beginDatabaseTransaction();
             cLevel.setXml(newXml);
