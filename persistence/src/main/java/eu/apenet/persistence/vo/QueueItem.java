@@ -243,9 +243,9 @@ public class QueueItem implements java.io.Serializable {
         return archivalInstitution;
     }
 
-//    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
-//        this.archivalInstitution = archivalInstitution;
-//    }
+    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+        this.archivalInstitution = archivalInstitution;
+    }
 
     public Integer getAiId() {
         return aiId;
