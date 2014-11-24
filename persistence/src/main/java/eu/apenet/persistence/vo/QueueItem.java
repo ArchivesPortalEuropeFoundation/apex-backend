@@ -80,9 +80,9 @@ public class QueueItem implements java.io.Serializable {
 	private QueueAction action;
 	private String preferences;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ai_id")
+    @JoinColumn(name = "ai_id", updatable = false, insertable = false)
     private ArchivalInstitution archivalInstitution;
-    @Column(name = "ai_id", updatable = false, insertable = false)
+    @Column(name = "ai_id")
     private Integer aiId;
 	
 	public QueueItem() {
@@ -243,9 +243,9 @@ public class QueueItem implements java.io.Serializable {
         return archivalInstitution;
     }
 
-    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
-        this.archivalInstitution = archivalInstitution;
-    }
+//    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+//        this.archivalInstitution = archivalInstitution;
+//    }
 
     public Integer getAiId() {
         return aiId;
