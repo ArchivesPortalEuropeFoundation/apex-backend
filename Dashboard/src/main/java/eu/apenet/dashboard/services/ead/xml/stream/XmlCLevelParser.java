@@ -50,7 +50,7 @@ public class XmlCLevelParser extends AbstractParser {
 		//int lastId = ownId;
 		List<LevelInfo> unittitles = new ArrayList<LevelInfo>();
 		unittitles.addAll(upperLevelUnittitles);
-		clevel.setPersistentId(xmlReader.getAttributeValue(null, PERSISTENT_ID.getLocalPart()));
+		clevel.setCid(xmlReader.getAttributeValue(null, PERSISTENT_ID.getLocalPart()));
 		StringWriter stringWriter = new StringWriter();
 		XMLStreamWriterHolder xmlWriterHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
 				.createXMLStreamWriter(stringWriter));
