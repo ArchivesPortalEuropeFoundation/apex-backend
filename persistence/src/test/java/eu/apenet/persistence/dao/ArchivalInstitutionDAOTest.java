@@ -118,7 +118,6 @@ public class ArchivalInstitutionDAOTest extends AbstractJpaTestCase{
 			CLevel clevel = new CLevel();
 			clevel.setEcId(5301l);
 			clevel.setLeaf(true);
-			clevel.setLevel("file");
 			clevel.setOrderId(i+j);
 			clevel.setUnitid(getRandomString());
 			clevel.setUnittitle(getRandomString());
