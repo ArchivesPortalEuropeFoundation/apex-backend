@@ -249,7 +249,6 @@ public class EacCpfService {
 		}
         queueItem.setPriority(priority);
         queueItem.setAiId(eacCpf.getAiId());
-        queueItem.setArchivalInstitution(eacCpf.getArchivalInstitution());
         return queueItem;
     }
 
@@ -703,7 +702,6 @@ public class EacCpfService {
 
         queueItem.setPriority(basePriority);
         queueItem.setAiId(upFile.getAiId());
-        queueItem.setArchivalInstitution(upFile.getArchivalInstitution());
         return queueItem;
     }
 
