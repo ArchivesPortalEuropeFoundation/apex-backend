@@ -26,11 +26,12 @@ import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 //import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import eu.archivesportaleurope.xml.ApeXMLConstants;
 
 public class XmlCLevelParser extends AbstractParser {
 
-	public static final QName CLEVEL = new QName(APENET_EAD, "c");
-	private static final QName PERSISTENT_ID = new QName(APENET_EAD, "id");
+	public static final QName CLEVEL = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "c");
+	private static final QName PERSISTENT_ID = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "id");
 
 	//private static final Logger LOG = Logger.getLogger(CLevelParser.class);
 
