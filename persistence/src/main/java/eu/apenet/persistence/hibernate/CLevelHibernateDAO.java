@@ -39,7 +39,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	}
 	@Override
 	public Long getChildCLevelId(Long parentId, Integer orderId){
-		String jpaQuery = "SELECT clevel.clId FROM CLevel clevel WHERE clevel.parentClId = :parentId AND clevel.orderId = :orderId";			
+		String jpaQuery = "SELECT clevel.id FROM CLevel clevel WHERE clevel.parentClId = :parentId AND clevel.orderId = :orderId";			
 		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
 		query.setParameter("orderId", orderId);
 		query.setParameter("parentId", parentId);	
@@ -84,7 +84,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			varName = "holdingsGuide";
 		}
 
-		String jpaQuery = "SELECT clevel.clId FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode AND clevel.parentClId IS NULL AND clevel.orderId = :orderId";			
+		String jpaQuery = "SELECT clevel.id FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode AND clevel.parentClId IS NULL AND clevel.orderId = :orderId";			
 		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
 		query.setParameter("orderId", orderId);
 		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
@@ -149,7 +149,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			varName = "holdingsGuide";
 		}
 
-		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.clId  = :id AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.id  = :id AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
 		query.setParameter("id", id);
 		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
@@ -240,7 +240,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	public Long countChildCLevels(Long parentCLevelId) {
 		long startTime = System.currentTimeMillis();
 		Criteria criteria = createChildCLevelsCriteria(parentCLevelId);
-		criteria.setProjection(Projections.countDistinct("clevel.clId"));
+		criteria.setProjection(Projections.countDistinct("clevel.id"));
 		Object object = criteria.list().get(0);
 
 		long endTime = System.currentTimeMillis();
@@ -276,7 +276,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	public Long countTopCLevels(Long eadContentId) {
 		long startTime = System.currentTimeMillis();
 		Criteria criteria = createTopCLevelsCriteria(eadContentId);
-		criteria.setProjection(Projections.countDistinct("clevel.clId"));
+		criteria.setProjection(Projections.countDistinct("clevel.id"));
 		Object object = criteria.list().get(0);
 
 		long endTime = System.currentTimeMillis();
@@ -351,7 +351,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	public Long getClIdByUnitid(String unitid, Long eadContentId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).setProjection(
-				Projections.distinct(Projections.projectionList().add(Projections.property("clId"))));
+				Projections.distinct(Projections.projectionList().add(Projections.property("id"))));
 		criteria.add(Restrictions.eq("clevel.ecId", eadContentId));
 		criteria.add(Restrictions.eq("clevel.unitid", unitid));
 		try {
@@ -394,14 +394,14 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		}
 		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent."
 				+ varName
-				+ " = :id AND clevel.hrefEadid IS NOT NULL AND clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation."
+				+ " = :id AND clevel.hrefEadid IS NOT NULL AND clevel.id NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation."
 				+ varName + " = :id)";
 	}
 
 	@Override
 	public List<CLevel> getClevelsFromSgOrHg(Integer aiId, String eadid) {
 		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE clevel.hrefEadid = :eadid AND "
-				+ "clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation.hgSgClevelId =  clevel.clId) AND"
+				+ "clevel.id NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation.hgSgClevelId =  clevel.id) AND"
 				+ "(eadContent.hgId IN "
 				+ "(SELECT holdingsGuide.id FROM HoldingsGuide holdingsGuide WHERE holdingsGuide.aiId = :aiId)"
 				+ "OR eadContent.sgId IN "

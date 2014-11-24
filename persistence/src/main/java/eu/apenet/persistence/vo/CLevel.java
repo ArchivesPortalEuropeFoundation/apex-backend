@@ -31,7 +31,7 @@ public class CLevel implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long clId;
+	private Long id;
 	@Column(name = "order_id")
 	private Integer orderId;
 	private boolean leaf;
@@ -96,11 +96,11 @@ public class CLevel implements Serializable{
 	public void setParentClId(Long parentClId) {
 		this.parentClId = parentClId;
 	}
-	public Long getClId() {
-		return clId;
+	public Long getId() {
+		return id;
 	}
-	public void setClId(Long clId) {
-		this.clId = clId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getXml() {
