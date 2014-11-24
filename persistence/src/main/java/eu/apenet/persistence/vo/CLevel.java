@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import eu.archivesportaleurope.util.ApeUtil;
+
 @Entity
 @Table(name = "c_level")
 public class CLevel implements Serializable{
@@ -142,6 +144,10 @@ public class CLevel implements Serializable{
 	}
 	public void setDuplicateUnitid(boolean duplicateUnitid) {
 		this.duplicateUnitid = duplicateUnitid;
+	}
+	
+	public String getEncodedPersistentId() {
+		return ApeUtil.encodeSpecialCharacters(persistentId);
 	}
 	public String getPersistentId() {
 		return persistentId;
