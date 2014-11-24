@@ -78,7 +78,7 @@ public class ArchivalInstitutionDAOTest extends AbstractJpaTestCase{
 				HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
 				hgSgFaRelation.setFaId(ead.getId());
 				hgSgFaRelation.setAiId(aiId);
-				hgSgFaRelation.setHgSgClevelId(clevel.getClId());
+				hgSgFaRelation.setHgSgClevelId(clevel.getId());
 				if(clazz.equals(HoldingsGuide.class)){
 					hgSgFaRelation.setHgId(id);
 				}else if(clazz.equals(SourceGuide.class)){
