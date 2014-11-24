@@ -44,8 +44,8 @@ public class CLevel implements Serializable{
 	private String unitid;
 	@Column(name = "duplicate_unitid")	
 	private boolean duplicateUnitid;
-	@Column(name = "persistent_id")
-	private String persistentId;
+	@Column(name = "cid")
+	private String cid;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="parent_cl_id", insertable=false, updatable=false)
 	private CLevel parent;
@@ -146,15 +146,16 @@ public class CLevel implements Serializable{
 		this.duplicateUnitid = duplicateUnitid;
 	}
 	
-	public String getEncodedPersistentId() {
-		return ApeUtil.encodeSpecialCharacters(persistentId);
+	public String getEncodedCid() {
+		return ApeUtil.encodeSpecialCharacters(cid);
 	}
-	public String getPersistentId() {
-		return persistentId;
+	public String getCid() {
+		return cid;
 	}
-	public void setPersistentId(String persistentId) {
-		this.persistentId = persistentId;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
+
 
     
 }

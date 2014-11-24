@@ -97,6 +97,28 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return null;
 	}
 	@Override
+	public CLevel getCLevelByCid(String repositoryCode, Class<? extends Ead> clazz, String eadid, String cid){
+		String varName = "findingAid";
+		if (FindingAid.class.equals(clazz)){
+			varName = "findingAid";
+		}if (SourceGuide.class.equals(clazz)){
+			varName = "sourceGuide";
+		}else if (HoldingsGuide.class.equals(clazz)){
+			varName = "holdingsGuide";
+		}
+
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent."+ varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE clevel.cid  = :cid AND ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode";			
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		query.setParameter("cid", ApeUtil.decodeSpecialCharacters(cid));
+		query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
+		query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));		
+		query.setMaxResults(1);
+		if (query.getResultList().size() > 0){
+			return query.getResultList().get(0);
+		}
+		return null;
+	}
+	@Override
 	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid){
 		String varName = "findingAid";
 		if (FindingAid.class.equals(clazz)){
