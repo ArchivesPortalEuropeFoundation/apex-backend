@@ -16,35 +16,36 @@ function loadUpPart(context,titleDT,countryId, text){
    				data: {couId: countryId}
    			},
    			onLazyRead: function(node){
-				hideAll();
+   				cleanInformation();
+   				hideAll();
    				node.appendAjax({
    					url: context+"/getALTree.action",
    					data: {nodeId: node.data.key}
    				});
-   				cleanInformation();
    			},
    			onClick: function(node,event){
+   				cleanInformation();
    				node.activate(true);
    				hideAll();
    				$("#divForm").show();
 				loadDownPart(node, text);
-				cleanInformation();
    			},
 			onDeactivate: function(node) {
 				$("#divForm").hide(); /*loadDownPart(node.data.key);*/
 				cleanInformation();
 			},
 			onSelect: function(select,node){
+				cleanInformation();
 				node.select(select);
 				hideAll();
    				$("#divForm").show();
 				loadDownPart(node, text);
-				cleanInformation();
 			}
 		});
 	});	
 }
 function editAlternativeNames(text){
+	cleanInformation();
 	$("#editDiv").hide();
 	$("#editLanguagesDiv").show();
 	$("#selectedLangTranslations option").each(function(){
@@ -93,6 +94,7 @@ function sendAlternativeNames(){
 	var aiId = activeNode.data.key;
 	var lang = $("select#selectedLangTranslations option:selected").val();
 	var text = $("input#target").val();
+	cleanInformation();
 	hideAlternativeNameButtons();
 	$.post("launchALActions.action",{"action":"create_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
@@ -262,7 +264,8 @@ function checkName(text, id){
 
 function deleteNode(){
 	// Show colorbox.
-	createColorboxForProcessing();
+	cleanInformation();
+	createColorboxForProcessing(); 
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var activeNode = dynatree.getActiveNode();
 	var parent = activeNode.getParent();
@@ -337,6 +340,7 @@ function moveUp(){
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var activeNode = dynatree.getActiveNode();
 	var currentId = activeNode.data.key;
+	cleanInformation();
 	$.post("launchALActions.action",{"action":"move_up","aiId":currentId},function(d){
 		if (d.error) {
 			showInformation(d.error,true);
@@ -352,6 +356,7 @@ function moveDown(){
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var activeNode = dynatree.getActiveNode();
 	var currentId = activeNode.data.key;
+	cleanInformation();
 	$.post("launchALActions.action",{"action":"move_down","aiId":currentId},function(d){
 		if (d.error) {
 			showInformation(d.error,true);
@@ -419,6 +424,7 @@ function getAlternativeNames(){
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var activeNode = dynatree.getActiveNode();
 	var currentId = activeNode.data.key;
+	cleanInformation();
 	$.post("launchALActions.action",{"action":"get_alternative_names","aiId":currentId},function(d){
 		if(d.alternativeNames){
 			$("div .alternativeNamesSelect").remove();
@@ -454,6 +460,7 @@ function changeGroup(){
 	var activeNode = dynatree.getActiveNode();
 	var currentId = activeNode.data.key;
 	var groupSelect = $("#groupSelect option:selected").val();
+	cleanInformation();
 	$.post("launchALActions.action",{"action":"change_group","aiId":currentId,"groupSelected":groupSelect},function(d){
 		var message = "";
 		var expanded = false;
@@ -514,6 +521,7 @@ function deleteAlternativeNames() {
 	var aiId = activeNode.data.key;
 	var lang = $("select#selectedLangTranslations option:selected").val();
 	var text = $("input#target").val();
+	cleanInformation();
 	hideAlternativeNameButtons();
 	$.post("launchALActions.action",{"action":"delete_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
