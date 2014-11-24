@@ -163,7 +163,7 @@ public class HoldingsGuideUnit implements Comparable {
 		CLevelDAO cLevelDao = DAOFactory.instance().getCLevelDAO();
 		cLevelList = cLevelDao.findTopCLevels(eadContent.getEcId(), from, maxNumberOfItems);
 		for (int i = 0; i < cLevelList.size(); i ++ ){
-			cLevelUnitList.add(new CLevelUnit(cLevelList.get(i).getClId(), cLevelList.get(i).isLeaf(), cLevelList.get(i).getHrefEadid(), cLevelList.get(i).getUnittitle(), aiId));
+			cLevelUnitList.add(new CLevelUnit(cLevelList.get(i).getId(), cLevelList.get(i).isLeaf(), cLevelList.get(i).getHrefEadid(), cLevelList.get(i).getUnittitle(), aiId));
 		}
 		
 		cLevelList = null;
@@ -176,18 +176,18 @@ public class HoldingsGuideUnit implements Comparable {
 	}
 
 	//This method retrieves all c-levels which are children from a specific c-level
-	public static List<CLevelUnit> getCLevels(Long clId, Integer from, Integer maxNumberOfItems) {
+	public static List<CLevelUnit> getCLevels(Long id, Integer from, Integer maxNumberOfItems) {
 		
 		List<CLevelUnit> cLevelUnitList = new ArrayList<CLevelUnit>();
 		List<CLevel> cLevelList = new ArrayList<CLevel>();
 		Integer aiId = null;
 		
 		CLevelDAO cLevelDao = DAOFactory.instance().getCLevelDAO();
-		aiId = cLevelDao.findById(clId).getEadContent().getHoldingsGuide().getArchivalInstitution().getAiId();
-		cLevelList = cLevelDao.findChildCLevels(clId, from, maxNumberOfItems);
+		aiId = cLevelDao.findById(id).getEadContent().getHoldingsGuide().getArchivalInstitution().getAiId();
+		cLevelList = cLevelDao.findChildCLevels(id, from, maxNumberOfItems);
 		
 		for (int i = 0; i < cLevelList.size(); i ++ ){
-			cLevelUnitList.add(new CLevelUnit(cLevelList.get(i).getClId(), cLevelList.get(i).isLeaf(), cLevelList.get(i).getHrefEadid(), cLevelList.get(i).getUnittitle(), aiId));
+			cLevelUnitList.add(new CLevelUnit(cLevelList.get(i).getId(), cLevelList.get(i).isLeaf(), cLevelList.get(i).getHrefEadid(), cLevelList.get(i).getUnittitle(), aiId));
 		}
 		
 		cLevelList = null;

@@ -40,7 +40,7 @@ public class ReconstructEadFile {
             List<CLevel> cLevels = cLevelDAO.findTopCLevels(eadContent.getEcId());
             for(CLevel cLevel : cLevels){
                 eadCreator.writeEadContent(cLevel.getXml());
-                writeChildren(cLevel.getClId(), eadCreator);
+                writeChildren(cLevel.getId(), eadCreator);
                 eadCreator.closeCTag();
             }
             eadCreator.closeEndTags();
@@ -63,7 +63,7 @@ public class ReconstructEadFile {
         List<CLevel> children = DAOFactory.instance().getCLevelDAO().findChilds(parentId);
         for(CLevel child : children){
             eadCreator.writeEadContent(child.getXml());
-            writeChildren(child.getClId(), eadCreator);
+            writeChildren(child.getId(), eadCreator);
             eadCreator.closeCTag();
         }
     }

@@ -216,7 +216,7 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
 
             cLevel = DAOFactory.instance().getCLevelDAO().store(cLevel);
 
-            String cLevelNewId = "cl_" + cLevel.getClId();
+            String cLevelNewId = "cl_" + cLevel.getId();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success", true).put("newId", cLevelNewId).put("dataToEdit", true);
             writer.append(jsonObject.toString());

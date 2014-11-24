@@ -45,7 +45,7 @@ public class DatabaseXmlCLevelParser {
 		EADCounts eadCounts = new EADCounts();
 		EadPublishData publishData = new EadPublishData();
 		parse(clevel, publishData);
-		publishData.setId(clevel.getClId());
+		publishData.setId(clevel.getId());
 		publishData.setParentId(clevel.getParentClId());
 		publishData.setLeaf(clevel.isLeaf());
 		publishData.setUpperLevelUnittitles(upperLevelUnittitles);
@@ -69,15 +69,15 @@ public class DatabaseXmlCLevelParser {
 		if ((ead instanceof SourceGuide || ead instanceof HoldingsGuide) && clevel.getHrefEadid() != null){
 			eadDatabaseSaver.insert(LinkingService.getNewLink(ead, clevel));
 		}
-		unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
+		unittitles.add(new LevelInfo(clevel.getId(),clevel.getOrderId(), clevel.getUnittitle()));	
 		int childOrderId = 0;
-		List<CLevel> clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
+		List<CLevel> clevels = clevelDAO.findChildCLevels(clevel.getId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		while (clevels.size() > 0) {
 			eadCounts.addEadCounts(DatabaseXmlCLevelParser.publish(clevels.get(0),eadContentId,ead, solrPublisher, unittitles, fullHierarchy, unitids,eadDatabaseSaver));
 			clevels.remove(0);
 			childOrderId++;
 			if (clevels.size() == 0){
-				clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
+				clevels = clevelDAO.findChildCLevels(clevel.getId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 			}
 		}
 		return eadCounts;

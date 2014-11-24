@@ -20,7 +20,7 @@
 <body>
 	<c:set var="aiId"><c:out value="${param['aiId']}" /></c:set>
 	<c:set var="printUrl"
-		value="${pageContext.request.contextPath}/displayCContentPreview.action?id=${c.clId}&pageNumber=${pageNumber}&print=true" />
+		value="${pageContext.request.contextPath}/displayCContentPreview.action?id=${c.id}&pageNumber=${pageNumber}&print=true" />
 	<script>
 		$(document)
 				.ready(
@@ -51,7 +51,7 @@
 					</div>
 
 					<c:set var="contentUrl"
-						value="${pageContext.request.contextPath}/displayCContent.action?id=${c.clId}&term=${term}" />
+						value="${pageContext.request.contextPath}/displayCContent.action?id=${c.id}&term=${term}" />
 					<div id="child-paging" class="paging">
 						<ape:paging numberOfItems="${totalNumberOfChildren}" pageSize="${pageSize}" pageNumber="${pageNumber}"
 							refreshUrl="${contentUrl}" pageNumberId="pageNumber"  />

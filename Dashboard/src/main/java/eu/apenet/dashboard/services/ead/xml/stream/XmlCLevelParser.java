@@ -87,7 +87,7 @@ public class XmlCLevelParser extends AbstractParser {
 							LinkingService.linkWithoutCommit(ead, clevel);
 						}
 						if (solrPublisher != null) {
-							publishData.setId(clevel.getClId());
+							publishData.setId(clevel.getId());
 							publishData.setParentId(parentId);
 							publishData.setLeaf(clevel.isLeaf());
 							publishData.setUpperLevelUnittitles(upperLevelUnittitles);
@@ -99,9 +99,9 @@ public class XmlCLevelParser extends AbstractParser {
 								publishData.setOrderId(clevel.getOrderId());
 							}
 							eadCounts.addClevel(solrPublisher.publishCLevel(publishData));	
-							unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
+							unittitles.add(new LevelInfo(clevel.getId(),clevel.getOrderId(), clevel.getUnittitle()));	
 						}						
-						clId  = clevel.getClId();
+						clId  = clevel.getId();
 						clevel = null;
 					}					
 					eadCounts.addEadCounts(XmlCLevelParser.parse(xmlReader, eadContentId,
@@ -154,7 +154,7 @@ public class XmlCLevelParser extends AbstractParser {
 			stringWriter.close();
 			stringWriter = null;
 			if (solrPublisher != null) {
-				publishData.setId(clevel.getClId());
+				publishData.setId(clevel.getId());
 				publishData.setParentId(parentId);
 				publishData.setLeaf(clevel.isLeaf());
 				publishData.setUpperLevelUnittitles(upperLevelUnittitles);
@@ -171,7 +171,7 @@ public class XmlCLevelParser extends AbstractParser {
 			if (clevel.getHrefEadid() != null){
 				LinkingService.linkWithoutCommit(ead, clevel);
 			}
-			clId  = clevel.getClId();
+			clId  = clevel.getId();
 			clevel = null;
 		}	
 		return eadCounts;

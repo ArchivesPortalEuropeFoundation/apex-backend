@@ -74,7 +74,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 			List<CLevel> clevelsTemp = clevelDAO.getCLevelsNodes(ecIdTemp);
 			clevels.add(new SelectItem("", getText("dashboard.hgcreation.linktohgsg.highestlevel")));
 			for (CLevel clevel :clevelsTemp){
-				clevels.add(new SelectItem(clevel.getClId() +"", clevel.getUnittitle()));
+				clevels.add(new SelectItem(clevel.getId() +"", clevel.getUnittitle()));
 			}
 			fillFindingAidsInfo();
 		}else{
@@ -90,7 +90,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 			List<CLevel> clevelsTemp = clevelDAO.getCLevelsNodes(ecIdTemp);
 			clevels.add(new SelectItem("", getText("dashboard.hgcreation.linktohgsg.highestlevel")));
 			for (CLevel clevel :clevelsTemp){
-				clevels.add(new SelectItem(clevel.getClId() +"", clevel.getUnittitle()));
+				clevels.add(new SelectItem(clevel.getId() +"", clevel.getUnittitle()));
 			}
 			fillFindingAidsInfo();
 		}

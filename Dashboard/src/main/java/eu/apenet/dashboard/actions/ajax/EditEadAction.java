@@ -967,14 +967,14 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     }
 
     private void writeNewCLevelXmlAndChildren(AddableFields field, CLevel cLevel, String key, boolean onlyLowLevels) throws XMLStreamException, IOException {
-        LOG.info("Adding in " + key + ", field " + field.name + "for cLevel id " + cLevel.getClId());
+        LOG.info("Adding in " + key + ", field " + field.name + "for cLevel id " + cLevel.getId());
         if(!onlyLowLevels){
             String newXml = new EditParser().addInLevel(field, cLevel.getXml(), formValues.get(key));
             JpaUtil.beginDatabaseTransaction();
             cLevel.setXml(newXml);
             JpaUtil.commitDatabaseTransaction();
         }
-        List<CLevel> children = DAOFactory.instance().getCLevelDAO().findChilds(cLevel.getClId());
+        List<CLevel> children = DAOFactory.instance().getCLevelDAO().findChilds(cLevel.getId());
         for(CLevel child : children){
             writeNewCLevelXmlAndChildren(field, child, key, onlyLowLevels);
         }

@@ -298,9 +298,9 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			addTitle(buffer, clevel);
 			buffer.append(COMMA);
             if(isWithUrl)
-			    addCContentUrl(buffer, clevel.getClId(), path);
+			    addCContentUrl(buffer, clevel.getId(), path);
             else
-                addId(buffer, clevel.getClId());
+                addId(buffer, clevel.getId());
 			addChildren(buffer, clevel, true, path, isWithUrl);
 			if (i < clevels.size() - 1) {
 				buffer.append(END_ITEM_WITH_COMMA);
@@ -378,9 +378,9 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		addTitle(buffer, clevel);
 		buffer.append(COMMA);
         if(isWithUrl)
-		    addCContentUrl(buffer, clevel.getClId(), path);
+		    addCContentUrl(buffer, clevel.getId(), path);
         else
-            addId(buffer, clevel.getClId());
+            addId(buffer, clevel.getId());
 		buffer.append(COMMA);
 		buffer.append("\"selected\":true, \"activate\": true");
 //		if (!clevel.isLeaf()) {
@@ -407,9 +407,9 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			addTitle(buffer, parent);
 			buffer.append(COMMA);
             if(isWithUrl)
-			    addCContentUrl(buffer, parent.getClId(), path);
+			    addCContentUrl(buffer, parent.getId(), path);
             else
-                addId(buffer, parent.getClId());
+                addId(buffer, parent.getId());
 			buffer.append(COMMA);
 			addExpand(buffer);
 			buffer.append(COMMA);
@@ -444,9 +444,9 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			addTitle(buffer, clevel);
 			buffer.append(COMMA);
             if(isWithUrl)
-			    addCContentUrl(buffer, clevel.getClId(), path);
+			    addCContentUrl(buffer, clevel.getId(), path);
             else
-                addId(buffer, clevel.getClId());
+                addId(buffer, clevel.getId());
 			addChildren(buffer, clevel, true, path, isWithUrl);
 			buffer.append(END_ITEM);
 			if (i < clevels.size() - 1) {
@@ -538,13 +538,13 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 				buffer.append(COMMA);
 				// id
 				buffer.append("\"id\":");
-				buffer.append(" \"" + clevel.getClId() + "\" ");
+				buffer.append(" \"" + clevel.getId() + "\" ");
 			} else {
 				buffer.append(FOLDER_WITH_CHILDREN);
 				long localStartTime = System.currentTimeMillis();
 				CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 
-				List<CLevel> children  = clevelDAO.findChildCLevels(clevel.getClId(), ZERO, MAX_NUMBER_OF_CLEVELS);
+				List<CLevel> children  = clevelDAO.findChildCLevels(clevel.getId(), ZERO, MAX_NUMBER_OF_CLEVELS);
 				databaseTimeCost += System.currentTimeMillis() - localStartTime;
 				buffer.append(generateChildCLevelJSON(children, path, isWithUrl));
 			}

@@ -69,7 +69,7 @@
 					</div>
 
 					<c:set var="contentUrl"
-						value="${pageContext.request.contextPath}/displayCContent.action?id=${c.clId}&term=${term}" />
+						value="${pageContext.request.contextPath}/displayCContent.action?id=${c.id}&term=${term}" />
 					<div id="child-paging" class="paging">
 						<ape:paging numberOfItems="${totalNumberOfChildren}" pageSize="${pageSize}" pageNumber="${pageNumber}"
 							refreshUrl="${contentUrl}" pageNumberId="pageNumber"  />

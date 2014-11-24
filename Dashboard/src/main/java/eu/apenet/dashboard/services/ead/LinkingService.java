@@ -59,7 +59,7 @@ public class LinkingService {
 				HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
 				hgSgFaRelation.setFaId(linkedFindingAid.getId());
 				hgSgFaRelation.setAiId(hgOrSg.getAiId());
-				hgSgFaRelation.setHgSgClevelId(clevel.getClId());
+				hgSgFaRelation.setHgSgClevelId(clevel.getId());
 				if (hgOrSg instanceof HoldingsGuide) {
 					hgSgFaRelation.setHgId(hgOrSg.getId());
 				} else if (hgOrSg instanceof SourceGuide) {
@@ -92,7 +92,7 @@ public class LinkingService {
 					HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
 					hgSgFaRelation.setFaId(findingAid.getId());
 					hgSgFaRelation.setAiId(findingAid.getAiId());
-					hgSgFaRelation.setHgSgClevelId(clevel.getClId());
+					hgSgFaRelation.setHgSgClevelId(clevel.getId());
 					EadContent eadContent = clevel.getEadContent();
 					hgSgFaRelation.setHgId(eadContent.getHgId());
 					hgSgFaRelation.setSgId(eadContent.getSgId());
@@ -191,7 +191,7 @@ public class LinkingService {
 				HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
 				hgSgFaRelation.setFaId(ead.getId());
 				hgSgFaRelation.setAiId(ead.getAiId());
-				hgSgFaRelation.setHgSgClevelId(cLevel.getClId());
+				hgSgFaRelation.setHgSgClevelId(cLevel.getId());
 				hgSgFaRelation.setHgId(eadContent.getHgId());
 				hgSgFaRelation.setSgId(eadContent.getSgId());
 				JpaUtil.getEntityManager().persist(hgSgFaRelation);

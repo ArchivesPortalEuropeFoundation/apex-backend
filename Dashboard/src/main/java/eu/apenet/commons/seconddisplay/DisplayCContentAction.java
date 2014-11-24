@@ -85,7 +85,7 @@ public class DisplayCContentAction extends ActionSupport implements ServletReque
 				pageNumberInt = new Integer(pageNumber);
 			}
 			int orderId = (pageNumberInt -1) *PAGE_SIZE;
-			List<CLevel> children = clevelDAO.findChildCLevels(currentCLevel.getClId(), orderId, PAGE_SIZE);
+			List<CLevel> children = clevelDAO.findChildCLevels(currentCLevel.getId(), orderId, PAGE_SIZE);
 			Long totalNumberOfChildren = clevelDAO.countChildCLevels(idLong);
 			LOG.debug("Database time: " + (System.currentTimeMillis() - startTime) + "ms");
 			StringBuilder builder = new StringBuilder();
