@@ -393,7 +393,16 @@
 	</form>
 </s:else>
 <script type="text/javascript">
-	        $(document).ready(function(){
+			function stopRKey(evt) {
+				var evt = (evt) ? evt : ((event) ? event : null);
+				var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+				if ((evt.keyCode == 13) && (node.type=="text")) {
+						return false;
+					}
+				}
+			 document.onkeypress = stopRKey; 
+
+    		 $(document).ready(function(){
 
 	        	eadidarray.splice(0,eadidarray.length);
 	        	recordidarray.splice(0, recordidarray.length);
@@ -455,7 +464,7 @@
 				if (eadid.indexOf("\.") != "-1")  {
 					eadid = eadid.replace("\\.", ".");
 				}
-
+				
 				var name = "";
 				// Activate button check.
 				if (isRepeated) {
