@@ -568,11 +568,13 @@ function showInformation(information,error){
 	}
 	message += ">"+information+"</span>";
 	$("#informationDiv").html(message);
-	$("#informationDiv").fadeIn("slow");
+	$("#informationDiv").show();
+	//$("#informationDiv").fadeIn("slow");
 }
 
 function cleanInformation(){
-	$("#informationDiv").fadeOut("slow");
+	//$("#informationDiv").fadeOut("fast");
+	$("#informationDiv").html("");
 }
 
 /**
