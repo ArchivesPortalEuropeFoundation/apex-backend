@@ -240,12 +240,13 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 		}
 	}
 	if(!exit){
-		createColorboxForProcessing();
 		// Check if almost one of the authorized name of the institution is the same as the institution's name.
 		var nameOfInstitution = checkNameOfInstitution(error8, institutionName);
 		if (!nameOfInstitution) {
 			return;
 		}
+
+		createColorboxForProcessing();
 
 		// Create final json object.
 		var jsonData =  "{'yourInstitution':" + jsonDataYourInstitution + "," +

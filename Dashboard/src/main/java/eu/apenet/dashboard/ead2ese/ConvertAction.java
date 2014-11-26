@@ -124,12 +124,12 @@ public class ConvertAction extends AbstractInstitutionAction {
 			} else  if (ConvertAction.OPTION_NO.equals(this.getInheritLanguage())) {
 				if (this.isNoLanguageOnClevel()) {
 					addFieldError("inheritLanguage", getText("errors.required")
-						+ getText("errors.clevel.without.langmaterial"));
+						+ ". " + getText("errors.clevel.without.langmaterial"));
 				}
 			} else if (ConvertAction.OPTION_YES.equals(this.getInheritLanguage())) {
 				if (this.isNoLanguageOnParents()) {
 					addFieldError("inheritLanguage", getText("errors.required")
-						+ getText("errors.fa.without.langmaterial"));
+						+ ". " + getText("errors.fa.without.langmaterial"));
 				}
 			}
 		}
