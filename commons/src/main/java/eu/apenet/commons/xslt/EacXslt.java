@@ -29,6 +29,7 @@ import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveCountryNameExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEacIdExtension;
 import eu.apenet.commons.xslt.extensions.RetrieveRepositoryCodeFromEadIdExtension;
+import eu.apenet.commons.xslt.extensions.RetrieveTitleFromEadIdExtension;
 import eu.apenet.commons.xslt.extensions.SpecialCharactersEncoderExtension;
 import eu.apenet.commons.xslt.extensions.TypeOfEacCpfExtension;
 
@@ -47,6 +48,7 @@ public final class EacXslt {
         SpecialCharactersEncoderExtension specialCharactersEncoder = new SpecialCharactersEncoderExtension();
         RetrieveRepositoryCodeFromEacIdExtension repositoryCodeEac = new RetrieveRepositoryCodeFromEacIdExtension();
         RetrieveRepositoryCodeFromEadIdExtension repositoryCodeEad = new RetrieveRepositoryCodeFromEadIdExtension();
+        RetrieveTitleFromEadIdExtension titleEad = new RetrieveTitleFromEadIdExtension();
         CheckAgencyCodeExtension checkAgencyCode = new CheckAgencyCodeExtension();
         RetrieveCountryNameExtension countryName = new RetrieveCountryNameExtension();
         HrefCheckerExtension hrefChecker = new HrefCheckerExtension();
@@ -61,6 +63,7 @@ public final class EacXslt {
         processor.registerExtensionFunction(countryName);
         processor.registerExtensionFunction(hrefChecker);
         processor.registerExtensionFunction(typeOfEacCpf);
+        processor.registerExtensionFunction(titleEad);
         XsltCompiler compiler = processor.newXsltCompiler();
         compiler.setURIResolver(new ClasspathURIResolver(xslUrl));
         return compiler.compile(xsltSource);
