@@ -457,6 +457,10 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         getServletRequest().setAttribute("results", results);
 //            getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
+        QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+        getServletRequest().setAttribute("totalItemsInQueue", queueDAO.countItems());
+        getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
+        getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));        
 
         if (countResults>0)
         	return "success-eaccpf";
