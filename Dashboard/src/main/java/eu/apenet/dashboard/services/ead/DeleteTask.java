@@ -27,7 +27,7 @@ public class DeleteTask extends AbstractEadTask {
 		if (!ead.isPublished()) {
 			if (ead instanceof FindingAid) {
 				FindingAid findingAid = (FindingAid) ead;
-				if (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana()) || EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana())) {
+				if (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana()) || EuropeanaState.FATAL_ERROR.equals(findingAid.getEuropeana()) || EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana())) {
 					valid =true;
 				}
 			}else{

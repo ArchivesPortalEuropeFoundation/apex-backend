@@ -22,7 +22,9 @@ import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.MetadataFormat;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.apenet.persistence.vo.Warnings;
 import java.io.IOException;
+import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
@@ -40,7 +42,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
         if (ead instanceof FindingAid) {
             FindingAid findingAid = (FindingAid) ead;
             return ValidatedState.VALIDATED.equals(ead.getValidated())
-                    && EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana());
+                    && (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana()) || EuropeanaState.FATAL_ERROR.equals(findingAid.getEuropeana()));
         }
         return false;
     }
@@ -80,69 +82,102 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                             .getArchivalInstitution().getAiId());
                     File edmOutputFile = EdmFileUtils.getFile(outputEDMDir, edmOutputFilename);
                     edmOutputFile.getParentFile().mkdirs();
-                    edmConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, edmOutputFile);
-                    DigitalObjectCounter digitalObjectCounter = XMLUtil.analyzeESEXML(edmOutputFile);
-                    int numberOfRecords = digitalObjectCounter.getNumberOfProvidedCHO();
-
-                    boolean update = false;
-                    if (numberOfRecords > 1) {
-                        Ese ese = null;
-                        if (findingAid.getEses().isEmpty()) {
-                            ese = new Ese();
-                            ese.setCreationDate(new Date());
-                        } else {
-                            ese = findingAid.getEses().iterator().next();
-                            update = true;
-                            if (ese.getPathHtml() != null) {
-                                EdmFileUtils.deleteDir(EdmFileUtils.getRepoFile(APEnetUtilities.getConfig()
-                                        .getRepoDirPath(), ese.getPathHtml()));
-                                ese.setPathHtml(null);
-                            }
+                    boolean errors = false;
+                    StringBuilder warn = new StringBuilder();
+                    try {
+                        edmConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, edmOutputFile);
+                    } catch (TransformerException e) {
+                        errors = true;
+                        warn.append("<span class=\"validation-error\">");
+                        warn.append("EDM conversion error: " + e.getMessage()).append("</span>").append("<br />");
+                        if (ead instanceof FindingAid) {
+                            ((FindingAid) ead).setEuropeana(EuropeanaState.FATAL_ERROR);
                         }
-
-                        // Ese example = new Ese();
-                        // example.setOaiIdentifier(oaiIdentifier);
-                        List<Ese> esesToBeDeleted = eseDao.getEsesFromDeletedFindingaids(oaiIdentifier);
-                        EseState eseState;
-                        if (esesToBeDeleted.size() > 0) {
-                            if (!update) {
-                                for (Ese eseToBeDeleted : esesToBeDeleted) {
-                                    // FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
-                                    eseDao.delete(eseToBeDeleted);
+                    }
+                    if (errors) {
+                        boolean warningExists = false;
+                        Set<Warnings> warningsFromEad = ead.getWarningses();
+                        if (!warningsFromEad.isEmpty()) {
+                            for (Warnings warning : warningsFromEad) {
+                                if (warning.getIswarning()) {
+                                    warningExists = true;
+                                    warning.setAbstract_(warn.toString());
+                                } else {
+                                    warningsFromEad.remove(warning);
                                 }
-                                eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
-                            } else {
-                                eseState = ese.getEseState();
                             }
-                            ese.setModificationDate(new Date());
-                        } else {
-                            ese.setModificationDate(ese.getCreationDate());
-                            eseState = DAOFactory.instance().getEseStateDAO()
-                                    .getEseStateByState(EseState.NOT_PUBLISHED);
                         }
-                        ese.setPath(EdmFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution()
-                                .getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(),
-                                edmOutputFilename));
-                        ese.setOaiIdentifier(oaiIdentifier);
-                        ese.setNumberOfRecords(numberOfRecords);
-                        ese.setNumberOfWebResource(digitalObjectCounter.getNumberOfWebResource());
-                        ese.setFindingAid(findingAid);
-                        ArchivalInstitution ai = findingAid.getArchivalInstitution();
-                        ese.setEseState(eseState);
-                        ese.setEset(ai.getRepositorycode());
-                        ese.setMetadataFormat(MetadataFormat.EDM);
-                        if (update) {
-                            eseDao.update(ese);
-                        } else {
-                            eseDao.store(ese);
+                        if (!warningExists) {
+                            Warnings warnings = new Warnings();
+                            warnings.setAbstract_(warn.toString());
+                            warnings.setIswarning(true);
+                            warnings.setEad(ead);
+                            ead.getWarningses().add(warnings);
                         }
-                        findingAid.setTotalNumberOfChos(new Long(numberOfRecords));
-                        findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfWebResource()));
-                        findingAid.setEuropeana(EuropeanaState.CONVERTED);
                     } else {
-                        edmOutputFile.delete();
-                        findingAid.setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);
-                        findingAid.setTotalNumberOfChos(0l);
+                        DigitalObjectCounter digitalObjectCounter = XMLUtil.analyzeESEXML(edmOutputFile);
+                        int numberOfRecords = digitalObjectCounter.getNumberOfProvidedCHO();
+
+                        boolean update = false;
+                        if (numberOfRecords > 1) {
+                            Ese ese = null;
+                            if (findingAid.getEses().isEmpty()) {
+                                ese = new Ese();
+                                ese.setCreationDate(new Date());
+                            } else {
+                                ese = findingAid.getEses().iterator().next();
+                                update = true;
+                                if (ese.getPathHtml() != null) {
+                                    EdmFileUtils.deleteDir(EdmFileUtils.getRepoFile(APEnetUtilities.getConfig()
+                                            .getRepoDirPath(), ese.getPathHtml()));
+                                    ese.setPathHtml(null);
+                                }
+                            }
+
+                            // Ese example = new Ese();
+                            // example.setOaiIdentifier(oaiIdentifier);
+                            List<Ese> esesToBeDeleted = eseDao.getEsesFromDeletedFindingaids(oaiIdentifier);
+                            EseState eseState;
+                            if (esesToBeDeleted.size() > 0) {
+                                if (!update) {
+                                    for (Ese eseToBeDeleted : esesToBeDeleted) {
+                                        // FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
+                                        eseDao.delete(eseToBeDeleted);
+                                    }
+                                    eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
+                                } else {
+                                    eseState = ese.getEseState();
+                                }
+                                ese.setModificationDate(new Date());
+                            } else {
+                                ese.setModificationDate(ese.getCreationDate());
+                                eseState = DAOFactory.instance().getEseStateDAO()
+                                        .getEseStateByState(EseState.NOT_PUBLISHED);
+                            }
+                            ese.setPath(EdmFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution()
+                                    .getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(),
+                                    edmOutputFilename));
+                            ese.setOaiIdentifier(oaiIdentifier);
+                            ese.setNumberOfRecords(numberOfRecords);
+                            ese.setNumberOfWebResource(digitalObjectCounter.getNumberOfWebResource());
+                            ese.setFindingAid(findingAid);
+                            ArchivalInstitution ai = findingAid.getArchivalInstitution();
+                            ese.setEseState(eseState);
+                            ese.setEset(ai.getRepositorycode());
+                            ese.setMetadataFormat(MetadataFormat.EDM);
+                            if (update) {
+                                eseDao.update(ese);
+                            } else {
+                                eseDao.store(ese);
+                            }
+                            findingAid.setTotalNumberOfChos(new Long(numberOfRecords));
+                            findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfWebResource()));
+                            findingAid.setEuropeana(EuropeanaState.CONVERTED);
+                        } else {
+                            edmOutputFile.delete();
+                            findingAid.setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);
+                            findingAid.setTotalNumberOfChos(0l);
+                        }
                     }
                 } else {
                     findingAid.setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);
@@ -154,9 +189,6 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                 logAction(ead, e);
                 throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
             } catch (XMLStreamException e) {
-                logAction(ead, e);
-                throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
-            } catch (TransformerException e) {
                 logAction(ead, e);
                 throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
             } catch (SAXException e) {

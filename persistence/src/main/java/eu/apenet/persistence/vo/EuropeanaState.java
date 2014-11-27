@@ -1,7 +1,7 @@
 package eu.apenet.persistence.vo;
 
 public enum EuropeanaState {
-	NOT_CONVERTED("not_converted"), CONVERTED("converted"), DELIVERED("delivered"), NO_EUROPEANA_CANDIDATE("no_europeana_candidate");
+	NOT_CONVERTED("not_converted"), CONVERTED("converted"), DELIVERED("delivered"), NO_EUROPEANA_CANDIDATE("no_europeana_candidate"), FATAL_ERROR("fatal_error");
 
 	private String name;
 
