@@ -5111,7 +5111,14 @@ function disableCoordinates(){
 
 $(document).ready(function(){
 	disableCoordinates();
+	changeSelectOptions();
 });
+
+function changeSelectOptions(){
+	var targetWidth = $("textarea").css("width");
+	$("select[size]").css("width",targetWidth);
+	$("select[size] option").css("width",targetWidth);
+}
 
 /**
  * Function that copy the country name from "Your Institution" table to "Contact"

@@ -204,9 +204,7 @@
 	font-size: 12px;
 	color: black;
 }
-#eag2012Div  select#textYISelectParallelNameOfTheInstitution, select#selectTypeOfTheInstitution{
-	width:95%;
-}
+
 #eag2012Div .longButton {
 	float: left;
 	width: 70%;
@@ -335,11 +333,7 @@ p.fieldRequired {
 }
 
 #selectTypeOfTheInstitution,.selectControlTab {
-	width: 200px;
-}
-
-#selectTypeOfTheInstitution option, #textYISelectParallelNameOfTheInstitution option {
-	width: 610px;
+	width: 290px;
 }
 
 #selectDescriptionLanguage option,.selectControlTab option {
