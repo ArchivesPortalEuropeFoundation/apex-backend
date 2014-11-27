@@ -1936,6 +1936,7 @@ function loadRepositories(text1, text2, number) {
 }
 
 function addRepositories(text1, text2, text3, text4, text5, text6, text7, property1, property2, property3, property4, property5){
+	$(document).scrollTop($("#eag2012tabs_institution_tabs").offset().top);
 	var counter = $("table[id^='contactTable_']").length;
 	var clone = $("table[id^='yourInstitutionTable_"+counter+"']").clone();
 	clone = "<table id='"+("yourInstitutionTable_"+(counter+1))+"'>"+clone.html()+"</table>";
@@ -2083,7 +2084,6 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 		$("table#contactTable_"+(counter+1)+" #textContactPACity").attr("value",postalCity);
 		$("table#contactTable_"+(counter+1)+" #textContactPAStreet").attr("value",postalStreet);
 		$("table#contactTable_"+(counter+1)+" #selectContactLanguagePostalAddress").attr("value",postalStreetLanguage);
-		
 	}
 
 	// add name of repository to contact tab and the button Delete repository.
