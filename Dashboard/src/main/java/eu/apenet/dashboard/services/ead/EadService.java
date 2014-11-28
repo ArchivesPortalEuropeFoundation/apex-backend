@@ -300,7 +300,6 @@ public class EadService {
 
 	}
 	public static void fixWrongQueueStates(){
-		LOGGER.info("Start searching for wrong queue states");
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		ContentSearchOptions searchOptions = new ContentSearchOptions();
 		searchOptions.setQueuing(QueuingState.BUSY);
