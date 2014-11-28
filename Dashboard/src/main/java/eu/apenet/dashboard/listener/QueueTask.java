@@ -55,6 +55,8 @@ public class QueueTask implements Runnable {
             LOGGER.debug("Queuing process active");
         }
         removeOldResumptionTokens();
+        EadService.fixWrongQueueStates();
+        EacCpfService.fixWrongQueueStates();
         long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 
         int numberOfTries = 0;
