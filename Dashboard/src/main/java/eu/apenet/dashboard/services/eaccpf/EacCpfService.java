@@ -726,4 +726,21 @@ public class EacCpfService {
 		EacCpf eacCpf = eacCpfDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(eacCpf);
 	}
+	public static void fixWrongQueueStates(){
+		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+		ContentSearchOptions searchOptions = new ContentSearchOptions();
+		searchOptions.setContentClass(EacCpf.class);
+		searchOptions.setQueuing(QueuingState.BUSY);
+		List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(searchOptions);
+		for (EacCpf eacCpf: eacCpfs){
+			LOGGER.info("Fix wrong queuing state for: " + eacCpf);
+			if (eacCpf.getQueueItem() ==null){
+				eacCpf.setQueuing(QueuingState.NO);
+			}else {
+				eacCpf.setQueuing(QueuingState.READY);
+			}
+			eacCpfDAO.store(eacCpf);
+		}
+
+	}
 }

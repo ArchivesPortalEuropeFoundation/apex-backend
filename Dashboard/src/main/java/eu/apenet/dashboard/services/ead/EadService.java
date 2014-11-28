@@ -299,6 +299,43 @@ public class EadService {
 		}
 
 	}
+	public static void fixWrongQueueStates(){
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		ContentSearchOptions searchOptions = new ContentSearchOptions();
+		searchOptions.setQueuing(QueuingState.BUSY);
+		List<Ead> eads = eadDAO.getEads(searchOptions);
+		for (Ead ead: eads){
+			LOGGER.info("Fix wrong queuing state for: " + ead);
+			if (ead.getQueueItem() ==null){
+				ead.setQueuing(QueuingState.NO);
+			}else {
+				ead.setQueuing(QueuingState.READY);
+			}
+			eadDAO.store(ead);
+		}
+		searchOptions.setContentClass(HoldingsGuide.class);
+		eads = eadDAO.getEads(searchOptions);
+		for (Ead ead: eads){
+			LOGGER.info("Fix wrong queuing state for: " + ead);
+			if (ead.getQueueItem() ==null){
+				ead.setQueuing(QueuingState.NO);
+			}else {
+				ead.setQueuing(QueuingState.READY);
+			}
+			eadDAO.store(ead);
+		}
+		searchOptions.setContentClass(SourceGuide.class);
+		eads = eadDAO.getEads(searchOptions);
+		for (Ead ead: eads){
+			LOGGER.info("Fix wrong queuing state for: " + ead);
+			if (ead.getQueueItem() ==null){
+				ead.setQueuing(QueuingState.NO);
+			}else {
+				ead.setQueuing(QueuingState.READY);
+			}
+			eadDAO.store(ead);
+		}
+	}
 
 	public static void deleteFromQueue(QueueItem queueItem) throws Exception {
 		SecurityContext.get().checkAuthorizedToManageQueue();
