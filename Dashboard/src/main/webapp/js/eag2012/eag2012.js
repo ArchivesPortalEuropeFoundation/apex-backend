@@ -5110,6 +5110,7 @@ function disableCoordinates(){
 }
 
 $(document).ready(function(){
+	$(document).scrollTop($("#logo").offset().top);
 	disableCoordinates();
 	changeSelectOptions();
 });
