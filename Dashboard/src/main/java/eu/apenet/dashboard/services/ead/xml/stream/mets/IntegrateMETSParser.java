@@ -30,16 +30,7 @@ public class IntegrateMETSParser extends AbstractParser {
 	private static Logger LOGGER = Logger.getLogger(IntegrateMETSParser.class);
 	protected static final QName DAO_ELEMENT = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "dao");
 	protected static final QName DID_ELEMENT = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "did");
-	public static void main(String[] args) throws Exception {
-		long startTime = System.currentTimeMillis();
-		String error = integrateMets(new File("/home/bverhoef/eadfiles/1.11.06.11-with-METS.xml"), new File(
-				"/home/bverhoef/eadfiles/1.11.06.11-APE-with-dao.xml"));
-		if (error == null) {
-			LOGGER.info("Merging done in: " + (System.currentTimeMillis() - startTime) + "ms");
-		} else {
-			LOGGER.error("Merging failed:\n" + error);
-		}
-	}
+
 
 	public static String mergeMETSinEAD(Ead ead) throws Exception {
 		XmlType xmlType = XmlType.getContentType(ead);
