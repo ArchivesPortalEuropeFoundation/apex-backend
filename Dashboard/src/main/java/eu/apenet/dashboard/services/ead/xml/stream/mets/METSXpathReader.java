@@ -13,7 +13,9 @@ import eu.apenet.dashboard.services.ead.xml.stream.mets.xpath.MetsFile;
 import eu.apenet.dashboard.services.ead.xml.stream.mets.xpath.StructMapDiv;
 import eu.apenet.dashboard.services.ead.xml.stream.mets.xpath.StructMapDivXpathHandler;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
+import eu.archivesportaleurope.xml.xpath.AttributeXpathHandler;
 import eu.archivesportaleurope.xml.xpath.NestedXpathHandler;
+import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
 import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
 
 public class METSXpathReader {
@@ -25,6 +27,14 @@ public class METSXpathReader {
 	
 	private NestedXpathHandler structMapHandler;
 	private StructMapDivXpathHandler structMapDivXpathHandler;
+	private NestedXpathHandler xmlDataHandler;
+	private AttributeXpathHandler rightsCategoryHandler;
+	private AttributeXpathHandler rightsOtherCategoryHandler;
+	
+	private TextXpathHandler rightsConstraintsHandler;
+	private TextXpathHandler rightsDeclarationHandler;
+	private TextXpathHandler rightsHolderHandler;
+	private TextXpathHandler rightsCommentsHandler;
 	private List<XmlStreamHandler> metsHandlers = new ArrayList<XmlStreamHandler>();
 	
 
@@ -45,8 +55,22 @@ public class METSXpathReader {
 		
 		structMapHandler = new NestedXpathHandler(ApeXMLConstants.METS_NAMESPACE,  new String[] { "mets", "structMap"});
 		structMapHandler.setAttribute("TYPE", "PHYSICAL", false);
-		metsHandlers.add(structMapHandler);
+		xmlDataHandler = new NestedXpathHandler(ApeXMLConstants.METS_NAMESPACE,  new String[] { "mets", "amdSec", "rightsMD", "mdWrap", "xmlData"});
+		rightsCategoryHandler = new AttributeXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD"}, "RIGHTSCATEGORY");
+		rightsOtherCategoryHandler = new AttributeXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD"}, "OTHERCATEGORYTYPE");
 		
+		rightsDeclarationHandler =new TextXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD", "RightsHolder", "RightsDeclaration"}, true);
+		rightsConstraintsHandler =new TextXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD", "Context", "Constraints","ConstraintDescription"}, true);
+		rightsHolderHandler =new TextXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD", "RightsHolder", "RightsHolderName"}, true);
+		rightsCommentsHandler =new TextXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD", "RightsHolder", "RightsHolderComments"}, true);
+		metsHandlers.add(structMapHandler);
+		metsHandlers.add(xmlDataHandler);
+		xmlDataHandler.getHandlers().add(rightsCategoryHandler);
+		xmlDataHandler.getHandlers().add(rightsOtherCategoryHandler);
+		xmlDataHandler.getHandlers().add(rightsHolderHandler);
+		xmlDataHandler.getHandlers().add(rightsCommentsHandler);
+		xmlDataHandler.getHandlers().add(rightsDeclarationHandler);
+		xmlDataHandler.getHandlers().add(rightsConstraintsHandler);		
 		structMapDivXpathHandler  = new StructMapDivXpathHandler();
 		structMapHandler.getHandlers().add(structMapDivXpathHandler);
 	}
@@ -74,8 +98,14 @@ public class METSXpathReader {
 	}
 
 
-	public List<DaoInfo> getData() throws METSParserException {
-		List<DaoInfo> results = new ArrayList<DaoInfo>();
+	public MetsInfo getData() throws METSParserException {
+		MetsInfo metsInfo = new MetsInfo();
+		metsInfo.setRightsDeclaration(rightsDeclarationHandler.getFirstResult());
+		metsInfo.setRightsConstraint(rightsConstraintsHandler.getFirstResult());
+		metsInfo.setRightsCategory(rightsCategoryHandler.getResultAsString());
+		metsInfo.setRightsOtherCategory(rightsOtherCategoryHandler.getResultAsString());
+		metsInfo.setRightsHolder(rightsHolderHandler.getResultAsString());
+		metsInfo.setRightsComments(rightsCommentsHandler.getResultAsString());
 		Map<String, MetsFile> defaultMetsFiles = defaultFileHandler.getResults();
 		Map<String, MetsFile> thumbsMetsFiles = thumbsFileHandler.getResults();
 		List<StructMapDiv> divs = structMapDivXpathHandler.getResults();
@@ -90,7 +120,7 @@ public class METSXpathReader {
 				daoInfo.setReference(defaultMetsFile);
 				MetsFile thumbsMetsFile = getMetsFile(thumbsMetsFiles, div.getFileIds());
 				daoInfo.setThumbnail(thumbsMetsFile);
-				results.add(daoInfo);
+				metsInfo.getDaoInfos().add(daoInfo);
 				if (thumbsMetsFile != null){
 					numberOfThumbnails++;
 				}
@@ -99,7 +129,7 @@ public class METSXpathReader {
 				}
 			}
 		}
-		return results;
+		return metsInfo;
 	}
 	private MetsFile getMetsFile(Map<String, MetsFile> defaultMetsFiles, List<String> fileIds){
 		boolean found = false;

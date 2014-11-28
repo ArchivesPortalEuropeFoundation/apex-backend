@@ -4,15 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXParseException;
@@ -28,7 +29,7 @@ public class IntegrateMETSParser extends AbstractParser {
 
 	private static Logger LOGGER = Logger.getLogger(IntegrateMETSParser.class);
 	protected static final QName DAO_ELEMENT = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "dao");
-
+	protected static final QName DID_ELEMENT = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "did");
 	public static void main(String[] args) throws Exception {
 		long startTime = System.currentTimeMillis();
 		String error = integrateMets(new File("/home/bverhoef/eadfiles/1.11.06.11-with-METS.xml"), new File(
@@ -58,6 +59,7 @@ public class IntegrateMETSParser extends AbstractParser {
 		XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(fileOutputStream,
 				ApeXMLConstants.UTF_8);
 		boolean isMetsDAO = false;
+		MetsInfo metsInfo = null;
 
 		for (int event = xmlReader.next(); error == null && event != XMLStreamConstants.END_DOCUMENT; event = xmlReader
 				.next()) {
@@ -67,7 +69,11 @@ public class IntegrateMETSParser extends AbstractParser {
 						&& "METS"
 								.equalsIgnoreCase(xmlReader.getAttributeValue(ApeXMLConstants.XLINK_NAMESPACE, "role"));
 				if (isMetsDAO) {
-					error = integrateDaoWithMets(xmlReader, xmlWriter, httpClient, outputFile.getParentFile());
+					try {
+						metsInfo = integrateDaoWithMets(xmlReader, xmlWriter, httpClient, outputFile.getParentFile());
+					}catch (METSException e){
+						error = e.getMessage();
+					}
 				}
 				if (!isMetsDAO) {
 					writeStartElement(xmlReader, xmlWriter);
@@ -87,6 +93,10 @@ public class IntegrateMETSParser extends AbstractParser {
 				if (isMetsDAO) {
 					isMetsDAO = false;
 				}
+				if (metsInfo != null && DID_ELEMENT.equals(xmlReader.getName())){
+					writeRightsToEad(xmlReader, xmlWriter, metsInfo);
+					metsInfo = null;
+				}
 			}
 		}
 		xmlWriter.writeEndDocument();
@@ -102,9 +112,84 @@ public class IntegrateMETSParser extends AbstractParser {
 		}
 		return error;
 	}
+	private static void writeRightsToEad(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter, MetsInfo metsInfo) throws XMLStreamException{
+		QName element = xmlReader.getName();
+		if (metsInfo.containRightsInfo()){
+			xmlWriter.writeCharacters("\n");
+			xmlWriter.writeStartElement(element.getPrefix(), "userestrict", element.getNamespaceURI());
+			xmlWriter.writeAttribute("encodinganalog", "rts:rightscategory");
+			xmlWriter.writeAttribute("type", "dao");
+			String href = null;
+			String description = null;
+			if ("PUBLIC DOMAIN".equals(metsInfo.getRightsCategory())){
+				href = "http://creativecommons.org/publicdomain/mark/1.0/";
+				description = "Public Domain Mark";
+			}else if("CONTRACTUAL".equals(metsInfo.getRightsCategory()) && "Out of copyright - no commercial re-use".equals(metsInfo.getRightsConstraint())){
+				href = "http://www.europeana.eu/portal/rights/out-of-copyright-non-commercial.html";
+				description = "Out of copyright - no commercial re-use";				
+			}else if("COPYRIGHTED".equals(metsInfo.getRightsCategory())){
+				if ("CC0".equals(metsInfo.getRightsOtherCategory())){
+					href = "http://creativecommons.org/publicdomain/zero/1.0/";
+					description = "Creative Commons CC0 Public Domain Dedication";		
+				}else if("SA".equals(metsInfo.getRightsConstraint())){
+					href = "http://creativecommons.org/licenses/by-sa/4.0/";
+					description = "Creative Commons Attribution, ShareAlike";					
+				}else if("ND".equals(metsInfo.getRightsConstraint())){
+					href = "http://creativecommons.org/licenses/by-nd/4.0/";
+					description = "Creative Commons Attribution, No Derivatives";					
+				}else if("NC".equals(metsInfo.getRightsConstraint())){
+					href = "http://creativecommons.org/licenses/by-nc/4.0/";
+					description = "Creative Commons Attribution, Non-Commercial";					
+				}else if("NC-SA".equals(metsInfo.getRightsConstraint())){
+					href = "http://creativecommons.org/licenses/by-nc-sa/4.0/";
+					description = "Creative Commons Attribution, Non-Commercial, ShareAlike";					
+				}else if("NC-ND".equals(metsInfo.getRightsConstraint())){
+					href = "http://creativecommons.org/licenses/by-nc-nd/4.0/";
+					description = "Creative Commons Attribution, Non-Commercial, No Derivatives";					
+				}else {
+					href = "http://creativecommons.org/licenses/by/4.0/";
+					description = "Creative Commons Attribution";						
+				}
+			}else {
+				if ("FREE ACCESS".equals(metsInfo.getRightsOtherCategory())){
+					href = "http://www.europeana.eu/rights/rr-f/";
+					description = "Free access – no re-use";	
+				}else if ("PAID ACCESS".equals(metsInfo.getRightsOtherCategory())){
+					href = "http://www.europeana.eu/rights/rr-p/";
+					description = "Paid access – no re-use";						
+				}else if ("ORPHAN WORK".equals(metsInfo.getRightsOtherCategory())){
+					href = "http://www.europeana.eu/portal/rights/orphan-work-eu.html";
+					description = "Orphan work";						
+				}else if ("UNKNOWN".equals(metsInfo.getRightsOtherCategory())){
+					href = "http://www.europeana.eu/rights/unknown/";
+					description = "Unknown";						
+				}		
+			}
 
-	private static String integrateDaoWithMets(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter,
-			MetsHttpClient httpClient, File dir) {
+			if (href != null && description != null){
+				xmlWriter.writeStartElement("p");
+				xmlWriter.writeStartElement("extref");
+				xmlWriter.writeAttribute(ApeXMLConstants.XLINK_NAMESPACE, "href", href);
+				xmlWriter.writeCharacters(description);
+				xmlWriter.writeEndElement();
+				xmlWriter.writeEndElement();
+			}
+			if (StringUtils.isNotBlank(metsInfo.getRightsHolder())){
+				xmlWriter.writeStartElement("p");
+				xmlWriter.writeCharacters(metsInfo.getRightsHolder());
+				xmlWriter.writeEndElement();
+			}	
+			if (StringUtils.isNotBlank(metsInfo.getRightsComments())){
+				xmlWriter.writeStartElement("p");
+				xmlWriter.writeCharacters(metsInfo.getRightsComments());
+				xmlWriter.writeEndElement();
+			}					
+			xmlWriter.writeEndElement();
+		}
+	}
+
+	private static MetsInfo integrateDaoWithMets(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter,
+			MetsHttpClient httpClient, File dir) throws METSException{
 		QName element = xmlReader.getName();
 		String href = xmlReader.getAttributeValue(ApeXMLConstants.XLINK_NAMESPACE, "href");
 		String filename = "METS_TEMP_FILE_" + System.currentTimeMillis() + ".xml";
@@ -128,7 +213,7 @@ public class IntegrateMETSParser extends AbstractParser {
 			StringBuilder error = new StringBuilder();
 			error.append("<span class=\"validation-error\"><b>METS file (" + href + ") :</b><br/>");
 			error.append(e.getMessage());
-			return error.toString();
+			throw new METSException(error.toString());
 		} finally {
 			try {
 				if (closeableHttpResponse != null) {
@@ -144,16 +229,16 @@ public class IntegrateMETSParser extends AbstractParser {
 			} catch (Exception e) {
 			}
 		}
-
+		MetsInfo metsInfo = null;
 		try {
 			/*
 			 * write to file
 			 */
 
 			LOGGER.debug("Merging: " + href);
-			List<DaoInfo> daoInfos = METSParser.parse(metsFile);
-			for (int i = 0; i < daoInfos.size(); i++) {
-				DaoInfo daoInfo = daoInfos.get(i);
+			metsInfo = METSParser.parse(metsFile);
+			for (int i = 0; i < metsInfo.getDaoInfos().size(); i++) {
+				DaoInfo daoInfo = metsInfo.getDaoInfos().get(i);
 				xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
 				if (daoInfo.getReference() != null) {
 					xmlWriter.writeAttribute(ApeXMLConstants.XLINK_NAMESPACE, "title", daoInfo.getLabel());
@@ -180,19 +265,19 @@ public class IntegrateMETSParser extends AbstractParser {
 			error.append("<span class=\"validation-error\"><b>METS file (" + href + ") :</b><br/>");
 			error.append("l.").append(exception.getLineNumber()).append(" c.").append(exception.getColumnNumber())
 					.append(": ").append(exception.getMessage()).append("</span>").append("<br />");
-			return error.toString();
+			throw new METSException(error.toString());
 		} catch (Exception e) {
 			StringBuilder error = new StringBuilder();
 			error.append("<span class=\"validation-error\"><b>METS file (" + href + ") :</b><br/>");
 			error.append(e.getMessage());
-			return error.toString();
+			throw new METSException(error.toString());
 		} finally {
 			metsFile.delete();
 		}
 		if (metsFile.exists()) {
 			metsFile.delete();
 		}
-		return null;
+		return metsInfo;
 
 	}
 

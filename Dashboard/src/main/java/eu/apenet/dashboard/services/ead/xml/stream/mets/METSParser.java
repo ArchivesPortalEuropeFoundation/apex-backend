@@ -29,7 +29,7 @@ import eu.archivesportaleurope.xml.ApeXMLConstants;
 
 public class METSParser extends AbstractParser {
 
-	public static List<DaoInfo> parse(File file) throws Exception {
+	public static MetsInfo parse(File file) throws Exception {
 		XMLStreamReader xmlReader = null;
 		try {
 			validateMETS(file);
