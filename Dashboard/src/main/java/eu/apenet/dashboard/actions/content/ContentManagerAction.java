@@ -12,7 +12,6 @@ import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.actions.content.eaccpf.EacCpfContentManagerResults;
 import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
 import eu.apenet.dashboard.listener.QueueDaemon;
-import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
@@ -65,7 +64,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
     private Map<String, String> europeanaStatusList = new LinkedHashMap<String, String>();
     private String[] europeanaStatus = new String[]{EuropeanaState.NOT_CONVERTED.toString(),
         EuropeanaState.CONVERTED.toString(), EuropeanaState.DELIVERED.toString(),
-        EuropeanaState.NO_EUROPEANA_CANDIDATE.toString()};
+        EuropeanaState.NO_EUROPEANA_CANDIDATE.toString(), EuropeanaState.FATAL_ERROR.toString()};
     private Map<String, String> queuingStatusList = new LinkedHashMap<String, String>();
     private String[] queuingStatus = new String[]{QueuingState.NO.toString(),
         QueuingState.READY.toString(), QueuingState.BUSY.toString(),
@@ -106,7 +105,8 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
         europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
         europeanaStatusList.put(EuropeanaState.NO_EUROPEANA_CANDIDATE.toString(), getText("content.message.europeana.nochos"));
-
+        europeanaStatusList.put(EuropeanaState.FATAL_ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
+        
         queuingStatusList.put(QueuingState.NO.toString(), getText(CONTENT_MESSAGE_NO));
         queuingStatusList.put(QueuingState.READY.toString(), getText("content.message.ready"));
         queuingStatusList.put(QueuingState.BUSY.toString(), getText("content.message.queueprocessing"));
