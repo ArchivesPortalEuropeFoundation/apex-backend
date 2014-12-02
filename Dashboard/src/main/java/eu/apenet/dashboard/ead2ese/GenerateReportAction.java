@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
@@ -77,12 +78,11 @@ public class GenerateReportAction extends AbstractInstitutionAction {
                 Ese ese = eses.get(0);
                 File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
                 InputStream is2;
-                InputStream xslIs;
                 try {
                     is2 = FileUtils.openInputStream(file);
-                    xslIs = TransformationTool.class.getClassLoader().getResourceAsStream("xmlQuality/edmQuality.xsl");
+                    URL url = TransformationTool.class.getClassLoader().getResource("xmlQuality/edmQuality.xsl");
                     EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
-                    TransformationTool.createTransformation(is2, null, xslIs, null, true, true, null, false, edmQualityCheckerCall);
+                    TransformationTool.createTransformation(is2, null, new File(url.getFile()), null, true, true, null, false, edmQualityCheckerCall);
 
                     noUnitidNumber = Integer.toString(edmQualityCheckerCall.getCounterNoUnitid());
                     int duplicateElements = 0;
@@ -101,7 +101,6 @@ public class GenerateReportAction extends AbstractInstitutionAction {
                     duplicateUnitidsNumber = Integer.toString(duplicateElements);
                     duplicateUnitids = scapeCharacters(duplicates.toString());
                     is2.close();
-                    xslIs.close();
                 } catch (IOException e) {
                     LOG.error(e.toString());
                 } catch (SAXException e) {
