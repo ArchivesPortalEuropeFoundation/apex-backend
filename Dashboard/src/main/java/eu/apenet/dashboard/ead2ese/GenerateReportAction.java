@@ -8,7 +8,6 @@ package eu.apenet.dashboard.ead2ese;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
@@ -77,13 +76,11 @@ public class GenerateReportAction extends AbstractInstitutionAction {
             if (eses.size() > 0) {
                 Ese ese = eses.get(0);
                 File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
-                File reportScript = new File(APEnetUtilities.getDashboardConfig().getXslDirPath()
-                        + APEnetUtilities.FILESEPARATOR + "report/edmQuality.xsl");
                 InputStream is2;
                 InputStream xslIs;
                 try {
                     is2 = FileUtils.openInputStream(file);
-                    xslIs = FileUtils.openInputStream(reportScript);
+                    xslIs = TransformationTool.class.getClassLoader().getResourceAsStream("xmlQuality/edmQuality.xsl");
                     EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
                     TransformationTool.createTransformation(is2, null, xslIs, null, true, true, null, false, edmQualityCheckerCall);
 
@@ -103,6 +100,8 @@ public class GenerateReportAction extends AbstractInstitutionAction {
                     }
                     duplicateUnitidsNumber = Integer.toString(duplicateElements);
                     duplicateUnitids = scapeCharacters(duplicates.toString());
+                    is2.close();
+                    xslIs.close();
                 } catch (IOException e) {
                     LOG.error(e.toString());
                 } catch (SAXException e) {
