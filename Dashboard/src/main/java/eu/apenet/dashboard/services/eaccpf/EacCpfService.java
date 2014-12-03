@@ -235,20 +235,24 @@ public class EacCpfService {
     }
 
     private static QueueItem fillQueueItem(EacCpf eacCpf, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
-        QueueItem queueItem = new QueueItem();
+        QueueItem queueItem = eacCpf.getQueueItem();
+        if (queueItem == null){
+        	queueItem = new QueueItem();
+        	queueItem.setEacCpf(eacCpf);
+            queueItem.setAiId(eacCpf.getAiId());
+        }
         queueItem.setQueueDate(new Date());
         queueItem.setAction(queueAction);
         if (preferences != null) {
             queueItem.setPreferences(writeProperties(preferences));
         }
         int priority = basePriority;
-        queueItem.setEacCpf(eacCpf);
+       
 
 		if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
 			priority += 150;
 		}
         queueItem.setPriority(priority);
-        queueItem.setAiId(eacCpf.getAiId());
         return queueItem;
     }
 
