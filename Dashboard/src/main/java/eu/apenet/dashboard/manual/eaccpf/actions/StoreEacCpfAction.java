@@ -296,8 +296,8 @@ public class StoreEacCpfAction extends EacCpfAction {
                         }
                         // build the title
                         builderTitle.append(surname);
-                        if (builderTitle.length() != 0) {
-                            builderTitle.append(", ");
+                        if (builderTitle.length() > 0 && ((firstname!=null && firstname.length()>0) || (patronymic!=null && patronymic.length()>0))){
+                    		builderTitle.append(", ");
                         }
                         builderTitle.append(firstname);
                         if (builderTitle.length() != 0) {
