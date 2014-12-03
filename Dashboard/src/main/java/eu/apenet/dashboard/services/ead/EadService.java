@@ -893,27 +893,36 @@ public class EadService {
 
 	private static QueueItem fillQueueItem(Ead ead, QueueAction queueAction, Properties preferences, int basePriority)
 			throws IOException {
-		QueueItem queueItem = new QueueItem();
+		QueueItem queueItem = ead.getQueueItem();
+		int priority = basePriority;
+		if (queueItem == null){
+			queueItem = new QueueItem();
+			if (ead instanceof FindingAid) {
+				queueItem.setFindingAid((FindingAid) ead);
+			} else if (ead instanceof HoldingsGuide) {
+				queueItem.setHoldingsGuide((HoldingsGuide) ead);
+				priority += 100;
+			} else if (ead instanceof SourceGuide) {
+				queueItem.setSourceGuide((SourceGuide) ead);
+				priority += 50;
+			}
+	        queueItem.setAiId(ead.getAiId());
+		}else {
+			if (ead instanceof HoldingsGuide) {
+				priority += 100;
+			} else if (ead instanceof SourceGuide) {
+				priority += 50;
+			}
+		}
 		queueItem.setQueueDate(new Date());
 		queueItem.setAction(queueAction);
 		if (preferences != null) {
 			queueItem.setPreferences(writeProperties(preferences));
 		}
-		int priority = basePriority;
-		if (ead instanceof FindingAid) {
-			queueItem.setFindingAid((FindingAid) ead);
-		} else if (ead instanceof HoldingsGuide) {
-			queueItem.setHoldingsGuide((HoldingsGuide) ead);
-			priority += 100;
-		} else if (ead instanceof SourceGuide) {
-			queueItem.setSourceGuide((SourceGuide) ead);
-			priority += 50;
-		}
 		if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
 			priority += 150;
 		}
 		queueItem.setPriority(priority);
-        queueItem.setAiId(ead.getAiId());
 		return queueItem;
 	}
 
