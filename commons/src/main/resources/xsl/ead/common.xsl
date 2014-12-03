@@ -962,31 +962,31 @@
 			<xsl:value-of select="ape:resource('eadcontent.userestrict')" />
 		</h2>
 		<div class="ead-content">
-			<xsl:if test="ead:userestrict[@type='dao' and @encodinganalog='rts:rightscategory']"> 
+			<xsl:if test="ead:userestrict[@type='dao']"> 
 				<br>
 					<b><xsl:value-of select="ape:resource('eadcontent.userestrict.dao')"/>:</b>
 				</br>
-				<xsl:for-each select="ead:userestrict[@type='dao' and @encodinganalog='rts:rightscategory']">
+				<xsl:for-each select="ead:userestrict[@type='dao']">
 					<xsl:apply-templates mode="other"/>
 				</xsl:for-each>
 			</xsl:if>
-			<xsl:if test="ead:userestrict[@type='ead' and @encodinganalog='rts:rightscategory']"> 
+			<xsl:if test="ead:userestrict[@type='ead']"> 
 				<br>
 					<b><xsl:value-of select="ape:resource('eadcontent.userestrict.ead')"/>:</b>
 				</br>
-				<xsl:for-each select="ead:userestrict[@type='ead' and @encodinganalog='rts:rightscategory']">
+				<xsl:for-each select="ead:userestrict[@type='ead']">
 					<xsl:apply-templates mode="other"/>
 				</xsl:for-each>
 			</xsl:if>
-			<xsl:if test="ead:userestrict[(@type!='ead' and @type!='dao') or not(@type) or @encodinganalog!='rts:rightscategory']">
-				<xsl:if test="ead:userestrict[(@type ='ead' or @type ='dao') and @encodinganalog='rts:rightscategory']"> 
+			<xsl:if test="ead:userestrict[(@type!='ead' and @type!='dao') or not(@type)]">
+				<xsl:if test="ead:userestrict[@type ='ead' or @type ='dao']"> 
 					<br/>
 				</xsl:if>
-				<xsl:for-each select="ead:userestrict[(@type!='ead' and @type!='dao') or not(@type) or @encodinganalog!='rts:rightscategory']">
+				<xsl:for-each select="ead:userestrict[(@type!='ead' and @type!='dao') or not(@type)]">
 					<xsl:apply-templates mode="other"/>
 				</xsl:for-each>
 			</xsl:if>
-		</div>	
+		</div>
 	</xsl:template>
 	<xsl:template name="phystech">
 		<h2>
