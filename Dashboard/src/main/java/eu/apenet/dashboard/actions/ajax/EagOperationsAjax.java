@@ -94,7 +94,7 @@ public class EagOperationsAjax extends AjaxControllerAbstractAction {
             File outputfile = new File(outputFilePath);
             String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath() + APEnetUtilities.FILESEPARATOR + xslfilename;
             InputStream in = new FileInputStream(file);
-            TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)), null, true, true, null, true, null);
+            TransformationTool.createTransformation(in, outputfile, new File(xslFilePath), null, true, true, null, true, null);
             in.close();
             FileUtils.copyFile(outputfile, file);
             outputfile.delete();

@@ -76,7 +76,7 @@ public class ConvertTask extends AbstractEacCpfTask {
                 in = new FileInputStream(file);
                 outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
                 xslMessages = TransformationTool.createTransformation(in, outputfile,
-                        FileUtils.openInputStream(new File(xslFilePath)), parameters, true, true, null, true, null);
+                        new File(xslFilePath), parameters, true, true, null, true, null);
 
                 StringBuilder xslWarnings = new StringBuilder();
                 String[] xslWarningLines = xslMessages.toString().split("\n");

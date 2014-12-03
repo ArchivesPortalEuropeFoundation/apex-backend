@@ -178,7 +178,7 @@ public class APEnetEAGDashboard{
 			String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
 					+ APEnetUtilities.FILESEPARATOR + xslfilename;
 			in = new FileInputStream(file);
-			TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)),
+			TransformationTool.createTransformation(in, outputfile, new File(xslFilePath),
 					null, true, true, null, true, null);
 			in.close();
 			FileUtils.copyFile(outputfile, file);
@@ -200,7 +200,7 @@ public class APEnetEAGDashboard{
 			String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
 					+ APEnetUtilities.FILESEPARATOR + xslfilename;
 			in = new FileInputStream(file);
-			TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)),
+			TransformationTool.createTransformation(in, outputfile, new File(xslFilePath),
 					null, true, true, null, true, null);
 			in.close();
 			FileUtils.copyFile(outputfile, file);

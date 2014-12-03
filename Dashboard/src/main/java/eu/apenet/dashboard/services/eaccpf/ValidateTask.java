@@ -165,7 +165,7 @@ class ValidateTask extends AbstractEacCpfTask {
             InputStream in = new FileInputStream(file);
             File outputfile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() +
                     APEnetUtilities.FILESEPARATOR + "converted_" + file.getName());
-            TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)),
+            TransformationTool.createTransformation(in, outputfile, new File(xslFilePath),
                     null, true, true, null, true, null);
             in.close();
 

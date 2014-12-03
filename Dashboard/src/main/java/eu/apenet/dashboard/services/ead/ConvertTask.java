@@ -96,7 +96,7 @@ public class ConvertTask extends AbstractEadTask {
 					in = new FileInputStream(file);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
 					xslMessages = TransformationTool.createTransformation(in, outputfile,
-							FileUtils.openInputStream(new File(xslFilePath)), null, true, true, null, true, null);
+							new File(xslFilePath), null, true, true, null, true, null);
 				}
 
 				StringBuilder xslWarnings = new StringBuilder();

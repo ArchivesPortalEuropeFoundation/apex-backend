@@ -152,7 +152,7 @@ public class ValidateTask extends AbstractEadTask {
 			File outputfile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath()
 					+ APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "converted_"
 					+ file.getName());
-			TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)),
+			TransformationTool.createTransformation(in, outputfile, new File(xslFilePath),
 					null, true, true, null, true, null);
 			in.close();
 
