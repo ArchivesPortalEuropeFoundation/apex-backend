@@ -81,7 +81,7 @@ public class GenerateReportAction extends AbstractInstitutionAction {
                 try {
                     is2 = FileUtils.openInputStream(file);
                     EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
-                    File xslFile = new File(TransformationTool.class.getClassLoader().getResource("xmlQuality/edmQuality.xsl").getFile());
+                    File xslFile = new File(TransformationTool.class.getResource("/xmlQuality/edmQuality.xsl").getFile());
                     TransformationTool.createTransformation(is2, null, xslFile, null, true, true, null, false, edmQualityCheckerCall);
 
                     noUnitidNumber = Integer.toString(edmQualityCheckerCall.getCounterNoUnitid());
