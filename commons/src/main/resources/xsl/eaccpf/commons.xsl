@@ -532,9 +532,33 @@
 										<xsl:choose>
 											<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
 												<a href="{$eadUrl}/{$aiCode}" target="_blank">
-													<xsl:for-each select="$list[@localType='title']">
-														<xsl:apply-templates select="." mode="other"/>
-												 	</xsl:for-each>
+													<xsl:choose>
+														<xsl:when test="$list[@localType='title']">
+															<xsl:for-each select="$list[@localType='title']">
+																<xsl:apply-templates select="." mode="other"/>
+														 	</xsl:for-each>
+														</xsl:when>
+														<xsl:when test="$list[@localType='id']">
+															<xsl:variable name="eadTitle" select="ape:titleFromEad($list[@localType='id']/text(),'')"/>
+															<xsl:choose>
+																<xsl:when test="$eadTitle!=''">
+																	<xsl:value-of select="$eadTitle"></xsl:value-of>
+																</xsl:when>
+																<xsl:when test="$list/parent::node()/eac:relationEntry[not(@localType)]">
+																	<xsl:apply-templates select="$list/parent::node()/eac:relationEntry[not(@localType)][1]" mode="other"/>
+																</xsl:when>
+																<xsl:otherwise>
+																	<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
+																</xsl:otherwise>
+															</xsl:choose>
+														</xsl:when>
+														<xsl:when test="$list/parent::node()/eac:relationEntry[not(@localType)]">
+															<xsl:apply-templates select="$list/parent::node()/eac:relationEntry[not(@localType)][1]" mode="other"/>
+														</xsl:when>
+														<xsl:otherwise>
+															<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
+														</xsl:otherwise>
+													</xsl:choose>
 												</a>
 											</xsl:when>
 											<xsl:otherwise>
@@ -825,7 +849,7 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
-							<xsl:when test="$list[not(@localType)]">
+							<xsl:when test="$first/parent::node()/eac:relationEntry[not(@localType)]">
 								<xsl:value-of select="$list[not(@localType)][1]"></xsl:value-of>
 							</xsl:when>
 							<xsl:otherwise>
@@ -833,7 +857,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
-					<xsl:when test="$list[not(@localType)]">
+					<xsl:when test="$first/parent::node()/eac:relationEntry[not(@localType)]">
 						<xsl:value-of select="$list[not(@localType)][1]"></xsl:value-of>
 					</xsl:when>
 					<xsl:otherwise>
