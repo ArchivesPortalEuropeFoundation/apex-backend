@@ -63,7 +63,7 @@
 				 	 		</xsl:when>
 				 	 		<xsl:otherwise>
 								<xsl:call-template name="resourceRelationListId">
-									<xsl:with-param name="list" select="$list"/>
+									<xsl:with-param name="list" select="$list[@xml:lang = $language.selected]"/>
 								</xsl:call-template>
 				 	 		</xsl:otherwise>
 			 	 	</xsl:choose>
@@ -141,7 +141,7 @@
 					 	 		</xsl:when>
 					 	 		<xsl:otherwise>
 									<xsl:call-template name="resourceRelationListId">
-										<xsl:with-param name="list" select="$list"/>
+										<xsl:with-param name="list" select="$list[@xml:lang = $lang.navigator]"/>
 									</xsl:call-template>
 					 	 		</xsl:otherwise>
 					 	 	</xsl:choose>
@@ -320,7 +320,7 @@
 					 	 		</xsl:when>
 					 	 		<xsl:otherwise>
 								 	<xsl:call-template name="resourceRelationListId">
-								 		<xsl:with-param name="list" select="$list" />
+								 		<xsl:with-param name="list" select="$list[not(@xml:lang)]" />
 								 	</xsl:call-template>
 					 	 		</xsl:otherwise>
 					 	 	</xsl:choose>
@@ -440,7 +440,7 @@
 												</xsl:when>
 												<xsl:otherwise>
 													<xsl:call-template name="resourceRelationListId">
-														<xsl:with-param name="list" select="$list"></xsl:with-param>
+														<xsl:with-param name="list" select="$list[@xml:lang = $language.first]"></xsl:with-param>
 													</xsl:call-template>
 												</xsl:otherwise>
 											</xsl:choose>
@@ -667,7 +667,7 @@
 	
 	<xsl:template name="resourceRelationListId">
 		<xsl:param name="list"/>
-		<xsl:variable name="first" select="$list[1]" />
+		<xsl:variable name="first" select="$list[1]/parent::node()/eac:relationEntry[1]" />
 		<xsl:variable name="title" select="$list[@localType='title']/text()"/>
 		<xsl:variable name="link" select="$first/parent::node()/@xlink:href"/>
 		<xsl:choose>
@@ -678,7 +678,7 @@
 							<xsl:when test="$first/parent::node()/@xlink:href">
 								<xsl:variable name="link" select="$first/parent::node()/@xlink:href"/>
 								<a href="{$link}" target="_blank">
-									<xsl:for-each select="$list[@xml:lang = $language.selected]">
+									<xsl:for-each select="$list">
 										<xsl:if test="@localType='title'">
 											<xsl:if test="(position() > 1 and $first[@localType='title'] ) or (position() > 2 and $first[@localType='id'])">
 												<xsl:text>. </xsl:text>
@@ -690,28 +690,24 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:choose>
-									<xsl:when test="$list[@localType='id']">
-										<xsl:variable name="id" select="$list[@localType='id']/text()"/>
+									<xsl:when test="$first/parent::node()/eac:relationEntry[@localType='id']">
+										<xsl:variable name="id" select="$first/parent::node()/eac:relationEntry[@localType='id']/text()"/>
 										<xsl:variable name="aiCode" select="ape:aiFromEad($id,'')"/>
 										<a href="{$eadUrl}/{$aiCode}" target="_blank">
-											<xsl:for-each select="$list[@xml:lang = $language.selected]">
-												<xsl:if test="@localType='title'">
-													<xsl:if test="(position() > 1 and $first[@localType='title'] ) or (position() > 2 and $first[@localType='id'])">
-														<xsl:text>. </xsl:text>
-													</xsl:if>
-													<xsl:apply-templates select="." mode="other"/>
+											<xsl:for-each select="$list[@localType='title']">
+												<xsl:if test="position() > 1">
+													<xsl:text>. </xsl:text>
 												</xsl:if>
+												<xsl:apply-templates select="." mode="other"/>
 										 	</xsl:for-each>
 										</a>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:for-each select="$list[@xml:lang = $language.selected]">
-											<xsl:if test="@localType='title'">
-												<xsl:if test="(position() > 1 and $first[@localType='title'] ) or (position() > 2 and $first[@localType='id'])">
-													<xsl:text>. </xsl:text>
-												</xsl:if>
-												<xsl:apply-templates select="." mode="other"/>
+										<xsl:for-each select="$list[@localType='title']">
+											<xsl:if test="position() > 1">
+												<xsl:text>. </xsl:text>
 											</xsl:if>
+											<xsl:apply-templates select="." mode="other"/>
 									 	</xsl:for-each>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -720,8 +716,8 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
-							<xsl:when test="$list[@localType='id']">
-								<xsl:variable name="id" select="$list[@localType='id']/text()"/>
+							<xsl:when test="$first/parent::node()/eac:relationEntry[@localType='id']">
+								<xsl:variable name="id" select="$first/parent::node()/eac:relationEntry[@localType='id']/text()"/>
 								<xsl:variable name="link" select="$first/parent::node()/@xlink:href"/>
 								<xsl:variable name="title" select="ape:titleFromEad($id,'')"/>
 								<xsl:choose>
@@ -797,8 +793,8 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="$list[@localType='id']">
-						<xsl:variable name="id" select="$list[@localType='id']/text()"/>
+					<xsl:when test="$first/parent::node()/eac:relationEntry[@localType='id']">
+						<xsl:variable name="id" select="$first/parent::node()/eac:relationEntry[@localType='id']/text()"/>
 						<xsl:variable name="aiCode" select="ape:aiFromEad($id,'')"/>
 						<xsl:variable name="title" select="$list[@localType='title']/text()"/>
 						<xsl:choose>
