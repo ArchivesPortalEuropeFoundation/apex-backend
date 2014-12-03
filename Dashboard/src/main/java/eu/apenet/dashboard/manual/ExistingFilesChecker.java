@@ -111,35 +111,38 @@ public class ExistingFilesChecker {
             fileUnit.setFileName(aListXml.getFilename());
             fileUnit.setFilePath(aListXml.getPath());
             fileUnit.setFileType(aListXml.getFileType());
-
-            //It is necessary to check the type of the uploaded XML file in order to determine further actions to be executed
-            try {
-                if (isElementContent(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "eac-cpf")) { //we can upload EAC-CPF file
-                    fileType = "eac-cpf";
-                } else {
-                    fileType = extractAttributeFromXML(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true, false);
-                }
-            } catch (WstxParsingException e) {
-                //We get the exception just after - so nothing to do here.
+            File file = new File(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename());
+            LOG.info(file.getAbsolutePath());
+            if (file.exists()){
+	            //It is necessary to check the type of the uploaded XML file in order to determine further actions to be executed
+	            try {
+	                if (isElementContent(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "eac-cpf")) { //we can upload EAC-CPF file
+	                    fileType = "eac-cpf";
+	                } else {
+	                    fileType = extractAttributeFromXML(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true, false);
+	                }
+	            } catch (WstxParsingException e) {
+	                //We get the exception just after - so nothing to do here.
+	            }
+	            if (fileType.equals("inventory")) {
+	                fileType = XmlType.EAD_FA.getName();
+	                fileUnit.setEadTypeId(XmlType.EAD_FA.getIdentifier());
+	            } else if (fileType.equals("holdings_guide")) {
+	                fileType = XmlType.EAD_HG.getName();
+	                fileUnit.setEadTypeId(XmlType.EAD_HG.getIdentifier());
+	            } else if (fileType.equals("eac-cpf")) {
+	                fileType = XmlType.EAC_CPF.getName();
+	                fileUnit.setEadTypeId(XmlType.EAC_CPF.getIdentifier());
+	            } else {
+	                //The XML is not an APEnet EAD
+	                fileType = "Undefined";
+	            }
+	
+	            fileUnit.setEadType(fileType);
+	            fileUnit.setEadid("");
+	            fileUnit.setPermId(null);
+	            existingNewXmlFilesUploaded.add(fileUnit);
             }
-            if (fileType.equals("inventory")) {
-                fileType = XmlType.EAD_FA.getName();
-                fileUnit.setEadTypeId(XmlType.EAD_FA.getIdentifier());
-            } else if (fileType.equals("holdings_guide")) {
-                fileType = XmlType.EAD_HG.getName();
-                fileUnit.setEadTypeId(XmlType.EAD_HG.getIdentifier());
-            } else if (fileType.equals("eac-cpf")) {
-                fileType = XmlType.EAC_CPF.getName();
-                fileUnit.setEadTypeId(XmlType.EAC_CPF.getIdentifier());
-            } else {
-                //The XML is not an APEnet EAD
-                fileType = "Undefined";
-            }
-
-            fileUnit.setEadType(fileType);
-            fileUnit.setEadid("");
-            fileUnit.setPermId(null);
-            existingNewXmlFilesUploaded.add(fileUnit);
         }
 
         // Retrieving all XSL files uploaded
