@@ -80,9 +80,9 @@ public class GenerateReportAction extends AbstractInstitutionAction {
                 InputStream is2;
                 try {
                     is2 = FileUtils.openInputStream(file);
-                    URL url = TransformationTool.class.getClassLoader().getResource("xmlQuality/edmQuality.xsl");
                     EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
-                    TransformationTool.createTransformation(is2, null, new File(url.getFile()), null, true, true, null, false, edmQualityCheckerCall);
+                    File xslFile = new File(TransformationTool.class.getClassLoader().getResource("xmlQuality/edmQuality.xsl").getFile());
+                    TransformationTool.createTransformation(is2, null, xslFile, null, true, true, null, false, edmQualityCheckerCall);
 
                     noUnitidNumber = Integer.toString(edmQualityCheckerCall.getCounterNoUnitid());
                     int duplicateElements = 0;
