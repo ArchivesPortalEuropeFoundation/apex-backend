@@ -1,7 +1,7 @@
 ALTER TABLE topic ALTER COLUMN property_key TYPE varchar(40);
 UPDATE topic SET property_key='german.democratic.republic', description='German Democratic Republic' WHERE property_key='gdr';
-UPDATE topic SET property_key='economics', description='Economics' WHERE property_key='national.admin';
-UPDATE topic SET property_key='national.administration', description='National administration' WHERE property_key='econimics';
+UPDATE topic SET property_key='economics', description='Economics' WHERE property_key='econimics';
+UPDATE topic SET property_key='national.administration', description='National administration' WHERE property_key='national.admin';
 
 INSERT INTO topic(property_key, description,position) VALUES ('agriculture', 'Agriculture',17);
 INSERT INTO topic(property_key, description,position) VALUES ('architecture', 'Architecture',18);
