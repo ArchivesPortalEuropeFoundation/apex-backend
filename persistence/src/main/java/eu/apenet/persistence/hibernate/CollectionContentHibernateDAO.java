@@ -9,6 +9,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.CollectionContentDAO;
+import eu.apenet.persistence.vo.Collection;
 import eu.apenet.persistence.vo.CollectionContent;
 
 public class CollectionContentHibernateDAO extends AbstractHibernateDAO<CollectionContent, Long> implements CollectionContentDAO{
@@ -74,6 +75,22 @@ public class CollectionContentHibernateDAO extends AbstractHibernateDAO<Collecti
 			collectionContents = criteria.list();
 		}
 		return collectionContents;
+	}
+
+
+	@Override
+	public List<CollectionContent> getCollectionContentByElementId(String table, String elemetId) {
+		List<CollectionContent> collectionContents = null;
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "collectionContent"); //collection
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			
+			if (table.equals("Bookmark"))
+				criteria.add(Restrictions.eq("collectionContent.savedBookmarks.id", Long.parseLong(elemetId)));
+			else
+				criteria.add(Restrictions.eq("collectionContent.eadSavedSearch.id", Long.parseLong(elemetId)));
+		
+			collectionContents = criteria.list();
+			return collectionContents;
 	}
 
 }

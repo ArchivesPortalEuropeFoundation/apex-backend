@@ -12,4 +12,7 @@ public interface CollectionDAO extends GenericDAO<Collection, Long>{
 	public List<Collection>  getCollectionByName (Long liferayUserId, String name, int pageSize);
 	public Long countCollectionsByUserId(Long liferayUserId);
 	public Collection getCollectionByIdAndUserId(Long id, Long liferayUserId);
+	public List<Collection> getCollectionsByIdAndUserId(Long liferayUserId, String table, String elemetId);
+	public List<Collection> getUserCollectionsWithoutIds(Long liferayUserId, List<Long> ids, Integer pageNumber, Integer pageSize);
+	public Long countUserCollectionsWithoutIds(Long liferayUserId, List<Long> ids);
 }
