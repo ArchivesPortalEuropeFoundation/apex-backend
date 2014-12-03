@@ -18,7 +18,6 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.hgTreeCreation.CLevelTreeNode;
 import eu.apenet.dashboard.services.ead.CreateEadTask;
-import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -29,6 +28,7 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.xml.ApeXMLConstants;
 
 /**
  * User: Yoann Moranville
@@ -112,7 +112,8 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
             	hgOrSg.setArchivalInstitution(archivalInstitution);
                 UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP);
             	hgOrSg.setUploadMethod(uploadMethod);
-            	String startPath = CreateEadTask.getPath(XmlType.EAD_HG, archivalInstitution);
+            	XmlType type = XmlType.getType(eadXmlTypeId);
+            	String startPath = CreateEadTask.getPath(type, archivalInstitution);
             	hgOrSg.setPath(startPath+ APEnetUtilities.convertToFilename(eadid)+ ".xml");
             	hgOrSg = DAOFactory.instance().getEadDAO().store(hgOrSg);
                 eadContent = createDummyEadContent();
@@ -241,14 +242,14 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
 
         writer.writeStartDocument();
 
-        QName qName = new QName(AbstractParser.APENET_EAD, "ead");
+        QName qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "ead");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        writer.writeDefaultNamespace(AbstractParser.APENET_EAD);
-        writer.writeNamespace("xlink", AbstractParser.XLINK);
-        writer.writeNamespace("xsi", AbstractParser.XSI);
+        writer.writeDefaultNamespace(ApeXMLConstants.APE_EAD_NAMESPACE);
+        writer.writeNamespace("xlink", ApeXMLConstants.XLINK_NAMESPACE);
+        writer.writeNamespace("xsi", ApeXMLConstants.XSI_NAMESPACE);
         writer.writeAttribute("audience", "external");
 
-        qName = new QName(AbstractParser.APENET_EAD, "eadheader");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "eadheader");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeAttribute("countryencoding", "iso3166-1");
         writer.writeAttribute("dateencoding", "iso8601");
@@ -257,7 +258,7 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
         writer.writeAttribute("scriptencoding", "iso15924");
         writer.writeAttribute("relatedencoding", "MARC21");
 
-        qName = new QName(AbstractParser.APENET_EAD, "eadid");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "eadid");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeAttribute("countrycode", archivalInstitution.getCountry().getIsoname());
         writer.writeAttribute("mainagencycode", archivalInstitution.getRepositorycode());
@@ -265,25 +266,25 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
         writer.writeCharacters(eadid);
         writer.writeEndElement();
 
-        qName = new QName(AbstractParser.APENET_EAD, "filedesc");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "filedesc");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        qName = new QName(AbstractParser.APENET_EAD, "titlestmt");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "titlestmt");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        qName = new QName(AbstractParser.APENET_EAD, "titleproper");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "titleproper");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeCharacters(levelTreeNode.getUnittitle());
         writer.writeEndElement();
         writer.writeEndElement();
         writer.writeEndElement();
         
-        qName = new QName(AbstractParser.APENET_EAD, "revisiondesc");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "revisiondesc");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        qName = new QName(AbstractParser.APENET_EAD, "change");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "change");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        qName = new QName(AbstractParser.APENET_EAD, "date");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "date");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeEndElement();
-        qName = new QName(AbstractParser.APENET_EAD, "item");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "item");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeCharacters(TransformationTool.getFullEADVersion());
         writer.writeEndElement();
@@ -292,7 +293,7 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
         
         writer.writeEndElement();
         
-        qName = new QName(AbstractParser.APENET_EAD, "archdesc");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "archdesc");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeAttribute("level", "fonds");
         writer.writeAttribute("type", "holdings_guide");
@@ -301,7 +302,7 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
 
         writeDidData(writer, levelTreeNode);
 
-        qName = new QName(AbstractParser.APENET_EAD, "dsc");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "dsc");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeEndElement();
         writer.writeEndElement();
@@ -322,11 +323,11 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
         writer.writeStartDocument();
 
 
-        QName qName = new QName(AbstractParser.APENET_EAD, "c");
+        QName qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "c");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        writer.writeDefaultNamespace(AbstractParser.APENET_EAD);
-        writer.writeNamespace("xlink", AbstractParser.XLINK);
-        writer.writeNamespace("xsi", AbstractParser.XSI);
+        writer.writeDefaultNamespace(ApeXMLConstants.APE_EAD_NAMESPACE);
+        writer.writeNamespace("xlink", ApeXMLConstants.XLINK_NAMESPACE);
+        writer.writeNamespace("xsi", ApeXMLConstants.XSI_NAMESPACE);
         writer.writeAttribute("encodinganalog", "3.1.4");
 
         writeDidData(writer, levelTreeNode);
@@ -341,15 +342,15 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
     }
 
     private void writeDidData(XMLStreamWriter writer, CLevelTreeNode levelTreeNode) throws XMLStreamException {
-        QName qName = new QName(AbstractParser.APENET_EAD, "did");
+        QName qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "did");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        qName = new QName(AbstractParser.APENET_EAD, "unitid");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "unitid");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeAttribute("encodinganalog", "3.1.1");
         if(StringUtils.isNotEmpty(levelTreeNode.getUnitid()))
             writer.writeCharacters(levelTreeNode.getUnitid());
         writer.writeEndElement();
-        qName = new QName(AbstractParser.APENET_EAD, "unittitle");
+        qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "unittitle");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeAttribute("encodinganalog", "3.1.2");
         if(StringUtils.isNotEmpty(levelTreeNode.getUnittitle()))
@@ -357,10 +358,10 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
         writer.writeEndElement();
         writer.writeEndElement();
         if(StringUtils.isNotEmpty(levelTreeNode.getDescription())){
-            qName = new QName(AbstractParser.APENET_EAD, "scopecontent");
+            qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "scopecontent");
             writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
             writer.writeAttribute("encodinganalog", "summary");
-            qName = new QName(AbstractParser.APENET_EAD, "p");
+            qName = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "p");
             writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
             writer.writeCharacters(levelTreeNode.getDescription());
             writer.writeEndElement();
