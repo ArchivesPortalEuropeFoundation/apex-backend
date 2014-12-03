@@ -128,7 +128,7 @@ public class HarvesterConverter extends AbstractParser {
                             outputFileDir.mkdirs();
                         File outputFile = new File(outputFileDir, "oai_set.xml");
                         if(findingAidOutputStream2 != null)
-                            TransformationTool.createTransformation(IOUtils.toInputStream(findingAidOutputStream2.toString()), outputFile, HarvesterConverter.class.getResourceAsStream("/dc2c.xsl"), null, true, true, null, true, null);
+                            TransformationTool.createTransformation(IOUtils.toInputStream(findingAidOutputStream2.toString()), outputFile, new File(HarvesterConverter.class.getResource("/dc2c.xsl").getFile()), null, true, true, null, true, null);
                         else
                             throw new Exception("findingAidOutputStream2 is null");
 
@@ -275,7 +275,7 @@ public class HarvesterConverter extends AbstractParser {
         try {
             Map<String, String> params = new HashMap<String, String>();
             params.put("mainagencycode", mainagencycode);
-            TransformationTool.createTransformation(IOUtils.toInputStream(cLevel.getXml(), UTF8), outputFile, HarvesterConverter.class.getResourceAsStream("/c2ead.xsl"), params, true, true, null, true, null);
+            TransformationTool.createTransformation(IOUtils.toInputStream(cLevel.getXml(), UTF8), outputFile, new File(HarvesterConverter.class.getResource("/c2ead.xsl").getFile()), params, true, true, null, true, null);
             eadContent.setXml(FileUtils.readFileToString(outputFile, UTF8));
 
             dbUtil.saveEadContentEadidAndXml(eadContent);
