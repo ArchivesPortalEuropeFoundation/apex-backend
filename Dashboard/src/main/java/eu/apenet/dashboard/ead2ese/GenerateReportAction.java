@@ -8,6 +8,7 @@ package eu.apenet.dashboard.ead2ese;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
@@ -18,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
@@ -77,12 +77,14 @@ public class GenerateReportAction extends AbstractInstitutionAction {
             if (eses.size() > 0) {
                 Ese ese = eses.get(0);
                 File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
+                File reportScript = new File(APEnetUtilities.getDashboardConfig().getXslDirPath()
+                        + APEnetUtilities.FILESEPARATOR + "report/edmQuality.xsl");
                 InputStream is2;
                 try {
                     is2 = FileUtils.openInputStream(file);
                     EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
-                    File xslFile = new File(TransformationTool.class.getResource("/xmlQuality/edmQuality.xsl").getFile());
-                    TransformationTool.createTransformation(is2, null, xslFile, null, true, true, null, false, edmQualityCheckerCall);
+                    TransformationTool.createTransformation(is2, null, reportScript, null, true, true, null, false, edmQualityCheckerCall);
+                    is2.close();
 
                     noUnitidNumber = Integer.toString(edmQualityCheckerCall.getCounterNoUnitid());
                     int duplicateElements = 0;
@@ -100,7 +102,6 @@ public class GenerateReportAction extends AbstractInstitutionAction {
                     }
                     duplicateUnitidsNumber = Integer.toString(duplicateElements);
                     duplicateUnitids = scapeCharacters(duplicates.toString());
-                    is2.close();
                 } catch (IOException e) {
                     LOG.error(e.toString());
                 } catch (SAXException e) {
