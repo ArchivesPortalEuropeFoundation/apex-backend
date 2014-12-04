@@ -41,11 +41,13 @@ public class QueueItem implements java.io.Serializable {
     public static final String INHERIT_ORIGINATION = "europeana.inheritorigination";
     public static final String SOURCE_OF_IDENTIFIERS = "europeana.sourceOfIdentifiers";
     public static final String RIGHTS_OF_DIGITAL_OBJECTS = "ape.rightsOfDigitalObjects";
+    public static final String RIGHTS_OF_DIGITAL_OBJECTS_TEXT = "ape.rightsOfDigitalObjectsText";
     public static final String RIGHTS_OF_DIGITAL_DESCRIPTION = "ape.rightsOfDigitalDescription";
     public static final String RIGHTS_OF_DIGITAL_HOLDER = "ape.rightsOfDigitalHolder";
-    public static final String RIGHTS_OF_EAD_DATA = "europeana.rightsOfEADData";
-    public static final String RIGHTS_OF_EAD_DESCRIPTION = "europeana.rightsOfEADDescription";
-    public static final String RIGHTS_OF_EAD_HOLDER = "europeana.rightsOfEADHolder";
+    public static final String RIGHTS_OF_EAD_DATA = "ape.rightsOfEADData";
+    public static final String RIGHTS_OF_EAD_DATA_TEXT = "ape.rightsOfEADDataText";
+    public static final String RIGHTS_OF_EAD_DESCRIPTION = "ape.rightsOfEADDescription";
+    public static final String RIGHTS_OF_EAD_HOLDER = "ape.rightsOfEADHolder";
 
     /**
 	 *

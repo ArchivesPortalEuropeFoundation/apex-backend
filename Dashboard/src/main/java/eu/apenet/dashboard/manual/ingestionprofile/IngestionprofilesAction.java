@@ -204,19 +204,33 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         if (profile.getFileType() != 2) {
 	        // Rights for digital objects.
 	        profile.setRightsOfDigitalObjects(this.getRightDigitalObjects());
+	        if (this.getRightDigitalObjects() != null
+	        		&& !this.getRightDigitalObjects().isEmpty()) {
+	        	profile.setRightsOfDigitalObjectsText(this.recoverRightsStatementText(this.getRightDigitalObjects()));
+	        } else {
+	        	profile.setRightsOfDigitalObjectsText("");
+	        }
 	        profile.setRightsOfDigitalDescription(this.getRightDigitalDescription());
 	        profile.setRightsOfDigitalHolder(this.getRightDigitalHolder());
 	        // Rights for EAD data.
 	        profile.setRightsOfEADData(this.getRightEadData());
+	        if (this.getRightEadData() != null
+	        		&& !this.getRightEadData().isEmpty()) {
+	        	profile.setRightsOfEADDataText(this.recoverRightsStatementText(this.getRightEadData()));
+	        }else {
+	        	profile.setRightsOfEADDataText("");
+	        }
 	        profile.setRightsOfEADDescription(this.getRightEadDescription());
 	        profile.setRightsOfEADHolder(this.getRightEadHolder());
         } else {
 	        // Rights for digital objects.
 	        profile.setRightsOfDigitalObjects("");
+	        profile.setRightsOfDigitalObjectsText("");
 	        profile.setRightsOfDigitalDescription("");
 	        profile.setRightsOfDigitalHolder("");
 	        // Rights for EAD data.
 	        profile.setRightsOfEADData("");
+	        profile.setRightsOfEADDataText("");
 	        profile.setRightsOfEADDescription("");
 	        profile.setRightsOfEADHolder("");
         }
@@ -270,7 +284,63 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         return SUCCESS;
     }
 
-    public String addIngestionprofile() throws Exception {
+    /**
+     * Method to recover the rights statement text from the rights statement
+     * URL selected.
+     *
+     * @param option_default_rights rights statement URL selected.
+     *
+     * @return Rights statement text.
+     */
+    private String recoverRightsStatementText(String option_default_rights) {
+    	String option_default_rights_text = null;
+
+    	// Check the URL selected
+    	if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, No Derivatives.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.no.derivates");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, Non-Commercial.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, Non-Commercial, No Derivatives.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.no.derivates");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, Non-Commercial, ShareAlike.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.sharealike");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, ShareAlike .
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.sharealike");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC.equalsIgnoreCase(option_default_rights)) {
+    		//  Creative Commons CC0 Public Domain Dedication .
+    		option_default_rights_text = getText("content.message.rights.creative.public.domain");
+    	} else if (AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
+    		// Free access – no re-use.
+    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.free");
+    	} else if (AjaxConversionOptionsConstants.ORPHAN_WORKS.equalsIgnoreCase(option_default_rights)) {
+    		// Orphan works.
+    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.orphan");
+    	} else if (AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
+    		// Out of copyright - no commercial re-use.
+    		option_default_rights_text = getText("ead2ese.content.license.out.of.copyright");
+    	} else if (AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
+    		// Paid access – no re-use.
+    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.paid");
+    	} else if (AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK.equalsIgnoreCase(option_default_rights)) {
+    		// Public Domain Mark.
+    		option_default_rights_text = getText("content.message.rights.public.domain");
+    	} else {
+    		// Unknown.
+    		option_default_rights_text = getText("content.message.rights.unknown");
+    	}
+
+		return option_default_rights_text;
+	}
+
+	public String addIngestionprofile() throws Exception {
         setUp();
 
         IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();

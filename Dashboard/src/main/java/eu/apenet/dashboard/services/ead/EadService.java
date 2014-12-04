@@ -969,11 +969,13 @@ public class EadService {
 
         // Properties related to the rights statement for digital objects.
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS));
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT));
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION));
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER));
 
         // Properties related to the rights statement for EAD data.
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA));
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT));
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION));
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_HOLDER));
 

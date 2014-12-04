@@ -84,6 +84,10 @@ public class Ingestionprofile implements Serializable {
     private String rightsOfEADDescription;
     @Column(name = "rights_of_ead_holder")
     private String rightsOfEADHolder;
+    @Column(name = "rights_of_digital_objects_text")
+    private String rightsOfDigitalObjectsText;
+    @Column(name = "rights_of_ead_data_text")
+    private String rightsOfEADDataText;
 
     public Ingestionprofile() {
     }
@@ -382,5 +386,33 @@ public class Ingestionprofile implements Serializable {
 	 */
 	public void setRightsOfEADHolder(String rightsOfEADHolder) {
 		this.rightsOfEADHolder = rightsOfEADHolder;
+	}
+
+	/**
+	 * @return the rightsOfDigitalObjectsText
+	 */
+	public String getRightsOfDigitalObjectsText() {
+		return this.rightsOfDigitalObjectsText;
+	}
+
+	/**
+	 * @param rightsOfDigitalObjectsText the rightsOfDigitalObjectsText to set
+	 */
+	public void setRightsOfDigitalObjectsText(String rightsOfDigitalObjectsText) {
+		this.rightsOfDigitalObjectsText = rightsOfDigitalObjectsText;
+	}
+
+	/**
+	 * @return the rightsOfEADDataText
+	 */
+	public String getRightsOfEADDataText() {
+		return this.rightsOfEADDataText;
+	}
+
+	/**
+	 * @param rightsOfEADDataText the rightsOfEADDataText to set
+	 */
+	public void setRightsOfEADDataText(String rightsOfEADDataText) {
+		this.rightsOfEADDataText = rightsOfEADDataText;
 	}
 }

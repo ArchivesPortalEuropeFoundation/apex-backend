@@ -127,6 +127,7 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
     private void fillRightsDigitalObjectPrarameters(HttpSession session, Properties parameters) {
         // Recover the options related to rights statement for digital objects.
         String option_default_rights_digital = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_DIGITAL);
+        String option_default_rights_digital_text = "";
         String option_rights_digital_description = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_DESCRIPTION);
         String option_rights_digital_holder = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_DIGITAL_HOLDER);
 
@@ -135,6 +136,11 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
         if (option_default_rights_digital == null
         		|| option_default_rights_digital.equalsIgnoreCase("---")) {
         	option_default_rights_digital = "";
+        }
+
+        // Recover the text for the selected rights statement for digital objects.
+        if (!option_default_rights_digital.isEmpty()) {
+        	option_default_rights_digital_text = this.recoverRightsStatementText(option_default_rights_digital);
         }
 
         // Description added for the rights statement for digital objects.
@@ -150,11 +156,12 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
         // Add the conversion options related to rights statement for digital
         // objects to the properties.
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, option_default_rights_digital);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, option_default_rights_digital_text);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, option_rights_digital_description);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, option_rights_digital_holder);
     }
 
-    /**
+	/**
      * Method to recover the rights statement, description and holder for
      * EAD data from session and added them as conversion parameters.
      *
@@ -167,6 +174,7 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
     private void fillRightsEadDataPrarameters(HttpSession session, Properties parameters) {
         // Recover the options related to rights statement for EAD data.
         String option_default_rights_ead = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_DEFAULT_RIGHTS_EAD);
+        String option_default_rights_ead_text = "";
         String option_rights_ead_description = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_DESCRIPTION);
         String option_rights_ead_holder = (String) session.getAttribute(AjaxConversionOptionsConstants.OPTIONS_RIGHTS_EAD_HOLDER);
 
@@ -175,6 +183,11 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
         if (option_default_rights_ead == null
         		|| option_default_rights_ead.equalsIgnoreCase("---")) {
         	option_default_rights_ead = "";
+        }
+
+        // Recover the text for the selected rights statement for EAD data.
+        if (!option_default_rights_ead.isEmpty()) {
+        	option_default_rights_ead_text = this.recoverRightsStatementText(option_default_rights_ead);
         }
 
         // Description added for the rights statement for EAD data.
@@ -190,7 +203,64 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
         // Add the conversion options related to rights statement for EAD data
         // to the properties.
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, option_default_rights_ead);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, option_default_rights_ead_text);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, option_rights_ead_description);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, option_rights_ead_holder);
     }
+
+    /**
+     * Method to recover the rights statement text from the rights statement
+     * URL selected.
+     *
+     * @param option_default_rights rights statement URL selected.
+     *
+     * @return Rights statement text.
+     */
+    private String recoverRightsStatementText(String option_default_rights) {
+    	String option_default_rights_text = null;
+
+    	// Check the URL selected
+    	if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, No Derivatives.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.no.derivates");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, Non-Commercial.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, Non-Commercial, No Derivatives.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.no.derivates");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, Non-Commercial, ShareAlike.
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.sharealike");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE.equalsIgnoreCase(option_default_rights)) {
+    		// Creative Commons Attribution, ShareAlike .
+    		option_default_rights_text = getText("content.message.rights.creative.attribution.sharealike");
+    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC.equalsIgnoreCase(option_default_rights)) {
+    		//  Creative Commons CC0 Public Domain Dedication .
+    		option_default_rights_text = getText("content.message.rights.creative.public.domain");
+    	} else if (AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
+    		// Free access – no re-use.
+    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.free");
+    	} else if (AjaxConversionOptionsConstants.ORPHAN_WORKS.equalsIgnoreCase(option_default_rights)) {
+    		// Orphan works.
+    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.orphan");
+    	} else if (AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
+    		// Out of copyright - no commercial re-use.
+    		option_default_rights_text = getText("ead2ese.content.license.out.of.copyright");
+    	} else if (AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
+    		// Paid access – no re-use.
+    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.paid");
+    	} else if (AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK.equalsIgnoreCase(option_default_rights)) {
+    		// Public Domain Mark.
+    		option_default_rights_text = getText("content.message.rights.public.domain");
+    	} else {
+    		// Unknown.
+    		option_default_rights_text = getText("content.message.rights.unknown");
+    	}
+
+		return option_default_rights_text;
+	}
 }

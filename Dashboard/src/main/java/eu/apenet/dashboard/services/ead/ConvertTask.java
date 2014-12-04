@@ -184,11 +184,13 @@ public class ConvertTask extends AbstractEadTask {
         // Parse the conversion options related to rights statement for digital
         // objects.
         String option_default_rights_digital = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL);
+        String option_default_rights_digital_text = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT);
         String option_rights_digital_description = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION);
         String option_rights_digital_holder = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER);
         // Parse the conversion options related to rights statement for EAD
         // data.
         String option_default_rights_ead = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD);
+        String option_default_rights_ead_text = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT);
         String option_rights_ead_description = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION);
         String option_rights_ead_holder = properties.getProperty(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER);
 
@@ -198,10 +200,12 @@ public class ConvertTask extends AbstractEadTask {
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, Boolean.toString(option_use_existing_bool));
         // Add options related to rights statement for digital objects.
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, option_default_rights_digital);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, option_default_rights_digital_text);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, option_rights_digital_description);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, option_rights_digital_holder);
         // Add options related to rights statement for EAD data.
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, option_default_rights_ead);
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, option_default_rights_ead_text);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, option_rights_ead_description);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, option_rights_ead_holder);
 

@@ -26,9 +26,11 @@ public final class AjaxConversionOptionsConstants {
     public static final String SCRIPT_DEFAULT = "defaultRoleType"; // Default DAO type.
     public static final String SCRIPT_USE_EXISTING = "useDefaultRoleType"; // Use DAO type if exists.
     public static final String SCRIPT_DEFAULT_RIGHTS_DIGITAL = "defaultRightsDigitalObject"; // Default rights statement for digital objects.
+    public static final String SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT = "defaultRightsDigitalObjectText"; // Default rights statement for digital objects text.
     public static final String SCRIPT_RIGHTS_DIGITAL_DESCRIPTION = "defaultRightsDigitalObjectDescription"; // Default rights description for digital objects.
     public static final String SCRIPT_RIGHTS_DIGITAL_HOLDER = "defaultRightsDigitalObjectHolder"; // Default rights holder for digital objects.
     public static final String SCRIPT_DEFAULT_RIGHTS_EAD = "defaultRightsEadData"; // Default rights statement for EAD data.
+    public static final String SCRIPT_DEFAULT_RIGHTS_EAD_TEXT = "defaultRightsEadDataText"; // Default rights statement for EAD data text.
     public static final String SCRIPT_RIGHTS_EAD_DESCRIPTION = "defaultRightsEadDataDescription"; // Default rights description for EAD data.
     public static final String SCRIPT_RIGHTS_EAD_HOLDER = "defaultRightsEadDataHolder"; // Default rights holder for EAD data.
 
