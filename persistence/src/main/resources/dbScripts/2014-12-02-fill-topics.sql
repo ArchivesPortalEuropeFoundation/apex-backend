@@ -69,3 +69,4 @@ INSERT INTO topic(property_key, description,position) VALUES ('trade.unions', 'T
 INSERT INTO topic(property_key, description,position) VALUES ('universities', 'Universities',80);
 INSERT INTO topic(property_key, description,position) VALUES ('wars.events', 'Wars (events)',81);
 INSERT INTO topic(property_key, description,position) VALUES ('women', 'Women',82);
+INSERT INTO topic(property_key, description,position) VALUES ('germany.sed.fdgb', 'SED/FDGB',83);
