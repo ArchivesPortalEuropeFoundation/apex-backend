@@ -2,8 +2,10 @@ package eu.apenet.dashboard.services.ead.xml.stream.publish;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
@@ -199,7 +201,6 @@ public class EadPublishDataFiller {
 	public void fillData(EadPublishData publishData) {
 		publishData.setUnitid(unitidHandler.getFirstResult());
 		publishData.setFirstOtherUnitid(otherUnitidHandler.getFirstResult());
-		publishData.setOtherUnitid(otherUnitidHandler.getResultAsStringWithWhitespace());
 		publishData.setFirstUnittitle(unittitleHandler.getFirstResult());
 		publishData.setScopecontent(scopecontentHandler.getResultAsStringWithWhitespace());
 		publishData.setUnitdate(unitdateHandler.getFirstResult());
@@ -213,10 +214,10 @@ public class EadPublishDataFiller {
 				publishData.getRoledao().add(roledaoTemp);
 			}
 		}
-		StringBuilder otherUnitid = new StringBuilder();
-		add(otherUnitid, unitidHandler.getOtherResultsAsStringWithWhitespace());
-		add(otherUnitid, otherUnitidHandler.getResultAsStringWithWhitespace());
-		publishData.setOtherUnitid(otherUnitid.toString().trim());
+		Set<String> otherUnitidSet = new HashSet<String>();
+		otherUnitidSet.addAll(unitidHandler.getOtherResultSet());
+		otherUnitidSet.addAll(otherUnitidHandler.getResultSet());
+		publishData.setOtherUnitid(otherUnitidSet);
 		StringBuilder other = new StringBuilder();
 		add(other, unittitleHandler.getOtherResultsAsStringWithWhitespace());
 		add(other, unitdateHandler.getOtherResultsAsStringWithWhitespace());

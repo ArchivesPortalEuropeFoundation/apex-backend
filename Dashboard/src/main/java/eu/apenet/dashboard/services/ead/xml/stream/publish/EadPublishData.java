@@ -9,7 +9,7 @@ public class EadPublishData extends PublishData {
 
 	private String unitid;
 	private String firstOtherUnitid;
-	private String otherUnitid;
+	private Set<String> otherUnitid;
 	private String firstUnittitle;
 	private String scopecontent;
 	private String otherinfo;
@@ -27,10 +27,10 @@ public class EadPublishData extends PublishData {
 	public void setUnitid(String unitid) {
 		this.unitid = unitid;
 	}
-	public String getOtherUnitid() {
+	public  Set<String> getOtherUnitid() {
 		return otherUnitid;
 	}
-	public void setOtherUnitid(String otherUnitid) {
+	public void setOtherUnitid( Set<String> otherUnitid) {
 		this.otherUnitid = otherUnitid;
 	}
 	public String getFirstUnittitle() {
