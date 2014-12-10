@@ -52,22 +52,34 @@
  	 			<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
 					<a href="{$link}" target="_blank"> <!-- $list[@xml:lang = $language.selected and @localType='title'] -->
 						<xsl:choose>
-							<xsl:when test="$paramLanguage!='notLang'">
-								<xsl:for-each select="$list[@xml:lang = $paramLanguage and @localType='title']">
-									<xsl:if test="position() > 1">
-										<xsl:text>. </xsl:text>
-									</xsl:if>
-									<xsl:apply-templates select="." mode="other"/>
-							 	</xsl:for-each>
-							 </xsl:when>
-							 <xsl:otherwise>
-							 	<xsl:for-each select="$list[not(@xml:lang) and @localType='title']">
-									<xsl:if test="position() > 1">
-										<xsl:text>. </xsl:text>
-									</xsl:if>
-									<xsl:apply-templates select="." mode="other"/>
-							 	</xsl:for-each>
-							 </xsl:otherwise>
+							<xsl:when test="count($list[@localType='title']) > 0">
+								<xsl:choose>
+									<xsl:when test="$paramLanguage!='notLang'">
+										<xsl:for-each select="$list[@xml:lang = $paramLanguage and @localType='title']">
+											<xsl:if test="position() > 1">
+												<xsl:text>. </xsl:text>
+											</xsl:if>
+											<xsl:apply-templates select="." mode="other"/>
+									 	</xsl:for-each>
+									 </xsl:when>
+									 <xsl:otherwise>
+									 	<xsl:for-each select="$list[not(@xml:lang) and @localType='title']">
+											<xsl:if test="position() > 1">
+												<xsl:text>. </xsl:text>
+											</xsl:if>
+											<xsl:apply-templates select="." mode="other"/>
+									 	</xsl:for-each>
+									 </xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:when test="$first/parent::node()/eac:relationEntry[@localType='id']">
+								<xsl:call-template name="resourceRelationListId">
+									<xsl:with-param name="list" select="$list[(not(@xml:lang) and @localType='title') or @localType='id']"/>
+								</xsl:call-template>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
+							</xsl:otherwise>
 						</xsl:choose>
 					</a>
 		 	   </xsl:if>
