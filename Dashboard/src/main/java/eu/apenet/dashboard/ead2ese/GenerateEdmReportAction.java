@@ -8,7 +8,6 @@ package eu.apenet.dashboard.ead2ese;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
@@ -29,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author papp
  */
-public class GenerateReportAction extends AbstractInstitutionAction {
+public class GenerateEdmReportAction extends AbstractInstitutionAction {
 
     private String id;
     private String noUnitidNumber;
