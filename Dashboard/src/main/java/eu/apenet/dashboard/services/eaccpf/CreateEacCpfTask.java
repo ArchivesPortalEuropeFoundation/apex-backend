@@ -189,6 +189,13 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 	                //output of the title
 	                if (builderTitle.length() != 0) {
 	                	foundTitle = true;
+	                	//issue #1442 extension's, 
+	                	//cases in which it's created via DPT or other external system. 
+	                	//For additional requirements see comment #7.
+	                	String title = builderTitle.toString().trim();
+	                	if(title.endsWith(", ") || title.endsWith(",")){
+	                		builderTitle.setLength(title.lastIndexOf(","));
+	                	}
 	                }
 	            } else {
 	            	unknownLocalType.append(getText("eaccpf.error.no.known.localtype"));
