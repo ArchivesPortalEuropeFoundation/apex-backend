@@ -84,6 +84,7 @@ function editAlternativeNames(text){
 function cancelEditAlternativeNames(){
 	cleanInformation();
 	$("#editDiv").show();
+	checkGroupsDiv();
 	$("select#alternativeNames").attr("disabled","disabled");
 	$("#editLanguagesDiv").hide();
 }
@@ -99,14 +100,24 @@ function sendAlternativeNames(){
 	$.post("launchALActions.action",{"action":"create_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
 //			showInformation(d.info);
+			checkGroupsDiv();
 			hideAll();
 			dynatree.reload();
 			displayNode(activeNode,d.info,true);
 		}else if(d.error){
 			showInformation(d.error,true);
 			recoverAlternativeName();
+			checkGroupsDiv();
 		}
 	});
+}
+
+function checkGroupsDiv(){
+	if($("#groupSelect option:selected").length>0){
+		$("#divGroupNodesContainer").show();
+	}else{
+		$("#divGroupNodesContainer").hide();
+	}
 }
 
 function hideAll(){
@@ -179,10 +190,12 @@ function loadDownPart(node, text){
 				$("#divGroupNodesContainer").show();
 				$("div .secondFilterSelect").show();
 				getGroups();
+				checkGroupsDiv();
 			}else if(value.canBeMoved=="true"){
 				$("#divGroupNodesContainer").show();
 				$("div .secondFilterSelect").show();
 				getGroups();
+				checkGroupsDiv();
 				//restore onclick information
 				$("#changeNodeDiv").attr("onclick","changeGroup();");
 			}else if(value.hasContentPublished!=undefined && value.hasContentPublished!="false"){
@@ -328,6 +341,7 @@ function getGroups(){
 				$(this).remove();
 			});
 			$("#divGroupNodesContainer").show();
+			checkGroupsDiv();
 			$("#changeNodeDiv").before(groupSelect);
 			$("div .secondFilterSelect").show();
 		}else{
@@ -456,47 +470,49 @@ function getAlternativeNames(){
 }
 
 function changeGroup(){
-	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
-	var activeNode = dynatree.getActiveNode();
-	var currentId = activeNode.data.key;
-	var groupSelect = $("#groupSelect option:selected").val();
-	cleanInformation();
-	$.post("launchALActions.action",{"action":"change_group","aiId":currentId,"groupSelected":groupSelect},function(d){
-		var message = "";
-		var expanded = false;
-		$.each(d,function(k,v){
-			if(v.info){
-//				showInformation(d.info);
-				message = v.info;
-				dynatree.reload();
-				hideAll();
-			}else if(v.error){
-				showInformation(d.error,true);
-			}else if(v.newparents){ //get parent structure
-				var parents = new Array();
-				var found;
-				if ($.browser.msie && $.browser.version == 8){   //internet explorer 8
-					found = v.newparents.indexOf(",");
-				}else{
-					found = $.inArray(",",v.newparents);
+	if($("#groupSelect option:selected").length>0){
+		var groupSelect = $("#groupSelect option:selected").val();
+		var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
+		var activeNode = dynatree.getActiveNode();
+		var currentId = activeNode.data.key;
+		cleanInformation();
+		$.post("launchALActions.action",{"action":"change_group","aiId":currentId,"groupSelected":groupSelect},function(d){
+			var message = "";
+			var expanded = false;
+			$.each(d,function(k,v){
+				if(v.info){
+//					showInformation(d.info);
+					message = v.info;
+					dynatree.reload();
+					hideAll();
+				}else if(v.error){
+					showInformation(d.error,true);
+				}else if(v.newparents){ //get parent structure
+					var parents = new Array();
+					var found;
+					if ($.browser.msie && $.browser.version == 8){   //internet explorer 8
+						found = v.newparents.indexOf(",");
+					}else{
+						found = $.inArray(",",v.newparents);
+					}
+					if(found != -1){
+						parents = v.newparents.split(",");
+					}else{
+						parents[0] = v.newparents;
+					}
+					var i = parents.length-1;
+					if(i>=0){
+						expandParents(parents,i,message,activeNode); //review i
+						expanded = true;
+					}
 				}
-				if(found != -1){
-					parents = v.newparents.split(",");
-				}else{
-					parents[0] = v.newparents;
-				}
-				var i = parents.length-1;
-				if(i>=0){
-					expandParents(parents,i,message,activeNode); //review i
-					expanded = true;
-				}
+			});
+			
+			if(!expanded){
+				showInformation(message);
 			}
 		});
-		
-		if(!expanded){
-			showInformation(message);
-		}
-	});
+	}
 }
 
 function recoverAlternativeName() {
