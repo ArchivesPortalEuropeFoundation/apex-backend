@@ -60,47 +60,20 @@
 														</xsl:choose>
 													</xsl:if>
 												</xsl:when>
-												<xsl:otherwise>
+												<xsl:when test="$link != ''">
+													<xsl:variable name="aiCode" select="ape:aiFromEad($link,'')"/>
 													<xsl:choose>
-														<xsl:when test="$link != ''">
-															<xsl:variable name="href" select="./eac:relationEntry[@localType='id']"/>
-															<xsl:variable name="aiCode" select="ape:aiFromEad($href,'')"/>
+														<xsl:when test="$aiCode != '' and $aiCode != 'ERROR'">
+															<a href="{$eadUrl}/{$aiCode}" target="_blank">
+															<xsl:variable name="eadTitle" select="ape:titleFromEad($link,'')"/>
 															<xsl:choose>
-																<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-																	<a href="{$eadUrl}/{$aiCode}" target="_blank">
-																		<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-																	</a>
+																<xsl:when test="$eadTitle != 'ERROR' and $eadTitle != ''">
+																	<xsl:value-of select="$eadTitle"/>
 																</xsl:when>
 																<xsl:otherwise>
-																	<xsl:variable name="aiCode" select="ape:titleFromEad($href,'')"/>
-																	<xsl:value-of select="aiCode"></xsl:value-of>
+																	<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
 																</xsl:otherwise>
 															</xsl:choose>
-														</xsl:when>
-														<xsl:when test="$link = ''">
-															<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-														</xsl:when>
-													</xsl:choose>
-												</xsl:otherwise>
-											</xsl:choose>
-			
-											<xsl:if test="./@xlink:href != ''">
-									   			<xsl:call-template name="relationType">
-													<xsl:with-param name="current" select="."/>
-												</xsl:call-template>
-											</xsl:if>
-										</xsl:when>
-										<xsl:otherwise> <!-- when ./@xlink:href = '' -->
-											<!-- search an <relationEntry @localType="id"> -->
-											<xsl:choose>
-												<xsl:when test="./eac:relationEntry[@localType='id']"> <!-- id is here -->
-													<xsl:variable name="href" select="./eac:relationEntry[@localType='id']"/>
-													<xsl:value-of select="href"></xsl:value-of> <!-- TODO, delete -->
-													<xsl:variable name="aiCode" select="ape:aiFromEad($href,'')"/>
-													<xsl:choose> <!-- generate at the same way that up -->
-														<xsl:when test="$aiCode != 'ERROR' and $aiCode != ''">
-															<a href="{$eadUrl}/{$aiCode}" target="_blank">
-																<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
 															</a>
 														</xsl:when>
 														<xsl:otherwise>
@@ -108,13 +81,18 @@
 														</xsl:otherwise>
 													</xsl:choose>
 												</xsl:when>
-												<xsl:when test="./eac:relationEntry[@localType='title']">
-													<xsl:variable name="href" select="./eac:relationEntry[@localType='title']"/>
-													<xsl:variable name="aiCode" select="ape:titleFromEad($href,'')"/>
-													<xsl:value-of select="aiCode"></xsl:value-of>
+												<xsl:when test="$link = ''">
+													<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
 												</xsl:when>
+												<xsl:otherwise />
 											</xsl:choose>
-										</xsl:otherwise>
+											<xsl:if test="./@xlink:href != ''">
+									   			<xsl:call-template name="relationType">
+													<xsl:with-param name="current" select="."/>
+												</xsl:call-template>
+											</xsl:if>
+										</xsl:when>
+										<xsl:otherwise />
 									</xsl:choose>
 						   		</xsl:otherwise>
 					   		</xsl:choose>
