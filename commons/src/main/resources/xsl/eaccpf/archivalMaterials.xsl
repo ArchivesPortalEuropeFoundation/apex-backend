@@ -65,15 +65,7 @@
 													<xsl:choose>
 														<xsl:when test="$aiCode != '' and $aiCode != 'ERROR'">
 															<a href="{$eadUrl}/{$aiCode}" target="_blank">
-															<xsl:variable name="eadTitle" select="ape:titleFromEad($link,'')"/>
-															<xsl:choose>
-																<xsl:when test="$eadTitle != 'ERROR' and $eadTitle != ''">
-																	<xsl:value-of select="$eadTitle"/>
-																</xsl:when>
-																<xsl:otherwise>
-																	<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
-																</xsl:otherwise>
-															</xsl:choose>
+																<xsl:value-of select="ape:resource('eaccpf.portal.goToRelatedResource')"/>
 															</a>
 														</xsl:when>
 														<xsl:otherwise>
