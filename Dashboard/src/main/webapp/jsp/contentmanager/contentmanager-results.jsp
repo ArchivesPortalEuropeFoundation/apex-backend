@@ -9,25 +9,25 @@
         //${securityContext.refresh_interval} is defined in SecurityContext.java to store in session the refresh timeout.
         initResultsHandlers(${securityContext.refresh_interval}, '<s:property value="getText('content.message.please.select.rights.statement')" />');
         drawColumns(${results.findingAid}, ${results.holdingsGuide}, ${results.sourceGuide}, false);
-	});
+    });
 </script>
-		<div id="queueSize">
-			<c:if test="${aiItemsInQueue > 0}"><s:text name="content.message.queue.size.youritems" /> ${aiItemsInQueue}, </c:if><s:text name="content.message.queue.size.allitems" /> ${totalItemsInQueue}<c:if test="${!empty positionInQueue}">, <s:text name="content.message.queue.size.itemsbeforeyou" /> ${positionInQueue}</c:if>
-		</div>
-<div id="batchBlock">
-    <form id="batchActionsForm">
-    	<c:choose>
-    		<c:when test="${results.holdingsGuide}">
-	            <div class="left">
-	                <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
-	            </div>    		
-    		</c:when>
-    		<c:when test="${results.sourceGuide}">
-	            <div class="left">
-	                <a href="sgTreeCreation.action"><s:text name="dashboard.sgcreation.title"/></a>
-	            </div>    		
-    		</c:when>    		
-    	</c:choose>
+<div id="queueSize">
+    <c:if test="${aiItemsInQueue > 0}"><s:text name="content.message.queue.size.youritems" /> ${aiItemsInQueue}, </c:if><s:text name="content.message.queue.size.allitems" /> ${totalItemsInQueue}<c:if test="${!empty positionInQueue}">, <s:text name="content.message.queue.size.itemsbeforeyou" /> ${positionInQueue}</c:if>
+    </div>
+    <div id="batchBlock">
+        <form id="batchActionsForm">
+        <c:choose>
+            <c:when test="${results.holdingsGuide}">
+                <div class="left">
+                    <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
+                </div>    		
+            </c:when>
+            <c:when test="${results.sourceGuide}">
+                <div class="left">
+                    <a href="sgTreeCreation.action"><s:text name="dashboard.sgcreation.title"/></a>
+                </div>    		
+            </c:when>    		
+        </c:choose>
 
         <div class="right">
             <span class="bold">
@@ -41,7 +41,7 @@
             <s:text name="content.message.onlysearched" />
             <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
                 id="batchSelectedAction" name="action">
-            	<!-- Option to call the action for apply a profile. -->
+                <!-- Option to call the action for apply a profile. -->
                 <option value="displayProfile">
                     <s:text name="content.message.applyProfile" />
                 </option>
@@ -141,91 +141,91 @@
                 <thead>
                     <tr>
                         <th id="thLabel">
-                        	<s:text name="content.message.select.label" /><br /> <span class="linkList" id="selectAll">[<s:text name="content.message.select.all" />]
+                            <s:text name="content.message.select.label" /><br /> <span class="linkList" id="selectAll">[<s:text name="content.message.select.all" />]
                             </span> - <span class="linkList" id="selectNone">[<s:text name="content.message.select.none" />]</span>
                        	</th>
                         <th id="thId">
-	                        <s:text name="content.message.id" />
-			                <div class="arrows">
-			                    <a class="order" href="javascript:changeOrder('eadid','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-			                    <a class="order" href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                </div>
-		                </th>
-		                <th id="thTitle">
-			                <s:text name="content.message.title" />
-			                <div class="arrows">
-			                    <a class="order" href="javascript:changeOrder('title','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-			                    <a class="order" href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                </div>
-		                </th>
-		                <th id="thDate">
-			                <s:text name="content.message.date" />
-			                <div class="arrows">
-			                    <a class="order" href="javascript:changeOrder('uploadDate','true')">
-			                    <img class="noStyle" src="images/expand/arrow-down.gif"	 alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"                                                                                      src="images/expand/arrow-up.gif" alt="up" /></a>
-			                </div>
-		                </th>
-		                <th id="thConverted">
-			                <s:text name="content.message.converted" />
-			                <div class="arrows">
-			                    <a class="order" href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-			                    <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                </div>
-			                <br/> <a href="#conversionOptsDiv" class="link_right" id="conversionOpts"><s:text name="content.message.conversion.options" /></a>
-		                </th>
-		                <th id="thValidated">
-			                <s:text name="content.message.validated" />
-			                <div class="arrows">
-			                    <a class="order" href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-			                    <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                </div>
-		                </th>
-		                <th id="thPublished">
-			                <s:text name="content.message.published" />
-			                <div class="arrows">
-			                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-			                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                </div>
-                		</th>
-	               		<c:choose>
-		                    <c:when test="${results.findingAid}">
-		                        <th id="thHoldings">
-		                        	<s:text name="content.message.holdings" />
-		                        </th>
-		                        <th id="thEdm">
-		                        	<s:text name="content.message.eseedm" />
-			                        <div class="arrows">
-			                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-			                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                        </div>
-		                        </th>
-		                        <th id="thEuropeana">
-		                            <s:text name="content.message.europeana" />
-			                        <div class="arrows">
-			                            <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
-			                            <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                        </div>
-		                        </th>
-		                    </c:when>
-		                    <c:when test="${results.holdingsGuide or results.sourceGuide}">
-		                        <th id="thDynamic">
-		                        	<s:text name="content.message.dynamic" />
-		                        </th>
-		                        <th id="thLynked">
-		                        	<s:text name="content.message.linked" />
-		                        </th>
-	                        </c:when>
-	                    </c:choose>
-		                <th id="thQueue">
-			                <s:text name="content.message.queue" />
-			                <div class="arrows">
-			                    <a class="order" href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
-			                    <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-			                </div>
-		                </th>
-	                	<th id="thActions">
-	                		<s:text name="content.message.actions" />
-	               		</th>
+                            <s:text name="content.message.id" />
+                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('eadid','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>
+                </th>
+                <th id="thTitle">
+                    <s:text name="content.message.title" />
+                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('title','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>
+                </th>
+                <th id="thDate">
+                    <s:text name="content.message.date" />
+                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('uploadDate','true')">
+                        <img class="noStyle" src="images/expand/arrow-down.gif"	 alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"                                                                                      src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>
+                </th>
+                <th id="thConverted">
+                    <s:text name="content.message.converted" />
+                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>
+                <br/> <a href="#conversionOptsDiv" class="link_right" id="conversionOpts"><s:text name="content.message.conversion.options" /></a>
+                </th>
+                <th id="thValidated">
+                    <s:text name="content.message.validated" />
+                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>
+                </th>
+                <th id="thPublished">
+                    <s:text name="content.message.published" />
+                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>
+                </th>
+                <c:choose>
+                    <c:when test="${results.findingAid}">
+                        <th id="thHoldings">
+                            <s:text name="content.message.holdings" />
+                        </th>
+                        <th id="thEdm">
+                            <s:text name="content.message.eseedm" />
+                        <div class="arrows">
+                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                        </div>
+                        </th>
+                        <th id="thEuropeana">
+                            <s:text name="content.message.europeana" />
+                        <div class="arrows">
+                            <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
+                            <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                        </div>
+                        </th>
+                    </c:when>
+                    <c:when test="${results.holdingsGuide or results.sourceGuide}">
+                        <th id="thDynamic">
+                            <s:text name="content.message.dynamic" />
+                        </th>
+                        <th id="thLynked">
+                            <s:text name="content.message.linked" />
+                        </th>
+                    </c:when>
+                </c:choose>
+                <th id="thQueue">
+                    <s:text name="content.message.queue" />
+                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
+                    <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>
+                </th>
+                <th id="thActions">
+                    <s:text name="content.message.actions" />
+                </th>
                 </tr>
                 </thead>
                 <c:forEach var="eadResult" items="${results.eadResults}">
@@ -233,23 +233,23 @@
                         <td id="tdLabel_${eadResult.id}"><input class="checkboxSave" type="checkbox" name="check" id="check_${eadResult.id}" value="${eadResult.id}" onclick="enable_features"/></td>
                         <td id="tdId_${eadResult.id}" class="nocenter"><c:out value="${eadResult.eadid}"/></td>
                         <td id="tdTitle_${eadResult.id}" class="nocenter">
-                        	<span class="title"><c:out value="${eadResult.title}"/></span>
+                            <span class="title"><c:out value="${eadResult.title}"/></span>
                         </td>
                         <td id="tdDate_${eadResult.id}">${eadResult.date}</td>
                         <td id="tdConverted_${eadResult.id}" class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>
                         <td id="tdValidated_${eadResult.id}" class="${eadResult.validatedCssClass}"><apenet:resource>${eadResult.validatedText}</apenet:resource></td>
                         <td id="tdPublished_${eadResult.id}" class="${eadResult.indexedCssClass}">
-                        	<c:choose>
+                            <c:choose>
                                 <c:when test="${eadResult.published}">
-                                	${eadResult.units}
+                                    ${eadResult.units}
                                 </c:when>
                                 <c:otherwise>
                                     <apenet:resource>${eadResult.indexedText}</apenet:resource>
                                 </c:otherwise>
                             </c:choose>
-						</td>
-						<c:choose>
-							<c:when test="${results.findingAid}">
+                        </td>
+                        <c:choose>
+                            <c:when test="${results.findingAid}">
                                 <td id="tdHoldings_${eadResult.id}">${eadResult.holdingsGuideTitle}</td>
                                 <td id="tdEdm_${eadResult.id}" class="${eadResult.eseEdmCssClass}" title="<s:text name='content.message.edm.tooltip' />"><c:choose>
                                         <c:when
@@ -266,11 +266,11 @@
                             </c:when>
                         </c:choose>
                         <td id="tdQueue_${eadResult.id}" class="${eadResult.queueCssClass}">
-                        	<c:if test="${eadResult.queueReady or eadResult.queueProcessing or eadResult.queueError}">
+                            <c:if test="${eadResult.queueReady or eadResult.queueProcessing or eadResult.queueError}">
                                 <c:if test="${eadResult.queueError}"><s:text name="content.message.error" />:</c:if>
                                 <apenet:resource>${eadResult.queueAction.resourceName }</apenet:resource>
                             </c:if>
-						</td>
+                        </td>
                         <td id="tdActions_${eadResult.id}" class="actions"><c:choose>
                                 <c:when test="${eadResult.queueReady}">
                                     <select class="selectedAction" name="selectedAction">
@@ -335,23 +335,28 @@
                                                 </option>
                                             </c:if>
                                         </c:if>
+                                        <c:if test="${eadResult.validated}">
+                                            <option value="colorbox|showEadReport.action">
+                                                <s:text name="content.message.report.ead" />
+                                            </option>
+                                        </c:if>
 
-                                    	<!-- Option to call the action for apply a profile. -->
-                                    	<!-- For finding aids display if is not deliver to Europeana. -->
+                                        <!-- Option to call the action for apply a profile. -->
+                                        <!-- For finding aids display if is not deliver to Europeana. -->
                                         <c:if test="${results.findingAid}">
-	                                        <c:if test="${(not eadResult.deliveredToEuropeana and not eadResult.validatedFatalError) or not eadResult.published}">
-		                                        <option value="_self|displayProfile.action">
-		                                            <s:text name="content.message.applyProfile" />
-		                                        </option>
-		                                    </c:if>
-	                                    </c:if>
-                                    	<!-- For holdings guides and source guides display if is not published. -->
+                                            <c:if test="${(not eadResult.deliveredToEuropeana and not eadResult.validatedFatalError) or not eadResult.published}">
+                                                <option value="_self|displayProfile.action">
+                                                    <s:text name="content.message.applyProfile" />
+                                                </option>
+                                            </c:if>
+                                        </c:if>
+                                        <!-- For holdings guides and source guides display if is not published. -->
                                         <c:if test="${results.holdingsGuide or results.sourceGuide}">
-	                                        <c:if test="${not eadResult.published and not eadResult.validatedFatalError}">
-		                                        <option value="_self|displayProfile.action">
-		                                            <s:text name="content.message.applyProfile" />
-		                                        </option>
-		                                    </c:if>
+                                            <c:if test="${not eadResult.published and not eadResult.validatedFatalError}">
+                                                <option value="_self|displayProfile.action">
+                                                    <s:text name="content.message.applyProfile" />
+                                                </option>
+                                            </c:if>
                                         </c:if>
 
                                         <c:if test="${eadResult.published}">
@@ -457,7 +462,7 @@
     </s:form>
     <div class="hidden">
         <div id="conversionOptsDiv">
-			<jsp:include page="conversionOptions.jsp" />
+            <jsp:include page="conversionOptions.jsp" />
         </div>
     </div>
 </div>

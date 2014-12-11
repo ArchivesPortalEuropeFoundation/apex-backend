@@ -8,7 +8,7 @@
             view, edit,contentmanager,updateContentmanager,
             validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
             httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
-            eadActions, batchEadActions, removeEseForFA, displayProfile, applyProfile,
+            eadActions, batchEadActions, removeEseForFA, displayProfile, applyProfile, showEadReport,
             displayEseConvert, processEseConvert, showEdmReport, showwarnings, download, link, removeLink, preview, downloadEse,
             displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
             batchAction, previewEdm, htmlPreview,

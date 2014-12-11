@@ -256,6 +256,9 @@
             <result name="success">/jsp/ajax/success.jsp</result>
             <result name="error">/jsp/ajax/error.jsp</result>
         </action>
+        <action name="showEadReport" class="eu.apenet.dashboard.manual.GenerateEadValidationReportAction">
+            <result name="success">/jsp/eadreport.jsp</result>
+        </action>
 
         <action name="eacCpfActions" class="eu.apenet.dashboard.actions.content.eaccpf.EacCpfActions">
             <result name="success">/jsp/ajax/success.jsp</result>
@@ -678,7 +681,7 @@
         </action>
 
         <action name="showEdmReport" class="eu.apenet.dashboard.ead2ese.GenerateEdmReportAction">
-            <result name="success">/jsp/ead2ese/report.jsp</result>
+            <result name="success">/jsp/ead2ese/edmreport.jsp</result>
         </action>
 
         <action name="editEad" class="eu.apenet.dashboard.actions.ajax.EditEadAction">
