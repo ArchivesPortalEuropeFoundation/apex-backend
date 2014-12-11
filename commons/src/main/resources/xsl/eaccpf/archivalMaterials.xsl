@@ -31,7 +31,7 @@
 						   		</xsl:when>
 						   		<xsl:when test="./eac:relationEntry[not(@localType)]">
 						   			<xsl:call-template name="multilanguageRelations">
-							   			<xsl:with-param name="list" select="./eac:relationEntry[not(@localType)]"/>
+							   			<xsl:with-param name="list" select="./eac:relationEntry[not(@localType)][1]"/>
 							   		</xsl:call-template>
 						   		</xsl:when>
 						   		<xsl:otherwise>
