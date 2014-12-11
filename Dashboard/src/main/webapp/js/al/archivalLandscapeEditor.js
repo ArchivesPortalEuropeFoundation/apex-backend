@@ -113,8 +113,17 @@ function sendAlternativeNames(){
 }
 
 function checkGroupsDiv(){
-	if($("#groupSelect option:selected").length>0){
-		$("#divGroupNodesContainer").show();
+	$("#divGroupNodesContainer").show();
+	if($("#groupSelect option").length>0){
+		var hide = true;
+		$("#groupSelect option").each(function(){
+			if(!($(this).attr("disabled"))){
+				hide = false;
+			}
+		});
+		if(hide){
+			$("#divGroupNodesContainer").hide();
+		}
 	}else{
 		$("#divGroupNodesContainer").hide();
 	}
@@ -340,13 +349,10 @@ function getGroups(){
 			$("div .secondFilterSelect").each(function(){
 				$(this).remove();
 			});
-			$("#divGroupNodesContainer").show();
-			checkGroupsDiv();
 			$("#changeNodeDiv").before(groupSelect);
 			$("div .secondFilterSelect").show();
-		}else{
-			$("#divGroupNodesContainer").hide();
 		}
+		checkGroupsDiv(); //$("#divGroupNodesContainer").show();
 	});
 }
 
