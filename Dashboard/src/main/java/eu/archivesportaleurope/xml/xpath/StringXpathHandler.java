@@ -25,6 +25,14 @@ public abstract class StringXpathHandler extends AbstractXpathHandler {
 		return new HashSet<String>(result);
 	}
 	
+	public Set<String> getOtherResultSet() {
+		if (result.size() > 1){
+			Set<String> temp =  new HashSet<String>(result);
+			temp.remove(0);
+			return temp;
+		}
+		return new HashSet<String>(); 
+	}
 	public String getResultAsString(){
 		return convertToString(result, 0, NO_SEPARATOR);	
 	}
