@@ -4,16 +4,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.CollectionContentDAO;
-import eu.apenet.persistence.vo.Collection;
 import eu.apenet.persistence.vo.CollectionContent;
 
 public class CollectionContentHibernateDAO extends AbstractHibernateDAO<CollectionContent, Long> implements CollectionContentDAO{
 
+	
+	private static final String BOOKMARK = "bookmark";
+	
 	@Override
 	public List<CollectionContent> getCollectionContentsByCollectionId(long id) {
 		List<CollectionContent> collectionContents = null;
@@ -83,8 +84,8 @@ public class CollectionContentHibernateDAO extends AbstractHibernateDAO<Collecti
 		List<CollectionContent> collectionContents = null;
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "collectionContent"); //collection
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			
-			if (table.equals("Bookmark"))
+
+			if (table.equals(BOOKMARK))
 				criteria.add(Restrictions.eq("collectionContent.savedBookmarks.id", Long.parseLong(elemetId)));
 			else
 				criteria.add(Restrictions.eq("collectionContent.eadSavedSearch.id", Long.parseLong(elemetId)));
