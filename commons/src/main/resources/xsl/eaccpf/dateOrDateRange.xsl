@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0" xmlns:fn="http://www.w3.org/2005/xpath-functions"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns='http://www.w3.org/1999/xhtml' xmlns:eac="urn:isbn:1-931666-33-4"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions"
 	exclude-result-prefixes="xlink xlink xsi eac ape">
 
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
-
+	
+	<xsl:template match="text()" mode="existDates">
+		<xsl:value-of select="fn:normalize-space(.)" disable-output-escaping="yes" /><xsl:text> </xsl:text>
+	</xsl:template>
+	
 	<!-- template for commons dates -->
 	<xsl:template name="commonDates">
 		<xsl:param name="date"/>
@@ -113,17 +117,15 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- Template for toDate or fromDate to detect the unknown value-->
+	<!-- Template for toDate or fromDate to detect the different @localType's values -->
 	<xsl:template name="dateUnknow"> 
 		<!-- dateUnknow gets fromDate or toDate -->
 		<xsl:param name="dateUnknow"/>
 	  	<xsl:choose>
 	  		<!-- when it is void or it does not exist -->
-	  		<xsl:when test="$dateUnknow='' or not($dateUnknow)">
+	  		<xsl:when test="($dateUnknow='' or not($dateUnknow)) and $dateUnknow/parent::node()[@localType!='open' or not(@localType)]">
         		<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
         	</xsl:when>
-        	<xsl:when test="$dateUnknow/parent::node()[@localType='open'] and $dateUnknow/text() = 'open'">
-			</xsl:when>
         	<!-- unknownStart, unknownEnd and both -->
         	<xsl:otherwise>
         		<xsl:choose>
@@ -131,9 +133,6 @@
 		        		<xsl:choose>
 							<xsl:when test="$dateUnknow/parent::node()[@localType='unknown' or @localType='unknownStart']">
 		        				<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
-							</xsl:when>
-							<xsl:when test="$dateUnknow/parent::node()[@localType='open'] and $dateUnknow/text() = 'open'">
-		        				<xsl:text> </xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:apply-templates select="$dateUnknow" mode="other"/> 
@@ -145,7 +144,7 @@
 							<xsl:when test="$dateUnknow/parent::node()[@localType='unknown' or @localType='unknownEnd']">
 	        					<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
 							</xsl:when>
-							<xsl:when test="$dateUnknow/parent::node()[@localType='open'] and $dateUnknow/text() = 'open'">
+							<xsl:when test="$dateUnknow/parent::node()[@localType='open']">
 		        				<xsl:text> </xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
@@ -567,7 +566,7 @@
 											</xsl:if>
 								    	</xsl:when>
 								    	<xsl:when test="./eac:toDate">
-								    		<xsl:if test="./eac:toDate[not(@xml:lang)]">
+											<xsl:if test="./eac:toDate[not(@xml:lang)]">
 								    			<xsl:if test="position() > 1 or (position() = 1 and ./parent::node()/eac:date/text())">
 													<xsl:text>, </xsl:text>
 												</xsl:if>
@@ -652,61 +651,27 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>	
-
+	
 	<!--template fromDate toDate-->
 	<xsl:template name="fromToDate">
 		<xsl:param name="dateRange"/>
 		
-       	<xsl:choose>
-			<xsl:when test="$dateRange[@localType='unknown' or @localType='unknownStart']">
-				<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
-			</xsl:when>
-			<xsl:when test="$dateRange[@localType='open'] and $dateRange/eac:fromDate/text() = 'open'">
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="$dateRange/eac:fromDate" mode="other"/> 
-			</xsl:otherwise>
-		</xsl:choose>
-
-		<xsl:choose>
-			<xsl:when test="($dateRange[@localType!='unknown']
+		<xsl:call-template name="dateUnknow">
+			<xsl:with-param name="dateUnknow" select="$dateRange/eac:fromDate"/>
+		</xsl:call-template>
+		<xsl:if test="($dateRange[@localType!='unknown']
 							or $dateRange[not(@localType)])
 							and ($dateRange/eac:toDate
 								or $dateRange[@localType='unknownEnd']
 				                or not($dateRange/eac:toDate) 
 				                or not($dateRange/eac:fromDate)
-				                or $dateRange[@localType='open'] 
-				                or $dateRange/eac:fromDate/text() = 'open')">
-				<xsl:text> - </xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="$dateRange[@localType='unknown']">
-					</xsl:when>
-					<xsl:when test="$dateRange[@localType='open'] and $dateRange/eac:fromDate/text() = 'open'">
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text> </xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
-
-		<xsl:choose>	
-			<xsl:when test="$dateRange[@localType='unknownEnd']">
-				<xsl:value-of select="ape:resource('eaccpf.commons.dateUnknow')"/>
-			</xsl:when>
-			<xsl:when test="$dateRange[@localType='open'] and $dateRange/eac:toDate/text() = 'open'">
-			</xsl:when>
-		    <xsl:otherwise>
-		    	<xsl:if  test="$dateRange[@localType='unknownStart' or @localType=''] or $dateRange[not(@localType)]"> 
-		    		<xsl:apply-templates select="$dateRange/eac:toDate" mode="other"/> 
-		   		</xsl:if>
-		   		<xsl:if  test="$dateRange[@localType='open'] and $dateRange/eac:fromDate/text() = 'open'"> 
-		    		<xsl:apply-templates select="$dateRange/eac:toDate" mode="other"/> 
-		   		</xsl:if>
-		    </xsl:otherwise>
-		</xsl:choose>
+				                or $dateRange[@localType='open'])"> 
+		
+			<xsl:text> - </xsl:text>
+			<xsl:call-template name="dateUnknow">
+				<xsl:with-param name="dateUnknow" select="$dateRange/eac:toDate"/>
+			</xsl:call-template>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- template for date -->
@@ -849,5 +814,10 @@
 				</xsl:if>
 			</div>
 		</div>
+	</xsl:template>
+	
+	<!--Template to show the existDates's content -->
+	<xsl:template match="eac:existDates">
+		<xsl:apply-templates mode="existDates"/>
 	</xsl:template>
 </xsl:stylesheet>

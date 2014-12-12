@@ -34,7 +34,7 @@
 	<xsl:template match="text()" mode="other">
 		<xsl:value-of select="fn:normalize-space(ape:highlight(., 'other'))" disable-output-escaping="yes" />
 	</xsl:template>
-
+	
 	<xsl:template match="/">
 		<xsl:variable name="existDates" select="./eac:eac-cpf/eac:cpfDescription/eac:description/eac:existDates"/>
 		<xsl:variable name="entityType" select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType"/>
@@ -177,6 +177,7 @@
 				<xsl:if test="$existDates/eac:dateSet and (($existDates/eac:dateSet/eac:dateRange/eac:fromDate or $existDates/eac:dateSet/eac:dateRange/eac:toDate) or ($existDates/eac:dateSet/eac:date and $existDates/eac:dateSet/eac:date/text()))">
 					<xsl:apply-templates select="$existDates/eac:dateSet">
 						<xsl:with-param name="mode" select="$translationMode" />
+						<xsl:with-param name="langNode" select="''"/>
 					</xsl:apply-templates>
 				</xsl:if>
 				<!-- when there are only 1 dateRange -->
@@ -195,6 +196,9 @@
 						</span>
 					<xsl:text>)</xsl:text>
 				</xsl:if>
+				<span class="existDates hidden">
+					<xsl:apply-templates select="$existDates"/>
+				</span>
 			</xsl:if>
 		<!--  	<xsl:if test="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType/text()">
 				<xsl:text> </xsl:text>
