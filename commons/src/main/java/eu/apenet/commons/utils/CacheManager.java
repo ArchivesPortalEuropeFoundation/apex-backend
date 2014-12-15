@@ -12,9 +12,9 @@ public class CacheManager {
 	private static final Logger LOGGER = Logger.getLogger(CacheManager.class);
 	private static CacheManager instance;
 	private List<Cache<?,?>> caches = new ArrayList<Cache<?,?>>();
-	private final long defaultExpire = 600;
+	private static final long DEFAULT_EXPIRE = 600;
 	private CacheManager(){
-		Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(this.removeExpired(), this.defaultExpire / 2, this.defaultExpire, TimeUnit.SECONDS);
+		Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(this.removeExpired(), this.DEFAULT_EXPIRE / 2, this.DEFAULT_EXPIRE, TimeUnit.SECONDS);
 	}
 	public static CacheManager getInstance(){
 		if (instance ==null){
@@ -30,7 +30,7 @@ public class CacheManager {
 				 throw new RuntimeException("There is already a cache with the same name: " + name);
 			 }
 		}
-		Cache<K,T> cache =  new Cache<K,T>(defaultExpire, name);
+		Cache<K,T> cache =  new Cache<K,T>(DEFAULT_EXPIRE, name);
 		caches.add(cache);
 		return cache;
 	}
