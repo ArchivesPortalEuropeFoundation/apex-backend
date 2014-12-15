@@ -12,7 +12,7 @@ public class CacheManager {
 	private static final Logger LOGGER = Logger.getLogger(CacheManager.class);
 	private static CacheManager instance;
 	private List<Cache<?,?>> caches = new ArrayList<Cache<?,?>>();
-	private final long defaultExpire = 300;
+	private final long defaultExpire = 600;
 	private CacheManager(){
 		Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(this.removeExpired(), this.defaultExpire / 2, this.defaultExpire, TimeUnit.SECONDS);
 	}
