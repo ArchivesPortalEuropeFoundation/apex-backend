@@ -1475,20 +1475,9 @@
 						<div class="rightcolumn moreDisplay" id="otherIdentifier"> 
 							<xsl:for-each select="./eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityId">
 								<xsl:if test="./text()">
-									   	<xsl:choose>
-											<xsl:when test="@localType!=''">
-												<p>
-													<xsl:variable name="href" select="./@localType"/>
-													<a href="{$href}" target="_blank"><xsl:apply-templates select="." mode="other"/></a>
-												</p>
-											</xsl:when>
-											<xsl:otherwise>
-												<p>
-													<xsl:apply-templates select="." mode="other"/> 
-												</p>
-											</xsl:otherwise>
-										</xsl:choose>
-								   
+								   		<xsl:call-template name="typeEntityId">
+								   			<xsl:with-param name="entityId" select="."/>
+								   		</xsl:call-template>
 								 </xsl:if>  
 							</xsl:for-each>
 							<div class="linkMore">
@@ -6026,5 +6015,78 @@
 				</xsl:for-each>
 			</xsl:for-each>
 		</ul>
+	</xsl:template>
+	
+	<!-- template to know the @localType in <entityId>-->
+	<xsl:template name="typeEntityId">
+		<xsl:param name="entityId"/>
+		<xsl:choose>
+   			<xsl:when test="$entityId[@localType!='']">
+   				<xsl:choose>
+   					<xsl:when test="$entityId[fn:upper-case(@localType)='VIAF']">
+		   				<xsl:call-template name="displayEntityId">
+		   					<xsl:with-param name="entityId" select="$entityId"/>
+		   					<xsl:with-param name="url" select="'http://viaf.org/viaf/'"/>
+		   				</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$entityId[fn:upper-case(@localType)='GND']">
+		   				<xsl:call-template name="displayEntityId">
+		   					<xsl:with-param name="entityId" select="$entityId"/>
+		   					<xsl:with-param name="url" select="'http://d-nb.info/gnd/'"/>
+		   				</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$entityId[fn:upper-case(@localType)='CGUIA']">
+		   				<xsl:call-template name="displayEntityId">
+		   					<xsl:with-param name="entityId" select="$entityId"/>
+		   					<xsl:with-param name="url" select="'http://censoarchivos.mcu.es/CensoGuia/productordetail.htm?id='"/>
+		   				</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$entityId[fn:upper-case(@localType)='LCNAF']">
+		   				<xsl:call-template name="displayEntityId">
+		   					<xsl:with-param name="entityId" select="$entityId"/>
+		   					<xsl:with-param name="url" select="'http://id.loc.gov/authorities/names/'"/>
+		   				</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$entityId[fn:upper-case(@localType)='ISNI']">
+		   				<xsl:call-template name="displayEntityId">
+		   					<xsl:with-param name="entityId" select="$entityId"/>
+		   					<xsl:with-param name="url" select="'http://isni.org/isni/'"/>
+		   				</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="$entityId[fn:upper-case(@localType)='BNF']">
+		   				<xsl:call-template name="displayEntityId">
+		   					<xsl:with-param name="entityId" select="$entityId"/>
+		   					<xsl:with-param name="url" select="'http://data.bnf.fr/'"/>
+		   				</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+		   				<p>
+							<xsl:apply-templates select="$entityId" mode="other"/>
+							<xsl:text> (</xsl:text>
+							<xsl:value-of select="$entityId/@localType"/>												
+							<xsl:text>)</xsl:text>
+						</p>
+					</xsl:otherwise>
+				</xsl:choose>
+   			</xsl:when>
+   			<xsl:otherwise>
+				<p>
+					<xsl:apply-templates select="$entityId" mode="other"/> 
+				</p>
+			</xsl:otherwise>
+   		</xsl:choose>
+	</xsl:template>
+	<!-- template to display the <entityId> -->
+	<xsl:template name="displayEntityId">
+		<xsl:param name="entityId"/>
+		<xsl:param name="url"/>
+		
+		<p>
+			<xsl:variable name="href" select="$entityId/text()"/>
+			<a href="{fn:concat($url,$href)}" target="_blank"><xsl:apply-templates select="$entityId" mode="other"/></a>
+			<xsl:text> (</xsl:text>
+			<xsl:value-of select="$entityId/@localType"/>												
+			<xsl:text>)</xsl:text>
+		</p>
 	</xsl:template>
 </xsl:stylesheet>
