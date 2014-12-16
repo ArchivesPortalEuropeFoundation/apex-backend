@@ -23,7 +23,7 @@ function hideAndShow(idPrefix,shown){
 			$("div[id='"+shown+"'] table").each(function(){
 				$(this).hide();
 				var newId = $(this).attr("id");
-				if(newId.indexOf(id)>-1){
+				if(newId.match(id+"$")){
 					$(this).show();
 				}
 
@@ -1938,9 +1938,9 @@ function loadRepositories(text1, text2, number) {
 function addRepositories(text1, text2, text3, text4, text5, text6, text7, property1, property2, property3, property4, property5){
 	$(document).scrollTop($("#eag2012tabs_institution_tabs").offset().top);
 	var counter = $("table[id^='contactTable_']").length;
-	var clone = $("table[id^='yourInstitutionTable_"+counter+"']").clone();
+	var clone = $("table[id='yourInstitutionTable_"+counter+"']").clone();
 	clone = "<table id='"+("yourInstitutionTable_"+(counter+1))+"'>"+clone.html()+"</table>";
-	$("table[id^='yourInstitutionTable_"+counter+"']").after(clone);
+	$("table[id='yourInstitutionTable_"+counter+"']").after(clone);
 	//reset parametters
 	$("table#yourInstitutionTable_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); //clean all input_text
