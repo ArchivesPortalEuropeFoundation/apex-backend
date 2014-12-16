@@ -203,25 +203,34 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         // Only adds the rights options if file type is an EAD.
         if (profile.getFileType() != 2) {
 	        // Rights for digital objects.
-	        profile.setRightsOfDigitalObjects(this.getRightDigitalObjects());
-	        if (this.getRightDigitalObjects() != null
-	        		&& !this.getRightDigitalObjects().isEmpty()) {
-	        	profile.setRightsOfDigitalObjectsText(this.recoverRightsStatementText(this.getRightDigitalObjects()));
-	        } else {
-	        	profile.setRightsOfDigitalObjectsText("");
-	        }
-	        profile.setRightsOfDigitalDescription(this.getRightDigitalDescription());
-	        profile.setRightsOfDigitalHolder(this.getRightDigitalHolder());
+        	if (this.getRightDigitalObjects() != null
+	        		&& !this.getRightDigitalObjects().isEmpty()
+	        		&& !this.getRightDigitalObjects().equalsIgnoreCase(AjaxConversionOptionsConstants.NO_SELECTED)) {
+        		profile.setRightsOfDigitalObjects(this.getRightDigitalObjects());
+        		profile.setRightsOfDigitalObjectsText(this.recoverRightsStatementText(this.getRightDigitalObjects()));
+        		profile.setRightsOfDigitalDescription(this.getRightDigitalDescription());
+		        profile.setRightsOfDigitalHolder(this.getRightDigitalHolder());
+        	} else {
+        		profile.setRightsOfDigitalObjects("");
+        		profile.setRightsOfDigitalObjectsText("");
+        		profile.setRightsOfDigitalDescription("");
+		        profile.setRightsOfDigitalHolder("");
+        	}
+
 	        // Rights for EAD data.
-	        profile.setRightsOfEADData(this.getRightEadData());
-	        if (this.getRightEadData() != null
-	        		&& !this.getRightEadData().isEmpty()) {
-	        	profile.setRightsOfEADDataText(this.recoverRightsStatementText(this.getRightEadData()));
-	        }else {
-	        	profile.setRightsOfEADDataText("");
-	        }
-	        profile.setRightsOfEADDescription(this.getRightEadDescription());
-	        profile.setRightsOfEADHolder(this.getRightEadHolder());
+        	if (this.getRightEadData() != null
+	        		&& !this.getRightEadData().isEmpty()
+	        		&& !this.getRightEadData().equalsIgnoreCase(AjaxConversionOptionsConstants.NO_SELECTED)) {
+        		profile.setRightsOfEADData(this.getRightEadData());
+        		profile.setRightsOfEADDataText(this.recoverRightsStatementText(this.getRightEadData()));
+        		profile.setRightsOfEADDescription(this.getRightEadDescription());
+		        profile.setRightsOfEADHolder(this.getRightEadHolder());
+        	} else {
+        		profile.setRightsOfEADData("");
+        		profile.setRightsOfEADDataText("");
+        		profile.setRightsOfEADDescription("");
+		        profile.setRightsOfEADHolder("");
+        	}
         } else {
 	        // Rights for digital objects.
 	        profile.setRightsOfDigitalObjects("");
