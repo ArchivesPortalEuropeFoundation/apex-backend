@@ -7,8 +7,8 @@
 
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
 	
-	<xsl:template match="text()" mode="existDates">
-		<xsl:value-of select="fn:normalize-space(.)" disable-output-escaping="yes" /><xsl:text> </xsl:text>
+	<xsl:template match="*" mode="existDates">
+	  <xsl:apply-templates mode="#current"/>
 	</xsl:template>
 	
 	<!-- template for commons dates -->
@@ -818,6 +818,6 @@
 	
 	<!--Template to show the existDates's content -->
 	<xsl:template match="eac:existDates">
-		<xsl:apply-templates mode="existDates"/>
+		<xsl:apply-templates select="eac:date | eac:dateRange | eac:dateSet" mode="existDates"/>
 	</xsl:template>
 </xsl:stylesheet>
