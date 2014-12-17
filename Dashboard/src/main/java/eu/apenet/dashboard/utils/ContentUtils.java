@@ -8,26 +8,16 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts2.util.TextProviderHelper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -542,74 +532,6 @@ public class ContentUtils {
 		return response.getOutputStream();
 	}
 
-	public static Map<String, String> getEmailConfiguration(boolean localized) {
-		Map<String, String> results = new HashMap<String, String>();
-		try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			String file_path = "emails/email-configuration.xml";
-			InputStream path = Thread.currentThread().getContextClassLoader().getResourceAsStream(file_path);
-			Document documento = builder.parse(path);
-			if (localized){
-				return readConfigFileLocalized(results, documento);
-			}else {
-				return readConfigFile(results, documento);
-			}
-			
-		} catch (Exception e) {
-			return results;
-		}
-	}
-	public static Map<String, String> readConfigFile(Map<String, String> dropDownTable, Node section) {
-		if (section != null) {
-			NodeList emails = section.getChildNodes();
-			String subject = new String();
-			String to = new String();
-			for (int i = 0; i < emails.getLength(); i++) {
-				Node email = emails.item(i);
-				if (email.hasChildNodes() && !email.getNodeName().equals("subject")
-						&& !email.getNodeName().equals("to")) {
-					dropDownTable = readConfigFile(dropDownTable, email);
-				} else {
-					if (email.getNodeName().equals("subject")) {
-						subject = email.getTextContent();			
-					}
-					if (email.getNodeName().equals("to")) {
-						to = email.getTextContent();
-					}
-				}
-			}
-			if (section.getNodeName().equals("email")) {
-				dropDownTable.put(subject, to);
-			}
-		}
-		return dropDownTable;
-	}
-	public static Map<String, String> readConfigFileLocalized(Map<String, String> dropDownTable, Node section) {
-		ValueStack valueStack = ActionContext.getContext().getValueStack();
-		if (section != null) {
-			NodeList emails = section.getChildNodes();
-			String subject = new String();
-			String to = new String();
-			for (int i = 0; i < emails.getLength(); i++) {
-				Node email = emails.item(i);
-				if (email.hasChildNodes() && !email.getNodeName().equals("subject")
-						&& !email.getNodeName().equals("to")) {
-					dropDownTable = readConfigFileLocalized(dropDownTable, email);
-				} else {
-					if (email.getNodeName().equals("subject")) {
-						subject = TextProviderHelper.getText(email.getTextContent(), null, valueStack);					
-					}
-					if (email.getNodeName().equals("to")) {
-						to = email.getTextContent();
-					}
-				}
-			}
-			if (section.getNodeName().equals("email")) {
-				dropDownTable.put(subject, to);
-			}
-		}
-		return dropDownTable;
-	}
 
 	public static boolean containsEacs(ArchivalInstitution archivalInstitution) {
 		if (archivalInstitution.isGroup()) {
