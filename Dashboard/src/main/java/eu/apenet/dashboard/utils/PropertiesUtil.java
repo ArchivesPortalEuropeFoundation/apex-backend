@@ -1,5 +1,7 @@
 package eu.apenet.dashboard.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -7,18 +9,34 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.archivesportaleurope.commons.config.DashboardConfig;
 
 public class PropertiesUtil {
 	private static final Logger LOGGER = Logger.getLogger(PropertiesUtil.class);
-
+	private static Properties dashboardProperties = new Properties();
 	private static Properties defaultProperties = new Properties();
 	static {
 		try {
 			InputStream inputStream = PropertiesUtil.class.getClassLoader()
 		        .getResourceAsStream("/default.properties");
 	    	defaultProperties.load(inputStream);
+	    	inputStream.close();
 		}catch (IOException ioe){
 			LOGGER.error(APEnetUtilities.generateThrowableLog(ioe));
+		}
+	}
+	public static void reload(DashboardConfig dashboardConfig){
+		String configFilename = dashboardConfig.getConfigPropertiesPath();
+		File configFile = new File(configFilename);
+		if (configFile.exists()){
+			try {
+				FileInputStream inputStream = new FileInputStream(configFile);
+				dashboardProperties.load(inputStream);
+				inputStream.close();
+			}catch (IOException ioe){
+				LOGGER.error(APEnetUtilities.generateThrowableLog(ioe));
+			}
+			
 		}
 	}
 	
@@ -44,9 +62,6 @@ public class PropertiesUtil {
 		return Long.parseLong(value);
 	}
 	private static String getExternal(String key){
-		/*
-		 * not yet implemented
-		 */
-		return null;
+		return dashboardProperties.getProperty(key);
 	}
 }
