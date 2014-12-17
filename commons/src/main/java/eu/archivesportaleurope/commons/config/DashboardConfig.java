@@ -21,6 +21,7 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
     private String maintenanceAction;
     private boolean defaultQueueProcessing = true;
     private boolean defaultHarvestingProcessing = false;
+    private String configPropertiesPath;
 
 	public String getEuropeanaDirPath() {
 		return europeanaDirPath;
@@ -129,5 +130,16 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		checkConfigured();
 		this.maintenanceAction = maintenanceAction;
 	}
+
+	public String getConfigPropertiesPath() {
+		return configPropertiesPath;
+	}
+
+	public void setConfigPropertiesPath(String configPropertiesPath) {
+		checkConfigured();
+		this.configPropertiesPath = configPropertiesPath;
+	}
+
+
 	
 }
