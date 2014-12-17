@@ -12,7 +12,7 @@
 		
 		<select id="Mail_selected" name="subjectsMenu">
 			<c:forEach items="${mails}" var="mail" >
-				<option value="${mail.value}">${mail.key}</option>
+				<option value="${mail.key}">${mail.value}</option>
 			</c:forEach>
 		</select>
 		
