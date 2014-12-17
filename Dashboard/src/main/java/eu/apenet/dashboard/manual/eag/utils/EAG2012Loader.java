@@ -6887,8 +6887,10 @@ public class EAG2012Loader{
 								&& repository.getAccessibility().get(i).getQuestion() != null
 								&& !repository.getAccessibility().get(i).getQuestion().isEmpty()) {
 							this.addYiAccessibilityQuestion(repository.getAccessibility().get(i).getQuestion());
+							this.setAccessibilityQuestion(repository.getAccessibility().get(i).getQuestion());
 						} else {
 							this.addYiAccessibilityQuestion(Eag2012.OPTION_NO);
+							this.setAccessibilityQuestion(Eag2012.OPTION_NO);
 						}
 
 						if (repository.getAccessibility().size() >= i
