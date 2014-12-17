@@ -43,7 +43,7 @@
 				<s:submit key="admin.queuemanagement.queue.stop"
 					cssClass="mainButton" name="startButton" />
 			</c:when>
-			<c:when test="${not queueActive and not queueProcessing}">
+			<c:when test="${not queueActive}">
 				<s:submit key="admin.queuemanagement.queue.start"
 					cssClass="mainButton" name="startButton" />
 			</c:when>
