@@ -9,15 +9,12 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.listener.ApePortalAndDashboardConfigListener;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.archivesportaleurope.commons.config.DashboardConfig;
 
 public class DashboardConfigListener extends ApePortalAndDashboardConfigListener {
 
 	private static final String CONFIG_PROPERTIES_PATH = "CONFIG_PROPERTIES_PATH";
-	private static final String EMAIL_DASHBOARD_FEEDBACK_DESTINY = "EMAIL_DASHBOARD_FEEDBACK_DESTINY";
 	private static final String EUROPEANA_DIR_PATH = "EUROPEANA_DIR_PATH";
 	private static final String EUROPEANA_DIR_PATH_DEFAULT = "/ape/data/europeana/";
 	private static final String SOLR_BASE_INDEX_URL = "SOLR_BASE_INDEX_URL";
@@ -62,7 +59,11 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	protected void init(ServletContext servletContext, DashboardConfig config) {
 		
 		String configProperties = servletContext.getInitParameter(CONFIG_PROPERTIES_PATH);
-		config.setConfigPropertiesPath(configProperties);
+		if (StringUtils.isBlank(configProperties)) {
+			config.setConfigPropertiesPath("/ape/liferay/tomcat-base/dashboard.properties");
+		}else {
+			config.setConfigPropertiesPath(configProperties);
+		}
 		PropertiesUtil.reload(config);
 		String europeanaDirPath = servletContext.getInitParameter(EUROPEANA_DIR_PATH);
 		if (StringUtils.isBlank(europeanaDirPath)) {
@@ -71,18 +72,6 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 		}
 		europeanaDirPath = checkPath(EUROPEANA_DIR_PATH, europeanaDirPath);
 		config.setEuropeanaDirPath(europeanaDirPath);
-		String emailDashboardFeedbackDestiny = servletContext.getInitParameter(EMAIL_DASHBOARD_FEEDBACK_DESTINY);
-
-		if (StringUtils.isBlank(emailDashboardFeedbackDestiny)) {
-			log.warn("No " + EMAIL_DASHBOARD_FEEDBACK_DESTINY + " specified.");
-			emailDashboardFeedbackDestiny = ContentUtils.getEmailConfiguration(false).get("xmlMail.troubles");
-			
-		} else {
-			log.info(EMAIL_DASHBOARD_FEEDBACK_DESTINY + ": " + emailDashboardFeedbackDestiny);
-		}
-
-		config.setEmailDashboardFeedbackDestiny(emailDashboardFeedbackDestiny);
-
 		/*
 		 * solr indexing
 		 */
