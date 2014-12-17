@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.actions;
 	
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -8,7 +9,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.UserService;
-import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.vo.User;
 
 /**
@@ -38,9 +39,16 @@ public class ContactAction extends ActionSupport{
 	 */
 	
 	public String execute() throws Exception {
-		mails = ContentUtils.getEmailConfiguration(true);
+		mails = new LinkedHashMap<String, String>();
+		mails.put("ape.emails.troubles", getText("xmlMail.troubles"));
+		mails.put("ape.emails.data", getText("xmlMail.data"));
+		mails.put("ape.emails.processing", getText("xmlMail.procesing"));
+		mails.put("ape.emails.europeana", getText("xmlMail.europeana"));
+		mails.put("ape.emails.other", getText("xmlMail.other"));
+		mails.put("ape.emails.suggestions", getText("xmlMail.suggestions"));
 		if (this.getEmail() != null && this.getFeedbackText() != null){
-			UserService.sendEmailFeedback(this.getEmail(),this.getFeedbackText(), this.subjectsMenu);
+			String toEmail = PropertiesUtil.get(subjectsMenu);
+			UserService.sendEmailFeedback(this.getEmail(),this.getFeedbackText(), toEmail);
 			addActionMessage(getText("success.feedback.contact"));
 			return SUCCESS;
 		}
