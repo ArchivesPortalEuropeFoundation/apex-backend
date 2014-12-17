@@ -14,7 +14,6 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
     
 	private String europeanaDirPath;
     private String baseSolrIndexUrl;
-	private String emailDashboardFeedbackDestiny;   
     private String xslDirPath;
     private XPathFactory xpathFactory;
     private boolean maintenanceMode = false;
@@ -31,18 +30,6 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		checkConfigured();	
 		this.europeanaDirPath = europeanaDirPath;
 	}
-	public String getEmailDashboardFeedbackDestiny() {
-		return emailDashboardFeedbackDestiny;
-	}
-
-	public void setEmailDashboardFeedbackDestiny(
-			String emailDashboardFeedbackDestiny) {
-		checkConfigured();
-		this.emailDashboardFeedbackDestiny = emailDashboardFeedbackDestiny;
-	
-	}
-
-
 	public String getBaseSolrIndexUrl() {
 		return baseSolrIndexUrl;
 	}
