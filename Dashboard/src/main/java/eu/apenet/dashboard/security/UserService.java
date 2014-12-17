@@ -506,11 +506,11 @@ public final class UserService {
 		}
 		if (toEmail == null){
 			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
-				toEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+				toEmail =  PropertiesUtil.get(PropertiesKeys.APE_EMAILS_ADMINS);
 			}
 		}else {
 			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
-				bccEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+				bccEmail =  PropertiesUtil.get(PropertiesKeys.APE_EMAILS_ADMINS);
 			}
 		}
 		if (toEmail != null){
@@ -571,11 +571,11 @@ public final class UserService {
 		}
 		if (toEmail == null){
 			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
-				toEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+				toEmail =  PropertiesUtil.get(PropertiesKeys.APE_EMAILS_ADMINS);
 			}
 		}else {
 			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
-				bccEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+				bccEmail =  PropertiesUtil.get(PropertiesKeys.APE_EMAILS_ADMINS);
 			}
 		}
 		if (toEmail != null){
