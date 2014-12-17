@@ -94,6 +94,7 @@
 								<s:form name="languageSelection" id="languageSelection" action="changeLanguage" theme="simple" method="post">
 									<select title="<s:property value="getText('header.chooselanguage')"/>" name="request_locale" id="selectLanguage" onchange="sendLanguageSelectionForm();" >
 										<option title="Български" value="bg" ${selectedLanguage['bg']}>Български</option>
+										<option title="Cрпски" value="sr" ${selectedLanguage['sr']}>Cрпски</option>
 										<option title="Hrvatski" value="hr" ${selectedLanguage['hr']}>Hrvatski</option>
 										<option title="Deutsch" value="de" ${selectedLanguage['de']}>Deutsch</option>
 										<option title="Eesti" value="et" ${selectedLanguage['et']}>Eesti</option>				
