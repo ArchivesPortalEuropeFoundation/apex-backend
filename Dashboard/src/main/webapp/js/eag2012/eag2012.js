@@ -47,15 +47,6 @@ function hideAndShow(idPrefix,shown){
 	}
 }
 
-function clickExitAction(strSaveMsg,form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, errorspecialcharacter){
-	if (confirmAndDecode(strSaveMsg)) {
-		clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName, true, errorspecialcharacter);
-	}else{ 
-		location.href="removeInvalidEAG2012.action";
-	}
-}
-
-
 function navigateToCurrentRepoTab(href){
 	var errorFieldText = $(".fieldRequired :not(#textContactCountyOfTheInstitution)");
 	var parent = errorFieldText.parent();
@@ -133,7 +124,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "your institution".
 				var jsonDataYourInstitution = clickYourInstitutionAction(text1,message);
 				if (!jsonDataYourInstitution) {
-					alertAndDecode(error1);
+					displayAlertDialog(error1);
 					if($("#tab_yourInstitutionTable_1").length>0){
 						$("#tab_yourInstitutionTable_1").trigger('click');
 						$("#tab_yourInstitutionTable_1 a[href='#tab-yourInstitution']").trigger('click');
@@ -150,7 +141,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 					// Check fill mandatory fields in tab "identity".
 					var jsonDataIdentity = clickIdentityAction(text1);
 					if (!jsonDataIdentity) {
-						alertAndDecode(error2);
+						displayAlertDialog(error2);
 						if($("#tab_yourInstitutionTable_1").length>0){
 							$("#tab_yourInstitutionTable_1").trigger('click');
 							$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
@@ -160,7 +151,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 						exit = true;
 					}
 		        } else{
-		        	alertAndDecode(errorspecialcharacter);
+		        	displayAlertDialog(errorspecialcharacter);
 		        	if (errorTab ==1){
 		        		if($("#tab_yourInstitutionTable_1").length>0){
 							$("#tab_yourInstitutionTable_1").trigger('click');
@@ -185,12 +176,12 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "contact".
 				var jsonDataContact = checkAllContactTabs(text1,message);
 				if (!jsonDataContact) {
-					alertAndDecode(error3);
+					displayAlertDialog(error3);
 					navigateToCurrentRepoTab(href);
 					exit = true;
 				}
 				if (jsonDataContact===true){
-					  alertAndDecode(error9);
+					  displayAlertDialog(error9);
 					  navigateToCurrentRepoTab(href);
 					  exit = true;
 				}
@@ -199,7 +190,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "access and services".
 				var jsonDataAccessAndServices = checkAllAccessAndServicesTabs(text1,message);
 				if (!jsonDataAccessAndServices) {
-					alertAndDecode(error4);
+					displayAlertDialog(error4);
 					navigateToCurrentRepoTab(href);
 					exit = true;
 				}
@@ -208,7 +199,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "description".
 				var jsonDataDescription = checkAllDescriptionTabs(text1);
 				if (!jsonDataDescription) {
-					alertAndDecode(error5);
+					displayAlertDialog(error5);
 					navigateToCurrentRepoTab(href);
 					exit = true;
 				}
@@ -217,7 +208,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "control".
 				var jsonDataControl = clickControlAction(text1);
 				if(!jsonDataControl){
-					alertAndDecode(error6);
+					displayAlertDialog(error6);
 					$("#tab_yourInstitutionTable_1").trigger('click');
 					$("#tab_yourInstitutionTable_1 a[href='#tab-control']").trigger('click');
 					exit = true;
@@ -227,7 +218,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 				// Check fill mandatory fields in tab "relations".
 				var jsonDataRelations = clickRelationsAction(text1,message);
 				if (!jsonDataRelations) {
-					alertAndDecode(error7);
+					displayAlertDialog(error7);
 					if($("#tab_yourInstitutionTable_1").length>0){
 						$("#tab_yourInstitutionTable_1").trigger('click');
 						$("#tab_yourInstitutionTable_1 a[href='#tab-relations']").trigger('click');
@@ -1740,7 +1731,7 @@ function yiFutherAccessInformation2(text1){
 	clone.find("[id^='selectFutherAccessInformation']").attr("value","none");
 	clone.find("[id^='selectFutherAccessInformation']").removeAttr("onchange");
 	if(wrongField){
-		alertAndDecode(text1);
+		displayAlertDialog(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -1780,7 +1771,7 @@ function yiAddFutherInformationOnExistingFacilities2(text1) {
 	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").attr("value","none");
 	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").removeAttr("onchange");
 	if(wrongField){
-		alertAndDecode(text1);
+		displayAlertDialog(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -1818,7 +1809,7 @@ function yiAddReferencetoyourinstitutionsholdingsguide(text1){
 	clone.find("[id^='textYIHoldingsGuideLinkTitle']").removeAttr("onchange");
 	clone2.find("[id^='selectYIReferencetoHoldingsguide']").attr("value","none");
 	if(wrongField){
-		alertAndDecode(text1);
+		displayAlertDialog(text1);
 	}else{
 		$(target2).after(clone2);
 		$(target2).after(clone);
@@ -2276,7 +2267,7 @@ function addYIFurtherEmailsOfTheInstitution(text1){
 	clone.find("[id^='selectTextYILangEmail']").attr("value","none");
 	clone2.find("[id^='textYIEmailLinkTitle']").attr("value","");
 	if(wrongField){
-		alertAndDecode(text1);
+		displayAlertDialog(text1);
 	}else{
 		$(target2).after(clone2);
 		$(target2).after(clone);
@@ -2322,7 +2313,7 @@ function addYIFurtherWebsOfTheInstitution(text1){
 	clone2.attr("id","trButtonYILangWebpage_"+(count+1));
 		
 	if(wrongField){
-		alertAndDecode(text1);
+		displayAlertDialog(text1);
 	}else{
 		$(target2).after(clone2);
 		$(target2).after(clone);
@@ -2356,7 +2347,7 @@ function yIAddOpeningTimes(text1){
 	clone.find("span").remove();
 	clone.find("p").remove();
 	if(wrongField){
-		alertAndDecode(text1);
+		displayAlertDialog(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -2471,7 +2462,7 @@ function yIAddClosingDates2(text1){
 	clone.find("[id^='yourInstitutionClosingDates']").attr("value","");
 	clone.find("[id^='selectTextYIClosingTimes']").attr("value","none");
 	if(wrongField){
-		alertAndDecode(text1);
+		displayAlertDialog(text1);
 	}else{
 		$(target).after(clone);
 	}
@@ -4139,11 +4130,11 @@ function relationAddNewInstitutionRelation(text1){
 }
 
 function alertEmptyFields(text1) {
-	alertAndDecode(text1);
+	displayAlertDialog(text1);
 }
 
 function alertFillFieldsBeforeChangeTab(text1) {
-	alertAndDecode(text1);
+	displayAlertDialog(text1);
 }
 
 // Copy content functions.
@@ -4164,7 +4155,7 @@ function idOfInstitutionChanged(text, text1, index){
 		$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i,v){
 			var otherFurtherId = $("#otherRepositorId_"+i).val();
 			if (identifier == otherFurtherId && check && identifier != "") {
-				alertAndDecode("\""+identifier+"\" "+text);
+				displayAlertDialog("\""+identifier+"\" "+text);
 				$("#otherRepositorId_"+i).attr("value","");
 				if ($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes"){
 					$("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
@@ -4185,7 +4176,7 @@ function idOfInstitutionChanged(text, text1, index){
 			if(i!=index){
 				if ((furtherId == otherFurtherId
 				|| furtherId == identifier) && check && furtherId !=""){
-					alertAndDecode("\""+furtherId+"\" "+text);
+					displayAlertDialog("\""+furtherId+"\" "+text);
 					$("#otherRepositorId_"+index).attr("value","");
 					if ($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes"){
 						$("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
@@ -4208,7 +4199,7 @@ function idOfInstitutionChanged(text, text1, index){
 		$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i){
 			var otherFurtherId = $("#otherRepositorId_"+(i)).val();
 			if (identifier == otherFurtherId && check && identifier != "") {
-				alertAndDecode("\""+identifier+"\" " + text);
+				displayAlertDialog("\""+identifier+"\" " + text);
 				$("#textYIIdentifierOfTheInstitution").attr("value","");
 				if ( $("#selectYICodeISIL").val()=="yes"){
 					$("#selectYICodeISIL").attr("value","no"); 
@@ -4233,7 +4224,7 @@ function idOfInstitutionChanged(text, text1, index){
 		if($("#selectYICodeISIL").val()=="yes"){
 			if(matched==null || matched != identifier){
 				$("#selectYICodeISIL").attr("value","no");
-				alertAndDecode("\""+identifier+"\" "+text1);	
+				displayAlertDialog("\""+identifier+"\" "+text1);	
 				$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 					$(this).removeAttr("disabled");
 				});
@@ -4253,7 +4244,7 @@ function idOfInstitutionChanged(text, text1, index){
 			var matched1 = furtherId.match(pattern);
 			if(matched1==null || matched1 != furtherId){
 				$("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
-				alertAndDecode("\""+furtherId+"\" "+text1);
+				displayAlertDialog("\""+furtherId+"\" "+text1);
 				$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 					$(this).removeAttr("disabled");
 				});
@@ -4849,7 +4840,7 @@ function codeISILChanged(text1, index){
 	  if($("#selectYICodeISIL").val()=="yes"){
             if(matched==null || matched != identifier){
                 $("#selectYICodeISIL").attr("value","no");
-                alertAndDecode("\""+identifier+"\" "+text1);	
+                displayAlertDialog("\""+identifier+"\" "+text1);	
                 $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 				    $(this).removeAttr("disabled");
 			     });	
@@ -4870,7 +4861,7 @@ function codeISILChanged(text1, index){
                var check = index;
                     if(matched1==null || matched1 != furtherId){
                         $("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
-                        alertAndDecode("\""+furtherId+"\" "+ text1);
+                        displayAlertDialog("\""+furtherId+"\" "+ text1);
                         $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 				           $(this).removeAttr("disabled");
 			            });
@@ -4894,7 +4885,7 @@ function codeISILChanged(text1, index){
 	if(index==undefined && $("#selectYICodeISIL").val()=="yes"){
               if(matched==null || matched != identifier){
                        $("#selectYICodeISIL").attr("value","no");
-                       alertAndDecode("\""+identifier+"\" "+text);	
+                       displayAlertDialog("\""+identifier+"\" "+text);	
                       }else{
 		                id = $("#textYIIdentifierOfTheInstitution").val();
                        } 
@@ -4903,7 +4894,7 @@ function codeISILChanged(text1, index){
          var matched1 = furtherId.match(pattern);
                     if(matched1==null || matched1 != furtherId){
                         $("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
-                        alertAndDecode("\""+furtherId+"\" "+text);	
+                        displayAlertDialog("\""+furtherId+"\" "+text);	
                       }else{
 		                 id = $("#otherRepositorId_"+index).val();
                      }
@@ -5176,7 +5167,7 @@ function checkName(text, id){
 	var showAlert = true;
 	while (indexPercentage > -1 || indexLessThan > -1 || indexGreaterThan > -1 || indexBackslash > -1 || indexColon > -1){
 		if (showAlert) {
-			alertAndDecode(text);
+			displayAlertDialog(text);
 			showAlert = false;
 		}
 		name =  name.replace("\%",'');
@@ -5293,4 +5284,24 @@ function deleteColorboxForProcessing() {
 	}else{
 		setTimeout(function(){deleteColorboxForProcessing();},500);
 	}
+}
+
+/**
+ * Exit button function, ask the user to save
+ * the contents or leaves the form without
+ * saving them
+ */
+function clickExitAction() {
+    // Display the dialog box.
+	displayExitDialog($("#DlgContent").text(),$("input#btnYes").val(),$("input#btnNo").val());
+}
+
+/**
+ * Exit button function, leaves the form 
+ * without saving the contents
+ **/
+function clickExitWithoutSaveAction() {
+    var Dlg = document.getElementById("dialog-saveOnQuit");
+    Dlg.style.visibility = "hidden";
+    location.href="removeInvalidEAG2012.action";
 }

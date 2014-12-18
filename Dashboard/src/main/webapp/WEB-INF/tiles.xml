@@ -112,11 +112,13 @@
 		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Creation.jsp" />
 		<put-attribute name="body" value="/jsp/eag2012/webFormEAG2012.jsp" />
 		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/jquery/jquery-ui.min.js"/>
 			<add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
 		</put-list-attribute>
 		<put-list-attribute name="cssfilesInternal">
           <add-attribute type="string" value="/css/colorbox.css"/>
+      	  <add-attribute type="string" value="/css/jquery/jquery-ui-1.8.14.custom.css"/>
       	</put-list-attribute>
 	</definition>
 	<definition name="webFormEAG2012WithoutCreate" extends="dashboardLayout">
@@ -124,11 +126,13 @@
 		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
 		<put-attribute name="body" value="/jsp/eag2012/webFormEAG2012.jsp" />
 		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/jquery/jquery-ui.min.js"/>
 			<add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
           <add-attribute type="string" value="/css/colorbox.css"/>
+      	  <add-attribute type="string" value="/css/jquery/jquery-ui-1.8.14.custom.css"/>
       	</put-list-attribute>
 	</definition>
 	<definition name="webFormEAG2012WithMenu" extends="dashboardLayout">
@@ -136,11 +140,13 @@
 		<put-attribute name="menu" value="/jsp/indexDashboard.jsp" />
 		<put-attribute name="body" value="/jsp/eag2012/webFormEAG2012.jsp" />
 		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/jquery/jquery-ui.min.js"/>
 			<add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
           <add-attribute type="string" value="/css/colorbox.css"/>
+      	  <add-attribute type="string" value="/css/jquery/jquery-ui-1.8.14.custom.css"/>
       	</put-list-attribute>
 	</definition>
 

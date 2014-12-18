@@ -343,3 +343,16 @@ p.fieldRequired {
 .labelLeft {
 	width: 25%;
 }
+
+#dialog-saveOnQuit {
+    background: none repeat scroll 0 0 #a4afb6;
+    height: 60px;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -30px;
+    position: fixed;
+    text-align: center;
+    top: 50%;
+    visibility: hidden;
+    width: 300px;
+}
