@@ -113,7 +113,8 @@
 										<option title="Polski" value="pl" ${selectedLanguage['pl']}>Polski</option>
 										<option title="Português" value="pt" ${selectedLanguage['pt']}>Português</option>
 										<option title="Slovenčina" value="sk" ${selectedLanguage['sk']}>Slovenčina</option>
-										<option title="Slovenščina" value="sl" ${selectedLanguage['sl']}>Slovenščina</option>				
+										<option title="Slovenščina" value="sl" ${selectedLanguage['sl']}>Slovenščina</option>
+										<option title="Cрпски" value="sr" ${selectedLanguage['sr']}>Cрпски</option>				
 										<option title="Suomi" value="fi" ${selectedLanguage['fi']}>Suomi</option>
 										<option title="Svenska" value="sv" ${selectedLanguage['sv']}>Svenska</option>   
 						      		</select>

@@ -16,7 +16,7 @@ public class ChangeLanguageTag extends SimpleTagSupport {
 	private String varSelectedLanguage;
 	private String varCurrentAction;
 	private static final List<String> SUPPORTED_LANGUAGES = Arrays.asList("bg", "hr", "de", "et", "el", "en", "es", "fi", "fr", "ga",
-			"is", "it", "lv", "lt", "hu", "mt", "nl", "no", "pl", "pt", "sk", "sl", "sv");
+			"is", "it", "lv", "lt", "hu", "mt", "nl", "no", "pl", "pt", "sk", "sl", "sr", "sv");
 
 
 
