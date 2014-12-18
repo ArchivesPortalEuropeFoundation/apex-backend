@@ -2183,6 +2183,7 @@ function deleteRepository(){
 	$("table#contactTable_" + counter).remove();
 	$("table#accessAndServicesTable_" + counter).remove();    
 	$("table#descriptionTable_" + counter).remove(); 
+	$("table#yourInstitutionTable_"+counter).remove();
 	if (numberRepositories==2){ //there is one repository
 		$("li a#tab_yourInstitutionTable_1").parent().remove();
 		$("ul#eag2012TabsContainer li a").each(function(){
@@ -2207,6 +2208,10 @@ function deleteRepository(){
 		    $("ul#eag2012tabs_institution_tabs li a").each(function(i){
                 var newId = "tab_yourInstitutionTable_"+(i+1);
                 $(this).attr("id",newId);
+		    });
+		    $("table[id^='yourInstitutionTable_']").each(function(i){
+		    	var newId = "yourInstitutionTable_"+(i+1);
+		    	 $(this).attr("id",newId);
 		    });
 		    $("table[id^='contactTable_']").each(function(i){
 		    	var newId = "contactTable_"+(i+1);
