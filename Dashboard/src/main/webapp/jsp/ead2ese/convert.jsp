@@ -248,7 +248,7 @@
                 <s:else>
                     <s:checkbox name="licenseCheck" id="licenseCheck" value="false"></s:checkbox>
                 </s:else>
-                <s:label key="ead2ese.label.license.file" for="languageOfTheMaterialCheck"/>
+                <s:label key="ead2ese.label.license.file" for="licenseCheck"/>
             </td>
         </tr>
         <tr>

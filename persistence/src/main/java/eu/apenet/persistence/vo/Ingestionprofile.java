@@ -56,6 +56,8 @@ public class Ingestionprofile implements Serializable {
     private String europeanaLanguages;
     @Column(name = "europeana_languages_from_file")
     private Boolean europeanaLanguagesFromFile = true;
+    @Column(name = "europeana_license_from_file")
+    private Boolean europeanaLicenseFromFile = true;
     @Column(name = "europeana_license")
     private String europeanaLicense;
     @Column(name = "europeana_license_details")
@@ -232,6 +234,14 @@ public class Ingestionprofile implements Serializable {
 
     public void setEuropeanaLanguagesFromFile(Boolean europeanaLanguagesFromFile) {
         this.europeanaLanguagesFromFile = europeanaLanguagesFromFile;
+    }
+
+    public Boolean getEuropeanaLicenseFromFile() {
+        return europeanaLicenseFromFile;
+    }
+
+    public void setEuropeanaLicenseFromFile(Boolean europeanaLicenseFromFile) {
+        this.europeanaLicenseFromFile = europeanaLicenseFromFile;
     }
 
     public String getEuropeanaLicense() {

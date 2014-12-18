@@ -94,6 +94,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String europeanaDaoTypeCheck;
     private List<String> languageSelection = new ArrayList<String>();
     private String languageCheck;
+    private String licenseCheck;
     private String license;
     private String europeanaLicense;
     private String cc_js_result_uri;
@@ -165,6 +166,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 String[] tempLang = ingestionprofile.getEuropeanaLanguages().split(" ");
                 languageSelection.addAll(Arrays.asList(tempLang));
                 languageCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguagesFromFile());
+                licenseCheck = Boolean.toString(ingestionprofile.getEuropeanaLicenseFromFile());
                 license = ingestionprofile.getEuropeanaLicense();
                 if (license.equals(EUROPEANA)) {
                     europeanaLicense = ingestionprofile.getEuropeanaLicenseDetails();
@@ -263,6 +265,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         }
         profile.setEuropeanaLanguages(langTemp.toString());
         profile.setEuropeanaLanguagesFromFile(Boolean.parseBoolean(languageCheck));
+        profile.setEuropeanaLicenseFromFile(Boolean.parseBoolean(licenseCheck));
         profile.setEuropeanaLicense(license);
         if (IngestionprofilesAction.EUROPEANA.equals(this.license)) {
             profile.setEuropeanaLicenseDetails(europeanaLicense);
@@ -394,6 +397,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         europeanaDaoTypeCheck = Boolean.toString(true);
         languageSelection = new ArrayList<String>();
         languageCheck = Boolean.toString(true);
+        licenseCheck = Boolean.toString(true);
         license = EUROPEANA;
         europeanaLicense = "";
         licenseAdditionalInformation = "";
@@ -866,6 +870,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setLanguageCheck(String languageCheck) {
         this.languageCheck = languageCheck;
+    }
+
+    public String getLicenseCheck() {
+        return licenseCheck;
+    }
+
+    public void setLicenseCheck(String licenseCheck) {
+        this.licenseCheck = licenseCheck;
     }
 
     public String getLicense() {

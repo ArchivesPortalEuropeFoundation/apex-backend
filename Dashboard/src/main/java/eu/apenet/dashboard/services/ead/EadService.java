@@ -992,6 +992,7 @@ public class EadService {
         config.setLanguage(preferences.getProperty(QueueItem.LANGUAGES));
         config.setUseExistingLanguage("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
     	config.setInheritLanguage(true);
+        config.setUseExistingRightsInfo("true".equals(preferences.getProperty(QueueItem.LICENSE_CHECK)));
         if ("europeana".equals(preferences.getProperty(QueueItem.LICENSE))){
     		config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
     	}else if("cc0".equals(preferences.getProperty(QueueItem.LICENSE))){
