@@ -97,7 +97,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 					// Checks if exists a FA with the provided identifier.
 					if (secondArgValue != null && !secondArgValue.isEmpty()) {
 						// And repository code.
-						ead = eadDAO.getPublishedEadByEadid(FindingAid.class, secondArgValue, firstArgValue);
+						ead = eadDAO.getEadByEadid(FindingAid.class, secondArgValue, firstArgValue, true);
 						type = "fa";
 					} else {
 						// First FA with identifier.
@@ -109,7 +109,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 						// Checks if exists a HG with the provided identifier.
 						if (secondArgValue != null && !secondArgValue.isEmpty()) {
 							// And repository code.
-							ead = eadDAO.getPublishedEadByEadid(HoldingsGuide.class, secondArgValue, firstArgValue);
+							ead = eadDAO.getEadByEadid(HoldingsGuide.class, secondArgValue, firstArgValue, true);
 							type = "hg";
 						} else {
 							// First HG with identifier.
@@ -122,7 +122,7 @@ public class RetrieveRepositoryCodeFromEadIdExtension extends ExtensionFunctionD
 						// Checks if exists a SG with the provided identifier.
 						if (secondArgValue != null && !secondArgValue.isEmpty()) {
 							// And repository code.
-							ead = eadDAO.getPublishedEadByEadid(SourceGuide.class, secondArgValue, firstArgValue);
+							ead = eadDAO.getEadByEadid(SourceGuide.class, secondArgValue, firstArgValue, true);
 							type = "sg";
 						} else {
 							// First SG with identifier.
