@@ -1,12 +1,5 @@
 package eu.apenet.commons.xslt.extensions;
 
-import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.SourceGuide;
-import eu.archivesportaleurope.util.ApeUtil;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -16,6 +9,12 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
+import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.SourceGuide;
 
 /**
  * Class for retrieve the identifier of the Archival Institution from the
@@ -97,7 +96,7 @@ public class RetrieveTitleFromEadIdExtension extends ExtensionFunctionDefinition
 					// Checks if exists a FA with the provided identifier.
 					if (secondArgValue != null && !secondArgValue.isEmpty()) {
 						// And repository code.
-						ead = eadDAO.getPublishedEadByEadid(FindingAid.class, secondArgValue, firstArgValue);
+						ead = eadDAO.getEadByEadid(FindingAid.class, secondArgValue, firstArgValue,false);
 						type = "fa";
 					} else {
 						// First FA with identifier.
@@ -109,7 +108,7 @@ public class RetrieveTitleFromEadIdExtension extends ExtensionFunctionDefinition
 						// Checks if exists a HG with the provided identifier.
 						if (secondArgValue != null && !secondArgValue.isEmpty()) {
 							// And repository code.
-							ead = eadDAO.getPublishedEadByEadid(HoldingsGuide.class, secondArgValue, firstArgValue);
+							ead = eadDAO.getEadByEadid(HoldingsGuide.class, secondArgValue, firstArgValue,false);
 							type = "hg";
 						} else {
 							// First HG with identifier.
@@ -122,7 +121,7 @@ public class RetrieveTitleFromEadIdExtension extends ExtensionFunctionDefinition
 						// Checks if exists a SG with the provided identifier.
 						if (secondArgValue != null && !secondArgValue.isEmpty()) {
 							// And repository code.
-							ead = eadDAO.getPublishedEadByEadid(SourceGuide.class, secondArgValue, firstArgValue);
+							ead = eadDAO.getEadByEadid(SourceGuide.class, secondArgValue, firstArgValue,false);
 							type = "sg";
 						} else {
 							// First SG with identifier.
