@@ -303,13 +303,13 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public Ead getPublishedEadByEadid(Class<? extends Ead> clazz, String repositorycode, String eadid) {
+	public Ead getEadByEadid(Class<? extends Ead> clazz, String repositorycode, String eadid, boolean published) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
 		criteria.add(Restrictions.eq("eadid", ApeUtil.decodeSpecialCharacters(eadid)));
-		criteria.add(Restrictions.eq("published", true));
+		criteria.add(Restrictions.eq("published", published));
 		criteria.setMaxResults(1);
 		List<Ead> list = criteria.list();
 		if (list.size() > 0)
