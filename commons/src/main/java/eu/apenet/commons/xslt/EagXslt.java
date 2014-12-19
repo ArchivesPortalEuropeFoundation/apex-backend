@@ -3,9 +3,7 @@ package eu.apenet.commons.xslt;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -37,7 +35,8 @@ public class EagXslt {
         RetrieveRelatedAIIdExtension relatedAIIdExtension = new RetrieveRelatedAIIdExtension(requiredAIRepositorCode);
         processor.registerExtensionFunction(relatedAIIdExtension);
         XsltCompiler compiler = processor.newXsltCompiler();
-        
+        compiler.setURIResolver(new ClasspathURIResolver(xslUrl));
+
         return compiler.compile(xsltSource);
 	}
     public static void displayAiDetails(boolean preview, Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
