@@ -26,8 +26,6 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	private static final String DEFAULT_HARVESTING_PROCESSING = "DEFAULT_HARVESTING_PROCESSING";
 	private static final String MAINTENANCE_MODE = "MAINTENANCE_MODE";
 	private static final String MAINTENANCE_ACTION = "MAINTENANCE_ACTION";
-	private static final String DOMAIN_NAME_MAIN_SERVER = "DOMAIN_NAME_MAIN_SERVER";
-	private static final String DOMAIN_NAME_MAIN_SERVER_DEFAULT = "localhost:8443";
 	@Override
 	public void contextInitializedInternal(ServletContext servletContext) {
 		try {
@@ -97,16 +95,6 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 		}
 		tmpDirPath = checkPath(TMP_DIR_PATH, tmpDirPath);
 		config.setTempDirPath(tmpDirPath);
-
-	
-	
-		String domainNameMainServer = servletContext.getInitParameter(DOMAIN_NAME_MAIN_SERVER);
-		if (StringUtils.isBlank(domainNameMainServer)) {
-			log.warn("No " + DOMAIN_NAME_MAIN_SERVER + " specified. Using the default: "
-					+ DOMAIN_NAME_MAIN_SERVER_DEFAULT);
-			domainNameMainServer = DOMAIN_NAME_MAIN_SERVER_DEFAULT;
-		}
-		config.setDomainNameMainServer(domainNameMainServer);
 		String defaultQueueProcessingString = servletContext.getInitParameter(DEFAULT_QUEUE_PROCESSING);
 		if (StringUtils.isNotBlank(defaultQueueProcessingString)) {
 			config.setDefaultQueueProcessing(Boolean.parseBoolean(defaultQueueProcessingString));
