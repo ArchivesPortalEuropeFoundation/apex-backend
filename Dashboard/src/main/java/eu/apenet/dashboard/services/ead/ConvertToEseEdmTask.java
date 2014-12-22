@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.utils.PropertiesKeys;
+import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.dpt.utils.ead2edm.DigitalObjectCounter;
 import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.ead2edm.XMLUtil;
@@ -23,10 +25,13 @@ import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.MetadataFormat;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
+
 import java.io.IOException;
 import java.util.Set;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
+
 import org.xml.sax.SAXException;
 
 public class ConvertToEseEdmTask extends AbstractEadTask {
@@ -68,7 +73,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                     EdmConfig edmConfig = new EdmConfig(properties);
                     edmConfig.setEdmIdentifier(oaiIdentifier);
                     edmConfig.setRepositoryCode(findingAid.getArchivalInstitution().getRepositorycode());
-                    edmConfig.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+                    edmConfig.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
                     edmConfig.setXmlTypeName(FA_XML_TYPE);
 
                     File apenetEad = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),

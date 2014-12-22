@@ -23,6 +23,8 @@ import eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.dashboard.utils.PropertiesKeys;
+import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EadDAO;
@@ -1023,7 +1025,7 @@ public class EadService {
         config.setEdmIdentifier(oaiIdentifier);
         //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
         //repositoryCode is taken from the tool while the other two have fixed values.
-        config.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+        config.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
         config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         config.setXmlTypeName("fa");
     	return config.getProperties();
