@@ -15,5 +15,9 @@ public class PropertiesKeys {
 	public static final String APE_SOLR_HTTP_TIMEOUT = "ape.solr.http.timeout";
 	public static final String APE_SOLR_HTTP_LONG_TIMEOUT = "ape.solr.http.long.timeout";
 	
+	public static final String APE_DASHBOARD_DOMAIN= "ape.dashboard.domain";
+	public static final String APE_PORTAL_DOMAIN= "ape.portal.domain";
+	public static final String APE_PORTAL_EAD_DISPLAY = "ape.portal.ead.display";
+	public static final String APE_PORTAL_EAC_DISPLAY = "ape.portal.eac.display";	
 
 }
