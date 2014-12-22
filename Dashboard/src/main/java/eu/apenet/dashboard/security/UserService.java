@@ -523,7 +523,7 @@ public final class UserService {
 	    	}
 	    	emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name",name);
-	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+	        emailComposer.setProperty("dashboardBase", PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
 	        emailComposer.setProperty("numberEadHarvested", numberEadHarvested+"");
 	        emailComposer.setProperty("infoHarvestedServer",infoHarvestedServer.replaceAll("\n", "<br/>"));
 	        if (oldestFileHarvested != null){
@@ -588,7 +588,7 @@ public final class UserService {
 	        EmailComposer emailComposer = new EmailComposer(file, title, true, true);
 	        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name", name);
-	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+	        emailComposer.setProperty("dashboardBase", PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
 	        emailComposer.setProperty("infoHarvestedServer", infoHarvestedServer.replaceAll("\n", "<br/>"));
 	        emailComposer.setProperty("harvestingDetails",errors);
 	        if (errorsResponsePath != null){
@@ -604,7 +604,7 @@ public final class UserService {
 	public static String getBasePath() {
 
 		HttpServletRequest requestHttp = ServletActionContext.getRequest();
-		String nameMainServer = APEnetUtilities.getDashboardConfig().getDomainNameMainServer();
+		String nameMainServer = PropertiesUtil.get(PropertiesKeys.APE_DASHBOARD_DOMAIN);
 		return requestHttp.getScheme() + "://" + nameMainServer + requestHttp.getContextPath() + "/";
 	}
     public static void sendExceptionToAdmin(String title, Throwable e) {
