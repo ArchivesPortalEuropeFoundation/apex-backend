@@ -58,7 +58,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 		
 		String configProperties = servletContext.getInitParameter(CONFIG_PROPERTIES_PATH);
 		if (StringUtils.isBlank(configProperties)) {
-			config.setConfigPropertiesPath("/ape/liferay/tomcat-base/dashboard.properties");
+			config.setConfigPropertiesPath("/ape/liferay/tomcat-base/conf/dashboard.properties");
 		}else {
 			config.setConfigPropertiesPath(configProperties);
 		}
