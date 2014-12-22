@@ -22,6 +22,8 @@ import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.actions.content.ead.BatchEadActions;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.utils.PropertiesKeys;
+import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
@@ -339,7 +341,7 @@ public class ConvertAction extends AbstractInstitutionAction {
             config.setEdmIdentifier(oaiIdentifier);
             config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         }
-        config.setHost(APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+        config.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
         config.setXmlTypeName("fa");
 
         return config;
