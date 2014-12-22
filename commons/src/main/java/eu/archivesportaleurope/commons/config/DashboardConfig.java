@@ -10,8 +10,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 public class DashboardConfig extends ApePortalAndDashboardConfig{
     protected static final String EMAIL_SEPARATOR = ";";
 	private String tempDirPath;
-    private String domainNameMainServer;
-    
+   
 	private String europeanaDirPath;
     private String baseSolrIndexUrl;
     private String xslDirPath;
@@ -65,14 +64,6 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		super.initBeforeFinalize();
 	}
 
-
-	public void setDomainNameMainServer(String domainNameMainServer) {
-		checkConfigured();
-		this.domainNameMainServer = domainNameMainServer;
-	}
-    public String getDomainNameMainServer() {
-		return domainNameMainServer;
-	}
     
 	//todo: Change this name back to getTempDirPath when everything is working fine
 	public String getTempAndUpDirPath(){
