@@ -10,6 +10,7 @@ import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
 
 public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
@@ -43,8 +44,15 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
 			XmlType xmlType = XmlType.getType(Integer.parseInt(getXmlTypeId()));
 			if (StringUtils.isNotBlank(getId()) && StringUtils.isNumeric(getId())) {
 				if (xmlType.equals(XmlType.EAC_CPF)){
-					EacCpfService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
-					//return super.displayEacCpf();
+						EacCpfService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
+						EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO().findById(Integer.parseInt(id), xmlType.getClazz());
+						if (eacCpf != null){
+						getServletRequest().setAttribute("identifier", eacCpf.getEncodedIdentifier());
+						getServletRequest().setAttribute("repoCode", eacCpf.getArchivalInstitution().getEncodedRepositorycode());
+						String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAC_DISPLAY);
+						getServletRequest().setAttribute("url", url);
+						return "success-eaccpf";
+					}
 				}else{
 					EadService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
 					Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), xmlType.getClazz());
@@ -54,15 +62,17 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
 						getServletRequest().setAttribute("repoCode", ead.getArchivalInstitution().getEncodedRepositorycode());
 						String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAD_DISPLAY);
 						getServletRequest().setAttribute("url", url);
+						return SUCCESS;
 					}
 				}
 			}
 		}catch (Exception e){
 			LOGGER.error(getText("previewseconddisplay.unabletopreview") + " (id,xmlType): (" + getId() + "," + getXmlTypeId() + "): " + e.getMessage() ,e);
-			addActionError(getText("error.user.second.display.notindexed"));
-			return ERROR;
+
 		}
-		return SUCCESS;
+		addActionError(getText("error.user.second.display.notindexed"));
+		return ERROR;
+
 	}
 
 }
