@@ -10,11 +10,10 @@
             httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
             eadActions, batchEadActions, removeEseForFA, displayProfile, applyProfile, showEadReport,
             displayEseConvert, processEseConvert, showEdmReport, showwarnings, download, link, removeLink, preview, downloadEse,
-            displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
             batchAction, previewEdm, htmlPreview,
             displayConvertEseBatch, startConvertEseBatch,
             generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
-            eacCpfActions, batchEacCpfActions, downloadEacCpf, printEacCpfDetails,
+            eacCpfActions, batchEacCpfActions, downloadEacCpf, 
 			manageTopicMappings,displayCreateEditTopicMapping,createEditTopicMapping,deleteTopicMapping,
             GoDashboard, dashboardHome, GoDashboardByInstitutionManager,setFeedbackEmailaddress,displaySetFeedbackEmailaddress,
 
