@@ -11,33 +11,5 @@
 		<name>resource</name>
 		<tag-class>eu.apenet.commons.view.jsp.ResourceTag</tag-class>
 		<body-content>JSP</body-content>
-	</tag>
-	<tag>
-		<name>context</name>
-		<tag-class>eu.apenet.commons.seconddisplay.jsp.ContextTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>clevel</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.Object</type>
-		</attribute>
-		<attribute>
-			<name>eadContent</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.Object</type>
-		</attribute>
-		<attribute>
-			<name>onlyArchives</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>country</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.Object</type>
-		</attribute>		
-	</tag>			
+	</tag>		
 </taglib>
