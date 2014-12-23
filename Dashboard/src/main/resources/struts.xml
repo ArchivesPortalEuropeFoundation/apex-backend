@@ -275,52 +275,11 @@
         </action>
 
         <action name="preview" class="eu.apenet.dashboard.actions.PreviewSecondDisplayAction">
-            <result name="success">/jsp/eadcontent/eadcontent.jsp</result>
-            <result name="success-eaccpf">/jsp/eaccpf/eaccpf.jsp</result>
+            <result name="success">/jsp/preview/ead.jsp</result>
+            <result name="success-eaccpf">/jsp/preview/eaccpf.jsp</result>
             <result name="error">/jsp/eadcontent/error.jsp</result>
         </action>
 
-        <action name="printEacCpfDetails" class="eu.apenet.commons.seconddisplay.SecondDisplayAction" method="displayEacCpf">
-        	<result name="success-eaccpf">/jsp/eaccpf/printEacCpfDetails.jsp</result>
-        	<result name="error">/jsp/eadcontent/error.jsp</result>
-        </action>
-
-        <action name="generateTreeJSON" class="eu.apenet.commons.seconddisplay.GenerateTreeJSONAction">
-            <result name="SUCCESS" type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
-
-        <action name="displayCContent" class="eu.apenet.commons.seconddisplay.DisplayCContentAction">
-            <result name="success">/jsp/eadcontent/cdetails.jsp</result>
-        </action>
-
-        <action name="displayCContentPreview" class="eu.apenet.commons.seconddisplay.DisplayCContentAction">
-            <result name="success">/jsp/eadcontent/cdetails-preview.jsp</result>
-        </action>
-
-        <action name="displayEadFrontPage"
-                class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
-            <result name="success">/jsp/eadcontent/frontpage.jsp</result>
-        </action>
-
-        <action name="displayEadIntroduction"
-                class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
-            <result name="success">/jsp/eadcontent/introduction.jsp</result>
-        </action>
-
-        <action name="displayEadDidContent"
-                class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
-            <result name="success">/jsp/eadcontent/didcontent.jsp</result>
-        </action>
-
-        <action name="generateTreeJSONWithoutPreface" class="eu.apenet.dashboard.tree.GenerateTreeJSONAction" method="executeNoPreface">
-            <result name="SUCCESS" type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
 
         <action name="download" class="eu.apenet.dashboard.actions.content.ead.EadActions" method="download">
 
