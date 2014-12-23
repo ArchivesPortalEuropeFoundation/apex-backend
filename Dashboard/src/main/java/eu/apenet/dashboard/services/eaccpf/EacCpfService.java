@@ -722,7 +722,7 @@ public class EacCpfService {
     }
 
     private static EacCpf doesFileExist(UpFile upFile, String identifier) {
-        return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier);
+        return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier, false);
     }
 
 	public static void createPreviewHTML(XmlType xmlType, Integer id) {
