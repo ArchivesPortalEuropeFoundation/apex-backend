@@ -7,7 +7,7 @@
 </head>
 <body>
 <script >
-window.location = '${url}?p_p_id=eaddisplay_WAR_Portal&p_p_lifecycle=0&p_p_state=pop_up&p_p_mode=view&_eaddisplay_WAR_Portal_myaction=displayArchdescAction&_eaddisplay_WAR_Portal_xmlTypeName=${xmlTypeName}&repoCode=${repoCode}&eadid=${identifier}&preview=true';
+window.location = '${url}?p_p_id=eaddisplay_WAR_Portal&p_p_lifecycle=0&p_p_state=pop_up&p_p_mode=view&myaction=displayArchdescAction&xmlTypeName=${xmlTypeName}&repoCode=${repoCode}&eadid=${identifier}&preview=true';
 </script>
 </body>
 </html>
