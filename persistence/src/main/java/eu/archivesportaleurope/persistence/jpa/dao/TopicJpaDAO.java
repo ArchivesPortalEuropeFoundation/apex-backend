@@ -26,14 +26,6 @@ public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements To
 	}
 	
 	@Override
-	public List<Topic> getFirstTopics() {
-		String jpaQuery = "SELECT topic FROM Topic topic ORDER BY position";
-		TypedQuery<Topic> query = getEntityManager().createQuery(jpaQuery, Topic.class);		
-		query.setMaxResults(15);
-		return query.getResultList();
-	}
-
-	@Override
 	public List<Topic> getTopicsWithoutMapping(Integer aiId) {
 		String jpaSubQuery = "SELECT topicMapping.topicId FROM TopicMapping topicMapping WHERE topicMapping.aiId = :aiId";
 		String jpaQuery = "SELECT topic FROM Topic topic WHERE topic.id NOT IN (" +jpaSubQuery + ") ORDER BY topic.description";

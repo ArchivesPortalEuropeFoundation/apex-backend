@@ -26,7 +26,6 @@ public class TopicsAction extends AbstractAction {
 	private String topicId;
 	private String adminTopicPropertyKey;
 	private String adminTopicDescription;
-	private String adminTopicPosition;
 	
 	@Override
 	protected void buildBreadcrumbs() {
@@ -53,15 +52,7 @@ public class TopicsAction extends AbstractAction {
 	public void setAdminTopicDescription(String adminTopicDescription) {
 		this.adminTopicDescription = adminTopicDescription;
 	}
-
-	public String getAdminTopicPosition() {
-		return adminTopicPosition;
-	}
-
-	public void setAdminTopicPosition(String adminTopicPosition) {
-		this.adminTopicPosition = adminTopicPosition;
-	}
-
+	
 	public String getTopicId() {
 		return this.topicId;
 	}
@@ -112,12 +103,6 @@ public class TopicsAction extends AbstractAction {
 					addFieldError("adminTopicDescription",getText("admin.topic.management.validation.notunique"));
 				}
 			}
-			//adminTopicPosition
-			if(this.adminTopicPosition==null || StringUtils.isEmpty(this.adminTopicPosition)){
-				addFieldError("adminTopicPosition",getText("admin.topic.management.validation.empty"));
-			}else if(!this.adminTopicPosition.matches("\\d*")){
-				addFieldError("adminTopicPosition",getText("admin.topic.management.validation.notvalid"));
-			}
 		}
 	}
 	
@@ -149,11 +134,7 @@ public class TopicsAction extends AbstractAction {
 			if(adminTopic!=null){
 				adminTopic.setPropertyKey(this.adminTopicPropertyKey);
 				adminTopic.setDescription(this.adminTopicDescription);
-				long position = 0;
-				if(StringUtils.isNotEmpty(this.adminTopicPosition) && this.adminTopicPosition.matches("\\d*")){
-					position = Long.parseLong(this.adminTopicPosition);
-				}
-				adminTopic.setPosition(position);
+		
 				try{
 					JpaUtil.beginDatabaseTransaction();
 					if(this.topicId!=null){
@@ -196,7 +177,6 @@ public class TopicsAction extends AbstractAction {
 					this.topicId = adminTopic.getId().toString();
 					this.adminTopicPropertyKey = adminTopic.getPropertyKey();
 					this.adminTopicDescription = adminTopic.getDescription();
-					this.adminTopicPosition = adminTopic.getPosition().toString();
 				}
 			}
 			return SUCCESS;

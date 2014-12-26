@@ -34,8 +34,7 @@
 			<tr>
 				<th><s:property value="getText('admin.topic.id')" /></th>
 				<th><s:property value="getText('topic.property')" /></th>
-				<th><s:property value="getText('topic.description')" /></th>
-				<th><s:property value="getText('admin.topic.position')" /></th>
+				<th><s:property value="getText('topic.description')" /></th> 
 				<th><s:property value="getText('content.message.actions')" /></th>
 			</tr>
 			</thead>
@@ -45,7 +44,6 @@
 				<td><c:out value="${topic.id}"/></td>
 				<td><c:out value="${topic.propertyKey}"/></td>
 				<td><c:out value="${topic.description}"/></td>
-				<td><c:out value="${topic.position}"/></td>
 				<td>
 					<s:form action="adminEditTopic" theme="simple" method="POST">
 						<input type="hidden" name="topicId"   value="${topic.id}"/>
