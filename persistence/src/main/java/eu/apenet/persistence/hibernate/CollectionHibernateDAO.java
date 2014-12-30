@@ -3,15 +3,8 @@ package eu.apenet.persistence.hibernate;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -19,9 +12,6 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.CollectionDAO;
 import eu.apenet.persistence.vo.Collection;
-import eu.apenet.persistence.vo.CollectionContent;
-import eu.apenet.persistence.vo.EadSavedSearch;
-import eu.archivesportaleurope.util.ApeUtil;
 
 public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Long> implements CollectionDAO{
 	private static final Logger LOGGER = Logger.getLogger(CollectionHibernateDAO.class);
@@ -42,6 +32,9 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 					} else {
 						criteria.addOrder(Order.desc(sortValue));
 					}
+				} else {
+					// By default order descendant by date.
+					criteria.addOrder(Order.desc("modified_date"));
 				}
 				
 			}
