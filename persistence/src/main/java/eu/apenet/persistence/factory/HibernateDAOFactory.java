@@ -1,33 +1,6 @@
 package eu.apenet.persistence.factory;
 
-import eu.apenet.persistence.dao.AiAlternativeNameDAO;
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
-import eu.apenet.persistence.dao.CLevelDAO;
-import eu.apenet.persistence.dao.CoordinatesDAO;
-import eu.apenet.persistence.dao.CouAlternativeNameDAO;
-import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.dao.DptUpdateDAO;
-import eu.apenet.persistence.dao.EacCpfDAO;
-import eu.apenet.persistence.dao.EadContentDAO;
-import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EseDAO;
-import eu.apenet.persistence.dao.EseStateDAO;
-import eu.apenet.persistence.dao.FindingAidDAO;
-import eu.apenet.persistence.dao.HgSgFaRelationDAO;
-import eu.apenet.persistence.dao.HoldingsGuideDAO;
-import eu.apenet.persistence.dao.IngestionprofileDAO;
-import eu.apenet.persistence.dao.LangDAO;
-import eu.apenet.persistence.dao.QueueItemDAO;
-import eu.apenet.persistence.dao.ResumptionTokenDAO;
-import eu.apenet.persistence.dao.SentMailRegisterDAO;
-import eu.apenet.persistence.dao.TopicDAO;
-import eu.apenet.persistence.dao.TopicMappingDAO;
-import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.dao.UploadMethodDAO;
-import eu.apenet.persistence.dao.UserDAO;
-import eu.apenet.persistence.dao.UserRoleDAO;
-import eu.apenet.persistence.dao.WarningsDAO;
+import eu.apenet.persistence.dao.*;
 import eu.apenet.persistence.hibernate.AiAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.ArchivalInstitutionHibernateDAO;
 import eu.apenet.persistence.hibernate.CLevelHibernateDAO;
@@ -48,14 +21,7 @@ import eu.apenet.persistence.hibernate.UploadMethodHibernateDAO;
 import eu.apenet.persistence.hibernate.UserHibernateDAO;
 import eu.apenet.persistence.hibernate.UserRoleHibernateDAO;
 import eu.apenet.persistence.hibernate.WarningsHibernateDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.ArchivalInstitutionOaiPmhJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.EacCpfJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.HgSgFaRelationJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.IngestionprofileJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.QueueItemJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.TopicJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.TopicMappingJpaDAO;
-import eu.archivesportaleurope.persistence.jpa.dao.UpFileJpaDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.*;
 
 
 /**
@@ -210,5 +176,10 @@ public class HibernateDAOFactory extends DAOFactory {
 	@Override
 	public TopicMappingDAO getTopicMappingDAO() {
 		return (TopicMappingDAO) instantiateDAO(TopicMappingJpaDAO.class);
+	}
+
+	@Override
+	public XslUploadDAO getXslUploadDAO() {
+		return (XslUploadDAO) instantiateDAO(XslUploadJpaDAO.class);
 	}
 }

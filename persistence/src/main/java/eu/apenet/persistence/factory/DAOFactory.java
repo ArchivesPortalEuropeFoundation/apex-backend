@@ -3,35 +3,7 @@ package eu.apenet.persistence.factory;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.apenet.persistence.dao.AiAlternativeNameDAO;
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
-import eu.apenet.persistence.dao.CLevelDAO;
-import eu.apenet.persistence.dao.CoordinatesDAO;
-import eu.apenet.persistence.dao.CouAlternativeNameDAO;
-import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.dao.DptUpdateDAO;
-import eu.apenet.persistence.dao.EacCpfDAO;
-import eu.apenet.persistence.dao.EadContentDAO;
-import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EseDAO;
-import eu.apenet.persistence.dao.EseStateDAO;
-import eu.apenet.persistence.dao.FindingAidDAO;
-import eu.apenet.persistence.dao.GenericDAO;
-import eu.apenet.persistence.dao.HgSgFaRelationDAO;
-import eu.apenet.persistence.dao.HoldingsGuideDAO;
-import eu.apenet.persistence.dao.IngestionprofileDAO;
-import eu.apenet.persistence.dao.LangDAO;
-import eu.apenet.persistence.dao.QueueItemDAO;
-import eu.apenet.persistence.dao.ResumptionTokenDAO;
-import eu.apenet.persistence.dao.SentMailRegisterDAO;
-import eu.apenet.persistence.dao.TopicDAO;
-import eu.apenet.persistence.dao.TopicMappingDAO;
-import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.dao.UploadMethodDAO;
-import eu.apenet.persistence.dao.UserDAO;
-import eu.apenet.persistence.dao.UserRoleDAO;
-import eu.apenet.persistence.dao.WarningsDAO;
+import eu.apenet.persistence.dao.*;
 import eu.apenet.persistence.exception.PersistenceException;
 
 
@@ -137,4 +109,5 @@ public abstract class DAOFactory {
     public abstract EacCpfDAO getEacCpfDAO();
 	public abstract TopicDAO getTopicDAO();
 	public abstract TopicMappingDAO getTopicMappingDAO();
+	public abstract XslUploadDAO getXslUploadDAO();
 }
