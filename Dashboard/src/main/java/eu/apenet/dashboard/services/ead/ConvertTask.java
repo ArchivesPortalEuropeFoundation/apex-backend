@@ -67,6 +67,7 @@ public class ConvertTask extends AbstractEadTask {
 				String tempDirOutputPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
 						+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR;
 				CheckIsEadFile checkIsEadFile = new CheckIsEadFile(file);
+                                checkIsEadFile.run();
 				if (checkIsEadFile.isEadRoot()) {
 					String tempOutputFilePath = tempDirOutputPath + "convert_" + ead.getId() + "_.xml";
 					File tempDirOutput = new File(tempDirOutputPath);
@@ -93,7 +94,7 @@ public class ConvertTask extends AbstractEadTask {
                                         if(tempDirOutput.listFiles().length == 0)
                                             FileUtils.deleteDirectory(tempDirOutput);
 				} else {
-					String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
+					String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
 							+ APEnetUtilities.FILESEPARATOR + xslFileName;
 					in = new FileInputStream(file);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
