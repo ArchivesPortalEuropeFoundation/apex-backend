@@ -94,7 +94,7 @@ public class ConvertTask extends AbstractEadTask {
                                         if(tempDirOutput.listFiles().length == 0)
                                             FileUtils.deleteDirectory(tempDirOutput);
 				} else {
-					String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
+					String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
 							+ APEnetUtilities.FILESEPARATOR + xslFileName;
 					in = new FileInputStream(file);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
