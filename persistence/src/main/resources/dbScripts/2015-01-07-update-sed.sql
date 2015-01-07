@@ -1,0 +1,1 @@
+UPDATE topic SET description='GDR parties and trade unions' WHERE property_key='germany.sed.fdgb';
