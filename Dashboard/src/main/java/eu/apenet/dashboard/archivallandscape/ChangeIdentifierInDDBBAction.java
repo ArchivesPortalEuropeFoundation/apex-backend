@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.Action;
 
-import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -18,7 +18,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  * in DDBB archival_institution entity
  * 
  */
-public class ChangeIdentifierInDDBBAction extends AbstractInstitutionAction{
+public class ChangeIdentifierInDDBBAction extends AbstractAction{
 	
 	private static final long serialVersionUID = 1L;
 	private final Logger log = Logger.getLogger(getClass());

@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.Action;
 
-import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -18,7 +18,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  * Class to fix the wrong values in production database.
  *
  */
-public class ArchivalLandscapeFixWrongDBAction extends AbstractInstitutionAction {
+public class ArchivalLandscapeFixWrongDBAction extends AbstractAction {
 	/**
 	 * Serializable.
 	 */
