@@ -26,7 +26,7 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 			if(liferayUserId!=null && liferayUserId>0){
 				criteria.add(Restrictions. eq("collection.liferayUserId", liferayUserId));
 				
-				if (sortValue != null && sortValue != "none") {
+				if (sortValue != null && !sortValue.equalsIgnoreCase("none")) {
 					if (ascending) {
 						criteria.addOrder(Order.asc(sortValue));
 					} else {
