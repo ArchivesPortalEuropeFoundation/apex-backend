@@ -981,6 +981,8 @@ public class EadService {
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION));
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_HOLDER));
 
+		conversionProperties.put(QueueItem.XSL_FILE, preferences.getProperty(QueueItem.XSL_FILE));
+
     	return conversionProperties;
     }
 

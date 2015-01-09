@@ -51,6 +51,7 @@ public class UploadXslAction extends AbstractAction {
 
     public String uploadXsl() {
         ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+        XslUploadDAO xslUploadDAO = DAOFactory.instance().getXslUploadDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDAO.getArchivalInstitution(getInstitutionId());
         String filenameSaved = archivalInstitution.getEncodedRepositorycode() + '-' + System.currentTimeMillis() +".xsl";
         String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath() + APEnetUtilities.FILESEPARATOR + filenameSaved;
@@ -61,7 +62,6 @@ public class UploadXslAction extends AbstractAction {
             } catch (IOException ioe) {
                 throw new DashboardAPEnetException(ioe);
             }
-            XslUploadDAO xslUploadDAO = DAOFactory.instance().getXslUploadDAO();
             XslUpload xslUpload = new XslUpload();
             xslUpload.setArchivalInstitutionId(getInstitutionId());
             xslUpload.setArchivalInstitution(archivalInstitution);

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="/struts-tags" prefix="s" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div id="headerContainer">
 </div>
 
@@ -25,6 +26,12 @@
                 <s:label key="ead2ese.label.type.file" for="daoType"/>
             </td>
         </tr>
+		<c:if test="${!empty xslFiles}">
+			<tr>
+				<td><s:label key="ingestionprofiles.defaultXslFile" /></td>
+				<td><s:select id="defaultXslFile" name="defaultXslFile" list="xslFiles" listKey="value" listValue="content" /></td>
+			</tr>
+		</c:if>
 		<tr id="trRightForDigitalObject">
 			<td id="tdLabelRightForDigitalObject">
 				<s:label key="content.message.default.rights.digital.objects" for="rightDigitalObjects"/>

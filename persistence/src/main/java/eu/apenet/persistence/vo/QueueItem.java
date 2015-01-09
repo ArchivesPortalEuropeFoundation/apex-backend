@@ -49,6 +49,7 @@ public class QueueItem implements java.io.Serializable {
     public static final String RIGHTS_OF_EAD_DATA_TEXT = "ape.rightsOfEADDataText";
     public static final String RIGHTS_OF_EAD_DESCRIPTION = "ape.rightsOfEADDescription";
     public static final String RIGHTS_OF_EAD_HOLDER = "ape.rightsOfEADHolder";
+    public static final String XSL_FILE = "ape.xslFile";
 
     /**
 	 *

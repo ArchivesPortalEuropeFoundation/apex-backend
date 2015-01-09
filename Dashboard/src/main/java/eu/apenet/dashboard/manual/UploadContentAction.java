@@ -602,6 +602,9 @@ public class UploadContentAction extends AbstractInstitutionAction {
 		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT, ingestionprofile.getRightsOfEADDataText() + "");
 		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION, ingestionprofile.getRightsOfEADDescription() + "");
 		properties.setProperty(QueueItem.RIGHTS_OF_EAD_HOLDER, ingestionprofile.getRightsOfEADHolder() + "");
+        if(ingestionprofile.getXslUpload() != null) {
+            properties.setProperty(QueueItem.XSL_FILE, ingestionprofile.getXslUpload().getName());
+        }
         return properties;
     }
 

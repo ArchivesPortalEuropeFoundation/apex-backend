@@ -90,6 +90,11 @@ public class Ingestionprofile implements Serializable {
     private String rightsOfDigitalObjectsText;
     @Column(name = "rights_of_ead_data_text")
     private String rightsOfEADDataText;
+    @Column(name = "xsl_upload_id")
+    private Long xslUploadId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "xsl_upload_id", insertable = false, updatable = false)
+    private XslUpload xslUpload;
 
     public Ingestionprofile() {
     }
@@ -425,4 +430,20 @@ public class Ingestionprofile implements Serializable {
 	public void setRightsOfEADDataText(String rightsOfEADDataText) {
 		this.rightsOfEADDataText = rightsOfEADDataText;
 	}
+
+    public Long getXslUploadId() {
+        return xslUploadId;
+    }
+
+    public void setXslUploadId(Long xslUploadId) {
+        this.xslUploadId = xslUploadId;
+    }
+
+    public XslUpload getXslUpload() {
+        return xslUpload;
+    }
+
+    public void setXslUpload(XslUpload xslUpload) {
+        this.xslUpload = xslUpload;
+    }
 }
