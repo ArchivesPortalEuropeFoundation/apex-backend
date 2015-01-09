@@ -160,7 +160,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 	                    }else if (part.getContent()!= null
 	                    		&& !part.getContent().trim().isEmpty()) {
 	                    	if (content.length() != 0) {
-	                    		content.append(" ");
+	                    		content.append(", ");
 	                    	}
 	                    	content.append(part.getContent().trim());
 	                    }
