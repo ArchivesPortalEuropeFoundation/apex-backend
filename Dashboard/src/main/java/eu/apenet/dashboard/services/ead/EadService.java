@@ -645,9 +645,8 @@ public class EadService {
 		newEad.setQueuing(QueuingState.BUSY);
         eadDAO.store(newEad);
 
-        Properties conversionProperties = createConversionProperties(preferences);
-
         try {
+        	Properties conversionProperties = createConversionProperties(preferences);
             if(ingestionprofileDefaultUploadAction.isConvert()) {
                 new ConvertTask().execute(newEad, conversionProperties);
             } else if(ingestionprofileDefaultUploadAction.isValidate()) {
@@ -674,6 +673,7 @@ public class EadService {
             LOGGER.error(APEnetUtilities.generateThrowableLog(e));
             queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
             queueItem.setPriority(0);
+            queueItem.setEad(newEad);
             queueItemDAO.store(queueItem);
             /*
              * throw exception when solr has problem, so the queue will stop for a while.
