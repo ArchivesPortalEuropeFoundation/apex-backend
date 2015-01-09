@@ -21,9 +21,9 @@ function checkBrowser(msg) {
 	}
 	else if (isSafari && version<5)
 		alertMsg = msg;
-	else if (isMsie && version<7)
+	else if (isMsie && version<8)
 		alertMsg = msg;
-	else if (isMozilla && version<24)
+	else if (isMozilla && version<17)
 		alertMsg = msg;
 
 	/* Show result */
