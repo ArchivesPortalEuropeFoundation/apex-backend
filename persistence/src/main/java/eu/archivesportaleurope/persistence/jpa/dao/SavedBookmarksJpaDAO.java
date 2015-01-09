@@ -70,10 +70,10 @@ public class SavedBookmarksJpaDAO extends AbstractHibernateDAO<SavedBookmarks, L
 	private Criteria getCriteriaSavedBookmarksOutOfCollectionByCollectionIdAndLiferayUser(Long id, long liferayUserId, Integer pageNumber, Integer pageSize) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "savedBookmarks");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		if(liferayUserId>0){
+			criteria.add(Restrictions.eq("savedBookmarks.liferayUserId", liferayUserId));
+		}
 		if(id!=null && id>0){
-			if(liferayUserId>0){
-				criteria.add(Restrictions.eq("savedBookmarks.liferayUserId", liferayUserId));
-			}
 			DetachedCriteria collectionSubquery = DetachedCriteria.forClass(CollectionContent.class, "collectionContent");
 			collectionSubquery.setProjection(Projections.property("collectionContent.savedBookmarks.id"));
 			collectionSubquery.add(Restrictions.eq("collectionContent.collection.id",id));
