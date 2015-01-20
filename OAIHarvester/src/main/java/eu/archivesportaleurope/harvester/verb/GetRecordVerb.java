@@ -2,6 +2,7 @@ package eu.archivesportaleurope.harvester.verb;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
@@ -36,7 +37,7 @@ public class GetRecordVerb extends AbstractListVerb {
 	protected String getRequestURL() throws UnsupportedEncodingException {
         StringBuffer requestURL =  new StringBuffer(getBaseURL());
         requestURL.append("?verb=GetRecord");
-        requestURL.append("&identifier=").append(identifier);
+        requestURL.append("&identifier=").append(URLEncoder.encode(identifier, "UTF-8"));
         requestURL.append("&metadataPrefix=").append(getMetadataPrefix());
         return requestURL.toString();
 	}
