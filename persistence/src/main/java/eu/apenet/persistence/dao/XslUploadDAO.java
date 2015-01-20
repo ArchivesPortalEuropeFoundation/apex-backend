@@ -9,5 +9,6 @@ import java.util.List;
  */
 public interface XslUploadDAO extends GenericDAO<XslUpload, Long>{
     public List<XslUpload> getXslUploads();
+    public List<XslUpload> getXslUploads(Integer archivalInstitutionId);
     public boolean hasXslUpload(Integer archivalInstitutionId);
 }

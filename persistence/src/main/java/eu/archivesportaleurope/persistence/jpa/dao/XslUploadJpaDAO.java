@@ -20,6 +20,14 @@ public class XslUploadJpaDAO extends AbstractHibernateDAO<XslUpload, Long> imple
     }
 
     @Override
+    public List<XslUpload> getXslUploads(Integer archivalInstitutionId) {
+        String query = "SELECT xslUpload FROM XslUpload xslUpload WHERE xslUpload.archivalInstitutionId  = :archivalInstitutionId ORDER BY xslUpload.id ASC";
+        TypedQuery<XslUpload> typedQuery = getEntityManager().createQuery(query, XslUpload.class);
+        typedQuery.setParameter("archivalInstitutionId", archivalInstitutionId);
+        return typedQuery.getResultList();
+    }
+
+    @Override
     public boolean hasXslUpload(Integer archivalInstitutionId) {
         String query = "SELECT xslUpload FROM XslUpload xslUpload WHERE xslUpload.archivalInstitutionId  = :archivalInstitutionId ORDER BY xslUpload.id";
         TypedQuery<XslUpload> typedQuery = getEntityManager().createQuery(query, XslUpload.class);

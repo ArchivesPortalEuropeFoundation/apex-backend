@@ -16,12 +16,12 @@ function checkBrowser(msg) {
 		/* To detect Chrome version in second display */
 		window.navigator.appVersion.match(/Chrome\/(.*?) /)[1];
 		var test = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
-		if (test<35)
+		if (test<38)
 			alertMsg = msg;
 	}
 	else if (isSafari && version<5)
 		alertMsg = msg;
-	else if (isMsie && version<7)
+	else if (isMsie && version<8)
 		alertMsg = msg;
 	else if (isMozilla && version<17)
 		alertMsg = msg;

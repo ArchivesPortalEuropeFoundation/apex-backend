@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import eu.apenet.persistence.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -23,11 +24,6 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Ingestionprofile;
-import eu.apenet.persistence.vo.IngestionprofileDefaultDaoType;
-import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
-import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
-import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 
 /**
  *
@@ -58,6 +54,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> rightsDigitalObjects = new LinkedHashSet<SelectItem>(); // Rights for digital objects.
     private Set<SelectItem> rightsEadData = new LinkedHashSet<SelectItem>(); // Rights for EAD data.
+    private Set<SelectItem> xslFiles = new LinkedHashSet<SelectItem>();
 
     //Collections for Europeana tab
     private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
@@ -84,6 +81,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String rightEadData;
     private String rightEadDescription;
     private String rightEadHolder;
+    private String defaultXslFile;
 
     //fields for Europeana tab components
     private String conversiontype;
@@ -145,14 +143,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
                 daoType = Integer.toString(ingestionprofile.getDaoType().getId());
                 daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
-            // Rights for digital objects.
-            this.setRightDigitalObjects(ingestionprofile.getRightsOfDigitalObjects());
-            this.setRightDigitalDescription(ingestionprofile.getRightsOfDigitalDescription());
-            this.setRightDigitalHolder(ingestionprofile.getRightsOfDigitalHolder());
-            // Rights for EAD data.
-            this.setRightEadData(ingestionprofile.getRightsOfEADData());
-            this.setRightEadDescription(ingestionprofile.getRightsOfEADDescription());
-            this.setRightEadHolder(ingestionprofile.getRightsOfEADHolder());
+                // Rights for digital objects.
+                this.setRightDigitalObjects(ingestionprofile.getRightsOfDigitalObjects());
+                this.setRightDigitalDescription(ingestionprofile.getRightsOfDigitalDescription());
+                this.setRightDigitalHolder(ingestionprofile.getRightsOfDigitalHolder());
+                // Rights for EAD data.
+                this.setRightEadData(ingestionprofile.getRightsOfEADData());
+                this.setRightEadDescription(ingestionprofile.getRightsOfEADDescription());
+                this.setRightEadHolder(ingestionprofile.getRightsOfEADHolder());
 
                 conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
                 sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
@@ -179,6 +177,9 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
                 inheritOriginationCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritOriginCheck());
                 inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
+                if(ingestionprofile.getXslUploadId() != null) {
+                    setDefaultXslFile(DAOFactory.instance().getXslUploadDAO().findById(ingestionprofile.getXslUploadId()).getId() + "");
+                }
             }
         }
         setUp();
@@ -233,6 +234,10 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         		profile.setRightsOfEADDescription("");
 		        profile.setRightsOfEADHolder("");
         	}
+
+            if(getDefaultXslFile() != null && !getDefaultXslFile().equals("-1")) {
+                profile.setXslUploadId(Long.parseLong(getDefaultXslFile()));
+            }
         } else {
 	        // Rights for digital objects.
 	        profile.setRightsOfDigitalObjects("");
@@ -477,6 +482,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-f/", getText("ead2ese.content.license.europeana.access.free")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/orphan-work-eu/", this.getText("ead2ese.content.license.europeana.access.orphan")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
+
+        if(DAOFactory.instance().getXslUploadDAO().hasXslUpload(getAiId())) {
+            List<XslUpload> xslUploads = DAOFactory.instance().getXslUploadDAO().getXslUploads(getAiId());
+            getXslFiles().add(new SelectItem("-1", "DEFAULT"));
+            for(XslUpload xslUpload : xslUploads) {
+                getXslFiles().add(new SelectItem(xslUpload.getId(), xslUpload.getReadableName()));
+            }
+        }
     }
 
     /**
@@ -952,7 +965,23 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 		this.lastSelection = lastSelection;
 	}
 
-	private String convertToString(int identifier) {
+    public Set<SelectItem> getXslFiles() {
+        return xslFiles;
+    }
+
+    public void setXslFiles(Set<SelectItem> xslFiles) {
+        this.xslFiles = xslFiles;
+    }
+
+    public String getDefaultXslFile() {
+        return defaultXslFile;
+    }
+
+    public void setDefaultXslFile(String defaultXslFile) {
+        this.defaultXslFile = defaultXslFile;
+    }
+
+    private String convertToString(int identifier) {
         return identifier + "";
     }
 }

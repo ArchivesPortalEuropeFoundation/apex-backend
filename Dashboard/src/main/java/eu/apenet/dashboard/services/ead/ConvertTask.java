@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import eu.apenet.dpt.utils.service.stax.CheckIsEadFile;
+import eu.apenet.persistence.vo.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,10 +23,6 @@ import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.ValidatedState;
-import eu.apenet.persistence.vo.Warnings;
 
 public class ConvertTask extends AbstractEadTask {
 
@@ -41,10 +38,14 @@ public class ConvertTask extends AbstractEadTask {
 	protected void execute(Ead ead, Properties properties) throws APEnetException {
 		if (valid(ead)) {
 			CounterCLevelCall counterCLevelCall = null;
-			String xslFileName = "default-apeEAD.xsl";
+			String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath() + APEnetUtilities.FILESEPARATOR + "default-apeEAD.xsl";
 			ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
 			String mainagencycode = archivalInstitution.getRepositorycode();
             Map<String, String> parameters = getConversionProperties(properties);
+			String xslName = getXslName(properties);
+			if(xslName != null) {
+				xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath() + APEnetUtilities.FILESEPARATOR + xslName;
+			}
 
 			if (mainagencycode != null)
 				parameters.put("mainagencycode", mainagencycode);
@@ -67,7 +68,7 @@ public class ConvertTask extends AbstractEadTask {
 				String tempDirOutputPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
 						+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR;
 				CheckIsEadFile checkIsEadFile = new CheckIsEadFile(file);
-                                checkIsEadFile.run();
+                checkIsEadFile.run();
 				if (checkIsEadFile.isEadRoot()) {
 					String tempOutputFilePath = tempDirOutputPath + "convert_" + ead.getId() + "_.xml";
 					File tempDirOutput = new File(tempDirOutputPath);
@@ -75,16 +76,15 @@ public class ConvertTask extends AbstractEadTask {
 						tempDirOutput.mkdirs();
 					}
 					File tempOutputFile = new File(tempOutputFilePath);
-					String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
+					String xslBeforeFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
 							+ APEnetUtilities.FILESEPARATOR + "before.xsl";
 					logger.info("'" + archivalInstitution.getAiname() + "' is converting file: '" + ead.getEadid()
 							+ "' with id: '" + ead.getId() + "'");
 					in = new FileInputStream(file);
-					TransformationTool.createTransformation(in, tempOutputFile, new File(xslFilePath), null, true,
+					TransformationTool.createTransformation(in, tempOutputFile, new File(xslBeforeFilePath), null, true,
 							true, null, true, null, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 
-					File xslFile = new File(APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
-							+ APEnetUtilities.FILESEPARATOR + "default-apeEAD.xsl");
+					File xslFile = new File(xslFilePath);
 
 					in = new FileInputStream(tempOutputFile);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
@@ -94,8 +94,6 @@ public class ConvertTask extends AbstractEadTask {
                                         if(tempDirOutput.listFiles().length == 0)
                                             FileUtils.deleteDirectory(tempDirOutput);
 				} else {
-					String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
-							+ APEnetUtilities.FILESEPARATOR + xslFileName;
 					in = new FileInputStream(file);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
 					xslMessages = TransformationTool.createTransformation(in, outputfile,
@@ -173,6 +171,16 @@ public class ConvertTask extends AbstractEadTask {
 		}
 		return result;
 	}
+
+	private String getXslName(Properties properties) {
+		if(properties == null) {
+			return null;
+		} else if(properties.containsKey(QueueItem.XSL_FILE)) {
+			return properties.getProperty(QueueItem.XSL_FILE);
+		} else {
+			return null;
+		}
+	}
 	
     private Map<String, String> getConversionProperties(Properties properties) {
         if(properties == null)
@@ -200,7 +208,7 @@ public class ConvertTask extends AbstractEadTask {
         // Add the values to the map.
         // Add options related to DAO type.
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, option_default);
-        parameters.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, Boolean.toString(option_use_existing_bool));
+        parameters.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, Boolean.toString(!option_use_existing_bool));
         // Add options related to rights statement for digital objects.
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, option_default_rights_digital);
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, option_default_rights_digital_text);

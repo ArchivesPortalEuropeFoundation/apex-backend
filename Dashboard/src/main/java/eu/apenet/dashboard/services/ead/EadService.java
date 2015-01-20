@@ -645,9 +645,8 @@ public class EadService {
 		newEad.setQueuing(QueuingState.BUSY);
         eadDAO.store(newEad);
 
-        Properties conversionProperties = createConversionProperties(preferences);
-
         try {
+        	Properties conversionProperties = createConversionProperties(preferences);
             if(ingestionprofileDefaultUploadAction.isConvert()) {
                 new ConvertTask().execute(newEad, conversionProperties);
             } else if(ingestionprofileDefaultUploadAction.isValidate()) {
@@ -674,6 +673,7 @@ public class EadService {
             LOGGER.error(APEnetUtilities.generateThrowableLog(e));
             queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
             queueItem.setPriority(0);
+            queueItem.setEad(newEad);
             queueItemDAO.store(queueItem);
             /*
              * throw exception when solr has problem, so the queue will stop for a while.
@@ -980,6 +980,10 @@ public class EadService {
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT));
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION));
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_HOLDER));
+
+		if(preferences.getProperty(QueueItem.XSL_FILE) != null) {
+			conversionProperties.put(QueueItem.XSL_FILE, preferences.getProperty(QueueItem.XSL_FILE));
+		}
 
     	return conversionProperties;
     }
