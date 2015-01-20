@@ -967,7 +967,7 @@ public class EadService {
         }
 
 		Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, daoTypeCheck);
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, Boolean.toString(daoTypeCheck));
 
         // Properties related to the rights statement for digital objects.
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS));

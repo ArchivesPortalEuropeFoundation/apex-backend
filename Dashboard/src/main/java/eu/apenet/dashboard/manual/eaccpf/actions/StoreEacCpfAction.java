@@ -248,7 +248,7 @@ public class StoreEacCpfAction extends EacCpfAction {
         }
         return result;
     }
-
+    
     private String getTitleFromFile(EacCpf eacCpf) {
         String title = "";
         StringBuilder builderTitle = new StringBuilder();
@@ -264,37 +264,35 @@ public class StoreEacCpfAction extends EacCpfAction {
                 Identity.NameEntry firstEntry = nameEntries.get(0);
                 List<Part> parts = firstEntry.getPart();
                 if (!parts.isEmpty()) {
-
-                    String result = parts.get(0).getLocalType();
-                    if (result.equalsIgnoreCase("corpname") || (result.equalsIgnoreCase("persname")) || result.equalsIgnoreCase("famname") || result.equalsIgnoreCase("error")) {
-                        // the title is the first occurrence of the element nameEntry/part
-                        title = parts.get(0).getContent();
-                    } else {
-                        // the title is formed by "surname, firstname patronymic"
-                        StringBuilder surname = new StringBuilder();
-                        StringBuilder firstname = new StringBuilder();
-                        StringBuilder patronymic = new StringBuilder();
-                        for (Part part : parts) {
-                            if (part.getLocalType().equals("surname")) {
-                                if (surname.length() != 0) {
-                                    surname.append(" ");
-                                }
-                                surname.append(part.getContent());
+                    // the title is formed by "surname, firstname patronymic"
+                    StringBuilder surname = new StringBuilder();
+                    StringBuilder firstname = new StringBuilder();
+                    StringBuilder patronymic = new StringBuilder();
+                    for (Part part : parts) {
+                    	if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
+  	                        builderTitle.append(part.getContent());
+  	                    }
+                		if (part.getLocalType().equals("surname")) {
+                            if (surname.length() != 0) {
+                                surname.append(" ");
                             }
-                            if (part.getLocalType().equals("firstname")) {
-                                if (firstname.length() != 0) {
-                                    firstname.append(" ");
-                                }
-                                firstname.append(part.getContent());
-                            }
-                            if (part.getLocalType().equals("patronymic")) {
-                                if (patronymic.length() != 0) {
-                                    patronymic.append(" ");
-                                }
-                                patronymic.append(part.getContent());
-                            }
+                            surname.append(part.getContent());
                         }
-                        // build the title
+                        if (part.getLocalType().equals("firstname")) {
+                            if (firstname.length() != 0) {
+                                firstname.append(" ");
+                            }
+                            firstname.append(part.getContent());
+                        }
+                        if (part.getLocalType().equals("patronymic")) {
+                            if (patronymic.length() != 0) {
+                                patronymic.append(" ");
+                            }
+                            patronymic.append(part.getContent());
+                        }
+                     }
+                    if (builderTitle.length() == 0) {
+                    	// build the title
                         builderTitle.append(surname);
                         if (builderTitle.length() > 0 && ((firstname!=null && firstname.length()>0) || (patronymic!=null && patronymic.length()>0))){
                     		builderTitle.append(", ");
@@ -304,18 +302,28 @@ public class StoreEacCpfAction extends EacCpfAction {
                             builderTitle.append(" ");
                         }
                         builderTitle.append(patronymic);
-                        if (builderTitle.length() == 0) {
-                            builderTitle.append(" ");
-                        }
-                        title = builderTitle.toString();
-                    }
+                    }    
+                    title = builderTitle.toString();
+             	}
+                //issue 1442
+                if (title.trim().isEmpty()){
+                	for (int i=0;i<parts.size();i++){
+                		builderTitle.append(parts.get(i).getContent());
+                		if (i<(parts.size()-1)){
+                			builderTitle.append(", ");
+                		}
+                	}
+                	title = builderTitle.toString();
                 }
             }
+           
         } catch (Exception e) {
             title = "";
         }
+       
         return title;
     }
+ 
 
     /**
      * @return the fileId
