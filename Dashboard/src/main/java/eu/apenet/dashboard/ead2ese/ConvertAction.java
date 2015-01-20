@@ -62,7 +62,8 @@ public class ConvertAction extends AbstractInstitutionAction {
     private static final String EUROPEANA_FREE = "http://www.europeana.eu/rights/rr-f/"; // Constant for link to europeana free license.
     private static final String EUROPEANA_NON_COMMERCIAL = "http://www.europeana.eu/rights/out-of-copyright-non-commercial/"; // Constant for link to europeana non-commercial license.
     private static final String EUROPEANA_ORPHAN = "http://www.europeana.eu/rights/orphan-work-eu/"; // Constant for link to europeana orphan license.
-    private static final String EUROPEANA_PAID = "http://www.europeana.eu/rights/rr-p"; // Constant for link to europeana paid license.
+    private static final String EUROPEANA_PAID = "http://www.europeana.eu/rights/rr-p/"; // Constant for link to europeana paid license.
+    private static final String EUROPEANA_UNKNOWN = "http://www.europeana.eu/rights/unknown/"; // Constant for link to europeana unknown license.
 
     protected final Logger log = Logger.getLogger(getClass());
     /**
@@ -197,6 +198,7 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_FREE, this.getText("ead2ese.content.license.europeana.access.free")));
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_ORPHAN, this.getText("ead2ese.content.license.europeana.access.orphan")));
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_PAID, this.getText("ead2ese.content.license.europeana.access.paid")));
+        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_UNKNOWN, this.getText("content.message.rights.unknown")));
     }
 
     public String input() throws IOException, SAXException, ParserConfigurationException {
