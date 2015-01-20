@@ -1197,6 +1197,10 @@
      <definition name="setFeedbackEmailaddress" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.ai.setfeedbackemail" />
         <put-attribute name="body" value="/jsp/setfeedbackemail.jsp" />
-    </definition>    
+    </definition>
 
+	<definition name="uploadXsl" extends="AdminLayout">
+		<put-attribute name="title" value="admin.xsl.upload" />
+		<put-attribute name="body" value="/jsp/admin/uploadXsl.jsp" />
+	</definition>
 </tiles-definitions>

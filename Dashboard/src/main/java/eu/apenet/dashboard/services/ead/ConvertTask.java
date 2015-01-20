@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import eu.apenet.dpt.utils.service.stax.CheckIsEadFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -65,7 +66,9 @@ public class ConvertTask extends AbstractEadTask {
 				File outputfile;
 				String tempDirOutputPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
 						+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR;
-				if (xslFileName == null || xslFileName.equals("default-apeEAD.xsl")) {
+				CheckIsEadFile checkIsEadFile = new CheckIsEadFile(file);
+                                checkIsEadFile.run();
+				if (checkIsEadFile.isEadRoot()) {
 					String tempOutputFilePath = tempDirOutputPath + "convert_" + ead.getId() + "_.xml";
 					File tempDirOutput = new File(tempDirOutputPath);
 					if (!tempDirOutput.exists()) {

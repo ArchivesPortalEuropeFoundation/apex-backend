@@ -65,6 +65,7 @@ public class ApeUtil {
 	        result = result.replaceAll("<", "_LT_");
 	        result = result.replaceAll(">", "_GT_");
 	        result = result.replaceAll("\"", "_QUOTE_");
+	        result = result.replaceAll("'", "_SQUOTE_");
 	        result = result.replaceAll(",", "_COMMA_");		
 	        result = result.replaceAll(";", "_SEMICOLON_");	 	        
 	        return result;
@@ -96,6 +97,7 @@ public class ApeUtil {
 	        result = result.replaceAll("_LT_","<");
 	        result = result.replaceAll("_GT_",">");	     
 	        result = result.replaceAll("_QUOTE_","\"");	  	
+	        result = result.replaceAll("_SQUOTE_", "'");
 	        result = result.replaceAll("_COMMA_", ",");	 
 	        result = result.replaceAll("_SEMICOLON_", ";");	 	        
 	        return result.trim();

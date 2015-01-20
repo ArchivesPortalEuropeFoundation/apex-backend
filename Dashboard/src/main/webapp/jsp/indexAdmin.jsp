@@ -9,7 +9,8 @@
 					<li><s:a action="downloadCountriesStatistics"><s:text name="admin.menu.statistics.countries" /></s:a></li>
 					<li><s:a action="downloadInstitutionsStatistics"><s:text name="al.menu.statistics.institutions" /></s:a></li>
 					<li><s:a action="sessionManagement"><s:property value="getText('admin.menu.sessionmanagement')" /></s:a></li>
-					<li><s:a action="userManagement"><s:property value="getText('admin.menu.usermanagement')" /></s:a></li>						
+					<li><s:a action="userManagement"><s:property value="getText('admin.menu.usermanagement')" /></s:a></li>
+				  	<li><s:a action="xslUploadChooseCountry"><s:property value="getText('admin.menu.xslupload')" /></s:a></li>
 					<li><s:a action="manageQueue"><s:text name="admin.queuemanagement.title" /></s:a> </li>
 					<li><s:a action="manageHarvest"><s:text name="admin.harvestmanagement.title" /></s:a> </li>
 					<li><s:a action="showLogFiles"><s:text name="admin.showlogfiles.title" /></s:a> </li>

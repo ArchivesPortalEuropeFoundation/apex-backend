@@ -982,6 +982,16 @@
             </result>
         </action>
 
+        <action name="xslUploadChooseCountry" class="eu.apenet.dashboard.actions.admin.UploadXslAction">
+            <result name="success" type="tiles">uploadXsl</result>
+        </action>
+        <action name="xslUploadChooseInstitution" class="eu.apenet.dashboard.actions.admin.UploadXslAction" method="chooseInstitution">
+            <result name="success" type="tiles">uploadXsl</result>
+        </action>
+        <action name="xslUploadFile" class="eu.apenet.dashboard.actions.admin.UploadXslAction" method="uploadXsl">
+            <result name="success" type="tiles">uploadXsl</result>
+        </action>
+
         <action name="changeToCountryManager" class="eu.apenet.dashboard.security.actions.UserManagementAction" method="changeToCountryManager">
             <result name="success" type="redirectAction">
                 <param name="actionName">index</param>
