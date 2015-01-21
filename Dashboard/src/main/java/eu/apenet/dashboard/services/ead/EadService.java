@@ -970,16 +970,66 @@ public class EadService {
         conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, Boolean.toString(daoTypeCheck));
 
         // Properties related to the rights statement for digital objects.
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS));
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT));
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION));
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER));
+        String rightsDigitalObjects = preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS);
+        if (StringUtils.isNotBlank(rightsDigitalObjects)
+        		&& !rightsDigitalObjects.equalsIgnoreCase("null")) {
+        	// URL.
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS));
+        	// Text.
+	        if (preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT) != null) {
+	        	conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT));
+	        } else {
+		        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, "");
+	        }
+        	// Description.
+	        if (preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION) != null) {
+	        	conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION));
+	        } else {
+		        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, "");
+	        }
+        	// Rights holder.
+	        if (preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER) != null) {
+	        	conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER));
+	        } else {
+		        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, "");
+	        }
+        } else {
+        	conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL, "");
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_DIGITAL_TEXT, "");
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_DESCRIPTION, "");
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, "");
+        }
 
         // Properties related to the rights statement for EAD data.
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA));
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT));
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION));
-        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_HOLDER));
+        String rightsEADData = preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA);
+        if (StringUtils.isNotBlank(rightsEADData)
+        		&& !rightsEADData.equalsIgnoreCase("null")) {
+        	// URL.
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA));
+        	// Text.
+	        if (preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT) != null) {
+	        	conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT));
+	        } else {
+		        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, "");
+	        }
+        	// Description.
+	        if (preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION) != null) {
+	        	conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION));
+	        } else {
+		        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, "");
+	        }
+        	// Rights holder.
+	        if (preferences.getProperty(QueueItem.RIGHTS_OF_EAD_HOLDER) != null) {
+	        	conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, preferences.getProperty(QueueItem.RIGHTS_OF_EAD_HOLDER));
+	        } else {
+		        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, "");
+	        }
+        } else {
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD, "");
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT_RIGHTS_EAD_TEXT, "");
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_DESCRIPTION, "");
+	        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_EAD_HOLDER, "");
+        }
 
 		if(preferences.getProperty(QueueItem.XSL_FILE) != null) {
 			conversionProperties.put(QueueItem.XSL_FILE, preferences.getProperty(QueueItem.XSL_FILE));
