@@ -21,6 +21,8 @@ public class ChangeControl {
 	public static String LOG_OUT_OPERATION = "Log out";
 	public static String UPLOAD_FA_OPERATION = "Upload FA";
 	public static String CHANGE_MANAGER_INSTITUTION = "Change manager instituion";
+	public static String MAINTENANCE_MODE_ACTIVATE = "Activate maintenance mode";
+	public static String MAINTENANCE_MODE_DEACTIVATE = "Deactivate maintenance mode";
 
     public final static String UPLOAD_EAD_OPERATION = "Upload EAD";
 

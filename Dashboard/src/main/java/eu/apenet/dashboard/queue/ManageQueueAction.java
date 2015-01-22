@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import eu.apenet.dashboard.utils.ChangeControl;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -203,8 +204,10 @@ public class ManageQueueAction extends AbstractAction {
 	public String changeMaintenanceMode(){
 		if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
 			APEnetUtilities.getDashboardConfig().setMaintenanceMode(false);
+			ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_DEACTIVATE);
 		}else {
 			APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
+			ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_ACTIVATE);
 		}
 		return SUCCESS;
 	}
