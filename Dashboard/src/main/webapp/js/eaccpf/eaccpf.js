@@ -75,7 +75,7 @@ function clickGoAction() {
  * Save button function, checks mandatory fields
  * before submitting the form
  **************************************/
-function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing, invalidDateMessage, invalidRangeMessage) {
+function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, endDateMissing, cpfTypeMissing, resourceTypeMissing, functionTypeMissing, languageMissing, scriptMissing, invalidDateMessage, invalidRangeMessage, websiteErrorMessage, xsUriErrorMessage) {
     var Dlg = document.getElementById('dialog-saveOnQuit');
     Dlg.style.visibility = 'hidden';
 
@@ -84,7 +84,7 @@ function clickSaveAction(onlySave, nameMissing, dateMissing, startDateMissing, e
     if (identityValidation !== "ok") {
         return;
     }
-    var descriptionValidation = checkDescriptionTab(invalidDateMessage, invalidRangeMessage);
+    var descriptionValidation = checkDescriptionTab(invalidDateMessage, invalidRangeMessage, websiteErrorMessage, xsUriErrorMessage);
     if (descriptionValidation !== "ok") {
         return;
     }
@@ -157,7 +157,7 @@ function clickExitAction() {
     }
 
     // Display the dialog box.
-    displayExitDialog($("#DlgContent").text(),$("input#btnYes").val(),$("input#btnNo").val());
+    displayExitDialog($("#DlgContent").text(), $("input#btnYes").val(), $("input#btnNo").val());
 //    $("#eacCpfDiv :input").attr("readonly", true);
 //    var Dlg = document.getElementById("dialog-saveOnQuit");
 //    Dlg.style.visibility = "visible";
@@ -278,7 +278,7 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
     return "ok";
 };
 
-var checkDescriptionTab = function(invalidDateMessage, invalidRangeMessage) {
+var checkDescriptionTab = function(invalidDateMessage, invalidRangeMessage, websiteErrorMessage, xsUriErrorMessage) {
     //check any ISO date rows in description tab for validity one more time
     var checkResult = "ok";
     var tableCounter = $("table[id^='placeTable_']").length;
@@ -287,6 +287,10 @@ var checkDescriptionTab = function(invalidDateMessage, invalidRangeMessage) {
     //check place dates
     if (tableCounter > 0) {
         for (var tc = 1; tc <= tableCounter; tc++) {
+            checkResult = checkIfWebpage("table#placeTable_" + tc + " input#linkPlaceVocab", websiteErrorMessage, xsUriErrorMessage);
+            if (checkResult != "ok") {
+                return;
+            }
             rowCounter = $("table#placeTable_" + tc + " tr[id^='trDate_text_']").length;
             if (rowCounter > 0) {
                 for (var rc = 1; rc <= rowCounter; rc++) {
@@ -304,10 +308,14 @@ var checkDescriptionTab = function(invalidDateMessage, invalidRangeMessage) {
         }
     }
 
-    //check function dates
+    //check validitiy of link to function vocabulary, check function dates
     var tableCounter = $("table[id^='functionTable_']").length;
     if (tableCounter > 0) {
         for (var tc = 1; tc <= tableCounter; tc++) {
+            checkResult = checkIfWebpage("table#functionTable_" + tc + " input#linkFunctionVocab", websiteErrorMessage, xsUriErrorMessage);
+            if (checkResult != "ok") {
+                return;
+            }
             rowCounter = $("table#functionTable_" + tc + " tr[id^='trDate_text_']").length;
             if (rowCounter > 0) {
                 for (var rc = 1; rc <= rowCounter; rc++) {
@@ -329,6 +337,10 @@ var checkDescriptionTab = function(invalidDateMessage, invalidRangeMessage) {
     var tableCounter = $("table[id^='occupationTable_']").length;
     if (tableCounter > 0) {
         for (var tc = 1; tc <= tableCounter; tc++) {
+            checkResult = checkIfWebpage("table#occupationTable_" + tc + " input#linkOccupationVocab", websiteErrorMessage, xsUriErrorMessage);
+            if (checkResult != "ok") {
+                return;
+            }
             rowCounter = $("table#occupationTable_" + tc + " tr[id^='trDate_text_']").length;
             if (rowCounter > 0) {
                 for (var rc = 1; rc <= rowCounter; rc++) {
@@ -403,33 +415,28 @@ var checkControlTab = function(languageMissing, scriptMissing) {
     return "ok";
 };
 
-function checkWebpages(target, message) {
-    var checkFails = false;
-    var value = target.val();
-    if (value && value.length > 0) {
-        value = value.toLowerCase();
-        value = $.trim(value);
+function checkIfWebpage(tf, websiteErrorMessage, xsUriErrorMessage) {
+    var value = $(tf).attr("value");
+    var linkSyntaxRegex = /(^|\s)((((https?)|(ftp)):\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
+    if (value != '' || value != null) {
         if (!(value.indexOf("https://") === 0 || value.indexOf("http://") === 0 || value.indexOf("ftp://") === 0)) {
-            var pFieldError = "<p id=\"" + $(this).attr("id") + "_w_required\" class=\"fieldRequired\">" + message + "</p>";
-            var id = target.attr("id");
-            if (id.indexOf("textWebsiteOfResource") === "-1" && id.indexOf("textWebsiteOfDescription") === "-1") {
-                target.after(pFieldError);
-            } else {
-                var parent = target.parent().parent().parent().parent().attr("id");
-                $("table#" + parent + " input#" + id).after(pFieldError);
-            }
-            checkFails = true;
+            displayAlertDialog(websiteErrorMessage);
+            return;
+        }
+        if (linkSyntaxRegex.test(value) != true) {
+            displayAlertDialog(xsUriErrorMessage);
+            return;
         }
     }
-    return checkFails;
+    return "ok";
 }
 
 function alertEmptyFields(text1) {
-	displayAlertDialog(text1);
+    displayAlertDialog(text1);
 }
 
 function alertFillFieldsBeforeChangeTab(text) {
-	displayAlertDialog(text);
+    displayAlertDialog(text);
 }
 
 /**************************************
@@ -715,7 +722,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMe
         }
         var date = new Date(year, month - 1, day);
         if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
-        	displayAlertDialog(year + "-" + month + "-" + day + ": " + invalidDateMessage);
+            displayAlertDialog(year + "-" + month + "-" + day + ": " + invalidDateMessage);
             return;
         }
     }
@@ -765,7 +772,7 @@ var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMe
         date2 = new Date(year, month - 1, day);
     }
     if (date1 > date2) {
-    	displayAlertDialog(invalidRangeMessage);
+        displayAlertDialog(invalidRangeMessage);
         return;
     }
     return "ok";
@@ -1715,18 +1722,18 @@ function addLocalId(fieldsMissing) {
  * Tab validation functions
  ****************************************************/
 var clickChooseTypeAction = function(text1) {
-	displayAlertDialog(text);
+    displayAlertDialog(text);
 }
 
 var clickIdentityAction = function(text, message) {
-	displayAlertDialog(text + '; ' + message);
+    displayAlertDialog(text + '; ' + message);
 }
 
 /*************************************************************************************
  *Functions related to second-display EAC-CPF
  **************************************************************************************/
 function init() {
-	drawListDiscs();
+    drawListDiscs();
     eraseData();
     $(".displayLinkShowLess").addClass("hidden");
     $('.displayLinkShowMore').addClass("hidden");
@@ -1752,23 +1759,23 @@ function init() {
     expandedSection();
     sameHeight();
 }
-function drawListDiscs(){
-	if($("div[id^='structureOrGenealogy']").length>0){
-		$("div[id^='structureOrGenealogy']").each(function(){
-			checkNodesLiDisc($(this));
-		});
-	}
-	if($("div[id^='generalContext']").length>0){
-		$("div[id^='generalContext']").each(function(){
-			checkNodesLiDisc($(this));
-		});
-	}
+function drawListDiscs() {
+    if ($("div[id^='structureOrGenealogy']").length > 0) {
+        $("div[id^='structureOrGenealogy']").each(function() {
+            checkNodesLiDisc($(this));
+        });
+    }
+    if ($("div[id^='generalContext']").length > 0) {
+        $("div[id^='generalContext']").each(function() {
+            checkNodesLiDisc($(this));
+        });
+    }
 }
 
-function checkNodesLiDisc(jDiv){
-	if(jDiv.find("li.item").length==1){
-		jDiv.find("li.item").css("list-style","none outside none");
-	}
+function checkNodesLiDisc(jDiv) {
+    if (jDiv.find("li.item").length == 1) {
+        jDiv.find("li.item").css("list-style", "none outside none");
+    }
 }
 function initPrint() {
     eraseData();
@@ -1945,15 +1952,15 @@ function expandedSection() {
  */
 function sameHeight() {
     $('#eacCpfDisplayPortlet .row').each(function() {
-         if(!$(this).is( ":hidden" )){
+        if (!$(this).is(":hidden")) {
             $(this).css("height", "");
             $(this).children().css("height", "");
             var height = $(this).height();
-            if(height == "auto"){
-                 height = $(this).css("height");
+            if (height == "auto") {
+                height = $(this).css("height");
             }
             $(this).children().css("height", height);
-         }
+        }
     });
 }
 
@@ -1961,65 +1968,68 @@ function sameHeight() {
  * Function to display the processing information.
  */
 function createColorboxForProcessing() {
-	$("#colorbox_load_finished").each(function(){
-		$(this).remove();
-	});
-	// Create colorbox.
-	$(document).colorbox({
-		html:function(){
-			var htmlCode = $("#processingInfoDiv").html();
-			return htmlCode;
-		},
-		overlayClose:false, // Prevent close the colorbox when clicks on window.
-		escKey:false, // Prevent close the colorbox when hit escape key.
-		innerWidth:"150px",
-		innerHeight:"36px",
-		initialWidth:"0px",
-		initialHeight:"0px",
-		open:true,
-		onLoad:function(){
-			$("#colorbox").show();
-			$("#cboxOverlay").show();
+    $("#colorbox_load_finished").each(function() {
+        $(this).remove();
+    });
+    // Create colorbox.
+    $(document).colorbox({
+        html: function() {
+            var htmlCode = $("#processingInfoDiv").html();
+            return htmlCode;
+        },
+        overlayClose: false, // Prevent close the colorbox when clicks on window.
+        escKey: false, // Prevent close the colorbox when hit escape key.
+        innerWidth: "150px",
+        innerHeight: "36px",
+        initialWidth: "0px",
+        initialHeight: "0px",
+        open: true,
+        onLoad: function() {
+            $("#colorbox").show();
+            $("#cboxOverlay").show();
 
-		},
-		onComplete: function(){
-			if(!$("#colorbox_load_finished").length){
-				$("#processingInfoDiv").append("<input type=\"hidden\" id=\"colorbox_load_finished\" value=\"true\" />");
-			}
+        },
+        onComplete: function() {
+            if (!$("#colorbox_load_finished").length) {
+                $("#processingInfoDiv").append("<input type=\"hidden\" id=\"colorbox_load_finished\" value=\"true\" />");
+            }
         }
-	});
-	
-	// Remove the close button from colorbox.
-	$("#cboxClose").remove();
+    });
 
-	// Prevent reload page.
-	$(document).on("keydown", disableReload);
+    // Remove the close button from colorbox.
+    $("#cboxClose").remove();
+
+    // Prevent reload page.
+    $(document).on("keydown", disableReload);
 }
 
 /**
  * Function to prevent reload the page using F5.
  */
 function disableReload(e) {
-	if (((e.which || e.keyCode) == 116)
-			|| (((e.ctrlKey && e.which) || (e.ctrlKey && e.keyCode)) == 82)) {
-		e.preventDefault();
-	}
-};
+    if (((e.which || e.keyCode) == 116)
+            || (((e.ctrlKey && e.which) || (e.ctrlKey && e.keyCode)) == 82)) {
+        e.preventDefault();
+    }
+}
+;
 
 /**
  * Function to close the processing information.
  */
 function deleteColorboxForProcessing() {
-	if($("input#colorbox_load_finished").length){
-		//removes flag
-		$("#colorbox_load_finished").each(function(){
-			$(this).remove();
-		});
-		// Close colorbox.
-		$.colorbox.close();
-		// Enable the page reload using F5.
-		$(document).off("keydown", disableReload);
-	}else{
-		setTimeout(function(){deleteColorboxForProcessing();},500);
-	}
+    if ($("input#colorbox_load_finished").length) {
+        //removes flag
+        $("#colorbox_load_finished").each(function() {
+            $(this).remove();
+        });
+        // Close colorbox.
+        $.colorbox.close();
+        // Enable the page reload using F5.
+        $(document).off("keydown", disableReload);
+    } else {
+        setTimeout(function() {
+            deleteColorboxForProcessing();
+        }, 500);
+    }
 }
