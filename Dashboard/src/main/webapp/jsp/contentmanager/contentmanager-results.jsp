@@ -395,11 +395,12 @@
                                                     <s:text name="content.message.deliver.europeana" />
                                                 </option>
                                             </c:if>
-                                            <c:if test="${eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana}">
+                                            <!-- This action is commented out until issue #1123#note-11 has been updated -->
+                                            <%--<c:if test="${eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana}">
                                                 <option value="_blank|previewEdm.action">
                                                     <s:text name="content.message.preview.ese" />
                                                 </option>
-                                            </c:if>
+                                            </c:if>--%>
                                             <c:if test="${eadResult.hasEseEdmFiles}">
                                                 <option value="_self|downloadEse.action">
                                                     <s:text name="content.message.download.ese" />
