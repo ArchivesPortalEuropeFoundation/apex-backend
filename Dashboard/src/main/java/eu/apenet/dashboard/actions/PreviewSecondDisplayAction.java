@@ -55,6 +55,9 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
 		    	}else{    		
 		    		language = session.get("WW_TRANS_I18N_LOCALE");
 		    	}
+		    	if (language == null){
+		    		language = getServletRequest().getLocale().getLanguage();
+		    	}
 				if (xmlType.equals(XmlType.EAC_CPF)) {
 					EacCpfService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
 					EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO()
