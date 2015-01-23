@@ -395,7 +395,7 @@
                                                     <s:text name="content.message.deliver.europeana" />
                                                 </option>
                                             </c:if>
-                                            <c:if test="${eadResult.convertedToEseEdm}">
+                                            <c:if test="${eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana}">
                                                 <option value="_blank|previewEdm.action">
                                                     <s:text name="content.message.preview.ese" />
                                                 </option>
@@ -405,7 +405,7 @@
                                                     <s:text name="content.message.download.ese" />
                                                 </option>
                                             </c:if>
-                                            <c:if test="${eadResult.convertedToEseEdm}">
+                                            <c:if test="${eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana}">
                                                 <option value="colorbox|showEdmReport.action">
                                                     <s:text name="content.message.report.edm" />
                                                 </option>
