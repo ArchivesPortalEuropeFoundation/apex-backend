@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.security.actions;
 
 import eu.apenet.dashboard.AbstractAction;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityContextContainer;
 import eu.apenet.dashboard.security.SecurityService;
 
@@ -30,7 +31,8 @@ public class SessionManagementAction extends AbstractAction {
 		return SUCCESS;
 	}
 	public String deleteSession(){
-		SecurityService.deleteSession(sessionId);
+		if(SecurityContext.get().isAdmin())
+			SecurityService.deleteSession(sessionId);
 		return SUCCESS;
 	}
 	

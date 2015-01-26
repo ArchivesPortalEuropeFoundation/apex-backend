@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
+<%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags"%>
+<dashboard:securityContext var="securityContext" />
 	<script type="text/javascript">
 	
 	$(function() {
@@ -40,22 +42,24 @@
         </tr>
         
     </table>
-    <s:form action="startStopHarvester" method="post" theme="simple">
-        <s:actionerror />
-        <c:choose>
-            <c:when test="${harvestActive or harvestProcessing}">
-            	<s:select  name="stopHarvesting" list="stopHarvestingProcessingOptions" listKey="value" listValue="content"></s:select>
-                <s:submit key="admin.harvestermanagement.harvester.stop" cssClass="mainButton" name="startButton" />
-            </c:when>
-            <c:otherwise>
-            	<c:if test="${defaultHarvestingProcessing}">
-            	<s:select  name="processOnceADay" list="processOptions" listKey="value" listValue="content"></s:select>
-            	</c:if>
-                <s:submit key="admin.harvestermanagement.harvester.start" cssClass="mainButton" name="startButton" />
-            </c:otherwise>
-        </c:choose>
-    </s:form>
-    <br/>
+	<c:if test="${securityContext.admin}">
+		<s:form action="startStopHarvester" method="post" theme="simple">
+			<s:actionerror />
+			<c:choose>
+				<c:when test="${harvestActive or harvestProcessing}">
+					<s:select  name="stopHarvesting" list="stopHarvestingProcessingOptions" listKey="value" listValue="content"></s:select>
+					<s:submit key="admin.harvestermanagement.harvester.stop" cssClass="mainButton" name="startButton" />
+				</c:when>
+				<c:otherwise>
+					<c:if test="${defaultHarvestingProcessing}">
+					<s:select  name="processOnceADay" list="processOptions" listKey="value" listValue="content"></s:select>
+					</c:if>
+					<s:submit key="admin.harvestermanagement.harvester.start" cssClass="mainButton" name="startButton" />
+				</c:otherwise>
+			</c:choose>
+		</s:form>
+		<br/>
+	</c:if>
     <c:if test="${!empty harvestObject}">
     <h2>Harvesting process status</h2>
     <table class="defaultlayout">
@@ -200,9 +204,11 @@
 			                                	<option value="ENABLE">
 													<s:text name="admin.harvestermanagement.harvester.activate" />
 												</option>
-			                                	<option value="DELETE">
-													<s:text name="admin.harvestermanagement.harvester.delete" />
-												</option>
+												<c:if test="${securityContext.admin}">
+													<option value="DELETE">
+														<s:text name="admin.harvestermanagement.harvester.delete" />
+													</option>
+												</c:if>
 			                                </c:otherwise>
 			                            </c:choose>
 												<option value="INTERVAL_DECREASE">
@@ -211,6 +217,7 @@
 												<option value="INTERVAL_INCREASE">
 													Increase interval
 												</option>
+											<c:if test="${securityContext.admin}">
 			                            <c:choose>
 			                                <c:when test="${item.locked}">
 												<option value="INTERVAL_UNLOCK">
@@ -222,16 +229,19 @@
 													Lock interval
 												</option>
 			                                </c:otherwise>
-			                            </c:choose>																					
+			                            </c:choose>
+											</c:if>
 												<option value="DELAY">
 													Delay with interval
 												</option>
 												<option value="DELAY_ONE_DAY">
 													Delay with one day
-												</option>												
-												<option value="FULL">
-													Harvest everything
 												</option>
+												<c:if test="${securityContext.admin}">
+													<option value="FULL">
+														Harvest everything
+													</option>
+												</c:if>
 			                            		<option value="METHOD">
 													Change harvester method
 												</option>												

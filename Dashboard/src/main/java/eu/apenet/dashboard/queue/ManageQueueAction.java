@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ChangeControl;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -120,102 +121,116 @@ public class ManageQueueAction extends AbstractAction {
 	}
 
 	public String manageQueueItem() throws Exception {
-		QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-		QueueItem queueItem = queueDAO.findById(queueItemId);
-		if ("DELETE".equals(selectedAction)) {
-			EadService.deleteFromQueue(queueItem);
-		} else {
-			queueItem.setErrors(null);
-			if ("DISABLE".equals(selectedAction)) {
-				queueItem.setPriority(0);
-			} else if ("ENABLE".equals(selectedAction)) {
-				queueItem.setPriority(1000);
-			}  else if ("HIGHEST".equals(selectedAction)) {
-				queueItem.setPriority(5000);
-			}else if ("LOWEST".equals(selectedAction)) {
-				queueItem.setPriority(1);
+		if(SecurityContext.get().isAdmin()) {
+			QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+			QueueItem queueItem = queueDAO.findById(queueItemId);
+			if ("DELETE".equals(selectedAction)) {
+				EadService.deleteFromQueue(queueItem);
+			} else {
+				queueItem.setErrors(null);
+				if ("DISABLE".equals(selectedAction)) {
+					queueItem.setPriority(0);
+				} else if ("ENABLE".equals(selectedAction)) {
+					queueItem.setPriority(1000);
+				} else if ("HIGHEST".equals(selectedAction)) {
+					queueItem.setPriority(5000);
+				} else if ("LOWEST".equals(selectedAction)) {
+					queueItem.setPriority(1);
+				}
+				queueDAO.store(queueItem);
 			}
-			queueDAO.store(queueItem);
 		}
 		return SUCCESS;
 	}
 
 	public String deleteAllQueueItemsWithErrors() throws Exception {
-		QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-		List<QueueItem> queueItems = queueDAO.getItemsWithErrors();
-		for (QueueItem queueItem : queueItems) {
-			try {
-				EadService.deleteFromQueue(queueItem);
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
+		if(SecurityContext.get().isAdmin()) {
+			QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+			List<QueueItem> queueItems = queueDAO.getItemsWithErrors();
+			for (QueueItem queueItem : queueItems) {
+				try {
+					EadService.deleteFromQueue(queueItem);
+				} catch (Exception e) {
+					LOGGER.error(e.getMessage(), e);
+				}
 			}
 		}
 		return SUCCESS;
 	}
 
 	public String deleteAllUnusedUploadFiles() throws Exception {
-		EadService.deleteAllUnusedUploadFiles();
+		if(SecurityContext.get().isAdmin())
+			EadService.deleteAllUnusedUploadFiles();
 		return SUCCESS;
 	}
 
 	public String forceSolrCommit() throws Exception {
-		try {
-			SolrUtil.forceSolrCommit();
-		} catch (Exception de) {
-			LOGGER.error(de.getMessage(), de);
+		if(SecurityContext.get().isAdmin()) {
+			try {
+				SolrUtil.forceSolrCommit();
+			} catch (Exception de) {
+				LOGGER.error(de.getMessage(), de);
+			}
 		}
 		return SUCCESS;
 	}
 
 	public String solrOptimize() throws Exception {
-		try {
-			SolrUtil.solrOptimize();
-		} catch (Exception de) {
-			LOGGER.error(de.getMessage(), de);
+		if(SecurityContext.get().isAdmin()) {
+			try {
+				SolrUtil.solrOptimize();
+			} catch (Exception de) {
+				LOGGER.error(de.getMessage(), de);
+			}
 		}
 		return SUCCESS;
 	}
 	
 	public String republishAllEagFiles(){
-		
+		if(SecurityContext.get().isAdmin()) {
 			EagSolrPublisher publisher = new EagSolrPublisher();
 			try {
 				publisher.deleteEverything();
-			}catch(Exception e){
+			} catch (Exception e) {
 				LOGGER.error(e.getMessage(), e);
-			}	
+			}
 			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsWithRepositoryCode();
-			for (ArchivalInstitution archivalInstitution: archivalInstitutions){
+			for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
 				try {
-				LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
-				XmlEagParser.parseAndPublish(archivalInstitution);
-				}catch(Exception e){
+					LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
+					XmlEagParser.parseAndPublish(archivalInstitution);
+				} catch (Exception e) {
 					LOGGER.error(e.getMessage(), e);
-				}	
+				}
 			}
-
+		}
 		return SUCCESS;
 	}
 	public String rebuildAutosuggestion() throws SolrServerException{
-		SolrUtil.rebuildAutosuggestion();
+		if(SecurityContext.get().isAdmin())
+			SolrUtil.rebuildAutosuggestion();
 		return SUCCESS;		
 	}
 	public String changeMaintenanceMode(){
-		if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
-			APEnetUtilities.getDashboardConfig().setMaintenanceMode(false);
-			ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_DEACTIVATE);
-		}else {
-			APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
-			ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_ACTIVATE);
+		if(SecurityContext.get().isAdmin()) {
+			if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()) {
+				APEnetUtilities.getDashboardConfig().setMaintenanceMode(false);
+				ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_DEACTIVATE);
+			} else {
+				APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
+				ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_ACTIVATE);
+			}
 		}
 		return SUCCESS;
 	}
 	public String startStopQueue() {
-		if (QueueDaemon.isActive()) {
-			QueueDaemon.stop();
-		} else {
-			QueueDaemon.start();
+		if(SecurityContext.get().isAdmin()) {
+			if (QueueDaemon.isActive()) {
+				QueueDaemon.stop();
+			} else {
+				QueueDaemon.start();
+			}
 		}
 		return SUCCESS;
 	}

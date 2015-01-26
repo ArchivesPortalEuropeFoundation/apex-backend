@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import eu.apenet.dashboard.security.SecurityContext;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -90,6 +91,7 @@ public class ManageHarvestAction extends AbstractAction {
     public String manageHarvestItem(){
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
+		boolean isAdmin = SecurityContext.get().isAdmin();
     	if ("NOW".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setNewHarvesting(new Date());
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
@@ -102,7 +104,7 @@ public class ManageHarvestAction extends AbstractAction {
     	}else if ("ENABLE".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setEnabled(true);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
-    	}else if ("DELETE".equals(selectedAction)){
+    	}else if ("DELETE".equals(selectedAction) && isAdmin){
 			if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
 				String[] items = DataHarvester.getErrorResponsePaths(archivalInstitutionOaiPmh);
 				for (String item: items){
@@ -114,7 +116,7 @@ public class ManageHarvestAction extends AbstractAction {
 				}
 			}
     		archivalInstitutionOaiPmhDAO.delete(archivalInstitutionOaiPmh);
-    	}else if ("FULL".equals(selectedAction)){
+    	}else if ("FULL".equals(selectedAction) && isAdmin){
     		archivalInstitutionOaiPmh.setFrom(null);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}else if ("DELAY".equals(selectedAction)){
@@ -133,10 +135,10 @@ public class ManageHarvestAction extends AbstractAction {
     		newHarvestingDate = new Date(newHarvestingDate.getTime() + ArchivalInstitutionOaiPmh.ONE_DAY);
     		archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
-    	}else if ("INTERVAL_LOCK".equals(selectedAction)){
+    	}else if ("INTERVAL_LOCK".equals(selectedAction) && isAdmin){
     		archivalInstitutionOaiPmh.setLocked(true);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
-    	}else if ("INTERVAL_UNLOCK".equals(selectedAction)){
+    	}else if ("INTERVAL_UNLOCK".equals(selectedAction) && isAdmin){
     		archivalInstitutionOaiPmh.setLocked(false);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}else if ("INTERVAL_DECREASE".equals(selectedAction)){

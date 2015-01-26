@@ -11,7 +11,7 @@ public class IndexAction extends AbstractAction {
     public String execute() throws Exception {
 		SecurityContext securityContext = SecurityContext.get();
         if(securityContext != null){
-			if (securityContext.isAdmin()) {
+			if (securityContext.isAdminOrCoordinator()) {
 				return "success_admin";
 			} else if (securityContext.isCountryManager()) {
 				this.removeInvalidEAG(securityContext.getSelectedInstitution());

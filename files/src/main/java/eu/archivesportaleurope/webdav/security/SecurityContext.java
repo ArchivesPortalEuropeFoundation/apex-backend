@@ -32,7 +32,7 @@ public final class SecurityContext{
 	protected SecurityContext(User partner, boolean webdav) {
 		this.webdav = webdav;
 		role = partner.getUserRole().getRole();
-		if (!UserRole.ROLE_ADMIN.equals(role)) {
+		if (!isAdminOrCoordinator()) {
 			countryId = partner.getCountryId();
 			countryName = partner.getCountry().getCname();
 			countryIsoname = partner.getCountry().getIsoname();
@@ -94,6 +94,9 @@ public final class SecurityContext{
 	public boolean isCountryManager() {
 		return UserRole.ROLE_COUNTRY_MANAGER.equals(role);
 	}
+	public boolean isCountryManagerCoordinator() {
+		return UserRole.ROLE_COUNTRY_MANAGER_COORDINATOR.equals(role);
+	}
 
 	public boolean isInstitutionManager() {
 		return UserRole.ROLE_INSTITUTION_MANAGER.equals(role);
@@ -101,6 +104,9 @@ public final class SecurityContext{
 
 	public boolean isAdmin() {
 		return UserRole.ROLE_ADMIN.equals(role);
+	}
+	public boolean isAdminOrCoordinator() {
+		return UserRole.ROLE_ADMIN.equals(role) || UserRole.ROLE_COUNTRY_MANAGER_COORDINATOR.equals(role);
 	}
 
 	@Override
@@ -132,7 +138,7 @@ public final class SecurityContext{
 		if (parent != null) {
 			result += " (" + parent.toString() + ") ";
 		}
-		if (!isAdmin()){
+		if (!isAdminOrCoordinator()){
 			result += " - " + countryIsoname  + " ";
 			result += " - ";
 		}

@@ -92,7 +92,7 @@ public abstract class AbstractResource implements CopyableResource, DeletableRes
 
 	protected static boolean acceptRead(File file) {
 		SecurityContext securityContext = getSecurityContext();
-		if (securityContext.isAdmin()) {
+		if (securityContext.isAdminOrCoordinator()) {
 			return true;
 		} else {
 			// make relative path

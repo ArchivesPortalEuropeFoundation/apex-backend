@@ -79,7 +79,7 @@ public final class SecurityService {
 			if (loginPartner != null) {
 				if (loginPartner.isActive()) {
 					context = new SecurityContext(loginPartner, true);
-					if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()&& !context.isAdmin()) {
+					if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()&& !context.isAdminOrCoordinator()) {
 						context = null;
 						type = LoginResultType.MAINTENANCE_MODE;
 						LOGGER.info("User login tried with username: " + username + " when in maintenance mode");
@@ -119,7 +119,7 @@ public final class SecurityService {
 		SecurityContext currentSecurityContext = SecurityContext.get();
 		SecurityContext context = null;
 		LoginResultType type = null;
-		if (currentSecurityContext != null && currentSecurityContext.isAdmin()) {
+		if (currentSecurityContext != null && currentSecurityContext.isAdminOrCoordinator()) {
 			User partner = DAOFactory.instance().getUserDAO().findById(partnerId);
 			// create security context;
 
@@ -149,10 +149,9 @@ public final class SecurityService {
 		SecurityContext context = null;
 		LoginResultType type = null;
 		if (currentSecurityContext != null
-				&& (currentSecurityContext.isAdmin() || currentSecurityContext.isCountryManager())) {
+				&& (currentSecurityContext.isAdminOrCoordinator() || currentSecurityContext.isCountryManager())) {
 			ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-			ArchivalInstitution ai = new ArchivalInstitution();
-			ai = aiDao.getArchivalInstitution(selectedAiId);
+			ArchivalInstitution ai = aiDao.getArchivalInstitution(selectedAiId);
 			User partner = ai.getPartner();
 			// create security context;
 			context = new SecurityContext(partner, currentSecurityContext);

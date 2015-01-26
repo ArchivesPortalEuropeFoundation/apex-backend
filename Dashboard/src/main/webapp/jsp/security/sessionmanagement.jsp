@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags"%>
+<dashboard:securityContext var="securityContext" />
 <div >  
 	<table class="defaultlayout">
 		<tr>
@@ -41,10 +43,14 @@
 			</td>
 			<td><c:if test="${sessionInfo.webdav }"><s:text name="admin.sessionmanagement.usewebdav"/></c:if> </td>
 
-			<td><s:form action="deleteSession" theme="simple"> 
-				<input type="hidden" name="sessionId" value="${sessionInfo.sessionId}"/>
-				<s:submit key="admin.sessionmanagement.delete"></s:submit>
-			</s:form></td>
+			<td>
+				<c:if test="${securityContext.admin}">
+					<s:form action="deleteSession" theme="simple">
+						<input type="hidden" name="sessionId" value="${sessionInfo.sessionId}"/>
+						<s:submit key="admin.sessionmanagement.delete"></s:submit>
+					</s:form>
+				</c:if>
+			</td>
 		</tr>
 	</c:forEach>
 	</table>

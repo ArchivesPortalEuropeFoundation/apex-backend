@@ -109,7 +109,7 @@ public class TopicsAction extends AbstractAction {
 	/** ACTIONS **/
 	
 	public String execute(){
-		if(SecurityContext.get()!=null && SecurityContext.get().isAdmin()){
+		if(SecurityContext.get()!=null && SecurityContext.get().isAdminOrCoordinator()){
 			TopicDAO topicDAO = DAOFactory.instance().getTopicDAO();
 			if(topicDAO!=null){
 				this.adminTopics = topicDAO.findAll();
@@ -123,7 +123,7 @@ public class TopicsAction extends AbstractAction {
 	}
 	
 	public String store(){
-		if(SecurityContext.get()!=null && SecurityContext.get().isAdmin()){
+		if(SecurityContext.get()!=null && SecurityContext.get().isAdminOrCoordinator()){
 			Topic adminTopic = null;
 			TopicDAO topicDAO = DAOFactory.instance().getTopicDAO();
 			if(this.topicId!=null && this.topicId.matches("\\d*")){
@@ -170,7 +170,7 @@ public class TopicsAction extends AbstractAction {
 	}
 	
 	public String createOrEdit(){
-		if(SecurityContext.get()!=null && SecurityContext.get().isAdmin()){
+		if(SecurityContext.get()!=null && SecurityContext.get().isAdminOrCoordinator()){
 			if(this.topicId!=null && this.topicId.matches("\\d*")){
 				Topic adminTopic = DAOFactory.instance().getTopicDAO().findById(Long.parseLong(this.topicId));
 				if(adminTopic!=null){
@@ -185,7 +185,7 @@ public class TopicsAction extends AbstractAction {
 	}
 	
 	public String delete(){
-		if(SecurityContext.get()!=null && SecurityContext.get().isAdmin()){
+		if(SecurityContext.get()!=null && SecurityContext.get().isAdminOrCoordinator()){
 			if(this.topicId!=null && this.topicId.matches("\\d*")){
 				Topic topic = null;
 				try{
