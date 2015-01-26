@@ -7,13 +7,11 @@ package eu.apenet.dashboard.actions;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dashboard.ead2ese.EAD2ESEConverter;
-import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
+import eu.apenet.dashboard.ead2edm.EAD2EDMConverter;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ese;
-import eu.apenet.persistence.vo.FindingAid;
 import java.util.List;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -54,7 +52,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
 
             if (ese.getPathHtml() == null) {
                 try {
-                    EAD2ESEConverter.generateHtml(ese);
+                    EAD2EDMConverter.generateHtml(ese);
                 } catch (TransformerException e) {
                     logger.error(e.getMessage(), e);
                     getServletResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create html files.");
@@ -62,7 +60,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
             }
             if (ese.getPathHtml() != null) {
                 logger.info(APEnetUtilities.getConfig().getRepoDirPath() + ", " + ese.getPathHtml());
-                File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml());
+                File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml());
                 if (!file.exists()) {
                     // Do your thing if the file appears to be non-existing.
                     // Throw an exception, or send 404, or show default/warning
@@ -76,7 +74,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
                         write(file, getServletResponse());
                     } else {
                         File parentDir = file.getParentFile();
-                        File subHtmlFile = EseFileUtils.getFile(parentDir, path);
+                        File subHtmlFile = EdmFileUtils.getFile(parentDir, path);
                         if (!subHtmlFile.exists()) {
                             // Do your thing if the file appears to be
                             // non-existing.

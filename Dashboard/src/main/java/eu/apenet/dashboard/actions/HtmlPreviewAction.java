@@ -6,7 +6,7 @@ package eu.apenet.dashboard.actions;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
@@ -36,7 +36,7 @@ public class HtmlPreviewAction extends AbstractInstitutionAction {
         if (NumberUtils.isNumber(getEseId())) {
             ese = dao.findById(NumberUtils.toInt(getEseId()));
         }
-        File outputFile = EseFileUtils.getFile(EseFileUtils.getOutputHTMLDir(APEnetUtilities.getConfig().getRepoDirPath(), ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId()), getPath());
+        File outputFile = EdmFileUtils.getFile(EdmFileUtils.getOutputHTMLDir(APEnetUtilities.getConfig().getRepoDirPath(), ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId()), getPath());
         write(outputFile, getServletResponse());
         return SUCCESS;
     }

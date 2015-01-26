@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.ead2ese;
+package eu.apenet.dashboard.ead2edm;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,12 +9,12 @@ import org.apache.commons.lang.math.NumberUtils;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 
-public class DownloadEseXmlAction extends AbstractInstitutionAction {
+public class DownloadEdmXmlAction extends AbstractInstitutionAction {
 
 	/**
 	 * 
@@ -38,7 +38,7 @@ public class DownloadEseXmlAction extends AbstractInstitutionAction {
 			List<Ese> eses = dao.getEses(NumberUtils.toInt(id), getAiId());
 			if (eses.size() > 0) {
 				Ese ese = eses.get(0);
-				File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
+				File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
 				ContentUtils.downloadXml(getServletRequest(), getServletResponse(), file);
 
 			}

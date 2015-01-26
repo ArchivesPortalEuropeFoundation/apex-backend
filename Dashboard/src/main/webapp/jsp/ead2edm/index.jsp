@@ -34,7 +34,7 @@
 						<br />
 					</c:forEach></td>
 					<td><c:forEach var="ese" items="${findingAid.eses}">
-						<s:a action="downloadEse">Download
+						<s:a action="downloadEdm">Download
 							    <s:param name="eseId">
 								<c:out value="${ese.eseId}" />
 							</s:param>

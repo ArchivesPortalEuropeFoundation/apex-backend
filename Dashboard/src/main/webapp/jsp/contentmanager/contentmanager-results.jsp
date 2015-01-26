@@ -58,7 +58,7 @@
                     <s:text name="content.message.publish" />
                 </option>
                 <c:if test="${results.findingAid}">
-                    <option value="displayEseConvert">
+                    <option value="displayEdmConvert">
                         <s:text name="content.message.convert.ese" />
                     </option>
                     <option value="deliverToEuropeana">
@@ -386,7 +386,7 @@
                                         <c:if test="${results.findingAid}">
                                             <c:if
                                                 test="${eadResult.validated and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana and not eadResult.noEuropeanaCandidate}">
-                                                <option value="_self|displayEseConvert.action">
+                                                <option value="_self|displayEdmConvert.action">
                                                     <s:text name="content.message.convert.ese" />
                                                 </option>
                                             </c:if>
@@ -402,7 +402,7 @@
                                                 </option>
                                             </c:if>--%>
                                             <c:if test="${eadResult.hasEseEdmFiles}">
-                                                <option value="_self|downloadEse.action">
+                                                <option value="_self|downloadEdm.action">
                                                     <s:text name="content.message.download.ese" />
                                                 </option>
                                             </c:if>

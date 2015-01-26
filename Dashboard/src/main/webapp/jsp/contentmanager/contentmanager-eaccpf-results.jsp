@@ -44,7 +44,7 @@
                 <option value="publish">
                     <s:text name="content.message.publish" />
                 </option><%--
-                <option value="displayEseConvert">
+                <option value="displayEdmConvert">
                     <s:text name="content.message.convert.ese" />
                 </option>
                 <option value="deliverToEuropeana">
@@ -283,7 +283,7 @@
                                         </c:if>
                                         <%--<c:if
                                             test="${eacCpfResult.validated and not eacCpfResult.convertedToEseEdm and not eacCpfResult.deliveredToEuropeana}">
-                                            <option value="_self|displayEseConvert.action">
+                                            <option value="_self|displayEdmConvert.action">
                                                 <s:text name="content.message.convert.ese" />
                                             </option>
                                         </c:if>
@@ -294,7 +294,7 @@
                                             <option value="_blank|previewEdm.action">
                                                 <s:text name="content.message.preview.ese" />
                                             </option>
-                                            <option value="_self|downloadEse.action">
+                                            <option value="_self|downloadEdm.action">
                                                 <s:text name="content.message.download.ese" />
                                             </option>
                                             <option value="action|deleteEseEdm">

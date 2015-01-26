@@ -9,7 +9,7 @@
             validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
             httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
             eadActions, batchEadActions, removeEseForFA, displayProfile, applyProfile, showEadReport,
-            displayEseConvert, processEseConvert, showEdmReport, showwarnings, download, link, removeLink, preview, downloadEse,
+            displayEdmConvert, processEdmConvert, showEdmReport, showwarnings, download, link, removeLink, preview, downloadEdm,
             batchAction, previewEdm, htmlPreview,
             displayConvertEseBatch, startConvertEseBatch,
             generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,

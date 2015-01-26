@@ -586,15 +586,15 @@
             <result name="cancel" type="tiles">indexLandscape</result>
         </action>
 
-        <action name="displayEseConvert" class="eu.apenet.dashboard.ead2ese.ConvertAction" method="input" >
-            <result name="success" type="tiles">ead2ese.convert</result>
-            <result name="input" type="tiles">ead2ese.convert</result>
+        <action name="displayEdmConvert" class="eu.apenet.dashboard.ead2edm.ConvertAction" method="input" >
+            <result name="success" type="tiles">ead2edm.convert</result>
+            <result name="input" type="tiles">ead2edm.convert</result>
         </action>
 
 
 
-        <action name="processEseConvert" class="eu.apenet.dashboard.ead2ese.ConvertAction">
-            <result name="input" type="tiles">ead2ese.convert</result>
+        <action name="processEdmConvert" class="eu.apenet.dashboard.ead2edm.ConvertAction">
+            <result name="input" type="tiles">ead2edm.convert</result>
             <result name="success" type="redirectAction">
                 <param name="actionName">contentmanager</param>
             </result>
@@ -626,7 +626,7 @@
             </result>
         </action>
 
-        <action name="downloadEse" class="eu.apenet.dashboard.ead2ese.DownloadEseXmlAction">
+        <action name="downloadEdm" class="eu.apenet.dashboard.ead2edm.DownloadEdmXmlAction">
             <result name="download" type="stream">
                 <param name="contentType">application/file-download</param>
                 <param name="contentCharSet">UTF-8</param>
@@ -637,8 +637,8 @@
             </result>
         </action>
 
-        <action name="showEdmReport" class="eu.apenet.dashboard.ead2ese.GenerateEdmReportAction">
-            <result name="success">/jsp/ead2ese/edmreport.jsp</result>
+        <action name="showEdmReport" class="eu.apenet.dashboard.ead2edm.GenerateEdmReportAction">
+            <result name="success">/jsp/ead2edm/edmreport.jsp</result>
         </action>
 
         <action name="editEad" class="eu.apenet.dashboard.actions.ajax.EditEadAction">
@@ -1055,7 +1055,7 @@
             <!--<result name="error">/jsp/eadcontent/error.jsp</result>-->
         </action>
         <action name="htmlPreview" class="eu.apenet.dashboard.actions.HtmlPreviewAction">
-            <result name="success">/jsp/ead2ese/edmpreview.jsp</result>
+            <result name="success">/jsp/ead2edm/edmpreview.jsp</result>
         </action>
 
         <action name="automaticharvestingcreation" class="eu.apenet.dashboard.harvest.AutomaticHarvestingCreationAction">

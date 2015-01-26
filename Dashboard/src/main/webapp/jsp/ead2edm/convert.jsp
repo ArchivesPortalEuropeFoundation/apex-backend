@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/ead2ese/ead2ese.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/ead2edm/ead2edm.css" type="text/css"/>
 
 <script type='text/javascript'>
     $(function() {
@@ -310,7 +310,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <s:submit id="processEDMConvert" action="processEseConvert" key="ead2ese.label.next" cssClass="mainButton"/>
+                <s:submit id="processEDMConvert" action="processEdmConvert" key="ead2ese.label.next" cssClass="mainButton"/>
                 <s:submit id="cancelEDMConvert" action="contentmanager" key="ead2ese.label.cancel" />
             </td>
         </tr>
