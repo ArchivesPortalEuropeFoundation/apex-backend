@@ -1,14 +1,9 @@
 package eu.apenet.dashboard.services.ead.xml.stream.publish;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -16,13 +11,14 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
-import eu.archivesportaleurope.xml.xpath.AttributeXpathHandler;
-import eu.archivesportaleurope.xml.xpath.CountXpathHandler;
-import eu.archivesportaleurope.xml.xpath.StringXpathHandler;
-import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
-import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
+import eu.archivesportaleurope.xml.ApeXmlUtil;
+import eu.archivesportaleurope.xml.xpath.AbstractXpathReader;
+import eu.archivesportaleurope.xml.xpath.handler.AttributeXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.CountXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.StringXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.TextXpathHandler;
 
-public class EadPublishDataFiller {
+public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublishData> {
 	//private static final Logger LOGGER = Logger.getLogger(EadPublishDataFiller.class);
 	/*
 	 * unitids
@@ -56,15 +52,9 @@ public class EadPublishDataFiller {
 	private AttributeXpathHandler daoRoleHandler;
 	private AttributeXpathHandler extrefHandler;
 
-	private AttributeXpathHandler globalLanguageHandler;
-	private List<XmlStreamHandler> archdescClevelHandlers = new ArrayList<XmlStreamHandler>();
-	private List<XmlStreamHandler> eadHandlers = new ArrayList<XmlStreamHandler>();
-	private boolean archDescCLevelParser = false;
 	private final static List<String> POSSIBLE_ROLE_DAO_VALUES = Arrays.asList(SolrValues.ROLE_DAOS_ALL);
 	
-	public EadPublishDataFiller(boolean archDescCLevelParser) {
-		this.archDescCLevelParser = archDescCLevelParser;
-		if (archDescCLevelParser) {
+	protected void internalInit() throws Exception {
 			/*
 			 * unitids
 			 */
@@ -118,63 +108,20 @@ public class EadPublishDataFiller {
 			controlAccessHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
 			"subject" });
 
-			archdescClevelHandlers.add(unitidHandler);
-			archdescClevelHandlers.add(otherUnitidHandler);
-			archdescClevelHandlers.add(unittitleHandler);
-			archdescClevelHandlers.add(scopecontentHandler);
-			archdescClevelHandlers.add(unitdateHandler);
-			archdescClevelHandlers.add(unitdateNormalHander);
-			archdescClevelHandlers.add(didOtherHandler);
-			archdescClevelHandlers.add(otherHandler);
-			archdescClevelHandlers.add(countDaoHandler);
-			archdescClevelHandlers.add(langmaterialHander);
-			archdescClevelHandlers.add(daoRoleHandler);
-			archdescClevelHandlers.add(extrefHandler);
-			archdescClevelHandlers.add(controlAccessHandler);
-		} else {
-			globalLanguageHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "ead",
-					"eadheader", "profiledesc", "langusage", "language" }, "langcode");
-			eadHandlers.add(globalLanguageHandler);
-		}
+			getXpathHandlers().add(unitidHandler);
+			getXpathHandlers().add(otherUnitidHandler);
+			getXpathHandlers().add(unittitleHandler);
+			getXpathHandlers().add(scopecontentHandler);
+			getXpathHandlers().add(unitdateHandler);
+			getXpathHandlers().add(unitdateNormalHander);
+			getXpathHandlers().add(didOtherHandler);
+			getXpathHandlers().add(otherHandler);
+			getXpathHandlers().add(countDaoHandler);
+			getXpathHandlers().add(langmaterialHander);
+			getXpathHandlers().add(daoRoleHandler);
+			getXpathHandlers().add(extrefHandler);
+			getXpathHandlers().add(controlAccessHandler);
 
-	}
-
-	public void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-		if (archDescCLevelParser) {
-			for (XmlStreamHandler handler : archdescClevelHandlers) {
-				handler.processCharacters(xpathPosition, xmlReader);
-			}
-		} else {
-			for (XmlStreamHandler handler : eadHandlers) {
-				handler.processCharacters(xpathPosition, xmlReader);
-			}
-		}
-
-	}
-
-	public void processStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-		if (archDescCLevelParser) {
-			for (XmlStreamHandler handler : archdescClevelHandlers) {
-				handler.processStartElement(xpathPosition, xmlReader);
-			}
-		} else {
-			for (XmlStreamHandler handler : eadHandlers) {
-				handler.processStartElement(xpathPosition, xmlReader);
-			}
-		}
-
-	}
-
-	public void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-		if (archDescCLevelParser) {
-			for (XmlStreamHandler handler : archdescClevelHandlers) {
-				handler.processEndElement(xpathPosition, xmlReader);
-			}
-		} else {
-			for (XmlStreamHandler handler : eadHandlers) {
-				handler.processEndElement(xpathPosition, xmlReader);
-			}
-		}
 	}
 
 	public void fillData(EadPublishData publishData, CLevel clevel) {
@@ -187,15 +134,8 @@ public class EadPublishDataFiller {
 	}
 
 	public void fillData(EadPublishData publishData, EadContent eadContent) {
-		if (archDescCLevelParser) {
-			//System.out.println("---archdesc----");
 			fillData(publishData);
 			eadContent.setUnittitle(publishData.getFirstUnittitle());
-
-			// eadContent.setUnitid(publishData.getUnitid());
-		} else {
-			publishData.setGlobalLanguage(globalLanguageHandler.getResultAsStringWithWhitespace());
-		}
 	}
 
 	public void fillData(EadPublishData publishData) {
@@ -228,7 +168,7 @@ public class EadPublishDataFiller {
 	}
 	private void add(StringBuilder other, String item){
 		if (StringUtils.isNotBlank(item)){
-			other.append(StringXpathHandler.WHITE_SPACE + item);
+			other.append(ApeXmlUtil.WHITE_SPACE + item);
 		}
 	}
 }

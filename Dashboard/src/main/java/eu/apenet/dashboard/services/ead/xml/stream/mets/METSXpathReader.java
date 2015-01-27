@@ -1,24 +1,19 @@
 package eu.apenet.dashboard.services.ead.xml.stream.mets;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 
 import eu.apenet.dashboard.services.ead.xml.stream.mets.xpath.FileXpathHandler;
 import eu.apenet.dashboard.services.ead.xml.stream.mets.xpath.MetsFile;
 import eu.apenet.dashboard.services.ead.xml.stream.mets.xpath.StructMapDiv;
 import eu.apenet.dashboard.services.ead.xml.stream.mets.xpath.StructMapDivXpathHandler;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
-import eu.archivesportaleurope.xml.xpath.AttributeXpathHandler;
-import eu.archivesportaleurope.xml.xpath.NestedXpathHandler;
-import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
-import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
+import eu.archivesportaleurope.xml.xpath.AbstractXpathReader;
+import eu.archivesportaleurope.xml.xpath.handler.AttributeXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.NestedXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.TextXpathHandler;
 
-public class METSXpathReader {
+public class METSXpathReader extends AbstractXpathReader<MetsInfo> {
 
 	private NestedXpathHandler defaultFileGrpHandler;
 	private NestedXpathHandler thumbsFileGrpHandler;
@@ -35,10 +30,9 @@ public class METSXpathReader {
 	private TextXpathHandler rightsDeclarationHandler;
 	private TextXpathHandler rightsHolderHandler;
 	private TextXpathHandler rightsCommentsHandler;
-	private List<XmlStreamHandler> metsHandlers = new ArrayList<XmlStreamHandler>();
 	
 
-	public METSXpathReader() {
+	protected void internalInit() {
 		defaultFileGrpHandler = new NestedXpathHandler(ApeXMLConstants.METS_NAMESPACE,  new String[] { "mets", "fileSec","fileGrp"});
 		defaultFileGrpHandler.setAttribute("USE", "DEFAULT", false);
 		thumbsFileGrpHandler = new NestedXpathHandler(ApeXMLConstants.METS_NAMESPACE,  new String[] { "mets", "fileSec","fileGrp"});
@@ -49,8 +43,8 @@ public class METSXpathReader {
 		thumbsFileHandler = new FileXpathHandler();
 		thumbsFileGrpHandler.getHandlers().add(thumbsFileHandler);
 		
-		metsHandlers.add(defaultFileGrpHandler);
-		metsHandlers.add(thumbsFileGrpHandler);
+		getXpathHandlers().add(defaultFileGrpHandler);
+		getXpathHandlers().add(thumbsFileGrpHandler);
 		
 		
 		structMapHandler = new NestedXpathHandler(ApeXMLConstants.METS_NAMESPACE,  new String[] { "mets", "structMap"});
@@ -63,8 +57,8 @@ public class METSXpathReader {
 		rightsConstraintsHandler =new TextXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD", "Context", "Constraints","ConstraintDescription"}, true);
 		rightsHolderHandler =new TextXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD", "RightsHolder", "RightsHolderName"}, true);
 		rightsCommentsHandler =new TextXpathHandler(ApeXMLConstants.METS_RIGHTS_NAMESPACE, new String[] { "RightsDeclarationMD", "RightsHolder", "RightsHolderComments"}, true);
-		metsHandlers.add(structMapHandler);
-		metsHandlers.add(xmlDataHandler);
+		getXpathHandlers().add(structMapHandler);
+		getXpathHandlers().add(xmlDataHandler);
 		xmlDataHandler.getHandlers().add(rightsCategoryHandler);
 		xmlDataHandler.getHandlers().add(rightsOtherCategoryHandler);
 		xmlDataHandler.getHandlers().add(rightsHolderHandler);
@@ -75,27 +69,6 @@ public class METSXpathReader {
 		structMapHandler.getHandlers().add(structMapDivXpathHandler);
 	}
 
-	public void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-			for (XmlStreamHandler handler : metsHandlers) {
-				handler.processCharacters(xpathPosition, xmlReader);
-			}
-
-
-	}
-
-	public void processStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-			for (XmlStreamHandler handler : metsHandlers) {
-				handler.processStartElement(xpathPosition, xmlReader);
-			}
-
-	}
-
-	public void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-			for (XmlStreamHandler handler : metsHandlers) {
-				handler.processEndElement(xpathPosition, xmlReader);
-			}
-
-	}
 
 
 	public MetsInfo getData() throws METSParserException {
