@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns="http://archivesportaleurope.net/schemas/test" xmlns:xlink="http://www.w3.org/1999/xlink">
+	  <c>
+	  	<did>
+	  		<unitid type="former call number">unitid1-old</unitid>
+	  		<unitid type="call number">unitid1</unitid>
+	  		<unittitle>Test item 1</unittitle>
+	  	</did>
+	  </c>
+	  <c>
+	  	<did>
+	  		<unitid type="former call number">unitid2-old</unitid>
+	  		<unitid type="call number">unitid2</unitid>
+	  		<unitid xlink:href="test">unitid2<p>hello<b>tester</b></p>-old1</unitid>
+	  		<unittitle>Test item 2</unittitle>
+	  		<other>Other info</other>
+	  	</did>
+	  		  <c>
+		  	<did>
+		  		<unitid type="former call number">unitid2-old</unitid>
+		  		<unitid type="call number">unitid2</unitid>
+		  		<unitid xlink:href="test">unitid2<p>hello<b>tester</b></p>-old1</unitid>
+		  		<unittitle>Test item 2</unittitle>
+		  		<other>Other info</other>
+		  	</did>
+		  </c>	
+	  </c>	  
+</ead>
