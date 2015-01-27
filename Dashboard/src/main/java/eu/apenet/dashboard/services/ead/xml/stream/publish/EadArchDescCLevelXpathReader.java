@@ -12,7 +12,6 @@ import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
 import eu.archivesportaleurope.xml.ApeXmlUtil;
-import eu.archivesportaleurope.xml.TestConstants;
 import eu.archivesportaleurope.xml.xpath.AbstractXpathReader;
 import eu.archivesportaleurope.xml.xpath.handler.AttributeXpathHandler;
 import eu.archivesportaleurope.xml.xpath.handler.CountXpathHandler;
@@ -102,7 +101,7 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 					"langmaterial", "language" }, "langcode");
 			daoRoleHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
 					new String[] { "did", "dao" }, ApeXMLConstants.XLINK_NAMESPACE, "role");
-			daoRoleHandler.setAttribute(TestConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
+			daoRoleHandler.setAttribute(ApeXMLConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
 
 			extrefHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "otherfindaid",
 					"p", "extref" }, ApeXMLConstants.XLINK_NAMESPACE, "href");
