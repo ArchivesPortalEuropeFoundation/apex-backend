@@ -19,8 +19,9 @@ import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dashboard.services.ead.xml.XMLStreamWriterHolder;
+import eu.apenet.dashboard.services.ead.xml.stream.publish.EadArchDescCLevelXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishDataFiller;
+import eu.apenet.dashboard.services.ead.xml.stream.publish.EadGlobalXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
@@ -60,7 +61,8 @@ public class XmlCLevelParser extends AbstractParser {
 		EADCounts eadCounts = new EADCounts();
 		Long clId = null;
 		QName lastElement = null;
-		EadPublishDataFiller publishDataFiller = new EadPublishDataFiller(true);
+		EadArchDescCLevelXpathReader publishDataFiller = new EadArchDescCLevelXpathReader();
+		publishDataFiller.init();
 		int event =  xmlReader.next();
 		while(!foundEndElement && event != XMLStreamConstants.END_DOCUMENT){
 			if (event == XMLStreamConstants.START_ELEMENT) {

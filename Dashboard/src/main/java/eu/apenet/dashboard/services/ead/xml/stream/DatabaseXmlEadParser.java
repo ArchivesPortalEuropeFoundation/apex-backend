@@ -26,8 +26,9 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.database.EadDatabaseSaver;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
+import eu.apenet.dashboard.services.ead.xml.stream.publish.EadArchDescCLevelXpathReader;
+import eu.apenet.dashboard.services.ead.xml.stream.publish.EadGlobalXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishDataFiller;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -119,8 +120,10 @@ public class DatabaseXmlEadParser {
 		LinkedList<QName> archdescXpathPosition = new LinkedList<QName>();
 		LinkedList<QName> fullXpathPosition = new LinkedList<QName>();
 		boolean inArchdesc = false;
-		EadPublishDataFiller archDescParser = new EadPublishDataFiller(true);
-		EadPublishDataFiller fullEadParser = new EadPublishDataFiller(false);
+		EadArchDescCLevelXpathReader archDescParser = new EadArchDescCLevelXpathReader();
+		EadGlobalXpathReader fullEadParser = new EadGlobalXpathReader();
+		fullEadParser.init();
+		archDescParser.init();
 		for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlReader.getName();
