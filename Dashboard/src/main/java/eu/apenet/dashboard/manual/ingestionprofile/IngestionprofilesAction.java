@@ -482,6 +482,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-f/", getText("ead2ese.content.license.europeana.access.free")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/orphan-work-eu/", this.getText("ead2ese.content.license.europeana.access.orphan")));
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
+        this.europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/unknown/", this.getText("content.message.rights.unknown")));
 
         if(DAOFactory.instance().getXslUploadDAO().hasXslUpload(getAiId())) {
             List<XslUpload> xslUploads = DAOFactory.instance().getXslUploadDAO().getXslUploads(getAiId());
