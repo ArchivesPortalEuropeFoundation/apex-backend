@@ -280,6 +280,19 @@
             <result name="error">/jsp/eadcontent/error.jsp</result>
         </action>
 
+        <action name="generateTreeJSON" class="eu.apenet.dashboard.tree.GenerateTreeJSONAction">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
+
+        <action name="generateTreeJSONWithoutPreface" class="eu.apenet.dashboard.tree.GenerateTreeJSONAction" method="executeNoPreface">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
 
         <action name="download" class="eu.apenet.dashboard.actions.content.ead.EadActions" method="download">
 
