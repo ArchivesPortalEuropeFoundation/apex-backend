@@ -26,7 +26,7 @@ public class METSParser extends AbstractParser {
 	public static MetsInfo parse(File file) throws Exception {
 		try {
 			validateMETS(file);
-				METSXpathReader metsXpathReader = new METSXpathReader();
+			METSXpathReader metsXpathReader = new METSXpathReader();
 			FileInputStream inputStream = new FileInputStream(file);
 			XmlParser.parse(inputStream, metsXpathReader);
 			inputStream.close();
