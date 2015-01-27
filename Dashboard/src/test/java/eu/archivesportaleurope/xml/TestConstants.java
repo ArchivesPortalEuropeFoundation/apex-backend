@@ -12,4 +12,5 @@ public class TestConstants {
 	public static final QName UNITID = new QName(TestConstants.TEST_NAMESPACE, "unitid");
 	public static final QName UNITTITLE = new QName(TestConstants.TEST_NAMESPACE, "unittitle");
 	public static final QName OTHER = new QName(TestConstants.TEST_NAMESPACE, "other");
+	public static final QName DAO = new QName(TestConstants.TEST_NAMESPACE, "dao");
 }

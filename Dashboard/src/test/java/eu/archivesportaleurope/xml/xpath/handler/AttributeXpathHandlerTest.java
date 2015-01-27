@@ -52,6 +52,25 @@ public class AttributeXpathHandlerTest extends AbstractTest {
 		List<String> result = textHandler.getResult();
 		Assert.assertEquals("test", result.get(0));
 	}
+	
+	/**
+	 * Test full existing xpath '/ead/c/did/unitid@type'
+	 * @throws Exception
+	 */
+	@Test
+	public void fullXpathWithNamespaceAndDifferentValues() throws Exception {
+		InputStream inputStream = getInputStream("/eu/archivesportaleurope/xml/xpath/handler/test-file.xml");
+		AttributeXpathHandler textHandler = new AttributeXpathHandler(TestConstants.TEST_NAMESPACE, new String[] {TestConstants.EAD.getLocalPart(), 
+				TestConstants.C.getLocalPart(), TestConstants.DID.getLocalPart(),TestConstants.DAO.getLocalPart()}, TestConstants.XLINK_NAMESPACE, "role");
+		textHandler.setAttribute(TestConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
+		TestAttributeXpathReader xpathReader = new TestAttributeXpathReader(textHandler);
+		XmlParser.parse(inputStream, xpathReader);
+		Assert.assertEquals("IMAGE", textHandler.getFirstResult());
+		Assert.assertEquals(2, textHandler.getResult().size());
+		Assert.assertEquals(1, textHandler.getResultSet().size());
+		List<String> result = textHandler.getResult();
+		Assert.assertEquals("IMAGE", result.get(0));
+	}
 
 	private static class TestAttributeXpathReader extends AbstractXpathReader<String> {
 		private AttributeXpathHandler attributeHandler;
