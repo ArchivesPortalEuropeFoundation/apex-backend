@@ -3,13 +3,8 @@ package eu.apenet.dashboard.services.eag.xml.stream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.log4j.Logger;
 
@@ -18,6 +13,7 @@ import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagPublishData;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.archivesportaleurope.xml.XmlParser;
 
 
 public class XmlEagParser extends AbstractParser {
@@ -30,32 +26,13 @@ public class XmlEagParser extends AbstractParser {
     	EagSolrPublisher solrPublisher = new EagSolrPublisher();
 
 		FileInputStream fileInputStream =  getFileInputStream(archivalInstitution.getEagPath());
-
-		XMLStreamReader xmlReader = getXMLReader(fileInputStream);
-		QName lastElement = null;
-
-		LinkedList<QName> pathPosition = new LinkedList<QName>();
-		EagXpathReader eagParser = new EagXpathReader();
+		EagXpathReader eagXpathReader = new EagXpathReader();
+		
 		try {
-			for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
-				if (event == XMLStreamConstants.START_ELEMENT) {
-					lastElement = xmlReader.getName();
-					add(pathPosition, lastElement);
-					eagParser.processStartElement(pathPosition, xmlReader);
-				} else if (event == XMLStreamConstants.END_ELEMENT) {
-					eagParser.processEndElement(pathPosition, xmlReader);
-					QName elementName = xmlReader.getName();
-					removeLast(pathPosition, elementName);
-				} else if (event == XMLStreamConstants.CHARACTERS) {
-					eagParser.processCharacters(pathPosition, xmlReader);
-				} else if (event == XMLStreamConstants.CDATA) {
-					eagParser.processCharacters(pathPosition, xmlReader);
-				}
-			}
-			xmlReader.close();
+			XmlParser.parse(fileInputStream, eagXpathReader);
 			fileInputStream.close();
 			EagPublishData publishData = new EagPublishData();
-			eagParser.fillData(publishData, archivalInstitution);
+			eagXpathReader.fillData(publishData, archivalInstitution);
 			solrPublisher.publish(archivalInstitution, publishData);
 			solrPublisher.commitSolrDocuments();
 		
@@ -72,43 +49,5 @@ public class XmlEagParser extends AbstractParser {
 	private static FileInputStream getFileInputStream(String path) throws FileNotFoundException, XMLStreamException {
 		File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
 		return new FileInputStream(file);
-	}
-
-	private static XMLStreamReader getXMLReader(FileInputStream fileInputStream) throws FileNotFoundException,
-			XMLStreamException {
-		XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
-		return (XMLStreamReader) inputFactory.createXMLStreamReader(fileInputStream, UTF_8);
-	}
-
-
-	protected static class IndexData {
-		private long startIndex = -1;
-		private long endIndex = -1;
-		private long currentIndex = -1;
-
-		public IndexData(long startIndex, long endIndex) {
-			this.startIndex = startIndex;
-			this.endIndex = endIndex;
-
-		}
-
-		public long getCurrentIndex() {
-			if (currentIndex == -1) {
-				this.currentIndex = startIndex;
-			} else if (currentIndex < (endIndex - 1)) {
-				currentIndex++;
-			}
-			return currentIndex;
-		}
-
-	}
-	private static void add(LinkedList<QName> path, QName qName) {
-		path.add(qName);
-	}
-
-	private static void removeLast(LinkedList<QName> path, QName qName) {
-		if (!path.isEmpty()) {
-			path.removeLast();
-		}
 	}
 }
