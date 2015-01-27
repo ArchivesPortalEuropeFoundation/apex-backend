@@ -35,7 +35,7 @@ public class XmlEagParser extends AbstractParser {
 		QName lastElement = null;
 
 		LinkedList<QName> pathPosition = new LinkedList<QName>();
-		EagPublishDataFiller eagParser = new EagPublishDataFiller();
+		EagXpathReader eagParser = new EagXpathReader();
 		try {
 			for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 				if (event == XMLStreamConstants.START_ELEMENT) {
