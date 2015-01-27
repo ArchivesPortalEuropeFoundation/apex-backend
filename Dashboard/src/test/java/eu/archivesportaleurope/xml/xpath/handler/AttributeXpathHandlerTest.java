@@ -54,7 +54,7 @@ public class AttributeXpathHandlerTest extends AbstractTest {
 	}
 	
 	/**
-	 * Test full existing xpath '/ead/c/did/unitid@type'
+	 * Test full existing xpath '/ead/c/did/dao[not(@xlink:title = 'thumbnail')]/@xlink:role'
 	 * @throws Exception
 	 */
 	@Test
