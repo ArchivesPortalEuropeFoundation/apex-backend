@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apenet.dashboard.ead2ese;
+package eu.apenet.dashboard.ead2edm;
 
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import eu.apenet.commons.utils.APEnetUtilities;

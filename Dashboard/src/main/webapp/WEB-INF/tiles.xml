@@ -936,9 +936,9 @@
         </put-list-attribute>
     </definition>
 
-    <definition name="ead2ese.convert" extends="DefaultLayout">
+    <definition name="ead2edm.convert" extends="DefaultLayout">
         <put-attribute name="title" value="dashboard.convert.title" />
-        <put-attribute name="body" value="/jsp/ead2ese/convert.jsp" />
+        <put-attribute name="body" value="/jsp/ead2edm/convert.jsp" />
         <put-list-attribute name="jsfilesInternal">
 
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>

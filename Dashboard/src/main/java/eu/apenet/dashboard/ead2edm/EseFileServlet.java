@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.ead2ese;
+package eu.apenet.dashboard.ead2edm;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerException;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
-import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
@@ -50,14 +50,14 @@ public class EseFileServlet extends HttpServlet {
 
 			if (ese.getPathHtml() == null) {
 				try {
-					EAD2ESEConverter.generateHtml(ese);
+					EAD2EDMConverter.generateHtml(ese);
 				} catch (TransformerException e) {
 					logger.error(e.getMessage(),e);
 					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create html files.");
 				}
 			}
 			if (ese.getPathHtml() != null) {
-				File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml());
+				File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml());
 				if (!file.exists()) {
 					// Do your thing if the file appears to be non-existing.
 					// Throw an exception, or send 404, or show default/warning
@@ -70,7 +70,7 @@ public class EseFileServlet extends HttpServlet {
 						write(file, response);
 					} else {
 						File parentDir = file.getParentFile();
-						File subHtmlFile = EseFileUtils.getFile(parentDir, path);
+						File subHtmlFile = EdmFileUtils.getFile(parentDir, path);
 						if (!subHtmlFile.exists()) {
 							// Do your thing if the file appears to be
 							// non-existing.

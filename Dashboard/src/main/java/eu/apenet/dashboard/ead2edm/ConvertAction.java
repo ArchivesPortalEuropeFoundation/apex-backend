@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.ead2ese;
+package eu.apenet.dashboard.ead2edm;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
-import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -204,7 +204,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     public String input() throws IOException, SAXException, ParserConfigurationException {
         if (StringUtils.isNotBlank(id)) {
             Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
-            File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
+            File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
                     ead.getPathApenetead());
             Ead2EdmInformation ead2EseInformation = new Ead2EdmInformation(file, "", getAiname());
             textDataProvider = ead2EseInformation.getRepository();

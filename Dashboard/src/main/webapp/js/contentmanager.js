@@ -181,7 +181,7 @@ function performBatchContentAction(type) {
 		json[formData[i].name] = formData[i].value;
 	}
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
-	if (json['action'] == "displayEseConvert") {
+	if (json['action'] == "displayEdmConvert") {
 		window.open(
 				json['action'] + ".action?batchItems=" + json['batchItems'],
 				"_self");
