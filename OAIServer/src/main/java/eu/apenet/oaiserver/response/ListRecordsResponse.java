@@ -48,6 +48,7 @@ public class ListRecordsResponse extends ListIdentifiersResponse {
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "edm", "", "http://www.europeana.eu/schemas/edm/");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "enrichment", "", "http://www.europeana.eu/schemas/edm/enrichment");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "europeana", "", "http://www.europeana.eu/schemas/ese/");
+					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, XMLStreamWriterHolder.XSI_PREFIX, "", XMLStreamWriterHolder.XSI_NAMESPACE);
 					writer.writeAttributeNS(XMLStreamWriterHolder.XSI_PREFIX, XMLStreamWriterHolder.SCHEMA_LOCATION,"", EDM_NAMESPACE + " " + EDM_SCHEMA_LOCATION);
 				}else {
 					writer.writeStartElement(xmlReader);
