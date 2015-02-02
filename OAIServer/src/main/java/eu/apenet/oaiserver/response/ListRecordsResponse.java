@@ -36,18 +36,7 @@ public class ListRecordsResponse extends ListIdentifiersResponse {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				QName elementName = xmlReader.getName();
 				if (elementName.getLocalPart().equals("RDF") && MetadataFormat.EDM.equals(ese.getMetadataFormat())){
-					writer.writeStartElementNS(elementName.getPrefix(), elementName.getLocalPart(), elementName.getNamespaceURI());
-					writer.writeAttribute(XMLStreamWriterHolder.XMLNS, EDM_NAMESPACE);
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "ore", "", "http://www.openarchives.org/ore/terms/");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "owl", "", "http://www.w3.org/2002/07/owl#");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "rdf", "", EDM_NAMESPACE);
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "skos", "", "http://www.w3.org/2004/02/skos/core#");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "wgs84", "", "http://www.w3.org/2003/01/geo/wgs84_pos#");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "dc", "", "http://purl.org/dc/elements/1.1/");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "dcterms", "", "http://purl.org/dc/terms/");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "edm", "", "http://www.europeana.eu/schemas/edm/");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "enrichment", "", "http://www.europeana.eu/schemas/edm/enrichment");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "europeana", "", "http://www.europeana.eu/schemas/ese/");
+					writer.writeStartDocument(xmlReader);
 				}else {
 					writer.writeStartElement(xmlReader);
 				}
