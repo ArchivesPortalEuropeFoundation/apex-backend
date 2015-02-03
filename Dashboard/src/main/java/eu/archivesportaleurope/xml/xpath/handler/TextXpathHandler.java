@@ -59,9 +59,9 @@ public class TextXpathHandler extends StringXpathHandler {
 	protected void processExactEndElementMatch() {
 		if (StringUtils.isNotBlank(temp)){
 			if (convertToLowerCase){
-				getResult().add(temp);
-			}else {
 				getResult().add(temp.toLowerCase());
+			}else {
+				getResult().add(temp);
 			}
 		}
 		temp=null;
