@@ -14,6 +14,7 @@ import eu.archivesportaleurope.xml.ApeXmlUtil;
 public class TextXpathHandler extends StringXpathHandler {
 	private String temp = null;
 	private boolean addWhitespaces;
+	private boolean convertToLowerCase;
 	/**
 	 * Contructor for queries like /ead/c/unitid
 	 * 
@@ -57,7 +58,11 @@ public class TextXpathHandler extends StringXpathHandler {
 	@Override
 	protected void processExactEndElementMatch() {
 		if (StringUtils.isNotBlank(temp)){
-			getResult().add(temp);
+			if (convertToLowerCase){
+				getResult().add(temp);
+			}else {
+				getResult().add(temp.toLowerCase());
+			}
 		}
 		temp=null;
 	}
@@ -70,4 +75,8 @@ public class TextXpathHandler extends StringXpathHandler {
 	protected void processExactStartElementMatch(XMLStreamReader xmlReader){
 		temp="";
 	}
+	public void setConvertToLowerCase(boolean convertToLowerCase) {
+		this.convertToLowerCase = convertToLowerCase;
+	}
+	
 }
