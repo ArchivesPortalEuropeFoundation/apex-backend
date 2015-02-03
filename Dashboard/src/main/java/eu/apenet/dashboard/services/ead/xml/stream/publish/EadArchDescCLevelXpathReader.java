@@ -108,7 +108,7 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 			
 			controlAccessHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
 			"subject" });
-
+			controlAccessHandler.setConvertToLowerCase(true);
 			getXpathHandlers().add(unitidHandler);
 			getXpathHandlers().add(otherUnitidHandler);
 			getXpathHandlers().add(unittitleHandler);

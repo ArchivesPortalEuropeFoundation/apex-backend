@@ -7,9 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -61,7 +63,8 @@ public class EadSolrPublisher {
 	private long solrTime = 0l;
 	private Set<String> topicsBySourceGuides = new HashSet<String>();
 	private Set<String> topicsByArchdescControlAccess = new HashSet<String>();
-	private List<TopicMapping> mappings;
+	private Map<String, String[]> topicMappings = new HashMap<String, String[]>();
+	//private List<TopicMapping> mappings;
 
 	public EadSolrPublisher(Ead ead) {
 		this.ead = ead;
@@ -71,13 +74,25 @@ public class EadSolrPublisher {
 		eadDao = DAOFactory.instance().getEadDAO();
 		TopicMappingDAO topicMappingDAO = DAOFactory.instance().getTopicMappingDAO();
 		HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
-		mappings = topicMappingDAO.getTopicMappingsByAiId(ead.getAiId());
+		List<TopicMapping> mappings = topicMappingDAO.getTopicMappingsByAiId(ead.getAiId());
 		for (TopicMapping mapping : mappings) {
 			if (mapping.getSgId() != null) {
 				if (ead instanceof FindingAid) {
 					boolean exist = hgSgFaRelationDAO.existHgSgFaRelations(mapping.getSgId(), ead.getId());
 					if (exist) {
 						topicsBySourceGuides.add(mapping.getTopic().getPropertyKey());
+					}else {
+						// fill mappings
+						if (StringUtils.isNotBlank(mapping.getControlaccessKeyword())) {
+							String input = mapping.getControlaccessKeyword().trim().toLowerCase();
+							input = input.replaceAll("\\s*\\|\\s*", "|");
+							String[] keywords = input.split("\\|");
+							if (keywords.length > 0){
+								topicMappings.put(mapping.getTopic().getPropertyKey(), keywords);
+							}
+						}
+
+						
 					}
 				} else if (ead instanceof SourceGuide) {
 					if (ead.getId().equals(mapping.getSgId())) {
@@ -92,17 +107,15 @@ public class EadSolrPublisher {
 
 	private void addTopics(Set<String> topics, Set<String> controlAccessSubjects) {
 		if (controlAccessSubjects.size() > 0) {
-			for (TopicMapping mapping : mappings) {
-				if (StringUtils.isNotBlank(mapping.getControlaccessKeyword())) {
-					String input = mapping.getControlaccessKeyword().trim();
-					String[] keywords = input.split("\\|");
-					for (String keyword : keywords) {
-						if (controlAccessSubjects.contains(keyword.trim())) {
-							topics.add(mapping.getTopic().getPropertyKey());
-						}
-					}
+			for (Entry<String, String[]> entry : topicMappings.entrySet()) {
+				boolean found = false;
+				String[] keywords = entry.getValue();
+				for (int i=0; !found && i < keywords.length;i++){
+					if (controlAccessSubjects.contains(keywords[i])) {
+						found = true;
+						topics.add(entry.getKey());
+					}					
 				}
-
 			}
 		}
 	}
