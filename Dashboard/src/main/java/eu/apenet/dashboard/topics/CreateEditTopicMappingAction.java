@@ -99,8 +99,8 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 		if (this.getSourceGuideId() == null && StringUtils.isBlank(keywords)){
 			addActionError(getText("topicmapping.sourceguide.keyword.required", new String[]{"<controlaccess><subject>"}));
 		}
-		if (StringUtils.isNotBlank(keywords) && keywords.trim().length() > 255){
-			addFieldError("keywords", getText("errors.toolong", new String[]{"255"}));
+		if (StringUtils.isNotBlank(keywords) && keywords.trim().length() > 1000){
+			addFieldError("keywords", getText("errors.toolong", new String[]{"1000"}));
 		}
 	}
 	
