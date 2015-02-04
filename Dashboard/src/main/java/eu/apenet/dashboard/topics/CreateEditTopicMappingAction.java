@@ -99,7 +99,7 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 		if (this.getSourceGuideId() == null && StringUtils.isBlank(keywords)){
 			addActionError(getText("topicmapping.sourceguide.keyword.required", new String[]{"<controlaccess><subject>"}));
 		}
-		if (StringUtils.isNotBlank(keywords) && keywords.trim().length() > 1000){
+		if (StringUtils.isNotBlank(keywords) && convertKeywords().length() > 1000){
 			addFieldError("keywords", getText("errors.toolong", new String[]{"1000"}));
 		}
 	}
@@ -148,7 +148,7 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 			if (StringUtils.isBlank(keywords)){
 				topicMapping.setControlaccessKeyword(null);
 			}else {
-				topicMapping.setControlaccessKeyword(keywords.trim());
+				topicMapping.setControlaccessKeyword(convertKeywords());
 			}
 			DAOFactory.instance().getTopicMappingDAO().store(topicMapping);
 		}
@@ -158,6 +158,11 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 	}
 
 
+	private String convertKeywords(){
+		String input = keywords.trim().toLowerCase();
+		input = input.replaceAll("\\s*\\|\\s*", "|");
+		return input;
+	}
 	public String cancel() {
 		return SUCCESS;
 	}
