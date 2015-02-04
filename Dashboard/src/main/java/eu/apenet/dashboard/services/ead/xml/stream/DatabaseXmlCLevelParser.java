@@ -89,6 +89,7 @@ public class DatabaseXmlCLevelParser {
 		QName lastElement = null;
 		LinkedList<QName> xpathPosition = new LinkedList<QName>();
 		EadArchDescCLevelXpathReader clevelParser = new EadArchDescCLevelXpathReader();
+		clevelParser.init();
 		for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlReader.getName();
