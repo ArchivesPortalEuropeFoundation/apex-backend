@@ -81,18 +81,6 @@ public class EadSolrPublisher {
 					boolean exist = hgSgFaRelationDAO.existHgSgFaRelations(mapping.getSgId(), ead.getId());
 					if (exist) {
 						topicsBySourceGuides.add(mapping.getTopic().getPropertyKey());
-					}else {
-						// fill mappings
-						if (StringUtils.isNotBlank(mapping.getControlaccessKeyword())) {
-							String input = mapping.getControlaccessKeyword().trim().toLowerCase();
-							input = input.replaceAll("\\s*\\|\\s*", "|");
-							String[] keywords = input.split("\\|");
-							if (keywords.length > 0){
-								topicMappings.put(mapping.getTopic().getPropertyKey(), keywords);
-							}
-						}
-
-						
 					}
 				} else if (ead instanceof SourceGuide) {
 					if (ead.getId().equals(mapping.getSgId())) {
@@ -100,6 +88,15 @@ public class EadSolrPublisher {
 					}
 				}
 
+			}
+			// fill mappings
+			if (StringUtils.isNotBlank(mapping.getControlaccessKeyword())) {
+				String input = mapping.getControlaccessKeyword().trim().toLowerCase();
+				input = input.replaceAll("\\s*\\|\\s*", "|");
+				String[] keywords = input.split("\\|");
+				if (keywords.length > 0){
+					topicMappings.put(mapping.getTopic().getPropertyKey(), keywords);
+				}
 			}
 
 		}
