@@ -112,6 +112,9 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 			for (Topic topic: topics){
 				this.topics.add(new SelectItem(topic.getId(), topic.getDescription()));
 			}
+		}else {
+			TopicMapping topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+			this.topicDescription = topicMapping.getTopic().getDescription();
 		}
 		ContentSearchOptions options = new ContentSearchOptions();
 		options.setArchivalInstitionId(getAiId());
