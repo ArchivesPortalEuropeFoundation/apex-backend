@@ -5,15 +5,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions" 
 	xmlns:xd="http://www.pnp-software.com/XSLTdoc"
 	exclude-result-prefixes="xlink xlink xsi eag ape xd" >
-	<xsl:import href="commonsEag.xsl"/>
-	<xd:doc type="import">
-	 <xd:short>Import the xml <code>commonsEag.xml</code>.
-	 </xd:short>
-	<xd:detail>
-		 CommonsEag.xml common templates for displaying data.
-		  </xd:detail>   
-	    
-	  </xd:doc>
+
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
 	<xd:doc type="stylesheet">
 	<xd:short>Page to display the part of Access and service information.</xd:short>
