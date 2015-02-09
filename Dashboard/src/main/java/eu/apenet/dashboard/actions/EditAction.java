@@ -17,7 +17,9 @@ import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
 import eu.apenet.persistence.vo.User;
-
+/**
+ * Class created for manage Struts2-action related to edit-user information
+ */
 public class EditAction extends AbstractAction {
 
 	private static final long serialVersionUID = -4369675443958545447L;
@@ -38,29 +40,43 @@ public class EditAction extends AbstractAction {
 	public String confirmPassword;
 	private List<Breadcrumb> breadcrumbRoute;
 
+	/**
+     * <p>
+	 * Method which is override of AbstractAction.
+	 * </p>
+	 * <p>
+	 * It's used to build the breadcrumb route.
+	 * </p>
+	 */
 	@Override
 	protected void buildBreadcrumbs() {
-		this.breadcrumbRoute = new ArrayList<Breadcrumb>();
-		Breadcrumb breadcrumb = new Breadcrumb(null,getText("breadcrumb.section.changeAIname"));
-		this.breadcrumbRoute.add(breadcrumb);
+		this.breadcrumbRoute = new ArrayList<Breadcrumb>(); //instanced routes
+		Breadcrumb breadcrumb = new Breadcrumb(null,getText("breadcrumb.section.changeAIname")); //added routes
+		this.breadcrumbRoute.add(breadcrumb); //added route
 	}
 
 	/**
 	 * <p>
-	 * Edit some user information, and let modify it
+	 * Edit some user information and let modify it.
 	 * </p>
+	 * <p>
+	 * (Password, FirstName, LastName, EmailAddress, SecretAnswer and SecretQuestion)
+	 * It's an action configured in struct.xml.
+	 * </p>
+	 * 
+	 * @return Structs.STATE
 	 */
 	public String execute() throws Exception {
 		User userToUpdate = new User();
-		userToUpdate.setId( SecurityService.getCurrentPartner().getId());
+		userToUpdate.setId( SecurityService.getCurrentPartner().getId()); // extract users from database and use it
 		boolean changePwd = false;
-		buildBreadcrumbs();
-		if (StringUtils.isNotBlank(this.newPassword) || StringUtils.isNotBlank(this.rePassword) || StringUtils.isNotBlank(this.currentPassword)) {
-			if (!validateChangePwd()) {
+		buildBreadcrumbs(); //init breadcrumb
+		if (StringUtils.isNotBlank(this.newPassword) || StringUtils.isNotBlank(this.rePassword) || StringUtils.isNotBlank(this.currentPassword)) { //validates user and password
+			if (!validateChangePwd()) { //it should be in validate method but here do the same operation and return INPUT if wrong 
 				return INPUT;
 			} else {
 				userToUpdate.setPassword(this.getNewPassword());
-				changePwd = true;
+				changePwd = true; //flag mark for change password
 			}
 		}
 		if ((changePwd == true)
@@ -71,8 +87,8 @@ public class EditAction extends AbstractAction {
 						.equalsIgnoreCase(userToUpdate.getEmailAddress())
 						|| !this.getSecretAnswer().equalsIgnoreCase(userToUpdate.getSecretAnswer())
 								|| !this.getSecretQuestion().equalsIgnoreCase(userToUpdate.getSecretQuestion())
-						)) {
-
+						)) { //verify data and flag for change user data
+			//update user data (all attributes)
 			userToUpdate.setFirstName(this.getFirstName().trim());
 			userToUpdate.setLastName(this.getLastName().trim());
 			userToUpdate.setEmailAddress(this.getEmail().trim()); //save the email-address without blanks
@@ -80,28 +96,28 @@ public class EditAction extends AbstractAction {
 			userToUpdate.setSecretQuestion(this.getSecretQuestion());
 			//after editing the user will be logged out and logged in
 			try{
-				if (changePwd) {
-					if (relog(email, this.getNewPassword(),userToUpdate, changePwd)){
+				if (changePwd) { //flag check
+					if (relog(email, this.getNewPassword(),userToUpdate, changePwd)){ //success part
 						addActionMessage(getText("success.user.edit"));
 						return SUCCESS;
 					}
-					else{
+					else{ //error part
 						addActionMessage(getText("oldpassword.notEquals"));
 						SecurityContext securityContext = SecurityContext.get();
-						if (securityContext!=null && securityContext.isAdmin()) {
+						if (securityContext!=null && securityContext.isAdmin()) { //admin's check
 							return "error_admin";
 						}
 						return ERROR;
 					}
 				} else {
-					if (relog(email, this.getConfirmPassword(),userToUpdate, changePwd)){
+					if (relog(email, this.getConfirmPassword(),userToUpdate, changePwd)){ //success part
 						addActionMessage(getText("success.user.edit"));
 						return SUCCESS;
 					}
-					else{
+					else{ //error part
 						addActionMessage(getText("oldpassword.wrong"));
 						SecurityContext securityContext = SecurityContext.get();
-						if (securityContext!=null && securityContext.isAdmin()) {
+						if (securityContext!=null && securityContext.isAdmin()) { //admin's check
 							return "error_admin";
 						}
 						return ERROR;
@@ -118,7 +134,18 @@ public class EditAction extends AbstractAction {
 		}
 	//	return INPUT;
 	}
-	
+	/**
+	 * <p>
+	 * Method build by some developer which just reload user session.
+	 * </p> 
+	 * 
+	 * @param email -> String Email
+	 * @param passw -> String Password
+	 * @param userToUpdate -> {@link User} boolean
+	 * @param changePwd -> boolean flag
+	 * @return boolean - state has finished
+	 * @throws Exception
+	 */
 	private boolean relog(String email, String passw, User userToUpdate, boolean changePwd) throws Exception
 	{
 		log.trace("relog() method is called");
@@ -162,10 +189,19 @@ public class EditAction extends AbstractAction {
 		}
 		return true;
 	}
-
+	/**
+	 * <p>
+	 * Method done by some developer which just replace Struts-validation.
+	 * </p>
+	 * <p>
+	 * It make all tests and add field errors in jsp if neccesary.
+	 * </p>
+	 * 
+	 * @return boolean - (state)
+	 */
 	public boolean validateChangePwd() {
-		boolean result = true;
-		this.setMessageError("true");
+		boolean result = true; //iniciated flags
+		this.setMessageError("true"); //iniciated flags
 		if (StringUtils.isBlank(getCurrentPassword())){
 			addFieldError("currentPassword", getText("currentPassword.required"));
 			result = false;
@@ -205,7 +241,14 @@ public class EditAction extends AbstractAction {
 		
 		return result;
 	}
-	
+	/**
+	 * <p>
+	 * Struts2 framework validation method.
+	 * </p>
+	 * <p>
+	 * Into this method in last instance is called buildBreadcrumbs().
+	 * </p>
+	 */
 	@Override
 	public void validate() {
 		
@@ -249,6 +292,10 @@ public class EditAction extends AbstractAction {
 		}		
 		buildBreadcrumbs();
 	}
+	
+	/*
+	 * GETTERS AND SETTERS
+	 */
 
 	public String getEmail() {
 		return email;
