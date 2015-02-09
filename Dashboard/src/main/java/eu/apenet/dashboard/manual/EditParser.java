@@ -343,6 +343,16 @@ public class EditParser extends AbstractParser {
         XMLStreamWriter2 xmlWriter = ((XMLOutputFactory2) XMLOutputFactory2.newInstance()).createXMLStreamWriter(stringWriter, UTF8);
         XMLStreamReader2 xmlReader = (XMLStreamReader2) ((XMLInputFactory2) XMLInputFactory2.newInstance()).createXMLStreamReader(IOUtils.toInputStream(xml, UTF8), UTF8);
 
+        // Fill the parent div which contains the language combo to clone and
+        // the rest of the EAD data.
+        LOG.debug("Open parent div which contains the 'language_langcode_hidden' combo and the ead data.");
+        counterDiv++;
+        xmlWriter.writeStartElement("div");
+        xmlWriter.writeAttribute("class", "editionElement");
+        // Get the language combo to clone.
+        this.writeHiddenLanguageBox(xmlWriter);
+
+        // Get the EAD data.
         String lastElementName = null;
         for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
             if (event == XMLStreamConstants.START_ELEMENT) {
@@ -435,6 +445,11 @@ public class EditParser extends AbstractParser {
             }
         }
 
+        // Close the parent div which contains the language combo to clone and
+        // the rest of the EAD data. 
+        xmlWriter.writeEndElement();
+        LOG.debug("Close div which contains the 'language_langcode_hidden' combo and the ead data.");
+        counterDiv--;
 
         xmlWriter.flush();
         xmlWriter.close();
@@ -485,6 +500,30 @@ public class EditParser extends AbstractParser {
                 this.setCounter(this.getCounter() + 1);
             }
         }
+    }
+
+    private void writeHiddenLanguageBox(XMLStreamWriter2 xmlWriter) throws XMLStreamException {
+    	// Write the select for the possible language codes.
+        xmlWriter.writeStartElement("select");
+        xmlWriter.writeAttribute("name", "language_langcode_hidden");
+        xmlWriter.writeAttribute("class", "hidden");
+
+        // Add empty value to the language select.
+        xmlWriter.writeStartElement("option");
+        xmlWriter.writeAttribute("value", EditParser.LANGCODE_VALUE);
+    	xmlWriter.writeAttribute("selected", "selected");
+        xmlWriter.writeCharacters("---");
+        xmlWriter.writeEndElement();
+
+        List<String> languagesList = LanguageIsoList.getLanguageIsoList();
+        for (String language : languagesList) {
+            xmlWriter.writeStartElement("option");
+            String langCode = LanguageIsoList.getIsoCode(language);
+            xmlWriter.writeAttribute("value", langCode);
+            xmlWriter.writeCharacters(LanguageIsoList.getIsoCode(language));
+            xmlWriter.writeEndElement();
+        }
+        xmlWriter.writeEndElement();
     }
 
     public String getNewXmlString(String xml, Map<String, String> formValues) throws XMLStreamException, IOException {
