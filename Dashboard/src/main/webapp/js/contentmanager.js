@@ -61,6 +61,11 @@ function initSubpage() {
 	});
 	//floating box
 	$("#selectAllFiles").bind("click", function(value) {
+		if($("input[name=xmlTypeId]:checked").val() == '2'){
+			addAllEacCpfsInSession();
+		} else {
+			addAllFAsInSession();
+		}
 		select_all();
 	});
 	//----------------------------------------------------
