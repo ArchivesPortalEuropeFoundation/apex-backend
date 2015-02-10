@@ -515,6 +515,8 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		buffer.append("\"");
         buffer.append(clId);
 		buffer.append("\"");
+		buffer.append(COMMA);
+		buffer.append("\"key\":" + "\"" + clId + "\"");
 	}
 
 	private static void addUrl(StringBuilder buffer, EadContent eadContent, String path, String xmlTypeIdString) {
@@ -539,6 +541,8 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 				// id
 				buffer.append("\"id\":");
 				buffer.append(" \"" + clevel.getId() + "\" ");
+				buffer.append(COMMA);
+				buffer.append("\"key\":" + "\"" + clevel.getId() + "\"");
 			} else {
 				buffer.append(FOLDER_WITH_CHILDREN);
 				long localStartTime = System.currentTimeMillis();

@@ -178,7 +178,7 @@ function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountryco
 		}
 	});
 
-	// Hide elements ans show processing info.
+	// Hide elements and show processing info.
 	$("p#editionFormContainer").hide();
 	createColorboxForProcessing();
 
@@ -215,8 +215,19 @@ function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountryco
 		if (data != undefined
 				&& data.saved != undefined) {
 			if (data.saved) {
-				dynatree.reload();
-				displayNode(node, data.savedText);
+				if (correctId != undefined) {
+					var currentNode = dynatree.getNodeByKey(correctId);
+					dynatree.reload();
+					if (currentNode != null
+							&& currentNode != undefined) {
+						displayNode(currentNode, data.savedText);
+					} else {
+						displayNode(node, data.savedText);
+					}
+				} else {
+					dynatree.reload();
+					displayNode(node, data.savedText);
+				}
 				$("div#right-pane input#changed").val("false");
 			} else {
 				showInformation(data.savedText, true);
@@ -798,9 +809,10 @@ function addLanguageElement(name) {
 	var currentSection = name.substring((name.indexOf("_") + 1), name.lastIndexOf("_"));
 	currentSection = currentSection.substring((currentSection.lastIndexOf("_") + 1));
 	var nameSelect = "language_langcode_" + currentSection + "_" + name.substring((name.lastIndexOf("_") + 1));
-	var select = $("select[name^='language_langcode_1_1']").clone();
+	var select = $("select[name^='language_langcode_hidden']").clone();
 	select.attr("name", nameSelect);
 	select.attr("value","none");
+	select.removeClass("hidden");
 
 	// Add the div for the new element.
 	var html = "<div class=\"editionElement\">" +
@@ -911,6 +923,14 @@ function expandParents(parents, i, message, targetNode) {
 		var target = dynatree.getNodeByKey(key);
 		if (!target) {
 			setTimeout(function(){expandParents(parents, i, message, targetNode);},40);
+
+			// In case the current node is hidden, tries to find a "More"
+			// element and expand it.
+			$("li").each(function(){
+				if ($(this).children().hasClass("more")) {
+					$(this).click();
+				}
+			});
 		} else {
 			target.expand(true);
 			expandParents(parents, i-1, message, targetNode);

@@ -625,20 +625,22 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 				for (int i = 0; i < size; i++) {
 					String currentElement = elementList.get(i);
 					String tempCurrentElement = currentElement.substring(0, currentElement.lastIndexOf("_"));
-    				int currentValue = Integer.parseInt(tempCurrentElement.substring((tempCurrentElement.lastIndexOf("_") + 1)));
-
-					// Add the current element to the map.
-					if (!valuesMap.isEmpty()) {
-						Set<String> stringSet = valuesMap.get(currentValue);
-						if (stringSet == null) {
-							stringSet = new LinkedHashSet<String>();
+					if (!currentElement.contains("hidden")) {
+	    				int currentValue = Integer.parseInt(tempCurrentElement.substring((tempCurrentElement.lastIndexOf("_") + 1)));
+	
+						// Add the current element to the map.
+						if (!valuesMap.isEmpty()) {
+							Set<String> stringSet = valuesMap.get(currentValue);
+							if (stringSet == null) {
+								stringSet = new LinkedHashSet<String>();
+							}
+							stringSet.add(currentElement);
+							valuesMap.put(currentValue, stringSet);
+						} else {
+							Set<String> stringSet = new LinkedHashSet<String>();
+							stringSet.add(currentElement);
+							valuesMap.put(currentValue, stringSet);
 						}
-						stringSet.add(currentElement);
-						valuesMap.put(currentValue, stringSet);
-					} else {
-						Set<String> stringSet = new LinkedHashSet<String>();
-						stringSet.add(currentElement);
-						valuesMap.put(currentValue, stringSet);
 					}
 				}
 
