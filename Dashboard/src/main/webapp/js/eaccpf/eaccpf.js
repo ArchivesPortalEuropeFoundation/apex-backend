@@ -418,13 +418,13 @@ var checkControlTab = function(languageMissing, scriptMissing) {
 function checkIfWebpage(tf, websiteErrorMessage, xsUriErrorMessage) {
     var value = $(tf).attr("value");
     var linkSyntaxRegex = /(^|\s)((((https?)|(ftp)):\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
-    if (value != '' || value != null) {
+    if (value != "" && value != null) {
         if (!(value.indexOf("https://") === 0 || value.indexOf("http://") === 0 || value.indexOf("ftp://") === 0)) {
-            displayAlertDialog(websiteErrorMessage);
+            displayAlertDialog(value + " - " + websiteErrorMessage);
             return;
         }
         if (linkSyntaxRegex.test(value) != true) {
-            displayAlertDialog(xsUriErrorMessage);
+            displayAlertDialog(value + " - " + xsUriErrorMessage);
             return;
         }
     }
