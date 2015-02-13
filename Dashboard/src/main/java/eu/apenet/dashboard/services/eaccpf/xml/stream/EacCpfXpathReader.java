@@ -111,6 +111,7 @@ public class EacCpfXpathReader extends AbstractXpathReader<EacCpfPublishData> {
 		namesHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "nameEntry" });
 		namesHandler.setAttributeValueAsKey("localType");
 		namesParallelHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {  "nameEntryParallel",  "nameEntry" });
+		namesParallelHandler.setAttributeValueAsKey("localType");
 		
 		placesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "places", "place", "placeEntry" });
 		occupationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "occupations", "occupation", "term" });
