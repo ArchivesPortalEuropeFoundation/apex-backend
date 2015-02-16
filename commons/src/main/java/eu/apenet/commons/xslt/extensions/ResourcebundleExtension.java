@@ -3,7 +3,6 @@ package eu.apenet.commons.xslt.extensions;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -66,17 +65,16 @@ public class ResourcebundleExtension extends ExtensionFunctionDefinition {
 			this.resourceBundleSource = resourceBundleSource;
 		}
 
-		@Override
-        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
-            if (sequences.length == 1) {
-                String value = sequences[0].toString();
-                if (resourceBundleSource != null) {
-                    value = resourceBundleSource.getString(value);
-                }
-                return StringValue.makeStringValue(value);
-            } else {
-                return StringValue.makeStringValue("ERROR");
-            }
-        }
-    }
+		public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
+			if (arguments.length == 1) {
+				String value = arguments[0].next().getStringValue();
+				if (resourceBundleSource != null) {
+					value = resourceBundleSource.getString(value);
+				}
+				return SingletonIterator.makeIterator(new StringValue(value));
+			} else {
+				return SingletonIterator.makeIterator(new StringValue("ERROR"));
+			}
+		}
+	}
 }

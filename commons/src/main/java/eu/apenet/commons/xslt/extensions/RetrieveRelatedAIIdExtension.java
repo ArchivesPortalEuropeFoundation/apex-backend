@@ -3,7 +3,6 @@ package eu.apenet.commons.xslt.extensions;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -81,29 +80,30 @@ public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
 			this.requiredAIRepositorCode = requiredAIRepositorCode;
 		}
 
-        @Override
-        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
-            if (sequences!= null && sequences.length == 1) {
-                String firstArgValue = sequences[0].toString();
-                String value = "";
+		@Override
+		public SequenceIterator call(SequenceIterator[] arguments, XPathContext arg1)
+				throws XPathException {
+			if (arguments!= null && arguments.length == 1) {
+				String firstArgValue = arguments[0].next().getStringValue();
+				String value = "";
 
-                ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-                ArchivalInstitution archivalInstitution = null;
+				ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+				ArchivalInstitution archivalInstitution = null;
 
-                if (firstArgValue != null && !firstArgValue.isEmpty()) {
-                    archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(firstArgValue);
-                } else if(this.requiredAIRepositorCode != null && !this.requiredAIRepositorCode.isEmpty()) {
-                    archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(requiredAIRepositorCode);
-                }
+				if (firstArgValue != null && !firstArgValue.isEmpty()) {
+					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(firstArgValue);
+				} else if(this.requiredAIRepositorCode != null && !this.requiredAIRepositorCode.isEmpty()) {
+					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(requiredAIRepositorCode);
+				}
 
-                if (archivalInstitution != null) {
-                    value = String.valueOf(archivalInstitution.getAiId());
-                }
+				if (archivalInstitution != null) {
+					value = String.valueOf(archivalInstitution.getAiId());
+				}
 
-                return StringValue.makeStringValue(value);
-            } else {
-                return StringValue.makeStringValue("ERROR");
-            }
-        }
-    }
+				return SingletonIterator.makeIterator(new StringValue(value));
+			} else {
+				return SingletonIterator.makeIterator(new StringValue("ERROR"));
+			}
+		}
+	}
 }

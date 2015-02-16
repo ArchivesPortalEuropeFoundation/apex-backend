@@ -39,8 +39,8 @@
 			<artifactId>persistence</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>saxon-HE</artifactId>
+			<groupId>net.sourceforge.saxon</groupId>
+			<artifactId>saxon</artifactId>
 		</dependency>
 		<!-- mail.jar is provided by tomcat now -->
 		<dependency>
