@@ -9,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/***
+ *  This class contains a saved search object
+ *
+ */
 @Entity
 @Table(name = "ead_saved_search")
 public class EadSavedSearch {

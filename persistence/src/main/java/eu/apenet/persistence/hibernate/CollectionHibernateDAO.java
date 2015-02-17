@@ -13,13 +13,31 @@ import org.hibernate.criterion.Restrictions;
 import eu.apenet.persistence.dao.CollectionDAO;
 import eu.apenet.persistence.vo.Collection;
 
+/***
+ * class CollectionHibernateDAO
+ *
+ */
 public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Long> implements CollectionDAO{
 	private static final Logger LOGGER = Logger.getLogger(CollectionHibernateDAO.class);
 	private static final String ORDER = "modified_date";
 	
+	/***
+	 * Function that gets a list with the user collections by user id
+	 * 
+	 * @param liferayUserId {@link Long} current user id
+	 * @param pageNumber {@link Integer} the current number of page in the pagination results
+	 * @param pageSize {@link Integer} the number of results results per page
+	 * @param sortValue {@link String} By default order descendant by date (none), if it has values it is the number of the field to sort
+	 * @param ascending {@link boolean} true for ascending or false for descending
+	 * 
+	 * @return criteria.list() if there is a valid user, null if not
+	 */
 	@Override
 	public List<Collection> getCollectionsByUserId(Long liferayUserId,Integer pageNumber,Integer pageSize, String sortValue,
-			boolean ascending) {
+	boolean ascending) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"getCollectionsByUserId\"");
+		
 		if(liferayUserId!=null && liferayUserId>0){
 			Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -44,14 +62,31 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 			if(pageSize!=null && pageSize>0){
 				criteria.setMaxResults(pageSize);
 			}
+			if (LOGGER.isDebugEnabled()) 
+				LOGGER.debug("Exit \"getCollectionsByUserId\"");
+			
 			return criteria.list();
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"getCollectionsByUserId\"");
+		
 		return null;
 	}
 	
-	
+	/***
+	 * Function that gets a bookmarks or searches list by user id and element id
+	 * 
+	 * @param liferayUserId {@link Long} current user id
+	 * @param table {@link String} Bookmark or Search
+	 * @param elemetId {@link String} the id of the bookmark or the search
+	 * 
+	 * @return criteria.list() if there is a valid user, null if not
+	 */
 	@Override
 	public List<Collection> getCollectionsByIdAndUserId(Long liferayUserId, String table, String elemetId) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"getCollectionsByIdAndUserId\"");
+		
 		if(liferayUserId!=null && liferayUserId>0){
 			Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection"); //collection
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -64,14 +99,29 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 					criteria.add(Restrictions.not(Restrictions.eq("collection.collectionContents.id_search.id", elemetId)));
 
 			}
-
+			if (LOGGER.isDebugEnabled()) 
+				LOGGER.debug("Exit \"getCollectionsByIdAndUserId\"");
+			
 			return criteria.list();
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"getCollectionsByIdAndUserId\"");
+		
 		return null;
 	}
 
+	/***
+	 * Function counts the number of the collections by user
+	 * 
+	 * @param liferayUserId {@link Long} current user id
+	 * 
+	 * @return results {@link Long} number of collections, 0 if there is no results.
+	 */
 	@Override
 	public Long countCollectionsByUserId(Long liferayUserId) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"countCollectionsByUserId\"");
+		
 		long results = 0;
 		if(liferayUserId!=null && liferayUserId>0){
 			Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
@@ -80,11 +130,25 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 			criteria.add(Restrictions.eq("collection.liferayUserId", liferayUserId));
 			results = (Long)criteria.uniqueResult();
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"countCollectionsByUserId\"");
+		
 		return results;
 	}
 
+	/***
+	 * Function gets a single collection by collection id and user id
+	 * 
+	 * @param id {@link Long} collection id.
+	 * @param liferayUserId {@link Long} current user id
+	 * 
+	 * @return collection {@link Collection} single collection.
+	 */
 	@Override
 	public Collection getCollectionByIdAndUserId(Long id, Long liferayUserId) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"getCollectionByIdAndUserId\"");
+		
 		Collection collection = null;
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -95,11 +159,24 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 				collection = (Collection)criteria.uniqueResult();
 			}
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"getCollectionByIdAndUserId\"");
+		
 		return collection;
 	}
 
+	/***
+	 * Function gets a single collection by collection id
+	 * 
+	 * @param id {@link Long} collection id
+	 * 
+	 * @return collection{@link Collection} single collection
+	 */
 	@Override
 	public Collection getCollectionById(Long id) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"getCollectionById\"");
+		
 		Collection collection = null;
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -107,11 +184,26 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 			criteria.add(Restrictions.eq("collection.id", id));
 			collection = (Collection)criteria.uniqueResult();
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"getCollectionById\"");
+		
 		return collection;
 	}
 		
+	/***
+	 * Function gets a list of collections by a pattern in the name
+	 * 
+	 * @param liferayUserId {@link Long} current user id
+	 * @param title {@link String} the pattern to search in the title of the collection
+	 * @param pageSize {@link int} the number of results results per page
+	 * 
+	 * @return criteria.list() if there is a valid user, null if not
+	 */
 	@Override
 	public List<Collection> getCollectionByName(Long liferayUserId, String title, int pageSize) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"getCollectionByName\"");
+		
 		if(liferayUserId!=null && liferayUserId>0){
 			Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -121,12 +213,31 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 				criteria.setMaxResults(pageSize);
 				criteria.add(Restrictions.ilike("collection.title",title, MatchMode.ANYWHERE));
 			}
+			if (LOGGER.isDebugEnabled()) 
+				LOGGER.debug("Exit \"getCollectionByName\"");
+			
 			return criteria.list();
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"getCollectionByName\" with no results");
+		
 		return null;
 	}
 	
+	/***
+	 * Function returns a list of user collections that NOT contains the elements of the list
+	 * 
+	 * @param liferayUserId {@link Long} current user id
+	 * @param ids List {@link Long} the list of collection ids
+	 * @param pageNumber {@link Integer} the current number of page in the pagination results
+	 * @param pageSize {@link Integer} the number of results results per page
+	 * 
+	 * @return criteria.list() if there is a valid user, null if not
+	 */
 	public List<Collection> getUserCollectionsWithoutIds(Long liferayUserId, List<Long> ids, Integer pageNumber, Integer pageSize){
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"getUserCollectionsWithoutIds\"");
+		
 		if(liferayUserId!=null && liferayUserId>0){
 			Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -144,13 +255,29 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 			if(pageSize!=null && pageSize>0){
 				criteria.setMaxResults(pageSize);
 			}
+			if (LOGGER.isDebugEnabled()) 
+				LOGGER.debug("Exit \"getUserCollectionsWithoutIds\"");
 			
 			return criteria.list();
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"getUserCollectionsWithoutIds\" with no results");
+		
 		return null;
 	}
 	
+	/***
+	 * Function returns the number of user collections that NOT contains the elements of the list
+	 * 
+	 * @param liferayUserId {@link Long} current user id
+	 * @param ids List {@link Long} the list of collection ids
+	 * 
+	 * @return ({@link Long})criteria.uniqueResult() if there is a valid user, null if not
+	 */
 	public Long countUserCollectionsWithoutIds(Long liferayUserId, List<Long> ids){
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Enter \"countUserCollectionsWithoutIds\"");
+		
 		if(liferayUserId!=null && liferayUserId>0){
 			Criteria criteria = getSession().createCriteria(getPersistentClass(), "collection");
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -161,8 +288,14 @@ public class CollectionHibernateDAO extends AbstractHibernateDAO<Collection, Lon
 				criteria.add(Restrictions.not(Restrictions.eq("collection.id", collectionId)));
 			}
 			criteria.setProjection(Projections.rowCount());
+			if (LOGGER.isDebugEnabled()) 
+				LOGGER.debug("Exit \"countUserCollectionsWithoutIds\"");
+			
 			return (Long)criteria.uniqueResult();
 		}
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("Exit \"countUserCollectionsWithoutIds\" with no results");
+		
 		return null;
 	}
 }
