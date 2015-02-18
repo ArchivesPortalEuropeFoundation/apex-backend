@@ -261,10 +261,8 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
     //check existence dates
     rowCounter = $("table#dateExistenceTable tr[id^='trDate_text_']").length;
     if (rowCounter > 0) {
-        var filledRowCounterAfterTrim = 0;
         for (var rc = 1; rc <= rowCounter; rc++) {
             if (dateRowNotEmpty("dateExistenceTable", rc)) {
-                filledRowCounterAfterTrim++;
                 dateCounter = $("table#dateExistenceTable tr#trDate_text_" + rc + " input[id^='date_']").length;
                 for (var dc = 1; dc <= dateCounter; dc++) {
                     checkResult = checkIsoDateRow("dateExistenceTable", rc, dc, invalidDateMessage, invalidRangeMessage);
@@ -273,10 +271,6 @@ var checkIdentityTab = function(nameMissing, dateMissing, startDateMissing, endD
                     }
                 }
             }
-        }
-        if (filledRowCounterAfterTrim == 0){
-            alertEmptyFields(dateMissing);
-            return;
         }
     }
 
@@ -564,16 +558,7 @@ function insertDateRangeAfter(tableName, anchorId, incrCounter, fromDateLabel, t
 
 
 function dateRowNotEmpty(table, counter) {
-    //strip input text of whitespaces first
     var testYear1 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_1").attr("value");
-    $("table#" + table + " tr#trDate_text_" + counter + " input#date_1").attr("value", jQuery.trim(testYear1));
-    if ($("table#" + table + " tr#trDate_text_" + counter + " input#date_2").length != 0) {
-        var testYear2 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_2").attr("value");
-        $("table#" + table + " tr#trDate_text_" + counter + " input#date_2").attr("value", jQuery.trim(testYear2));
-    }
-
-    //actual check begins here
-    testYear1 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_1").attr("value");
     var testYear1Checked = $("table#" + table + " tr#trDate_radio_" + counter + " input[name^='" + table + "_date_1_']:checked").val();
     if ($("table#" + table + " tr#trDate_text_" + counter + " input#date_2").length != 0) {
         var testYear2 = $("table#" + table + " tr#trDate_text_" + counter + " input#date_2").attr("value");
@@ -586,7 +571,7 @@ function dateRowNotEmpty(table, counter) {
             return false;
         else
             return true;
-    } else if ((testYear2 == "" && testYear2Checked == "known") || (testYear1 == "" && testYear1Checked == "known")) {
+    } else if (testYear2 == "" && testYear1 == "" && testYear1Checked == "known" && testYear2Checked == "known") {
         return false;
     } else
         return true;
@@ -709,13 +694,7 @@ function validateIsoDates(textfield, invalidDateMessage, invalidRangeMessage) {
     var idParts = id.split("_");
     var name = $(textfield).attr("name");
     var nameParts = name.split("_");
-    var tableName;
-    if (nameParts[1] != "date") {
-        tableName = nameParts[0] + "_" + nameParts[1];
-    } else {
-        tableName = nameParts[0];
-    }
-//    var tableName = $(textfield).parent().parent().parent().parent().attr("id");
+    var tableName = $(textfield).parent().parent().parent().parent().attr("id");
     var counter = nameParts[nameParts.length - 1];
     // add trailing zero for month and day fields if necessary
     if (idParts[2] == "Month" || idParts[2] == "Day") {
@@ -727,38 +706,24 @@ function validateIsoDates(textfield, invalidDateMessage, invalidRangeMessage) {
 }
 
 var checkIsoDateRow = function(tableName, rowCounter, dateCounter, invalidDateMessage, invalidRangeMessage) {
-//0. remove any whitespace
-    var dayText = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value");
-    var monthText = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value");
-    var yearText = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value");
-    $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value", jQuery.trim(dayText));
-    $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value", jQuery.trim(monthText));
-    $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value", jQuery.trim(yearText));
-
 //1. check date for general validity
-    dayText = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value");
-    monthText = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value");
-    yearText = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value");
     var year = 1;
     var month = 1;
     var day = 1;
-
-    if (dayText != "" || monthText != "" || yearText != "") {
-        if ($("table#" + tableName + " tr#trDate_radio_" + rowCounter + " input[name^='" + tableName + "_date_" + dateCounter + "_']:checked").val() == "known") {
-            if (dayText != "") {
-                day = dayText;
-            }
-            if (monthText != "") {
-                month = monthText
-            }
-            if (yearText != "") {
-                year = yearText;
-            }
-            var date = new Date(year, month - 1, day);
-            if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
-                displayAlertDialog(yearText + "-" + monthText + "-" + dayText + ": " + invalidDateMessage);
-                return;
-            }
+    if ($("table#" + tableName + " tr#trDate_radio_" + rowCounter + " input[name^='" + tableName + "_date_" + dateCounter + "_']:checked").val() == "known") {
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value") != "") {
+            day = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Day").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value") != "") {
+            month = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Month").attr("value");
+        }
+        if ($("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value") != "") {
+            year = $("table#" + tableName + " tr#trDate_iso_" + rowCounter + " td input#date_" + dateCounter + "_Year").attr("value");
+        }
+        var date = new Date(year, month - 1, day);
+        if (date.getFullYear() != Number(year) || (date.getMonth() + 1) != Number(month) || date.getDate() != Number(day)) {
+            displayAlertDialog(year + "-" + month + "-" + day + ": " + invalidDateMessage);
+            return;
         }
     }
 
