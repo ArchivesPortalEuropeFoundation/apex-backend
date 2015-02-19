@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
 
@@ -30,6 +31,11 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.UpFile;
 
+/**
+ * Creates a new EAC-CPF in the file system and in the data base and
+ * builds the title of the EAC-CPF based on the value of @localType
+ * in the element {@code <part>}.
+ */
 public class CreateEacCpfTask extends AbstractEacCpfTask {
 
     @Override
@@ -37,6 +43,18 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         return "create EAC-CPF";
     }
 
+   /**
+    * Stores in the data base and in the file system the EAC-CPF uploaded in the Dashboard.
+    * @param xmlType {@link XmlType} The type of the file to upload.
+    * @param upFile {@link UpFile} The file uploaded.
+    * @param aiId {@link Integer} The identifier of the archival institution.
+    * @return {@link EacCpf} 
+    * @throws Exception
+    * @see ExistingFilesChecker#extractAttributeFromXML(String, String, String, boolean, boolean)
+    * @see eu.apenet.persistence.dao.EacCpfDAO
+    * @see eu.apenet.persistence.vo.EacCpf
+    * @see eu.apenet.persistence.vo.ArchivalInstitution
+    */
     protected EacCpf execute(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
         String fileName = upFile.getFilename();
         try {
@@ -100,10 +118,10 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
     }
 
     /**
-     * Build the EAC-CPF's title
+     * Builds the EAC-CPF's title.
      *
-     * @param path, the file's path to upload
-     * @return the title
+     * @param path String The file's path to upload
+     * @return String The title of the EAC-CPF.
      */
     private String builderTitle(String path) {
         StringBuilder builderTitle = new StringBuilder();
@@ -221,10 +239,18 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         }
     }
 
+   /**
+    * Empty method.
+    */
     @Override
     protected void execute(EacCpf eac, Properties properties) throws APEnetException {
     }
-
+    /**
+     * This method is implemented by some developer to logs Action.
+     * @param xmlType The type of the file.
+     * @param fileName The name of the file.
+     * @param exception The exception to treat.
+     */
     protected void logAction(XmlType xmlType, String fileName, Exception exception) {
         if (exception == null) {
             logger.info(fileName + "(" + xmlType.getName() + "): " + getActionName() + " - succeed");
@@ -234,6 +260,12 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 
     }
 
+    /**
+     * Gets the path of the EAC-CPF.
+     * @param xmlType {@link XmlType} The type of the file.
+     * @param archivalInstitution {@link ArchivalInstitution} The institution where is the EAC-CPF.
+     * @return String The path of the EAC-CPF file.
+     */
     public static String getPath(XmlType xmlType, ArchivalInstitution archivalInstitution) {
         String countryIso = archivalInstitution.getCountry().getIsoname().trim();
         String startPath = APEnetUtilities.FILESEPARATOR + countryIso + APEnetUtilities.FILESEPARATOR
@@ -245,11 +277,14 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
     }
 
     /**
-     * Method to recover all the values of <part> in one repeatable element <nameEntry>.
+     * Method to recover all the values of {@code <part>} in one repeatable element {@code <nameEntry>}.
      *
-     * @param element, the repeatable element <part>
+     * @param element String the repeatable element {@code <part>}
      *
-     * @return all the values of the element
+     * @return  {@link LinkedList}{@code <}{@link NameEntry}{@code >} All the values of the element
+     * @see javax.xml.stream.XMLInputFactory
+     * @see javax.xml.stream.XMLStreamReader
+     * @see javax.xml.stream.events.XMLEvent
      */
     private LinkedList<NameEntry> searchForAllTitleElements(String path, String element) {
         final String CONVERTED_FLAG = "Converted_apeEAC-CPF_version_";
@@ -362,6 +397,12 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         return nameEntries;
     }
 
+   
+    /**
+     * 
+     * Class for the element <code>&lt;nameEntry&gt;</code> in the EAC-CPF.
+     *
+     */
     private class NameEntry {
 
         private NameEntryLocalType localType;
@@ -393,6 +434,11 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         }
     }
 
+    /**
+     * 
+     * Class for the element <code>&lt;part&gt;</code> in the EAC-CPF.
+     *
+     */
     private class Part {
 
         private String localType;
@@ -420,6 +466,11 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         }
     }
 
+   /**
+    * 
+    *Values of the attribute @localType in the element <code>&lt;nameEntry&gt;</code>.
+    *
+    */
     private enum NameEntryLocalType {
 
         PREFERRED("preferred"),
@@ -451,6 +502,11 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         }
     }
 
+    /**
+     * 
+     * Compares two elements <code>&lt;nameEntry&gt;</code>.
+     *
+     */
     private class NameEntryComp implements Comparator<NameEntry> {
 
         @Override
