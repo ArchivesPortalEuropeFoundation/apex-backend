@@ -14,19 +14,30 @@ import org.w3c.dom.NodeList;
 
 /**
  * @author Jara Alvarez
- * 23rd February 2011
+ * <span>23rd February 2011</span>
+ *<p>This class contains an items list of the one country archival landscape</p> 
+ *<p>The item is also another class with an specified structure</p>
  */
-
-//This class contains an items list of the one country archival landscape
-//The item is also another class with an specified structure
 public class ArchivalLandscapeStructure {
 	
 	private final Logger log = Logger.getLogger(getClass());
 	private List <ArchivalLandscapeNode> alNodes = new ArrayList<ArchivalLandscapeNode>();
 	private ArchivalLandscapeNode alNode;
 	private int nodeId=0;
-		
-	public List <ArchivalLandscapeNode> archivalLandscapeStructure(NodeList cList){
+	
+	/**
+	 * <p>
+	 * Method which returns a List<ArchivalLandscapeNode> 
+	 * with the content of a DOM node (param).
+	 * </p>
+	 * <p>
+	 * It uses getStructuredList method.
+	 * </p>
+	 * 
+	 * @param cList - NodeList source
+	 * @return List<ArchivalLandscapeNode> - structured list
+	 */
+	public List<ArchivalLandscapeNode> archivalLandscapeStructure(NodeList cList){
 				
 		for (int i=0;i< cList.getLength();i++)
 			this.getStructuredList(cList.item(i), null, null, null);
@@ -34,6 +45,17 @@ public class ArchivalLandscapeStructure {
         return alNodes;
 	}
 	
+	/**
+	 * <p>
+	 * Method used into archivalLandscapeStructure method to navigate throw a dom-node
+	 * It fills a global List<ArchivalLandscapeNode>
+	 * </p> 
+	 * 
+	 * @param node - Node source
+	 * @param is_group - Boolean flag
+	 * @param parent_name - String parent
+	 * @param parent_internal_al_id - String parent identifier
+	 */
 	private void getStructuredList(Node node, Boolean is_group, String parent_name, String parent_internal_al_id) {
 		
 		NodeList listDid;

@@ -54,12 +54,17 @@ import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
+ * <p>
  * Class which supports download and upload actions
- * for Archival Landscape. It's separated for the rest
- * of the Archival Landscape Edition because these operations
- * only support the last Archival Landscape export/import 
- * operations (download and upload), which are based on DDBB 
- * and not in any File storage. 
+ * for Archival Landscape.
+ * </p>
+ * <p>
+ * It's separated for the rest of the Archival Landscape 
+ * Edition because these operations only support the last 
+ * Archival Landscape export/import operations 
+ * (download and upload), which are based on DDBB and not 
+ * in any File storage.
+ * </p> 
  */
 public class ArchivalLandscapeManager extends DynatreeAction{
 	
@@ -458,10 +463,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Upload main action
+	 * <p>
+	 * Upload main action.
+	 * </p>
+	 * <p>
+	 * It uses temporally AL.xml file internally to work with it.
+	 * </p>
 	 * @return Struts.STATE
-	 * @throws SAXException
-	 * @throws APEnetException
+	 * @throws {@link SAXException} -> see checkUnzipAndUpload() documentation
+	 * @throws {@link APEnetException} -> see checkUnzipAndUpload() documentation
 	 */
 	public String upload() throws SAXException, APEnetException{
 		String state = ERROR;
@@ -498,12 +508,19 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return state;
 	}
 	/**
+	 * <p>
 	 * Main launcher of logic.
-	 * Unzip and call checks for ingest process.
+	 * </p>
+	 * <p>
+	 * Checks the uploaded file and call to checkOverwrite() method 
+	 * when discrimination checking file process finished.
+	 * </p>
+	 * <p>
+	 * It unzips and call checks for ingestion process if a zip file is detected.
+	 * </p>
 	 * @return Struts.STATE
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws APEnetException
+	 * @throws IOException -> see java.io.File and Apache {@link FileUtils} documentation for more details
+	 * @throws {@link APEnetException} -> see project documentation for details (APEnetException management)
 	 */
 	private String checkUnzipAndUpload() throws IOException, SAXException, APEnetException {
 		boolean error = false;
@@ -569,8 +586,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return ERROR;
 	}
 	/**
+	 * <p>
 	 * Checks if there is needed an overwrite, if not continues 
 	 * with the normal process (old new implementation).
+	 * </p>
+	 * <p>
+	 * It calls to ingestArchivalLandscapeXML() method in last instance.
+	 * </p>
 	 * @return Struts.STATE
 	 */
 	private String checkOverwrite() {
@@ -598,7 +620,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return state;
 	}
 	/**
+	 * <p>
 	 * Cancel (clean) action.
+	 * </p>
+	 * <p>
+	 * This method removes the uploaded file not ingested.
+	 * His information is stored into a global attribute, so it uses that value.
+	 * </p>
+	 * <p>
+	 * Also deletes internally .tmp files.
+	 * </p>
 	 * @return Structs.STATE
 	 */
 	public String cancelOverwrite(){
@@ -619,13 +650,26 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return state;
 	}
-
+	
+	/**
+	 * <p>
+	 * Method which fills the global attributes to be used in the next steps.
+	 * </p> 
+	 */
 	private void fillMainFiles() {
 		this.httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() +AL_FILE_NAME;
 		this.httpFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + 
 			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase(),
 			this.httpFileFileName);
 	}
+	/**
+	 * <p>
+	 * Method which cleans the target files (temp files).
+	 * </p>
+	 * <p>
+	 * This method try to delete all files and directory used for temp upload process.
+	 * </p>
+	 */
 	private void cleanMainFiles(){
 		if (httpFile != null){
 			String tempPath = this.httpFile.getAbsolutePath() + ".tmp";
@@ -642,6 +686,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 	}
 
+	/**
+	 * <p>
+	 * Action lauched to ingest xml archival-institution to ddbb.
+	 * </p>
+	 * <p>
+	 * It call to fillMainFiles(), rightXml() (checks) and reportAction() methods.
+	 * </p>
+	 * @return String - state_constants[INVALID or reportAction() result]
+	 * @throws {@link APEnetException} -> see project documentation for details ({@link APEnetException} management)
+	 */
 	public String checkReportAndIngestLogic() throws SAXException, APEnetException {
 		String state = INVALID;
 		//fill main files to be used
@@ -652,10 +706,19 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return state;
 	}
+	
 	/**
-	 * Launch all validations.
+	 * <p>
+	 * Launch all file validations (see validateUploadedAL() 
+	 * documentation for more details).
+	 * </p>
+	 * <p>
+	 * It validates the uploaded Archival Landscape (file) and next
+	 * works with DDBB checking identifiers and if some institution
+	 * has content indexed. 
+	 * </p>
 	 * 
-	 * @return boolean.RIGHT
+	 * @return boolean -> is right or not
 	 */
 	private boolean rightXml(){
 		boolean right = true;
@@ -700,9 +763,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Checks if the AL uploaded is for the current country.
+	 * <p>
+	 * Checks if the AL uploaded is for the current country (file).
+	 * </p>
 	 *
-	 * @return boolean
+	 * @return boolean -> is right or not
 	 */
 	private boolean checkCountryCode() {
 		boolean right = false;
@@ -715,11 +780,19 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Checks two structures, indexed institutions with target structure.
-	 * The first structure is plain (probably obtained by DDBB query)
-	 * The second structure is in a tree way (probably obtained by a file parsed to an structured no plain) 
-	 * @param indexedInstitutions
-	 * @param archivalFileInstitutions
+	 * <p>
+	 * Checks two structures, search for an indexed institutions 
+	 * using the target structure.
+	 * </p>
+	 * <p>
+	 * The first structure is plain (should be obtained by DDBB query).
+	 * </p>
+	 * <p>
+	 * The second structure is in a tree way (should be obtained by 
+	 * a file parsed to an structured no plain).
+	 * </p> 
+	 * @param indexedInstitutions - List<{@link ArchivalInstitution}> source
+	 * @param archivalFileInstitutions - Collection<{@link ArchivalInstitution}> seeker
 	 * @return Boolean - is right structure
 	 */
 	private boolean checkIndexedInstitutions(List<ArchivalInstitution> indexedInstitutions,Collection<ArchivalInstitution> archivalFileInstitutions) {
@@ -749,11 +822,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return (!exit && (indexedInstitutions!=null && this.relatedInstitutionsByName.size()==indexedInstitutions.size())); //found all institutions indexed (yes = true, no = false)
 	}
 	/**
-	 * Check for checkIndexedInstitutions - recursive. 
+	 * <p>
+	 * Check for checkIndexedInstitutions - recursive.
+	 * </p>
+	 * <p> 
 	 * It should be called by checkIndexedInstitutions.
+	 * </p>
 	 * 
-	 * @param childArchivalInstitutions
-	 * @param indexedInstitution
+	 * @param childArchivalInstitutions - List<{@link ArchivalInstitution}> source
+	 * @param indexedInstitution - {@link ArchivalInstitution} seeker
+	 * @return boolean -> found
 	 */
 	private boolean checkChildrenIndexedInstitutionRecursive(List<ArchivalInstitution> childArchivalInstitutions,ArchivalInstitution indexedInstitution) {
 		boolean found = false;
@@ -776,15 +854,18 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Action which checks the uploaded file and displays the error messages or
 	 * the report while it's not being uploaded.
-	 *
+	 * </p>
+	 * <p>
 	 * The checks are as follow:
-	 *
-	 *     1. Checks if the file is a valid XML file.
-	 *     2. Checks if the file contains duplicate identifiers.
-	 *     3. Checks if the file contains changes in the institutions' names.
-	 * 
+	 * </p>
+	 * <ol>
+	 *     <li>Checks if the file is a valid XML file.</li>
+	 *     <li>Checks if the file contains duplicate identifiers.</li>
+	 *     <li>Checks if the file contains changes in the institutions' names.</li>
+	 * </ol>
 	 * @return Struts.STATE
 	 */
 	public String reportAction(){
@@ -813,11 +894,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Compare, if possible identify an institution. 
+	 * <p>
+	 * Compare, if possible identify an institution.
+	 * </p>
+	 * <p> 
 	 * When method is able to detect that exits two institutions with the same identifier, it 
 	 * compares the name, and if some institution detected has different name is rejected.
+	 * </p>
 	 * 
-	 * @param archivalInstitutions
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
 	 * @return state (rejected or not)
 	 */
 	private boolean institutionNamesHaveChanged(Collection<ArchivalInstitution> archivalInstitutions) {
@@ -845,9 +930,35 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Action which displays three list, inserts, updates and deleted
-	 * @param archivalInstitutions
-	 * @return String <=> (Action.INPUT)
+	 * <p>
+	 * Action which displays three list, inserts, updates and deleted.
+	 * </p>
+	 * <p>
+	 * Shows a report to user with the following information.
+	 * </p>
+	 * <p> 
+	 * To get this information it runs steps:
+	 * </p>
+	 * <ol>
+	 * 	<li>Extract all institutions identifiers</li>
+	 * 	<li>Uses identifiers to discriminate which institutions are new, which are removed and which are updated.</li> 
+	 * 	<li>Also uses this identifiers to differences between institutions which have the same identifier 
+	 * 	   and institutions which have empty identifier (next steps).</li>
+	 * 	<li>
+	 * 	 <ul>
+	 * 	  <li>Manage information for different actions:</li>
+	 * 	  <li>Show ->  Same identifiers, Empty identifiers.</li>
+	 * 	  <li>Execute -> Institution updates and deletes.</li>
+	 *   </ul>
+	 *  </li>
+	 *  <li> Finally discriminates institutions which have the same name. </li>
+	 * </ol>
+	 * <p>
+	 * This method doesn't change any internal institution in this step.
+	 * </p>
+	 * 
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @return String <=> ({@link Action}.INPUT)
 	 */
 	private String displayReport(Collection<ArchivalInstitution> archivalInstitutions){
 		//all ingested identifiers, to be used for checks if there are deletes
@@ -1109,10 +1220,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Method to check if the lists contains more than one institution or group
-	 * with same name. 
-	 *
-	 * @return Boolean result.
+	 * with same name.
+	 * </p>
+	 * <p>
+	 * Returns true if some change was detected.
+	 * </p> 
+	 * 
+	 * @return boolean -> result / something has been detected
 	 */
 	private boolean checkMultipleInstitutionsSameName(Collection<ArchivalInstitution> archivalInstitutions) {
 		boolean result = false;
@@ -1200,11 +1316,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Method to clean the archives with same name in the list passed.  
-	 *
-	 * @param archives List of archives.
-	 *
-	 * @return List of archives without repeated names.
+	 * </p>
+	 * @param archives - List<{@link ArchivalInstitution}> sources
+	 * @return List<{@link ArchivalInstitution}> -> Archives without repeated names.
 	 */
 	private List<ArchivalInstitution> removeSameNameInstitutionsFromList(List<ArchivalInstitution> archives) {
 		if (this.getNameSet() != null && !this.getNameSet().isEmpty()
@@ -1229,17 +1345,20 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Method to checks the sizes of the lists, in the maps of institutions
 	 * with same name and add items if needed.
-	 *
+	 * </p>
+	 * <p>
 	 * The items added will be:
-	 *
-	 *    1.- If the size of the list from database is less than the size from
-	 *        the file, the value will be "Add".
-	 *    2.- If the size of the list from database is greater than the size
-	 *        from the file, the value will be "Delete".
-	 *
-	 * @return {@link Boolean}
+	 * </p>
+	 * <ol>
+	 *    <li>If the size of the list from database is less than the size from
+	 *        the file, the value will be "Add".</li>
+	 *    <li>If the size of the list from database is greater than the size
+	 *        from the file, the value will be "Delete".</li>
+	 * </ol>
+	 * @return boolean -> false
 	 */
 	private boolean checkSizeOfListsInMap() {
 		boolean result = false;
@@ -1284,10 +1403,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Search xml file from File (folders) structure and
 	 * fill global this.httpFile.
+	 * </p>
 	 * 
-	 * @param targetFile
+	 * @param targetFile - File source
+	 * @return boolean -> has been found or not
 	 */
 	private boolean checkFileLevel(File targetFile) {
 		boolean found = false;
@@ -1308,21 +1430,29 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Method to discriminate between the different types of ingest the XML.
-	 *
-	 *     1. "Continue", the XML file doesn't contains changes or only contains
+	 * </p>
+	 * <ol>
+	 *     <li>
+	 *        "Continue", the XML file doesn't contains changes or only contains
 	 *        changes related to a reorder of the institutions inside the same
 	 *        group.
-	 *     2. "Keep", some of the internal identifiers in the database and in
+	 *     </li>
+	 *     <li>
+	 *       "Keep", some of the internal identifiers in the database and in
 	 *        the file aren't the same, so the internal identifiers in database
 	 *        will be maintained.
-	 *     3. "Overwrite", some of the internal identifiers in the database and
+	 *     </li>
+	 *     <li>
+	 *        "Overwrite", some of the internal identifiers in the database and
 	 *        in the file aren't the same, so the internal identifiers in
 	 *        database will be overwritten with the identifiers in the file.
-	 *
-	 * @return Structs2-RESPONSE
-	 * @throws SAXException
-	 * @throws APEnetException
+	 *     </li>
+	 * </ol>
+	 * @return Structs.STATE
+	 * @throws {@link SAXException} -> see ingestArchivalLandscapeXML for details
+	 * @throws {@link APEnetException} -> see project documentation for details ({@link APEnetException} management)
 	 */
 	public String checkIngestionMode() throws SAXException, APEnetException {
 		String state = ERROR;
@@ -1363,16 +1493,24 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Main function called to ingest all content.
-	 * 
+	 * </p>
+	 * <p>
 	 * This function is explited in two parts:
-	 * 	1) Read target file and returns his archival-institutions structure
-	 * 	2) Checks if previews structure is possible to insert/update into 
+	 * </p>
+	 * <ol>
+	 * 	<li>
+	 *     Read target file and returns his archival-institutions structure.
+	 *  </li>
+	 * 	<li>
+	 *      Checks if previews structure is possible to insert/update into 
 	 * 		current system and make ingestion/update logic.
-	 * 
-	 * @return Structs2-RESPONSE
-	 * @throws APEnetException 
-	 * @throws SAXException 
+	 *  </li>
+	 * </ol>
+	 * @return Structs.STATE
+	 * @throws {@link APEnetException} -> see project documentation for details (APEnetException management)
+	 * @throws {@link SAXException} -> see validateUploadedAL() for details
 	 */
 	private String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
 		String state = ERROR;
@@ -1422,6 +1560,19 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return state;
 	}
 
+	/**
+	 * <p>
+	 * Method which validates an xml with DPT. See DPT documentation for more details.
+	 * {@link DocumentValidation}.xmlValidation
+	 * </p>
+	 * <p>
+	 * If there are some kind of validation errors a global list is filled with messages in HTML format.
+	 * </p>
+	 * 
+	 * @param file - File source
+	 * @throws {@link SAXException} -> see project documentation for details ({@link APEnetException} management)
+	 * @throws {@link APEnetException} -> see project documentation for details ({@link APEnetException} management)
+	 */
 	private void validateUploadedAL(File file) throws SAXException, APEnetException {
 		warnings_ead = new ArrayList<String>();
 	//	boolean state = true;
@@ -1449,8 +1600,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Method to add the selections of the user in the details view to the
 	 * correct lists.
+	 * </p>
 	 */
 	private void parseUserSelections() {
 
@@ -1472,7 +1625,21 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			}
 		}
 	}
-	
+	/**
+	 * <p>
+	 * Method which checks if an Collection<{@link ArchivalInstitution}> has new identifiers.
+	 * </p>
+	 * <p>
+	 * This method is called recursively if child levels are found
+	 * </p>
+	 * <p>
+	 * Return if new identifiers are found.
+	 * </p>
+	 * 
+	 * @param newArchivalInstitutionStructure - Collection<{@link ArchivalInstitution}> source
+	 * @param ingestedIdentifiers - List<String> second source, discrimination list
+	 * @return boolean - returns state of institution with has new identifiers
+	 */
 	private boolean institutionHasNewIdentifiers(Collection<ArchivalInstitution> newArchivalInstitutionStructure,List<String> ingestedIdentifiers) {
 		boolean state = false;
 		if(newArchivalInstitutionStructure!=null){
@@ -1496,12 +1663,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	
 	/**
+	 * <p>
 	 * Checks and work with an archival_institution structure.
-	 * Tries to insert, update and delete institutions.
+	 * </p>
+	 * <p>
+	 * Tries to insert, update and delete institutions (DDBB operations).
+	 * </p>
 	 * 
-	 * @param archivalInstitutions
-	 * @return validOperation
-	 * @throws IOException 
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> sources used
+	 * @return validOperation - String Struts.state / Internals STATE_IDENTIFIERS
+	 * @throws IOException - see rollbackDeletedPaths() documentation for more details
 	 */
 	public String checkAndUpdateFromToDDBB(Collection<ArchivalInstitution> archivalInstitutions,boolean useddbb) throws IOException {
 		String validOperation = SUCCESS; //flag used to rollback the process when some rule is wrong
@@ -1605,7 +1776,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return validOperation;
 	}
-	
+	/**
+	 * <p>
+	 * Method which removes directories from "repo" folder.
+	 * </p>
+	 * 
+	 * @throws IOException - See {@link FileUtils}.deleteDirectory Apache documentation for more details 
+	 */
 	private void removePathsToBeDeleted() throws IOException {
 		if(this.pathsToBeDeleted!=null){
 			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
@@ -1621,6 +1798,17 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 	}
 
+	/**
+	 * <p>
+	 * Method which rollback (move to the original path)
+	 * a file marked to be deleted.
+	 * </p>
+	 * <p>
+	 * Uses global pathsToBeDeleted and move into "repo" dir path to 
+	 * "delete" (move/rename with '_old') directories.
+	 * </p>
+	 * @throws IOException - See {@link FileUtils}.moveDirectory Apache documentation for more details 
+	 */
 	private void rollbackDeletedPaths() throws IOException {
 		if(this.pathsToBeDeleted!=null){
 			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
@@ -1636,6 +1824,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 	}
 
+	/**
+	 * <p>
+	 * Method which deletes institution which are not used.
+	 * </p>
+	 * <p>
+	 * Returns if an institution is removed.
+	 * </p>
+	 * @return boolean -> error
+	 */
 	private boolean deleteSimpleUnusedGroups() {
 		boolean error = false;
 		log.debug("Begin delete process for old institutions.");
@@ -1676,10 +1873,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Method to order the structure of the groups.
+	 * </p>
 	 *
-	 * @param archivalInstitutionList List of groups to order.
-	 * @return Order list.
+	 * @param archivalInstitutionList - List<{@link ArchivalInstitution}> source unsorted
+	 * @return ArrayList<{@link ArchivalInstitution}> -> Sorted list of institutionsToBeDeleted.
 	 */
 	private List<ArchivalInstitution> orderGroups(List<ArchivalInstitution> archivalInstitutionList) {
 		Set<ArchivalInstitution> institutionsToBeDeleted = new LinkedHashSet<ArchivalInstitution>();
@@ -1723,11 +1922,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Detects and checks if some institution exists into system which algorithm
 	 * could overwrite. When it's detected an overwrite check it's launched.
+	 * </p>
+	 * <p>
 	 * Returns if an override and/or normal process is possible.
+	 * </p>
 	 * 
-	 * @param archivalInstitutions
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @return Structs.STATE
 	 */
 	private String checkIfSomeInstitutionIsIngestedAndHasContentIndexed(Collection<ArchivalInstitution> archivalInstitutions) {
 		String valid = SUCCESS;
@@ -1798,10 +2002,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Method to recover all child institutions that have content indexed.
-	 *
-	 * @param archivalInstitution Current archival institution to process.
-	 * @return List of archival institution with content published.
+	 * </p>
+	 * @param archivalInstitution - {@link ArchivalInstitution} current archival institution to process (source).
+	 * @return List<{@link ArchivalInstitution}> -> List of archival institution with searching content/published.
 	 */
 	private List<ArchivalInstitution> recoverChildInstitutions(ArchivalInstitution archivalInstitution) {
 		log.debug("Recover elements with content indexed for: " + archivalInstitution.getAiname());
@@ -1826,9 +2031,26 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Insert not updated institutions. It should be the rest of the 
-	 * param Collection<ArchivalInstitution> not updated.
-	 * @param archivalInstitutions
+	 * <p>
+	 * Insert not updated institutions.
+	 * </p>
+	 * <p>
+	 * Iterates through a global List<{@link ArchivalInstitution}> (updatedInstitutions)
+	 * to check if an institution is into parameter. 
+	 * </p>
+	 * <p> 
+	 * If it's found is called recursively or discarded.
+	 * If it's not found this institution is inserted.
+	 * </p>
+	 * <p>
+	 * This method could be called recursively by himself.
+	 * <p/>
+	 * <p>
+	 * It should be the rest of the param Collection<{@link ArchivalInstitution}> not updated.
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> sources
+	 * @param parent - {@link ArchivalInstitution} parent
+	 * @return String -> 'stdout' or {@link DashboardAPEnetException} detailed message
 	 */
 	private String insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent,boolean useddbb) {
 		String strOut = null;
@@ -1865,13 +2087,18 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return strOut;
 	}
 	/**
+	 * <p>
 	 * Method used to delete all institutions not updated or inserted.
+	 * </p>
+	 * <p>
 	 * It runs a DDBB query to get all current institutions less the 
 	 * sum of the updatedInstitutions and the insertedInstitutions.
-	 * 
+	 * </p>
+	 * <p>
 	 * It just delete all alternative names not used of each unused institutions.
+	 * </p>
 	 * 
-	 * @return boolean (error situation)
+	 * @return boolean -> error detected
 	 */
 	private boolean deleteSimpleUnusedInstitutions() {
 		boolean error = false;
@@ -1921,9 +2148,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Checks if it's needed some delete operation.
+	 * </p>
+	 * <p>
+	 * Loop into parameter List<{@link ArchivalInstitution}> currentIngestedArchivalInstitutions and compare
+	 * this list with internal detected updateInstitutions. If an institution is found it market it and deletes 
+	 * from updated list (this.updatedInstitutions).
+	 * </p>
 	 * 
-	 * @param currentIngestedArchivalInstitutions
+	 * @param List<{@link ArchivalInstitution}> -> currentIngestedArchivalInstitutions, used to seek into internal updatedInstitutions
 	 */
 	private void checkDeleteArchivalInstitutions(List<ArchivalInstitution> currentIngestedArchivalInstitutions) {
 		this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
@@ -1942,17 +2176,24 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 	}
 	/**
+	 * <p>
 	 * This method is recursive, when it's used it has 2 management cases.
-	 * 
+	 * </p>
+	 * <p>
 	 * On the one hand is used when first time is called. It tries to get all parent institutions
 	 * and next run into targets from parents to children.
+	 * </p>
+	 * <p>
 	 * On the other hand there is the recursive method, institutionUpdate, to fill all targets.
+	 * </p>
+	 * <p>
 	 * It's needed to be called each time by one institution (sibling).
+	 * </p>
 	 * 
-	 * @param target
-	 * @param archivalInstitutions
-	 * @param useddbb 
-	 * @return boolean (found or not)
+	 * @param target - {@link ArchivalInstitution} seeker
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @param useddbb - boolean flag
+	 * @return boolean -> some institution has been updated
 	 */
 	private boolean checkAndUpdateArchivalInstitutions(ArchivalInstitution target,Collection<ArchivalInstitution> archivalInstitutions, boolean useddbb) {
 		boolean found = false;
@@ -1991,12 +2232,19 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	
 	/**
+	 * <p>
 	 * Update the current node with the new information.
+	 * </p>
+	 * <p>
 	 * Institutions - Alternative Names are being updating.
+	 * </p>
+	 * <p>
 	 * If institution has children they are not being updated.
+	 * </p>
 	 * 
-	 * @param oldDDBBInstitution
-	 * @param updatedInstitution
+	 * @param oldDDBBInstitution - {@link ArchivalInstitution} source
+	 * @param updatedInstitution - {@link ArchivalInstitution} updated
+	 * @return boolean -> state
 	 */
 	protected boolean replaceNode(ArchivalInstitution oldDDBBInstitution,ArchivalInstitution updatedInstitution) {
 		boolean state = true;
@@ -2062,14 +2310,18 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	
 	/**
+	 * <p>
 	 * Recursive function to check root parents and all his children when
 	 * target parent institution has other institutions pending of.
-	 * 
+	 * </p>
+	 * <p>
 	 * Returns boolean, if target institution is updated or not.
+	 * </p>
 	 * 
-	 * @param parentInstitutions
-	 * @param archivalInstitutions
-	 * @param useddbb 
+	 * @param parentInstitutions - List<{@link ArchivalInstitution}> parents
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> sources
+	 * @param useddbb - boolean flag
+	 * @return boolean -> state
 	 */
 	private boolean checkParents(List<ArchivalInstitution> parentInstitutions,Collection<ArchivalInstitution> archivalInstitutions, boolean useddbb) {
 		boolean found = false;
@@ -2100,14 +2352,20 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	
 	/**
+	 * <p>
 	 * This function update an institution when it's found.
-	 * When it's found List<ArchivalInstitution> this.deletedInstitutions is updated
+	 * </p>
+	 * <p>
+	 * <p>
+	 * When it's found List<{@link ArchivalInstitution}> this.deletedInstitutions is updated
 	 * and the current founded institution is appended to this list.
-	 * 
+	 * </p>
+	 * <p>
 	 * It returns a boolean if the target Archival Institution is found or not.
-	 * 
-	 * @param archivalInstitutions
-	 * @param target
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> sources
+	 * @param target - {@link ArchivalInstitution} seeker
+	 * @return boolean -> institution updated was found
 	 */
 	private boolean institutionUpdate(Collection<ArchivalInstitution> archivalInstitutions, ArchivalInstitution target,boolean useddbb) {
 		boolean found = false;
@@ -2136,10 +2394,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Deletes a simple institution (this method doesn't 
 	 * take into account count children) and his alternative names.
+	 * </p>
 	 * 
-	 * @param possibleDeletedInstitution
+	 * @param possibleDeletedInstitution -> {@link ArchivalInstitution} target
 	 */
 	private void deleteInstitution(ArchivalInstitution possibleDeletedInstitution) {
 		Set<AiAlternativeName> itAiAN = possibleDeletedInstitution.getAiAlternativeNames();
@@ -2171,17 +2431,24 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
+	 * <p>
 	 * Recursive function to ingest an Archival Institution to DDBB and his children.
-	 * 
+	 * </p>
+	 * <p>
 	 * It loops into archivalInstitution param and next go each by one.
+	 * </p>
+	 * <p>
 	 * If target institution is a group (SERIES) it ingests itself and next
 	 * tries to ingests his children.
+	 * </p>
+	 * <p>
 	 * If target case is not a group (FILE) it ingest itself by 
-	 * insertInstitution method. 
+	 * insertInstitution method.
+	 * </p> 
 	 * 
-	 * @param archivalInstitutions
-	 * @param parent
-	 * @throws DashboardAPEnetException 
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @param parent - {@link ArchivalInstitution} seeker
+	 * @throws {@link DashboardAPEnetException}
 	 */
 	private void insertChildren(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent,boolean useddbb) throws DashboardAPEnetException {
 		Iterator<ArchivalInstitution> aiIt = archivalInstitutions.iterator();
@@ -2222,18 +2489,29 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 	}
 	/**
+	 * <p>
 	 * Recursive function to ingest an Archival Institution.
+	 * </p>
+	 * <p>
 	 * All the target institutions will be provided from this method.
+	 * </p>
+	 * <p>
 	 * This method is used to ingest all institutions each by one with
 	 * a simple method (needs an open transaction first and next a commit).
-	 * 
+	 * </p>
+	 * <p>
 	 * Function aggregates institution to global this.groupsInsertedIntoDDBB,
-	 * which it's used onto other methods to be used to put a parent. These 
-	 * parents are stored into a Map<String-InternalAlId,ArchivalInstitution-parent>
-	 * 
+	 * which it's used onto other methods to be used to put a parent.
+	 * </p>
+	 * <p> These parents are stored into a Map<String-InternalAlId,{@link ArchivalInstitution}-parent>
+	 * </p>
+	 * <p>
 	 * It's called by insertChildren institution.
+	 * </p>
 	 * 
-	 * @param currentInstitution
+	 * @param currentInstitution - {@link ArchivalInstitution} seeker
+	 * @param useddbb - boolean flag
+	 * @return {@link ArchivalInstitution} -> institution inserted
 	 */
 	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution,boolean useddbb) throws DashboardAPEnetException {
 		String internalAlId = currentInstitution.getInternalAlId();
@@ -2303,9 +2581,20 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * It extracts and returns file institutions. 
+	 * <p>
+	 * It extracts and returns file institutions.
+	 * </p>
+	 * <p>
+	 * This method read file and returns a Set<{@link ArchivalInstitution}>.
+	 * </p> 
+	 * <p>
+	 * It calls to createXMLStreamReader and next use getXMLArchivalInstitutionLevel 
+	 * to read xml content and format it into the target set.
+	 * </p>
 	 * 
-	 * @param archivalInstitutionFile
+	 * @param archivalInstitutionFile - File source
+	 * @param checkLang - boolean flag
+	 * @return Set<{@link ArchivalInstitution}> -> file institutions / null
 	 */
 	public Set<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile,boolean checkLang) {
 		Set<ArchivalInstitution> archivalInstitutions = null;
@@ -2330,10 +2619,25 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	
 	/**
+	 * <p>
 	 * Method which obtain and return country institution children
 	 * readed from file by SAX.
+	 * </p>
+	 * <p>
+	 * Uses a LinkedHashSet to store the targets archival institutions.
+	 * </p>
+	 * <p>
+	 * It should be called by getInstitutionsByALFile method.
+	 * </p>
+	 * <p>
+	 * It returns an Set<{@link ArchivalInstitution}> with the content of 
+	 * the xml level given in the target param.
+	 * </p>
 	 * 
-	 * @throws XMLStreamException
+	 * @throws {@link XMLStreamException}
+	 * @param r - {@link XMLStreamReader} reader
+	 * @param checkLang - boolean flag
+	 * @return Set<{@link ArchivalInstitution}> -> reader institutions / null
 	 */
 	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevel(XMLStreamReader r,boolean checkLang) throws XMLStreamException{
 		ArchivalInstitution archivalInstitution = null;
@@ -2488,9 +2792,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	
 	/**
+	 * <p>
 	 * Method which get all the series children, it's used to obtain recursive
-	 * institution series children. 
-	 * @throws XMLStreamException
+	 * institution series children.
+	 * </p> 
+	 * 
+	 * @throws {@link XMLStreamException}
+	 * @param r - {@link XMLStreamReader} reader
+	 * @param aiParent - {@link ArchivalInstitution} parent
+	 * @param checkLang - boolean flag
+	 * @return LinkedHashSet<{@link ArchivalInstitution}> -> level institutions / null
 	 */
 	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevelChildren(XMLStreamReader r, ArchivalInstitution aiParent,boolean checkLang) throws XMLStreamException {
 		Set<ArchivalInstitution> archivalInstitutions = new LinkedHashSet<ArchivalInstitution>();
@@ -2633,6 +2944,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return (validXML)?archivalInstitutions:null;
 	}
 
+	/**
+	 * <p>
+	 * Method which launches the download archival-landscape action.
+	 * </p>
+	 * <p>
+	 * It calls to {@link ContentUtils}.download function. See {@link ContentUtils} documentation to get more extended explanation.
+	 * </p>
+	 * 
+	 * @return Struct.STATE
+	 */
 	public String download(){
 		ByteArrayOutputStream xml = ArchivalLandscapeUtils.buildXMlFromDDBB(getSecurityContext().getCountryName());
 		if(xml!=null){

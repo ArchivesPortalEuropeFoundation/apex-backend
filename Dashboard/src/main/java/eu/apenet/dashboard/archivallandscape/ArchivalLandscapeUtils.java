@@ -57,9 +57,16 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.Lang;
 import eu.apenet.persistence.vo.SentMailRegister;
 import eu.apenet.persistence.vo.SourceGuide;
-
+/**
+ * <p>
+ * Archival-Landscape utilities class.
+ * </p>
+ * <p>
+ * It contains all final information to build xml-nodes.
+ * </p>
+ */
 public class ArchivalLandscapeUtils {
-	
+	//Constants used internally
 	private static final String AL_XMLNS = "urn:isbn:1-931666-22-9";
 	private static final String AL_XMLNS_XLINK = "http://www.w3.org/1999/xlink";
 	private static final String AL_XMLNS_XSI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI; //"http://www.w3.org/2001/XMLSchema-instance";
@@ -168,7 +175,7 @@ public class ArchivalLandscapeUtils {
 	public List<SentMailRegister> getSentMailRegisterList() {
 		return sentMailRegisterList;
 	}
-
+	
 	public void setSentMailRegisterList(List<SentMailRegister> sentMailRegisterList) {
 		this.sentMailRegisterList = sentMailRegisterList;
 	}
@@ -224,8 +231,15 @@ public class ArchivalLandscapeUtils {
 	public static void setDuplicateIdentifiers(Set<String> duplicateIdentifiers) {
 		ArchivalLandscapeUtils.duplicateIdentifiers = duplicateIdentifiers;
 	}
-
-	//Returns the path of the AL of each country
+	// END of setters and getters from old ArchivalLandscape class.
+	
+	/**
+	 * <p>
+	 * Method which returns the path of the AL of each country.
+	 * </p>
+	 * @param country - String country
+	 * @return String - target path
+	 */
 	public String getmyPath(String country) {
 		String path = APEnetUtilities.getConfig().getRepoDirPath() + File.separatorChar;
 		path = path + country + File.separatorChar + "AL" + File.separatorChar;
@@ -236,8 +250,13 @@ public class ArchivalLandscapeUtils {
 
 		return path;
 	}
-	// End of setters and getters from old ArchivalLandscape class.
 	
+	/**
+	 * <p>
+	 * Append to a global Set an institution with special characters (param -> identifier)
+	 * </p>
+	 * @param institutionsWithSpecialCharacters - String institution
+	 */
 	public static void addInstitutionsWithSpecialCharacters(String institutionsWithSpecialCharacters) {
 		if (ArchivalLandscapeUtils.getInstitutionsWithSpecialCharacters() == null) {
 			ArchivalLandscapeUtils.institutionsWithSpecialCharacters = new LinkedHashSet<String>();
@@ -246,6 +265,14 @@ public class ArchivalLandscapeUtils {
 		ArchivalLandscapeUtils.getInstitutionsWithSpecialCharacters().add(institutionsWithSpecialCharacters);
 	}
 
+	/**
+	 * <p>
+	 * Method which check if two institution has the same father and returns it.
+	 * </p>
+	 * @param ingestedInstitution -  {@link ArchivalInstitution} compare parameter 1
+	 * @param archivalInstitution -  {@link ArchivalInstitution} compare parameter 2
+	 * @return boolean -> same parent
+	 */
 	protected static boolean checkIfTwoInstitutionsHasTheSameParents(ArchivalInstitution ingestedInstitution,ArchivalInstitution archivalInstitution) {
 		boolean state = false;
 		if(ingestedInstitution!=null && archivalInstitution!=null 
@@ -263,12 +290,15 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
-	 * Seek an institution into ArchivalInstitution structure.
+	 * <p>
+	 * Seek an institution into {@link ArchivalInstitution} structure.
+	 * </p>
+	 * <p>
 	 * The seek institution comes from an AL file.
-	 * 
-	 * @param ingestedInstitution
-	 * @param archivalInstitutions
-	 * @return ArchivalInstitution.TARGET / NULL if not found
+	 * </p>
+	 * @param ingestedInstitution - {@link ArchivalInstitution} seeker
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @return {@link ArchivalInstitution}.TARGET / null if not found
 	 */
 	protected static ArchivalInstitution getInstitutionFromArchivalInstitutionStructure(ArchivalInstitution ingestedInstitution, Collection<ArchivalInstitution> archivalInstitutions) {
 		ArchivalInstitution targetInstitution = null;
@@ -286,6 +316,15 @@ public class ArchivalLandscapeUtils {
 		return targetInstitution;
 	}
 	
+	/**
+	 * <p>
+	 * Method which loop into an structured Collection<{@link ArchivalInstitution}> and returns
+	 * in a new Collection<{@link ArchivalInstitution}> institutions which contains an empty 
+	 * internal-identifier. 
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @return Collection<{@link ArchivalInstitution}> -> detectedArchivalInstitutions / null 
+	 */
 	protected static Collection<ArchivalInstitution> getInstitutionsWithEmptyIdFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions){
 		Collection<ArchivalInstitution> detectedArchivalInstitutions = null;
 		if(archivalInstitutions!=null){
@@ -306,7 +345,14 @@ public class ArchivalLandscapeUtils {
 		}
 		return detectedArchivalInstitutions;
 	}
-	
+	/**
+	 * <p>
+	 * Method which loop into an structured Collection<{@link ArchivalInstitution}> and returns
+	 * in a new Collection<{@link ArchivalInstitution}> institutions which contains the same identifier.
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @return Map<String,List<{@link ArchivalInstitution}>> -> allRepeatedInstitutions / null
+	 */
 	protected static Map<String,List<ArchivalInstitution>> getInstitutionsWithSameIdentifierFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions){
 		Map<String,List<ArchivalInstitution>> allRepeatedInstitutions = null;
 		Map<String, List<ArchivalInstitution>> allInstitutionsByIdentifier = getInstitutionsWithSameIdentifierFromArchivalInstitutionStructure(archivalInstitutions,null);
@@ -327,6 +373,15 @@ public class ArchivalLandscapeUtils {
 		return allRepeatedInstitutions;
 	}
 
+	/**
+	 * <p>
+	 * Recursive method which loop into an structured Collection<{@link ArchivalInstitution}> and returns
+	 * in a new Collection<{@link ArchivalInstitution}> institutions which contains the same identifier.
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @param allRepeatedInstitutions - Map<String,List<{@link ArchivalInstitution}>> storage
+	 * @return Map<String,List<{@link ArchivalInstitution}>> -> allRepeatedInstitutions
+	 */
 	private static Map<String,List<ArchivalInstitution>> getInstitutionsWithSameIdentifierFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions,Map<String,List<ArchivalInstitution>> allRepeatedInstitutions){
 		if(allRepeatedInstitutions==null){
 			allRepeatedInstitutions = new HashMap<String,List<ArchivalInstitution>>();
@@ -364,11 +419,12 @@ public class ArchivalLandscapeUtils {
 	}
 
 	/**
+	 * <p>
 	 * Method to check and returns, the list of institutions that has the same
 	 * name in the collection passed.
-	 *
-	 * @param archivalInstitutions List of institutions and/or groups to check.
-	 * @return The list of related institutions.
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source to check
+	 * @return Map<String, List<{@link ArchivalInstitution}>> -> The list of related institutions with same name / null
 	 */
 	protected static Map<String,List<ArchivalInstitution>> getInstitutionsWithSameNameFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions) {
 		Map<String, List<ArchivalInstitution>> allRepeatedInstitutions = null;
@@ -393,12 +449,13 @@ public class ArchivalLandscapeUtils {
 	}
 
 	/**
+	 * <p>
 	 * Method to obtain the institutions listed under same name.
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> institutions and/or groups to check (source)
+	 * @param allRepeatedInstitutions - Map<String,List<{@link ArchivalInstitution}>> institutions and/or groups checked (storage)
 	 *
-	 * @param archivalInstitutions List of institutions and/or groups to check.
-	 * @param allRepeatedInstitutions List of institutions and/or groups checked.
-	 *
-	 * @return Map of institutions with keys the same name.
+	 * @return Map<String,List<{@link ArchivalInstitution}>> -> institutions with keys which have the same name, key is aiName
 	 */
 	private static Map<String,List<ArchivalInstitution>> getInstitutionsWithSameNameFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions, Map<String,List<ArchivalInstitution>> allRepeatedInstitutions) {
 		if (allRepeatedInstitutions == null) {
@@ -436,9 +493,11 @@ public class ArchivalLandscapeUtils {
 	}
 
 	/**
+	 * <p>
 	 * Parse an archivalInstitution structure to a plain internal identifiers
-	 * @param archivalInstitutions
-	 * @return List<String> internalIdentifiers (plain list)
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @return List<String> internalIdentifiers -> plain identifiers list
 	 */
 	protected static List<String> getIdentifiersFromArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions) {
 		List<String> institutionsIdentifiers = new ArrayList<String>();
@@ -457,6 +516,15 @@ public class ArchivalLandscapeUtils {
 		return institutionsIdentifiers;
 	}
 
+	/**
+	 * <p>
+	 * Method which tries to search in an structure (param) containing ArchivalInstitutions 
+	 * and returns if it's found an institution with the target name (param).
+	 * </p>
+	 * @param emptyIdentifierNamed - String name (seeker)
+	 * @param archivalInstitutionList - Collection<{@link ArchivalInstitution}> source
+	 * @return {@link ArchivalInstitution} -> target extracted institution / null 
+	 */
 	public static ArchivalInstitution getInstitutionByNameFromStructure(String emptyIdentifierNamed,Collection<ArchivalInstitution> archivalInstitutionList) {
 		ArchivalInstitution target = null;
 		if(archivalInstitutionList!=null){
@@ -477,13 +545,14 @@ public class ArchivalLandscapeUtils {
 	}
 
 	/**
+	 * <p>
 	 * Recovers the list of institutions with same name from the collection
 	 * passed.
+	 * </p>
+	 * @param institutionName - String name of the institution to search (seeker)
+	 * @param archivalInstitutionList - Collection<{@link ArchivalInstitution}> of institutions in which the search will be performed.
 	 *
-	 * @param institutionName Name of the institution to search.
-	 * @param archivalInstitutionList Collection of institutions in which the search will be performed.
-	 *
-	 * @return List of institutions with same name in the collection.
+	 * @return List<{@link ArchivalInstitution}> -> institutions with same name into the collection
 	 */
 	public static List<ArchivalInstitution> getInstitutionsByNameFromStructure(String institutionName, Collection<ArchivalInstitution> archivalInstitutionList) {
 		List<ArchivalInstitution> target = new ArrayList<ArchivalInstitution>();
@@ -510,13 +579,14 @@ public class ArchivalLandscapeUtils {
 	}
 
 	/**
+	 * <p>
 	 * Recovers the institution with the internal identifier from the
 	 * collection passed.
+	 * </p>
+	 * @param internalIdentifier - String internal identifier of the institution to search.
+	 * @param archivalInstitutionList - Collection<{@link ArchivalInstitution}> of institutions in which the search will be performed.
 	 *
-	 * @param internalIdentifier Internal identifier of the institution to search.
-	 * @param archivalInstitutionList Collection of institutions in which the search will be performed.
-	 *
-	 * @return Institutions with the internal identifier in the collection.
+	 * @return {@link ArchivalInstitution} -> Target institution with the internal identifier in the collection.
 	 */
 	public static ArchivalInstitution getInstitutionsByInternalIdentifierFromStructure(String internalIdentifier, Collection<ArchivalInstitution> archivalInstitutionList) {
 		ArchivalInstitution target = null;
@@ -543,15 +613,21 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Replaces a node from an archivalInstitution List with the new.
+	 * </p>
+	 * <p>
 	 * Uses oldArchivalInstitution to set a target to be replaced (by newArchivalInstitution).
+	 * </p>
+	 * <p>
 	 * (Only it's replaced when internal identifier match or if internal identifier of
 	 * old institution is empty the ainame match).
+	 * </p>
 	 * 
-	 * @param oldInstitution
-	 * @param newArchivalInstitution
-	 * @param archivalInstitutionList
-	 * @return
+	 * @param oldInstitution - {@link ArchivalInstitution} target
+	 * @param newArchivalInstitution - {@link ArchivalInstitution} destination
+	 * @param archivalInstitutionList - Collection<{@link ArchivalInstitution}> source
+	 * @return ArrayList<{@link ArchivalInstitution}> -> Structure with target replacement
 	 */
 	public static List<ArchivalInstitution> replaceAnInstitutionToArchivalInstitutionStructure(ArchivalInstitution oldArchivalInstitution,ArchivalInstitution newArchivalInstitution,Collection<ArchivalInstitution> archivalInstitutionList) {
 		List<ArchivalInstitution> institutions = new ArrayList<ArchivalInstitution>();
@@ -576,13 +652,18 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Replace an institution by other institution with the same identifier and the same name
-	 * into a structure. It's necessary both conditions are true.
+	 * into a structure.
+	 * </p>
+	 * <p>
+	 * It's necessary both conditions are true.
+	 * </p>
 	 *  
-	 * @param oldInstitution
-	 * @param newInstitution
-	 * @param archivalInstitutionList
-	 * @return
+	 * @param oldInstitution - {@link ArchivalInstitution} target
+	 * @param newInstitution - {@link ArchivalInstitution} destination
+	 * @param archivalInstitutionList - Collection<{@link ArchivalInstitution}> source
+	 * @return ArrayList<{@link ArchivalInstitution}> -> changed institutions
 	 */
 	public static List<ArchivalInstitution> replaceXMLInstitutionByInstitution(ArchivalInstitution oldInstitution, ArchivalInstitution newInstitution,Collection<ArchivalInstitution> archivalInstitutionList) {
 		List<ArchivalInstitution> institutions = new ArrayList<ArchivalInstitution>();
@@ -609,13 +690,18 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Called into parseCollectionToPlainList method.
+	 * </p>
+	 * <p>
 	 * Functionality is very similar, but the different is the argument parent.
-	 * 
+	 * </p>
+	 * <p>
 	 * Parent is used to get all children and call to himself by recursive-way if needed.
+	 * </p>
 	 * 
-	 * @param parent
-	 * @return List<ArchivalInstition> plainArchivalInstitutions
+	 * @param parent - {@link ArchivalInstitution} parent institution
+	 * @return List<{@link ArchivalInstitution}> -> plainArchivalInstitutions list
 	 */
 	private static List<ArchivalInstitution> checkChild(ArchivalInstitution parent){
 		List<ArchivalInstitution> archivalInstitutionList = new ArrayList<ArchivalInstitution>();
@@ -638,6 +724,16 @@ public class ArchivalLandscapeUtils {
 		return archivalInstitutionList;
 	}
 	
+	/**
+	 * <p>
+	 * Method which discriminate from an Collection<{@link ArchivalInstitution}> institutions (param) 
+	 * which are contained into a List<String> identifiers (param).
+	 * </p>
+	 * 
+	 * @param newArchivalInstitutionStructure - Collection<{@link ArchivalInstitution}> seeker
+	 * @param ingestedIdentifiers - List<String> source
+	 * @return List<{@link ArchivalInstitution}> -> excludedInstitutions list
+	 */
 	protected List<ArchivalInstitution> getExcludedInstitutions(Collection<ArchivalInstitution> newArchivalInstitutionStructure,List<String> ingestedIdentifiers) {
 		List<ArchivalInstitution> excludedInstitutions = new ArrayList<ArchivalInstitution>();
 		if(newArchivalInstitutionStructure!=null){
@@ -661,12 +757,16 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Checks if some identifier is repeated.
+	 * </p>
+	 * <p>
 	 * It's used before do anything, and necessary for checks and 
 	 * discriminate states with archival institution edition.
+	 * </p>
 	 * 
-	 * @param archivalInstitutions
-	 * @return state<boolean>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> archivalInstitutions 
+	 * @return HashSet<String> -> internalIdentifiers set
 	 */
 	protected static Collection<String> checkIdentifiersForArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions) {
 		Collection<String> internalIdentifiers = null;
@@ -703,8 +803,18 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Recursive method for checkIdentifiersForArchivalInstitutionStructure.
+	 * </p>
+	 * <p>
+	 * If archival institution node has archival institution children it call recursively itself. 
+	 * </p>
+	 * <p>
 	 * It returns null when repeated identifier is detected.
+	 * </p>
+	 * @param child - {@link ArchivalInstitution} child node
+	 * @param internalIdentifiersParents - Collection<String> list of parents identifiers
+	 * @return HashSet<String> -> internalIdentifiers set / null
 	 */
 	private static Set<String> checkIdentifiersForArchivalInstitutionChild(ArchivalInstitution child,Collection<String> internalIdentifiersParents) {
 		Set<String> internalIdentifiers = new HashSet<String>();
@@ -740,11 +850,16 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Method to order the child groups.
+	 * </p>
+	 * <p>
+	 * If an archival institution has children it call recursively itself.
+	 * </p>
 	 *
-	 * @param archivalInstitution Current parent.
-	 * @param initialAIToBeDeleted List of ai to be deleted.
-	 * @return List of childs.
+	 * @param archivalInstitution - Current parent.
+	 * @param initialAIToBeDeleted - List of ai to be deleted.
+	 * @return List<{@link ArchivalInstitution}> -> Children sorted list
 	 */
 	protected static List<ArchivalInstitution> orderChildsGroups(ArchivalInstitution archivalInstitution, List<ArchivalInstitution> initialAIToBeDeleted) {
 		List<ArchivalInstitution> orderedChildList = new ArrayList<ArchivalInstitution>();
@@ -770,10 +885,17 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Method to construct the path from the current element to the root level.
-	 *
+	 * </p>
+	 * <p>
+	 * It builds his parent structure using internalALId() of each parent, and write it into StringBuilder
+	 * </p>
+	 * <p>
+	 * Returns the content of StringBuilder converted by StringBuilder.toString().
+	 * </p>
 	 * @param parentArchivalInstitution Element to construct the path.
-	 * @return Path from the current element to root level.
+	 * @return String -> path from the current element to root level.
 	 */
 	protected static String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
 		StringBuffer parents = new StringBuffer();
@@ -792,22 +914,39 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
-	 * Parse a Collection<ArchivalInstitutions> currentStructure(Group1,Institution2,Group3,Institution4):
-	 * 
-	 * 1. - Group1
-	 * 1.1 - Group1.1
-	 * 1.1.1 - Institution1.1.1
-	 * 2. - Institution2
-	 * 3. - Group3
-	 * 3.1 - Institution3.1
-	 * 4. Institution4
-	 * 
-	 * to a plain List<ArchivalInstitution> allInstitutions:
-	 * 
+	 * <p>
+	 * Parse a Collection<{@link ArchivalInstitutions}> currentStructure(Group1,Institution2,Group3,Institution4):
+	 * </p>
+	 * <p>
+	 * It differences between group and institutions, using the .isGroup() and .getParent().getAiId() methods.
+	 * This last step is necessary for fix a bad configuration of Hibernate annotations (in this case related to parent_ai_id) 
+	 * </p>
+	 * <p>
+	 * The results are built in this kind of structure:
+	 * </p>
+	 * <p>
+	 * Source:
+	 * </p>
+	 * <ul>
+	 * <li>1. - Group1 </li>
+	 * <li>1.1 - Group1.1</li>
+	 * <li>1.1.1 - Institution1.1.1</li>
+	 * <li>2. - Institution2</li>
+	 * <li>3. - Group3</li>
+	 * <li>3.1 - Institution3.1</li>
+	 * <li>4. Institution4</li>
+	 * </ul>
+	 * <p>
+	 * This structure is converted to a plain List<{@link ArchivalInstitution}> (allInstitutions):
+	 * </p>
+	 * <p>
+	 * Results values for this example structure:
+	 * </p>
+	 * <p>
 	 * (Group1,Group1.1,Institution1.1.1,Institution2,Group3,Institution3.1,Institution4).
-	 * 
-	 * @param archivalInstitutions
-	 * @return List<ArchivalInstitution>
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}>
+	 * @return ArrayList<{@link ArchivalInstitution}> -> archivalInstitutionsPlainList
 	 */
 	protected static List<ArchivalInstitution> parseCollectionToPlainList(Collection<ArchivalInstitution> archivalInstitutions) {
 		List<ArchivalInstitution> archivalInstitutionsPlainList = new ArrayList<ArchivalInstitution>();
@@ -831,11 +970,20 @@ public class ArchivalLandscapeUtils {
 	}
 	
 	/**
+	 * <p>
 	 * Open a file, read it and get attribute "countrycode" from
 	 * eadid node.
-	 * 
-	 * @param httpFile
-	 * @return countryCode-String
+	 * </p>
+	 * <p>
+	 * It uses a SAX logic to extract from <eadid> element the 
+	 * 'countrycode' attribute content.
+	 * </p>
+	 * <p>
+	 * This method don't check syntax of any results, simply 
+	 * get the content seek. 
+	 * </p>
+	 * @param httpFile - File source
+	 * @return String -> countryCode extracted from File
 	 */
 	protected static String getXMLEadidCountrycode(File httpFile){
 		String response = "";
@@ -889,6 +1037,17 @@ public class ArchivalLandscapeUtils {
 		return response;
 	}
 	
+	/**
+	 * <p>
+	 * Method which is used to build an xml reading a Collection<{@link ArchivalInstitution}>.
+	 * </p>
+	 * <p>
+	 * It returns an OutputStream (ByteArrayOutputStream) with the xml nodes written.
+	 * </p>
+	 * @param countryName - String name of country
+	 * @param archivalInstitutionStructure - Collection<{@link ArchivalInstitution}>
+	 * @return ByteArrayOutputStream -> StringBuilder written into ByteArrayOutputStream
+	 */
 	protected static ByteArrayOutputStream buildXMlFromStructure(String countryName,Collection<ArchivalInstitution> archivalInstitutionStructure){
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 //		EadCreator eadCreator = null;
@@ -935,6 +1094,22 @@ public class ArchivalLandscapeUtils {
 		return outputStream;
 	}
 	
+	/**
+	 * <p>
+	 * Method which build the entire xml using the countryName (param).
+	 * </p>
+	 * <p>
+	 * It calls to each xml open/close method for each node.
+	 * XML file nodes are ead, eadheader, eadid, filedesc, archdesc,
+	 * did, unittitle and dsc with all c levels.
+	 * </p>
+	 * <p>
+	 * It returns a ByteArrayOutputStream with a complete xml written.
+	 * </p>
+	 * 
+	 * @param countryName - String formateed country name to be pushed into c levels
+	 * @return ByteArrayOutputStream -> StringBuilder written into ByteArrayOutputStream
+	 */
 	protected static ByteArrayOutputStream buildXMlFromDDBB(String countryName) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 //		EadCreator eadCreator = null;
@@ -981,14 +1156,37 @@ public class ArchivalLandscapeUtils {
 		return outputStream;
 	}
 
+	/**
+	 * <p>
+	 * Method which returns the starting-head of a XML (version 1.0)
+	 * with encoding "UTF-8".
+	 * </p>
+	 * 
+	 * @return String
+	 */
 	private static String openingXmlHeader() {
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 	}
 
+	/**
+	 * <p>
+	 * Method which returns the archdesc node close tag
+	 * with all indents.
+	 * </p>
+	 * 
+	 * @return String
+	 */
 	private static String closeArchDesc() {
 		return "\n\t</archdesc>";
 	}
 
+	/**
+	 * <p>
+	 * Method which builds the starting tag of archdesc node.
+	 * It contains the encodinganalog, level, relatedencoding and type.
+	 * </p>
+	 * @return StringBuilder -> it has writen the archdesc node data
+	 */
 	private static StringBuilder openArchDesc() {
 		StringBuilder archDesc = new StringBuilder();
 		archDesc.append("\n\t");
@@ -999,7 +1197,26 @@ public class ArchivalLandscapeUtils {
 		archDesc.append(" type=\""+AL_ARCHDESC_TYPE+"\">");
 		return archDesc;
 	}
-
+	
+	/**
+	 * <p>
+	 * This method builds a c-level.
+	 * </p>
+	 * <p>
+	 * This method is used recursively, and depends on the params (Object parameter) 
+	 * builds and institutionCLevel (instanceof {@link ArchivalInstitution}) or 
+	 * buildsFondsCLevel (instanceof {@link ArchivalInstitution}), it calls to eachs method depends 
+	 * on the case.
+	 * </p>
+	 * <p>
+	 * It returns an StringBuilder with the XML content (Archival-Landscape).
+	 * </p> 
+	 * 
+	 * @param parameter - Object which could be instanceof String or {@link ArchivalInstitution}
+	 * @param level - integer huge level
+	 * @param listCountryArchivalInstitutions - Collection<{@link ArchivalInstitution}> target
+	 * @return StringBuilder - c level written into StringBuilder
+	 */
 	private static StringBuilder buildCLevel(Object parameter, int level,Collection<ArchivalInstitution> listCountryArchivalInstitutions) {
 		StringBuilder cLevel = new StringBuilder();
 		cLevel.append("\n");
@@ -1018,7 +1235,21 @@ public class ArchivalLandscapeUtils {
 		}
 		return cLevel;
 	}
-
+	/**
+	 * <p>
+	 * This method builds a c-level fond.
+	 * </p>
+	 * <p>
+	 * It uses an object param - CName of a Country
+	 * </p>
+	 * <p>
+	 * It builds a did node and if necessary a c-level child/children
+	 * </p>
+	 * @param parameter - Object which could be instanceof String or {@link ArchivalInstitution}
+	 * @param tabs - String tab indent by level
+	 * @param listCountryArchivalInstitutions - Collection<{@link ArchivalInstitution}>
+	 * @return StringBuilder - c level fond written into StringBuilder
+	 */
 	private static StringBuilder buildFondsCLevel(Object parameter, String tabs,Collection<ArchivalInstitution> listCountryArchivalInstitutions) {
 		StringBuilder cLevel = new StringBuilder();
 		cLevel.append("<c level=\""+FONDS+"\">");
@@ -1048,7 +1279,15 @@ public class ArchivalLandscapeUtils {
 		cLevel.append("</c>");
 		return cLevel;
 	}
-
+	/**
+	 * <p>
+	 * This method builds into StringBuilder a c-level (only SERIES and FILES)
+	 * </p>
+	 * @param archivalInstitution - {@link ArchivalInstitution} source
+	 * @param tabs - String tab indent by level
+	 * @param level - Integer huge level
+	 * @return StringBuilder -> c_level written
+	 */
 	private static StringBuilder buildInstitutionCLevel(ArchivalInstitution archivalInstitution,String tabs,Integer level) {
 		StringBuilder cLevel = new StringBuilder();
 		cLevel.append("<c");
@@ -1097,7 +1336,17 @@ public class ArchivalLandscapeUtils {
 		cLevel.append("</c>");
 		return cLevel;
 	}
-
+	/**
+	 * <p>
+	 * This method builds <otherfindaid> node with chis default values.
+	 * </p>
+	 * <p>
+	 * This node is indent by his level figure.
+	 * <p>
+	 * @param holdingsGuide  {@link HoldingsGuide}
+	 * @param tabs - String tab indent by level
+	 * @return StringBuilder -> otherfindaid node written
+	 */
 	private static StringBuilder buildOtherfindaid(HoldingsGuide holdingsGuide,String tabs) {
 		StringBuilder otherfindaid = new StringBuilder();
 		if(holdingsGuide!=null){
@@ -1117,18 +1366,39 @@ public class ArchivalLandscapeUtils {
 		}
 		return otherfindaid;
 	}
-
+	/**
+	 * <p>
+	 * This method returns the close tag for <dsc> node.
+	 * </p>
+	 * @return String
+	 */
 	private static String closeDsc() {
 		return "\n\t\t</dsc>";
 	}
-
+	/**
+	 * <p>
+	 * This method builds the opening tag for <dsc> node.
+	 * </p>
+	 * @return StringBuilder -> openedDsc node
+	 */
 	private static StringBuilder openDsc() {
 		StringBuilder openedDsc = new StringBuilder();
 		openedDsc.append("\n\t\t<dsc");
 		openedDsc.append(" type=\""+AI_DSC_TYPE+"\">");
 		return openedDsc;
 	}
-
+	/**
+	 * <p>
+	 * This method builds a did node with default values.
+	 * </p>
+	 * <p>
+	 * Also it uses alternative names to make <unittitle> nodes.
+	 * </p>
+	 * @param alternativeNames - Map<String, String> source alternative names, this is used depending on the huge level, it could be null
+	 * @param mainAlternativeName - Map<String, String> source alternative names, this is used depending on the huge level, it must be not null
+	 * @param tabs - String tab indent by level
+	 * @return StringBuilder -> did node written
+	 */
 	private static StringBuilder buildDidNode(Map<String, String> alternativeNames, Map<String, String> mainAlternativeName, String tabs) {
 		StringBuilder didNode = new StringBuilder();
 		//first make main alternative name, which it's the institution name
@@ -1191,11 +1461,21 @@ public class ArchivalLandscapeUtils {
 		}
 		return didNode;
 	}
-
+	/**
+	 * <p>
+	 * This method builds the close tag for <eadheader> node.
+	 * </p>
+	 * @return String
+	 */
 	private static String closeEadHeader() {
 		return "\n\t</eadheader>";
 	}
-
+	/**
+	 * <p>
+	 * This method builds a <filedesc> node with his defaults values.
+	 * </p>
+	 * @return StringBuilder -> filedesc node written
+	 */
 	private static StringBuilder buildFiledesc() {
 		StringBuilder filedesc = new StringBuilder();
 		filedesc.append("\n\t\t<filedesc>");
@@ -1209,7 +1489,17 @@ public class ArchivalLandscapeUtils {
 		filedesc.append("\n\t\t</filedesc>");
 		return filedesc;
 	}
-
+	/**
+	 * <p>
+	 * This method builds a default <eadid> complete 
+	 * node with his country code.
+	 * </p>
+	 * <p>
+	 * The current country code is extracted 
+	 * from session user information.
+	 * </p>
+	 * @return StringBuilder -> eadid node written
+	 */
 	private static StringBuilder buildEadId() {
 		String countryCode = SecurityContext.get().getCountryIsoname();
 		StringBuilder eadId = new StringBuilder();
@@ -1222,7 +1512,12 @@ public class ArchivalLandscapeUtils {
 		eadId.append("</eadid>");
 		return eadId;
 	}
-
+	/**
+	 * <p>
+	 * This method builds default <eadheader> node opening tag.
+	 * </p>
+	 * @return StringBuilder -> eadheader node written
+	 */
 	private static StringBuilder openEadHeader() {
 		StringBuilder eadHeader = new StringBuilder();
 		eadHeader.append("\n\t<eadheader");
@@ -1235,11 +1530,21 @@ public class ArchivalLandscapeUtils {
 		eadHeader.append(">");
 		return eadHeader;
 	}
-
+	/**
+	 * <p>
+	 * This method builds a close <ead> node tag.
+	 * </p>
+	 * @return String - closing tag </ead> with line break
+	 */
 	private static String closeEadNode() {
 		return "\n</ead>";
 	}
-
+	/**
+	 * <p>
+	 * This method builds an <ead> node tag with default values.
+	 * </p>
+	 * @return StringBuilder -> ead node written
+	 */
 	private static StringBuilder openEadNode() {
 		StringBuilder eadNode = new StringBuilder();
 		eadNode.append("<ead");
@@ -1253,9 +1558,24 @@ public class ArchivalLandscapeUtils {
 	}
 
 
-	// Methods from old ArchivalLandscape class.
-
-	//Check if an institution has alternatives name in a node in archival landscape. 
+	/**
+	 * <p>
+	 * This methods from old ArchivalLandscape class.
+	 * </p>
+	 * <p>
+	 * It checks if an institution has alternatives name
+	 * in a node in archival-landscape.
+	 * </p>
+	 * <p>
+	 * Uses special rules to generate corrections into alternative_names.
+	 * See
+	 * </p>
+	 * <p>
+	 * If necessary updates an ArchivalInstitution related data into DDBB.
+	 * </p>
+	 * @param arch_inst - {@link ArchivalInstitution} used into DDBB to extract alternative_nameS
+	 * @param archivalLandscapeNode - {@link ArchivalLandscapeNode}, see ArchivalLandscapeStructure for more details
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void checkAlternativeNames(ArchivalInstitution arch_inst, ArchivalLandscapeNode archivalLandscapeNode){
 		
@@ -1382,9 +1702,11 @@ public class ArchivalLandscapeUtils {
 	}
 
 	/**
-	 * This method checks if a file contains unique identifiers 
-	 * @param file
-	 * @return boolean
+	 * <p>
+	 * This method checks if a file contains unique identifiers.
+	 * </p> 
+	 * @param file - File, source file
+	 * @return boolean -> changed / null
 	 */
 	public static Boolean checkIdentifiers(File file){
 		try {
@@ -1433,11 +1755,31 @@ public class ArchivalLandscapeUtils {
 
 		return true;
 	}
-
+	/**
+	 * <p>
+	 * This method generates a random identifier for archival_institutions.
+	 * </p>
+	 * <p>
+	 * It always starts with 'A' and uses current time plus '-' 
+	 * character and a random float number.
+	 * </p>
+	 * @return String - patterned random id
+	 */
 	private static String generateNewRandomIdentifier() {
 		return "A"+System.currentTimeMillis()+"-"+(new Float(+Math.random()*1000000).toString());
 	}
-
+	/**
+	 * <p>
+	 * This method checks if identifier is given in the unique 
+	 * param could be generated or it's valid.
+	 * </p>
+	 * <p>
+	 * It checks if this identifier has content and 
+	 * his content starts with a letter.
+	 * </p>
+	 * @param identifier - String identifier
+	 * @return boolean - valid
+	 */
 	public static boolean isValidIdentifier(String identifier) {
 		if(identifier.length()>0){
 			char firstCharacter = identifier.charAt(0);
@@ -1448,7 +1790,25 @@ public class ArchivalLandscapeUtils {
 		return false;
 	}
 
-	//Store in the database the name of the NEW archival institutions uploaded and delete the ones removed
+	/**
+	 * <p>
+	 * Method which stores in the database the name of the 'new' archival 
+	 * institutions uploaded and delete the ones 'removed'.
+	 * </p>
+	 * <p>
+	 * It uses an InputSource (extracted from a Reader) to parse
+	 * file data to a DOM document.
+	 * </p>
+	 * <p>
+	 * DOM Document is used to extract c levels information.
+	 * </p>
+	 * <p>
+	 * See {@link ArchivalLandscapeStructure} documentation for more details.
+	 * </p>
+	 * @param file -> File, used to get stream and a DOM document
+	 * @param execute -> boolean, flag to launch a delete action (see ContentUtils.deleteArchivalInstitution() documentation for more details)
+	 * @return String -> state control string
+	 */
 	public String storeArchives(File file, boolean execute) {
 		
 		String result = "success";
@@ -1667,7 +2027,21 @@ public class ArchivalLandscapeUtils {
 		}
 		return result;
 	}
-
+	/**
+	 * <p>
+	 * Method which deletes content from an archival_institution (param)
+	 * </p> 
+	 * <p>
+	 * It uses {@link ContentUtils} class to check if this institution 
+	 * contains eacs and remove content.
+	 * </p>
+	 * <p>
+	 * Also it rename internal files to be removed when confirmation success 
+	 * process has been detected.
+	 * </p>
+	 * @param ai -> {@link ArchivalInstitution}, target to be deleted
+	 * @return String -> renamed/market_like_deleted path
+	 */
 	protected static String deleteContent(ArchivalInstitution ai) {
 		String path = null;
 		ContentUtils cu = new ContentUtils();
@@ -1714,9 +2088,11 @@ public class ArchivalLandscapeUtils {
 	// End of methods from old ArchivalLandscape class.
 
 	/**
-	 * Check special characters in the institution's name and alternative's name
-	 * @param archivalInstitutions
-	 * @return true if there are specials characters and false in other case
+	 * <p>
+	 * Check special characters in the institution's name and alternative's name.
+	 * </p>
+	 * @param archivalInstitutions - Collection<{@link ArchivalInstitution}> source
+	 * @return boolean -> if there are specials characters into the source collection
 	 */
 	public static Boolean checkSpecialCharacter(Collection<ArchivalInstitution> archivalInstitutions) {
 		archivalInstitutions = ArchivalLandscapeUtils.parseCollectionToPlainList(archivalInstitutions); //parse to list

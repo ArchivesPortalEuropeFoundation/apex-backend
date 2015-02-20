@@ -35,6 +35,11 @@ import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
+/**
+ * <p>
+ * Class used to manage Archival-Landscape edition into Dashboard.
+ * </p>
+ */
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 
 	private static final long serialVersionUID = -1631997370424365298L;
@@ -56,6 +61,14 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	private List<Lang> langList;
 	private Set<String> pathsToBeDeleted;
 
+	/**
+	 * <p>
+	 * Method which is override of AbstractAction.
+	 * </p>
+	 * <p>
+	 * It's used to build the breadcrumb route.
+	 * </p>
+	 */
 	private void buildBreadcrumb() {
 		super.buildBreadcrumbs();
 		this.addBreadcrumb(null,getText("breadcrumb.section.editArchivalLandscape"));
@@ -64,7 +77,17 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	public List<Lang> getLangList(){
 		return this.langList;
 	}
-
+	
+	/**
+	 * <p>
+	 * Method which starts archival landscape editor (default action).
+	 * </p>
+	 * <p>
+	 * It's used to render the client browser part (editor).
+	 * </p>
+	 * 
+	 * @return Structs.STATE
+	 */
 	@Override
 	public String execute() throws Exception {
 		buildBreadcrumb();
@@ -77,7 +100,20 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		buildBreadcrumbs();
 		return SUCCESS;
 	}
-	
+	/**
+	 * <p>
+	 * Method which manages ajax actions.
+	 * </p>
+	 * <p>
+	 * It uses a writer to communicate with client browser.
+	 * </p>
+	 * <p>
+	 * Uses actions CREATE, DELETE, GET_GROUPS, CHANGE_GROUP, CHANGE_GROUP,
+	 * MOVE_UP, MOVE_DOWN, GET_NAMES, CREATE_ALTERNATIVE and DELETE_ALTERNATIVE
+	 * </p>
+	 * 
+	 * @return Structs.STATE -> null
+	 */
 	public String launchArchivalInstitutionActions(){
 		Writer writer = null;
 		try{
@@ -167,7 +203,33 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		return null;
 	}
-	
+	/**
+	 * <p>
+	 * Method which create alternative-names for an institution.
+	 * </p>
+	 * <p>
+	 * It uses his aiId to locate and append his new alternative name and language.
+	 * </p>
+	 * <p> 
+	 * Launches transactions to the database creating and writing
+	 * new alternative names into table (ai_alternative_name) unique by language.
+	 * </p>
+	 * <p> 
+	 * This language is obtained from ddbb table (lang) and must be unique 
+	 * by each (archival_institution).
+	 * </p>
+	 * <p> 
+	 * No rollback is included in this method.
+	 * </p>
+	 * <p>
+	 * It builds into a StringBuilder the structured response and returns it in String format.
+	 * </p>
+	 * 
+	 * @param aiId -> Integer archival-institution id
+	 * @param name -> String name
+	 * @param lang -> String language
+	 * @return String - StringBuilder.toString();
+	 */
 	private String createAlternativeNames(Integer aiId,String name,String lang) {
 		StringBuilder buffer = new StringBuilder();
 		if(aiId!=null && name!=null && !name.trim().isEmpty() && lang!=null && !lang.trim().isEmpty()){
@@ -212,7 +274,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				}
 			}
 			// The final commits
-			JpaUtil.commitDatabaseTransaction();
+			JpaUtil.commitDatabaseTransaction(); //commit to the database
 		}else{
 			if (name != null
 					&& (name.isEmpty()
@@ -225,6 +287,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return buffer.toString();
 	}
 
+	/**
+	 * <p>
+	 * Return the ajax response (JSON) in a String which contains
+	 * alternatives names stored into DDBB for an institution.
+	 * </p>
+	 * <p>
+	 * Uses the target aiId of an existing institution.
+	 * </p>
+	 * <p>
+	 * It builds into a StringBuilder the structured response and returns it in String format.
+	 * </p>
+	 * 
+	 * @param aiId -> Integer archival-institution id
+	 * @return String - StringBuilder.toString();
+	 */
 	private String getAlternativeNames(Integer aiId) {
 		StringBuffer buffer = new StringBuffer();
 		AiAlternativeNameDAO aiAlternativesNamesDAO = DAOFactory.instance().getAiAlternativeNameDAO();
@@ -267,6 +344,23 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return buffer.toString();
 	}
 
+	/**
+	 * <p>
+	 * Method which locates an institution and move one possition up or down, 
+	 * it depends his attributes.
+	 * </p>
+	 * <p>
+	 * Uses an aiId to determinate which institution is the target and a boolean 
+	 * to detect the action (move-up or move-down).
+	 * </p>
+	 * <p>
+	 * It builds into a StringBuilder the structured response and returns it in String format.
+	 * </p>
+	 * 
+	 * @param aiId - Integer archival-institution id
+	 * @param moveUp - boolean action
+	 * @return String - StringBuilder.toString();
+	 */
 	private String moveOrder(Integer aiId, boolean moveUp) {
 		StringBuffer buffer = new StringBuffer();
 		// Store in data base the operation, the archival institutions
@@ -307,7 +401,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		return buffer.toString();
 	}
-
+	
+	/**
+	 * <p>
+	 * Changes an institution parent to other parent.
+	 * </p>
+	 * <p>
+	 * It detect an institution with his aiId and determinates
+	 * the target parent with his internalParentId.
+	 * </p> 
+	 * 
+	 * @param aiId - Integer archival-institution id
+	 * @param internalParentId - Integer archival-institution id
+	 * @return String - StringBuilder.toString();
+	 * @throws Exception -> EagService.publish(archivalInstitutionTarget); throws Exceptions, for more information see {@link EagService} documentation
+	 */
 	private String changeGroup(Integer aiId,String internalParentId) throws Exception {
 		StringBuffer buffer = new StringBuffer();
 		// Store in data base the operation, the archival institutions
@@ -380,6 +488,20 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return buffer.toString();
 	}
 
+	/**
+	 * <p>
+	 * Method which builds the target JSON with his new parent.
+	 * </p>
+	 * <p> 
+	 * This JSON should be used to get working dynatree.
+	 * </p>
+	 * <p>
+	 * It builds into a StringBuilder the structured response and returns it in String format.
+	 * </p>
+	 * 
+	 * @param parentArchivalInstitution - parent {@link ArchivalInstitution} 
+	 * @return String - StringBuilder.toString();
+	 */
 	private String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
 		StringBuffer parents = new StringBuffer();
 		if(parentArchivalInstitution!=null){
@@ -395,6 +517,17 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return buildNode("newparents",parents.toString());
 	}
 
+	/**
+	 * <p>
+	 * Method which tries to get all groups (JSON).
+	 * </p>
+	 * <p>
+	 * This JSON should be used to get working dynatree.
+	 * </p>
+	 * 
+	 * @param aiId - Integer archival-institution id
+	 * @return String -> StringBuilder.toString()
+	 */
 	private String getAllCountryGroups(Integer aiId) {
 		StringBuilder institutions = new StringBuilder();
 		Integer couId = SecurityContext.get().getCountryId();
@@ -438,6 +571,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return institutions.toString();
 	}
 
+	/**
+	 * <p>
+	 * Method which deletes an institution.
+	 * </p>
+	 * <p>
+	 * It determinates which institution is the target with his aiId.
+	 * </p>
+	 * <p>
+	 * Returns an String with JSON. It could contain messages translated.
+	 * </p>
+	 * 
+	 * @param aiId - Integer archival-institution id
+	 * @return String -> StringBuilder.toString()
+	 * @throws IOException -> removePathsToBeDeleted(); and rollbackDeletedPaths(); throws IOException, see his documentation about it.
+	 */
 	private String deleteArchivalInstitution(String aiId) throws IOException {
 		StringBuilder messenger = new StringBuilder();
 		if(aiId!=null){
@@ -509,7 +657,12 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		return messenger.toString();
 	}
-	
+	/**
+	 * <p>
+	 * Method which tries to delete a list of path used before an action. 
+	 * </p>
+	 * @throws IOException -> {@link FileUtils}.deleteDirectory(new File(subDir+path)); throws Exception, see Apache documentation about it.
+	 */
 	private void removePathsToBeDeleted() throws IOException {
 		if(this.pathsToBeDeleted!=null){
 			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
@@ -523,6 +676,13 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Method which restores deleted path (temporally moved to other path) 
+	 * to the original path.
+	 * </p>
+	 * @throws IOException -> {@link FileUtils}.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length()))); throws IOException, see Apache documentation about it.
+	 */
 	private void rollbackDeletedPaths() throws IOException {
 		if(this.pathsToBeDeleted!=null){
 			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
@@ -537,9 +697,14 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	}
 
 	/**
-	 * Method to delete each ai.
+	 * <p>
+	 * Method to delete each Archival Institution.
+	 * </p>
+	 * <p>
+	 * Uses the target Archival-Institution VO.
+	 * </p>
 	 *
-	 * @param ai
+	 * @param ai - {@link ArchivalInstitution} used to get child Archival Institution
 	 */
 	private void deleteAIChild(ArchivalInstitution ai) {
 		if (ai.isGroup()) {
@@ -559,6 +724,26 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Method which creates an archival institution using params.
+	 * </p>
+	 * <p>
+	 * The current params are name, parent-name, type and language.
+	 * </p>
+	 * <p>
+	 * Returns the JSON (in a String) with the info/error user messages.
+	 * </p>
+	 * <p>
+	 * Returns an String with JSON. It could contain messages translated.
+	 * </p>
+	 * 
+	 * @param name - String name
+	 * @param father - String parent
+	 * @param type - String type
+	 * @param lang - String lang
+	 * @return String - StringBuilder.toString();
+	 */
 	private String createArchivalInstitution(String name,String father,String type,String lang){
 		StringBuilder messenger = new StringBuilder();
 		if(name!=null && type!=null && !name.trim().isEmpty() && !type.trim().isEmpty()){
@@ -616,10 +801,40 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return messenger.toString();
 	}
 
+	/**
+	 * <p>
+	 * Generates a random internal identifier.
+	 * </p>
+	 * <p> 
+	 * It always starts with an 'A' character.
+	 * </p>
+	 * 
+	 * @return String - (pattern is in this format A+currentTime+'-'+randomFigure)
+	 */
 	protected static String getNewinternalIdentifier() {
 		return "A"+System.currentTimeMillis()+"-"+(new Float(+Math.random()*1000000).toString());
 	}
 
+	/**
+	 * <p>
+	 * Action which writes the JSON (archival-landscape tree) using params (couId).
+	 * </p>
+	 * <p>
+	 * It the target param is not received it's built from session attributes.
+	 * </p>
+	 * <p>
+	 * The next step is call to generateArchivalInstitutionPartJSON to write
+	 * the spected result.
+	 * </p>
+	 * <p>
+	 * This method is required for dynatree plugin.
+	 * </p>
+	 * <p>
+	 * Writes an String with JSON into ServletResponse.
+	 * </p>
+	 * 
+	 * @return String - StringBuilder.toString();
+	 */
 	public String getArchivalInstitutionTree(){
 		try{
 			log.debug("Building tree for Archival Institution");
@@ -659,6 +874,16 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return null;
 	}
 	
+	/**
+	 * <p>
+	 * Method which generates an archival institution tree in JSON format.
+	 * </p>
+	 * <p>
+	 * Calls to generateArchivalInstitutionsTreeJSON with the current List<ArchivalInstitutionUnit>
+	 * </p>
+	 * @param archivalInstitutionList - List<ArchivalInstitution> source list.
+	 * @return StringBuffer - generateArchivalInstitutionsTreeJSON response with the target tree.
+	 */
 	public StringBuffer generateArchivalInstitutionPartJSON(List<ArchivalInstitutionUnit> archivalInstitutionList) {
 		StringBuffer tree = null;
 		try {
@@ -669,6 +894,18 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return tree;
 	}
 	
+	/**
+	 * <p>
+	 * Method which returns in JSON format the possible actions for an institution.
+	 * </p>
+	 * <p>
+	 * It uses a param called aieag and aigroup, and extracts it from the request.
+	 * </p>
+	 * <p>
+	 * Writes info ServletResponse an String with JSON.
+	 * </p>
+	 * @return String - (always is null because this value must never be used, it's useless)
+	 */
 	public String getArchivalInstitutionPossibleActions(){
 		Writer writer = null;
 		try {
@@ -705,9 +942,19 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return null;
 	}
 	/**
+	 * <p>
+	 * Method which builds the current actions for an institution.
+	 * </p>
+	 * <p>
+	 * It uses the target archival-institution to be filled.
+	 * </p>
+	 * <p>
 	 * appendInstitution - launch the Name, Select an element type, 
 	 * select a language and "add to the list" form part to allow 
-	 * create new institutions/groups 
+	 * create new institutions/groups.
+	 * </p>
+	 * 
+	 * @return StringBuilder - action nodes
 	 */
 	private StringBuilder buildActions(ArchivalInstitution archivalInstitution) {
 		
@@ -797,6 +1044,18 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return response;
 	}
 
+	/**
+	 * <p>
+	 * Internal method which builds a node in JSON format.
+	 * </p>
+	 * <p>
+	 * It returns the target JSON in a String.
+	 * </p>
+	 * 
+	 * @param actionName -> String action
+	 * @param actionValue -> String value
+	 * @return String - JSON node in String format
+	 */
 	private String buildNode(String actionName, String actionValue) {
 		String node = "";
 		if(actionName!=null && actionValue!=null && !actionName.isEmpty() && !actionValue.isEmpty()){
@@ -810,7 +1069,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		return node;
 	}
-	
+	/**
+	 * <p>
+	 * Method which returns if an institution is parent of other institution.
+	 * </p>
+	 * <p>
+	 * First param is the source and the second one is the destination.
+	 * </p>
+	 * <p>
+	 * Returns the state: if the target source is not able to be moved to destination.
+	 * </p> 
+	 * 
+	 * @param source - {@link ArchivalInstitution} source
+	 * @param destination - {@link ArchivalInstitution} destination
+	 * @return boolean - isParent flag
+	 */
 	private boolean archivalGroupIsParentOf(ArchivalInstitution source,ArchivalInstitution destination){
 		boolean isParent = false;
 		if(source!=null && destination!=null){
@@ -822,7 +1095,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					if(destination.getParentAiId()!=aiId){
 						 destination = archivalInstitutionDAO.getArchivalInstitution(destination.getParentAiId());
 					}else{
-						isParent = true;
+						 isParent = true;
 					}
 				}
 			}
@@ -833,7 +1106,24 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	public String getCountryId() {
 		return countryId;
 	}
-
+	
+	/**
+	 * <p>
+	 * Method which deletes an alternative-name from DDBB an archival-institution.
+	 * </p>
+	 * <p>
+	 * It uses the aiId to detect which is the archival-institution, and a name and
+	 * language for detects target alternative-name.
+	 * </p>
+	 * <p>
+	 * It returns a JSON (String) which the current messages for user (info/error) translated.
+	 * </p>
+	 * 
+	 * @param aiId - Integer archival-institution id
+	 * @param name - String name
+	 * @param lang - String language
+	 * @return String - node with actionTranslate -> StringBuilder.toString();
+	 */
 	private String deleteAlternativeNames(Integer aiId,String name,String lang) {
 		StringBuilder buffer = new StringBuilder();
 		if(aiId!=null && name!=null && lang!=null){
