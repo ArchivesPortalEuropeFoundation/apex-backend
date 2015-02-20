@@ -1,5 +1,33 @@
 var globalMessageNormalCorrecVal, globalMessageEmptyNormal, globalMessageEmptyPreviousLang;
 
+/**
+ * Function to initialize the tree which represents the structure of the 
+ * finding aid.
+ *
+ * @param {Integer} fileId Identifier of the current file.
+ * @param {int} xmlTypeId Identifier of the current file type.
+ * @param {String} messageEmptyEADID Message when the element <b>&lt;eadid&gt;</b> is
+ * empty.
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageInvalidCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is not valid.
+ * @param {String} messageEmptyCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyMainagencycode Message when the attribute
+ * <b>@mainagencycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageNormalCorrecVal Message for the correct values for
+ * the attribute <b>@normal</b> of the element <i>&lt;unitdate&gt;</i>.
+ * @param {String} messageEmptyNormal Message when the attribute
+ * <b>@normal</b> of the element <i>&lt;unitdate&gt;</i> is empty.
+ * @param {String} messageEmptyTitleproper Message when the element
+ * <b>&lt;titleproper&gt;</b> is empty.
+ * @param {String} messageEmptyPreviousLang Message when is not possible to add
+ * a new block of, type <b>&lt;language&gt;</b>, before complete the previous
+ * one.
+ * @param {String} messagePleaseSaveChanges Message to inform the user for save
+ * the changes before change to other node.
+ */
 function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageNormalCorrecVal, messageEmptyNormal, messageEmptyTitleproper, messageEmptyPreviousLang, messagePleaseSaveChanges){
 	globalMessageNormalCorrecVal = messageNormalCorrecVal;
 	globalMessageEmptyNormal = messageEmptyNormal;
@@ -100,6 +128,25 @@ function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave,
 /**
  * Function to execute all the necessary actions when a new XML (part of EAD file)
  * is loaded.
+
+ * @param {Integer} fileId Identifier of the current file.
+ * @param {int} xmlTypeId Identifier of the current file type.
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageInvalidCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is not valid.
+ * @param {String} messageEmptyCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyMainagencycode Message when the attribute
+ * <b>@mainagencycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyEADID Message when the element <b>&lt;eadid&gt;</b> is
+ * empty.
+ * @param {String} messageEmptyNormal Message when the attribute
+ * <b>@normal</b> of the element <i>&lt;unitdate&gt;</i> is empty.
+ * @param {String} messageNormalCorrecVal Message for the correct values for
+ * the attribute <b>@normal</b> of the element <i>&lt;unitdate&gt;</i>.
+ * @param {String} messageEmptyTitleproper Message when the element
+ * <b>&lt;titleproper&gt;</b> is empty.
  */
 function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNormalCorrecVal, messageEmptyTitleproper) {
 	// Initialize the buttons panel.
@@ -120,6 +167,26 @@ function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messa
     addOnChangeValue();
 }
 
+/**
+ * Function to initialize the buttons once the data is loaded.
+ *
+ * @param {Integer} fileId Identifier of the current file.
+ * @param {int} xmlTypeId Identifier of the current file type.
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageInvalidCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is not valid.
+ * @param {String} messageEmptyCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyMainagencycode Message when the attribute
+ * <b>@mainagencycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyEADID Message when the element <b>&lt;eadid&gt;</b> is
+ * empty.
+ * @param {String} messageEmptyNormal Message when the attribute
+ * <b>@normal</b> of the element <i>&lt;unitdate&gt;</i> is empty.
+ * @param {String} messageEmptyTitleproper Message when the element
+ * <b>&lt;titleproper&gt;</b> is empty.
+ */
 function initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageEmptyTitleproper){
 	if ($("#controls").is(':hidden')) {
 		$("#controls").show();
@@ -132,6 +199,28 @@ function initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCount
 	}
 }
 
+/**
+ * Function to performs all the needed actions to save the edited file.
+ *
+ * This function also includes the initial needed checks of validity.
+ *
+ * @param {Integer} fileId Identifier of the current file.
+ * @param {int} xmlTypeId Identifier of the current file type.
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageInvalidCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is not valid.
+ * @param {String} messageEmptyCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyMainagencycode Message when the attribute
+ * <b>@mainagencycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyEADID Message when the element <b>&lt;eadid&gt;</b> is
+ * empty.
+ * @param {String} messageEmptyNormal Message when the attribute
+ * <b>@normal</b> of the element <i>&lt;unitdate&gt;</i> is empty.
+ * @param {String} messageEmptyTitleproper Message when the element
+ * <b>&lt;titleproper&gt;</b> is empty.
+ */
 function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageEmptyTitleproper){
 	// Remove the previous alerts.
 	removeAlerts();
@@ -261,18 +350,27 @@ function removeAlerts(){
 /**
  * Function that loads all the methods to check if the values inserted are correct ones.
  *
- * @param fileId
- * @param messageEmptyEADID
- * @param messageEmptyWhenSave
- * @param messageInvalidCountrycode
- * @param messageEmptyCountrycode
- * @param messageEmptyMainagencycode
- * @param messageEmptyNormal
- * @param messageNormalCorrecVal
- * @param messageEmptyTitleproper
- * @returns
+ * @param {Integer} fileId Identifier of the current file.
+ * @param {String} messageEmptyEADID Message when the element <b>&lt;eadid&gt;</b> is
+ * empty.
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageInvalidCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is not valid.
+ * @param {String} messageEmptyCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyMainagencycode Message when the attribute
+ * <b>@mainagencycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {String} messageEmptyNormal Message when the attribute
+ * <b>@normal</b> of the element <i>&lt;unitdate&gt;</i> is empty.
+ * @param {String} messageNormalCorrecVal Message for the correct values for
+ * the attribute <b>@normal</b> of the element <i>&lt;unitdate&gt;</i>.
+ * @param {String} messageEmptyTitleproper Message when the element
+ * <b>&lt;titleproper&gt;</b> is empty.
+ *
+ * @returns {boolean} The result of the checks.
  */
-function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyNormal, messageNormalCorrecVal, messageEmptyTitleproper) {
+function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode,messageEmptyMainagencycode, messageEmptyNormal, messageNormalCorrecVal, messageEmptyTitleproper) {
 	var result = true;
 
 	// First, checks if the countrycode is valid.
@@ -316,11 +414,16 @@ function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageIn
 /**
  * Function to check if countrycode is valid.
  *
- * @param messageEmptyWhenSave
- * @param messageInvalidCountrycode
- * @param messageEmptyCountrycode
- * @param showAlert
- * @returns {Boolean}
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageInvalidCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is not valid.
+ * @param {String} messageEmptyCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {boolean} showAlert Indicate if the alert should be displayed or has
+ * been already shown.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isValidCountryCode(messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, showAlert) {
 	var result = true;
@@ -365,9 +468,12 @@ function isValidCountryCode(messageEmptyWhenSave, messageInvalidCountrycode, mes
 /**
  * Function to check if mainagencycode is empty.
  *
- * @param messageEmptyMainagencycode
- * @param showAlert
- * @returns {Boolean}
+ * @param {String} messageEmptyMainagencycode Message when the attribute
+ * <b>@mainagencycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ * @param {boolean} showAlert Indicate if the alert should be displayed or has
+ * been already shown.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isEmptyMainagencycode(messageEmptyMainagencycode, showAlert) {
 	var result = false;
@@ -394,10 +500,14 @@ function isEmptyMainagencycode(messageEmptyMainagencycode, showAlert) {
 /**
  * Function to check if EADID is empty.
  *
- * @param messageEmptyWhenSave
- * @param messageEmptyEADID
- * @param showAlert
- * @returns {Boolean}
+ * @param  {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageEmptyEADID Message when the element <b>&lt;eadid&gt;</b> is
+ * empty.
+ * @param {boolean} showAlert Indicate if the alert should be displayed or has
+ * been already shown.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isEmptyEADID(messageEmptyWhenSave, messageEmptyEADID, showAlert) {
 	var result = false;
@@ -429,8 +539,9 @@ function isEmptyEADID(messageEmptyWhenSave, messageEmptyEADID, showAlert) {
 /**
  * Function to checks if the new ID is available.
  *
- * @param fileId
- * @returns {Boolean}
+ * @param {Integer} fileId Identifier of the current file.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isNewEADIDavailable(fileId) {
 	var result = true;
@@ -488,7 +599,8 @@ function isNewEADIDavailable(fileId) {
 /**
  * Function to check the correct value of the "countrycode" field.
  *
- * @param messageEmptyCountrycode
+ * @param {String} messageEmptyCountrycode Message when the attribute
+ * <b>@countrycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
  */
 function checkCountryCodeValue(messageEmptyCountrycode) {
 	$("input[name^='eadid_countrycode']").each(function(){
@@ -505,6 +617,12 @@ function checkCountryCodeValue(messageEmptyCountrycode) {
 	});
 }
 
+/**
+ * Function to check the correct value of the "mainagencycode" field.
+ *
+ * @param {String} messageEmptyMainagencycode Message when the attribute
+ * <b>@mainagencycode</b> of the element <i>&lt;eadid&gt;</i> is empty.
+ */
 function checkMainagencycodeValue(messageEmptyMainagencycode) {
 	$("input[name^='eadid_mainagencycode']").each(function(){
 		var name = $(this).attr("name");
@@ -523,7 +641,8 @@ function checkMainagencycodeValue(messageEmptyMainagencycode) {
 /**
  * Function to check the correct value of the "EADID" field.
  *
- * @param messageEmptyEADID
+ * @param {String} messageEmptyEADID Message when the element <b>&lt;eadid&gt;</b> is
+ * empty.
  */
 function checkEADIDValue(messageEmptyEADID) {
 	$("input[name^='eadid']").each(function(){
@@ -568,8 +687,10 @@ function checkEADIDValue(messageEmptyEADID) {
 /**
  * Function to check the correct value of the attribute "normal" in element "unitdate".
  *
- * @param messageNormalCorrecVal
- * @param messageEmptyNormal
+ * @param {String} messageNormalCorrecVal Message for the correct values for
+ * the attribute <b>@normal</b> of the element <i>&lt;unitdate&gt;</i>.
+ * @param {String} messageEmptyNormal Message when the attribute
+ * <b>@normal</b> of the element <i>&lt;unitdate&gt;</i> is empty.
  */
 function checkNormalValue(messageNormalCorrecVal, messageEmptyNormal) {
 	$("input[name^='unitdate_normal']").each(function(){
@@ -609,10 +730,14 @@ function checkNormalValue(messageNormalCorrecVal, messageEmptyNormal) {
 /**
  * Function to check if element titleproper is empty.
  *
- * @param messageEmptyWhenSave
- * @param messageEmptyTitleproper
- * @param showAlert
- * @returns {Boolean}
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageEmptyTitleproper Message when the element
+ * <b>&lt;titleproper&gt;</b> is empty.
+ * @param {boolean} showAlert Indicate if the alert should be displayed or has
+ * been already shown.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isEmptyTitleproper(messageEmptyWhenSave, messageEmptyTitleproper, showAlert) {
 	var result = false;
@@ -642,10 +767,14 @@ function isEmptyTitleproper(messageEmptyWhenSave, messageEmptyTitleproper, showA
 /**
  * Function to check if attribute normal is empty.
  *
- * @param messageEmptyWhenSave
- * @param messageEmptyNormal
- * @param showAlert
- * @returns {Boolean}
+ * @param {String} messageEmptyWhenSave Message when a field is empty when
+ * trying to save the changes.
+ * @param {String} messageEmptyNormal Message when the attribute
+ * <b>@normal</b> of the element <i>&lt;unitdate&gt;</i> is empty.
+ * @param {boolean} showAlert Indicate if the alert should be displayed or has
+ * been already shown.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isEmptyNormal(messageEmptyWhenSave, messageEmptyNormal, showAlert) {
 	var result = false;
@@ -673,11 +802,14 @@ function isEmptyNormal(messageEmptyWhenSave, messageEmptyNormal, showAlert) {
 }
 
 /**
- * Function to check if attrubute normal is well formed.
+ * Function to check if attribute normal is well formed.
  *
- * @param messageNormalCorrecVal
- * @param showAlert
- * @returns {Boolean}
+ * @param {String} messageNormalCorrecVal Message for the correct values for
+ * the attribute <b>@normal</b> of the element <i>&lt;unitdate&gt;</i>.
+ * @param {boolean} showAlert Indicate if the alert should be displayed or has
+ * been already shown.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isCorrectNormal(messageNormalCorrecVal, showAlert) {
 	var result = false;
@@ -730,7 +862,8 @@ function isCorrectNormal(messageNormalCorrecVal, showAlert) {
 /**
  * Function to check the correct value of the element "titleproper".
  *
- * @param messageEmptyTitleproper The alert message
+ * @param {String} messageEmptyTitleproper Message when the element
+ * <b>&lt;titleproper&gt;</b> is empty.
  */
 function checkTitleproperValue(messageEmptyTitleproper) {
 	$("input[name^='titleproper']").each(function(){
@@ -774,7 +907,8 @@ function addOnclickActionToButtons() {
 /**
  * Function to replace button to add attribute normal for the coresponding label and input.
  *
- * @param name
+ * @param {String} name Name of the button used to add the attribute <b>@normal</b>
+ * for the element <i>&lt;unitdate&gt;</i>.
  */
 function addNormalAttribute(name) {
 	var inputName = name.substring((name.indexOf("_") + 1));
@@ -788,7 +922,8 @@ function addNormalAttribute(name) {
 /**
  * Function to add new section for element language.
  *
- * @param name
+ * @param {String} name Name of the button used to add the <b>&lt;language&gt;</b>
+ * block.
  */
 function addLanguageElement(name) {
 	// Check if the previous elelements have content.
@@ -833,8 +968,10 @@ function addLanguageElement(name) {
 /**
  * Function to cheks if the previous sections of language are filled.
  *
- * @param name
- * @returns {Boolean}
+ * @param {String} name Name of the button used to add the <b>&lt;language&gt;</b>
+ * block.
+ *
+ * @returns {boolean} The result of the check.
  */
 function isPreviousLanguageFilled(name) {
 	var result = true;
@@ -883,8 +1020,8 @@ function addOnChangeValue() {
 /**
  * Function to display the previous selected node after reload the tree. 
  *
- * @param node
- * @param message
+ * @param {Object} node The node which is previously edited.
+ * @param {String} message Message with the result of the save process.
  */
 function displayNode(node, message) {
 	var parents = new Array();
@@ -905,10 +1042,10 @@ function displayNode(node, message) {
 /**
  * Funtion that expands the parents of the selected node.
  *
- * @param parents
- * @param i
- * @param message
- * @param targetNode
+ * @param {Object[]} parents The hierarchical parents of the <i>targetNode</i>.
+ * @param {int} i Number of parents of the <i>targetNode</i>.
+ * @param {String} message Message with the result of the save process.
+ * @param {Object} targetNode The node which is previously edited.
  */
 function expandParents(parents, i, message, targetNode) {
 	var dynatree = $("#eadTree").dynatree("getTree");
@@ -944,8 +1081,8 @@ function expandParents(parents, i, message, targetNode) {
 /**
  * Function to check if is the moment of display the result message.
  *
- * @param key
- * @param message
+ * @param {String} key Identifier of the <i>targetNode</i>.
+ * @param {String} message Message with the result of the save process.
  */
 function launchFinalAction(key, message) {
 	//targetNode.select(true);
@@ -964,8 +1101,8 @@ function launchFinalAction(key, message) {
 /**
  * Function to display the result message.
  *
- * @param information
- * @param error
+ * @param {String} information Message with the result of the save process.
+ * @param {boolean} [error] Indicates if the <i>message</i> if an error or no.
  */
 function showInformation(information, error) {
 	var message = "<span";
@@ -1021,7 +1158,9 @@ function createColorboxForProcessing() {
 
 /**
  * Function to prevent reload the page using F5.
- * @param e
+ *
+ * @param {Event} e Event launched in the page which will be checked if is
+ * the press of the <b>F5</b> key.
  */
 function disableReload(e) {
 	if (((e.which || e.keyCode) == 116)

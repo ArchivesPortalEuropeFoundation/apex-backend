@@ -28,97 +28,308 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import eu.apenet.dashboard.actions.ajax.EditEadAction;
+import eu.apenet.dashboard.actions.ajax.EditEadAction.AddableFields;
+import eu.apenet.dashboard.actions.ajax.EditEadAction.EditableFields;
+import eu.apenet.dashboard.actions.ajax.EditEadAction.UndisplayableFields;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
-import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
 
 /**
+ * <p>
+ * Support class used to process the information of the XML file and convert it
+ * in an HTML representation and viceversa.
+ * </p>
+ * <p>
+ * In this HTML representation it is automatically included the needed changes
+ * to let the user edit and/or add more information about the elements which
+ * are marked as editable and/or appendable.
+ * </p>
+ * <p>
+ * Once the user end its changes and wants to save them, this class have the
+ * necessary methods to performs the needed task of recover the information
+ * from the client and store all the edited/added elements, and/or attributes,
+ * as the XML of the file which is currently edited.
+ * </p><br/>
+ * <p>
  * User: Yoann Moranville
+ * <p>
  * Date: 06/05/2011
+ * </p><br/>
  *
  * @author Yoann Moranville
  */
 public class EditParser extends AbstractParser {
-    /**
-	 * Serializable.
+	/**
+	 * <p>
+	 * Constant for the class to use for the log.
+	 * </p>
 	 */
-
 	private static final Logger LOG = Logger.getLogger(EditParser.class);
+	/**
+	 * <p>
+	 * Constant for the qualified name of the element {@code <c>}.
+	 * </p>
+	 */
     public final QName C_ELEMENT = new QName(APENET_EAD, "c");
+	/**
+	 * <p>
+	 * Constant for the qualified name of the element {@code <ead>}.
+	 * </p>
+	 */
     public final QName EAD_ELEMENT = new QName(APENET_EAD, "ead");
+	/**
+	 * <p>
+	 * Constant for the qualified name of the element {@code <language>}.
+	 * </p>
+	 */
     public final QName LANGUAGE_ELEMENT = new QName(APENET_EAD, "language");
+	/**
+	 * <p>
+	 * Constant to define the desired encoding for the response.
+	 * </p>
+	 */
     private static final String UTF8 = "UTF-8";
     // Counters to be able to parse all the values.
     // General counter.
+    /**
+     * <p>
+     * Variable to store the general number of elements.
+     * </p>
+     */
     private int counter = 1;
-    // Counter for attibute "@normal" in element <unitdate>.
+    // Counter for attribute "@normal" in element <unitdate>.
+    /**
+     * <p>
+     * Variable to store the number of attributes <b>{@code @normal}</b> in
+     * element <i>{@code <unitdate>}</i>.
+     * </p>
+     */
     private int counterUnitdate = 1;
     // Counter for element <titleproper>.
+    /**
+     * <p>
+     * Variable to store the number of elements <b>{@code <titleproper>}</b>.
+     * </p>
+     */
     private int counterTitleproper = 1;
     // Counter for element <language>.
+    /**
+     * <p>
+     * Variable to store the number of elements <b>{@code <language>}</b>.
+     * </p>
+     */
     private int counterLanguage = 1;
-    // Counter for attibute "@langcode" in element <language>.
+    // Counter for attribute "@langcode" in element <language>.
+    /**
+     * <p>
+     * Variable to store the number of attributes <b>{@code @langcode}</b> in
+     * element <i>{@code <language>}</i>.
+     * </p>
+     */
     private int counterLangcode = 1;
 
     // Name of the elements and attributes.
     // Name of element <titlestmt>.
+    /**
+	 * <p>
+     * Constant for the name of the element <b>{@code <titlestmt>}</b>.
+	 * </p>
+     */
 	private static final String TITLESTMT = "titlestmt";
     // Name of element "<titleproper>".
+    /**
+	 * <p>
+     * Constant for the name of the element <b>{@code <titleproper>}</b>.
+	 * </p>
+     */
 	private static final String TITLEPROPER = "titleproper";
-    // Name of attibute "@normal" in element <unitdate>.
+    // Name of attribute "@normal" in element <unitdate>.
+    /**
+	 * <p>
+     * Constant for the name of the attribute <b>{@code @normal}</b> of the
+     * element <i>{@code <unitdate>}</i>.
+	 * </p>
+     */
 	private static final String NORMAL = "normal";
     // Name of element <unitdate>.
+    /**
+	 * <p>
+     * Constant for the name of the element <b>{@code <unitdate>}</b>.
+	 * </p>
+     */
 	private static final String UNITDATE = "unitdate";
 	// Name of element <langmaterial>.
+    /**
+	 * <p>
+     * Constant for the name of the element <b>{@code <langmaterial>}</b>.
+	 * </p>
+     */
 	private static final String LANGMATERIAL = "langmaterial";
 	// Name of element <langusage>.
+    /**
+	 * <p>
+     * Constant for the name of the element <b>{@code <langusage>}</b>.
+	 * </p>
+     */
 	private static final String LANGUSAGE = "langusage";
 	// Name of element <language>.
+    /**
+	 * <p>
+     * Constant for the name of the element <b>{@code <language>}</b>.
+	 * </p>
+     */
 	private static final String LANGUAGE = "language";
-    // Name of attibute "@langcode" in element <language>.
+    // Name of attribute "@langcode" in element <language>.
+    /**
+	 * <p>
+     * Constant for the name of the attribute <b>{@code @langcode}</b> of the
+     * element <i>{@code <language>}</i>.
+	 * </p>
+     */
 	private static final String LANGCODE = "langcode";
-    // Name of attibute "@scriptcode" in element <language>.
+    // Name of attribute "@scriptcode" in element <language>.
+    /**
+	 * <p>
+     * Constant for the name of the attribute <b>{@code @scriptcode}</b> of the
+     * element <i>{@code <language>}</i>.
+	 * </p>
+     */
 	private static final String SCRIPTCODE = "scriptcode";
-    // Name of attibute "@level" in element <c>.
+    // Name of attribute "@level" in element <c>.
+    /**
+	 * <p>
+     * Constant for the name of the attribute <b>{@code @level}</b> of the
+     * element <i>{@code <c>}</i>.
+	 * </p>
+     */
 	private static final String LEVEL = "level";
-    // Name of id for attibute "@normal" in element <unitdate>.
+    // Name of id for attribute "@normal" in element <unitdate>.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * attribute <b>{@code @normal}</b> of the element
+     * <i>{@code <unitdate>}</i>.
+	 * </p>
+     */
 	private static final String UNITDATE_NORMAL = "unitdate_normal";
-    // Name of id for attibute "@langcode" in element <language>.
+    // Name of id for attribute "@langcode" in element <language>.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * attribute <b>{@code @langcode}</b> of the element
+     * <i>{@code <language>}</i>.
+	 * </p>
+     */
 	private static final String LANGUAGE_LANGCODE = "language_langcode";
 
 	// Default value of attribute @scriptcode.
+	/**
+	 * <p>
+     * Constant for the default value of the attribute <b>{@code @scriptcode}</b>
+     * of the element <i>{@code <language>}</i>.
+	 * </p>
+	 */
 	private static final String SCRIPTCODE_VALUE = "Latn";
 	// Default value of namespaceURI for element <language>.
+	/**
+	 * <p>
+     * Constant for the default value of the <b>namespaceURI</b> of the element
+     * <i>{@code <language>}</i>.
+	 * </p>
+	 */
 	private static final String LANGUAGE_NAMESPACE_URI = "urn:isbn:1-931666-22-9";
-	// Default value of attribue @langcode.
+	// Default value of attribute @langcode.
+	/**
+	 * <p>
+     * Constant for the default value of the attribute <b>{@code @langcode}</b>
+     * of the element <i>{@code <language>}</i>.
+	 * </p>
+	 */
 	private static final String LANGCODE_VALUE = "none";
 
 	// Variables to check if exists (or no) the necessary elements and attributes. 
 	// Element <unitdate>.
+	/**
+	 * <p>
+	 * Variable to specify if the element <b>{@code <unitdate>}</b> is located.
+	 * </p>
+	 */
 	private boolean unitdateLocated = false;
 	// Attribute @normal in element <unitdate>.
+	/**
+	 * <p>
+	 * Variable to specify if the attribute <b>{@code @normal}</b> of the
+	 * element <i>{@code <unitdate>}</i> is located.
+	 * </p>
+	 */
 	private boolean normalLocated = false;
 	// Element <titlestmt>.
+	/**
+	 * <p>
+	 * Variable to specify if the element <b>{@code <titlestmt>}</b> is located.
+	 * </p>
+	 */
 	private boolean titlestmtLocated = false;
 	// Element <titleproper>.
+	/**
+	 * <p>
+	 * Variable to specify if the element <b>{@code <titleproper>}</b> is
+	 * located.
+	 * </p>
+	 */
 	private boolean titleproperLocated = false;
 	// Element <langmaterial> or <langusage>.
+	/**
+	 * <p>
+	 * Variable to specify if the element <b>{@code <langmaterial>}</b> or the
+	 * element <b>{@code <langusage>}</b> is located.
+	 * </p>
+	 */
 	private boolean languageSectionLocated = false;
 	// Element <language>.
+	/**
+	 * <p>
+	 * Variable to specify if the element <b>{@code <language>}</b> is located.
+	 * </p>
+	 */
 	private boolean languageLocated = false;
-	// Attriute @lagcode in element <language>.
+	// Attribute @lagcode in element <language>.
+	/**
+	 * <p>
+	 * Variable to specify if the attribute <b>{@code @lagcode}</b> of the
+	 * element <i>{@code <language>}</i> is located.
+	 * </p>
+	 */
 	private boolean langcodeLocated = false;
 
 	// Variables to check if the value is added.
 	// Element <titleproper>.
+	/**
+	 * <p>
+	 * Variable to specify if the value of the element <b>{@code <titleproper>}</b>
+	 * has been added.
+	 * </p>
+	 */
 	private boolean titleproperValueAdded = false;
 
 	// Map with the values.
+	/**
+	 * <p>
+	 * Variable to store all the edited, added and non-modified
+	 * information in the client side.
+	 * </p>
+	 */
 	private Map<String, String> formValues;
 
 	// The text value of the element.
+	/**
+	 * <p>
+	 * Variable to store the text value of the item which is currently being
+	 * processed.
+	 * </p>
+	 */
 	private String changedItem;
 
     /**
@@ -331,7 +542,49 @@ public class EditParser extends AbstractParser {
 		this.changedItem = changedItem;
 	}
 
+	/**
+	 * <p>
+	 * This method is called from <i>"{@link EditEadAction#getXmlData()}"</i>.
+	 * </p>
+	 * <p>
+	 * It is used to built a {@link String} which will have the representation
+	 * of the XML, of the passed object, in an HTML format.
+	 * </p>
+	 * <p>
+	 * This representation includes the needed information to display elements
+	 * of type <i>{@code <input type="text">}</i> for those fields which are
+	 * editable. Also include elements of type <i>{@code <input type="button">}</i>
+	 * for those fields which are appendable.
+	 * </p>
+	 * <p>
+	 * <b>NOTE</b>: Take in mind that not all the available elements/attributes
+	 * from the XML are parsed to its HTML display. Only are shown does
+	 * elements which are not in the enumeration {@link UndisplayableFields}.
+	 * </p>
+	 *
+	 * @param cLevel {@link CLevel} specifying the level which information
+	 * should be displayed.
+	 * @param eadContent {@link EadContent} specifying the file which root
+	 * information should be displayed.
+	 *
+	 * @return {@link String} which contains the HTML representation of the XML
+	 * from the passed object.
+	 *
+	 * @throws XMLStreamException Exception while reading the XML information
+	 * and generating the HTML.
+	 * @throws IOException Exception when accessing the file.
+	 *
+	 * @see EditParser#writeHiddenLanguageBox(XMLStreamWriter2)
+	 * @see EditParser#checkAttributes(String, String)
+	 * @see UndisplayableFields#isDisplayable(String)
+	 * @see EditableFields#isEditable(String)
+	 * @see EditParser#writeCorrectInput(XMLStreamWriter2, String, String, String, CLevel)
+	 * @see EditParser#checkEndElement(String, XMLStreamWriter2)
+	 * @see EditParser#resetElementsLocated(String)
+	 */
 	public String xmlToHtml(CLevel cLevel, EadContent eadContent) throws XMLStreamException, IOException {
+		LOG.debug("Entering method \"xmlToHtml\".");
+
         int counterDiv = 0;
         String xml = "";
         if (cLevel != null)
@@ -454,10 +707,39 @@ public class EditParser extends AbstractParser {
         xmlWriter.flush();
         xmlWriter.close();
         xmlReader.close();
+
+		LOG.debug("Leaving method \"xmlToHtml\".");
+
         return stringWriter.toString();
     }
 
+	/**
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#xmlToHtml(CLevel, EadContent)}"</i>.
+	 * </p>
+	 * <p>
+	 * It is used to process the current element/attribute and create the
+	 * needed structure in the HTML in order to enable the edition of the
+	 * passed element/attribute.
+	 * </p>
+	 *
+	 * @param xmlWriter {@link XMLStreamWriter2} containing the HTML
+	 * representation of the XML.
+	 * @param lastElementName {@link String} specifying the name of the current
+	 * element of the XML which is under process.
+	 * @param attrName {@link String} specifying the name of the current
+	 * attribute for the passed element of the XML which is under process.
+	 * @param attrValue {@link String} specifying the value of the current
+	 * element of the XML which is under process.
+	 * @param cLevel {@link CLevel} specifying the level which information
+	 * should be displayed.
+	 *
+	 * @throws XMLStreamException Exception while reading the XML information
+	 * and generating the HTML.
+	 */
     private void writeCorrectInput(XMLStreamWriter2 xmlWriter, String lastElementName, String attrName, String attrValue, CLevel cLevel) throws XMLStreamException {
+		LOG.debug("Entering method \"writeCorrectInput\".");
+
         if (EditParser.LANGCODE.equalsIgnoreCase(attrName)
         		&& EditParser.LANGUAGE.equalsIgnoreCase(lastElementName)) {
         	// Write the select for the possible language codes.
@@ -500,9 +782,29 @@ public class EditParser extends AbstractParser {
                 this.setCounter(this.getCounter() + 1);
             }
         }
+
+        LOG.debug("Leaving method \"writeCorrectInput\".");
     }
 
+    /**
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#xmlToHtml(CLevel, EadContent)}"</i>.
+	 * </p>
+	 * <p>
+	 * It is used to create a hidden HTML {@code <select>} element which should
+	 * be used as a base to create the duplications when a new <b>language</b>
+	 * block will be added.
+	 * </p>
+     *
+     * @param xmlWriter {@link XMLStreamWriter2} containing the HTML
+	 * representation of the XML.
+     *
+     * @throws XMLStreamException Exception while reading the XML information
+	 * and generating the HTML.
+     */
     private void writeHiddenLanguageBox(XMLStreamWriter2 xmlWriter) throws XMLStreamException {
+    	LOG.debug("Entering method \"writeHiddenLanguageBox\".");
+
     	// Write the select for the possible language codes.
         xmlWriter.writeStartElement("select");
         xmlWriter.writeAttribute("name", "language_langcode_hidden");
@@ -524,9 +826,48 @@ public class EditParser extends AbstractParser {
             xmlWriter.writeEndElement();
         }
         xmlWriter.writeEndElement();
+
+    	LOG.debug("Leaving method \"writeHiddenLanguageBox\".");
     }
 
+    /**
+	 * <p>
+	 * This method is called from <i>"{@link EditEadAction#saveXmlData()}"</i>.
+	 * </p>
+     * <p>
+     * It is used to save the <i>edited</i> and/or <i>added</i> elements and
+     * its contents in XML of the current part.
+     * </p>
+     * <p>
+     * Once the save process ends, a {@link String} is returned containing a
+     * correct XML and, in most of the cases, a valid XML against apeEAD schema.
+     * </p>
+     * <p>
+     * If any error occurs during the process an appropriate exception is
+     * thrown.
+     * </p>
+     *
+     * @param xml {@link String} representing the XML which should be updated
+     * after the edition.
+     * @param formValues {@link Map}{@code <}{@link String}, {@link String}{@code >}
+     * containing the values for the editable and appendable fields.
+     *
+     * @return {@link String} representing the XML in which all the edited and
+     * appended elements have been saved.
+     *
+     * @throws XMLStreamException Exception while reading the XML information
+	 * and processing one edited/added by the user.
+	 * @throws IOException Exception when trying to read the XML information.
+	 *
+	 * @see EditParser#checkAttributes(String, String)
+	 * @see EditParser#addContent(XMLStreamReader2, XMLStreamWriter2, QName)
+	 * @see EditParser#checkCurrentLanguage(XMLStreamWriter2, XMLStreamReader2, QName)
+	 * @see EditParser#checkAddedLanguages(XMLStreamWriter2, XMLStreamReader2)
+	 * @see EditParser#resetElementsLocated(String)
+     */
     public String getNewXmlString(String xml, Map<String, String> formValues) throws XMLStreamException, IOException {
+    	LOG.debug("Entering method \"getNewXmlString\".");
+
     	Map<String, String> formValuesCopy = new LinkedHashMap<String, String>(formValues);
 
     	// Set the copy to the global map.
@@ -601,11 +942,44 @@ public class EditParser extends AbstractParser {
         xmlWriter.flush();
         xmlWriter.close();
         xmlReader.close();
+
+    	LOG.debug("Leaving method \"getNewXmlString\".");
+
         return stringWriter.toString();
     }
 
+    /**
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#getNewXmlString(String, Map)}"</i>.
+	 * </p>
+     * <p>
+     * It is used to process the <b>current</b> <i>element</i> and its
+     * <i>attributes</i> checking if its needed to replace the current value in
+     * the XML for the new one, edited by the user, or should maintain the
+     * current one. 
+     * </p>
+     * <p>
+     * In the case that it is detected that a <b>new</b> <i>element</i> and its
+     * <i>attributes</i> has been added by the user, also are processed and
+     * added to the new XML in the right location.
+     * </p>
+     *
+     * @param xmlReader {@link XMLStreamReader2} containing the old information
+     * for the XML.
+     * @param xmlWriter {@link XMLStreamWriter2} containing the new information
+     * for the XML.
+     * @param element {@link QName} specifying the qualified name of the
+     * element which is currently processed.
+     *
+     * @throws XMLStreamException Exception while modifying the XML information.
+     *
+     * @see EditParser#checkAttributes(String, String)
+     * @see EditParser#isElementChanged(String, String)
+     */
     private void addContent(XMLStreamReader2 xmlReader,
 			XMLStreamWriter2 xmlWriter, QName element) throws XMLStreamException {
+    	LOG.debug("Entering method \"addContent\".");
+
         for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
         	this.checkAttributes(xmlReader.getLocalName(), xmlReader.getAttributeLocalName(i));
             String changedAttr = isElementChanged(element.getLocalPart(), xmlReader.getAttributeLocalName(i));
@@ -624,20 +998,40 @@ public class EditParser extends AbstractParser {
         }
 
         this.setChangedItem(isElementChanged(element.getLocalPart(), null));
+
+    	LOG.debug("Leaving method \"addContent\".");
 	}
 
-	/**
-     * Method to check if the current language element should be maintained,
-     * changed or removed.
+    /**
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#getNewXmlString(String, Map)}"</i>.
+	 * </p>
+     * <p>
+     * It is used to check if the current <i>element</i>, which is the type
+     * {@code <language>}, should be maintained without any change, maintained
+     * but its value, or the value of any of its attributes, changed or fully
+     * removed for the final XML.
+     * </p>
      *
-     * @param xmlWriter
-     * @param xmlReader
-     * @param element
-     * @return
-     * @throws XMLStreamException
+     * @param xmlWriter {@link XMLStreamWriter2} containing the new information
+     * for the XML.
+     * @param xmlReader {@link XMLStreamReader2} containing the old information
+     * for the XML.
+     * @param element {@link QName} specifying the qualified name of the
+     * element which is currently processed.
+     *
+     * @return {@code boolean} specifying if the value of the element, of any
+     * its attributes has been changed or not.
+     *
+     * @throws XMLStreamException Exception while modifying the XML information.
+     *
+     * @see EditParser#isElementChanged(String, String)
+     * @see EditParser#checkAttributes(String, String)
      */
     private boolean checkCurrentLanguage(XMLStreamWriter2 xmlWriter,
 			XMLStreamReader2 xmlReader, QName element) throws XMLStreamException {
+    	LOG.debug("Entering method \"checkCurrentLanguage\".");
+
     	boolean result = false;
 		// Checks the value of the element.
     	String elementValue = isElementChanged(element.getLocalPart(), null);
@@ -655,10 +1049,43 @@ public class EditParser extends AbstractParser {
 	        this.setChangedItem(elementValue);
 	        result = true;
 		}
+
+    	LOG.debug("Leaving method \"checkCurrentLanguage\".");
+
 		return result;
 	}
 
+    /**
+	 * <p>
+	 * This method is called from <i>"{@link EditEadAction#addFieldEntry()}"</i>
+	 * and from <i>"{@link EditEadAction#writeNewCLevelXmlAndChildren(AddableFields, CLevel, String, boolean)}"</i>.
+	 * </p>
+     * <p>
+     * It is used for modifying the value of the element passed for the new one
+     * when needed.
+     * </p>
+     * <p>
+     * <b>Note: This method is currently unused.</b>
+     * </p>
+     *
+     * @param field {@link AddableFields} specifying an element which is marked
+     * as appendable.
+     * @param xml {@link String} representing the XML which should be changed.
+     * @param value {@link String} specifying the new value for the current
+     * element.
+     *
+     * @return {@link String} representing the XML in which all the edited and
+     * appended elements have been saved.
+     *
+     * @throws XMLStreamException Exception while modifying the XML information.
+     * @throws IOException Exception when trying to read the XML information.
+     *
+     * @see EditParser#createTag(XMLStreamWriter2, String, String)
+     * @see EditParser#writeEndElement(javax.xml.stream.XMLStreamReader, javax.xml.stream.XMLStreamWriter)
+     */
 	public String addInLevel(EditEadAction.AddableFields field, String xml, String value) throws XMLStreamException, IOException {
+    	LOG.debug("Entering method \"addInLevel\".");
+
         LOG.info("We are adding '" + value + "' for the key '" + field.getName() + "'");
 
         StringWriter stringWriter = new StringWriter();
@@ -753,10 +1180,36 @@ public class EditParser extends AbstractParser {
         xmlWriter.flush();
         xmlWriter.close();
         xmlReader.close();
+
+    	LOG.debug("Leaving method \"addInLevel\".");
+
         return stringWriter.toString();
     }
 
+	/**
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#addInLevel(AddableFields, String, String)}"</i>.
+	 * </p>
+     * <p>
+     * It is used to create the tag for the element passes or the value of the
+     * element passed. 
+     * </p>
+     * <p>
+     * <b>Note: This method is currently unused.</b>
+     * </p>
+	 *
+	 * @param writer {@link XMLStreamWriter2} containing the new information
+     * for the XML.
+	 * @param element {@link String} specifying an element which is currently
+	 * processed.
+	 * @param value {@link String} specifying the new value for the current
+     * element.
+	 *
+	 * @throws XMLStreamException Exception while modifying the XML information.
+	 */
     private void createTag(XMLStreamWriter2 writer, String element, String value) throws XMLStreamException {
+    	LOG.debug("Entering method \"createTag\".");
+
         LOG.info("We create element: " + element);
         writer.writeStartElement(null, element, APENET_EAD);
         if (value == null) {
@@ -765,16 +1218,53 @@ public class EditParser extends AbstractParser {
             LOG.info("And value is not null, so last element");
             writer.writeCharacters(value);
         }
+
+    	LOG.debug("Leaving method \"createTag\".");
     }
 
     /**
-     * Checks if an element of the original XML is part of the submitted form
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#addContent(XMLStreamReader2, XMLStreamWriter2, QName)}"</i>
+	 * and from <i>"{@link EditParser#checkCurrentLanguage(XMLStreamWriter2, XMLStreamReader2, QName)}"</i>.
+	 * </p>
+     * <p>
+     * It is used to check if the value of the <i>element</i>, or the
+     * <i>attribute</i>, passed is in the list of the fields edited/added by
+     * the user.
+     * </p>
+     * <p>
+     * If the value is found, before returns it, it is performed the action of
+     * unescape the characters which previously has been escaped, before has
+     * been sent from client to server.
+     * </p>
+     * <p>
+     * Those characters are: <b>{@code '}</b>, <b>{@code <}</b> and <b>{@code >}</b>.
+     * </p>
      *
-     * @param xmlElementName The name of the element in the original XML
-     * @param xmlAttributeName The name of the attribute in the original XML
-     * @return Either the value of the changed element or null if it does not exist
+     * @param xmlElementName {@link String} specifying the name of the element
+     * in the original XML.
+     * @param xmlAttributeName {@link String} specifying the name of the
+     * attribute in the original XML.
+     *
+     * @return
+     * <p>
+     * {@link String} which represent the result of the process.
+     * </p>
+     * <p>
+     * Could be one of the follows:
+     * </p>
+     * <p>
+     *  <ul>
+     *   <li><b>null</b> - If the value of the element is not changed or the
+     *   	element does not exists.</li>
+     *   <li><b>Any value</b> - The new value of the element when it is
+     *   	changed.</li>
+     *  </ul>
+     * </p>
      */
     public String isElementChanged(String xmlElementName, String xmlAttributeName) {
+    	LOG.debug("Entering method \"isElementChanged\".");
+
     	// Recover the list of the keys for the current element.
     	Set<String> keyList= new LinkedHashSet<String>();
     	if (this.getFormValues() != null) {
@@ -861,19 +1351,38 @@ public class EditParser extends AbstractParser {
     		if (value.contains("%3E")) { 
     			value = value.replaceAll("%3E", ">");
     		}
+
+        	LOG.debug("Leaving method \"isElementChanged\" when the value of the element is changed.");
+
     		return value;
     	}
+
+    	LOG.debug("Leaving method \"isElementChanged\" when the value of the element is not changed.");
 
         return null;
     }
 
     /**
-     * Method to check the attribute name to enable or disable the "add attribute" button.
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#addContent(XMLStreamReader2, XMLStreamWriter2, QName)}"</i>,
+	 * from <i>"{@link EditParser#checkCurrentLanguage(XMLStreamWriter2, XMLStreamReader2, QName)}"</i>,
+	 * from <i>"{@link EditParser#getNewXmlString(String, Map)}"</i>
+	 * and from <i>"{@link EditParser#xmlToHtml(CLevel, EadContent)}"</i>.
+	 * </p>
+     * <p>
+     * It is used to check the <i>name of the element</i> and the <i>name of
+     * the attribute</i> in order to enable or disable the "add attribute"
+     * button, thought the enable of the variables for the element located.
+     * </p>
      *
-     * @param elementName Name of the current element.
-     * @param attributeName Name of the current attribute for the element.
+     * @param elementName {@link String} specifying the name of the element
+     * in the original XML.
+     * @param attributeName {@link String} specifying the name of the
+     * attribute in the original XML.
      */
     private void checkAttributes(String elementName, String attributeName) {
+    	LOG.debug("Entering method \"checkAttributes\".");
+
     	LOG.debug("Check attribute " + attributeName + ", for element " + elementName);
     	// Check if the current element is "unitdate".
     	if (EditParser.UNITDATE.equalsIgnoreCase(elementName)) {
@@ -919,14 +1428,26 @@ public class EditParser extends AbstractParser {
     		LOG.debug("Located attribute " + attributeName + ", for element " + elementName);
     		this.setLangcodeLocated(true);
     	}
+
+    	LOG.debug("Leaving method \"checkAttributes\".");
     }
 
     /**
-     * Method to reset the located elements when necessary.
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#getNewXmlString(String, Map)}"</i>
+	 * and from <i>"{@link EditParser#xmlToHtml(CLevel, EadContent)}"</i>.
+	 * </p>
+	 * <p>
+     * It is used to check the <i>name of the element/attribute</i> in order to
+     * disable the variables for the element located when necessary.
+	 * </p>
      *
-     * @param elementName Name of the current element.
+     * @param elementName {@link String} specifying the name of the element, or
+     * the name of the attribute, in the original XML.
      */
     private void resetElementsLocated(String elementName) {
+    	LOG.debug("Entering method \"resetElementsLocated\".");
+
     	// Reset located element <unitdate>.
     	if (EditParser.UNITDATE.equalsIgnoreCase(elementName)) {
         	LOG.debug("Reset located element: " + elementName);
@@ -968,15 +1489,30 @@ public class EditParser extends AbstractParser {
     		this.setLanguageLocated(false);
     		this.setCounterLangcode(this.getCounterLangcode() + 1);
     	}
+
+    	LOG.debug("Leaving method \"resetElementsLocated\".");
     }
 
     /**
-     * Method to check the close tags and add the appropriate buttons when necessary.
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#xmlToHtml(CLevel, EadContent)}"</i>.
+	 * </p>
+	 * <p>
+	 * It is used to check if its needed to include a button to add more
+	 * elements from the same type of the currently processed element before
+	 * close the current parent.
+	 * </p>
      *
-     * @param elementName Name of the current close tag.
-     * @throws XMLStreamException Exception processing XML.
+     * @param elementName {@link String} specifying the name of the current
+	 * element of the XML which is under process.
+     * @param xmlWriter {@link XMLStreamWriter2} containing the HTML
+	 * representation of the XML.
+     *
+     * @throws XMLStreamException Exception while modifying the XML information.
      */
     private void checkEndElement(String elementName, XMLStreamWriter2 xmlWriter) throws XMLStreamException {
+    	LOG.debug("Entering method \"checkEndElement\".");
+
     	// Checks if the close element is "titleproper".
     	if (EditParser.TITLEPROPER.equalsIgnoreCase(elementName)) {
     		// Check if it is necessary to add input text for "titleproper" element.
@@ -1029,14 +1565,26 @@ public class EditParser extends AbstractParser {
 			xmlWriter.writeAttribute("value", getText("dashboard.editead.btn.addElement") + " " + getText("dashboard.editead.btn.elementLanguage"));
 			this.setCounterLangcode(this.getCounterLangcode() + 1);
     	}
+
+    	LOG.debug("Leaving method \"checkEndElement\".");
     }
 
     /**
-     * Method to check if there is new language added for the current section.
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#getNewXmlString(String, Map)}"</i>.
+	 * </p>
+     * <p>
+     * It is used to check if there is new language added for the current
+     * section and built the information needed, including the element part and
+     * value plus the attribute and its value.
+     * </p>
      *
-     * @param xmlWriter
-     * @param xmlReader
-     * @throws XMLStreamException 
+     * @param xmlWriter {@link XMLStreamWriter2} containing the new information
+     * for the XML.
+     * @param xmlReader {@link XMLStreamReader2} containing the old information
+     * for the XML.
+     *
+     * @throws XMLStreamException Exception while modifying the XML information.
      */
     private void checkAddedLanguages(XMLStreamWriter2 xmlWriter, XMLStreamReader2 xmlReader) throws XMLStreamException {
     	List<String> keysList = new LinkedList<String>();
@@ -1079,6 +1627,24 @@ public class EditParser extends AbstractParser {
 			}
 		}
     }
+
+    /**
+	 * <p>
+	 * This method is called from <i>"{@link EditParser#checkEndElement(String, XMLStreamWriter2)}"</i>.
+	 * </p>
+     * <p>
+     * It is used to check recover the internationalized text, in the current
+     * selected language, for the key which is passed as parameter.
+     * </p>
+     *
+     * @param code {@link String} representing the key of the porperty which
+     * should be obtained.
+     *
+     * @return {@link String} which contains the internationalized text for the
+     * passed key.
+     *
+     * @see TextProviderHelper#getText(String, String, ValueStack)
+     */
     private String getText(String code){
 		ValueStack valueStack = ActionContext.getContext().getValueStack();
 		return TextProviderHelper.getText(code, code, valueStack);

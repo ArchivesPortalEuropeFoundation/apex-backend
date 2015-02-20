@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.actions.ajax;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,45 +45,215 @@ import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
+ * <p>
+ * Main class used to process the edition of the apeEAD files, from display
+ * the structure an editable fields of the file to save the changes that the
+ * user make.
+ * </p>
+ * <p>
+ * The only editable types of apeEADs are the <i>"Finding aids"</i>, the 
+ * <i>"Holdings guides"</i> and the <i>"Source guides"</i> are not editable.
+ * </p><br/>
+ * <p>
  * User: Yoann Moranville
+ * </p>
+ * <p>
  * Date: 3/10/11
+ * </p><br/>
  *
  * @author Yoann Moranville
  */
 public class EditEadAction extends AjaxControllerAbstractAction {
+	/**
+	 * <p>
+	 * Constant for the interface {@link Serializable}.
+	 * </p>
+	 *
+	 * @see Serializable
+	 */
 	private static final long serialVersionUID = 4831971826309950250L;
     // Log.
+	/**
+	 * <p>
+	 * Constant for the class to use for the log.
+	 * </p>
+	 */
     private final Logger log = Logger.getLogger(EditEadAction.class);
 
 	// Constants for the names of only editable elements.
 //	private static final String ARCHDESC_LEVEL = "archdesc_level"; // Name of attibute "@level" in element <archdesc>.
+    /**
+	 * <p>
+     * Constant for the name of the editable field of the element
+     * <b>{@code <titleproper>}</b>.
+	 * </p>
+     */
 	private static final String TITLEPROPER = "titleproper"; // Name of element <titleproper>.
 
 	// Constants for the names of editable and appendable elements.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * element <b>{@code <eadid>}</b>.
+	 * </p>
+     */
 	private static final String EADID = "eadid"; // Name of element <eadid>.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * attribute <b>{@code @countrycode}</b> of the element
+     * <i>{@code <eadid>}</i>.
+	 * </p>
+     */
 	private static final String EADID_COUNTRYCODE = "eadid_countrycode"; // Name of attibute "@countrycode" in element <eadid>.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * attribute <b>{@code @mainagencycode}</b> of the element
+     * <i>{@code <eadid>}</i>.
+	 * </p>
+     */
 	private static final String EADID_MAINAGENCYCODE = "eadid_mainagencycode"; // Name of attibute "@mainagencycode" in element <eadid>.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * element<b>{@code <language>}</b>.
+	 * </p>
+     */
 	private static final String LANGUAGE = "language"; // Name of element <language>.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * attribute <b>{@code @langcode}</b> of the element
+     * <i>{@code <language>}</i>.
+	 * </p>
+     */
 	private static final String LANGUAGE_LANGCODE = "language_langcode"; // Name of attibute "@langcode" in element <language>.
+    /**
+	 * <p>
+     * Constant for the name of the editable and appendable field of the
+     * attribute <b>{@code @normal}</b> of the element
+     * <i>{@code <unitdate>}</i>.
+	 * </p>
+     */
 	private static final String UNITDATE_NORMAL = "unitdate_normal"; // Name of attibute "@normal" in element <unitdate>.
 
 	// Constants for the names of the buttons for the appendable elements.
+    /**
+	 * <p>
+     * Constant for the name of button for the editable and appendable
+     * attribute <b>{@code @normal}</b> of the element
+     * <i>{@code <unitdate>}</i>.
+	 * </p>
+     */
 	private static final String BTN_UNITDATE_NORMAL = "btn_unitdate_normal"; // Name of the button to add attibute "@normal" in element <unitdate>.
 
 	// Constants for the names used.
+	/**
+	 * <p>
+	 * Constant for the name of the identifier of the <b>{@code <c>}</b>
+	 * element.
+	 * </p>
+	 */
 	private static final String C_LEVEL_ID = "id"; // Type of XML.
+	/**
+	 * <p>
+	 * Constant for the name of the identifier of the file (the apeEAD) in the
+	 * database.
+	 * </p>
+	 */
 	private static final String FILEID = "fileId"; // Key for the identifier of the EAD in DB.
+	/**
+	 * <p>
+	 * Constant for the name of the map, which is passed form the client side
+	 * to the server side, that contains all the edited, added and non-modified
+	 * information to save.
+	 * </p>
+	 */
 	private static final String FORM_NAME = "'formValues'"; // Name of the map with all the values.
+	/**
+	 * <p>
+	 * Constant for the name of the element which store the type of the XML.
+	 * </p>
+	 */
 	private static final String XMLTYPEID = "xmlTypeId"; // Type of XML.
 
 	// Variables.
+	/**
+	 * <p>
+	 * Variable to store the identifier, in database, of the apeEAD.
+	 * </p>
+	 */
 	private Long id;
+	/**
+	 * <p>
+	 * Variable to store the identifier, in database, of the finding aid which
+	 * should be edited.
+	 * </p>
+	 */
 	private Long faId;
+	/**
+	 * <p>
+	 * Variable to store the identifier, in database, of the finding aid which
+	 * should be edited.
+	 * </p>
+	 */
 	private Long hgId;
+	/**
+	 * <p>
+	 * Variable to store the identifier, in database, of the level which should
+	 * be edited.
+	 * </p>
+	 */
 	private Integer fileId;
+	/**
+	 * <p>
+	 * Variable to store the type of the XML which should be edited.
+	 * </p><br/>
+	 * <p>
+	 * Possible values are:
+	 * </p>
+	 * <p>
+	 *  <ul>
+	 *   <li><b>0</b> - Finding Aid.</li>
+	 *   <li><b>1</b> - Holdings Guide.</li>
+	 *   <li><b>2</b> - EAC-CPF. <b>Note</b>: <i>this is not an apeEAD type</i>.</li>
+	 *   <li><b>3</b> - Source Guide.</li>
+	 *  </ul>
+	 * </p>
+	 */
 	private int xmlTypeId;
+	/**
+	 * <p>
+	 * Variable to store all the edited, added and non-modified
+	 * information in the client side.
+	 * </p>
+	 */
 	private Map<String, String> formValues;
+	/**
+	 * <p>
+	 * Variable to store the edition type of the XML.<br/>
+	 * </p>
+	 * <p>
+	 * Possible values are:
+	 * </p>
+	 * <p>
+	 *  <ul>
+	 *   <li><b>thisLevel</b> - Enables the edition only for the elements of the
+	 *   	current level.</li>
+	 *   <li><b>lowLevels</b> - Enables the edition only for the elements of the
+	 *   	lower levels.</li>
+	 *   <li><b>allLevels</b> - Enables the edition of all possible elements.</li>
+	 *  </ul>
+	 * </p>
+	 */
 	private String type;
+	/**
+	 * <p>
+	 * Variable to store the value of the element <b>{@code <eadid>}</b> in
+	 * case the user has changed the identifier of the apeEAD.
+	 * </p>
+	 */
 	private String chagedEADID;
 
 	/* GETTERS & SETTERS. */
@@ -128,7 +299,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 	}
 
 	public String getType(){
-	return this.type;
+		return this.type;
 	}
 
 	public void setType(String type){
@@ -159,7 +330,12 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 	}
 
 	/**
-	 * Override the method to build the correct breadcrumb.
+	 * <p>
+	 * Override the method to build the correct breadcrumb for this section.
+	 * </p>
+	 * <p>
+	 * Home - {@code <Institution's name>} - Content manager - Edit EAD files
+	 * </p>
 	 */
 	@Override
 	protected void buildBreadcrumbs() {
@@ -169,14 +345,63 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 	}
 
 	/**
+	 * <p>
 	 * Override the method to execute the action.
+	 * </p>
+	 *
+	 * @return {@link String} {@link Action#SUCCESS}
+	 *
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
 	@Override
 	public String execute() {
 		return SUCCESS;
 	}
 
+	/**
+	 * <p>
+	 * This method is called thought the Struts action <i>"editEadCreateDbEntries"</i>.
+	 * </p>
+	 * <p>
+	 * It is used to create the needed structure in the database which
+	 * represents the contents of the apeEAD file, if they are not yet
+	 * created.
+	 * </p>
+	 * <p>
+	 * If it's already created, or has any problem during the creation time the
+	 * user could see an appropriate message.
+	 * </p><br/>
+	 * <p>
+	 * Possible messages:
+	 * </p>
+	 * <p>
+	 *  <ul>
+	 *   <li>When type of the document is not a FA or HG - No XML type defined
+	 *  	or wrong type; it should be either EAD_FA or EAD_HG ? other types
+	 *  	not working yet</li>
+	 *   <li>When the apeEAD is published - The file state of the finding aid
+	 * 		is not compliant with the edition action</li>
+	 *   <li>When the apeEAD is a FA and is converted to Europeana - The file
+	 * 		state of the finding aid is not compliant with the edition action</li>
+	 *  </ul>
+	 * </p><br/>
+	 * <p>
+	 * The response will be send as an {@link String} to the client after
+	 * finishing the actions.
+	 * </p>
+     * <p>
+     * <b>Note: This method is currently unused.</b>
+     * </p>
+	 *
+	 * @return null since we use the HttpResponse to write JSON data directly
+	 * to the page.
+	 *
+	 * @see XmlEadParser#parseEad(Ead)
+	 * 
+	 */
 	public String createDbEntries(){
+		this.log.debug("Entering method \"createDbEntries\".");
+
         XmlType xmlType = XmlType.getType(xmlTypeId);
         LOG.trace("Identifier of EAD: " + id + ", is XmlType: " + xmlType.getName());
         Writer writer = null;
@@ -211,10 +436,39 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 LOG.error("Could not provide the action with any data", ex);
             }
         }
+
+        this.log.debug("Leaving method \"createDbEntries\".");		
+
         return null;
     }
 
+
+	/**
+	 * <p>
+	 * This method is called thought the Struts action <i>"editEadXml"</i>.
+	 * </p>
+	 * <p>
+	 * It is used to recover the information in database and construct the
+	 * navigation tree for the current level (include its brothers).
+	 * </p>
+	 * <p>
+	 * The identifier of the level could be found on {@link EditEadAction#id},
+	 * if is the root level, or in {@link EditEadAction#fileId} in case of a
+	 * lower level.
+	 * </p>
+	 * <p>
+	 * The response will be send as an {@link String} to the client after
+	 * convert the XML in a HTML page.
+	 * </p>
+	 *
+	 * @return null since we use the HttpResponse to write JSON data directly
+	 * to the page.
+	 *
+	 * @see EditParser#xmlToHtml(CLevel, EadContent)
+	 */
     public String getXmlData() {
+    	this.log.debug("Entering method \"getXmlData\".");
+
         XmlType xmlType = XmlType.getType(xmlTypeId);
         Writer writer = null;
         try {
@@ -241,16 +495,54 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                     writer.close();
             } catch (IOException ioe){}
         }
+
+        this.log.debug("Leaving method \"getXmlData\".");
+
         return null;
     }
 
     //todo before production: Sanitize user input
     /**
-     * Method to check the data in the form and save it. 
-     * 
-     * @return The result of the process.
+     * <p>
+     * This method is called thought the Struts action <i>"editEadXmlSaveLevel"</i>.
+     * </p>
+     * <p>
+     * It is used to check the data filled by the user in the form and save it,
+     * when needed.
+     * </p><br/>
+     * <p>
+	 * This action could result in the next possible messages:
+	 * </p>
+	 * <p>
+	 *  <ul>
+	 *   <li>When the data is not received in the server side - No changes have
+	 * 		been saved.</li>
+	 *   <li>When an error occurs when saving the information in the XML file -
+	 * 		No changes have been saved.</li>
+	 *   <li>When an error occurs when saving the information in database -
+	 * 		Error while updating the changes, please try again.</li>
+	 *   <li>When no changes in the information is detected - No changes have
+	 * 		been made.</li>
+	 *   <li>When no error occurs and all is saved correctly - All your changes
+	 * 		have been saved successfully.</li>
+	 *  </ul>
+	 * </p><br/>
+	 * <p>
+     * The response will be send as an {@link String} to the client after
+	 * finishing the actions.
+	 * </p>
+     *
+     * @return null since we use the HttpResponse to write JSON data directly
+	 * to the page.
+     *
+     * @see EditEadAction#recoverMapFormValues()
+     * @see EditParser#getNewXmlString(String, Map)
+     * @see LinkingService#linkWithHgOrSg(Ead)
+     * @see EditEadAction#saveAllXmlData()
      */
     public String saveXmlData() {
+    	this.log.debug("Entering method \"saveXmlData\".");
+
         Writer writer = null;
         try {
             XmlType xmlType = XmlType.getType(this.getXmlTypeId());
@@ -267,6 +559,9 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                         	jsonObject.put("savedText", getText("dashboard.editead.errorNoChanges"));
                             writer.append(jsonObject.toString());
                             writer.close();
+
+                            this.log.debug("Leaving method \"saveXmlData\" when no data is received.");
+
                             return null;
                         }
                     } catch (Exception ex){
@@ -352,14 +647,19 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
                 	jsonObject.put("saved", false);
                 	jsonObject.put("savedText", getText("dashboard.editead.errorNoChanges"));
+
+                	this.log.debug("Leaving method \"saveXmlData\" when an error occurs saving the information in the XML file.");
             	} else {
                     jsonObject.put("saved", true);
                     jsonObject.put("savedText", getText("dashboard.editead.correctSaved"));
-            		
+
+                    this.log.debug("Leaving method \"saveXmlData\" when all is correcty saved.");
             	}
             } else {
             	jsonObject.put("saved", true);
                 jsonObject.put("savedText", getText("dashboard.editead.notChanged"));
+
+                this.log.debug("Leaving method \"saveXmlData\" when there is no changes.");
             }
 
             writer.append(jsonObject.toString());
@@ -379,16 +679,78 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
             JpaUtil.rollbackDatabaseTransaction();
             LOG.error("EXCEPTION", e);
+
+            this.log.debug("Leaving method \"saveXmlData\" when an error occurs saving the information in database.");
         }
         return null;
     }
 
     /**
-     * Method to recover and add the correct values to the map "formValues".
-     * This is derived from issue 180 and bug in Struts2 (see:
-     * https://issues.apache.org/jira/browse/WW-4176).
+     * <p>
+     * This method is called from <i>"{@link EditEadAction#saveXmlData()}"</i>.
+     * </p>
+     * <p>
+     * It is used to recover the data sent from the client side to the server
+     * side in a map structure under the parameter name <i>"formValues"</i>.
+     * </p>
+     * <p>
+     * This is derived from 
+     * <a href="https://redmine.archivesportaleurope.net/issues/180" target="_blank">issue #180</a>
+     * and bug in Struts2 (see:
+     * <a href="https://issues.apache.org/jira/browse/WW-4176" target="_blank">Bug #4176</a>).
+     * </p><br/>
+     * <p>
+     * The values which are recovered from the map are as follows:
+     * </p>
+     * <p>
+     *  <ul>
+     *   <li><b>xmlTypeId</b> - Value for {@link EditEadAction#xmlTypeId}</li>
+     *   <li><b>id</b> - Value for {@link EditEadAction#id}</li>
+     *   <li><b>fileId</b> - Value for {@link EditEadAction#fileId}</li>
+     *   <li><b>eadid_countrycode</b> - {@link Set}{@code <}{@link String}{@code >}
+     *   	of the values for attribute <b>{@code @countrycode}</b> of the
+     *   	element <i>{@code <eadid>}</i>.</li>
+     *   <li><b>eadid_mainagencycode</b> - {@link Set}{@code <}{@link String}{@code >}
+     *   	of the values for attribute <b>{@code @mainagencycode}</b> of the
+     *   	element <i>{@code <eadid>}</i>.</li>
+     *   <li><b>eadid</b> - {@link Set}{@code <}{@link String}{@code >} of the
+     *   	values for element <b>{@code <eadid>}</b>.</li>
+     *   <li><b>language_langcode</b> - {@link Set}{@code <}{@link String}{@code >}
+     *   	of the values for attribute <b>{@code @langcode}</b> of the element
+     *   	<i>{@code <language>}</i>.</li>
+     *   <li><b>language</b> - {@link Set}{@code <}{@link String}{@code >} of
+     *   	the values for element<b>{@code <language>}</b>.</li>
+     *   <li><b>titleproper</b> - {@link Set}{@code <}{@link String}{@code >}
+     *   	of the values for element <b>{@code <titleproper>}</b>.</li>
+     *   <li><b>unitdate_normal</b> and/or <b>btn_unitdate_normal</b> -
+     * 		{@link Set}{@code <}{@link String}{@code >} of the values for
+     * 		attribute <b>{@code @normal}</b> of the element <i>{@code <unitdate>}</i>.</li>
+     *  </ul>
+     * </p>
+     * 
+     * @return
+     * <p>
+     * {@link String} which represent the result of the process.
+     * </p>
+     * <p>
+     * Could be one of the follows:
+     * </p>
+     * <p>
+     *  <ul>
+     *   <li><b>{@link Action#SUCCESS}</b> - If all the data is correctly
+     * 		recovered.</li>
+     *   <li><b>{@link Action#ERROR}</b> - If there is some problem in the
+     * 		process of recover the data.</li>
+     *  </ul>
+     * </p>
+     *
+     * @see EditEadAction#ensureOrder(Set)
+     * @see EditEadAction#ensureOrderLanguage(Set)
+     * @see EditEadAction#addValuesToMap(JSONObject, Set)
      */
     private String recoverMapFormValues() {
+    	this.log.debug("Entering method \"recoverMapFormValues\".");
+
     	this.log.debug("Starting process to recover values to change.");
     	String result = Action.SUCCESS;
 		this.setFormValues(new LinkedHashMap<String, String>());
@@ -556,16 +918,27 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 				this.log.error(e.getCause());
 			}
 			result = Action.ERROR;
+
+			this.log.debug("Leaving the method \"recoverMapFormValues\" when an error occurs trying to recover the data.");
 		}
 
 		return result;
     }
 
     /**
-     * Method to ensure the elements in the set are correctly ordered.
+     * <p>
+     * This recursive method is called from itself and from the method
+     * <i>"{@link EditEadAction#recoverMapFormValues()}"</i>.
+     * </p>
+     * <p>
+     * It is used to ensure the elements in a {@link Set}{@code <}{@link String}{@code >}
+     * are correctly sorted in ascending mode.
+     * </p>
      *
-     * @param elementSet Set of elements.
-     * @return Ordered set of elements.
+     * @param elementSet {@link Set}{@code <}{@link String}{@code >} of
+     * unsorted elements.
+     *
+     * @return {@link Set}{@code <}{@link String}{@code >} of sorted elements.
      */
     private Set<String> ensureOrder(Set<String> elementSet) {
     	log.debug("Starting the process to order the list.");
@@ -605,10 +978,21 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     }
 
     /**
-     * Method to ensure the elements in the language sets are correctly ordered.
+     * <p>
+     * This recursive method is called from itself and from the method
+     * <i>"{@link EditEadAction#recoverMapFormValues()}"</i>.
+     * </p>
+     * <p>
+     * It is used to ensure the language elements in a
+     * {@link Set}{@code <}{@link String}{@code >} are correctly sorted in
+     * ascending mode.
+     * </p>
      *
-     * @param elementSet Set of elements.
-     * @return Ordered set of elements.
+     * @param elementSet {@link Set}{@code <}{@link String}{@code >} of
+     * unsorted language elements.
+     *
+     * @return {@link Set}{@code <}{@link String}{@code >} of sorted language
+     * elements.
      */
     private Set<String> ensureOrderLanguage(Set<String> elementSet) {
     	log.debug("Starting the process to order the language list.");
@@ -679,14 +1063,27 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     }
 
     /**
-     * Method to add the entries in FormValues map from the values in jsonObject usign
-     * the keys in elementSet.
+     * <p>
+     * This method is called from <i>"{@link EditEadAction#recoverMapFormValues()}"</i>.
+     * </p>
+     * <p>
+     * It is used to fill the entries in <i>"{@link EditEadAction#formValues}"</i>
+     * map from the values in the <i>"{@link JSONObject}"</i> using the keys
+     * passed in the parameter elementSet.
+     * </p>
      *
-     * @param jsonObject Object to recover the values using the keys passed in elementSet.
-     * @param elementSet Ordered set of elements.
-     * @throws JSONException Exception processing JSONObject.
+     * @param jsonObject {@link JSONObject} object received from the client
+     * which contains all the information and should be used to recover the
+     * values using the keys passed in parameter elementSet.
+     * @param elementSet {@link Set}{@code <}{@link String}{@code >} ordered
+     * set of elements which represents the keys to recover the values in the
+     * parameter jsonObject.
+     *
+     * @throws JSONException Exception while working with {@link JSONObject}.
      */
     private void addValuesToMap(JSONObject jsonObject, Set<String> elementSet) throws JSONException {
+    	this.log.debug("Entering method \"addValuesToMap\".");
+
     	if (elementSet != null && !elementSet.isEmpty()) {
 			Iterator<String> elementIt = elementSet.iterator();
 			while (elementIt.hasNext()) {
@@ -698,11 +1095,23 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 				}
 			}
 		}
+
+    	this.log.debug("Leaving method \"addValuesToMap\".");
     }
 
     /**
-     * Deletes the entries of this Finding Aid in the EadContent and the CLevel tables
-     * @return null since we use the HttpResponse to write JSON data directly to the page
+     * <p>
+     * This method is called thought the Struts action <i>"editEadXmlDeleteEntries"</i>.
+     * </p>
+     * <p>
+     * It is used to deletes the entries of this Finding Aid in the EadContent and the CLevel tables.
+     * </p>
+     * <p>
+     * <b>Note: This method is currently unused.</b>
+     * </p>
+     *
+     * @return null since we use the HttpResponse to write JSON data directly
+     * to the page.
      */
     public String deleteDatabaseEntries(){
 //        Long faId = new Long(getServletRequest().getParameter("faId"));
@@ -731,7 +1140,47 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         return null;
     }
 
+    /**
+     * <p>
+     * This method is called thought the Struts action <i>"editEadXmlSaveAll"</i>.
+     * Also is called from <i>"{@link EditEadAction#saveXmlData()}"</i>.
+     * </p>
+     * <p>
+     * It is used to save the new information of the EAD, which is currently
+     * stored in database on <i>"ead_content"</i> and <i>"c_level"</i> tables,
+     * to the file.
+     * </p>
+     * <p>
+     * Also revert the file to the <b>not validated</b> status.
+     * </p>
+     * <p>
+     * If any error is detected during the process, all the changes will be
+     * reverted and an appropriate error message will be shown to the user.
+     * </p>
+     *
+     * @return
+     * <p>
+     * {@link String} which represent the result of the process.
+     * </p>
+     * <p>
+     * Could be one of the follows:
+     * </p>
+     * <p>
+     *  <ul>
+     *   <li><b>{@link Action#SUCCESS}</b> - If all the data is correctly
+     * 		saved in the file and it is reverted to <b>not validated</b>
+     * 		status.</li>
+     *   <li><b>{@link Action#ERROR}</b> - If there is some problem in the
+     * 		process of saving the file or changing the status.</li>
+     *  </ul>
+     * </p>
+     *
+     * @see SecurityContext#checkAuthorized(ArchivalInstitution)
+     * @see ReconstructEadFile#reconstructEadFile(EadContent, String)
+     */
     public String saveAllXmlData(){
+    	this.log.debug("Entering method \"saveAllXmlData\".");
+
     	String result = Action.ERROR;
         ArchivalInstitution archivalInstitution = null;
         FindingAid findingAid = null;
@@ -772,6 +1221,8 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
 //                writer.append(new JSONObject().put("saved", true).toString());
 //                writer.close();
+
+    			this.log.debug("Leaving the method \"saveAllXmlData\" when no error occurs.");
             } catch (Exception e){
                 LOG.error("ERROR", e);
                 try {
@@ -785,14 +1236,35 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 } catch (Exception ex){
                     LOG.error("Error closing the streams", ex);
                 }
+
+    			this.log.debug("Leaving the method \"saveAllXmlData\" when an error occurs saving the new information in the file or in database.");
             }
         } catch (NotAuthorizedException e){
             LOG.error("Not authorized...", e);
+
+			this.log.debug("Leaving the method \"saveAllXmlData\" when an error occurs due to the user is not autorized to change the current file.");
         }
         return result;
     }
 
+    /**
+     * <p>
+     * This method is called thought the Struts action <i>"editEadGetFields"</i>.
+     * </p>
+     * <p>
+     * It is used to recover the possible editable fields and send it to the
+     * client.
+     * </p>
+     * <p>
+     * <b>Note: This method is currently unused.</b>
+     * </p>
+     *
+     * @return null since we use the HttpResponse to write JSON data directly
+	 * to the page.
+     */
     public String getPossibleFieldEntries(){
+    	this.log.debug("Entering method \"getPossibleFieldEntries\".");
+
         Writer writer = null;
         try {
             writer = openOutputWriter();
@@ -831,17 +1303,36 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 }
                 writer.close();
             }
+
+        	this.log.debug("Leaving method \"getPossibleFieldEntries\" when no error occurs.");
         } catch (Exception e){
             LOG.error("Error getting possible field entries", e);
+
+        	this.log.debug("Leaving method \"getPossibleFieldEntries\" when error occurs processing the possible field entries.");
         }
         return null;
     }
 
     /**
-     * type can be "thisLevel", "allLevels" or "lowLevels"
-     * @return null - the data is being sent directly to the response pipe
+     * <p>
+     * This method is called thought the Struts action <i>"editEadAddField"</i>.
+     * </p>
+     * <p>
+     * It is used to define the level in which is needed to add a new field.
+     * </p>
+     * <p>
+     * <b>Note: This method is currently unused.</b>
+     * </p>
+     *
+     * @return null since we use the HttpResponse to write JSON data directly
+	 * to the page.
+	 *
+	 * @see EditEadAction#writeNewCLevelXmlAndChildren(AddableFields, CLevel, String, boolean)
+	 * @see EditParser#addInLevel(AddableFields, String, String)
      */
     public String addFieldEntry(){
+    	this.log.debug("Entering method \"addFieldEntry\".");
+
         Writer writer = null;
 
         try {
@@ -965,9 +1456,37 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         } catch (Exception e){
             LOG.error("Could not save the field entry", e);
         }
+
+    	this.log.debug("Leaving method \"addFieldEntry\".");
+
         return null;
     }
 
+    /**
+     * <p>
+     * This method is called from <i>"{@link EditEadAction#addFieldEntry()}"</i>.
+     * </p>
+     * <p>
+     * It is used to define the level in which is needed to add a new field.
+     * </p>
+     * <p>
+     * <b>Note: This method is currently unused.</b>
+     * </p>
+     *
+     * @param field {@link AddableFields} filed which should be added to the
+     * level. Could be one of the enumeration.
+     * @param cLevel {@link CLevel} level in which the field should be added.
+     * @param key {@link String} which contains the value of the key to recover
+     * the value, from the map, that will be used for the new field added.
+     * @param onlyLowLevels boolean specifying if the field should be
+     * added in the current level or in the others too.
+     *
+     * @throws XMLStreamException Exception when processing the XML information
+     * in memory.
+     * @throws IOException Exception when saving the information to the file.
+     *
+     * @see EditParser#addInLevel(AddableFields, String, String)
+     */
     private void writeNewCLevelXmlAndChildren(AddableFields field, CLevel cLevel, String key, boolean onlyLowLevels) throws XMLStreamException, IOException {
         LOG.info("Adding in " + key + ", field " + field.name + "for cLevel id " + cLevel.getId());
         if(!onlyLowLevels){
@@ -983,26 +1502,127 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     }
 
     /**
-     * Fields that are Editable on this Edit page
+     * <p>
+     * Enumeration which contains the list of fields that can be <b>editable</b>
+     * during the edition of the apeEAD files.
+     * </p>
      */
     public enum EditableFields {
+    	/**
+    	 * <p>
+    	 * Element which represent the field <b>{@code <titleproper>}</b>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by the name which is the value of {@link EditEadAction#TITLEPROPER}.
+    	 * <p>
+    	 */
     	TITLEPROPER(EditEadAction.TITLEPROPER),
 //    	ARCHDESC_LEVEL(EditEadAction.ARCHDESC_LEVEL),
+    	/**
+    	 * <p>
+    	 * Element which represent the field <b>{@code <eadid>}</b>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by the name which is the value of {@link EditEadAction#EADID}.
+    	 * <p>
+    	 */
     	EADID(EditEadAction.EADID),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @countrycode}</b>
+    	 * for the element <i>{@code <eadid>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by the name which is the value of {@link EditEadAction#EADID_COUNTRYCODE}.
+    	 * <p>
+    	 */
     	EADID_COUNTRYCODE(EditEadAction.EADID_COUNTRYCODE),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @mainagencycode}</b>
+    	 * for the element <i>{@code <eadid>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by the name which is the value of {@link EditEadAction#EADID_MAINAGENCYCODE}.
+    	 * <p>
+    	 */
     	EADID_MAINAGENCYCODE(EditEadAction.EADID_MAINAGENCYCODE),
+    	/**
+    	 * <p>
+    	 * Element which represent the field <b>{@code <language>}</b>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by the name which is the value of {@link EditEadAction#LANGUAGE}.
+    	 * <p>
+    	 */
     	LANGUAGE(EditEadAction.LANGUAGE),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @langcode}</b>
+    	 * for the element <i>{@code <language>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by the name which is the value of {@link EditEadAction#LANGUAGE_LANGCODE}.
+    	 * <p>
+    	 */
     	LANGUAGE_LANGCODE(EditEadAction.LANGUAGE_LANGCODE),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @normal}</b>
+    	 * for the element <i>{@code <unitdate>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by the name which is the value of {@link EditEadAction#UNITDATE_NORMAL}.
+    	 * <p>
+    	 */
     	UNITDATE_NORMAL(EditEadAction.UNITDATE_NORMAL);
 
+    	/**
+    	 * <p>
+    	 * Variable to store the name of the editable field.
+    	 * </p>
+    	 */
         String name;
+
+        /**
+         * <p>
+         * Constructor.
+         * </p>
+         *
+         * @param name {@link String} which contains the current field name.
+         */
         EditableFields(String name){
             this.name = name;
         }
+
         public String getName(){
             return name;
         }
 
+        /**
+         * <p>
+         * This method is used to check if the passed field name is contained
+         * in the list of fields that can be <b>editable</b>.
+         * </p>
+         *
+         * @param name {@link String} which contains the current field name.
+         *
+         * @return
+	     * <p>
+	     * {@code boolean} which represent the result of the check.
+	     * </p>
+	     * <p>
+	     * Could be one of the follows:
+	     * </p>
+	     * <p>
+	     *  <ul>
+	     *   <li><b>true</b> - The passed field name is in the list of fields
+	     *   	that can be <b>editable</b>.</li>
+	     *   <li><b>false</b> - The passed field name is not in the list of
+	     *   	fields that can be <b>editable</b>.</li>
+	     *  </ul>
+	     * </p>
+         */
         public static boolean isEditable(String name){
             for(EditableFields editableFields : EditableFields.values()){
                 if(editableFields.getName().equals(name))
@@ -1013,30 +1633,178 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     }
 
     /**
-     * Fields that we do not display (and therefor not edit) on the Edit page
+     * <p>
+     * Enumeration which contains the list of fields that won't be <b>displayed</b>
+     * (and therefore not editable) during the edition of the apeEAD files.
+     * </p>
      */
     public enum UndisplayableFields {
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @encodinganalog}</b>
+    	 * for <i>any</i> element.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         ENCODINGANALOG("encodinganalog"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @level}</b>
+    	 * for the element <i>{@code <c>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         LEVEL("level"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field <b>{@code <did>}</b>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         DID("did"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @id}</b>
+    	 * for <i>any</i> element.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         ID("id"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @era}</b>
+    	 * for the element <i>{@code <unitdate>}</i> or <i>{@code <date>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         ERA("era"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @calendar}</b>
+    	 * for the element <i>{@code <unitdate>}</i> or <i>{@code <date>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         CALENDAR("calendar"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @countryencoding}</b>
+    	 * for the element <i>{@code <eadheader>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         COUNTRYENCODING("countryencoding"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @dateencoding}</b>
+    	 * for the element <i>{@code <eadheader>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         DATEENCODING("dateencoding"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @langencoding}</b>
+    	 * for the element <i>{@code <eadheader>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         LANGENCODING("langencoding"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @repositoryencoding}</b>
+    	 * for the element <i>{@code <eadheader>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         REPOSITORYENCODING("repositoryencoding"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @scriptencoding}</b>
+    	 * for the element <i>{@code <eadheader>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         SCRIPTENCODING("scriptencoding"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field attribute <b>{@code @relatedencoding}</b>
+    	 * for the element <i>{@code <eadheader>}</i> or <i>{@code <archdesc>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is only described by its name.
+    	 * <p>
+    	 */
         RELATEDENCODING("relatedencoding");
 
+    	/**
+    	 * <p>
+    	 * Variable to store the name of the non-displayed field.
+    	 * </p>
+    	 */
         String name;
+
+        /**
+         * <p>
+         * Constructor.
+         * </p>
+         *
+         * @param name {@link String} which contains the current field name.
+         */
         UndisplayableFields(String name){
             this.name = name;
         }
+
         public String getName(){
             return name;
         }
 
+        /**
+         * <p>
+         * This method is used to check if the passed field name is contained
+         * in the list of fields that shoudn't be <b>displayed</b>.
+         * </p>
+         *
+         * @param name {@link String} which contains the current field name.
+         *
+         * @return
+	     * <p>
+	     * {@code boolean} which represent the result of the check.
+	     * </p>
+	     * <p>
+	     * Could be one of the follows:
+	     * </p>
+	     * <p>
+	     *  <ul>
+	     *   <li><b>true</b> - The passed field name is not in the list of
+	     *   	fields that shoudn't be <b>editable</b>.</li>
+	     *   <li><b>false</b> - The passed field name is in the list of fields
+	     *   	that shoudn't be <b>displayed</b>.</li>
+	     *  </ul>
+	     * </p>
+         */
         public static boolean isDisplayable(String name){
             if(StringUtils.isEmpty(name))
                 return false;
@@ -1049,14 +1817,73 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         }
     }
 
+    /**
+     * <p>
+     * Enumeration which contains the list of fields that can be <b>addable</b>
+     * during the edition of the apeEAD files.
+     * </p>
+     */
     public enum AddableFields {
+    	/**
+    	 * <p>
+    	 * Element which represent the field <b>{@code <language>}</b> as child
+    	 * of element <i>{@code <ead>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is described by its name, full path to locate it, and type.
+    	 * <p>
+    	 */
         LANGUSAGE_EAD("langusage_ead", "ead/eadheader/profiledesc/langusage/language", "ead"),
+    	/**
+    	 * <p>
+    	 * Element which represent the field <b>{@code <language>}</b> as child
+    	 * of element <i>{@code <c>}</i>.
+    	 * </p>
+    	 * <p>
+    	 * Is described by its name, full path to locate it, and type.
+    	 * <p>
+    	 */
         LANGUSAGE_C("langusage_c", "c/did/langusage/language", "c");
 
+    	/**
+    	 * <p>
+    	 * Variable to store the name of the addable field.
+    	 * </p>
+    	 */
         String name;
+    	/**
+    	 * <p>
+    	 * Variable to store the path of the addable field.
+    	 * </p>
+    	 */
         String xpath;
+    	/**
+    	 * <p>
+    	 * Variable to store the type of the addable field.
+    	 * </p>
+    	 * <p>
+    	 * Could be one of the follows:
+    	 * </p>
+    	 * <p>
+	     *  <ul>
+	     *   <li><b>ead</b> - Represents the <b>addable</b> field <i>{@code <language>}</i>
+	     *   	as child of element <i>{@code <ead>}</i>.</li>
+	     *   <li><b>c</b> - Represents the <b>addable</b> field <i>{@code <language>}</i>
+	     *   	as child of element <i>{@code <c>}</i>.</li>
+	     *  </ul>
+    	 * </p>
+    	 */
         String type;
 
+        /**
+         * <p>
+         * Constructor.
+         * </p>
+         *
+         * @param name {@link String} which contains the current field name.
+         * @param xpath {@link String} which contains the current field path.
+         * @param type {@link String} which contains the current field type.
+         */
         AddableFields(String name, String xpath, String type){
             this.name = name;
             this.xpath = xpath;
