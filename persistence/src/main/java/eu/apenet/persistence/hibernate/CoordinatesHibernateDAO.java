@@ -21,14 +21,25 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Coordinates;
 import eu.apenet.persistence.vo.Country;
 
-
+/***
+ * class CoordinatesHibernateDAO
+ *
+ */
 public class CoordinatesHibernateDAO extends AbstractHibernateDAO<Coordinates, Integer> implements CoordinatesDAO {
 	private final Logger log = Logger.getLogger(getClass());
 
+	/***
+	 * Function gets the coordinates on an archival institution
+	 * 
+	 * @param archivalInstitution {@link ArchivalInstitution} ArchivalInstitution object to build the criteria
+	 * 
+	 * @return results List {@link Coordinates} criteria.list()
+	 */
 	@Override
 	public List<Coordinates> findCoordinatesByArchivalInstitution(ArchivalInstitution archivalInstitution) {
-		log.debug("Finding coordinates related to the institution with name: " + archivalInstitution.getAiname());
-
+		if (log.isDebugEnabled()) 
+			log.debug("Enter \"findCoordinatesByArchivalInstitution\"");
+		
 		long startTime = System.currentTimeMillis();
 		List<Coordinates> results = new ArrayList<Coordinates>();
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
@@ -43,12 +54,17 @@ public class CoordinatesHibernateDAO extends AbstractHibernateDAO<Coordinates, I
 		return results;
 	}
 	
-	/**
-	 * get all repositories with all directions to build Europe landscape
+	/***
+	 * Function gets the list of coordinates
+	 * 
+	 * @return results List {@link Coordinates} criteria.list()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Coordinates> getCoordinates() {
+		if (log.isDebugEnabled()) 
+			log.debug("Enter \"getCoordinates\"");
+		
 		long startTime = System.currentTimeMillis();
 		List<Coordinates> results = null;
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "coordinates");
@@ -64,9 +80,16 @@ public class CoordinatesHibernateDAO extends AbstractHibernateDAO<Coordinates, I
 	
 	/**
 	 * get all repos from a country to build country landscape
+	 * 
+	 * @param countryCode {@link String} The ISO name of the country name
+	 * 
+	 * @return results List {@link Coordinates} criteria.list()
 	 */
 	@Override
 	public List<Coordinates> getCoordinatesByCountryCode(String countryCode) {
+		if (log.isDebugEnabled()) 
+			log.debug("Enter \"getCoordinatesByCountryCode\"");
+		
 		long startTime = System.currentTimeMillis();
 		List<Coordinates> results = null;
 		if(countryCode!=null && countryCode.length()==2){
@@ -92,6 +115,4 @@ public class CoordinatesHibernateDAO extends AbstractHibernateDAO<Coordinates, I
 		return results;
 	}
     
-
-
 }

@@ -42,13 +42,18 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.util.ApeUtil;
 
 /**
+ * Class for create and insert GeoCoordinates
  * @author fernando
- * 
  */
 public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	// Logger.
 	private final Logger log = Logger.getLogger(getClass());
-
+	Node repositoryChildNode;
+	boolean isLocationRecovered;
+	boolean isNameRecovered;
+	boolean isVisitorAddress;
+	String strPath;
+	Coordinates coordinates;
 	// Attributes for Coordinates
 	private double co_archId;	// Archival institution ID.
 	private String co_name;		// Institution or repository name.
@@ -77,8 +82,14 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	}
 
 	// Methods
+	/**
+	 * Method that Delete all previous content in the table "Coordinates" and Loads the lists of institutions
+	 * 
+	 */
+	
 	public String execute() throws Exception {
 		try {
+			this.log.debug("Method start: \"execute\"");
 			log.debug("Start process to fill Coordinates table.");
 			// Delete all previous content in the table "Coordinates".
 			CoordinatesDAO coordinatesDAO = DAOFactory.instance().getCoordinatesDAO();
@@ -92,7 +103,6 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 					JpaUtil.commitDatabaseTransaction();
 				}
 			}
-
 			// Loads the lists of institutions.
 			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 			List<ArchivalInstitution> archivalInstitution = archivalInstitutionDao.findAll();
@@ -111,17 +121,19 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 			return ERROR;
 		}
 		log.debug("End process to fill Coordinates table.");
+		this.log.debug("End method: \"execute\"");
 		return SUCCESS;
 	}
 
 	/**
 	 * Method to add the coordinates to the coordinates table.
 	 *
-	 * @param archivalInstitution Archival institution to recover the EAG file.
+	 * @param archivalInstitution {@link ArchivalInstitution} Archival institution to recover the {@link Eag} EAG file.
 	 */
-	public void insertCoordinates(final ArchivalInstitution archivalInstitution) {
+	public void insertCoordinates( ArchivalInstitution archivalInstitution) {
+		this.log.debug("Method start: \"errorString\"");
 		log.debug("Processing institution: " + archivalInstitution.getAiname() + "(" + archivalInstitution.getAiId() + ")");
-		String strPath = "";
+		 strPath = "";
 		try {
 			if (archivalInstitution.getEagPath() != null) {
 				strPath = APEnetUtilities.getConfig().getRepoDirPath() + archivalInstitution.getEagPath();
@@ -144,10 +156,10 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 						for (int j = 0; j < nodeRepositoryList.getLength(); j++) {
 							Node repositoryNode = nodeRepositoryList.item(j);
 							NodeList repositoryChildsList = repositoryNode.getChildNodes();
-							boolean isVisitorAddress = false;
+							isVisitorAddress = false;
 							// Reset values.
-							boolean isNameRecovered = false;
-							boolean isLocationRecovered = false;
+							 isNameRecovered = false;
+							 isLocationRecovered = false;
 							this.setCo_name("");
 							this.setCo_street("");
 							this.setCo_postalCity("");
@@ -155,159 +167,14 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 							this.setCo_lat(0.0);
 							this.setCo_lon(0.0);
 							for (int k=0; k< repositoryChildsList.getLength() && (!isNameRecovered || !isLocationRecovered); k++) {
-								Node repositoryChildNode = repositoryChildsList.item(k);
-			
-								if (repositoryChildNode.getNodeName().equalsIgnoreCase("repositoryName")) {
-									//repositoryName
-									this.setCo_name(repositoryChildNode.getTextContent()); //Co_name
-									isNameRecovered = true;
-								} else if (repositoryChildNode.getNodeName().equalsIgnoreCase("location")) {
-									NamedNodeMap repositoryChildAttributesMap = repositoryChildNode.getAttributes();
-									isVisitorAddress = false;
-			
-									for (int l = 0; l < repositoryChildAttributesMap.getLength(); l++) {
-										Node attributeNode = repositoryChildAttributesMap.item(l);
-										if (attributeNode.getNodeName().equalsIgnoreCase("localType")) {
-											if (attributeNode.getTextContent().equalsIgnoreCase("visitors address")) {
-												isVisitorAddress = true;
-											}
-										} else if (attributeNode.getNodeName().equalsIgnoreCase("latitude")) {
-											String latitude = attributeNode.getTextContent();
-											try {
-												this.setCo_lat(Double.parseDouble(latitude)); //Co_lat
-											} catch (Exception e) {
-												log.debug(strPath + " Error: " + this.getCo_name() + ": " + e.toString());
-											}
-										} else if (attributeNode.getNodeName().equalsIgnoreCase("longitude")) {
-											String longitude = attributeNode.getTextContent();
-											try {
-												this.setCo_lon(Double.parseDouble(longitude)); //Co_lon
-											} catch (Exception e) {
-												log.debug(strPath + " Error: " + this.getCo_name() + ": " + e.toString());
-											}
-										}
-									}// for L
-									
-									if (isVisitorAddress) {
-										boolean isStreetRecovered = false;
-										boolean isMunicipalityRecovered = false;
-										NodeList visitorsAddressChildsList = repositoryChildNode.getChildNodes();
-										String municipalityPostalcode = "";
-										String street = "";
-										String country = "";
-										for (int l=0; l< visitorsAddressChildsList.getLength() && (!isStreetRecovered || !isMunicipalityRecovered); l++) {
-											Node visitorsAddressChildNode = visitorsAddressChildsList.item(l);
-			
-											if (visitorsAddressChildNode.getNodeName().equals("municipalityPostalcode")) {
-												//municipalityPostalcode
-												municipalityPostalcode = visitorsAddressChildNode.getTextContent().trim();
-												isMunicipalityRecovered = true;
-											} else if (visitorsAddressChildNode.getNodeName().equals("street")) {
-												//street
-												street = visitorsAddressChildNode.getTextContent().trim();
-												isStreetRecovered = true;
-											} else if (visitorsAddressChildNode.getNodeName().equals("country")) {
-												//country
-												country = visitorsAddressChildNode.getTextContent().trim();
-											}
-										}// for L
-										this.setCo_street(street); //setCo_street
-										this.setCo_postalCity(municipalityPostalcode); //setCo_postalCity
-										this.setCo_country(country); //setCo_country
-										if (isStreetRecovered || isMunicipalityRecovered) {
-											isLocationRecovered = true;
-										}
-									}// if isVisitorAddress
-								}//child.getLocalName().equals("location")
-			
-								if(this.getCo_name() == null){
-									this.setCo_name(archivalInstitution.getAiname());
-									isNameRecovered = true;
-								} else if (this.getCo_name().trim().isEmpty()) {
+								repositoryChildNode = repositoryChildsList.item(k);
+								createRepositoryChildNode();			
+								if(this.getCo_name() == null||this.getCo_name().trim().isEmpty()){
 									this.setCo_name(archivalInstitution.getAiname());
 									isNameRecovered = true;
 								}
-			
-								if (isNameRecovered && isLocationRecovered) {
-									log.debug("Start to fill the new cell for Coordinates table.");
-									CoordinatesDAO coordinatesDAO = DAOFactory.instance().getCoordinatesDAO();
-									Coordinates coordinates = new Coordinates();
-									// Archival institution.
-									coordinates.setArchivalInstitution(archivalInstitution);
-									// Name of the current archival institution/repository.
-									coordinates.setNameInstitution(this.getCo_name());
-									// street for the current archival institution/repository.
-									coordinates.setStreet(this.getCo_street());
-									// municipalityPostalCode for the current archival institution/repository.
-									coordinates.setPostalCity(this.getCo_postalCity());
-									//country for the current archival institution/repository.
-									coordinates.setCountry(this.getCo_country());
+								archivalInstitution = createCoordinates(archivalInstitution);
 
-									// Check the coordinates or recover it if necessary.
-									if (this.getCo_lat() == 0.0
-											|| this.getCo_lon() == 0.0) {
-
-										// Try to recover the coordinates to bound.
-										Geocoder geocoder = new Geocoder();
-
-										String address = this.getCo_street() + ", " + this.getCo_postalCity() + ", " + this.getCo_country();
-										GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address).getGeocoderRequest();
-										GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
-
-										if (geocoderResponse.getStatus().equals(GeocoderStatus.OK)) {
-											List<GeocoderResult> geocoderResultList = geocoderResponse.getResults();
-
-											// Always recover the first result.
-											if (geocoderResultList.size() > 0) {
-												GeocoderResult geocoderResult = geocoderResultList.get(0);
-
-												// get Geometry Object
-												GeocoderGeometry geocoderGeometry = geocoderResult.getGeometry();
-												// get Location Object
-												LatLng latLng = geocoderGeometry.getLocation();
-												this.setCo_lat(latLng.getLat().doubleValue());
-												this.setCo_lon(latLng.getLng().doubleValue());
-											}
-										}
-									}
-
-									double latTrunc = (double) Math.round(this.getCo_lat() * 10000000) / 10000000;
-									double longTrunc = (double) Math.round(this.getCo_lon() * 10000000) / 10000000;
-
-									this.setCo_lat(latTrunc);
-									this.setCo_lon(longTrunc);
-									
-									if (this.getCo_lat() != 0.0 && this.getCo_lon() != 0.0) {
-										//do not loop blanks and compare actual with existing
-										List<Coordinates> coordinatesList = DAOFactory.instance().getCoordinatesDAO().getCoordinates();
-										if (coordinatesList != null && !coordinatesList.isEmpty()) {
-											// Check if current coordinates exist in database.
-											while(this.loopCoord(coordinatesList));
-										}
-									}
-
-									// Latitude (if exists) for the current archival institution/repository.
-									if (this.getCo_lat() != 0.0) {
-										coordinates.setLat(this.getCo_lat());
-									}
-									// Longitude (if exists) for the current archival institution/repository.
-									if (this.getCo_lon() != 0.0) {
-										coordinates.setLon(this.getCo_lon());
-									}
-
-									// Try to add the new value to coordinates table.
-									try {
-										JpaUtil.beginDatabaseTransaction();
-										coordinatesDAO.insertSimple(coordinates);
-										JpaUtil.commitDatabaseTransaction();
-										log.info("insert: " + coordinates.getNameInstitution() + " with (" + coordinates.getLat() + "," + coordinates.getLon() + ")");
-									} catch (Exception e) {
-										// Rollback current database transaction.
-										JpaUtil.rollbackDatabaseTransaction();
-										log.error("Error trying to insert: " + coordinates.getNameInstitution());
-										log.error(e.getCause());
-									}
-								}
 							}// for K
 						}//for J
 					}// if nodeAutList
@@ -326,15 +193,192 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 			log.error("SAX exception with file " + strPath);
 			log.error(saxEx.getCause());
 		}
+		this.log.debug("End method: \"insertCoordinates\"");
 	}
+	/**
+	 * Method to create coordinates
+	 * @param archivalInstitution {@link ArchivalInstitution} ArchivalInstitution
+	 * @return {@link ArchivalInstitution} ArchivalInstitution
+	 */
+	private ArchivalInstitution createCoordinates(final ArchivalInstitution archivalInstitution){
+		this.log.debug("Method start: \"createCoordinates\"");
+		if (isNameRecovered && isLocationRecovered) {
+			log.debug("Start to fill the new cell for Coordinates table.");
+			CoordinatesDAO coordinatesDAO = DAOFactory.instance().getCoordinatesDAO();
+			 coordinates = new Coordinates();
+			// Archival institution.
+			coordinates.setArchivalInstitution(archivalInstitution);
+			// Name of the current archival institution/repository.
+			coordinates.setNameInstitution(this.getCo_name());
+			// street for the current archival institution/repository.
+			coordinates.setStreet(this.getCo_street());
+			// municipalityPostalCode for the current archival institution/repository.
+			coordinates.setPostalCity(this.getCo_postalCity());
+			//country for the current archival institution/repository.
+			coordinates.setCountry(this.getCo_country());
 
+			// Check the coordinates or recover it if necessary.
+			if (this.getCo_lat() == 0.0
+					|| this.getCo_lon() == 0.0) {
+
+				// Try to recover the coordinates to bound.
+				Geocoder geocoder = new Geocoder();
+
+				String address = this.getCo_street() + ", " + this.getCo_postalCity() + ", " + this.getCo_country();
+				GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address).getGeocoderRequest();
+				GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+
+				if (geocoderResponse.getStatus().equals(GeocoderStatus.OK)) {
+					List<GeocoderResult> geocoderResultList = geocoderResponse.getResults();
+
+					// Always recover the first result.
+					if (geocoderResultList.size() > 0) {
+						GeocoderResult geocoderResult = geocoderResultList.get(0);
+						// get Geometry Object
+						GeocoderGeometry geocoderGeometry = geocoderResult.getGeometry();
+						// get Location Object
+						LatLng latLng = geocoderGeometry.getLocation();
+						this.setCo_lat(latLng.getLat().doubleValue());
+						this.setCo_lon(latLng.getLng().doubleValue());
+					}
+				}
+			}
+
+			double latTrunc = (double) Math.round(this.getCo_lat() * 10000000) / 10000000;
+			double longTrunc = (double) Math.round(this.getCo_lon() * 10000000) / 10000000;
+
+			this.setCo_lat(latTrunc);
+			this.setCo_lon(longTrunc);
+			
+			if (this.getCo_lat() != 0.0 && this.getCo_lon() != 0.0) {
+				//do not loop blanks and compare actual with existing
+				List<Coordinates> coordinatesList = DAOFactory.instance().getCoordinatesDAO().getCoordinates();
+				if (coordinatesList != null && !coordinatesList.isEmpty()) {
+					// Check if current coordinates exist in database.
+					while(this.loopCoord(coordinatesList));
+				}
+			}
+			setLatitudeLongitude();
+
+			// Try to add the new value to coordinates table.
+			try {
+				JpaUtil.beginDatabaseTransaction();
+				coordinatesDAO.insertSimple(coordinates);
+				JpaUtil.commitDatabaseTransaction();
+				log.info("insert: " + coordinates.getNameInstitution() + " with (" + coordinates.getLat() + "," + coordinates.getLon() + ")");
+			} catch (Exception e) {
+				// Rollback current database transaction.
+				JpaUtil.rollbackDatabaseTransaction();
+				log.error("Error trying to insert: " + coordinates.getNameInstitution());
+				log.error(e.getCause());
+			}
+		}
+		this.log.debug("End method: \"createCoordinates\"");
+		return archivalInstitution;
+	}
+	/**
+	 * Method to set coordinates (latitude and longitude)
+	 */
+	private void setLatitudeLongitude(){
+		this.log.debug("Method start: \"setLatitudeLongitude\"");
+		// Latitude (if exists) for the current archival institution/repository.
+		if (this.getCo_lat() != 0.0) {
+			coordinates.setLat(this.getCo_lat());
+		}
+		// Longitude (if exists) for the current archival institution/repository.
+		if (this.getCo_lon() != 0.0) {
+			coordinates.setLon(this.getCo_lon());
+		}
+		this.log.debug("End method: \"setLatitudeLongitude\"");
+	}
+	/**
+	 * Method to create repository child nodes of institution
+	 */
+	private void createRepositoryChildNode(){
+	//	try {
+		this.log.debug("Method start: \"createRepositoryChildNode\"");	
+		if (repositoryChildNode.getNodeName().equalsIgnoreCase("repositoryName")) {
+				//repositoryName
+				this.setCo_name(repositoryChildNode.getTextContent()); //Co_name
+				isNameRecovered = true;
+			} else if (repositoryChildNode.getNodeName().equalsIgnoreCase("location")) {
+				NamedNodeMap repositoryChildAttributesMap = repositoryChildNode.getAttributes();
+				isVisitorAddress = false;
+	
+				for (int l = 0; l < repositoryChildAttributesMap.getLength(); l++) {
+					Node attributeNode = repositoryChildAttributesMap.item(l);
+					if (attributeNode.getNodeName().equalsIgnoreCase("localType")) {
+						if (attributeNode.getTextContent().equalsIgnoreCase("visitors address")) {
+							isVisitorAddress = true;
+						}
+					} else if (attributeNode.getNodeName().equalsIgnoreCase("latitude")) {
+						String latitude = attributeNode.getTextContent();
+						try {
+							this.setCo_lat(Double.parseDouble(latitude)); //Co_lat
+						} catch (Exception e) {
+							log.debug(strPath + " Error: " + this.getCo_name() + ": " + e.toString());
+						}
+					} else if (attributeNode.getNodeName().equalsIgnoreCase("longitude")) {
+						String longitude = attributeNode.getTextContent();
+						try {
+							this.setCo_lon(Double.parseDouble(longitude)); //Co_lon
+						} catch (Exception e) {
+							log.debug(strPath + " Error: " + this.getCo_name() + ": " + e.toString());
+						}
+					}
+				}// for L
+				parseVisitorAdress();
+	//			
+			}
+		this.log.debug("End method: \"createRepositoryChildNode\"");
+		
+	}
+	/**
+	 * Method to if visitor address to create repository visitors address childs list
+	 */
+	private void parseVisitorAdress(){
+		this.log.debug("Method start: \"parseVisitorAdress\"");
+		if (isVisitorAddress) {
+			boolean isStreetRecovered = false;
+			boolean isMunicipalityRecovered = false;
+			NodeList visitorsAddressChildsList = repositoryChildNode.getChildNodes();
+			String municipalityPostalcode = "";
+			String street = "";
+			String country = "";
+			for (int l=0; l< visitorsAddressChildsList.getLength() && (!isStreetRecovered || !isMunicipalityRecovered); l++) {
+				Node visitorsAddressChildNode = visitorsAddressChildsList.item(l);
+
+				if (visitorsAddressChildNode.getNodeName().equals("municipalityPostalcode")) {
+					//municipalityPostalcode
+					municipalityPostalcode = visitorsAddressChildNode.getTextContent().trim();
+					isMunicipalityRecovered = true;
+				} else if (visitorsAddressChildNode.getNodeName().equals("street")) {
+					//street
+					street = visitorsAddressChildNode.getTextContent().trim();
+					isStreetRecovered = true;
+				} else if (visitorsAddressChildNode.getNodeName().equals("country")) {
+					//country
+					country = visitorsAddressChildNode.getTextContent().trim();
+				}
+			}// for L
+			this.setCo_street(street); //setCo_street
+			this.setCo_postalCity(municipalityPostalcode); //setCo_postalCity
+			this.setCo_country(country); //setCo_country
+			if (isStreetRecovered || isMunicipalityRecovered) {
+				isLocationRecovered = true;
+			}
+		}// if isVisitorAddress
+		this.log.debug("End method: \"parseVisitorAdress\"");
+	}
+	
 	/**
 	 * Method to check if the current coordinates exist in database.
 	 *
-	 * @param coordinatesList List of elements in coordinates table.
-	 * @return Process should end (false) or start again (true).
+	 * @param coordinatesList {@link List<Coordinates>} List of elements in coordinates table.
+	 * @return Process should end {@link boolean} (false) or start again (true).
 	 */
 	private boolean loopCoord(List<Coordinates> coordinatesList) {
+		this.log.debug("Method start: \"loopCoord\"");
 		Iterator<Coordinates> coordinatesIt = coordinatesList.iterator();
 		while (coordinatesIt.hasNext()) {
 			Coordinates coordinatesCurrent = coordinatesIt.next();
@@ -348,6 +392,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 				return true;
 			}
 		}
+		this.log.debug("End method: \"loopCoord\"");
 		return false;
 	}
 
