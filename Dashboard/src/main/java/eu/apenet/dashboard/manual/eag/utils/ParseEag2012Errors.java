@@ -1,5 +1,7 @@
 package eu.apenet.dashboard.manual.eag.utils;
 
+import org.apache.log4j.Logger;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.dashboard.manual.eag.Eag2012;
@@ -10,7 +12,7 @@ import eu.apenet.dashboard.manual.eag.WebFormEAG2012Action;
  *
  */
 public class ParseEag2012Errors{
-
+	private final Logger log = Logger.getLogger(getClass());
 	private String warning;
 	private boolean validationDefault;
 	private ActionSupport targetAction;
@@ -23,34 +25,38 @@ public class ParseEag2012Errors{
 	}
 
 	/**
-	 * @return the warning
+	 * @return the warning {@link String}
 	 */
 	public String getWarning() {
 		return this.warning;
 	}
 	/**
-	 * @param warning the warning to set
+	 * @param warning {@link String} the warning to set
 	 */
 	public void setWarning(String warning) {
 		this.warning = warning;
 	}
 	/**
-	 * @return the validationDefault
+	 * @return the validationDefault {@link boolean}
 	 */
 	public boolean isValidationDefault() {
 		return this.validationDefault;
 	}
 	/**
-	 * @param validationDefault the validationDefault to set
+	 * @param validationDefault {@link boolean} the validationDefault to set
 	 */
 	public void setValidationDefault(boolean validationDefault) {
 		this.validationDefault = validationDefault;
 	}
+	/**
+	 * Method for errors validation
+	 * @return the errorValidation {@link String}
+	 */
 	public String errorsValidation(){
+		this.log.debug("Method start: \"errorsValidation\"");
 		//This method parse the incomprehensible messages of error to comprehensive messages for the user 
         String errorValidation = null; 
         String errorDate;
-        
         if(this.getWarning().contains("Attribute 'question' must appear on element 'restorationlab'.")){
         	errorValidation = targetAction.getText("eag2012.errors.questionRestorationLab")+targetAction.getText("eag2012.errors.seeTabAccessAndServices");
         }else if(this.getWarning().contains("Attribute 'question' must appear on element 'internetAccess'.")){
@@ -106,16 +112,22 @@ public class ParseEag2012Errors{
 		} else {
 			errorValidation = this.getWarning();
 		}
+        this.log.debug("End method: \"errorsValidation\"");
 		return errorValidation;
    }  //end errorsValidaton 
-
+	/**
+	 * Method for find the wrong string
+	 * @param warn {@link String} the warm
+	 * @return  {@link String} subStringWarn
+	 */
 	public String errorString(String warn) { 
+		this.log.debug("Method start: \"errorString\"");
 		//This method find the wrong string
 		int firstPosition = warn.indexOf("'");
 		String subStringWarn = warn.substring(firstPosition+1);
 		int secondPosition = subStringWarn.indexOf("'");
 		subStringWarn = subStringWarn.substring(0,secondPosition);
+		this.log.debug("End method: \"errorString\"");
 		return subStringWarn;
 	}
 }
-

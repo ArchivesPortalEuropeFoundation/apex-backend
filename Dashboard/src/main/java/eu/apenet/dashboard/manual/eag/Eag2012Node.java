@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Used to managed an dynamic structure for EAG2012.
+ * Class used to managed a dynamic structure for EAG2012
  */
 public class Eag2012Node {
 	
@@ -38,5 +38,3 @@ public class Eag2012Node {
 		this.nodeName = nodeName;
 	}
 }
-
-

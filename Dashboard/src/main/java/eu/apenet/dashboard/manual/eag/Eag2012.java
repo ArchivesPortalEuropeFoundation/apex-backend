@@ -15,6 +15,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,13 +29,13 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**
- * This class has been created to manage all EAG2012 information
+ * Class has been created to manage all EAG2012 information
  * into one object.
  */
 public class Eag2012 {
 	// Constants.
 	private static final String OTHERRECORDID_PATH = "/eag/archguide/otherRecordId";
-
+	private final static Logger log = Logger.getLogger(Eag2012.class);
 	public static final String OPTION_YES = "yes";	// Constant for value "yes".
 	public static final String OPTION_NO = "no";	// ConsEag2012ant for value "no".
 
@@ -2135,17 +2136,17 @@ public class Eag2012 {
 	 * Through this procedure can be ensured that an institution within the Dashboard
 	 * will have its unique ISO 15511 compliant identifier.
 	 * 
-	 * @param archivalInstitutionId
-	 * @param fullFilePath
-	 * @return boolean
-	 * @throws TransformerException
-	 * @throws ParserConfigurationException
+	 * @param archivalInstitutionId {@link Integer} the archivalInstitutionId
+	 * @param fullFilePath {@link String} the fullFilePath
+	 * @return boolean {@link boolean} the changed
+	 * @throws TransformerException 
+	 * @throws ParserConfigurationException 
 	 * @throws SAXException
 	 * @throws IOException
 	 */
 	public static boolean checkAndFixRepositorId(Integer archivalInstitutionId,String fullFilePath) throws TransformerException, ParserConfigurationException, SAXException, IOException{
-		boolean changed = false;
-		
+		log.debug("Method start: \"checkAndFixRepositorId\"");
+		boolean changed = false;		
         APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, fullFilePath);
         eag.setEagPath(fullFilePath);
         //this information must be encoded in the element <otherRepositorId>;
@@ -2189,17 +2190,19 @@ public class Eag2012 {
 			Transformer transformer = tf.newTransformer();
 			transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFilePath)));
 		}
-        return changed;
+		log.debug("End method: \"checkAndFixRepositorId\"");
+		return changed;
 	}
 	
 	/**
 	 * Generates a ISO-code based on internal archivalInstitutionId. 
 	 * This ISO-code should be unique for each institution.
 	 * 
-	 * @param archivalInstitutionId
-	 * @return String
+	 * @param archivalInstitutionId {@link Integer} the archivalInstitutionId
+	 * @return {@link String} the otherRepositorId
 	 */
 	public static String generatesISOCode(Integer archivalInstitutionId) {
+		log.debug("Method start: \"generatesISOCode\"");
 		String otherRepositorId = null;
 		if(archivalInstitutionId>0){
 			int zeroes = 11-archivalInstitutionId.toString().length();
@@ -2217,7 +2220,8 @@ public class Eag2012 {
 	    		finalFigure--;
 	    	}
 		}
-    	return otherRepositorId;
+		log.debug("End method: \"generatesISOCode\"");
+		return otherRepositorId;
 	}
 
 	/**
@@ -2226,10 +2230,11 @@ public class Eag2012 {
 	 * In case it isn’t or the code provided could not be used
 	 * returns false 
 	 * 
-	 * @param repositorId
-	 * @return boolean
+	 * @param repositorId {@link String} the repositorId
+	 * @return {@link boolean}  
 	 */
 	private static boolean isWrongRepositorId(String repositorId){
+		log.debug("Method start: \"isWrongRepositorId\"");
 		String isoCountry = new ArchivalLandscapeUtils().getmyCountry();
 		if(repositorId.length()==14 && repositorId.substring(0,2).toLowerCase().equals(isoCountry) && StringUtils.isNumeric(repositorId.substring(3))){
 			//TODO could be helpful store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
@@ -2241,7 +2246,8 @@ public class Eag2012 {
 					return true; //the ISO code used could not be unique because it's reserved to existing other institution of this country
 				}
 			}
-		}
+		}		
+		log.debug("End method: \"isWrongRepositorId\"");
 		return false;
 	}
 }

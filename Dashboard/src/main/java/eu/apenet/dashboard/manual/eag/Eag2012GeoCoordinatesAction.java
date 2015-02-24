@@ -33,6 +33,7 @@ import com.google.code.geocoder.model.LatLng;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -42,7 +43,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.util.ApeUtil;
 
 /**
- * Class for create and insert GeoCoordinates
+ * Class creates and inserts the coordinates using Google GeoCoder
  * @author fernando
  */
 public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
@@ -168,7 +169,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 							this.setCo_lon(0.0);
 							for (int k=0; k< repositoryChildsList.getLength() && (!isNameRecovered || !isLocationRecovered); k++) {
 								repositoryChildNode = repositoryChildsList.item(k);
-								createRepositoryChildNode();			
+								createRepositoryChildNode();
 								if(this.getCo_name() == null||this.getCo_name().trim().isEmpty()){
 									this.setCo_name(archivalInstitution.getAiname());
 									isNameRecovered = true;

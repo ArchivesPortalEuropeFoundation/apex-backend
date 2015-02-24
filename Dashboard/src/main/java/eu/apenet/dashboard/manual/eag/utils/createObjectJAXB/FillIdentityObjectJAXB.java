@@ -1,147 +1,72 @@
-package eu.apenet.dashboard.manual.eag.utils;
+package eu.apenet.dashboard.manual.eag.utils.createObjectJAXB;
 
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
 import eu.apenet.dashboard.manual.eag.Eag2012;
-import eu.apenet.dashboard.manual.eag.utils.createObjectJAXB.FillControlObjectJAXB;
-import eu.apenet.dashboard.manual.eag.utils.createObjectJAXB.FillDescObjectJAXB;
-import eu.apenet.dashboard.manual.eag.utils.createObjectJAXB.FillRelationsObjectJAXB;
-import eu.apenet.dpt.utils.eag2012.Archguide;
 import eu.apenet.dpt.utils.eag2012.Autform;
-import eu.apenet.dpt.utils.eag2012.Control;
 import eu.apenet.dpt.utils.eag2012.Date;
 import eu.apenet.dpt.utils.eag2012.DateRange;
 import eu.apenet.dpt.utils.eag2012.DateSet;
-import eu.apenet.dpt.utils.eag2012.Desc;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.FromDate;
-import eu.apenet.dpt.utils.eag2012.Identity;
-import eu.apenet.dpt.utils.eag2012.MaintenanceHistory;
-import eu.apenet.dpt.utils.eag2012.MaintenanceStatus;
 import eu.apenet.dpt.utils.eag2012.Nonpreform;
 import eu.apenet.dpt.utils.eag2012.OtherRepositorId;
 import eu.apenet.dpt.utils.eag2012.Parform;
-import eu.apenet.dpt.utils.eag2012.Relations;
 import eu.apenet.dpt.utils.eag2012.Repositorid;
 import eu.apenet.dpt.utils.eag2012.RepositoryType;
 import eu.apenet.dpt.utils.eag2012.ToDate;
 import eu.apenet.dpt.utils.eag2012.UseDates;
 
 /**
- * Class for fill EAG2012 {@link Eag2012} JAXB object.
+ * Class for fill "Identity" element of object JAXB
  */
-public class CreateEAG2012 {
+public class FillIdentityObjectJAXB extends AbstractObjectJAXB implements ObjectJAXB{
 	/**
-	 * eag2012 {@link Eag2012} internal object.
+	 * EAG2012 {@link Eag2012} internal object.
 	 */
-	protected Eag2012 eag2012;
-
+	protected Eag2012 eag2012;	
 	/**
-	 * eag {@link Eag} JAXB object.
+	 * Eag {@link Eag} JAXB object.
 	 */
 	protected Eag eag;
+	boolean exists ;
+	private SimpleDateFormat df;
 	private final Logger log = Logger.getLogger(getClass());
-	/**
-	 * Constructor.
-	 */
-	public CreateEAG2012(final Eag2012 eag2012, final Eag eag) {
-		super();
-		this.eag2012 = eag2012;
-		if (eag == null) {
-			this.eag = new Eag();
-		} else {
-			this.eag = eag;
-		}
-	}
 
-	/**
-	 * Input method.
-	 *
-	 * @return The EAG {@link Eag} JAXB object.
-	 */
-	public Eag fillEAG2012() {
-		this.log.debug("Method start: \"fillEAG2012\"");
-		// Constructs elements.
-		constructAllParentElements();
-		// Fill "Control" element.
-		//fillControl();
-		FillControlObjectJAXB descriptionJsonObjToEag2012 = new FillControlObjectJAXB();
-		descriptionJsonObjToEag2012.ObjectJAXB(eag2012, eag);
-		// Fill "Archguide" element.
-		fillArchguide();
-		// Fill "Relations" element.
-		//fillRelations();
-		FillRelationsObjectJAXB fillRelationsObjectJAXB = new FillRelationsObjectJAXB();
-		fillRelationsObjectJAXB.ObjectJAXB(eag2012, eag);
-		this.log.debug("End method: \"fillEAG2012\"");
+	@Override
+	public Eag ObjectJAXB(Eag2012 eag2012, Eag eag) {
+		// TODO Auto-generated method stub
+		this.eag2012=eag2012;
+		this.eag=eag;
+		exists=true;
+		df = new SimpleDateFormat();
+		main();
 		return this.eag;
 	}
-	/**
-	 * Method to construct all parent elements:<br>
-	 * - Fill "control" elements: MaintenanceStatus element {@link MaintenanceStatus} and MaintenanceHistory element<MaintenanceHistory>.<br>
-	 * - Fill EAG {@link Eag} attributes.<br>
-	 * - Fill archguide {@link Archguide} element.<br>
-	 * - Fill relations {@link Relations} element .
-	 */	
-	private void constructAllParentElements() {
-		this.log.debug("Method start: \"constructAllParentElements\"");
-		// Fill EAG attibutes.
-		this.eag.setAudience(Eag2012.XML_AUDIENCE);
-		// Cosntruct "control".
-		if (this.eag.getControl() == null) {
-			this.eag.setControl(new Control());
-		} else {
-			MaintenanceStatus maintenanceStatus = this.eag.getControl().getMaintenanceStatus();
-			MaintenanceHistory maintenanceHistory = this.eag.getControl().getMaintenanceHistory();
 
-			this.eag.setControl(new Control());
-			this.eag.getControl().setMaintenanceStatus(maintenanceStatus);
-			this.eag.getControl().setMaintenanceHistory(maintenanceHistory);
-		}
-		// Constructs "archguide".
-		this.eag.setArchguide(new Archguide());
-		// Constructs "relations".
-		this.eag.setRelations(new Relations());
-		this.log.debug("End method: \"constructAllParentElements\"");		
-	}	
 	/**
-	 * Method to fill Archguide {@link Archguide } element:<br>
-	 * - Fill Identity {@link Identity} element<br>
-	 * - Fill Desc {@link Desc} element<br>
+	 * Method main with method for fill "identity" element of object JAXB
 	 */
-	private void fillArchguide() {
-		this.log.debug("Method start: \"fillArchguide\"");
-		// Fill "Identity" element.
-		if (this.eag.getArchguide().getIdentity() == null) {
-			this.eag.getArchguide().setIdentity(new Identity());
-		}
-		fillIdentity();
-		// Fill "Desc" element.
-		if (this.eag.getArchguide().getDesc() == null) {
-			this.eag.getArchguide().setDesc(new Desc());
-		}
-		//fillDesc();
-		FillDescObjectJAXB fillDescObjectJAXB = new FillDescObjectJAXB();
-		fillDescObjectJAXB.ObjectJAXB(eag2012, eag);
-		this.log.debug("End method: \"fillArchguide\"");
-	}	
+	private void main(){
+		this.log.debug("Method start: \"Main of class FillIdentitycObjectJAXB\"");
+		creatCountryCode();
+		createAutform();
+		createParform();
+		createNonpreform();		
+		createRepositoryType();		
+		this.log.debug("End method: \"createAccessibility\"");
+	}
+
 	/**
-	 * Method to fill Identity {@link Identity} element:
-	 * - Fill Repositorid {@link Repositorid} element.<br>
-	 * - Fill repositorycode element.<br>
-	 * - Fill otherRepositorid {@link OtherRepositorId} element .<br>
-	 * - Fill Countrycode element.<br>
-	 * - Fill parform {@link Parform} element.<br>
-	 * - Fill nonpreform  {@link Nonpreform} element.<br>
-	 * - Fill repositoryType element.<br>
+	 * Method to fill CountryCode element
 	 */
-	private void fillIdentity() {
-		this.log.debug("Method start: \"fillIdentity\"");
+	private void creatCountryCode(){
+		this.log.debug("Method start: \"createAccessibility\"");
 		// eag/archguide/identity/repositorid/countrycode
 		if (this.eag.getArchguide().getIdentity().getRepositorid() == null) {
 			this.eag.getArchguide().getIdentity().setRepositorid(new Repositorid());
@@ -156,6 +81,14 @@ public class CreateEAG2012 {
 			}
 			this.eag.getArchguide().getIdentity().getOtherRepositorId().setContent(this.eag2012.getOtherRepositorId());
 		}
+		this.log.debug("End method: \"createAccessibilityQuestion\"");
+	}
+
+	/**
+	 * Method to fill CountryCode element
+	 */
+	private void createAutform(){
+		this.log.debug("Method start: \"createAccessibility\"");
 		// eag/archguide/identity/autform
 		if (this.eag2012.getAutformValue() != null) {
 			for (int i = 0; i < this.eag2012.getAutformValue().size(); i++) {
@@ -165,12 +98,18 @@ public class CreateEAG2012 {
 				// eag/archguide/identity/autform/lang
 				if (!Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getAutformLang().get(i))) {
 					autform.setLang(this.eag2012.getAutformLang().get(i));
-				}
-	
+				}	
 				this.eag.getArchguide().getIdentity().getAutform().add(autform);
 			}
-			
 		}
+		this.log.debug("End method: \"createAccessibilityQuestion\"");
+	}
+
+	/**
+	 * Method to fill CountryCode element
+	 */
+	private void createParform(){
+		this.log.debug("Method start: \"createAccessibility\"");
 		// eag/archguide/identity/parform
 		if (this.eag2012.getParformValue() != null
 				&& this.eag2012.getParformValue().size() > 0) {
@@ -183,12 +122,19 @@ public class CreateEAG2012 {
 					// eag/archguide/identity/parform/lang
 					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getParformLang().get(i))) {
 						parform.setLang(this.eag2012.getParformLang().get(i));
-					}
-		
+					}		
 					this.eag.getArchguide().getIdentity().getParform().add(parform);
 				}
 			}
 		}
+		this.log.debug("End method: \"createAccessibilityQuestion\"");
+	}
+
+	/**
+	 * Method to fill Nonpreform element
+	 */
+	private void createNonpreform(){
+		this.log.debug("Method start: \"createAccessibility\"");
 		// eag/archguide/identity/nonpreform
 		if (this.eag2012.getNonpreformValue() != null){
 			for (int i = 0; i < this.eag2012.getNonpreformValue().size(); i++) {
@@ -198,15 +144,21 @@ public class CreateEAG2012 {
 					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getNonpreformLang().get(i))) {
 						nonpreform.setLang(this.eag2012.getNonpreformLang().get(i));
 					}
-					nonpreform.getContent().add(this.eag2012.getNonpreformValue().get(i));
-	
+					nonpreform.getContent().add(this.eag2012.getNonpreformValue().get(i));	
 					// eag/archguide/identity/nonpreform/dates
-					getNompreformDates(nonpreform, i);
-	
+					getNompreformDates(nonpreform, i);	
 					this.eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
 				}
 			}
-		}		
+		}
+		this.log.debug("End method: \"createAccessibilityQuestion\"");
+	}
+
+	/**
+	 * Method to fill RepositoryType element
+	 */
+	private void createRepositoryType(){
+		this.log.debug("Method start: \"createAccessibility\"");
 		// eag/archguide/identity/repositoryType
 		if (this.eag2012.getRepositoryTypeValue() != null) {
 			for (int i = 0; i < this.eag2012.getRepositoryTypeValue().size(); i++) {
@@ -247,48 +199,14 @@ public class CreateEAG2012 {
 				}
 			}
 		}
-		this.log.debug("End method: \"fillIdentity\"");
+		this.log.debug("End method: \"createAccessibilityQuestion\"");
 	}
+
 	/**
-	 * Method to parse date returns the date in the correct format or null if not date.
-	 * @param formatDate {@link String} the date.
-	 * @return {@link String} the parse date.
-	 */
-	private String parseDate(String formatDate) {
-		this.log.debug("Method start: \"parseDate\"");
-		boolean pattern1 = Pattern.matches("\\d{4}", formatDate); //yyyy
-		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", formatDate); //yyyy-MM
-		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", formatDate); //yyyy-MM-dd
-		boolean pattern4 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", formatDate); //dd-MM-yyyy
-		if (pattern4){
-			String yearStandardDate = formatDate.substring(6);
-			String monthStandardDate = formatDate.substring(2,6);
-			String dateStandardDate = formatDate.substring(0,2);
-			String reverseString =yearStandardDate+monthStandardDate+dateStandardDate;
-	         formatDate = formatDate.replaceAll(formatDate, reverseString);
-		}
-		if (pattern1){
-			return formatDate;
-		} else if (pattern2) {
-			String monthStandardDate = formatDate.substring(5,7);
-			if (Integer.parseInt(monthStandardDate) <= 12) {
-				formatDate = formatDate.replaceAll("[\\./:\\s]", "-");
-				return formatDate;
-			}
-		} else if (pattern3 || pattern4) {
-			formatDate = formatDate.replaceAll("[\\./:\\s]", "-");
-			return formatDate;
-		}
-		this.log.debug("End method: \"parseDate\"");
-		return null;		
-	}
-	/**
-	 * Method to recover all dates for the nonpreform passed.
-	 * @param nonpreform {@link Nonpreform}
-	 * @param i {@link int}
+	 * Method to fill all dates for the nonpreform passed.
 	 */
 	private void getNompreformDates(final Nonpreform nonpreform, final int i) {
-		this.log.debug("Method start: \"getNompreformDates\"");
+		this.log.debug("Method start: \"createAccessibility\"");
 		if (this.eag2012.getDateStandardDate() != null) {
 			// Main institution date.
 			Map<String, Map<String, Map<String, List<List<String>>>>> tabsValueMap = this.eag2012.getDateStandardDate().get(0);
@@ -317,8 +235,7 @@ public class CreateEAG2012 {
 													date.setStandardDate(valueStandardDate);
 												}
 												date.setContent(valueList.get(k));	
-												if (Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
-		
+												if (Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {		
 													List<Object> nonpreformObjectList = nonpreform.getContent();
 													UseDates useDates = null;
 													int index = 0;
@@ -414,8 +331,7 @@ public class CreateEAG2012 {
 												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
 													fromDate.setStandardDate(valueStandardDate);
 												}
-												fromDate.setContent(valueFromList.get(k));
-		
+												fromDate.setContent(valueFromList.get(k));		
 												ToDate toDate = new ToDate();
 												valueStandardDate = parseDate(valueToList.get(k));
 												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
@@ -479,6 +395,7 @@ public class CreateEAG2012 {
 					}
 				}
 			}
-		}this.log.debug("End method: \"getNompreformDates\"");
+		}
+		this.log.debug("End method: \"createAccessibilityQuestion\"");
 	}
 }
