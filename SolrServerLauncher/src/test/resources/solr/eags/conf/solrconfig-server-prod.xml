@@ -26,14 +26,14 @@
 	<query>
 		<maxBooleanClauses>256</maxBooleanClauses>
 
-		<filterCache class="solr.FastLRUCache" size="64"
-			initialSize="32" autowarmCount="80%" cleanupThread="true" />
+		<filterCache class="solr.FastLRUCache" size="128"
+			initialSize="32" autowarmCount="90%" cleanupThread="true" />
 
-		<queryResultCache class="solr.FastLRUCache" size="64"
-			initialSize="32" autowarmCount="80%" cleanupThread="true"  />
+		<queryResultCache class="solr.FastLRUCache" size="128"
+			initialSize="32" autowarmCount="90%" cleanupThread="true"  />
 
-		<documentCache class="solr.FastLRUCache" size="64"
-			initialSize="32" autowarmCount="80%"  cleanupThread="true" />
+		<documentCache class="solr.FastLRUCache" size="128"
+			initialSize="32" autowarmCount="90%"  cleanupThread="true" />
 
 		<enableLazyFieldLoading>true</enableLazyFieldLoading>
 
