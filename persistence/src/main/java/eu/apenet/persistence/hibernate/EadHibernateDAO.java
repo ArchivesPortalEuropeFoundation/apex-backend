@@ -119,8 +119,8 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
 		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
-				criteriaBuilder.greaterThan(from.<Integer> get("total_number_of_web_resource_edm"), 0)));
-		cq.select(criteriaBuilder.sum(from.<Long> get("total_number_of_web_resource_edm")));
+				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfWebResourceEdm"), 0)));
+		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfWebResourceEdmAdd in stats")));
 
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
