@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.services.ead.xml;
 
 import eu.archivesportaleurope.xml.ApeXMLConstants;
+import org.apache.commons.lang.StringUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -18,7 +19,11 @@ public class XMLStreamWriterHolder {
 	public void writeEAD(QName name) throws XMLStreamException {
 		if (numberOfOpenedElements == 0) {
 			xmlWriter.writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
-			xmlWriter.writeDefaultNamespace(ApeXMLConstants.APE_EAD_NAMESPACE);
+            if(StringUtils.isNotEmpty(name.getPrefix())) {
+                xmlWriter.writeNamespace(name.getPrefix(), ApeXMLConstants.APE_EAD_NAMESPACE);
+            } else {
+                xmlWriter.writeDefaultNamespace(ApeXMLConstants.APE_EAD_NAMESPACE);
+            }
 			xmlWriter.writeNamespace(ApeXMLConstants.XLINK_PREFIX, ApeXMLConstants.XLINK_NAMESPACE);
 			xmlWriter.writeNamespace(ApeXMLConstants.XSI_PREFIX, ApeXMLConstants.XSI_NAMESPACE);
 			numberOfOpenedElements++;
@@ -29,7 +34,11 @@ public class XMLStreamWriterHolder {
 		if (numberOfOpenedElements == 0) {
 			QName name = xmlReader.getName();
 			xmlWriter.writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
-            xmlWriter.writeDefaultNamespace(ApeXMLConstants.APE_EAD_NAMESPACE);
+            if(StringUtils.isNotEmpty(name.getPrefix())) {
+                xmlWriter.writeNamespace(name.getPrefix(), ApeXMLConstants.APE_EAD_NAMESPACE);
+            } else {
+                xmlWriter.writeDefaultNamespace(ApeXMLConstants.APE_EAD_NAMESPACE);
+            }
             xmlWriter.writeNamespace(ApeXMLConstants.XLINK_PREFIX, ApeXMLConstants.XLINK_NAMESPACE);
             xmlWriter.writeNamespace(ApeXMLConstants.XSI_PREFIX, ApeXMLConstants.XSI_NAMESPACE);
 			for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
