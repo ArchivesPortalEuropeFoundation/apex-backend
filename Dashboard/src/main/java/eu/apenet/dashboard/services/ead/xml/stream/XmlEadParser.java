@@ -129,7 +129,7 @@ public class XmlEadParser extends AbstractParser {
                     QName elementName = xmlReader.getName();
                     lastElement = xmlReader.getName();
                     if (EAD.equals(elementName)) {
-                        xmlWriterHolder.writeEAD();
+                        xmlWriterHolder.writeEAD(elementName);
                     } else if (XmlCLevelParser.CLEVEL.equals(elementName)) {
                         if (noCLevelFound) {
                             noCLevelFound = false;
