@@ -7,7 +7,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import eu.archivesportaleurope.xml.ApeXMLConstants;
-import eu.archivesportaleurope.xml.xpath.AbstractXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.AbstractXpathHandler;
 
 public class FileXpathHandler extends AbstractXpathHandler {
 	private static final QName FLOCAT = new QName(ApeXMLConstants.METS_NAMESPACE, "FLocat");
@@ -50,11 +50,6 @@ public class FileXpathHandler extends AbstractXpathHandler {
 		return results;
 	}
 
-	@Override
-	protected void clear() {
-		results.clear();
-
-	}
 
 	@Override
 	public boolean isAllTextBelow() {

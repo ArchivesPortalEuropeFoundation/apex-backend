@@ -17,6 +17,7 @@ public class UserRole implements java.io.Serializable {
 	public final static String ROLE_COUNTRY_MANAGER = "countryManager";
     public final static String ROLE_INSTITUTION_MANAGER = "institutionManager";
     public final static String ROLE_ADMIN = "admin";
+	public final static String ROLE_COUNTRY_MANAGER_COORDINATOR = "countryManagerCoordinator";
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;

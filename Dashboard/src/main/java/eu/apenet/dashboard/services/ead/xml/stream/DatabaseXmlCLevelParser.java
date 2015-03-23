@@ -1,18 +1,10 @@
 package eu.apenet.dashboard.services.ead.xml.stream;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -21,8 +13,8 @@ import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.dashboard.services.ead.database.EadDatabaseSaver;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
+import eu.apenet.dashboard.services.ead.xml.stream.publish.EadArchDescCLevelXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishDataFiller;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -30,7 +22,7 @@ import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
-import eu.archivesportaleurope.xml.ApeXMLConstants;
+import eu.archivesportaleurope.xml.XmlParser;
 
 
 
@@ -85,50 +77,9 @@ public class DatabaseXmlCLevelParser {
 	}
 	private static void parse(CLevel clevel, EadPublishData publishData) throws Exception {
 		InputStream inputstream = IOUtils.toInputStream(clevel.getXml());
-		XMLStreamReader xmlReader = getXMLReader(inputstream);
-		QName lastElement = null;
-		LinkedList<QName> xpathPosition = new LinkedList<QName>();
-		EadPublishDataFiller clevelParser = new EadPublishDataFiller(true);
-		for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
-			if (event == XMLStreamConstants.START_ELEMENT) {
-				lastElement = xmlReader.getName();
-				if (!XmlCLevelParser.CLEVEL.equals(lastElement)) {
-					add(xpathPosition, lastElement);
-					clevelParser.processStartElement(xpathPosition, xmlReader);
-				}
-			} else if (event == XMLStreamConstants.END_ELEMENT) {
-				clevelParser.processEndElement(xpathPosition, xmlReader);
-				QName elementName = xmlReader.getName();
-				removeLast(xpathPosition, elementName);
-			} else if (event == XMLStreamConstants.CHARACTERS) {
-				clevelParser.processCharacters(xpathPosition, xmlReader);
-			} else if (event == XMLStreamConstants.CDATA) {
-				clevelParser.processCharacters(xpathPosition, xmlReader);
-			}
-		}
-		xmlReader.close();
+		EadArchDescCLevelXpathReader xpathReader = new EadArchDescCLevelXpathReader();
+		XmlParser.parse(inputstream, xpathReader);
 		inputstream.close();
-		clevelParser.fillData(publishData, clevel);
-	}
-
-	private static XMLStreamReader getXMLReader(InputStream inputStream) throws XMLStreamException, IOException {
-
-		XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
-		return (XMLStreamReader) inputFactory.createXMLStreamReader(inputStream, ApeXMLConstants.UTF_8);
-	}
-
-	private static void add(LinkedList<QName> path, QName qName) {
-		// if (!CLEVEL.equals(qName)) {
-		path.add(qName);
-		// }
-	}
-
-	private static void removeLast(LinkedList<QName> path, QName qName) {
-		// if (!CLEVEL.equals(qName)) {
-		if (!path.isEmpty()) {
-			path.removeLast();
-		}
-		// }
-
+		xpathReader.fillData(publishData, clevel);
 	}
 }

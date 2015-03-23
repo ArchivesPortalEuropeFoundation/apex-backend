@@ -67,7 +67,9 @@ public class EadService {
 		SecurityContext.get().checkAuthorized(ead);
 		if (ead.getEadContent() == null) {
 			try {
+				long startTime = System.currentTimeMillis();
 				XmlEadParser.parseEad(ead);
+				LOGGER.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): generate preview - " +   (System.currentTimeMillis() - startTime) +"ms");
 			} catch (Exception e) {
 				throw new APEnetRuntimeException(e);
 			}

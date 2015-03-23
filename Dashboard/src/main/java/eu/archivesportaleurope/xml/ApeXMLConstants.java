@@ -1,7 +1,11 @@
 package eu.archivesportaleurope.xml;
 
-import javax.xml.namespace.QName;
-
+/**
+ * XML constants
+ * 
+ * @author Bastiaan Verhoef
+ *
+ */
 public class ApeXMLConstants {
 	public static final String UTF_8 = "utf-8";
 	public static final String APE_EAD_NAMESPACE = "urn:isbn:1-931666-22-9";
@@ -18,6 +22,4 @@ public class ApeXMLConstants {
 	public static final String SCHEMA_LOCATION = "schemaLocation";
 
 
-	public static final QName EAD_ELEMENT = new QName(APE_EAD_NAMESPACE, "ead");
-	public static final QName C_ELEMENT = new QName(APE_EAD_NAMESPACE, "c");
 }

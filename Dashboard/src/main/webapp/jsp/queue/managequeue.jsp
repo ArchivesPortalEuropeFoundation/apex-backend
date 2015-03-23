@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags"%>
+<dashboard:securityContext var="securityContext" />
 <div id="manageQueue">
 	<table class="defaultlayout">
 		<tr>
@@ -36,53 +38,55 @@
 			</tr>
 		</c:if>
 	</table>
-	<s:form action="startStopQueue" method="post">
-		<s:actionerror />
-		<c:choose>
-			<c:when test="${queueActive}">
-				<s:submit key="admin.queuemanagement.queue.stop"
-					cssClass="mainButton" name="startButton" />
-			</c:when>
-			<c:when test="${not queueActive}">
-				<s:submit key="admin.queuemanagement.queue.start"
-					cssClass="mainButton" name="startButton" />
-			</c:when>
-		</c:choose>
+	<c:if test="${securityContext.admin}">
+		<s:form action="startStopQueue" method="post">
+			<s:actionerror />
+			<c:choose>
+				<c:when test="${queueActive}">
+					<s:submit key="admin.queuemanagement.queue.stop"
+						cssClass="mainButton" name="startButton" />
+				</c:when>
+				<c:when test="${not queueActive}">
+					<s:submit key="admin.queuemanagement.queue.start"
+						cssClass="mainButton" name="startButton" />
+				</c:when>
+			</c:choose>
 
-	</s:form>
-	
-	<s:form action="deleteAllQueueItemsWithErrors" theme="simple" method="post">
-		<s:submit value="Delete all errors from the Queue"></s:submit>
-	</s:form>
-	<s:form action="deleteAllUnusedUploadFiles" theme="simple" method="post">
-		<s:submit value="Delete all unused uploads"></s:submit>
-	</s:form>
-	<h2>Other management tasks</h2>
-	<s:form action="changeMaintenanceMode" method="post">
-		<s:actionerror />
-		<c:choose>
-			<c:when test="${maintenanceMode}">
-				<s:submit value="Stop maintenance mode" />
-			</c:when>
-			<c:otherwise>
-				<s:submit value="Start maintenance mode" />
-			</c:otherwise>
-		</c:choose>
+		</s:form>
 
-	</s:form>	
-	<s:form action="forceSolrCommit" theme="simple" method="post">
-		<s:submit value="Force Solr commit"></s:submit>
-	</s:form>
-	<c:if test="${not queueActive}">
-		<s:form action="solrOptimize" theme="simple" method="post">
-			<s:submit value="Solr optimize"></s:submit>
-		</s:form>		
-		<s:form action="republishAllEagFiles" theme="simple" method="post">
-			<s:submit value="Republish all EAG files"></s:submit>
-		</s:form>	
-		<s:form action="rebuildAutosuggestion" theme="simple" method="post">
-			<s:submit value="Build autosuggestion dictionaries"></s:submit>
-		</s:form>			
+		<s:form action="deleteAllQueueItemsWithErrors" theme="simple" method="post">
+			<s:submit value="Delete all errors from the Queue"></s:submit>
+		</s:form>
+		<s:form action="deleteAllUnusedUploadFiles" theme="simple" method="post">
+			<s:submit value="Delete all unused uploads"></s:submit>
+		</s:form>
+		<h2>Other management tasks</h2>
+		<s:form action="changeMaintenanceMode" method="post">
+			<s:actionerror />
+			<c:choose>
+				<c:when test="${maintenanceMode}">
+					<s:submit value="Stop maintenance mode" />
+				</c:when>
+				<c:otherwise>
+					<s:submit value="Start maintenance mode" />
+				</c:otherwise>
+			</c:choose>
+
+		</s:form>
+		<s:form action="forceSolrCommit" theme="simple" method="post">
+			<s:submit value="Force Solr commit"></s:submit>
+		</s:form>
+		<c:if test="${not queueActive}">
+			<s:form action="solrOptimize" theme="simple" method="post">
+				<s:submit value="Solr optimize"></s:submit>
+			</s:form>
+			<s:form action="republishAllEagFiles" theme="simple" method="post">
+				<s:submit value="Republish all EAG files"></s:submit>
+			</s:form>
+			<s:form action="rebuildAutosuggestion" theme="simple" method="post">
+				<s:submit value="Build autosuggestion dictionaries"></s:submit>
+			</s:form>
+		</c:if>
 	</c:if>
 	<c:if test="${!empty countsByArchivalInstitutions }">
 		<h2>Number of items per institution:</h2>
@@ -124,7 +128,7 @@
 						<td><c:out value="${item.archivalInstitution}" /></td>
 						<td><c:out value="${item.action}" /></td>
 						<td><c:out value="${item.priority}" /></td>
-						<td><c:if test="${not queueActive and not queueProcessing}">
+						<td><c:if test="${not queueActive and not queueProcessing and securityContext.admin}">
 			                        <s:form action="manageQueueItem" theme="simple">
 			                        	<input type="hidden" name="queueItemId" value="${item.id}" />
 			                        	<select class="selectedAction" name="selectedAction">
@@ -170,7 +174,8 @@
 						<td><c:out value="${item.archivalInstitution}" /></td>
 						<td><c:out value="${item.action}" /></td>
 						<td><c:out value="${item.priority}" /></td>
-						<td><s:form action="manageQueueItem" theme="simple">
+						<td><c:if test="${securityContext.admin}">
+							<s:form action="manageQueueItem" theme="simple">
 			                        	<input type="hidden" name="queueItemId" value="${item.id}" />
 			                        	<select class="selectedAction" name="selectedAction">
 												<option value="ENABLE">
@@ -188,7 +193,9 @@
 												</option>												
 					                            </select>
 			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
-			                            </s:form></td>					
+			                            </s:form>
+							</c:if>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -215,7 +222,8 @@
 						<td><c:out value="${item.archivalInstitution}" /></td>
 						<td><c:out value="${item.action}" /></td>
 						<td><c:out value="${item.priority}" /></td>
-						<td><s:form action="manageQueueItem" theme="simple">
+						<td><c:if test="${securityContext.admin}">
+								<s:form action="manageQueueItem" theme="simple">
 			                        	<input type="hidden" name="queueItemId" value="${item.id}" />
 			                        	<select class="selectedAction" name="selectedAction">
 			                                	<option value="DELETE">
@@ -232,7 +240,9 @@
 												</option>																								
 					                            </select>
 			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
-			                            </s:form></td>
+			                            </s:form>
+							</c:if>
+						</td>
 						<td><c:out value="${item.errors}" /></td>
 	
 					</tr>

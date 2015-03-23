@@ -49,7 +49,7 @@ public final class UserService {
 	 *            id of User
 	 */
 	public static void deleteCountryManager(Integer id) {
-		if (SecurityContext.get().isAdmin()) {
+		if (SecurityContext.get().isAdminOrCoordinator()) {
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
 			User partner = partnerDao.findById(id);
 			if (UserRole.ROLE_COUNTRY_MANAGER.equals(partner.getUserRole().getRole())
@@ -73,13 +73,13 @@ public final class UserService {
 	 */
 	public static void deleteInstitutionManager(Integer aiId, Integer id) {
 		SecurityContext securityContext = SecurityContext.get();
-		if (securityContext.isAdmin() || securityContext.isCountryManager()) {
+		if (securityContext.isAdminOrCoordinator() || securityContext.isCountryManager()) {
 			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
 			ArchivalInstitution archivalInstitution = archivalInstitutionDAO.findById(aiId);
 			User partner = archivalInstitution.getPartner();
 			boolean authorized = false;
-			if (securityContext.isAdmin()) {
+			if (securityContext.isAdminOrCoordinator()) {
 				authorized = true;
 			} else if (securityContext.isCountryManager()
 					&& securityContext.getCountryId().equals(archivalInstitution.getCountryId())) {
@@ -113,11 +113,11 @@ public final class UserService {
 	 */
 	public static void enableUser(Integer id) {
 		SecurityContext securityContext = SecurityContext.get();
-		if (securityContext.isAdmin() || securityContext.isCountryManager()) {
+		if (securityContext.isAdminOrCoordinator() || securityContext.isCountryManager()) {
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
 			User partner = partnerDao.findById(id);
 			boolean authorized = false;
-			if (securityContext.isAdmin()) {
+			if (securityContext.isAdminOrCoordinator()) {
 				authorized = true;
 			} else if (securityContext.isCountryManager()
 					&& securityContext.getCountryId().equals(partner.getCountryId())) {
@@ -139,11 +139,11 @@ public final class UserService {
 	 */
 	public static void disableUser(Integer partnerId) {
 		SecurityContext securityContext = SecurityContext.get();
-		if (securityContext.isAdmin() || securityContext.isCountryManager()) {
+		if (securityContext.isAdminOrCoordinator() || securityContext.isCountryManager()) {
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
 			User partner = partnerDao.findById(partnerId);
 			boolean authorized = false;
-			if (securityContext.isAdmin()) {
+			if (securityContext.isAdminOrCoordinator()) {
 				authorized = true;
 			} else if (securityContext.isCountryManager()
 					&& securityContext.getCountryId().equals(partner.getCountryId())) {
@@ -166,7 +166,7 @@ public final class UserService {
 	 *            Id of the selected country
 	 */
 	public static void createCountryManager(User user, Integer countryId) {
-		if (SecurityContext.get().isAdmin()) {
+		if (SecurityContext.get().isAdminOrCoordinator()) {
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
 			UserRoleDAO roleTypeDAO = DAOFactory.instance().getUserRoleDAO();
 			user.setActive(true);
@@ -197,12 +197,12 @@ public final class UserService {
 	 */
 	public static void createOrAssociateInstitutionManager(User inputUser, Integer aiId, Integer existingUserId) {
 		SecurityContext securityContext = SecurityContext.get();
-		if (securityContext.isAdmin() || securityContext.isCountryManager()) {
+		if (securityContext.isAdminOrCoordinator() || securityContext.isCountryManager()) {
 			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 			ArchivalInstitution archivalInstitution = archivalInstitutionDAO.findById(aiId);
 
 			boolean authorized = false;
-			if (securityContext.isAdmin()) {
+			if (securityContext.isAdminOrCoordinator()) {
 				authorized = true;
 			} else if (securityContext.isCountryManager()
 					&& securityContext.getCountryId().equals(archivalInstitution.getCountryId())) {

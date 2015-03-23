@@ -5,16 +5,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -23,12 +19,13 @@ import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagPublishData;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
-import eu.archivesportaleurope.xml.xpath.StringXpathHandler;
-import eu.archivesportaleurope.xml.xpath.TextMapXpathHandler;
-import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
-import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
+import eu.archivesportaleurope.xml.ApeXmlUtil;
+import eu.archivesportaleurope.xml.xpath.AbstractXpathReader;
+import eu.archivesportaleurope.xml.xpath.handler.StringXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.TextMapXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.TextXpathHandler;
 
-public class EagPublishDataFiller {
+public class EagXpathReader extends AbstractXpathReader<EagPublishData> {
 	private static final String COUNTRY_PREFIX = "country.";
 	/*
 	 * unitids
@@ -41,7 +38,6 @@ public class EagPublishDataFiller {
 	private TextMapXpathHandler locationHandler;
 	private TextXpathHandler actingMaintenanceForHandler;
 	private TextXpathHandler municipalityPostalcodeHandler;	
-	private List<XmlStreamHandler> eagHandlers = new ArrayList<XmlStreamHandler>();
 	private static Map<String, Set<String>> countryResourceBundles;
 	static {
 		countryResourceBundles = new HashMap<String, Set<String>>();
@@ -67,8 +63,13 @@ public class EagPublishDataFiller {
 		}
 
 	}
-	public EagPublishDataFiller() {
-			/*
+	
+	
+
+
+	@Override
+	protected void internalInit() throws Exception {
+		/*
 			 * name
 			 */
 		otherNamesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","identity", "autform | parform | nonpreform" });
@@ -84,38 +85,20 @@ public class EagPublishDataFiller {
 		locationHandler.setOnlyFirst(true);
 		actingMaintenanceForHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "holdings", "actingMaintenanceForGroup", "actingMaintenanceFor", "placeEntry" }); 
 		municipalityPostalcodeHandler = new TextXpathHandler(ApeXMLConstants.APE_EAG_NAMESPACE, new String[] { "eag", "archguide","desc", "repositories", "repository", "location", "municipalityPostalcode" });
-		eagHandlers.add(otherNamesHandler);
-		eagHandlers.add(repositoryNameHandler);
-		eagHandlers.add(repositoryTypeHandler);
-		eagHandlers.add(historyHandler);
-		eagHandlers.add(holdingsHandler);
-		eagHandlers.add(locationHandler);
-		eagHandlers.add(actingMaintenanceForHandler);
-		eagHandlers.add(municipalityPostalcodeHandler);
+		getXpathHandlers().add(otherNamesHandler);
+		getXpathHandlers().add(repositoryNameHandler);
+		getXpathHandlers().add(repositoryTypeHandler);
+		getXpathHandlers().add(historyHandler);
+		getXpathHandlers().add(holdingsHandler);
+		getXpathHandlers().add(locationHandler);
+		getXpathHandlers().add(actingMaintenanceForHandler);
+		getXpathHandlers().add(municipalityPostalcodeHandler);
 	}
-
-	public void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-			for (XmlStreamHandler handler : eagHandlers) {
-				handler.processCharacters(xpathPosition, xmlReader);
-			}
-
-
+	@Override
+	public EagPublishData getData() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
-	public void processStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-			for (XmlStreamHandler handler : eagHandlers) {
-				handler.processStartElement(xpathPosition, xmlReader);
-			}
-
-	}
-
-	public void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-			for (XmlStreamHandler handler : eagHandlers) {
-				handler.processEndElement(xpathPosition, xmlReader);
-			}
-
-	}
-
 
 	public void fillData(EagPublishData publishData, ArchivalInstitution archivalInstitution) {
 		Set<String> otherNames = otherNamesHandler.getResultSet();
@@ -159,7 +142,7 @@ public class EagPublishDataFiller {
 	}
 	private void add(StringBuilder other, String item){
 		if (StringUtils.isNotBlank(item)){
-			other.append(StringXpathHandler.WHITE_SPACE + item);
+			other.append(ApeXmlUtil.WHITE_SPACE + item);
 		}
 	}
 	public static Map<String, ResourceBundle> getResourceBundles(String baseName) {
@@ -168,7 +151,7 @@ public class EagPublishDataFiller {
 
 		  for (String isoLanguage: Locale.getISOLanguages()) {
 		    try {
-		    	URL url = EagPublishDataFiller.class.getClassLoader().getResource(baseName + "_"+isoLanguage+".properties");
+		    	URL url = EagXpathReader.class.getClassLoader().getResource(baseName + "_"+isoLanguage+".properties");
 		    	if (url != null){
 		    		resourceBundles.put(isoLanguage, ResourceBundle.getBundle(baseName, new Locale(isoLanguage)));
 		    	}

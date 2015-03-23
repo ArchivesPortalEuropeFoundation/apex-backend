@@ -37,7 +37,7 @@ public class StatisticsAction extends AbstractAction {
 	private static final long serialVersionUID = -7140890005810933129L;
 
 	public String downloadCountriesStatistics()  throws Exception {
-		if (this.getSecurityContext().isAdmin()) {
+		if (this.getSecurityContext().isAdminOrCoordinator()) {
 			String name = APEnetUtilities.convertToFilename("countries-statistics-"
 					+ SIMPLE_DATE_FORMAT.format(new Date()) + ".ods");
 			CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
@@ -65,7 +65,7 @@ public class StatisticsAction extends AbstractAction {
 	public String downloadInstitutionsStatistics() throws Exception {
 		CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
 		List<Country> countries = new ArrayList<Country>();
-		if (this.getSecurityContext().isAdmin()) {
+		if (this.getSecurityContext().isAdminOrCoordinator()) {
 			countries = countryDAO.findAll();
 		} else if (this.getSecurityContext().isCountryManager()) {
 			Integer countryId = this.getSecurityContext().getCountryId();

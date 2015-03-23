@@ -54,16 +54,21 @@
             displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager,downloadInstitutionsStatistics,
 			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm,ALCancelOverwrite,ALOverwrite,ALReport,ALRecheckIdentifiers, ALContinueUpload,changeMets
         </group>
-        <group name="adminActions">
-            checkEagNamespace,downloadCountriesStatistics,
-            createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
-            storeCountry,storeLanguage,viewAdmin,
-            sessionManagement,deleteSession,userManagement,
+        <group name="countryManagerCoordinatorActions">
+            downloadCountriesStatistics,
+            downloadGeneralAL,goCountryAccount,
+            viewAdmin,sessionManagement,
+            userManagement,manageHarvest,manageHarvestItem,
+            manageQueue,
             changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,manageQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
-            manageHarvest, startStopHarvester, manageHarvestItem,solrOptimize,
+            adminTopic,adminEditTopic,adminStoreTopic,adminDeleteTopic
+        </group>
+        <group name="adminActions">
+            createCountry,createLanguage,storeCountry,storeLanguage,
+            deleteSession,
+            viewDptVersions, addVersion, deleteVersion,startStopQueue,manageQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
+            startStopHarvester,solrOptimize,
             eag2012GeoCoordinates, changeIdentifierInDDBB, fixALOrderInDDBB, republishAllEagFiles,showLogFiles,downloadLogFile,changeMaintenanceMode,rebuildAutosuggestion,
-            adminTopic,adminEditTopic,adminStoreTopic,adminDeleteTopic,
             xslUploadChooseCountry,xslUploadChooseInstitution,xslUploadFile
         </group>
     </groups>
@@ -71,6 +76,7 @@
         <role-mapping name="norole" groups="publicActions"/>
         <role-mapping name="institutionManager" groups="publicActions,institutionManagerActions"/>
         <role-mapping name="countryManager" groups="publicActions,institutionManagerActions,countryManagerActions"/>
-        <role-mapping name="admin" groups="publicActions,institutionManagerActions,countryManagerActions,adminActions"/>
+        <role-mapping name="countryManagerCoordinator" groups="publicActions,institutionManagerActions,countryManagerActions,countryManagerCoordinatorActions"/>
+        <role-mapping name="admin" groups="publicActions,institutionManagerActions,countryManagerActions,countryManagerCoordinatorActions,adminActions"/>
     </role-mappings>
 </authorization>

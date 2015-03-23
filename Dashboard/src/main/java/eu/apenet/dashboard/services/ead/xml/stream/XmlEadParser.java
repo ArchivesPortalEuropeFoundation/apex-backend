@@ -28,8 +28,9 @@ import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dashboard.services.ead.xml.XMLStreamWriterHolder;
+import eu.apenet.dashboard.services.ead.xml.stream.publish.EadArchDescCLevelXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishDataFiller;
+import eu.apenet.dashboard.services.ead.xml.stream.publish.EadGlobalXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
@@ -117,8 +118,10 @@ public class XmlEadParser extends AbstractParser {
         LinkedList<QName> archdescXpathPosition = new LinkedList<QName>();
         LinkedList<QName> fullXpathPosition = new LinkedList<QName>();
         boolean inArchdesc = false;
-        EadPublishDataFiller archDescParser = new EadPublishDataFiller(true);
-        EadPublishDataFiller fullEadParser = new EadPublishDataFiller(false);
+		EadArchDescCLevelXpathReader archDescParser = new EadArchDescCLevelXpathReader();
+		EadGlobalXpathReader fullEadParser = new EadGlobalXpathReader();
+		fullEadParser.init();
+		archDescParser.init();
         try {
             JpaUtil.beginDatabaseTransaction();
             for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {

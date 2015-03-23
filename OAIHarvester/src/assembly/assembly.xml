@@ -28,6 +28,11 @@
 	<fileSets>
 		<fileSet>
 			<outputDirectory></outputDirectory>
+			<directory>src/assembly/documentation</directory>
+			<filtered>false</filtered>
+		</fileSet>
+		<fileSet>
+			<outputDirectory></outputDirectory>
 			<directory>src/assembly/files</directory>
 			<filtered>false</filtered>
 		</fileSet>

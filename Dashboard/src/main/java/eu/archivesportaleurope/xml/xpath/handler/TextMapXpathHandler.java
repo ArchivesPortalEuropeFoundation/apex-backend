@@ -1,4 +1,4 @@
-package eu.archivesportaleurope.xml.xpath;
+package eu.archivesportaleurope.xml.xpath.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
+
+import eu.archivesportaleurope.xml.ApeXmlUtil;
 
 public class TextMapXpathHandler extends AbstractXpathHandler {
 	private List<Map<String, List<String>>> results = new ArrayList<Map<String, List<String>>>();
@@ -30,9 +32,9 @@ public class TextMapXpathHandler extends AbstractXpathHandler {
 	@Override
 	protected void writeContent(String content) {
 		if (StringUtils.isNotBlank(content)){
-			temp += removeUnusedCharacters(content);
+			temp += ApeXmlUtil.removeUnusedCharacters(content);
 			if (addWhitespaces){
-				temp += WHITE_SPACE;
+				temp += ApeXmlUtil.WHITE_SPACE;
 			}
 		}
 
@@ -107,12 +109,12 @@ public class TextMapXpathHandler extends AbstractXpathHandler {
 		return result;
 	}
 	public static String getResultAsStringWithWhitespaceWithKey(Map<String, List<String>> source, String key){
-		return convertToString(getResultSet(source, key),0, WHITE_SPACE);	
+		return ApeXmlUtil.convertToString(getResultSet(source, key),0, ApeXmlUtil.WHITE_SPACE);	
 	}
 	public static String getResultAsStringWithWhitespace(Map<String, List<String>> source, String separator){
 		String result = null;
 		for (String key: source.keySet()){
-			String value = convertToString(getResultSet(source, key),0, WHITE_SPACE);
+			String value = ApeXmlUtil.convertToString(getResultSet(source, key),0, ApeXmlUtil.WHITE_SPACE);
 			if (result == null){
 				result = value;
 			}else {
@@ -122,11 +124,7 @@ public class TextMapXpathHandler extends AbstractXpathHandler {
 		}
 		return result;
 	}
-	@Override
-	protected void clear() {
-		results.clear();
-		
-	}
+
 	@Override
 	public boolean isAllTextBelow() {
 		return true;

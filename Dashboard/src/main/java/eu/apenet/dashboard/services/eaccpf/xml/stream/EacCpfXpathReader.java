@@ -4,16 +4,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -22,15 +18,15 @@ import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfPublishData;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
-import eu.archivesportaleurope.xml.xpath.AttributeXpathHandler;
-import eu.archivesportaleurope.xml.xpath.CountXpathHandler;
-import eu.archivesportaleurope.xml.xpath.NestedXpathHandler;
-import eu.archivesportaleurope.xml.xpath.StringXpathHandler;
-import eu.archivesportaleurope.xml.xpath.TextMapXpathHandler;
-import eu.archivesportaleurope.xml.xpath.TextXpathHandler;
-import eu.archivesportaleurope.xml.xpath.XmlStreamHandler;
+import eu.archivesportaleurope.xml.ApeXmlUtil;
+import eu.archivesportaleurope.xml.xpath.AbstractXpathReader;
+import eu.archivesportaleurope.xml.xpath.handler.AttributeXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.CountXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.NestedXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.TextMapXpathHandler;
+import eu.archivesportaleurope.xml.xpath.handler.TextXpathHandler;
 
-public class EacCpfPublishDataFiller {
+public class EacCpfXpathReader extends AbstractXpathReader<EacCpfPublishData> {
 	private static final String DATE_UNKNOWN_START = "unknownStart";
 	private static final String DATE_UNKNOWN_END = "unknownEnd";
 	private static final String DATE_UNKNOWN = "unknown";
@@ -100,9 +96,8 @@ public class EacCpfPublishDataFiller {
 	private TextXpathHandler alternativeSetDescriptiveNoteHandler;	
 	private TextXpathHandler alternativeSetComponentEntryHandler;	
 
-	private List<XmlStreamHandler> eacCpfHandlers = new ArrayList<XmlStreamHandler>();
 
-	public EacCpfPublishDataFiller() {
+	protected void internalInit() throws Exception {
 		/*
 		 * name
 		 */
@@ -186,7 +181,7 @@ public class EacCpfPublishDataFiller {
 		alternativeSetComponentEntryHandler   = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"setComponent", "componentEntry"});
 		
 
-		eacCpfHandlers.add(languageHandler);
+		getXpathHandlers().add(languageHandler);
 		identityHandler.getHandlers().add(entityTypeHandler);
 		identityHandler.getHandlers().add(entityIdHandler);
 		identityHandler.getHandlers().add(namesHandler);
@@ -235,35 +230,15 @@ public class EacCpfPublishDataFiller {
 		
 		alternativeSetHandler.getHandlers().add(alternativeSetDescriptiveNoteHandler);
 		alternativeSetHandler.getHandlers().add(alternativeSetComponentEntryHandler);
-		eacCpfHandlers.add(descriptionHandler);
-		eacCpfHandlers.add(relationsHandler);
-		eacCpfHandlers.add(alternativeSetHandler);
-		eacCpfHandlers.add(identityHandler);
+		getXpathHandlers().add(descriptionHandler);
+		getXpathHandlers().add(relationsHandler);
+		getXpathHandlers().add(alternativeSetHandler);
+		getXpathHandlers().add(identityHandler);
 		
 
 
 	}
 
-	public void processCharacters(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-		for (XmlStreamHandler handler : eacCpfHandlers) {
-			handler.processCharacters(xpathPosition, xmlReader);
-		}
-
-	}
-
-	public void processStartElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-		for (XmlStreamHandler handler : eacCpfHandlers) {
-			handler.processStartElement(xpathPosition, xmlReader);
-		}
-
-	}
-
-	public void processEndElement(LinkedList<QName> xpathPosition, XMLStreamReader xmlReader) throws Exception {
-		for (XmlStreamHandler handler : eacCpfHandlers) {
-			handler.processEndElement(xpathPosition, xmlReader);
-		}
-
-	}
 
 	public void fillData(EacCpfPublishData publishData, EacCpf eacCpf) {
 		publishData.setEntityType(entityTypeHandler.getFirstResult());
@@ -421,7 +396,7 @@ public class EacCpfPublishDataFiller {
 
 	private void add(StringBuilder other, String item) {
 		if (StringUtils.isNotBlank(item)) {
-			other.append(StringXpathHandler.WHITE_SPACE + item);
+			other.append(ApeXmlUtil.WHITE_SPACE + item);
 		}
 	}
 
@@ -431,7 +406,7 @@ public class EacCpfPublishDataFiller {
 
 		for (String isoLanguage : Locale.getISOLanguages()) {
 			try {
-				URL url = EacCpfPublishDataFiller.class.getClassLoader().getResource(
+				URL url = EacCpfXpathReader.class.getClassLoader().getResource(
 						baseName + "_" + isoLanguage + ".properties");
 				if (url != null) {
 					resourceBundles.put(isoLanguage, ResourceBundle.getBundle(baseName, new Locale(isoLanguage)));
