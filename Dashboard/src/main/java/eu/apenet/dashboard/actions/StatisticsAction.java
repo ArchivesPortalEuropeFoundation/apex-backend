@@ -127,6 +127,7 @@ public class StatisticsAction extends AbstractAction {
 			if (institutionStatistics.findingaids > 0){
 				institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
 				institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
+                institutionStatistics.webResources += convertLong(eadDAO.countWebResources(searchOptions));
 			}
 
 			searchOptions.setPublished(null);
@@ -163,6 +164,7 @@ public class StatisticsAction extends AbstractAction {
 		long units = 0;
 		long totalChosDeliveredToEuropeana = 0;
 		long totalChos = 0;
+		long webResources = 0;
 
 		public InstitutionStatistics(String country, String archivalInstitution) {
 			this.country = country;
@@ -186,6 +188,7 @@ public class StatisticsAction extends AbstractAction {
 		long units = 0;
 		long totalChosDeliveredToEuropeana = 0;
 		long totalChos = 0;
+		long webResources = 0;
 
 		public CountryStatistics(String country) {
 			this.country = country;
@@ -209,6 +212,7 @@ public class StatisticsAction extends AbstractAction {
 			units += institutionStatistics.units;
 			totalChos += totalChos;
 			totalChosDeliveredToEuropeana += institutionStatistics.totalChosDeliveredToEuropeana;
+			webResources += institutionStatistics.webResources;
 		}
 	}
 
@@ -245,6 +249,8 @@ public class StatisticsAction extends AbstractAction {
 			fillHeaderCell(colNumber, rowNumber, "#EDM(providedCHOs)");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
+            colNumber++;
+            fillHeaderCell(colNumber, rowNumber, "#EDM(webResources)");
 			rowNumber++;
 		}
 
@@ -286,6 +292,8 @@ public class StatisticsAction extends AbstractAction {
 			fillCell(colNumber, rowNumber, institutionStatistics.totalChos);
 			colNumber++;
 			fillCell(colNumber, rowNumber, institutionStatistics.totalChosDeliveredToEuropeana);
+            colNumber++;
+            fillCell(colNumber, rowNumber, institutionStatistics.webResources);
 			rowNumber++;
 		}
 
@@ -360,6 +368,8 @@ public class StatisticsAction extends AbstractAction {
 			fillHeaderCell(colNumber, rowNumber, "#EDM(providedCHOs)");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
+            colNumber++;
+            fillHeaderCell(colNumber, rowNumber, "#EDM(webResources)");
 			rowNumber++;
 		}
 
@@ -388,6 +398,8 @@ public class StatisticsAction extends AbstractAction {
 			fillCell(colNumber, rowNumber, countryStatistics.totalChos);
 			colNumber++;
 			fillCell(colNumber, rowNumber, countryStatistics.totalChosDeliveredToEuropeana);
+            colNumber++;
+            fillCell(colNumber, rowNumber, countryStatistics.webResources);
 			rowNumber++;
 		}
 

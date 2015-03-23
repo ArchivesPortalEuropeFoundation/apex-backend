@@ -18,6 +18,8 @@ public interface EadDAO extends GenericDAO<Ead, Integer> {
 
 	public Long countUnits(ContentSearchOptions eadSearchOptions);
 
+	public Long countWebResources(ContentSearchOptions eadSearchOptions);
+
 	public Long countDaos(ContentSearchOptions eadSearchOptions);
 	
 	public Long countChos(ContentSearchOptions eadSearchOptions);

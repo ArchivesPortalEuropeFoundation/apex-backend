@@ -113,6 +113,18 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
 
+    @Override
+	public Long countWebResources(ContentSearchOptions eadSearchOptions) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
+		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
+				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfWebResourceEdm"), 0)));
+		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfWebResourceEdm")));
+
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+
 	@Override
 	public Long countDaos(ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();

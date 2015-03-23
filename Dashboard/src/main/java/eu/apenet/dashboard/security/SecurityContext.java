@@ -31,7 +31,7 @@ public final class SecurityContext implements HttpSessionBindingListener{
 	private String name;
 	private Integer partnerId;
 	private Integer countryId = null;
-	private Integer refresh_interval=5;
+	private Integer refresh_interval = 20; //20ms
 	private String countryName = "UNKNOWN";
 	private String countryIsoname;
 	private List<Integer> aiIds = new ArrayList<Integer>();
