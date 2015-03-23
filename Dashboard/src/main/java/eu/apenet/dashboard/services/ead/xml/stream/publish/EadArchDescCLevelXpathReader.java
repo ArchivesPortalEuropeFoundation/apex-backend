@@ -101,13 +101,14 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 					"langmaterial", "language" }, "langcode");
 			daoRoleHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
 					new String[] { "did", "dao" }, ApeXMLConstants.XLINK_NAMESPACE, "role");
+			daoRoleHandler.setAttribute(ApeXMLConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
 
 			extrefHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "otherfindaid",
 					"p", "extref" }, ApeXMLConstants.XLINK_NAMESPACE, "href");
 			
 			controlAccessHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
 			"subject" });
-
+			controlAccessHandler.setConvertToLowerCase(true);
 			getXpathHandlers().add(unitidHandler);
 			getXpathHandlers().add(otherUnitidHandler);
 			getXpathHandlers().add(unittitleHandler);

@@ -31,7 +31,7 @@
 					<c:out value="${topicMapping.sourceGuide.identifier}"/> - <c:out value="${topicMapping.sourceGuide.title}"/>
 				</c:if>
 			</td>
-			<td><c:out value="${topicMapping.controlaccessKeyword}"/></td>
+			<td style="max-width:100px"><c:out value="${topicMapping.controlaccessKeyword}"/></td>
 			<td>
 								<s:form action="displayCreateEditTopicMapping" theme="simple" method="GET">
 									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>

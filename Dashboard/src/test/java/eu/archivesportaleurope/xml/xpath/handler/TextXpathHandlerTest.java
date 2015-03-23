@@ -38,6 +38,11 @@ public class TextXpathHandlerTest extends AbstractTest {
 	}
 	
 	/**
+	 * Test full existing xpath '/ead/c/did/unitid/text()'
+	 * @throws Exception
+	 */
+	
+	/**
 	 * Test full existing xpath '/ead/c/did[not(unitid)]'
 	 * @throws Exception
 	 */
@@ -92,6 +97,27 @@ public class TextXpathHandlerTest extends AbstractTest {
 		Assert.assertEquals("Test item 1", result.get(0));
 		Assert.assertEquals("Test item 2", result.get(1));
 		Assert.assertEquals("Other info", result.get(2));
+	}
+	
+	/**
+	 * Test full existing xpath '/ead/c/did[unitid | unittitle]'
+	 * @throws Exception
+	 */
+	@Test
+	public void fullXpathWithOrAndLowerCase() throws Exception {
+		InputStream inputStream = getInputStream("/eu/archivesportaleurope/xml/xpath/handler/test-file.xml");
+		TextXpathHandler textHandler = new TextXpathHandler(TestConstants.TEST_NAMESPACE, new String[] {TestConstants.EAD.getLocalPart(), 
+				TestConstants.C.getLocalPart(), TestConstants.DID.getLocalPart(),TestConstants.OTHER.getLocalPart() + " | " + TestConstants.UNITTITLE.getLocalPart()  });
+		textHandler.setConvertToLowerCase(true);
+		TestTextXpathReader xpathReader = new TestTextXpathReader(textHandler);
+		XmlParser.parse(inputStream, xpathReader);
+		Assert.assertEquals("test item 1", textHandler.getFirstResult());
+		Assert.assertEquals(3, textHandler.getResult().size());
+		Assert.assertEquals(3, textHandler.getResultSet().size());
+		List<String> result = textHandler.getResult();
+		Assert.assertEquals("test item 1", result.get(0));
+		Assert.assertEquals("test item 2", result.get(1));
+		Assert.assertEquals("other info", result.get(2));
 	}
 	/**
 	 * Test full existing xpath '/ead/c/did/unitid//text()'

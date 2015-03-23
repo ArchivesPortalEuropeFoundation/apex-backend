@@ -24,7 +24,7 @@
 		
 		<tr>
 			<td class="inputLabel"><s:label key="topicmapping.keywords.label" for="keywords" /> &lt;controlaccess&gt;&lt;subject&gt;:<br/>(<s:text name="topicmapping.keywords.controllaccess.split"/>)</td>
-			<td><textarea id="keywords" rows="" cols="" maxlength="255" name="keywords"><c:out value="${keywords}"/></textarea></td>
+			<td><textarea id="keywords" rows="" cols="" maxlength="1500" name="keywords"><c:out value="${keywords}"/></textarea><s:fielderror fieldName="keywords"/></td>
 		</tr>
 	</table>
 	<table>

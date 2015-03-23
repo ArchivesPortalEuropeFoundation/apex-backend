@@ -1,0 +1,1 @@
+alter table topic_mapping alter column controlaccess_keyword TYPE text;

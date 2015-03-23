@@ -94,12 +94,13 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
         try {
             Writer writer = openOutputWriter();
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
-            String eadid = getPrefix() +System.currentTimeMillis();
-            eadid = eadid.substring(0,eadid.length()-4);
+
             CLevelTreeNode levelTreeNode = createCLevelTreeNode();
-            StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode, eadid);
             EadContent eadContent;
             if(StringUtils.isEmpty(getServletRequest().getParameter("key"))){
+                String eadid = getPrefix() +System.currentTimeMillis();
+                eadid = eadid.substring(0,eadid.length()-4);
+                StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode, eadid);
             	Ead hgOrSg = getEad();
 
             	hgOrSg.setEadid(eadid);
@@ -132,6 +133,7 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
 
                 eadContent = DAOFactory.instance().getEadContentDAO().findById(Long.parseLong(keyString));
                 Ead ead = eadContent.getEad();
+                StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode, ead.getEadid());
                 if(!eadContent.getTitleproper().equals(levelTreeNode.getUnittitle()))
                     eadContent.setTitleproper(levelTreeNode.getUnittitle());
                 if(!eadContent.getUnittitle().equals(levelTreeNode.getUnittitle())){

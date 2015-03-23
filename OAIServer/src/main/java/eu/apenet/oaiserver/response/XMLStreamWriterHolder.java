@@ -5,6 +5,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 public class XMLStreamWriterHolder {
@@ -112,6 +113,29 @@ public class XMLStreamWriterHolder {
 			LOGGER.error("Try to write attribute: "  + localName + ", but writer is already closed.");
 		} else {
 			xmlWriter.writeAttribute(prefix, namespaceURI, localName, value);
+		}
+	}
+	protected void writeStartDocument(XMLStreamReader xmlReader) throws XMLStreamException {
+		QName element = xmlReader.getName();
+		if (xmlWriter == null) {
+			LOGGER.error("Try to write element: "  + element.getPrefix() + ":" + element.getLocalPart() + ", but writer is already closed.");
+		} else {
+			xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
+			for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
+				xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i),
+						xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+			}
+			for (int i = 0; i < xmlReader.getNamespaceCount(); i++) {
+				String prefix = xmlReader.getNamespacePrefix(i);
+				String namespaceURI = xmlReader.getNamespaceURI(i);
+
+				if (StringUtils.isEmpty(prefix)) {
+					xmlWriter.writeDefaultNamespace(namespaceURI);
+				} else {
+					xmlWriter.writeNamespace(prefix, namespaceURI);
+				}
+			}
+			numberOfOpenedElements++;
 		}
 	}
 	protected void writeStartElement(XMLStreamReader xmlReader) throws XMLStreamException {

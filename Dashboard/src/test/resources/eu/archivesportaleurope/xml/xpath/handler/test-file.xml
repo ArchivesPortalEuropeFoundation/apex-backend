@@ -15,6 +15,9 @@
 	  		<unitid xlink:href="test">unitid2<p>hello<b>tester</b></p>-old1</unitid>
 	  		<unittitle>Test item 2</unittitle>
 	  		<other>Other info</other>
+	  		<dao xlink:href="http://test.png" xlink:role="IMAGE"/>
+	  		<dao xlink:href="http://test.jpg" xlink:title="c-file2-dao1" xlink:role="IMAGE"/>
+            <dao xlink:href="http://thumbnail.jpg" xlink:title="thumbnail" xlink:role="TEXT"/>
 	  	</did>
 	  </c>	  
 </ead>
