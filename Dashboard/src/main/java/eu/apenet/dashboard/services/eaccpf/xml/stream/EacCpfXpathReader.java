@@ -111,6 +111,7 @@ public class EacCpfXpathReader extends AbstractXpathReader<EacCpfPublishData> {
 		namesHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "nameEntry" });
 		namesHandler.setAttributeValueAsKey("localType");
 		namesParallelHandler = new TextMapXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {  "nameEntryParallel",  "nameEntry" });
+		namesParallelHandler.setAttributeValueAsKey("localType");
 		
 		placesHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "places", "place", "placeEntry" });
 		occupationsHandler = new TextXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] { "occupations", "occupation", "term" });
@@ -291,19 +292,11 @@ public class EacCpfXpathReader extends AbstractXpathReader<EacCpfPublishData> {
 		add(other, alternativeSetDescriptiveNoteHandler.getResultAsStringWithWhitespace());
 		add(other, alternativeSetComponentEntryHandler.getResultAsStringWithWhitespace());		
 		
-		relationsHandler.getHandlers().add(countArchivalMaterialRelationsHandler);
-		relationsHandler.getHandlers().add(countNameRelationsHandler);
-		relationsHandler.getHandlers().add(countCpfRelationHandler);
-		relationsHandler.getHandlers().add(countFunctionRelationHandler);
-		relationsHandler.getHandlers().add(institutionsRelationsHandler);
 		publishData.setOther(other.toString());
 		publishData.setNumberOfArchivalMaterialRelations(countArchivalMaterialRelationsHandler.getCount());
 		publishData.setNumberOfNameRelations(countNameRelationsHandler.getCount());
 		publishData.setNumberOfCpfRelations(countCpfRelationHandler.getCount());
 		publishData.setNumberOfFunctionRelations(countFunctionRelationHandler.getCount());
-		countCpfRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"cpfRelation"});		
-		countFunctionRelationHandler = new CountXpathHandler(ApeXMLConstants.APE_EAC_CPF_NAMESPACE, new String[] {"functionRelation"});		
-
 		/*
 		 * dates
 		 */

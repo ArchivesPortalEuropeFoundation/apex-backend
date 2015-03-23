@@ -1511,9 +1511,11 @@ public class CreateEacCpf extends EacCpfAction {
         FromDate fromDate = new FromDate();
 
         //when date is known, fill in the values, else set localType of parent range to unknown and element
-        if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date1year + rowCounter))[0].isEmpty()) {
+        if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date1text + rowCounter))[0].isEmpty()) {
             //retrieve year
-            standardDate.append(((String[]) parameters.get(date1year + rowCounter))[0]);
+            if (!((String[]) parameters.get(date1year + rowCounter))[0].isEmpty()) {
+                standardDate.append(((String[]) parameters.get(date1year + rowCounter))[0]);
+            }
             //if available, retrieve month
             if (!((String[]) parameters.get(date1month + rowCounter))[0].isEmpty()) {
                 standardDate.append("-");
@@ -1525,7 +1527,9 @@ public class CreateEacCpf extends EacCpfAction {
                 }
             }
             //set element values
-            fromDate.setStandardDate(standardDate.toString());
+            if(!standardDate.toString().isEmpty()){
+                fromDate.setStandardDate(standardDate.toString());
+            }
             fromDate.setContent(((String[]) parameters.get(date1text + rowCounter))[0]);
         } else if (((String[]) parameters.get(date1radio + rowCounter))[0].equals(UNKNOWN)) {
             fromDate.setContent(UNKNOWN);
@@ -1536,8 +1540,10 @@ public class CreateEacCpf extends EacCpfAction {
         //add toDate if known; same procedure as with fromDate
         ToDate toDate = new ToDate();
 
-        if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date2year + rowCounter))[0].isEmpty()) {
-            standardDate.append(((String[]) parameters.get(date2year + rowCounter))[0]);
+        if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date2text + rowCounter))[0].isEmpty()) {
+            if (!((String[]) parameters.get(date1year + rowCounter))[0].isEmpty()) {
+                standardDate.append(((String[]) parameters.get(date2year + rowCounter))[0]);
+            }
             if (!((String[]) parameters.get(date2month + rowCounter))[0].isEmpty()) {
                 standardDate.append("-");
                 standardDate.append(((String[]) parameters.get(date2month + rowCounter))[0]);
@@ -1546,7 +1552,9 @@ public class CreateEacCpf extends EacCpfAction {
                     standardDate.append(((String[]) parameters.get(date2day + rowCounter))[0]);
                 }
             }
-            toDate.setStandardDate(standardDate.toString());
+            if(!standardDate.toString().isEmpty()){
+                toDate.setStandardDate(standardDate.toString());
+            }
             toDate.setContent(((String[]) parameters.get(date2text + rowCounter))[0]);
         } else if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(UNKNOWN)) {
             toDate.setContent(UNKNOWN);
