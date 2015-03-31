@@ -39,7 +39,9 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 	private StringXpathHandler unitdateHandler;
 	private AttributeXpathHandler unitdateNormalHander;
 	
-	private TextXpathHandler controlAccessHandler;
+	private TextXpathHandler controlAccessSubjectHandler;
+	private TextXpathHandler controlAccessFunctionHandler;
+	private TextXpathHandler controlAccessGenreformHandler;
 	/*
 	 * other
 	 */
@@ -55,74 +57,84 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 	private final static List<String> POSSIBLE_ROLE_DAO_VALUES = Arrays.asList(SolrValues.ROLE_DAOS_ALL);
 	
 	protected void internalInit() throws Exception {
-			/*
-			 * unitids
-			 */
-			unitidHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did", "unitid" });
-			unitidHandler.setAllTextBelow(true);
-			unitidHandler.setAttribute("type", "call number", false);
-			otherUnitidHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
-					new String[] { "did", "unitid" });
-			otherUnitidHandler.setAttribute("type", "call number", true);
-			/*
-			 * unittitle
-			 */
-			unittitleHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
-					"unittitle" }, true);
-			unittitleHandler.setAllTextBelow(true);
-			/*
-			 * scopecontent
-			 */
-			scopecontentHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
-					new String[] { "scopecontent" }, true);
-			scopecontentHandler.setAllTextBelow(true);
+        /*
+         * unitids
+         */
+        unitidHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did", "unitid" });
+        unitidHandler.setAllTextBelow(true);
+        unitidHandler.setAttribute("type", "call number", false);
+        otherUnitidHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
+                new String[] { "did", "unitid" });
+        otherUnitidHandler.setAttribute("type", "call number", true);
+        /*
+         * unittitle
+         */
+        unittitleHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
+                "unittitle" }, true);
+        unittitleHandler.setAllTextBelow(true);
+        /*
+         * scopecontent
+         */
+        scopecontentHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
+                new String[] { "scopecontent" }, true);
+        scopecontentHandler.setAllTextBelow(true);
 
-			/*
-			 * unitdate
-			 */
-			unitdateHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
-					new String[] { "did", "unitdate" });
-			unitdateNormalHander = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
-					"unitdate" }, "normal");
-			unitdateNormalHander.setOnlyFirst(true);
-			/*
-			 * other
-			 */
-			didOtherHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
-					"not(unittitle | unitid | unitdate | dao)" }, true);
-			didOtherHandler.setAllTextBelow(true);
-			otherHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
-					new String[] { "not(scopecontent | did)" }, true);
-			otherHandler.setAllTextBelow(true);
+        /*
+         * unitdate
+         */
+        unitdateHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
+                new String[] { "did", "unitdate" });
+        unitdateNormalHander = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
+                "unitdate" }, "normal");
+        unitdateNormalHander.setOnlyFirst(true);
+        /*
+         * other
+         */
+        didOtherHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
+                "not(unittitle | unitid | unitdate | dao)" }, true);
+        didOtherHandler.setAllTextBelow(true);
+        otherHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
+                new String[] { "not(scopecontent | did)" }, true);
+        otherHandler.setAllTextBelow(true);
 
-			countDaoHandler = new CountXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did", "dao" });
-			countDaoHandler.setAttribute(ApeXMLConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
-			langmaterialHander = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
-					"langmaterial", "language" }, "langcode");
-			daoRoleHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
-					new String[] { "did", "dao" }, ApeXMLConstants.XLINK_NAMESPACE, "role");
-			daoRoleHandler.setAttribute(ApeXMLConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
+        countDaoHandler = new CountXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did", "dao" });
+        countDaoHandler.setAttribute(ApeXMLConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
+        langmaterialHander = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "did",
+                "langmaterial", "language" }, "langcode");
+        daoRoleHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE,
+                new String[] { "did", "dao" }, ApeXMLConstants.XLINK_NAMESPACE, "role");
+        daoRoleHandler.setAttribute(ApeXMLConstants.XLINK_NAMESPACE, "title", "thumbnail", true);
 
-			extrefHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "otherfindaid",
-					"p", "extref" }, ApeXMLConstants.XLINK_NAMESPACE, "href");
-			
-			controlAccessHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
-			"subject" });
-			controlAccessHandler.setConvertToLowerCase(true);
-			getXpathHandlers().add(unitidHandler);
-			getXpathHandlers().add(otherUnitidHandler);
-			getXpathHandlers().add(unittitleHandler);
-			getXpathHandlers().add(scopecontentHandler);
-			getXpathHandlers().add(unitdateHandler);
-			getXpathHandlers().add(unitdateNormalHander);
-			getXpathHandlers().add(didOtherHandler);
-			getXpathHandlers().add(otherHandler);
-			getXpathHandlers().add(countDaoHandler);
-			getXpathHandlers().add(langmaterialHander);
-			getXpathHandlers().add(daoRoleHandler);
-			getXpathHandlers().add(extrefHandler);
-			getXpathHandlers().add(controlAccessHandler);
+        extrefHandler = new AttributeXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "otherfindaid",
+                "p", "extref" }, ApeXMLConstants.XLINK_NAMESPACE, "href");
 
+        controlAccessSubjectHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
+                "subject" });
+        controlAccessSubjectHandler.setConvertToLowerCase(true);
+
+        controlAccessFunctionHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
+                "function" });
+        controlAccessFunctionHandler.setConvertToLowerCase(true);
+
+        controlAccessGenreformHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
+                "genreform" });
+        controlAccessGenreformHandler.setConvertToLowerCase(true);
+
+        getXpathHandlers().add(unitidHandler);
+        getXpathHandlers().add(otherUnitidHandler);
+        getXpathHandlers().add(unittitleHandler);
+        getXpathHandlers().add(scopecontentHandler);
+        getXpathHandlers().add(unitdateHandler);
+        getXpathHandlers().add(unitdateNormalHander);
+        getXpathHandlers().add(didOtherHandler);
+        getXpathHandlers().add(otherHandler);
+        getXpathHandlers().add(countDaoHandler);
+        getXpathHandlers().add(langmaterialHander);
+        getXpathHandlers().add(daoRoleHandler);
+        getXpathHandlers().add(extrefHandler);
+        getXpathHandlers().add(controlAccessSubjectHandler);
+        getXpathHandlers().add(controlAccessFunctionHandler);
+        getXpathHandlers().add(controlAccessGenreformHandler);
 	}
 
 	public void fillData(EadPublishData publishData, CLevel clevel) {
@@ -148,7 +160,9 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 		publishData.setUnitdateNormal(unitdateNormalHander.getFirstResult());
 		publishData.setNumberOfDaos(countDaoHandler.getCount());
 		publishData.setLangmaterial(langmaterialHander.getResultAsStringWithWhitespace());
-		publishData.setControlAccessSubjects(controlAccessHandler.getResultSet());
+		publishData.setControlAccessSubjectsFunctionsGenreforms(controlAccessSubjectHandler.getResultSet());
+		publishData.getControlAccessSubjectsFunctionsGenreforms().addAll(controlAccessFunctionHandler.getResultSet());
+		publishData.getControlAccessSubjectsFunctionsGenreforms().addAll(controlAccessGenreformHandler.getResultSet());
 		for (String roledao : daoRoleHandler.getResult()) {
 			String roledaoTemp = roledao.toUpperCase();
 			if (POSSIBLE_ROLE_DAO_VALUES.contains(roledaoTemp)){

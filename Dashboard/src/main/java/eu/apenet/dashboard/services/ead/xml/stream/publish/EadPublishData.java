@@ -19,7 +19,7 @@ public class EadPublishData extends PublishData {
 	private int numberOfDaos = 0;
 	private Set<String> roledao = new HashSet<String>();
 	private String globalLanguage;
-	private Set<String> controlAccessSubjects = new HashSet<String>();
+	private Set<String> controlAccessSubjectsFunctionsGenreforms = new HashSet<String>();
 	
 	public String getUnitid() {
 		return unitid;
@@ -95,11 +95,11 @@ public class EadPublishData extends PublishData {
 		this.firstOtherUnitid = firstOtherUnitid;
 	}
 	
-	public Set<String> getControlAccessSubjects() {
-		return controlAccessSubjects;
+	public Set<String> getControlAccessSubjectsFunctionsGenreforms() {
+		return controlAccessSubjectsFunctionsGenreforms;
 	}
-	public void setControlAccessSubjects(Set<String> controlAccessSubjects) {
-		this.controlAccessSubjects = controlAccessSubjects;
+	public void setControlAccessSubjectsFunctionsGenreforms(Set<String> controlAccessSubjectsFunctionsGenreforms) {
+		this.controlAccessSubjectsFunctionsGenreforms = controlAccessSubjectsFunctionsGenreforms;
 	}
 	@Override
 	public String toString() {
