@@ -5,6 +5,7 @@
  */
 package eu.apenet.dashboard.manual;
 
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dpt.utils.service.TransformationTool;
@@ -31,6 +32,7 @@ import org.xml.sax.SAXException;
 public class GenerateEadValidationReportAction extends AbstractInstitutionAction {
 
     private String id;
+    protected Integer xmlTypeId;
     private String counterDao;
     private String counterUnitdate;
     private String counterUnittitle;
@@ -42,6 +44,14 @@ public class GenerateEadValidationReportAction extends AbstractInstitutionAction
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getXmlTypeId() {
+        return xmlTypeId;
+    }
+
+    public void setXmlTypeId(Integer xmlTypeId) {
+        this.xmlTypeId = xmlTypeId;
     }
 
     public String getCounterDao() {
@@ -76,12 +86,16 @@ public class GenerateEadValidationReportAction extends AbstractInstitutionAction
         this.counterWrongHref = counterWrongHref;
     }
 
+    protected XmlType getXmlType() {
+        return XmlType.getType(xmlTypeId);
+    }
+
     @Override
     public String execute() throws Exception {
         EadDAO dao = DAOFactory.instance().getEadDAO();
         if (NumberUtils.isNumber(id)) {
 
-            Ead ead = dao.findById(Integer.parseInt(id), FindingAid.class);
+            Ead ead = dao.findById(Integer.parseInt(id), getXmlType().getClazz());
             if (valid(ead)) {
                 File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + ead.getPath());
                 File reportScript = new File(APEnetUtilities.getDashboardConfig().getXslDirPath()
