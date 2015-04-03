@@ -1178,5 +1178,11 @@
         <action name="showLogFiles" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction">
             <result name="success" type="tiles">showLogFiles</result>
         </action>
+        
+        <action name="manageQueueItemOfInstitution" class="eu.apenet.dashboard.queue.ManageQueueAction" method="manageQueueItemOfInstitution">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageQueue</param>
+            </result>
+        </action>
     </package>
 </struts>
