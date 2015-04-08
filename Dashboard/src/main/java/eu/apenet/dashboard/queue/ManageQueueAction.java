@@ -250,8 +250,8 @@ public class ManageQueueAction extends AbstractAction {
     public String manageQueueItemOfInstitution() throws Exception {
         if (SecurityContext.get().isAdmin()) {
             QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-            List<QueueItem> queueItems = queueDAO.getItemsOfInstitution(aiId);
             if ("DELETE".equals(selectedAction)) {
+                List<QueueItem> queueItems = queueDAO.getItemsOfInstitution(aiId);
                 for (QueueItem queueItem : queueItems) {
                     EadService.deleteFromQueue(queueItem);
                 }
