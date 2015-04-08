@@ -30,209 +30,246 @@ import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 
 public class ManageQueueAction extends AbstractAction {
-	private static final Logger LOGGER = Logger.getLogger(ManageQueueAction.class);
-	private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-	private Integer queueItemId;
-	private String selectedAction;
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7015833987047809962L;
 
-	public Integer getQueueItemId() {
-		return queueItemId;
-	}
+    private static final Logger LOGGER = Logger.getLogger(ManageQueueAction.class);
+    private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+    private Integer queueItemId;
+    private Integer aiId;
+    private String selectedAction;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 7015833987047809962L;
 
-	public void setQueueItemId(Integer queueItemId) {
-		this.queueItemId = queueItemId;
-	}
-	
+    public Integer getQueueItemId() {
+        return queueItemId;
+    }
 
-	public String getSelectedAction() {
-		return selectedAction;
-	}
+    public void setQueueItemId(Integer queueItemId) {
+        this.queueItemId = queueItemId;
+    }
 
-	public void setSelectedAction(String selectedAction) {
-		this.selectedAction = selectedAction;
-	}
-	
+    public Integer getAiId() {
+        return aiId;
+    }
 
+    public void setAiId(Integer aiId) {
+        this.aiId = aiId;
+    }
 
+    public String getSelectedAction() {
+        return selectedAction;
+    }
 
-	@Override
-	protected void buildBreadcrumbs() {
-		super.buildBreadcrumbs();
-		addBreadcrumb(getText("admin.queuemanagement.title"));
-	}
+    public void setSelectedAction(String selectedAction) {
+        this.selectedAction = selectedAction;
+    }
 
-	public String execute() throws Exception {
-		QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-		getServletRequest().setAttribute("numberOfItemsInQueue", queueDAO.countItems());
-		getServletRequest().setAttribute("firstItems", convert(queueDAO.getFirstItems()));
-		getServletRequest().setAttribute("countsByArchivalInstitutions", queueDAO.countByArchivalInstitutions());
-		getServletRequest().setAttribute("disabledItems", convert(queueDAO.getDisabledItems()));
-		getServletRequest().setAttribute("itemsWithErrors", convert(queueDAO.getItemsWithErrors()));
-		getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
-		getServletRequest().setAttribute("queueStatus", QueueDaemon.getQueueStatus());
-		getServletRequest().setAttribute("queueStatusCss", QueueDaemon.getQueueStatusCss());
-		
-		getServletRequest().setAttribute("queueProcessing", QueueDaemon.isQueueProcessing());
-		getServletRequest().setAttribute("europeanaHarvestingStarted", EadService.isHarvestingStarted());
-		getServletRequest().setAttribute("dashboardHarvestingStarted", HarvesterDaemon.isHarvesterProcessing());
-		getServletRequest().setAttribute("maintenanceMode", APEnetUtilities.getDashboardConfig().isMaintenanceMode());
-		getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
-		Date endDateTime = DAOFactory.instance().getResumptionTokenDAO().getPossibleEndDateTime();
-		if (endDateTime != null)
-			getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
-		return SUCCESS;
-	}
+    @Override
+    protected void buildBreadcrumbs() {
+        super.buildBreadcrumbs();
+        addBreadcrumb(getText("admin.queuemanagement.title"));
+    }
 
-	private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
-		List<DisplayQueueItem> results = new ArrayList<DisplayQueueItem>();
-		for (QueueItem queueItem : queueItems) {
-			DisplayQueueItem displayItem = new DisplayQueueItem();
-			displayItem.setId(queueItem.getId());
-			displayItem.setAction(queueItem.getAction().toString());
-			displayItem.setPriority(queueItem.getPriority());
-			displayItem.setErrors(queueItem.getErrors());
-			try {
-				if (queueItem.getAbstractContent() != null) {
-					AbstractContent content = queueItem.getAbstractContent();
-					displayItem.setEadidOrFilename(content.getIdentifier());
-					displayItem.setArchivalInstitution(content.getArchivalInstitution().getAiname());
-				} else if (queueItem.getUpFile() != null) {
-					UpFile upFile = queueItem.getUpFile();
-					displayItem.setEadidOrFilename(upFile.getPath() + upFile.getFilename());
-					displayItem.setArchivalInstitution(upFile.getArchivalInstitution().getAiname());
-				}
-				if (QueueAction.USE_PROFILE.equals(queueItem.getAction())) {
-					Properties preferences = EadService.readProperties(queueItem.getPreferences());
-					IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction
-							.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
-					displayItem.setAction(displayItem.getAction() + " ("
-							+ getText(ingestionprofileDefaultUploadAction.getResourceName()) + ")");
-				}
-			} catch (Exception e) {
+    public String execute() throws Exception {
+        QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+        getServletRequest().setAttribute("numberOfItemsInQueue", queueDAO.countItems());
+        getServletRequest().setAttribute("firstItems", convert(queueDAO.getFirstItems()));
+        getServletRequest().setAttribute("countsByArchivalInstitutions", queueDAO.countByArchivalInstitutions());
+        getServletRequest().setAttribute("disabledItems", convert(queueDAO.getDisabledItems()));
+        getServletRequest().setAttribute("itemsWithErrors", convert(queueDAO.getItemsWithErrors()));
+        getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
+        getServletRequest().setAttribute("queueStatus", QueueDaemon.getQueueStatus());
+        getServletRequest().setAttribute("queueStatusCss", QueueDaemon.getQueueStatusCss());
 
-			}
-			results.add(displayItem);
-		}
-		return results;
-	}
+        getServletRequest().setAttribute("queueProcessing", QueueDaemon.isQueueProcessing());
+        getServletRequest().setAttribute("europeanaHarvestingStarted", EadService.isHarvestingStarted());
+        getServletRequest().setAttribute("dashboardHarvestingStarted", HarvesterDaemon.isHarvesterProcessing());
+        getServletRequest().setAttribute("maintenanceMode", APEnetUtilities.getDashboardConfig().isMaintenanceMode());
+        getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
+        Date endDateTime = DAOFactory.instance().getResumptionTokenDAO().getPossibleEndDateTime();
+        if (endDateTime != null) {
+            getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
+        }
+        return SUCCESS;
+    }
 
-	public String manageQueueItem() throws Exception {
-		if(SecurityContext.get().isAdmin()) {
-			QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-			QueueItem queueItem = queueDAO.findById(queueItemId);
-			if ("DELETE".equals(selectedAction)) {
-				EadService.deleteFromQueue(queueItem);
-			} else {
-				queueItem.setErrors(null);
-				if ("DISABLE".equals(selectedAction)) {
-					queueItem.setPriority(0);
-				} else if ("ENABLE".equals(selectedAction)) {
-					queueItem.setPriority(1000);
-				} else if ("HIGHEST".equals(selectedAction)) {
-					queueItem.setPriority(5000);
-				} else if ("LOWEST".equals(selectedAction)) {
-					queueItem.setPriority(1);
-				}
-				queueDAO.store(queueItem);
-			}
-		}
-		return SUCCESS;
-	}
+    private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
+        List<DisplayQueueItem> results = new ArrayList<DisplayQueueItem>();
+        for (QueueItem queueItem : queueItems) {
+            DisplayQueueItem displayItem = new DisplayQueueItem();
+            displayItem.setId(queueItem.getId());
+            displayItem.setAction(queueItem.getAction().toString());
+            displayItem.setPriority(queueItem.getPriority());
+            displayItem.setErrors(queueItem.getErrors());
+            try {
+                if (queueItem.getAbstractContent() != null) {
+                    AbstractContent content = queueItem.getAbstractContent();
+                    displayItem.setEadidOrFilename(content.getIdentifier());
+                    displayItem.setArchivalInstitution(content.getArchivalInstitution().getAiname());
+                } else if (queueItem.getUpFile() != null) {
+                    UpFile upFile = queueItem.getUpFile();
+                    displayItem.setEadidOrFilename(upFile.getPath() + upFile.getFilename());
+                    displayItem.setArchivalInstitution(upFile.getArchivalInstitution().getAiname());
+                }
+                if (QueueAction.USE_PROFILE.equals(queueItem.getAction())) {
+                    Properties preferences = EadService.readProperties(queueItem.getPreferences());
+                    IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction
+                            .getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+                    displayItem.setAction(displayItem.getAction() + " ("
+                            + getText(ingestionprofileDefaultUploadAction.getResourceName()) + ")");
+                }
+            } catch (Exception e) {
 
-	public String deleteAllQueueItemsWithErrors() throws Exception {
-		if(SecurityContext.get().isAdmin()) {
-			QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-			List<QueueItem> queueItems = queueDAO.getItemsWithErrors();
-			for (QueueItem queueItem : queueItems) {
-				try {
-					EadService.deleteFromQueue(queueItem);
-				} catch (Exception e) {
-					LOGGER.error(e.getMessage(), e);
-				}
-			}
-		}
-		return SUCCESS;
-	}
+            }
+            results.add(displayItem);
+        }
+        return results;
+    }
 
-	public String deleteAllUnusedUploadFiles() throws Exception {
-		if(SecurityContext.get().isAdmin())
-			EadService.deleteAllUnusedUploadFiles();
-		return SUCCESS;
-	}
+    public String manageQueueItem() throws Exception {
+        if (SecurityContext.get().isAdmin()) {
+            QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+            QueueItem queueItem = queueDAO.findById(queueItemId);
+            if ("DELETE".equals(selectedAction)) {
+                EadService.deleteFromQueue(queueItem);
+            } else {
+                queueItem.setErrors(null);
+                if ("DISABLE".equals(selectedAction)) {
+                    queueItem.setPriority(0);
+                } else if ("ENABLE".equals(selectedAction)) {
+                    queueItem.setPriority(1000);
+                } else if ("HIGHEST".equals(selectedAction)) {
+                    queueItem.setPriority(5000);
+                } else if ("LOWEST".equals(selectedAction)) {
+                    queueItem.setPriority(1);
+                }
+                queueDAO.store(queueItem);
+            }
+        }
+        return SUCCESS;
+    }
 
-	public String forceSolrCommit() throws Exception {
-		if(SecurityContext.get().isAdmin()) {
-			try {
-				SolrUtil.forceSolrCommit();
-			} catch (Exception de) {
-				LOGGER.error(de.getMessage(), de);
-			}
-		}
-		return SUCCESS;
-	}
+    public String deleteAllQueueItemsWithErrors() throws Exception {
+        if (SecurityContext.get().isAdmin()) {
+            QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+            List<QueueItem> queueItems = queueDAO.getItemsWithErrors();
+            for (QueueItem queueItem : queueItems) {
+                try {
+                    EadService.deleteFromQueue(queueItem);
+                } catch (Exception e) {
+                    LOGGER.error(e.getMessage(), e);
+                }
+            }
+        }
+        return SUCCESS;
+    }
 
-	public String solrOptimize() throws Exception {
-		if(SecurityContext.get().isAdmin()) {
-			try {
-				SolrUtil.solrOptimize();
-			} catch (Exception de) {
-				LOGGER.error(de.getMessage(), de);
-			}
-		}
-		return SUCCESS;
-	}
-	
-	public String republishAllEagFiles(){
-		if(SecurityContext.get().isAdmin()) {
-			EagSolrPublisher publisher = new EagSolrPublisher();
-			try {
-				publisher.deleteEverything();
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsWithRepositoryCode();
-			for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
-				try {
-					LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
-					XmlEagParser.parseAndPublish(archivalInstitution);
-				} catch (Exception e) {
-					LOGGER.error(e.getMessage(), e);
-				}
-			}
-		}
-		return SUCCESS;
-	}
-	public String rebuildAutosuggestion() throws SolrServerException{
-		if(SecurityContext.get().isAdmin())
-			SolrUtil.rebuildAutosuggestion();
-		return SUCCESS;		
-	}
-	public String changeMaintenanceMode(){
-		if(SecurityContext.get().isAdmin()) {
-			if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()) {
-				APEnetUtilities.getDashboardConfig().setMaintenanceMode(false);
-				ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_DEACTIVATE);
-			} else {
-				APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
-				ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_ACTIVATE);
-			}
-		}
-		return SUCCESS;
-	}
-	public String startStopQueue() {
-		if(SecurityContext.get().isAdmin()) {
-			if (QueueDaemon.isActive()) {
-				QueueDaemon.stop();
-			} else {
-				QueueDaemon.start();
-			}
-		}
-		return SUCCESS;
-	}
+    public String deleteAllUnusedUploadFiles() throws Exception {
+        if (SecurityContext.get().isAdmin()) {
+            EadService.deleteAllUnusedUploadFiles();
+        }
+        return SUCCESS;
+    }
+
+    public String forceSolrCommit() throws Exception {
+        if (SecurityContext.get().isAdmin()) {
+            try {
+                SolrUtil.forceSolrCommit();
+            } catch (Exception de) {
+                LOGGER.error(de.getMessage(), de);
+            }
+        }
+        return SUCCESS;
+    }
+
+    public String solrOptimize() throws Exception {
+        if (SecurityContext.get().isAdmin()) {
+            try {
+                SolrUtil.solrOptimize();
+            } catch (Exception de) {
+                LOGGER.error(de.getMessage(), de);
+            }
+        }
+        return SUCCESS;
+    }
+
+    public String republishAllEagFiles() {
+        if (SecurityContext.get().isAdmin()) {
+            EagSolrPublisher publisher = new EagSolrPublisher();
+            try {
+                publisher.deleteEverything();
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+            ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+            List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsWithRepositoryCode();
+            for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
+                try {
+                    LOGGER.info("Publish : " + archivalInstitution.getAiId() + " " + archivalInstitution.getAiname());
+                    XmlEagParser.parseAndPublish(archivalInstitution);
+                } catch (Exception e) {
+                    LOGGER.error(e.getMessage(), e);
+                }
+            }
+        }
+        return SUCCESS;
+    }
+
+    public String rebuildAutosuggestion() throws SolrServerException {
+        if (SecurityContext.get().isAdmin()) {
+            SolrUtil.rebuildAutosuggestion();
+        }
+        return SUCCESS;
+    }
+
+    public String changeMaintenanceMode() {
+        if (SecurityContext.get().isAdmin()) {
+            if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()) {
+                APEnetUtilities.getDashboardConfig().setMaintenanceMode(false);
+                ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_DEACTIVATE);
+            } else {
+                APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
+                ChangeControl.logOperation(ChangeControl.MAINTENANCE_MODE_ACTIVATE);
+            }
+        }
+        return SUCCESS;
+    }
+
+    public String startStopQueue() {
+        if (SecurityContext.get().isAdmin()) {
+            if (QueueDaemon.isActive()) {
+                QueueDaemon.stop();
+            } else {
+                QueueDaemon.start();
+            }
+        }
+        return SUCCESS;
+    }
+
+    public String manageQueueItemOfInstitution() throws Exception {
+        if (SecurityContext.get().isAdmin()) {
+            QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+            List<QueueItem> queueItems = queueDAO.getItemsOfInstitution(aiId);
+            for (QueueItem queueItem : queueItems) {
+                if ("DELETE".equals(selectedAction)) {
+                    EadService.deleteFromQueue(queueItem);
+                } else {
+                    queueItem.setErrors(null);
+                    if ("DISABLE".equals(selectedAction)) {
+                        queueItem.setPriority(0);
+                    } else if ("ENABLE".equals(selectedAction)) {
+                        queueItem.setPriority(1000);
+                    } else if ("HIGHEST".equals(selectedAction)) {
+                        queueItem.setPriority(5000);
+                    } else if ("LOWEST".equals(selectedAction)) {
+                        queueItem.setPriority(1);
+                    }
+                    queueDAO.store(queueItem);
+                }
+            }
+        }
+        return SUCCESS;
+    }
 
 }

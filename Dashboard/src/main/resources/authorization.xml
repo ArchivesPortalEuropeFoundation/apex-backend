@@ -69,7 +69,8 @@
             viewDptVersions, addVersion, deleteVersion,startStopQueue,manageQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
             startStopHarvester,solrOptimize,
             eag2012GeoCoordinates, changeIdentifierInDDBB, fixALOrderInDDBB, republishAllEagFiles,showLogFiles,downloadLogFile,changeMaintenanceMode,rebuildAutosuggestion,
-            xslUploadChooseCountry,xslUploadChooseInstitution,xslUploadFile
+            xslUploadChooseCountry,xslUploadChooseInstitution,xslUploadFile,
+            manageQueueItemOfInstitution
         </group>
     </groups>
     <role-mappings>
