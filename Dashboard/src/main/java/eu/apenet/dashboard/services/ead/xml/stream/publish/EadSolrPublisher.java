@@ -119,7 +119,7 @@ public class EadSolrPublisher {
 
 	public long publishArchdesc(EadPublishData publishData) throws Exception {
 		archivalinstitution = ead.getArchivalInstitution();
-		addTopics(topicsByArchdescControlAccess, publishData.getControlAccessSubjectsFunctionsGenreforms());
+		addTopics(topicsByArchdescControlAccess, publishData.getControlAccessSubjectsOccupationsGenreforms());
 		parseCLevelOrArchdesc(false, publishData);
 		language = publishData.getGlobalLanguage();
 		return 0;
@@ -385,7 +385,7 @@ public class EadSolrPublisher {
 		topics.addAll(topicsBySourceGuides);
 		topics.addAll(topicsByArchdescControlAccess);
 		if (clevel) {
-			addTopics(topics, publishData.getControlAccessSubjectsFunctionsGenreforms());
+			addTopics(topics, publishData.getControlAccessSubjectsOccupationsGenreforms());
 		}
 		if (topics.size() > 0) {
 			doc1.addField(SolrFields.TOPIC_FACET, topics);

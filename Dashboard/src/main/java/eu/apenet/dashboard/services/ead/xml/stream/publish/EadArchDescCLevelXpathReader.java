@@ -40,7 +40,7 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 	private AttributeXpathHandler unitdateNormalHander;
 	
 	private TextXpathHandler controlAccessSubjectHandler;
-	private TextXpathHandler controlAccessFunctionHandler;
+	private TextXpathHandler controlAccessOccupationHandler;
 	private TextXpathHandler controlAccessGenreformHandler;
 	/*
 	 * other
@@ -112,9 +112,9 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
                 "subject" });
         controlAccessSubjectHandler.setConvertToLowerCase(true);
 
-        controlAccessFunctionHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
-                "function" });
-        controlAccessFunctionHandler.setConvertToLowerCase(true);
+        controlAccessOccupationHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
+                "occupation" });
+        controlAccessOccupationHandler.setConvertToLowerCase(true);
 
         controlAccessGenreformHandler = new TextXpathHandler(ApeXMLConstants.APE_EAD_NAMESPACE, new String[] { "controlaccess",
                 "genreform" });
@@ -133,7 +133,7 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
         getXpathHandlers().add(daoRoleHandler);
         getXpathHandlers().add(extrefHandler);
         getXpathHandlers().add(controlAccessSubjectHandler);
-        getXpathHandlers().add(controlAccessFunctionHandler);
+        getXpathHandlers().add(controlAccessOccupationHandler);
         getXpathHandlers().add(controlAccessGenreformHandler);
 	}
 
@@ -160,9 +160,9 @@ public class EadArchDescCLevelXpathReader extends AbstractXpathReader<EadPublish
 		publishData.setUnitdateNormal(unitdateNormalHander.getFirstResult());
 		publishData.setNumberOfDaos(countDaoHandler.getCount());
 		publishData.setLangmaterial(langmaterialHander.getResultAsStringWithWhitespace());
-		publishData.setControlAccessSubjectsFunctionsGenreforms(controlAccessSubjectHandler.getResultSet());
-		publishData.getControlAccessSubjectsFunctionsGenreforms().addAll(controlAccessFunctionHandler.getResultSet());
-		publishData.getControlAccessSubjectsFunctionsGenreforms().addAll(controlAccessGenreformHandler.getResultSet());
+		publishData.setControlAccessSubjectsOccupationsGenreforms(controlAccessSubjectHandler.getResultSet());
+		publishData.getControlAccessSubjectsOccupationsGenreforms().addAll(controlAccessOccupationHandler.getResultSet());
+		publishData.getControlAccessSubjectsOccupationsGenreforms().addAll(controlAccessGenreformHandler.getResultSet());
 		for (String roledao : daoRoleHandler.getResult()) {
 			String roledaoTemp = roledao.toUpperCase();
 			if (POSSIBLE_ROLE_DAO_VALUES.contains(roledaoTemp)){
