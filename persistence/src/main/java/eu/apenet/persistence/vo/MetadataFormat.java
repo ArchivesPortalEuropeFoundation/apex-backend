@@ -1,7 +1,8 @@
 package eu.apenet.persistence.vo;
 
 public enum MetadataFormat {
-	EDM("edm");;
+	EDM("edm"),
+    EAD("ead");
 
 	private String name;
 

@@ -7,6 +7,7 @@ import javax.xml.stream.XMLStreamException;
 
 import eu.apenet.oaiserver.config.Configuration;
 import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
+import eu.apenet.oaiserver.config.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.util.OAIUtils;
 
 public class IdentifyResponse extends AbstractResponse {
@@ -28,7 +29,7 @@ public class IdentifyResponse extends AbstractResponse {
 
 	@Override
 	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params) throws XMLStreamException {
-        MetadataObjectDAOFront metadataObjectDAOFront = new MetadataObjectDAOFront();
+        MetadataObjectDAOFront metadataObjectDAOFront = new MetadataObjectDAOFrontImpl();
 		writer.writeStartElement("Identify");
 		writer.writeTextElement("repositoryName",REPOSITORY_NAME );
 		writer.writeTextElement("baseURL",params.get(AbstractResponse.REQUEST_URL) );

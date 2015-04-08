@@ -7,6 +7,7 @@ import javax.xml.stream.XMLStreamException;
 
 import eu.apenet.oaiserver.config.MetadataFormats;
 import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
+import eu.apenet.oaiserver.config.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.config.vo.MetadataObject;
 import eu.apenet.oaiserver.response.ErrorResponse;
 import eu.apenet.oaiserver.response.GetRecordResponse;
@@ -14,7 +15,7 @@ import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 
 public class GetRecord {
 	public static boolean execute(XMLStreamWriterHolder writer, Map<String, String> params) throws XMLStreamException, IOException {
-        MetadataObjectDAOFront metadataObjectDAOFront = new MetadataObjectDAOFront();
+        MetadataObjectDAOFront metadataObjectDAOFront = new MetadataObjectDAOFrontImpl();
 		String identifier = params.get("identifier");
 		MetadataFormats metadataFormats = MetadataFormats.getMetadataFormats(params.get(RequestProcessor.METADATA_PREFIX));
         MetadataObject metadataObject = metadataObjectDAOFront.getMetadataObject(identifier, metadataFormats);

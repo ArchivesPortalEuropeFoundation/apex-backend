@@ -9,8 +9,10 @@ import javax.xml.stream.XMLStreamException;
 
 import eu.apenet.oaiserver.config.Configuration;
 import eu.apenet.oaiserver.config.MetadataFormats;
-import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
+import eu.apenet.oaiserver.config.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.config.dao.ResumptionTokensDAOFront;
+import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
+import eu.apenet.oaiserver.config.dao.impl.ResumptionTokensDAOFrontImpl;
 import eu.apenet.oaiserver.config.vo.MetadataObject;
 import eu.apenet.oaiserver.config.vo.ResumptionTokens;
 import org.apache.commons.lang.StringUtils;
@@ -27,8 +29,8 @@ public class ListRecordsOrIdentifiers {
 	private static Logger LOG = Logger.getLogger(ListRecordsOrIdentifiers.class);
 
 	public static boolean execute(XMLStreamWriterHolder writer, Map<String, String> params, boolean showRecords) throws XMLStreamException, IOException {
-        MetadataObjectDAOFront metadataObjectDAOFront = new MetadataObjectDAOFront();
-        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFront();
+        MetadataObjectDAOFront metadataObjectDAOFront = new MetadataObjectDAOFrontImpl();
+        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFrontImpl();
 
 		String resumptionToken = params.get("resumptionToken");
 		String from = params.get("from");
