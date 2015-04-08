@@ -250,22 +250,20 @@ public class ManageQueueAction extends AbstractAction {
     public String manageQueueItemOfInstitution() throws Exception {
         if (SecurityContext.get().isAdmin()) {
             QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
-            List<QueueItem> queueItems = queueDAO.getItemsOfInstitution(aiId);
-            for (QueueItem queueItem : queueItems) {
-                if ("DELETE".equals(selectedAction)) {
+            if ("DELETE".equals(selectedAction)) {
+                List<QueueItem> queueItems = queueDAO.getItemsOfInstitution(aiId);
+                for (QueueItem queueItem : queueItems) {
                     EadService.deleteFromQueue(queueItem);
-                } else {
-                    queueItem.setErrors(null);
-                    if ("DISABLE".equals(selectedAction)) {
-                        queueItem.setPriority(0);
-                    } else if ("ENABLE".equals(selectedAction)) {
-                        queueItem.setPriority(1000);
-                    } else if ("HIGHEST".equals(selectedAction)) {
-                        queueItem.setPriority(5000);
-                    } else if ("LOWEST".equals(selectedAction)) {
-                        queueItem.setPriority(1);
-                    }
-                    queueDAO.store(queueItem);
+                }
+            } else {
+                if ("DISABLE".equals(selectedAction)) {
+                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 0);
+                } else if ("ENABLE".equals(selectedAction)) {
+                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 1000);
+                } else if ("HIGHEST".equals(selectedAction)) {
+                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 5000);
+                } else if ("LOWEST".equals(selectedAction)) {
+                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 1);
                 }
             }
         }

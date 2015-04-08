@@ -95,13 +95,39 @@
                 <tr>
                     <th><s:text name="admin.queuemanagement.institution.name" /></th>
                     <th>Count</th>
+                    <th><s:text name="admin.queuemanagement.queue.actions" /></th>
                 </tr>
             </thead>
             <tbody>
                 <c:forEach var="item" items="${countsByArchivalInstitutions}">
                     <tr>
                         <td><c:out value="${item[0].ainame}" /></td>
-                        <td><c:out value="${item[1]}" /></td>		
+                        <td><c:out value="${item[1]}" /></td>
+                        <td>
+                            <c:if test="${not queueActive and not queueProcessing and securityContext.admin}">
+                                <s:form action="manageQueueItemOfInstitution" theme="simple">
+                                    <input type="hidden" name="aiId" value="${item[0].aiId}" />
+                                    <select class="selectedAction" name="selectedAction">
+                                        <option value="DISABLE">
+                                            <s:text name="admin.queuemanagement.disable" />
+                                        </option>
+                                        <option value="HIGHEST">
+                                            <s:text name="admin.queuemanagement.highest" />
+                                        </option>
+                                        <option value="LOWEST">
+                                            <s:text name="admin.queuemanagement.lowest" />
+                                        </option>
+                                        <option value="DELETE">
+                                            <s:text name="admin.queuemanagement.delete" />
+                                        </option>
+                                        <option value="ENABLE">
+                                            <s:text name="admin.queuemanagement.enable" />
+                                        </option>
+                                    </select>
+                                    <input type="submit" value="<s:text name="content.message.go" />" />
+                                </s:form>
+                            </c:if>
+                        </td>
                     </tr>
                 </c:forEach>
             </tbody>
@@ -244,55 +270,9 @@
                             </c:if>
                         </td>
                         <td><c:out value="${item.errors}" /></td>
-
                     </tr>
                 </c:forEach>
             </tbody>
         </table>
     </c:if>
-    <c:if test="${!empty countsByArchivalInstitutions }">
-        <h2>Number of items per institution:</h2>
-        <table class="defaultlayout">
-            <thead>
-                <tr>
-                    <th><s:text name="admin.queuemanagement.institution.name" /></th>
-                    <th>Count</th>
-                    <th><s:text name="admin.queuemanagement.queue.actions" /></th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="item" items="${countsByArchivalInstitutions}">
-                    <tr>
-                        <td><c:out value="${item[0].ainame}" /></td>
-                        <td><c:out value="${item[1]}" /></td>		
-                        <td>
-                            <c:if test="${not queueActive and not queueProcessing and securityContext.admin}">
-                                <s:form action="manageQueueItemOfInstitution" theme="simple">
-                                    <input type="hidden" name="aiId" value="${item[0].aiId}" />
-                                    <select class="selectedAction" name="selectedAction">
-                                        <option value="DISABLE">
-                                            <s:text name="admin.queuemanagement.disable" />
-                                        </option>
-                                        <option value="HIGHEST">
-                                            <s:text name="admin.queuemanagement.highest" />
-                                        </option>
-                                        <option value="LOWEST">
-                                            <s:text name="admin.queuemanagement.lowest" />
-                                        </option>
-                                        <option value="DELETE">
-                                            <s:text name="admin.queuemanagement.delete" />
-                                        </option>
-                                        <option value="ENABLE">
-                                            <s:text name="admin.queuemanagement.enable" />
-                                        </option>
-                                    </select>
-                                    <input type="submit" value="<s:text name="content.message.go" />" />
-                                </s:form>
-                            </c:if>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-    </c:if>	
 </div>
