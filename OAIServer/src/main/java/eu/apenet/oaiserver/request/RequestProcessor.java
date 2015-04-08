@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 
+import eu.apenet.oaiserver.config.MetadataFormats;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -47,9 +48,8 @@ public class RequestProcessor {
 
 			} else {
 				String metadataPrefix = params.get(METADATA_PREFIX);
-				if (StringUtils.isNotBlank(metadataPrefix) && MetadataFormat.getMetadataFormat(metadataPrefix) == null) {
-					new ErrorResponse(ErrorResponse.ErrorCode.CANNOT_DISSEMINATE_FORMAT).generateResponse(writer,
-							params);
+				if (StringUtils.isNotBlank(metadataPrefix) && MetadataFormats.getMetadataFormats(metadataPrefix) == null) {
+					new ErrorResponse(ErrorResponse.ErrorCode.CANNOT_DISSEMINATE_FORMAT).generateResponse(writer, params);
 				} else if (!OAIUtils.validateRequestAttributes(params)) {
 					new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
 				} else if (!badArguments) {

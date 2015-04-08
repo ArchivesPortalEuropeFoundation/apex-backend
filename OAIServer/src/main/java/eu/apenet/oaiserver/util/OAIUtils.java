@@ -4,18 +4,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.apenet.oaiserver.config.MetadataFormats;
+import eu.apenet.oaiserver.config.dao.ResumptionTokensDAOFront;
+import eu.apenet.oaiserver.config.vo.ResumptionTokens;
 import org.apache.log4j.Logger;
 
-import eu.apenet.persistence.dao.ResumptionTokenDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.MetadataFormat;
-import eu.apenet.persistence.vo.ResumptionToken;
 
 public class OAIUtils {
 	//This part has the standard response description and never should be change. 
@@ -29,24 +27,9 @@ public class OAIUtils {
 	public static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*30; //10 minutes
 	public static final String SPECIAL_KEY = "-";
 	private static Logger LOG = Logger.getLogger(OAIUtils.class);
-	public final static String XSI_SCHEMALOCATION = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
-	public final static String ESE_SCHEMA_LOCATION_FILE = "http://www.europeana.eu/schemas/ese/ESE-V3.3.xsd";
-	public static final String XMLNS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
-	public static final String ESE_METADATA_NAMESPACE = "http://www.europeana.eu/schemas/ese/";
-	public static final String DC_METADATA_NAMESPACE = "http://purl.org/dc/elements/1.1/";
-	public static final String DCTERMS_SCHEMA_LOCATION = "http://purl.org/dc/terms/";
-	public static final String BRANDING_SCHEMA_LOCATION = "http://www.openarchives.org/OAI/2.0/branding/";
-	public static final String RIGHTS_SCHEMA_LOCATION = "http://www.openarchives.org/OAI/2.0/rights/";
-	public static final String OAIDC_SCHEMA_LOCATION = "http://www.openarchives.org/OAI/2.0/oai_dc/";
-	public static final String DUBLINCORE_SCHEMA_LOCATION_FILE = "http://www.dublincore.org/schemas/xmls/qdc/dc.xsd";
-	public static final String DCTERMS_SCHEMA_LOCATION_FILE = "http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd";
-	public static final String BRANDING_SCHEMA_LOCATION_FILE = "http://www.openarchives.org/OAI/2.0/branding.xsd";
-	public static final String RIGHTS_SCHEMA_LOCATION_FILE = "http://www.openarchives.org/OAI/2.0/rightsManifest.xsd";
-	public static final String OAIDC_SCHEMA_LOCATION_FILE = "http://www.openarchives.org/OAI/2.0/oai_dc.xsd";
 	
-	
-	
-	public static ResumptionToken buildResumptionToken(Map<String,String> arguments,int limit){
+	public static ResumptionTokens buildResumptionToken(Map<String,String> arguments,int limit){
+        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFront();
 		Date expirationDate = new Date();
 		expirationDate = new Date(expirationDate.getTime()+OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
 		String resumptionToken = arguments.get("resumptionToken");
@@ -79,21 +62,20 @@ public class OAIUtils {
 			metadataPrefix = "";
 		}
 		resumptionToken = null;
-		ResumptionToken result = null;
+		ResumptionTokens result = null;
 		try {
-			try{//DDBB part
-				ResumptionTokenDAO daoResumptionToken = DAOFactory.instance().getResumptionTokenDAO();
-				ResumptionToken resToken = new ResumptionToken();
+			try{
+				ResumptionTokens resToken = new ResumptionTokens();
 				resToken.setFromDate(OAIUtils.parseStringToISO8601Date(from));
 				resToken.setUntilDate(OAIUtils.parseStringToISO8601Date(until));
 				if(set!=null && !set.isEmpty()){
 					resToken.setSet(set.trim());
 				}
 				resToken.setLastRecordHarvested(limit +"");
-				resToken.setExpirationDate(expirationDate); 
-				MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
-				resToken.setMetadataFormat(metadataFormat);
-				result = daoResumptionToken.store(resToken);//End DDBB part
+				resToken.setExpirationDate(expirationDate);
+				MetadataFormats metadataFormats = MetadataFormats.getMetadataFormats(metadataPrefix);
+				resToken.setMetadataFormats(metadataFormats);
+                result = resumptionTokensDAOFront.saveResumptionTokens(resToken);
 			}catch(Exception e){
 				LOG.error("Error trying to save the resumptionToken value in DDBB:",e);
 			}
@@ -105,21 +87,21 @@ public class OAIUtils {
 		}
 		return result;
 	}
-	public static ResumptionToken buildResumptionToken(ResumptionToken oldResumptionToken,int limit){
+	public static ResumptionTokens buildResumptionToken(ResumptionTokens oldResumptionTokens, int limit){
+        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFront();
 		Date expirationDate = new Date();
-		expirationDate = new Date(expirationDate.getTime()+OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
-		ResumptionToken result = null;
+		expirationDate = new Date(expirationDate.getTime() + OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
+		ResumptionTokens result = null;
 		try {
-			try{//DDBB part
-				ResumptionTokenDAO daoResumptionToken = DAOFactory.instance().getResumptionTokenDAO();
-				ResumptionToken resToken = new ResumptionToken();
-				resToken.setFromDate(oldResumptionToken.getFromDate());
-				resToken.setUntilDate(oldResumptionToken.getUntilDate());
-				resToken.setSet(oldResumptionToken.getSet());
-				resToken.setLastRecordHarvested(limit +"");
+			try{
+				ResumptionTokens resToken = new ResumptionTokens();
+				resToken.setFromDate(oldResumptionTokens.getFromDate());
+				resToken.setUntilDate(oldResumptionTokens.getUntilDate());
+				resToken.setSet(oldResumptionTokens.getSet());
+				resToken.setLastRecordHarvested(limit + "");
 				resToken.setExpirationDate(expirationDate); 
-				resToken.setMetadataFormat(oldResumptionToken.getMetadataFormat());
-				result = daoResumptionToken.store(resToken);//End DDBB part
+				resToken.setMetadataFormats(oldResumptionTokens.getMetadataFormats());
+                result = resumptionTokensDAOFront.saveResumptionTokens(resToken);
 			}catch(Exception e){
 				LOG.error("Error trying to save the resumptionToken value in DDBB:",e);
 			}
@@ -134,12 +116,8 @@ public class OAIUtils {
 	 * Deletes all values in DDBB that has never been used again.
 	 */
 	public static void removeOldResumptionTokens() {
-		ResumptionTokenDAO resumptionTokenDao = DAOFactory.instance().getResumptionTokenDAO();
-		List<ResumptionToken> resumptionTokenList = resumptionTokenDao.getOldResumptionTokensThan(new Date());
-		Iterator<ResumptionToken> iterator = resumptionTokenList.iterator();
-		while(iterator.hasNext()){
-			resumptionTokenDao.delete(iterator.next());
-		}
+        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFront();
+		resumptionTokensDAOFront.removeOldResumptionToken();
 	}
 	
 	/**

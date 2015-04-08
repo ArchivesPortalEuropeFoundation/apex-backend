@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -14,11 +13,7 @@ import org.junit.Test;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.oaiserver.request.RequestProcessor;
-import eu.apenet.oaiserver.response.AbstractResponse;
-import eu.apenet.oaiserver.response.ListIdentifiersResponse;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Ese;
 import eu.archivesportaleurope.commons.config.ApeConfig;
 
 public class OAISyntaxCheckerTest  extends AbstractJpaTestCase {

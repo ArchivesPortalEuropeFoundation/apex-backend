@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
+import eu.apenet.oaiserver.config.MetadataFormats;
 import eu.apenet.persistence.vo.MetadataFormat;
 
 public class ListMetadataFormatsResponse extends AbstractResponse {
@@ -12,11 +13,13 @@ public class ListMetadataFormatsResponse extends AbstractResponse {
 	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params)
 			throws XMLStreamException {
 		writer.writeStartElement("ListMetadataFormats");
-		writer.writeStartElement("metadataFormat");
-		writer.writeTextElement("metadataPrefix", MetadataFormat.EDM.toString());
-		writer.writeTextElement("schema", EDM_SCHEMA_LOCATION);
-		writer.writeTextElement("metadataNamespace", EDM_NAMESPACE);
-		writer.closeElement();
+        for(MetadataFormats metadataFormats : MetadataFormats.values()) {
+            writer.writeStartElement("metadataFormat");
+            writer.writeTextElement("metadataPrefix", metadataFormats.getName());
+            writer.writeTextElement("schema", metadataFormats.getSchemaLocation());
+            writer.writeTextElement("metadataNamespace", metadataFormats.getNamespace());
+            writer.closeElement();
+        }
 		writer.closeElement();
 
 	}

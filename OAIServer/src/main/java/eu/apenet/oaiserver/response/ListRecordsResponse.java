@@ -13,6 +13,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.oaiserver.config.Configuration;
+import eu.apenet.oaiserver.config.vo.MetadataObject;
+import eu.apenet.oaiserver.config.vo.ResumptionTokens;
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.MetadataFormat;
@@ -21,28 +24,27 @@ import eu.apenet.persistence.vo.ResumptionToken;
 public class ListRecordsResponse extends ListIdentifiersResponse {
 
 
-	public ListRecordsResponse(List<Ese> eses, ResumptionToken resumptionToken) {
-		super(eses, resumptionToken);
+	public ListRecordsResponse(List<MetadataObject> metadataObjects, ResumptionTokens resumptionToken) {
+		super(metadataObjects, resumptionToken);
 	}
-	protected ListRecordsResponse(Ese ese) {
-		super(ese);
+	protected ListRecordsResponse(MetadataObject metadataObject) {
+		super(metadataObject);
 	}
 
-	protected void writeEseFile(XMLStreamWriterHolder writer, Ese ese) throws IOException, XMLStreamException {
+	protected void writeMetadataObjectFile(XMLStreamWriterHolder writer, MetadataObject metadataObject) throws IOException, XMLStreamException {
 		writer.writeStartElement("metadata");
-		FileInputStream inputStream = getFileInputStream(ese.getPath());
+		FileInputStream inputStream = getFileInputStream(metadataObject.getXmlPath());
 		XMLStreamReader xmlReader = getXMLReader(inputStream);
+        boolean isRoot = true;
 		for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 			if (event == XMLStreamConstants.START_ELEMENT) {
-				QName elementName = xmlReader.getName();
-				if (elementName.getLocalPart().equals("RDF") && MetadataFormat.EDM.equals(ese.getMetadataFormat())){
+				if (isRoot) {
 					writer.writeStartDocument(xmlReader);
-				}else {
+                    isRoot = false;
+				} else {
 					writer.writeStartElement(xmlReader);
 				}
-				
-				
-			} else if (event == XMLStreamConstants.END_ELEMENT) {
+            } else if (event == XMLStreamConstants.END_ELEMENT) {
 				writer.closeElement();
 			} else if (event == XMLStreamConstants.CHARACTERS) {
 				writer.writeCharacters(xmlReader);
@@ -56,12 +58,11 @@ public class ListRecordsResponse extends ListIdentifiersResponse {
 	}
 
 	private static FileInputStream getFileInputStream(String path) throws FileNotFoundException, XMLStreamException {
-		File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
+		File file = new File(Configuration.XML_DIR_PATH + path);
 		return new FileInputStream(file);
 	}
 
-	private static XMLStreamReader getXMLReader(FileInputStream fileInputStream) throws FileNotFoundException,
-			XMLStreamException {
+	private static XMLStreamReader getXMLReader(FileInputStream fileInputStream) throws FileNotFoundException, XMLStreamException {
 		XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
 		return (XMLStreamReader) inputFactory.createXMLStreamReader(fileInputStream, UTF_8);
 	}

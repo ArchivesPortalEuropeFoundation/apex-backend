@@ -14,6 +14,11 @@ public class XMLStreamWriterHolder {
     public static final String XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
     public static final String XSI_PREFIX = "xsi";
     public static final String OAI_PMH_NAMESPACE = "http://www.openarchives.org/OAI/2.0/";
+    public static final String OAI_PMH_NAMESPACE_URI = "http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
+    public static final String UTF8 = "UTF-8";
+    public static final String XML_VERSION = "1.0";
+    public static final String OAI_PMH_ROOT = "OAI-PMH";
+    public static final String OAI_PMH_PREFIX = "";
 	private static final Logger LOGGER = Logger.getLogger(XMLStreamWriterHolder.class);
 	private XMLStreamWriter xmlWriter;
 	private int numberOfOpenedElements = 0;
@@ -24,13 +29,11 @@ public class XMLStreamWriterHolder {
 
 	public void writeOaiPmh() throws XMLStreamException {
 		if (numberOfOpenedElements == 0) {
-			xmlWriter.writeStartDocument("UTF-8", "1.0");
-			xmlWriter.writeStartElement("",
-					"OAI-PMH", OAI_PMH_NAMESPACE);
+			xmlWriter.writeStartDocument(UTF8, XML_VERSION);
+			xmlWriter.writeStartElement(OAI_PMH_PREFIX, OAI_PMH_ROOT, OAI_PMH_NAMESPACE);
 			xmlWriter.writeDefaultNamespace(OAI_PMH_NAMESPACE);
-			//
 			xmlWriter.writeNamespace(XSI_PREFIX, XSI_NAMESPACE);
-			xmlWriter.writeAttribute(XSI_NAMESPACE, SCHEMA_LOCATION, OAI_PMH_NAMESPACE + " http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd");
+			xmlWriter.writeAttribute(XSI_NAMESPACE, SCHEMA_LOCATION, OAI_PMH_NAMESPACE + " " + OAI_PMH_NAMESPACE_URI);
 			numberOfOpenedElements++;
 		}
 	}
@@ -122,8 +125,11 @@ public class XMLStreamWriterHolder {
 		} else {
 			xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
 			for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
-				xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i),
-						xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+                if(xmlReader.getAttributeNamespace(i) == null) {
+                    xmlWriter.writeAttribute(xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+                } else {
+                    xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+                }
 			}
 			for (int i = 0; i < xmlReader.getNamespaceCount(); i++) {
 				String prefix = xmlReader.getNamespacePrefix(i);
@@ -145,8 +151,11 @@ public class XMLStreamWriterHolder {
 		} else {
 			xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
 			for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
-				xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i),
-						xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+                if(xmlReader.getAttributeNamespace(i) == null) {
+                    xmlWriter.writeAttribute(xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+                } else {
+                    xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+                }
 			}
 			numberOfOpenedElements++;
 		}

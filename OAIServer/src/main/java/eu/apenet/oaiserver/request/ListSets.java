@@ -9,13 +9,8 @@ import eu.apenet.oaiserver.response.ListSetsResponse;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 
 public class ListSets {
-
-
-	public static boolean execute(XMLStreamWriterHolder writer, Map<String, String> params)
-		throws XMLStreamException, IOException {
+	public static boolean execute(XMLStreamWriterHolder writer, Map<String, String> params) throws XMLStreamException, IOException {
 		new ListSetsResponse(null).generateResponse(writer, params);
 		return true;
-
 	}
-
 }

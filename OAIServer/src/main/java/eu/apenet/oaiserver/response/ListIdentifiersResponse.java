@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
+import eu.apenet.oaiserver.config.vo.MetadataObject;
+import eu.apenet.oaiserver.config.vo.ResumptionTokens;
 import org.apache.log4j.Logger;
 
 import eu.apenet.oaiserver.request.RequestProcessor;
@@ -17,38 +19,38 @@ import eu.apenet.persistence.vo.ResumptionToken;
 
 public class ListIdentifiersResponse extends AbstractResponse {
     private static final Logger LOGGER = Logger.getLogger(ListIdentifiersResponse.class);
-	private List<Ese> eses;
-	private ResumptionToken resumptionToken;
+	private List<MetadataObject> metadataObjects;
+	private ResumptionTokens resumptionToken;
 
-	public ListIdentifiersResponse(List<Ese> eses, ResumptionToken resumptionToken) {
-		this.eses = eses;
+	public ListIdentifiersResponse(List<MetadataObject> metadataObjects, ResumptionTokens resumptionToken) {
+		this.metadataObjects = metadataObjects;
 		this.resumptionToken = resumptionToken;
 	}
-	protected ListIdentifiersResponse(Ese ese) {
-		eses = new ArrayList<Ese>();
-		eses.add(ese);
+	protected ListIdentifiersResponse(MetadataObject metadataObject) {
+		metadataObjects = new ArrayList<MetadataObject>();
+		metadataObjects.add(metadataObject);
 	}
 	@Override
 	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params)
 			throws XMLStreamException, IOException {
 		writer.writeStartElement(getVerb());
-		for (Ese ese : eses) {
+		for (MetadataObject metadataObject : metadataObjects) {
 			writer.writeStartElement("record");
 			writer.writeStartElement("header");
-			if (EseState.REMOVED.equalsIgnoreCase(ese.getEseState().getState())) {
+			if (MetadataObject.State.REMOVED.equals(metadataObject.getState())) {
 				writer.writeAttribute("status", "deleted");
 			}
-			writer.writeTextElement("identifier", ese.getOaiIdentifier());
-			writer.writeTextElement("datestamp", OAIUtils.parseDateToISO8601(ese.getModificationDate()));
-			writer.writeTextElement("setSpec", ese.getEset());
+			writer.writeTextElement("identifier", metadataObject.getOaiIdentifier());
+			writer.writeTextElement("datestamp", OAIUtils.parseDateToISO8601(metadataObject.getModificationDate()));
+			writer.writeTextElement("setSpec", metadataObject.getSet());
 			writer.closeElement();
-			if (EseState.PUBLISHED.equalsIgnoreCase(ese.getEseState().getState())) {
-				if (resumptionToken == null){
-					LOGGER.info("ESE '" + ese.getOaiIdentifier() + "' LAST ITEM");
-				}else {
-					LOGGER.info("ESE '" + ese.getOaiIdentifier() + "'");
+			if (MetadataObject.State.PUBLISHED.equals(metadataObject.getState())) {
+				if (resumptionToken == null) {
+					LOGGER.info("XML '" + metadataObject.getOaiIdentifier() + "' LAST ITEM");
+				} else {
+					LOGGER.info("XML '" + metadataObject.getOaiIdentifier() + "'");
 				}
-				writeEseFile(writer, ese);
+				writeMetadataObjectFile(writer, metadataObject);
 			}
 			writer.closeElement();
 		}
@@ -56,7 +58,7 @@ public class ListIdentifiersResponse extends AbstractResponse {
 		writer.closeElement();
 	}
 
-	protected void writeEseFile(XMLStreamWriterHolder writer, Ese ese) throws IOException, XMLStreamException {
+	protected void writeMetadataObjectFile(XMLStreamWriterHolder writer, MetadataObject metadataObject) throws IOException, XMLStreamException {
 
 	}
 

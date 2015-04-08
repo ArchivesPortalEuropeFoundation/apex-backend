@@ -5,29 +5,37 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
+import eu.apenet.oaiserver.config.Configuration;
+import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
 import eu.apenet.oaiserver.util.OAIUtils;
-import eu.apenet.persistence.factory.DAOFactory;
 
 public class IdentifyResponse extends AbstractResponse {
+    private static String REPOSITORY_NAME;
+    private static String ADMIN_EMAIL;
+    private static String DELETED_RECORD_MANNER;
+    private static String GRANULARITY;
+    private static String PROTOCOL_VERSION;
+    private static String COMPRESSION;
 
-
-	private static final String REPOSITORY_NAME = "Archives Portal Europe OAI-PMH Repository";
-	private static final String ADMIN_EMAIL = "info@apex-project.eu";
-	private static final String DELETED_RECORD_MANNER = "transient";
-	private static final String GRANULARITY = "YYYY-MM-DDThh:mm:ssZ";
-	private static final String PROTOCOL_VERSION = "2.0";
-	private static final String COMPRESSION = "gzip";
-
+    static {
+        REPOSITORY_NAME = Configuration.REPOSITORY_NAME;
+        ADMIN_EMAIL = Configuration.ADMIN_EMAIL;
+        DELETED_RECORD_MANNER = Configuration.DELETED_RECORD_MANNER;
+        GRANULARITY = Configuration.GRANULARITY;
+        PROTOCOL_VERSION = Configuration.PROTOCOL_VERSION;
+        COMPRESSION = Configuration.COMPRESSION;
+    }
 
 	@Override
 	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params) throws XMLStreamException {
+        MetadataObjectDAOFront metadataObjectDAOFront = new MetadataObjectDAOFront();
 		writer.writeStartElement("Identify");
 		writer.writeTextElement("repositoryName",REPOSITORY_NAME );
 		writer.writeTextElement("baseURL",params.get(AbstractResponse.REQUEST_URL) );
 		writer.writeTextElement("protocolVersion",PROTOCOL_VERSION );
 		writer.writeTextElement("adminEmail",ADMIN_EMAIL);
-		Date earliestDate = DAOFactory.instance().getEseDAO().getTheEarliestDatestamp();
-		if(earliestDate==null){
+		Date earliestDate = metadataObjectDAOFront.getTheEarliestDatestamp();
+		if(earliestDate == null){
 			earliestDate = new Date();
 		}
 		writer.writeTextElement("earliestDatestamp",OAIUtils.parseDateToISO8601(earliestDate));
@@ -35,8 +43,6 @@ public class IdentifyResponse extends AbstractResponse {
 		writer.writeTextElement("granularity",GRANULARITY);
 		writer.writeTextElement("compression",COMPRESSION);
 		writer.closeElement();
-		
-		
 	}
 
 }

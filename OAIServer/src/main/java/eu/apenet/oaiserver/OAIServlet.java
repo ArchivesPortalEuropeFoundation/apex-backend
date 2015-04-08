@@ -18,15 +18,15 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 
-public class EuropeanaOAIServlet extends HttpServlet {
+public class OAIServlet extends HttpServlet {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5447972081653456478L;
-	private static final String REQUEST_SUFIX = "/europeana";
+	private static final String REQUEST_SUFIX = "/oai";
 	public static final String UTF_8 = "utf-8";
-	private static Logger LOGGER = Logger.getLogger(EuropeanaOAIServlet.class);
+	private static Logger LOGGER = Logger.getLogger(OAIServlet.class);
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		long startTime = System.currentTimeMillis() ;
@@ -43,8 +43,7 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		OutputStream outputStream = response.getOutputStream();
 		XMLStreamWriterHolder writerHolder;
 		try {
-			writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(outputStream, UTF_8));
+			writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, UTF_8));
 			RequestProcessor.process(request.getParameterMap(), url, writerHolder);
 		} catch (XMLStreamException e) {
 			LOGGER.error(APEnetUtilities.generateThrowableLog(e));
