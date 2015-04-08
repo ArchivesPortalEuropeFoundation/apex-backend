@@ -2,6 +2,7 @@ package eu.archivesportaleurope.persistence.jpa.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.apache.log4j.Logger;
@@ -125,5 +126,15 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
                 QueueItem.class);
                 query.setParameter("aiId", aiId);
         return query.getResultList();
+    }
+
+    public void setPriorityToQueueOfArchivalInstitution(Integer aiId, Integer priority) {
+        getEntityManager().getTransaction().begin();
+        Query query = getEntityManager().createQuery(
+                "UPDATE QueueItem queueItem SET queueItem.priority = :priority WHERE aiId = :aiId AND (queueItem.priority > 0 OR queueItem.errors is null)");
+        query.setParameter("priority", priority);
+        query.setParameter("aiId", aiId);
+        query.executeUpdate();
+        getEntityManager().getTransaction().commit();
     }
 }
