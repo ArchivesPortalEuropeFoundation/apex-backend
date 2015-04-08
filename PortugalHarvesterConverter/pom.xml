@@ -77,8 +77,8 @@
             <artifactId>DPTutils</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.saxon</groupId>
-            <artifactId>saxon</artifactId>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon-HE</artifactId>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
