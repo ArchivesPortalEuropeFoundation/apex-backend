@@ -6,11 +6,10 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.vo.ResumptionTokens;
+import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
 import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.oaiserver.util.OAIUtils;
-import eu.apenet.persistence.vo.ResumptionToken;
 
 public abstract class AbstractResponse {
 	public static final String UTF_8 = "utf-8";
