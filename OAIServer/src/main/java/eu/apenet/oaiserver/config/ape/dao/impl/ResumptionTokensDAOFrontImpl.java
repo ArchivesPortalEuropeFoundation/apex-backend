@@ -1,8 +1,8 @@
 package eu.apenet.oaiserver.config.ape.dao.impl;
 
-import eu.apenet.oaiserver.config.MetadataFormats;
-import eu.apenet.oaiserver.config.dao.ResumptionTokensDAOFront;
-import eu.apenet.oaiserver.config.vo.ResumptionTokens;
+import eu.apenet.oaiserver.config.main.MetadataFormats;
+import eu.apenet.oaiserver.config.main.dao.ResumptionTokensDAOFront;
+import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.MetadataFormat;

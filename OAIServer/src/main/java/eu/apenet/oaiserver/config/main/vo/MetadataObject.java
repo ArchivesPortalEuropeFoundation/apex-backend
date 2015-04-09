@@ -1,11 +1,8 @@
-package eu.apenet.oaiserver.config.vo;
+package eu.apenet.oaiserver.config.main.vo;
 
-import eu.apenet.oaiserver.config.MetadataFormats;
-import eu.apenet.persistence.vo.Ese;
+import eu.apenet.oaiserver.config.main.MetadataFormats;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by yoannmoranville on 08/04/15.

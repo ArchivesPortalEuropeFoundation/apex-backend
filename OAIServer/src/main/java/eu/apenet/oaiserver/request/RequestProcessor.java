@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.MetadataFormats;
+import eu.apenet.oaiserver.config.main.MetadataFormats;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -17,7 +17,6 @@ import eu.apenet.oaiserver.response.IdentifyResponse;
 import eu.apenet.oaiserver.response.ListMetadataFormatsResponse;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 import eu.apenet.oaiserver.util.OAIUtils;
-import eu.apenet.persistence.vo.MetadataFormat;
 
 public class RequestProcessor {
 	private static Logger LOGGER = Logger.getLogger(RequestProcessor.class);

@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config;
+package eu.apenet.oaiserver.config.main;
 
 /**
  * Created by yoannmoranville on 08/04/15.

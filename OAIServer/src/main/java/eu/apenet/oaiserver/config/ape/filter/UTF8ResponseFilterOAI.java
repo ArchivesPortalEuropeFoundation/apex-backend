@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config;
+package eu.apenet.oaiserver.config.ape.filter;
 
 import eu.apenet.commons.filter.UTF8ResponseFilter;
 
