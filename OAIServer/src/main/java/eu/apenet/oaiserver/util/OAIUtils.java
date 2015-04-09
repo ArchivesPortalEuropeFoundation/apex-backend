@@ -9,6 +9,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.apenet.oaiserver.config.ape.dao.impl.ResumptionTokensDAOFrontImpl;
 import eu.apenet.oaiserver.config.main.MetadataFormats;
 import eu.apenet.oaiserver.config.main.dao.ResumptionTokensDAOFront;
 import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
@@ -29,7 +30,7 @@ public class OAIUtils {
 	private static Logger LOG = Logger.getLogger(OAIUtils.class);
 	
 	public static ResumptionTokens buildResumptionToken(Map<String,String> arguments,int limit){
-        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFront();
+        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFrontImpl();
 		Date expirationDate = new Date();
 		expirationDate = new Date(expirationDate.getTime()+OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
 		String resumptionToken = arguments.get("resumptionToken");
@@ -88,7 +89,7 @@ public class OAIUtils {
 		return result;
 	}
 	public static ResumptionTokens buildResumptionToken(ResumptionTokens oldResumptionTokens, int limit){
-        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFront();
+        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFrontImpl();
 		Date expirationDate = new Date();
 		expirationDate = new Date(expirationDate.getTime() + OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
 		ResumptionTokens result = null;
@@ -116,7 +117,7 @@ public class OAIUtils {
 	 * Deletes all values in DDBB that has never been used again.
 	 */
 	public static void removeOldResumptionTokens() {
-        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFront();
+        ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFrontImpl();
 		resumptionTokensDAOFront.removeOldResumptionToken();
 	}
 	
