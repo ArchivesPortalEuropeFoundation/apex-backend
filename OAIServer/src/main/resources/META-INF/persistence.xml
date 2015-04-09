@@ -10,10 +10,13 @@
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
             <property name="hibernate.cache.use_second_level_cache" value="false" />
             <property name="hibernate.cache.use_query_cache" value="false" />
+            <property name="hibernate.show_sql" value="true" />
 
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://URL:PORT/NAME" />
-            <property name="javax.persistence.jdbc.user" value="USERNAME" />
-            <property name="javax.persistence.jdbc.password" value="PASSWORD" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:10111/oaiphp" />
+            <property name="javax.persistence.jdbc.user" value="oaiphp" />
+            <property name="javax.persistence.jdbc.password" value="Talmac!" />
         </properties>
     </persistence-unit>
 </persistence>
+
+<!--select id, creation_date, metadata_format, modification_date, oai_identifier, set, state, xml_path from filepaths where modification_date between ? and ? and metadata_format="ape_ead" and state="Published" and set="exemple1" order by modification_date desc limit 2-->

@@ -5,9 +5,9 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.ape.Configuration;
+import eu.apenet.oaiserver.config.other.Configuration;
 import eu.apenet.oaiserver.config.main.dao.MetadataObjectDAOFront;
-import eu.apenet.oaiserver.config.ape.dao.impl.MetadataObjectDAOFrontImpl;
+import eu.apenet.oaiserver.config.other.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.util.OAIUtils;
 
 public class IdentifyResponse extends AbstractResponse {

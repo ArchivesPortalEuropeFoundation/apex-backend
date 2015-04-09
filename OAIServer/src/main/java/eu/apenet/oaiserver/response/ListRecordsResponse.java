@@ -11,13 +11,14 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import eu.apenet.oaiserver.config.ape.Configuration;
+import eu.apenet.oaiserver.config.other.Configuration;
 import eu.apenet.oaiserver.config.main.vo.MetadataObject;
 import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
 import eu.apenet.oaiserver.request.RequestProcessor;
+import org.apache.log4j.Logger;
 
 public class ListRecordsResponse extends ListIdentifiersResponse {
-
+    private static final Logger LOG = Logger.getLogger(ListRecordsResponse.class);
 
 	public ListRecordsResponse(List<MetadataObject> metadataObjects, ResumptionTokens resumptionToken) {
 		super(metadataObjects, resumptionToken);
@@ -53,6 +54,7 @@ public class ListRecordsResponse extends ListIdentifiersResponse {
 	}
 
 	private static FileInputStream getFileInputStream(String path) throws FileNotFoundException, XMLStreamException {
+        LOG.info("The file path is: " + path);
 		File file = new File(Configuration.XML_DIR_PATH + path);
 		return new FileInputStream(file);
 	}

@@ -1,6 +1,7 @@
 package eu.apenet.oaiserver.config.main.vo;
 
 import eu.apenet.oaiserver.config.main.MetadataFormats;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
 
@@ -8,7 +9,7 @@ import java.util.Date;
  * Created by yoannmoranville on 08/04/15.
  */
 public class MetadataObject {
-
+    private static final Logger LOG = Logger.getLogger(MetadataObject.class);
     private Integer id;
     private String oaiIdentifier;
 
@@ -97,9 +98,13 @@ public class MetadataObject {
             this.name = name;
         }
 
+        public String getName() {
+            return name;
+        }
+
         public static State getStateFromName(String name) {
             for(State state : State.values()) {
-                if(state.name.equals(name)) {
+                if(state.name.equalsIgnoreCase(name)) {
                     return state;
                 }
             }

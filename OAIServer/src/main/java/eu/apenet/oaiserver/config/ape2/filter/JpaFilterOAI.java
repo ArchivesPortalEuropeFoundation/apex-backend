@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config.ape.filter;
+package eu.apenet.oaiserver.config.ape2.filter;
 
 import eu.archivesportaleurope.persistence.jpa.web.JpaFilter;
 

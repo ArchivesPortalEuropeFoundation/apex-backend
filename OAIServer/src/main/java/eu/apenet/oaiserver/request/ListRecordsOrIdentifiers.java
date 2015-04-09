@@ -7,12 +7,12 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.ape.Configuration;
+import eu.apenet.oaiserver.config.other.Configuration;
 import eu.apenet.oaiserver.config.main.MetadataFormats;
-import eu.apenet.oaiserver.config.ape.dao.impl.MetadataObjectDAOFrontImpl;
+import eu.apenet.oaiserver.config.other.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.config.main.dao.ResumptionTokensDAOFront;
 import eu.apenet.oaiserver.config.main.dao.MetadataObjectDAOFront;
-import eu.apenet.oaiserver.config.ape.dao.impl.ResumptionTokensDAOFrontImpl;
+import eu.apenet.oaiserver.config.other.dao.impl.ResumptionTokensDAOFrontImpl;
 import eu.apenet.oaiserver.config.main.vo.MetadataObject;
 import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
 import org.apache.commons.lang.StringUtils;
@@ -41,10 +41,14 @@ public class ListRecordsOrIdentifiers {
 		Date fromDate = null;
 		Date untilDate = null;
 		ResumptionTokens oldResTokens = null;
-		int limit = Configuration.RECORDS_LIMIT;
+		int limit = Configuration.EAD_RECORDS_LIMIT;
 		if (!showRecords){
 			limit = Configuration.IDENTIFIERS_LIMIT;
-		}
+		} else {
+            if(metadataFormats.equals(MetadataFormats.DC)) {
+                limit = Configuration.DC_RECORDS_LIMIT;
+            }
+        }
 		if (metadataFormats != null) {
 			try {
 				if (from != null) {

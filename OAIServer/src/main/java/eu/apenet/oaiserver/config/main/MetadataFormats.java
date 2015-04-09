@@ -8,7 +8,7 @@ public enum MetadataFormats {
     EAD("ead", "urn:isbn:1-931666-22-9", "http://www.loc.gov/ead/ead.xsd"),
     APE_EAD("ape_ead", "urn:isbn:1-931666-22-9", "http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd"),
     OAI_DC("oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/", "http://www.openarchives.org/OAI/2.0/oai_dc.xsd"),
-//    NOMINA("nomina", "", ""),
+//    NOMINA("nomina", "", "http://www.archivesdefrance.culture.gouv.fr/nomina/nomina1.4.xsd"),
     DC("dc", "http://purl.org/dc/elements/1.1/", "http://dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd");
 
     private String name;

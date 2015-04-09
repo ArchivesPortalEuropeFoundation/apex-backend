@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config.ape.dao.impl;
+package eu.apenet.oaiserver.config.ape2.dao.impl;
 
 import eu.apenet.oaiserver.config.main.MetadataFormats;
 import eu.apenet.oaiserver.config.main.dao.MetadataObjectDAOFront;

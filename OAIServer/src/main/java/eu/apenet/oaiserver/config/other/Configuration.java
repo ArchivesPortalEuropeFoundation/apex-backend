@@ -12,6 +12,11 @@ public abstract class Configuration {
     public static final String COMPRESSION = "gzip";
     public static final String XML_DIR_PATH = "";
 
-    public static final int RECORDS_LIMIT = 2;
     public static final int IDENTIFIERS_LIMIT = 100;
+    public static final int EAD_RECORDS_LIMIT = 2;
+    public static final int DC_RECORDS_LIMIT = 100;
+    public static final int NOMINA_RECORDS_LIMIT = 100;
+
+
+    public static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*30; //30 minutes
 }

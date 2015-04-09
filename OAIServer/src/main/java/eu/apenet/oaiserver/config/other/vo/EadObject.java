@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by yoannmoranville on 09/04/15.
  */
 @Entity
-@Table(name = "ead")
+@Table(name = "filepaths")
 public class EadObject implements java.io.Serializable {
 
     @Id
@@ -15,8 +15,10 @@ public class EadObject implements java.io.Serializable {
     private Integer id;
     @Column(name="oai_identifier")
     private String oaiIdentifier;
+    @Column(name="xml_path")
     private String xmlPath;
-    private String set;
+    @Column(name="data_set")
+    private String dataSet;
 
     @Column(name="creation_date")
     private Date creationDate;
@@ -30,12 +32,12 @@ public class EadObject implements java.io.Serializable {
 
     public EadObject() {}
 
-    public EadObject(int id, String metadataFormat, String state, Date creationDate, String set, String xmlPath, String oaiIdentifier) {
+    public EadObject(int id, String metadataFormat, String state, Date creationDate, String dataSet, String xmlPath, String oaiIdentifier) {
         this.id = id;
         this.metadataFormat = metadataFormat;
         this.state = state;
         this.creationDate = creationDate;
-        this.set = set;
+        this.dataSet = dataSet;
         this.xmlPath = xmlPath;
         this.oaiIdentifier = oaiIdentifier;
     }
@@ -64,12 +66,12 @@ public class EadObject implements java.io.Serializable {
         this.xmlPath = xmlPath;
     }
 
-    public String getSet() {
-        return set;
+    public String getDataSet() {
+        return dataSet;
     }
 
-    public void setSet(String set) {
-        this.set = set;
+    public void setDataSet(String dataSet) {
+        this.dataSet = dataSet;
     }
 
     public Date getCreationDate() {

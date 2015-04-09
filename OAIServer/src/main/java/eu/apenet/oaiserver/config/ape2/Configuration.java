@@ -1,6 +1,4 @@
-package eu.apenet.oaiserver.config.ape;
-
-import eu.apenet.commons.utils.APEnetUtilities;
+package eu.apenet.oaiserver.config.ape2;
 
 /**
  * Created by yoannmoranville on 08/04/15.

@@ -9,7 +9,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import eu.apenet.oaiserver.config.ape.dao.impl.ResumptionTokensDAOFrontImpl;
+import eu.apenet.oaiserver.config.other.Configuration;
+import eu.apenet.oaiserver.config.other.dao.impl.ResumptionTokensDAOFrontImpl;
 import eu.apenet.oaiserver.config.main.MetadataFormats;
 import eu.apenet.oaiserver.config.main.dao.ResumptionTokensDAOFront;
 import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
@@ -25,14 +26,13 @@ public class OAIUtils {
 	private static final String SET_ATTRIBUTE = "set";
 	public static final String VERB = "verb";
 	private static final String RESUMPTIONTOKEN_ATTRIBUTE = "resumptionToken";
-	public static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*30; //10 minutes
 	public static final String SPECIAL_KEY = "-";
 	private static Logger LOG = Logger.getLogger(OAIUtils.class);
 	
 	public static ResumptionTokens buildResumptionToken(Map<String,String> arguments,int limit){
         ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFrontImpl();
 		Date expirationDate = new Date();
-		expirationDate = new Date(expirationDate.getTime()+OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
+		expirationDate = new Date(expirationDate.getTime()+ Configuration.EXPIRATION_TIME_IN_MILLISECONDS);
 		String resumptionToken = arguments.get("resumptionToken");
 		String from = null;
 		String until = null;
@@ -91,7 +91,7 @@ public class OAIUtils {
 	public static ResumptionTokens buildResumptionToken(ResumptionTokens oldResumptionTokens, int limit){
         ResumptionTokensDAOFront resumptionTokensDAOFront = new ResumptionTokensDAOFrontImpl();
 		Date expirationDate = new Date();
-		expirationDate = new Date(expirationDate.getTime() + OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
+		expirationDate = new Date(expirationDate.getTime() + Configuration.EXPIRATION_TIME_IN_MILLISECONDS);
 		ResumptionTokens result = null;
 		try {
 			try{
@@ -131,7 +131,7 @@ public class OAIUtils {
 		SimpleDateFormat df = null;
 		if (isoStringDate.contains("Z")) {
 			//Time granularity
-			df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");			
+			df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		}
 		else {
 			//Only day granularity
