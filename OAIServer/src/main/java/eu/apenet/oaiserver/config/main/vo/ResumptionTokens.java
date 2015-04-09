@@ -1,7 +1,6 @@
-package eu.apenet.oaiserver.config.vo;
+package eu.apenet.oaiserver.config.main.vo;
 
-import eu.apenet.oaiserver.config.MetadataFormats;
-import eu.apenet.persistence.vo.ResumptionToken;
+import eu.apenet.oaiserver.config.main.MetadataFormats;
 
 import java.util.Date;
 
