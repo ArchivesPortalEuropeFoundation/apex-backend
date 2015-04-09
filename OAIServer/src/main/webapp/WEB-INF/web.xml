@@ -29,7 +29,7 @@
 		<url-pattern>/oai</url-pattern>
 	</servlet-mapping>
 	<listener>
-		<listener-class>eu.apenet.oaiserver.config.JpaListenerOAI</listener-class>
+		<listener-class>eu.apenet.oaiserver.config.listener.JpaListenerOAI</listener-class>
 	</listener>
 	<listener>
 		<listener-class>eu.apenet.oaiserver.config.APEConfigListenerOAI</listener-class>

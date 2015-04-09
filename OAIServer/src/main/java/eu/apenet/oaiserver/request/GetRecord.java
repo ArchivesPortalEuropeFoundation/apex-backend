@@ -7,7 +7,7 @@ import javax.xml.stream.XMLStreamException;
 
 import eu.apenet.oaiserver.config.MetadataFormats;
 import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
-import eu.apenet.oaiserver.config.dao.impl.MetadataObjectDAOFrontImpl;
+import eu.apenet.oaiserver.config.ape.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.config.vo.MetadataObject;
 import eu.apenet.oaiserver.response.ErrorResponse;
 import eu.apenet.oaiserver.response.GetRecordResponse;

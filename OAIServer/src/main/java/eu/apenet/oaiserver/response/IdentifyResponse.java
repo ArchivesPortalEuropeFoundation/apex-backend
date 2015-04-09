@@ -7,7 +7,7 @@ import javax.xml.stream.XMLStreamException;
 
 import eu.apenet.oaiserver.config.Configuration;
 import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
-import eu.apenet.oaiserver.config.dao.impl.MetadataObjectDAOFrontImpl;
+import eu.apenet.oaiserver.config.ape.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.util.OAIUtils;
 
 public class IdentifyResponse extends AbstractResponse {
