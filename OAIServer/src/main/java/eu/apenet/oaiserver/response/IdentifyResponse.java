@@ -5,8 +5,8 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.Configuration;
-import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
+import eu.apenet.oaiserver.config.ape.Configuration;
+import eu.apenet.oaiserver.config.main.dao.MetadataObjectDAOFront;
 import eu.apenet.oaiserver.config.ape.dao.impl.MetadataObjectDAOFrontImpl;
 import eu.apenet.oaiserver.util.OAIUtils;
 

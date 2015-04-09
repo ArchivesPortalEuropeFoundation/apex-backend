@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config;
+package eu.apenet.oaiserver.config.ape;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 

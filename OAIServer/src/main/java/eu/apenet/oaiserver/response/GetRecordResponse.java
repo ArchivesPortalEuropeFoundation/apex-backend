@@ -1,8 +1,7 @@
 package eu.apenet.oaiserver.response;
 
-import eu.apenet.oaiserver.config.vo.MetadataObject;
+import eu.apenet.oaiserver.config.main.vo.MetadataObject;
 import eu.apenet.oaiserver.request.RequestProcessor;
-import eu.apenet.persistence.vo.Ese;
 
 public class GetRecordResponse extends ListRecordsResponse {
 

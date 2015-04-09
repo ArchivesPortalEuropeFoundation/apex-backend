@@ -5,10 +5,10 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.MetadataFormats;
-import eu.apenet.oaiserver.config.dao.MetadataObjectDAOFront;
+import eu.apenet.oaiserver.config.main.MetadataFormats;
+import eu.apenet.oaiserver.config.main.dao.MetadataObjectDAOFront;
 import eu.apenet.oaiserver.config.ape.dao.impl.MetadataObjectDAOFrontImpl;
-import eu.apenet.oaiserver.config.vo.MetadataObject;
+import eu.apenet.oaiserver.config.main.vo.MetadataObject;
 import eu.apenet.oaiserver.response.ErrorResponse;
 import eu.apenet.oaiserver.response.GetRecordResponse;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;

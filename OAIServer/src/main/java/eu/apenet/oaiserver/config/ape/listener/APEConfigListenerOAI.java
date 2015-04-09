@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config;
+package eu.apenet.oaiserver.config.ape.listener;
 
 import eu.apenet.commons.listener.APEnetConfigListener;
 
