@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config.jpa;
+package eu.apenet.oaiserver.config.other.jpa;
 
 import org.apache.log4j.Logger;
 import javax.persistence.EntityManager;

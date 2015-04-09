@@ -1,4 +1,4 @@
-package eu.apenet.oaiserver.config.listener;
+package eu.apenet.oaiserver.config.ape.listener;
 
 import eu.archivesportaleurope.persistence.jpa.web.JpaListener;
 
