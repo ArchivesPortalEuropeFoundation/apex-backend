@@ -7,15 +7,12 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.vo.MetadataObject;
-import eu.apenet.oaiserver.config.vo.ResumptionTokens;
+import eu.apenet.oaiserver.config.main.vo.MetadataObject;
+import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
 import org.apache.log4j.Logger;
 
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.oaiserver.util.OAIUtils;
-import eu.apenet.persistence.vo.Ese;
-import eu.apenet.persistence.vo.EseState;
-import eu.apenet.persistence.vo.ResumptionToken;
 
 public class ListIdentifiersResponse extends AbstractResponse {
     private static final Logger LOGGER = Logger.getLogger(ListIdentifiersResponse.class);

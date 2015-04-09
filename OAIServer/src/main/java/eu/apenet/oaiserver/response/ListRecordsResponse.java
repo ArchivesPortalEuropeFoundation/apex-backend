@@ -6,20 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.oaiserver.config.Configuration;
-import eu.apenet.oaiserver.config.vo.MetadataObject;
-import eu.apenet.oaiserver.config.vo.ResumptionTokens;
+import eu.apenet.oaiserver.config.ape.Configuration;
+import eu.apenet.oaiserver.config.main.vo.MetadataObject;
+import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
 import eu.apenet.oaiserver.request.RequestProcessor;
-import eu.apenet.persistence.vo.Ese;
-import eu.apenet.persistence.vo.MetadataFormat;
-import eu.apenet.persistence.vo.ResumptionToken;
 
 public class ListRecordsResponse extends ListIdentifiersResponse {
 

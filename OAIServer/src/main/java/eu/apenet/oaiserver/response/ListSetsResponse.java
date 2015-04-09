@@ -5,9 +5,8 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.vo.ResumptionTokens;
+import eu.apenet.oaiserver.config.main.vo.ResumptionTokens;
 import eu.apenet.oaiserver.request.RequestProcessor;
-import eu.apenet.persistence.vo.ResumptionToken;
 
 public class ListSetsResponse extends AbstractResponse {
 

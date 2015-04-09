@@ -4,8 +4,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import eu.apenet.oaiserver.config.MetadataFormats;
-import eu.apenet.persistence.vo.MetadataFormat;
+import eu.apenet.oaiserver.config.main.MetadataFormats;
 
 public class ListMetadataFormatsResponse extends AbstractResponse {
 
