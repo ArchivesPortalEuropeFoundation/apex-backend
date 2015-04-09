@@ -6,7 +6,7 @@
 	<display-name>OAIServer</display-name>
 	<filter>
 		<filter-name>JpaFilterOAI</filter-name>
-		<filter-class>eu.apenet.oaiserver.config.ape.filter.JpaFilterOAI</filter-class>
+		<filter-class>eu.apenet.oaiserver.config.other.filter.JpaFilterOAI</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>JpaFilterOAI</filter-name>
@@ -14,7 +14,7 @@
 	</filter-mapping>
 	<filter>
 		<filter-name>UTF8ResponseFilterOAI</filter-name>
-		<filter-class>eu.apenet.oaiserver.config.ape.filter.UTF8ResponseFilterOAI</filter-class>
+		<filter-class>eu.apenet.oaiserver.config.other.filter.UTF8ResponseFilterOAI</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>UTF8ResponseFilterOAI</filter-name>
@@ -29,9 +29,9 @@
 		<url-pattern>/oai</url-pattern>
 	</servlet-mapping>
 	<listener>
-		<listener-class>eu.apenet.oaiserver.config.ape.listener.JpaListenerOAI</listener-class>
+		<listener-class>eu.apenet.oaiserver.config.other.listener.JpaListenerOAI</listener-class>
 	</listener>
-	<listener>
-		<listener-class>eu.apenet.oaiserver.config.ape.listener.APEConfigListenerOAI</listener-class>
-	</listener>
+	<!--<listener>-->
+		<!--<listener-class>eu.apenet.oaiserver.config.other.listener.APEConfigListenerOAI</listener-class>-->
+	<!--</listener>-->
 </web-app>

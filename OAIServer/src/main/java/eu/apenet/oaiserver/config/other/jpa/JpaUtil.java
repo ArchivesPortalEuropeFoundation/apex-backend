@@ -22,7 +22,7 @@ public class JpaUtil {
 
     public static void init() {
         if (entityManagerFactory == null){
-            entityManagerFactory = Persistence.createEntityManagerFactory("");//todo...
+            entityManagerFactory = Persistence.createEntityManagerFactory("otherPersistence");
         }
     }
 
