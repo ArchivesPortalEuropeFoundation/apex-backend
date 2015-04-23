@@ -3,13 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags" %>
 <dashboard:securityContext var="securityContext" />
-<c:set var="countryManager" value=""/>
-<c:if test="${securityContext.countryManager}">
-	<c:set var="countryManager" value="countryManager"/>
-</c:if>
 <div>
 		<s:actionerror />
-	<form action="createEditTopicMapping${countryManager}" method="post" theme="simple">
+	<s:form method="post" theme="simple">
 	<table>
 		<s:if test="%{topicMappingId}">
 			<tr>
@@ -35,7 +31,15 @@
 	</table>
 	<table>
 		<tr>
-			<td colspan="2"><s:submit key="label.ok" cssClass="mainButton" name="okButton" /><s:submit method="cancel" key="label.cancel" name="cancelButton" onclick="form.onsubmit=null"/>
+			<td colspan="2">
+				<c:choose>
+					<c:when test="${securityContext.countryManager}">
+						<s:submit key="label.ok" cssClass="mainButton" name="okButton" action="createEditTopicMappingCountryManager" /><s:submit method="cancel" key="label.cancel" name="cancelButton" onclick="form.onsubmit=null" action="createEditTopicMappingCountryManager"/>
+					</c:when>
+					<c:otherwise>
+						<s:submit key="label.ok" cssClass="mainButton" name="okButton" action="createEditTopicMapping" /><s:submit method="cancel" key="label.cancel" name="cancelButton" onclick="form.onsubmit=null" action="createEditTopicMapping"/>
+					</c:otherwise>
+				</c:choose>
 			</td>
 		</tr>
 	</table>			
@@ -45,5 +49,5 @@
 
 		
 		
-	</form>
+	</s:form>
 </div>

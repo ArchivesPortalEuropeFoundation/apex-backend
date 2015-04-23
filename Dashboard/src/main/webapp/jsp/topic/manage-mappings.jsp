@@ -3,10 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags" %>
 <dashboard:securityContext var="securityContext" />
-<s:set var="countryManager" value=""/>
-<c:if test="${securityContext.countryManager}">
-	<s:set var="countryManager" value="countryManager"/>
-</c:if>
 	<script type="text/javascript">
 	
 	$(function() {
@@ -39,21 +35,44 @@
 			</td>
 			<td style="max-width:100px"><c:out value="${topicMapping.controlaccessKeyword}"/></td>
 			<td>
-								<s:form action="displayCreateEditTopicMapping<s:property value='#countryManager'/>" theme="simple" method="GET">
-									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
-									<s:submit key="label.edit" name="edit"/>
-								</s:form>
-								<s:form action="deleteTopicMapping<s:property value='#countryManager'/>" theme="simple">
-									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
-									<s:submit key="content.message.delete" name="delete"/>
-								</s:form>
+				<c:choose>
+					<c:when test="${securityContext.countryManager}">
+						<s:form theme="simple" method="GET" action="displayCreateEditTopicMappingCountryManager">
+							<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
+							<s:submit key="label.edit" name="edit" />
+						</s:form>
+						<s:form theme="simple" action="deleteTopicMappingCountryManager">
+							<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
+							<s:submit key="content.message.delete" name="delete" />
+						</s:form>
+					</c:when>
+					<c:otherwise>
+						<s:form theme="simple" method="GET" action="displayCreateEditTopicMapping">
+							<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
+							<s:submit key="label.edit" name="edit" />
+						</s:form>
+						<s:form theme="simple" action="deleteTopicMapping">
+							<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
+							<s:submit key="content.message.delete" name="delete" />
+						</s:form>
+					</c:otherwise>
+				</c:choose>
 			</td>
 		</tr>
 		</c:forEach>
 		</tbody>
 	</table>
-								<s:form action="displayCreateEditTopicMapping<s:property value='#countryManager'/>" theme="simple"  method="GET">
-									<s:submit key="topicmapping.create" name="add"/>
-								</s:form>
+	<c:choose>
+		<c:when test="${securityContext.countryManager}">
+			<s:form theme="simple"  method="GET" action="displayCreateEditTopicMappingCountryManager">
+				<s:submit key="topicmapping.create" name="add" />
+			</s:form>
+		</c:when>
+		<c:otherwise>
+			<s:form theme="simple"  method="GET" action="displayCreateEditTopicMapping">
+				<s:submit key="topicmapping.create" name="add" />
+			</s:form>
+		</c:otherwise>
+	</c:choose>
 </div>
 
