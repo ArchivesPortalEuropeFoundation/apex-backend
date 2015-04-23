@@ -1193,6 +1193,9 @@
      <definition name="createEditTopicMapping" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.topic.mappings.create" />
         <put-attribute name="body" value="/jsp/topic/create-edit-mapping.jsp" />
+		 <put-list-attribute name="jsfilesInternal">
+			 <add-attribute type="string" value="/js/institution-topics.js"/>
+		 </put-list-attribute>
     </definition>
 
 	<definition name="manageTopicMappingsCountryManager" extends="DefaultLayout" >

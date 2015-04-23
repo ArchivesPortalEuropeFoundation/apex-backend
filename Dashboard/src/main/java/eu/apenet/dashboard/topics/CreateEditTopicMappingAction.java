@@ -25,6 +25,7 @@ public class CreateEditTopicMappingAction extends AbstractCountryAction {
 	private List<SelectItem> sourceGuides = new ArrayList<SelectItem>();
 	private Integer sourceGuideId;
 	private String keywords;
+	private String keywordsCountryManager;
 
 	
 	public List<SelectItem> getTopics() {
@@ -80,6 +81,14 @@ public class CreateEditTopicMappingAction extends AbstractCountryAction {
 
 	public void setTopicDescription(String topicDescription) {
 		this.topicDescription = topicDescription;
+	}
+
+	public String getKeywordsCountryManager() {
+		return keywordsCountryManager;
+	}
+
+	public void setKeywordsCountryManager(String keywordsCountryManager) {
+		this.keywordsCountryManager = keywordsCountryManager;
 	}
 
 	protected void buildBreadcrumbs() {
@@ -155,6 +164,10 @@ public class CreateEditTopicMappingAction extends AbstractCountryAction {
 			TopicMapping topicMapping;
 			if(getAiId() != null) {
 				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+				TopicMapping topicMappingCountryManager = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByTopicIdAndCountryId(topicMapping.getTopicId(), getCountryId());
+				if(topicMappingCountryManager != null) {
+					this.keywordsCountryManager = topicMappingCountryManager.getControlaccessKeyword();
+				}
 			} else {
 				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndCountryId(topicMappingId, getCountryId());
 			}
@@ -174,7 +187,7 @@ public class CreateEditTopicMappingAction extends AbstractCountryAction {
 			} else {
 				topicMapping.setCountryId(getCountryId());
 			}
-		}else {
+		} else {
 			if(getAiId() != null) {
 				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
 			} else {

@@ -47,4 +47,16 @@ public class TopicMappingJpaDAO extends AbstractHibernateDAO<TopicMapping, Long>
 		query.setParameter("id", id);
 		return query.getSingleResult();
 	}
+
+	@Override
+	public TopicMapping getTopicMappingByTopicIdAndCountryId(Long topicId, Integer countryId) {
+		String jpaQuery = "SELECT topicMapping FROM TopicMapping topicMapping WHERE countryId = :countryId AND topicId = :topicId";
+		TypedQuery<TopicMapping> query = getEntityManager().createQuery(jpaQuery, TopicMapping.class);
+		query.setParameter("countryId", countryId);
+		query.setParameter("topicId", topicId);
+		List<TopicMapping> topicMappings = query.getResultList();
+		if(topicMappings.size() > 0)
+			return topicMappings.get(0);
+		return null;
+	}
 }

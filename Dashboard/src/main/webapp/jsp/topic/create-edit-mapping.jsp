@@ -3,6 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags" %>
 <dashboard:securityContext var="securityContext" />
+<script type="text/javascript">
+	$(document).ready(function() {
+		initInstitutionTopics();
+	});
+</script>
 <div>
 		<s:actionerror />
 	<s:form method="post" theme="simple">
@@ -28,6 +33,19 @@
 			<td class="inputLabel"><s:label key="topicmapping.keywords.label" for="keywords" /> &lt;controlaccess&gt;&lt;subject&gt;:<br/>(<s:text name="topicmapping.keywords.controllaccess.split"/>)</td>
 			<td><textarea id="keywords" rows="" cols="" maxlength="1500" name="keywords"><c:out value="${keywords}"/></textarea><s:fielderror fieldName="keywords"/></td>
 		</tr>
+		<c:if test="${not securityContext.countryManager and not empty keywordsCountryManager}">
+			<tr>
+				<td class="inputLabel"><s:label key="topicmapping.keywords.countrymanager.label" for="keywordscountrymanager" />:</td>
+				<td><textarea id="keywordscountrymanager" rows="" cols="" maxlength="1500" disabled="disabled" name="keywordscountrymanager"><c:out value="${keywordsCountryManager}"/></textarea><s:fielderror fieldName="keywordscountrymanager"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+				<s:submit key="topicmapping.button.merge" cssClass="mainButton" name="mergeButton" />
+				<%--<button class="mainButton" name="mergeButton" id="mergeButton"><s:property value="getText('topicmapping.button.merge')"/></button>--%>
+				</td>
+			</tr>
+		</c:if>
 	</table>
 	<table>
 		<tr>
