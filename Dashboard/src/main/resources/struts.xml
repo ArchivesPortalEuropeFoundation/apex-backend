@@ -867,8 +867,31 @@
                 <param name="actionName">manageTopicMappings</param>
             </result>
             <result name="input" type="tiles">createEditTopicMapping</result>
-        </action>  
-        
+        </action>
+        <action name="deleteTopicMapping" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction" method="deleteTopicMapping">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageTopicMappings</param>
+            </result>
+        </action>
+
+        <action name="manageTopicMappingsCountryManager" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction">
+            <result name="success" type="tiles">manageTopicMappingsCountryManager</result>
+        </action>
+        <action name="displayCreateEditTopicMappingCountryManager" class="eu.apenet.dashboard.topics.CreateEditTopicMappingAction" method="input">
+            <result name="input" type="tiles">createEditTopicMappingCountryManager</result>
+        </action>
+        <action name="createEditTopicMappingCountryManager" class="eu.apenet.dashboard.topics.CreateEditTopicMappingAction">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageTopicMappingsCountryManager</param>
+            </result>
+            <result name="input" type="tiles">createEditTopicMappingCountryManager</result>
+        </action>
+        <action name="deleteTopicMappingCountryManager" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction" method="deleteTopicMapping">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageTopicMappingsCountryManager</param>
+            </result>
+        </action>
+
         <action name="displaySetFeedbackEmailaddress" class="eu.apenet.dashboard.actions.SetFeedbackEmailaddressAction" method="input">
             <result name="input" type="tiles">setFeedbackEmailaddress</result>
         </action>
@@ -877,13 +900,7 @@
                 <param name="actionName">displaySetFeedbackEmailaddress</param>
             </result>
             <result name="input" type="tiles">setFeedbackEmailaddress</result>
-        </action>          
-            
-        <action name="deleteTopicMapping" class="eu.apenet.dashboard.topics.ManageTopicMappingsAction" method="deleteTopicMapping">
-            <result name="success" type="redirectAction">
-                <param name="actionName">manageTopicMappings</param>
-            </result>
-        </action>           
+        </action>
         
         <action name="manageHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction">
             <result name="success" type="tiles">manageHarvest</result>

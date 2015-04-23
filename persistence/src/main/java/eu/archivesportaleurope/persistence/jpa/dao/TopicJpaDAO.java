@@ -35,6 +35,15 @@ public class TopicJpaDAO extends AbstractHibernateDAO<Topic, Long> implements To
 	}
 
 	@Override
+	public List<Topic> getTopicsWithoutMappingPerCountry(Integer countryId) {
+		String jpaSubQuery = "SELECT topicMapping.topicId FROM TopicMapping topicMapping WHERE topicMapping.countryId = :countryId";
+		String jpaQuery = "SELECT topic FROM Topic topic WHERE topic.id NOT IN (" +jpaSubQuery + ") ORDER BY topic.description";
+		TypedQuery<Topic> query = getEntityManager().createQuery(jpaQuery, Topic.class);
+		query.setParameter("countryId", countryId);
+		return query.getResultList();
+	}
+
+	@Override
 	public Topic getTopicByDescription(String topicDescription){
 		Topic result = null;
 		if(topicDescription!=null){

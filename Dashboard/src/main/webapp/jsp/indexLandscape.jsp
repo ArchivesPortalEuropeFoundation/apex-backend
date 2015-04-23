@@ -19,6 +19,7 @@
                      <li><s:a action="ALDownload" target="_blank"> -   <s:property value="getText('al.menu.downloadal')" /></s:a></li>    
                               
                      <li><s:a action="changeAlIdentifiers"> -   <s:property value="getText('al.menu.changeAlIdentifiers')" /></s:a></li>
+                    <li><a href ="manageTopicMappingsCountryManager.action"><s:text name="dashboard.menu.topic.mappings" /></a></li>
 				</c:if>
                      <li><br/><span style="font : bold 100% sans-serif;color : #333;text-align : left;"><s:a action="GoDashboard"><s:property value="getText('al.menu.managecontent')"/></s:a></span><br/></li>
                      

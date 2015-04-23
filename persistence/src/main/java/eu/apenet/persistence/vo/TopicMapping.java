@@ -23,6 +23,12 @@ public class TopicMapping {
 	private ArchivalInstitution archivalInstitution;
 	@Column(name = "ai_id")
 	private Integer aiId;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="country_id",insertable=false, updatable=false)
+	private Country country;
+	@Column(name = "country_id")
+	private Integer countryId;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="topic_id",insertable=false, updatable=false)
@@ -87,4 +93,19 @@ public class TopicMapping {
 		this.sgId = sgId;
 	}
 
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public Integer getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(Integer countryId) {
+		this.countryId = countryId;
+	}
 }

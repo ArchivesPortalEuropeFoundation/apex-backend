@@ -3,18 +3,16 @@ package eu.apenet.dashboard.topics;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.apenet.dashboard.AbstractCountryAction;
+import eu.apenet.persistence.vo.*;
 import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.SourceGuide;
-import eu.apenet.persistence.vo.Topic;
-import eu.apenet.persistence.vo.TopicMapping;
 
-public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
+public class CreateEditTopicMappingAction extends AbstractCountryAction {
 
 	/**
 	 * 
@@ -108,21 +106,45 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 	@Override
 	public void prepare() throws Exception {
 		if (topicMappingId == null){
-			List<Topic> topics = DAOFactory.instance().getTopicDAO().getTopicsWithoutMapping(getAiId());
+			List<Topic> topics;
+			if(getAiId() != null) {
+				topics = DAOFactory.instance().getTopicDAO().getTopicsWithoutMapping(getAiId());
+			} else {
+				topics = DAOFactory.instance().getTopicDAO().getTopicsWithoutMappingPerCountry(getCountryId());
+			}
 			for (Topic topic: topics){
 				this.topics.add(new SelectItem(topic.getId(), topic.getDescription()));
 			}
-		}else {
-			TopicMapping topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+		} else {
+			TopicMapping topicMapping;
+			if(getAiId() != null) {
+				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+			} else {
+				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndCountryId(topicMappingId, getCountryId());
+			}
 			this.topicDescription = topicMapping.getTopic().getDescription();
 		}
-		ContentSearchOptions options = new ContentSearchOptions();
-		options.setArchivalInstitionId(getAiId());
-		options.setContentClass(SourceGuide.class);
-		options.setPageSize(100);
-		List<Ead> eads = DAOFactory.instance().getEadDAO().getEads(options);
-		for (Ead ead: eads){
-			this.sourceGuides.add(new SelectItem(ead.getId(), ead.getIdentifier() + " - " + ead.getTitle()));
+		if(getAiId() == null) {
+			Country country = DAOFactory.instance().getCountryDAO().findById(getCountryId());
+			for(ArchivalInstitution archivalInstitution : country.getArchivalInstitutions()) {
+				ContentSearchOptions options = new ContentSearchOptions();
+				options.setArchivalInstitionId(archivalInstitution.getAiId());
+				options.setContentClass(SourceGuide.class);
+				options.setPageSize(100);
+				List<Ead> eads = DAOFactory.instance().getEadDAO().getEads(options);
+				for (Ead ead : eads) {
+					this.sourceGuides.add(new SelectItem(ead.getId(), ead.getIdentifier() + " - " + ead.getTitle()));
+				}
+			}
+		} else {
+			ContentSearchOptions options = new ContentSearchOptions();
+			options.setArchivalInstitionId(getAiId());
+			options.setContentClass(SourceGuide.class);
+			options.setPageSize(100);
+			List<Ead> eads = DAOFactory.instance().getEadDAO().getEads(options);
+			for (Ead ead : eads) {
+				this.sourceGuides.add(new SelectItem(ead.getId(), ead.getIdentifier() + " - " + ead.getTitle()));
+			}
 		}
 		super.prepare();
 	}
@@ -130,7 +152,12 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 	@Override
 	public String input() throws Exception {
 		if (topicMappingId != null){
-			TopicMapping topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId , getAiId());
+			TopicMapping topicMapping;
+			if(getAiId() != null) {
+				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+			} else {
+				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndCountryId(topicMappingId, getCountryId());
+			}
 			this.sourceGuideId = topicMapping.getSgId();
 			this.topicDescription = topicMapping.getTopic().getDescription();
 			this.keywords = topicMapping.getControlaccessKeyword();
@@ -142,9 +169,17 @@ public class CreateEditTopicMappingAction extends AbstractInstitutionAction {
 		TopicMapping topicMapping = new TopicMapping();
 		if (topicMappingId == null){
 			topicMapping.setTopicId(topicId);
-			topicMapping.setAiId(getAiId());
+			if(getAiId() != null) {
+				topicMapping.setAiId(getAiId());
+			} else {
+				topicMapping.setCountryId(getCountryId());
+			}
 		}else {
-			topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+			if(getAiId() != null) {
+				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndAiId(topicMappingId, getAiId());
+			} else {
+				topicMapping = DAOFactory.instance().getTopicMappingDAO().getTopicMappingByIdAndCountryId(topicMappingId, getCountryId());
+			}
 		}
 		if (topicMapping != null){
 			topicMapping.setSgId(sourceGuideId);

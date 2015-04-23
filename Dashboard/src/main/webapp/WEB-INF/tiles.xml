@@ -1194,6 +1194,22 @@
         <put-attribute name="title" value="dashboard.menu.topic.mappings.create" />
         <put-attribute name="body" value="/jsp/topic/create-edit-mapping.jsp" />
     </definition>
+
+	<definition name="manageTopicMappingsCountryManager" extends="DefaultLayout" >
+		<put-attribute name="title" value="dashboard.menu.topic.mappings" />
+		<put-attribute name="body" value="/jsp/topic/manage-mappings.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/jquery/jquery.tablesorter.min.js"/>
+		</put-list-attribute>
+		<put-list-attribute name="cssfilesInternal">
+			<add-attribute type="string" value="/css/jquery/theme.tablesorter.css"/>
+		</put-list-attribute>
+	</definition>
+	<definition name="createEditTopicMappingCountryManager" extends="DefaultLayout" >
+		<put-attribute name="title" value="dashboard.menu.topic.mappings.create" />
+		<put-attribute name="body" value="/jsp/topic/create-edit-mapping.jsp" />
+	</definition>
+
      <definition name="setFeedbackEmailaddress" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.ai.setfeedbackemail" />
         <put-attribute name="body" value="/jsp/setfeedbackemail.jsp" />

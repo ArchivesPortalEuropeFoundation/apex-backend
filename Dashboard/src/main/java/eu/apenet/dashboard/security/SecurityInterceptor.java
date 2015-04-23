@@ -14,6 +14,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
+import eu.apenet.dashboard.AbstractCountryAction;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -111,7 +112,7 @@ public class SecurityInterceptor extends AbstractInterceptor implements Serializ
 			role = securityContext.getRole();
 		}
 		if (isAllowed(emailAddress, role, actionName)) {
-			if (invocation.getProxy().getAction() instanceof AbstractInstitutionAction){
+			if (invocation.getProxy().getAction() instanceof AbstractInstitutionAction && !(invocation.getProxy().getAction() instanceof AbstractCountryAction)){
 				if (securityContext == null || securityContext.getSelectedInstitution() == null){
 					LOGGER.info("user: " + emailAddress + " with role: " + role + " has NO institution selected, when accessing: " + invocation.getProxy().getAction().getClass().getName());
 					return INSTITUTION_REQUIRED;

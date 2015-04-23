@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags" %>
+<dashboard:securityContext var="securityContext" />
+<s:set var="countryManager" value=""/>
+<c:if test="${securityContext.countryManager}">
+	<s:set var="countryManager" value="countryManager"/>
+</c:if>
 	<script type="text/javascript">
 	
 	$(function() {
@@ -33,20 +39,20 @@
 			</td>
 			<td style="max-width:100px"><c:out value="${topicMapping.controlaccessKeyword}"/></td>
 			<td>
-								<s:form action="displayCreateEditTopicMapping" theme="simple" method="GET">
+								<s:form action="displayCreateEditTopicMapping<s:property value='#countryManager'/>" theme="simple" method="GET">
 									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
 									<s:submit key="label.edit" name="edit"/>
-								</s:form>				
-								<s:form action="deleteTopicMapping" theme="simple">
+								</s:form>
+								<s:form action="deleteTopicMapping<s:property value='#countryManager'/>" theme="simple">
 									<input type="hidden" name="topicMappingId"   value="${topicMapping.id}"/>
 									<s:submit key="content.message.delete" name="delete"/>
-								</s:form>					
+								</s:form>
 			</td>
 		</tr>
 		</c:forEach>
 		</tbody>
 	</table>
-						<s:form action="displayCreateEditTopicMapping" theme="simple"  method="GET">
+								<s:form action="displayCreateEditTopicMapping<s:property value='#countryManager'/>" theme="simple"  method="GET">
 									<s:submit key="topicmapping.create" name="add"/>
 								</s:form>
 </div>
