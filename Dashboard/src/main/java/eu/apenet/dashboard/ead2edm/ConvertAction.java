@@ -48,7 +48,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private static final String TYPE_TEXT = "TEXT"; // Constant for type "text".
     private static final String TYPE_VIDEO = "VIDEO"; // Constant for type "video".
     // Inherit options.
-    private static final String INHERITLANGUAGE_PROVIDE = "provide";
+    private static final String INHERIT_PROVIDE = "provide";
     // Options.
     private static final String OPTION_YES = "yes"; // Constant for value "yes".
     private static final String OPTION_NO = "no"; // Constant for value "no".
@@ -79,6 +79,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
+    private Set<SelectItem> inheritRightsInfoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> providerSet = new TreeSet<SelectItem>();
     private Set<SelectItem> licenseSet = new TreeSet<SelectItem>();
     private Set<SelectItem> europeanaLicenseSet = new TreeSet<SelectItem>();
@@ -93,6 +94,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String sourceOfIdentifiers = ConvertAction.OPTION_UNITID;
     private String validateLinks = ConvertAction.OPTION_NO;
     private String inheritLanguage = ConvertAction.OPTION_NO;
+    private String inheritRightsInfo = ConvertAction.OPTION_NO;
     //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
     private String inheritOrigination = ConvertAction.OPTION_NO;
     private String inheritFileParent = ConvertAction.OPTION_NO;
@@ -121,7 +123,7 @@ public class ConvertAction extends AbstractInstitutionAction {
                 this.addFieldError("languageSelection", getText("errors.required"));
             }
         } else {
-            if (ConvertAction.INHERITLANGUAGE_PROVIDE.equals(this.getInheritLanguage())) {
+            if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
                 if (StringUtils.isBlank(this.getLanguageSelection())) {
                     addFieldError("languageSelection", getText("errors.required"));
                 }
@@ -187,7 +189,10 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.yesNoSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
-        this.inheritLanguageSet.add(new SelectItem(ConvertAction.INHERITLANGUAGE_PROVIDE, this.getText("ead2ese.label.language.select")));
+        this.inheritLanguageSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.language.select")));
+        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
+        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
+        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.license.select")));
         this.licenseSet.add(new SelectItem(ConvertAction.EUROPEANA, this.getText("ead2ese.content.license.europeana")));
         this.licenseSet.add(new SelectItem(ConvertAction.OUT_OF_COPYRIGHT, this.getText("ead2ese.content.license.out.of.copyright")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS, this.getText("ead2ese.content.license.creativecommons")));
@@ -288,7 +293,7 @@ public class ConvertAction extends AbstractInstitutionAction {
             config.setLanguage(parseLanguages);
         } else {
             config.setInheritLanguage(ConvertAction.OPTION_YES.equals(this.getInheritLanguage()));
-            if (ConvertAction.INHERITLANGUAGE_PROVIDE.equals(this.getInheritLanguage())) {
+            if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
                 String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
                 config.setLanguage(parseLanguages);
             }
@@ -305,6 +310,11 @@ public class ConvertAction extends AbstractInstitutionAction {
             config.setDataProvider(this.getTextDataProvider());
         }
         
+        if (this.isBatchConversion()) {
+            config.setInheritRightsInfo(false);
+        } else {
+            config.setInheritRightsInfo(ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo()));
+        }
         config.setUseExistingRightsInfo(this.isLicenseCheck());
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             config.setRights(this.getEuropeanaLicense());
@@ -405,6 +415,14 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.inheritLanguage = inheritLanguage;
     }
 
+    public String getInheritRightsInfo() {
+        return inheritRightsInfo;
+    }
+
+    public void setInheritRightsInfo(String inheritRightsInfo) {
+        this.inheritRightsInfo = inheritRightsInfo;
+    }
+
     public String getInheritOrigination() {
         return inheritOrigination;
     }
@@ -483,6 +501,14 @@ public class ConvertAction extends AbstractInstitutionAction {
 
     public void setInheritLanguageSet(Set<SelectItem> inheritLanguageSet) {
         this.inheritLanguageSet = inheritLanguageSet;
+    }
+
+    public Set<SelectItem> getInheritRightsInfoSet() {
+        return inheritRightsInfoSet;
+    }
+
+    public void setInheritRightsInfoSet(Set<SelectItem> inheritRightsInfoSet) {
+        this.inheritRightsInfoSet = inheritRightsInfoSet;
     }
 
     public Set<SelectItem> getProviderSet() {
