@@ -98,6 +98,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
     private String inheritOrigination = ConvertAction.OPTION_NO;
     private String inheritFileParent = ConvertAction.OPTION_NO;
+    private String inheritUnittitle = ConvertAction.OPTION_NO;
     private String customDataProvider;
     private String mappingsFileFileName; 		//The uploaded file name
     private File mappingsFile;					//The uploaded file
@@ -108,6 +109,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean daoTypeCheck = true;
     private boolean inheritFileParentCheck;
     private boolean inheritOriginationCheck;
+    private boolean inheritUnittitleCheck;
     private boolean inheritLanguageCheck = true;
     private boolean languageOfTheMaterialCheck = true;
     private boolean noLanguageOnClevel = true;
@@ -206,6 +208,7 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_UNKNOWN, this.getText("content.message.rights.unknown")));
     }
 
+    @Override
     public String input() throws IOException, SAXException, ParserConfigurationException {
         if (StringUtils.isNotBlank(id)) {
             Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
@@ -253,6 +256,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public String execute() throws Exception {
         EdmConfig config = fillConfig();
         if (StringUtils.isBlank(batchItems)) {
@@ -286,6 +290,7 @@ public class ConvertAction extends AbstractInstitutionAction {
         EdmConfig config = new EdmConfig();
         config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
         config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
+        config.setInheritUnittitle(ConvertAction.OPTION_YES.equals(this.getInheritUnittitle()));
 
         if (this.isBatchConversion()) {
             config.setInheritLanguage(false);
@@ -437,6 +442,14 @@ public class ConvertAction extends AbstractInstitutionAction {
 
     public void setInheritFileParent(String inheritFileParent) {
         this.inheritFileParent = inheritFileParent;
+    }
+
+    public String getInheritUnittitle() {
+        return inheritUnittitle;
+    }
+
+    public void setInheritUnittitle(String inheritUnittitle) {
+        this.inheritUnittitle = inheritUnittitle;
     }
 
     public Set<SelectItem> getLanguages() {
@@ -699,9 +712,17 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.inheritOriginationCheck = inheritOriginationCheck;
     }
 
+    public boolean isInheritUnittitleCheck() {
+        return inheritUnittitleCheck;
+    }
+
     /**
-     * @return the inheritLanguageCheck
+     * @param inheritUnittitleCheck
      */
+    public void setInheritUnittitleCheck(boolean inheritUnittitleCheck) {
+        this.inheritUnittitleCheck = inheritUnittitleCheck;
+    }
+
     public boolean isInheritLanguageCheck() {
         return this.inheritLanguageCheck;
     }
