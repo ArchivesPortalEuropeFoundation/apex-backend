@@ -101,6 +101,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String inheritFileParent;
     private String inheritOriginationCheck;
     private String inheritOrigination;
+    private String inheritUnittitleCheck;
+    private String inheritUnittitle;
 
     //other fields
     private static final Logger LOG = Logger.getLogger(IngestionprofilesAction.class);
@@ -177,6 +179,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
                 inheritOriginationCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritOriginCheck());
                 inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
+                inheritUnittitleCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitleCheck());
+                inheritUnittitle = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitle());
                 if(ingestionprofile.getXslUploadId() != null) {
                     setDefaultXslFile(DAOFactory.instance().getXslUploadDAO().findById(ingestionprofile.getXslUploadId()).getId() + "");
                 }
@@ -288,6 +292,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setEuropeanaInheritElements(Boolean.parseBoolean(inheritFileParent));
         profile.setEuropeanaInheritOriginCheck(Boolean.parseBoolean(inheritOriginationCheck));
         profile.setEuropeanaInheritOrigin(Boolean.parseBoolean(inheritOrigination));
+        profile.setEuropeanaInheritUnittitleCheck(Boolean.parseBoolean(inheritUnittitleCheck));
+        profile.setEuropeanaInheritUnittitle(Boolean.parseBoolean(inheritUnittitle));
         
         if (profilelist.equals("-1")) {
             profile = profileDAO.store(profile);
@@ -410,6 +416,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         inheritFileParent = Boolean.toString(false);
         inheritOriginationCheck = Boolean.toString(true);
         inheritOrigination = Boolean.toString(false);
+        inheritUnittitleCheck = Boolean.toString(true);
+        inheritUnittitle = Boolean.toString(false);
 
         this.lastSelection = this.profilelist;
         
@@ -956,6 +964,22 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setInheritOrigination(String inheritOrigination) {
         this.inheritOrigination = inheritOrigination;
+    }
+
+    public String getInheritUnittitleCheck() {
+        return inheritUnittitleCheck;
+    }
+
+    public void setInheritUnittitleCheck(String inheritUnittitleCheck) {
+        this.inheritUnittitleCheck = inheritUnittitleCheck;
+    }
+
+    public String getInheritUnittitle() {
+        return inheritUnittitle;
+    }
+
+    public void setInheritUnittitle(String inheritUnittitle) {
+        this.inheritUnittitle = inheritUnittitle;
     }
 
     public String getLastSelection() {

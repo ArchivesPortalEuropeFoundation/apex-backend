@@ -12,6 +12,8 @@
             enableInheritFileParentCheckState();
             $('#hiddenInheritOrigination').show();
             enableInheritOriginationCheckState();
+            $('#hiddenInheritUnittitle').show();
+            enableInheritUnittitleCheckState();
         });
 
         $("#radioConversiontypetrue").click(function() {
@@ -19,6 +21,8 @@
             disableInheritFileParentCheckState();
             $('#hiddenInheritOrigination').hide();
             disableInheritOriginationCheckState();
+            $('#hiddenInheritUnittitle').hide();
+            disableInheritUnittitleCheckState();
         });
 
         $('#licensecreativecommons').click(function() {
@@ -93,6 +97,33 @@
             if ($(this).attr("name") != "inheritOriginationCheck") {
                 $(this).attr('disabled', 'disabled');
                 if ($(this).val() == "false") {
+                    $(this).attr('checked', 'checked');
+                } else {
+                    $(this).removeAttr('checked');
+                }
+            }
+        });
+    }
+
+    function changeInheritUnittitleCheckState() {
+        if ($("#inheritUnittitleCheck").attr('checked')) {
+            enableInheritUnittitleCheckState();
+        } else {
+            disableInheritUnittitleCheckState();
+        }
+    }
+
+    function enableInheritUnittitleCheckState() {
+        $("input[name^='inheritUnittitle']").each(function() {
+            $(this).removeAttr('disabled');
+        });
+    }
+
+    function disableInheritUnittitleCheckState() {
+        $("input[name^='inheritUnittitle']").each(function() {
+            if ($(this).attr("name") != "inheritUnittitleCheck") {
+                $(this).attr('disabled', 'disabled');
+                if ($(this).val() == "no") {
                     $(this).attr('checked', 'checked');
                 } else {
                     $(this).removeAttr('checked');
@@ -221,6 +252,17 @@
             <td>
                 <s:iterator value="yesNoSet">
                     <s:radio name="inheritOrigination" id="inheritOrigination" list="top" listKey="value" listValue="content"></s:radio><br/>
+                </s:iterator>
+            </td>
+        </tr>
+        <tr id="hiddenInheritUnittitle" ${showMinimal}>
+            <td class="inputLabel">
+                <s:checkbox name="inheritUnittitleCheck" id="inheritUnittitleCheck" value="true" onchange="changeInheritUnittitleCheckState();"></s:checkbox>
+                <s:label key="ead2ese.label.inherit.unittitle" for="inheritUnittitle" />:
+            </td>
+            <td>
+                <s:iterator value="yesNoSet">
+                    <s:radio name="inheritUnittitle" id="inheritUnittitle" list="top" listKey="value" listValue="content"></s:radio><br/>
                 </s:iterator>
             </td>
         </tr>
