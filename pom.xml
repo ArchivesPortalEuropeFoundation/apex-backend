@@ -335,6 +335,11 @@
                 <artifactId>nv-i18n</artifactId>
                 <version>1.13</version>
             </dependency>
+			<dependency>
+				<groupId>xerces</groupId>
+				<artifactId>xercesImpl-schema</artifactId>
+				<version>2.10.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<organization>
