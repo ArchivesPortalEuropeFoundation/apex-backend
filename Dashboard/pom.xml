@@ -36,56 +36,6 @@
 
 			</plugin>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.5.v20120716</version>
-				<configuration>
-					<stopKey>stop</stopKey>
-					<stopPort>8081</stopPort>
-					<systemProperties>
-						<systemProperty>
-							<name>org.mortbay.jetty.Request.maxFormContentSize</name>
-							<value>4000000</value>
-						</systemProperty>
-					</systemProperties>
-					<scanIntervalSeconds>3</scanIntervalSeconds>
-					<webApp>
-						<overrideDescriptor>../commons/src/test/resources/web-override-jetty.xml</overrideDescriptor>
-						<jettyEnvXml>${user.home}/Work/APEnet/portal_data/jetty-env.xml</jettyEnvXml>
-					</webApp>
-					<connectors>
-						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>8081</port>
-							<maxIdleTime>60000</maxIdleTime>
-						</connector>
-						<connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
-							<port>8443</port>
-							<maxIdleTime>60000</maxIdleTime>
-							<keystore>${user.home}/jetty-ssl.keystore</keystore>
-							<password>jetty6</password>
-							<keyPassword>jetty6</keyPassword>
-						</connector>
-					</connectors>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>postgresql</groupId>
-						<artifactId>postgresql</artifactId>
-						<version>${postgresql.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>javax.persistence</groupId>
-						<artifactId>persistence-api</artifactId>
-						<version>1.0</version>
-					</dependency>
-					<dependency>
-						<groupId>eu.archivesportaleurope.backend</groupId>
-						<artifactId>persistence</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<version>1.0</version>
