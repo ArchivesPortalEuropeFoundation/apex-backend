@@ -5,12 +5,15 @@ import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.exception.DashboardAPEnetException;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CountryDAO;
+import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.XslUploadDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.apenet.persistence.vo.XslUpload;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -29,6 +32,8 @@ public class UploadXslAction extends AbstractAction {
     private List<UploadXslInstitution> institutions;
     private File xslFile;
     private String xslFilename;
+    private String editXslFilename;
+    private Long xslUploadId;
 
     public String execute() throws Exception {
         CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
@@ -42,7 +47,7 @@ public class UploadXslAction extends AbstractAction {
         List<UploadXslInstitution> uploadXslInstitutions = new ArrayList<UploadXslInstitution>(archivalInstitutions.size());
         XslUploadDAO xslUploadDAO = DAOFactory.instance().getXslUploadDAO();
         for(ArchivalInstitution archivalInstitution : archivalInstitutions) {
-            uploadXslInstitutions.add(new UploadXslInstitution(archivalInstitution, xslUploadDAO.hasXslUpload(archivalInstitution.getAiId())));
+            uploadXslInstitutions.add(new UploadXslInstitution(archivalInstitution, xslUploadDAO.getXslUploads(archivalInstitution.getAiId())));
         }
         setInstitutions(uploadXslInstitutions);
         setCountryId(getCountryId());
@@ -75,6 +80,32 @@ public class UploadXslAction extends AbstractAction {
             }
             return ERROR;
         }
+        return SUCCESS;
+    }
+
+    public String editXslFilename() {
+        XslUploadDAO xslUploadDAO = DAOFactory.instance().getXslUploadDAO();
+        XslUpload xslUpload = xslUploadDAO.findById(getXslUploadId());
+        if(StringUtils.isNotBlank(getEditXslFilename())) {
+            xslUpload.setReadableName(getEditXslFilename());
+            xslUploadDAO.store(xslUpload);
+        }
+        return SUCCESS;
+    }
+
+    public String deleteXsl() {
+        XslUploadDAO xslUploadDAO = DAOFactory.instance().getXslUploadDAO();
+        XslUpload xslUpload = xslUploadDAO.findById(getXslUploadId());
+        IngestionprofileDAO ingestionprofileDAO = DAOFactory.instance().getIngestionprofileDAO();
+        List<Ingestionprofile> ingestionprofiles = ingestionprofileDAO.getIngestionprofiles(getInstitutionId());
+        for(Ingestionprofile ingestionprofile : ingestionprofiles) {
+            if(ingestionprofile.getXslUploadId() != null && ingestionprofile.getXslUploadId().equals(getXslUploadId())) {
+                ingestionprofile.setXslUploadId(null);
+                ingestionprofile.setXslUpload(null);
+                ingestionprofileDAO.store(ingestionprofile);
+            }
+        }
+        xslUploadDAO.delete(xslUpload);
         return SUCCESS;
     }
 
@@ -126,13 +157,29 @@ public class UploadXslAction extends AbstractAction {
         this.institutions = institutions;
     }
 
+    public String getEditXslFilename() {
+        return editXslFilename;
+    }
+
+    public void setEditXslFilename(String editXslFilename) {
+        this.editXslFilename = editXslFilename;
+    }
+
+    public Long getXslUploadId() {
+        return xslUploadId;
+    }
+
+    public void setXslUploadId(Long xslUploadId) {
+        this.xslUploadId = xslUploadId;
+    }
+
     public class UploadXslInstitution {
         public ArchivalInstitution archivalInstitution;
-        public boolean hasXsl;
+        public List<XslUpload> xslUploads;
 
-        public UploadXslInstitution(ArchivalInstitution archivalInstitution, boolean hasXsl) {
+        public UploadXslInstitution(ArchivalInstitution archivalInstitution, List<XslUpload> xslUploads) {
             this.archivalInstitution = archivalInstitution;
-            this.hasXsl = hasXsl;
+            this.xslUploads = xslUploads;
         }
 
         public ArchivalInstitution getArchivalInstitution() {
@@ -143,12 +190,12 @@ public class UploadXslAction extends AbstractAction {
             this.archivalInstitution = archivalInstitution;
         }
 
-        public boolean isHasXsl() {
-            return hasXsl;
+        public List<XslUpload> getXslUploads() {
+            return xslUploads;
         }
 
-        public void setHasXsl(boolean hasXsl) {
-            this.hasXsl = hasXsl;
+        public void setXslUploads(List<XslUpload> xslUploads) {
+            this.xslUploads = xslUploads;
         }
     }
 }

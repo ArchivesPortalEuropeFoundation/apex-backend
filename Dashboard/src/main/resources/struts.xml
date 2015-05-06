@@ -1021,6 +1021,12 @@
         <action name="xslUploadFile" class="eu.apenet.dashboard.actions.admin.UploadXslAction" method="uploadXsl">
             <result name="success" type="tiles">uploadXsl</result>
         </action>
+        <action name="deleteXsl" class="eu.apenet.dashboard.actions.admin.UploadXslAction" method="deleteXsl">
+            <result name="success" type="tiles">uploadXsl</result>
+        </action>
+        <action name="editXslFilename" class="eu.apenet.dashboard.actions.admin.UploadXslAction" method="editXslFilename">
+            <result name="success" type="tiles">uploadXsl</result>
+        </action>
 
         <action name="changeToCountryManager" class="eu.apenet.dashboard.security.actions.UserManagementAction" method="changeToCountryManager">
             <result name="success" type="redirectAction">

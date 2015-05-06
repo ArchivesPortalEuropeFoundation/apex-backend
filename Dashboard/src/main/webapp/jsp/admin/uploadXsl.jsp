@@ -37,36 +37,35 @@
         <tr>
           <th><s:text name="label.xsl.upload.institution.id" /></th>
           <th><s:text name="label.xsl.upload.institution.name" /></th>
-          <th><s:text name="label.xsl.upload.file" /></th>
-          <th><s:text name="label.xsl.upload.file.name" /></th>
+          <%--<th><s:text name="label.xsl.upload.file" /></th>--%>
+          <%--<th><s:text name="label.xsl.upload.file.name" /></th>--%>
           <th><s:text name="label.xsl.upload.action" /></th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="item" items="${institutions}">
-          <s:form action="xslUploadFile.action" enctype="multipart/form-data" method="POST" theme="simple">
             <tr>
               <td><c:out value="${item.archivalInstitution.aiId}" /></td>
               <td><c:out value="${item.archivalInstitution.ainame}" /></td>
               <td>
-                <s:file id="xslFile" theme="simple" name="xslFile" key="label.xsl.upload.file"/>
-              </td>
-              <td>
-                <s:textfield id="xslFilename" theme="simple" name="xslFilename" key="label.xsl.upload.file.name"/>
-              </td>
-              <td>
-                <c:choose>
-                  <c:when test="${item.hasXsl}">
-                    <s:text name="label.xsl.upload.alreadyone" />
-                  </c:when>
-                  <c:otherwise>
+                <c:forEach var="xsl" items="${item.xslUploads}">
+                  <s:form method="POST" theme="simple">
+                    <input type="text" id="editXslFilename" name="editXslFilename" value="${xsl.readableName}" />
                     <input type="hidden" name="institutionId" value="${item.archivalInstitution.aiId}" />
-                    <s:submit key="content.message.go" />
-                  </c:otherwise>
-                </c:choose>
+                    <input type="hidden" name="xslUploadId" value="${xsl.id}" />
+                    <s:submit key="content.message.editname" action="editXslFilename" />
+                    <s:submit key="content.message.delete" action="deleteXsl" />
+                  </s:form>
+                  <br/>
+                </c:forEach>
+                <s:form action="xslUploadFile" enctype="multipart/form-data" method="POST" theme="simple">
+                  <s:file id="xslFile" theme="simple" name="xslFile" key="label.xsl.upload.file"/>
+                  <s:textfield id="xslFilename" theme="simple" name="xslFilename" key="label.xsl.upload.file.name"/>
+                  <input type="hidden" name="institutionId" value="${item.archivalInstitution.aiId}" />
+                  <s:submit key="content.message.go" />
+                </s:form>
               </td>
             </tr>
-          </s:form>
         </c:forEach>
         </tbody>
       </table>
