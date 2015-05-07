@@ -431,23 +431,31 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					if(internalParentId.equals(archivalInstitutionTarget.getCountry().getCname())){
 						parentArchivalInstitution = null;
 					}
-					//last step, reorder old tree nodes and put the current position at the end of the new parent
-					int aloOrder = 0;
 					int oldOrder = 0;
 					if(parentArchivalInstitution!=null){
 						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parentArchivalInstitution.getChildArchivalInstitutions());
-						if(children!=null){
-							aloOrder = children.size();
-							oldOrder = archivalInstitutionTarget.getAlorder();
-							archivalInstitutionTarget.setAlorder(aloOrder);
+						if(children.size() > 0){
+							int biggestAlOrder = 0;
+							for(ArchivalInstitution archivalInstitution : children) {
+								if(archivalInstitution.getAlorder() >= biggestAlOrder) {
+									biggestAlOrder = archivalInstitution.getAlorder() + 1;
+								}
+							}
+							archivalInstitutionTarget.setAlorder(biggestAlOrder);
 						}
-					}else{
+						oldOrder = archivalInstitutionTarget.getAlorder();
+					} else {
 						List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
 						if(children!=null){
-							aloOrder = children.size();
-							oldOrder = archivalInstitutionTarget.getAlorder();
-							archivalInstitutionTarget.setAlorder(aloOrder);
+							int biggestAlOrder = 0;
+							for(ArchivalInstitution archivalInstitution : children) {
+								if(archivalInstitution.getAlorder() >= biggestAlOrder) {
+									biggestAlOrder = archivalInstitution.getAlorder() + 1;
+								}
+							}
+							archivalInstitutionTarget.setAlorder(biggestAlOrder);
 						}
+						oldOrder = archivalInstitutionTarget.getAlorder();
 					}
 					archivalInstitutionTarget.setParent(parentArchivalInstitution);
 					List<ArchivalInstitution> siblings = null;
@@ -463,7 +471,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						Iterator<ArchivalInstitution> itSiblings = siblings.iterator();
 						while(itSiblings.hasNext()){
 							ArchivalInstitution aiTemp = itSiblings.next();
-							if(oldOrder<aiTemp.getAlorder() && aiTemp.getAiId()!=archivalInstitutionTarget.getAiId()){
+							if(oldOrder<=aiTemp.getAlorder() && aiTemp.getAiId()!=archivalInstitutionTarget.getAiId()){
 								aiTemp.setAlorder(aiTemp.getAlorder()-1);
 								aiDao.updateSimple(aiTemp);
 							}
