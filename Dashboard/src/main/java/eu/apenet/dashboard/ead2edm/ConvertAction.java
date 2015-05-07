@@ -58,6 +58,9 @@ public class ConvertAction extends AbstractInstitutionAction {
     // Source of identifiers.
     private static final String OPTION_UNITID = "unitid";
     private static final String OPTION_CID = "cid";
+    // Source of title for fonds.
+    private static final String OPTION_ARCHDESC_UNITTITLE = "archdescUnittitle";
+    private static final String OPTION_TITLESTMT_TITLEPROPER = "titlestmtTitleproper";
     // Europeana licences.
     private static final String EUROPEANA_FREE = "http://www.europeana.eu/rights/rr-f/"; // Constant for link to europeana free license.
     private static final String EUROPEANA_NON_COMMERCIAL = "http://www.europeana.eu/rights/out-of-copyright-non-commercial/"; // Constant for link to europeana non-commercial license.
@@ -76,6 +79,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String daoType;
     private Set<SelectItem> conversionTypeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> sourceOfIdentifiersSet = new TreeSet<SelectItem>();
+    private Set<SelectItem> sourceOfFondsTitleSet = new TreeSet<SelectItem>();
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
@@ -92,6 +96,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String filename;
     private String conversionType = ConvertAction.OPTION_MINIMAL;
     private String sourceOfIdentifiers = ConvertAction.OPTION_UNITID;
+    private String sourceOfFondsTitle = ConvertAction.OPTION_ARCHDESC_UNITTITLE;
     private String validateLinks = ConvertAction.OPTION_NO;
     private String inheritLanguage = ConvertAction.OPTION_NO;
     private String inheritRightsInfo = ConvertAction.OPTION_NO;
@@ -114,6 +119,8 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean languageOfTheMaterialCheck = true;
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
+    private boolean hasArchdescUnittitle = true;
+    private boolean hasTitlestmtTitleproper = true;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
     private boolean licenseCheck = true;
 
@@ -138,6 +145,27 @@ public class ConvertAction extends AbstractInstitutionAction {
                 if (this.isNoLanguageOnParents()) {
                     addFieldError("inheritLanguage", getText("errors.required")
                             + ". " + getText("errors.fa.without.langmaterial"));
+                }
+            }
+        }
+        
+        if (!this.isBatchConversion()) {
+            if (ConvertAction.OPTION_ARCHDESC_UNITTITLE.equals(this.getSourceOfFondsTitle())){
+                if (!this.isHasArchdescUnittitle()){
+                    if (!this.isHasTitlestmtTitleproper()){
+                        addActionMessage(getText("ead2edm.message.fondsTitle.useNoTitle"));
+                    } else {
+                        addFieldError("sourceOfFondsTitle", getText("ead2edm.errors.fondsTitle.useAlternativeSource"));
+                    }
+                }
+            }
+            if (ConvertAction.OPTION_TITLESTMT_TITLEPROPER.equals(this.getSourceOfFondsTitle())){
+                if (!this.isHasTitlestmtTitleproper()){
+                    if (!this.isHasArchdescUnittitle()){
+                        addActionMessage(getText("ead2edm.message.fondsTitle.useNoTitle"));
+                    } else {
+                        addFieldError("sourceOfFondsTitle", getText("ead2edm.errors.fondsTitle.useAlternativeSource"));
+                    }
                 }
             }
         }
@@ -180,6 +208,8 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_MINIMAL, this.getText("ead2ese.label.minimal.conversion")));
         this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
+        this.sourceOfFondsTitleSet.add(new SelectItem(ConvertAction.OPTION_ARCHDESC_UNITTITLE, this.getText("ead2ese.label.fondstitle.archdescUnittitle").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
+        this.sourceOfFondsTitleSet.add(new SelectItem(ConvertAction.OPTION_TITLESTMT_TITLEPROPER, this.getText("ead2ese.label.fondstitle.titlestmtTitleproper").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         //list="#{'IMAGE':'Image', 'TEXT':'Text', 'SOUND':'Sound', 'VIDEO':'Video'}"
         this.typeSet.add(new SelectItem("", this.getText("ead2ese.content.selectone")));
         this.typeSet.add(new SelectItem(ConvertAction.TYPE_3D, this.getText("ead2ese.content.type.3D")));
@@ -227,6 +257,8 @@ public class ConvertAction extends AbstractInstitutionAction {
             }
             this.setNoLanguageOnClevel(!ead2EseInformation.isLanguagesOnAllCLevels());
             this.setNoLanguageOnParents(!ead2EseInformation.isLanguagesOnParent());
+            this.setHasArchdescUnittitle(StringUtils.isNotBlank(ead2EseInformation.getArchdescUnittitle()));
+            this.setHasTitlestmtTitleproper(StringUtils.isNotBlank(ead2EseInformation.getTitlestmtTitleproper()));
             if (StringUtils.isNotBlank(ead2EseInformation.getUserestrictDaoLicenceType())) {
                 license = ead2EseInformation.getUserestrictDaoLicenceType();
                 licenseCheck = true;
@@ -345,6 +377,13 @@ public class ConvertAction extends AbstractInstitutionAction {
             config.setIdSource(ConvertAction.OPTION_UNITID);
         } else {
             config.setIdSource(ConvertAction.OPTION_CID);
+        }
+        
+        // Set the source of the title of the fonds.
+        if (ConvertAction.OPTION_ARCHDESC_UNITTITLE.equalsIgnoreCase(this.getSourceOfFondsTitle())) {
+            config.setUseArchUnittitle(true);
+        } else {
+            config.setUseArchUnittitle(false);
         }
 
         //if id is not empty, oaiIdentifier and repositoryCode will be filled here; otherwise this is done in EadService
@@ -628,6 +667,22 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.noLanguageOnParents = noLanguageOnParents;
     }
 
+    public boolean isHasArchdescUnittitle() {
+        return hasArchdescUnittitle;
+    }
+
+    public void setHasArchdescUnittitle(boolean hasArchdescUnittitle) {
+        this.hasArchdescUnittitle = hasArchdescUnittitle;
+    }
+
+    public boolean isHasTitlestmtTitleproper() {
+        return hasTitlestmtTitleproper;
+    }
+
+    public void setHasTitlestmtTitleproper(boolean hasTitlestmtTitleproper) {
+        this.hasTitlestmtTitleproper = hasTitlestmtTitleproper;
+    }
+
     /**
      * @return the conversionTypeSet
      */
@@ -656,6 +711,14 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.sourceOfIdentifiersSet = sourceOfIdentifiersSet;
     }
 
+    public Set<SelectItem> getSourceOfFondsTitleSet() {
+        return sourceOfFondsTitleSet;
+    }
+
+    public void setSourceOfFondsTitleSet(Set<SelectItem> sourceOfFondsTitleSet) {
+        this.sourceOfFondsTitleSet = sourceOfFondsTitleSet;
+    }
+
     /**
      * @return the conversionType
      */
@@ -682,6 +745,14 @@ public class ConvertAction extends AbstractInstitutionAction {
      */
     public String getSourceOfIdentifiers() {
         return this.sourceOfIdentifiers;
+    }
+
+    public String getSourceOfFondsTitle() {
+        return sourceOfFondsTitle;
+    }
+
+    public void setSourceOfFondsTitle(String sourceOfFondsTitle) {
+        this.sourceOfFondsTitle = sourceOfFondsTitle;
     }
 
     /**

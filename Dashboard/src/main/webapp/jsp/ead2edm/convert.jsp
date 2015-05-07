@@ -203,6 +203,18 @@
             </td>
         </tr>
         <tr>
+            <td class="inputLabel">
+                <s:label key="ead2ese.label.specify.sourceOfFondsTitle"  for="sourceOfFondsTitle" />:
+            </td>
+            <td>
+                <s:iterator value="sourceOfFondsTitleSet">
+                    <s:radio name="sourceOfFondsTitle" id="sourceOfFondsTitle" list="top" listKey="value" listValue="content"></s:radio><br/>
+                </s:iterator>
+                <s:fielderror fieldName="sourceOfFondsTitle"/>
+                <s:actionmessage/>
+            </td>
+        </tr>
+        <tr>
             <td colspan="2" class="titleLabel">
                 <s:label key="ead2ese.label.specific.settings" />
             </td>
@@ -266,7 +278,7 @@
                 </s:else>
                 <s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
                 <s:fielderror fieldName="languageSelection"/>
-                <!-- 				<s:fielderror fieldName="languageOfTheMaterialCheck"/> -->
+                <%-- 				<s:fielderror fieldName="languageOfTheMaterialCheck"/> --%>
             </td>
         </tr>
 
@@ -376,4 +388,6 @@
     <s:hidden name="id" />
     <s:hidden name="noLanguageOnClevel"/>
     <s:hidden name="noLanguageOnParents" />
+    <s:hidden name="hasArchdescUnittitle" />
+    <s:hidden name="hasTitlestmtTitleproper" />
 </s:form>
