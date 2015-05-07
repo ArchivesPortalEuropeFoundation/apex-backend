@@ -245,8 +245,8 @@ public class EacCpfXpathReader extends AbstractXpathReader<EacCpfPublishData> {
 		publishData.setEntityType(entityTypeHandler.getFirstResult());
 		publishData.setLanguage(languageHandler.getResultAsString());
 		publishData.setEntityIds(entityIdHandler.getResultSet());
+		List<String> names = new ArrayList<String>();
 		if (namesHandler.getResults().size() > 0){
-			List<String> names = new ArrayList<String>();
 			for (Map<String, List<String>> tempResults: namesHandler.getResults()){
 				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, PERSON_PARTS,", ");
 				if (StringUtils.isBlank(name)){
@@ -254,9 +254,8 @@ public class EacCpfXpathReader extends AbstractXpathReader<EacCpfPublishData> {
 				}
 				names.add(name);
 			}
-			publishData.setNames(names);
-		}else if (namesParallelHandler.getResults().size() > 0){
-			List<String> names = new ArrayList<String>();
+		}
+		if (namesParallelHandler.getResults().size() > 0){
 			for (Map<String, List<String>> tempResults: namesParallelHandler.getResults()){
 				String name = TextMapXpathHandler.getResultAsStringWithWhitespace(tempResults, PERSON_PARTS,", ");
 				if (StringUtils.isBlank(name)){
@@ -264,9 +263,8 @@ public class EacCpfXpathReader extends AbstractXpathReader<EacCpfPublishData> {
 				}
 				names.add(name);
 			}
-			publishData.setNames(names);			
 		}
-
+		publishData.setNames(names);
 
 		publishData.setPlaces(strip(placesHandler.getResultSet()));
 		publishData.setFunctions(strip(functionsHandler.getResultSet()));
