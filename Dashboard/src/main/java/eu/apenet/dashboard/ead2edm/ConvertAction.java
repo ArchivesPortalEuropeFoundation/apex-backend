@@ -149,23 +149,15 @@ public class ConvertAction extends AbstractInstitutionAction {
             }
         }
         
-        if (!this.isBatchConversion()) {
+        if (!this.isBatchConversion() && (this.isHasArchdescUnittitle() || this.isHasTitlestmtTitleproper())) {
             if (ConvertAction.OPTION_ARCHDESC_UNITTITLE.equals(this.getSourceOfFondsTitle())){
                 if (!this.isHasArchdescUnittitle()){
-                    if (!this.isHasTitlestmtTitleproper()){
-                        addFieldError("sourceOfFondsTitle", getText("ead2edm.message.fondsTitle.noSourceAvailable"));
-                    } else {
-                        addFieldError("sourceOfFondsTitle", getText("ead2edm.errors.fondsTitle.useAlternativeSource"));
-                    }
+                    addFieldError("sourceOfFondsTitle", getText("ead2edm.errors.fondsTitle.useAlternativeSource"));
                 }
             }
             if (ConvertAction.OPTION_TITLESTMT_TITLEPROPER.equals(this.getSourceOfFondsTitle())){
                 if (!this.isHasTitlestmtTitleproper()){
-                    if (!this.isHasArchdescUnittitle()){
-                        addFieldError("sourceOfFondsTitle", getText("ead2edm.message.fondsTitle.noSourceAvailable"));
-                    } else {
-                        addFieldError("sourceOfFondsTitle", getText("ead2edm.errors.fondsTitle.useAlternativeSource"));
-                    }
+                    addFieldError("sourceOfFondsTitle", getText("ead2edm.errors.fondsTitle.useAlternativeSource"));
                 }
             }
         }

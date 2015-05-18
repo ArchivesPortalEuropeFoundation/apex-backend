@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/ead2edm/ead2edm.css" type="text/css"/>
 
 <script type='text/javascript'>
-    $(function() {
+    $(function () {
 
-        $("#conversionTypefull").click(function() {
+        $("#conversionTypefull").click(function () {
             $('#hiddenInheritFileParent').show();
             enableInheritFileParentCheckState();
             $('#hiddenInheritOrigination').show();
@@ -17,7 +17,7 @@
             enableInheritUnittitleCheckState();
         });
 
-        $("#conversionTypeminimal").click(function() {
+        $("#conversionTypeminimal").click(function () {
             $('#hiddenInheritFileParent').hide();
             disableInheritFileParentCheckState();
             $('#hiddenInheritOrigination').hide();
@@ -26,51 +26,51 @@
             disableInheritUnittitleCheckState();
         });
 
-        $('#inheritLanguageprovide').click(function() {
+        $('#inheritLanguageprovide').click(function () {
             $('#hiddenLanguage').show();
         });
-        $('#inheritLanguageyes').click(function() {
+        $('#inheritLanguageyes').click(function () {
             $('#hiddenLanguage').hide();
         });
-        $('#inheritLanguageno').click(function() {
+        $('#inheritLanguageno').click(function () {
             $('#hiddenLanguage').hide();
         });
 
-        $('#dataProvidercustom').click(function() {
+        $('#dataProvidercustom').click(function () {
             $('#hiddenCustomDataProvider').show();
         });
-        $('#dataProvidermapping').click(function() {
+        $('#dataProvidermapping').click(function () {
             $('#hiddenCustomDataProvider').hide();
         });
 
 
-        $('#providercustom').click(function() {
+        $('#providercustom').click(function () {
             $('#hiddenCustomProvider').show();
         });
-        $('#providerapenet').click(function() {
+        $('#providerapenet').click(function () {
             $('#hiddenCustomProvider').hide();
         });
-        $('#providernothing').click(function() {
+        $('#providernothing').click(function () {
             $('#hiddenCustomProvider').hide();
         });
 
-        $('#licensecreativecommons').click(function() {
+        $('#licensecreativecommons').click(function () {
             $('#hiddenCreativeCommonsLicense').show();
             $('#hiddenEuropeanaLicense').hide();
         });
-        $('#licensecc0').click(function() {
+        $('#licensecc0').click(function () {
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').hide();
         });
-        $('#licensecpdm').click(function() {
+        $('#licensecpdm').click(function () {
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').hide();
         });
-        $('#licenseeuropeana').click(function() {
+        $('#licenseeuropeana').click(function () {
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').show();
         });
-        $('#licenseoutofcopyright').click(function() {
+        $('#licenseoutofcopyright').click(function () {
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').hide();
         });
@@ -86,13 +86,13 @@
     }
 
     function enableInheritFileParentCheckState() {
-        $("input[id^='inheritFileParent']").each(function() {
+        $("input[id^='inheritFileParent']").each(function () {
             $(this).removeAttr('disabled');
         });
     }
 
     function disableInheritFileParentCheckState() {
-        $("input[id^='inheritFileParent']").each(function() {
+        $("input[id^='inheritFileParent']").each(function () {
             if ($(this).attr("id") != "inheritFileParentCheck") {
                 $(this).attr('disabled', 'disabled');
                 if ($(this).val() == "no") {
@@ -113,13 +113,13 @@
     }
 
     function enableInheritOriginationCheckState() {
-        $("input[name^='inheritOrigination']").each(function() {
+        $("input[name^='inheritOrigination']").each(function () {
             $(this).removeAttr('disabled');
         });
     }
 
     function disableInheritOriginationCheckState() {
-        $("input[name^='inheritOrigination']").each(function() {
+        $("input[name^='inheritOrigination']").each(function () {
             if ($(this).attr("name") != "inheritOriginationCheck") {
                 $(this).attr('disabled', 'disabled');
                 if ($(this).val() == "no") {
@@ -140,13 +140,13 @@
     }
 
     function enableInheritUnittitleCheckState() {
-        $("input[name^='inheritUnittitle']").each(function() {
+        $("input[name^='inheritUnittitle']").each(function () {
             $(this).removeAttr('disabled');
         });
     }
 
     function disableInheritUnittitleCheckState() {
-        $("input[name^='inheritUnittitle']").each(function() {
+        $("input[name^='inheritUnittitle']").each(function () {
             if ($(this).attr("name") != "inheritUnittitleCheck") {
                 $(this).attr('disabled', 'disabled');
                 if ($(this).val() == "no") {
@@ -159,7 +159,7 @@
     }
 
     function setMandatoryField() {
-        $("input[name^='inheritLanguage']").each(function() {
+        $("input[name^='inheritLanguage']").each(function () {
             if ($(this).attr("checked") == "checked") {
                 var text = $("tr#trLanguageOfTheMaterial label[for='languageOfTheMaterial']").text();
 
@@ -207,11 +207,15 @@
                 <s:label key="ead2ese.label.specify.sourceOfFondsTitle"  for="sourceOfFondsTitle" />:
             </td>
             <td>
-                <s:iterator value="sourceOfFondsTitleSet">
-                    <s:radio name="sourceOfFondsTitle" id="sourceOfFondsTitle" list="top" listKey="value" listValue="content"></s:radio><br/>
-                </s:iterator>
-                <s:fielderror fieldName="sourceOfFondsTitle"/>
-                <s:actionmessage/>
+                <s:if test="hasArchdescUnittitle or hasTitlestmtTitleproper">
+                    <s:iterator value="sourceOfFondsTitleSet">
+                        <s:radio name="sourceOfFondsTitle" id="sourceOfFondsTitle" list="top" listKey="value" listValue="content"></s:radio><br/>
+                    </s:iterator>
+                    <s:fielderror fieldName="sourceOfFondsTitle"/>
+                </s:if>
+                <s:else>
+                    <s:text name="ead2edm.message.fondsTitle.noSourceAvailable"/>
+                </s:else>
             </td>
         </tr>
         <tr>

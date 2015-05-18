@@ -40,10 +40,13 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private static final String CREATIVECOMMONS = "creativecommons";
     private static final String EUROPEANA = "europeana";
     private static final String INHERITLANGUAGE_PROVIDE = "provide";
-	private static final String OUT_OF_COPYRIGHT = "outofcopyright";
-	// Source of identifiers.
-	public static final String OPTION_UNITID = "unitid";
-	private static final String OPTION_CID = "cid";
+    private static final String OUT_OF_COPYRIGHT = "outofcopyright";
+    // Source of identifiers.
+    public static final String OPTION_UNITID = "unitid";
+    private static final String OPTION_CID = "cid";
+    // Source of title for fonds.
+    private static final String OPTION_ARCHDESC_UNITTITLE = "archdescUnittitle";
+    private static final String OPTION_TITLESTMT_TITLEPROPER = "titlestmtTitleproper";
 
     //Collections for basic tab
     private Set<SelectItem> ingestionprofiles = new LinkedHashSet<SelectItem>();
@@ -59,6 +62,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     //Collections for Europeana tab
     private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> sourceOfIdentifiersSet = new LinkedHashSet<SelectItem>();
+    private Set<SelectItem> sourceOfFondsTitleSet = new TreeSet<SelectItem>();
     private Set<SelectItem> typeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
@@ -86,6 +90,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     //fields for Europeana tab components
     private String conversiontype;
     private String sourceOfIdentifiers;
+    private String sourceOfFondsTitle;
     private String textDataProvider;
     private String dataProviderCheck;
     private String europeanaDaoType;
@@ -106,7 +111,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     //other fields
     private static final Logger LOG = Logger.getLogger(IngestionprofilesAction.class);
-    
+
     private String lastSelection; //See #1718 description
 
     @Override
@@ -118,22 +123,22 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
             if (profilelist == null) {
-            	if(this.lastSelection!=null){
-            		this.profilelist = this.lastSelection;
-            	}else{
-            		profilelist = ingestionprofiles.iterator().next().getValue();
-            	}
-            }else{
-            	this.lastSelection = this.profilelist;
+                if (this.lastSelection != null) {
+                    this.profilelist = this.lastSelection;
+                } else {
+                    profilelist = ingestionprofiles.iterator().next().getValue();
+                }
+            } else {
+                this.lastSelection = this.profilelist;
             }
         }
 
         if (StringUtils.isNotBlank(profilelist)) {
-        	
+
             Long profilelistLong = Long.parseLong(profilelist);
             Ingestionprofile ingestionprofile = profileDAO.findById(profilelistLong);
-            if(ingestionprofile!=null){
-            	profileName = ingestionprofile.getNameProfile();
+            if (ingestionprofile != null) {
+                profileName = ingestionprofile.getNameProfile();
                 associatedFiletype = ingestionprofile.getFileType().toString();
                 if (!convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)
                         && ingestionprofile.getUploadAction().getId() == 2) {
@@ -157,8 +162,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
                 sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
                 if (sourceOfIdentifiers == null || sourceOfIdentifiers.isEmpty()) {
-                	sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
+                    sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
                 }
+                if (ingestionprofile.getUseArchdescUnittitle() == false) {
+                    sourceOfFondsTitle = IngestionprofilesAction.OPTION_TITLESTMT_TITLEPROPER;
+                } else {
+                    sourceOfFondsTitle = IngestionprofilesAction.OPTION_ARCHDESC_UNITTITLE;
+                }
+
                 textDataProvider = ingestionprofile.getEuropeanaDataProvider();
                 dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
                 europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
@@ -181,7 +192,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
                 inheritUnittitleCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitleCheck());
                 inheritUnittitle = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitle());
-                if(ingestionprofile.getXslUploadId() != null) {
+                if (ingestionprofile.getXslUploadId() != null) {
                     setDefaultXslFile(DAOFactory.instance().getXslUploadDAO().findById(ingestionprofile.getXslUploadId()).getId() + "");
                 }
             }
@@ -209,54 +220,59 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
         // Only adds the rights options if file type is an EAD.
         if (profile.getFileType() != 2) {
-	        // Rights for digital objects.
-        	if (this.getRightDigitalObjects() != null
-	        		&& !this.getRightDigitalObjects().isEmpty()
-	        		&& !this.getRightDigitalObjects().equalsIgnoreCase(AjaxConversionOptionsConstants.NO_SELECTED)) {
-        		profile.setRightsOfDigitalObjects(this.getRightDigitalObjects());
-        		profile.setRightsOfDigitalObjectsText(this.recoverRightsStatementText(this.getRightDigitalObjects()));
-        		profile.setRightsOfDigitalDescription(this.getRightDigitalDescription());
-		        profile.setRightsOfDigitalHolder(this.getRightDigitalHolder());
-        	} else {
-        		profile.setRightsOfDigitalObjects("");
-        		profile.setRightsOfDigitalObjectsText("");
-        		profile.setRightsOfDigitalDescription("");
-		        profile.setRightsOfDigitalHolder("");
-        	}
+            // Rights for digital objects.
+            if (this.getRightDigitalObjects() != null
+                    && !this.getRightDigitalObjects().isEmpty()
+                    && !this.getRightDigitalObjects().equalsIgnoreCase(AjaxConversionOptionsConstants.NO_SELECTED)) {
+                profile.setRightsOfDigitalObjects(this.getRightDigitalObjects());
+                profile.setRightsOfDigitalObjectsText(this.recoverRightsStatementText(this.getRightDigitalObjects()));
+                profile.setRightsOfDigitalDescription(this.getRightDigitalDescription());
+                profile.setRightsOfDigitalHolder(this.getRightDigitalHolder());
+            } else {
+                profile.setRightsOfDigitalObjects("");
+                profile.setRightsOfDigitalObjectsText("");
+                profile.setRightsOfDigitalDescription("");
+                profile.setRightsOfDigitalHolder("");
+            }
 
-	        // Rights for EAD data.
-        	if (this.getRightEadData() != null
-	        		&& !this.getRightEadData().isEmpty()
-	        		&& !this.getRightEadData().equalsIgnoreCase(AjaxConversionOptionsConstants.NO_SELECTED)) {
-        		profile.setRightsOfEADData(this.getRightEadData());
-        		profile.setRightsOfEADDataText(this.recoverRightsStatementText(this.getRightEadData()));
-        		profile.setRightsOfEADDescription(this.getRightEadDescription());
-		        profile.setRightsOfEADHolder(this.getRightEadHolder());
-        	} else {
-        		profile.setRightsOfEADData("");
-        		profile.setRightsOfEADDataText("");
-        		profile.setRightsOfEADDescription("");
-		        profile.setRightsOfEADHolder("");
-        	}
+            // Rights for EAD data.
+            if (this.getRightEadData() != null
+                    && !this.getRightEadData().isEmpty()
+                    && !this.getRightEadData().equalsIgnoreCase(AjaxConversionOptionsConstants.NO_SELECTED)) {
+                profile.setRightsOfEADData(this.getRightEadData());
+                profile.setRightsOfEADDataText(this.recoverRightsStatementText(this.getRightEadData()));
+                profile.setRightsOfEADDescription(this.getRightEadDescription());
+                profile.setRightsOfEADHolder(this.getRightEadHolder());
+            } else {
+                profile.setRightsOfEADData("");
+                profile.setRightsOfEADDataText("");
+                profile.setRightsOfEADDescription("");
+                profile.setRightsOfEADHolder("");
+            }
 
-            if(getDefaultXslFile() != null && !getDefaultXslFile().equals("-1")) {
+            if (getDefaultXslFile() != null && !getDefaultXslFile().equals("-1")) {
                 profile.setXslUploadId(Long.parseLong(getDefaultXslFile()));
             }
         } else {
-	        // Rights for digital objects.
-	        profile.setRightsOfDigitalObjects("");
-	        profile.setRightsOfDigitalObjectsText("");
-	        profile.setRightsOfDigitalDescription("");
-	        profile.setRightsOfDigitalHolder("");
-	        // Rights for EAD data.
-	        profile.setRightsOfEADData("");
-	        profile.setRightsOfEADDataText("");
-	        profile.setRightsOfEADDescription("");
-	        profile.setRightsOfEADHolder("");
+            // Rights for digital objects.
+            profile.setRightsOfDigitalObjects("");
+            profile.setRightsOfDigitalObjectsText("");
+            profile.setRightsOfDigitalDescription("");
+            profile.setRightsOfDigitalHolder("");
+            // Rights for EAD data.
+            profile.setRightsOfEADData("");
+            profile.setRightsOfEADDataText("");
+            profile.setRightsOfEADDescription("");
+            profile.setRightsOfEADHolder("");
         }
 
         profile.setEuropeanaConversionType(Boolean.parseBoolean(conversiontype));
         profile.setSourceOfIdentifiers(sourceOfIdentifiers);
+        if (sourceOfFondsTitle.equals(IngestionprofilesAction.OPTION_TITLESTMT_TITLEPROPER)) {
+            profile.setUseArchdescUnittitle(Boolean.FALSE);
+        } else {
+            profile.setUseArchdescUnittitle(Boolean.TRUE);
+        }
         profile.setEuropeanaDataProvider(textDataProvider);
         profile.setEuropeanaDataProviderFromFile(Boolean.parseBoolean(dataProviderCheck));
         if (europeanaDaoType == null || europeanaDaoType.isEmpty()) {
@@ -285,7 +301,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         } else if (IngestionprofilesAction.CREATIVECOMMONS_CPDM.equals(this.license)) {
             profile.setEuropeanaLicenseDetails("http://creativecommons.org/publicdomain/mark/1.0/");
         } else {
-        	profile.setEuropeanaLicenseDetails("http://www.europeana.eu/rights/out-of-copyright-non-commercial/");
+            profile.setEuropeanaLicenseDetails("http://www.europeana.eu/rights/out-of-copyright-non-commercial/");
         }
         profile.setEuropeanaAddRights(licenseAdditionalInformation);
         profile.setEuropeanaInheritElementsCheck(Boolean.parseBoolean(inheritFileParentCheck));
@@ -294,7 +310,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setEuropeanaInheritOrigin(Boolean.parseBoolean(inheritOrigination));
         profile.setEuropeanaInheritUnittitleCheck(Boolean.parseBoolean(inheritUnittitleCheck));
         profile.setEuropeanaInheritUnittitle(Boolean.parseBoolean(inheritUnittitle));
-        
+
         if (profilelist.equals("-1")) {
             profile = profileDAO.store(profile);
             this.lastSelection = profile.getId().toString();
@@ -308,62 +324,62 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     }
 
     /**
-     * Method to recover the rights statement text from the rights statement
-     * URL selected.
+     * Method to recover the rights statement text from the rights statement URL
+     * selected.
      *
      * @param option_default_rights rights statement URL selected.
      *
      * @return Rights statement text.
      */
     private String recoverRightsStatementText(String option_default_rights) {
-    	String option_default_rights_text = null;
+        String option_default_rights_text = null;
 
-    	// Check the URL selected
-    	if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, No Derivatives.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.no.derivates");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, Non-Commercial.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, Non-Commercial, No Derivatives.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.no.derivates");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, Non-Commercial, ShareAlike.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.sharealike");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, ShareAlike .
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.sharealike");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC.equalsIgnoreCase(option_default_rights)) {
-    		//  Creative Commons CC0 Public Domain Dedication .
-    		option_default_rights_text = getText("content.message.rights.creative.public.domain");
-    	} else if (AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
-    		// Free access – no re-use.
-    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.free");
-    	} else if (AjaxConversionOptionsConstants.ORPHAN_WORKS.equalsIgnoreCase(option_default_rights)) {
-    		// Orphan works.
-    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.orphan");
-    	} else if (AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
-    		// Out of copyright - no commercial re-use.
-    		option_default_rights_text = getText("ead2ese.content.license.out.of.copyright");
-    	} else if (AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
-    		// Paid access – no re-use.
-    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.paid");
-    	} else if (AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK.equalsIgnoreCase(option_default_rights)) {
-    		// Public Domain Mark.
-    		option_default_rights_text = getText("content.message.rights.public.domain");
-    	} else {
-    		// Unknown.
-    		option_default_rights_text = getText("content.message.rights.unknown");
-    	}
+        // Check the URL selected
+        if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution.
+            option_default_rights_text = getText("content.message.rights.creative.attribution");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, No Derivatives.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.no.derivates");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, Non-Commercial.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, Non-Commercial, No Derivatives.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.no.derivates");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, Non-Commercial, ShareAlike.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.sharealike");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, ShareAlike .
+            option_default_rights_text = getText("content.message.rights.creative.attribution.sharealike");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC.equalsIgnoreCase(option_default_rights)) {
+            //  Creative Commons CC0 Public Domain Dedication .
+            option_default_rights_text = getText("content.message.rights.creative.public.domain");
+        } else if (AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
+            // Free access – no re-use.
+            option_default_rights_text = getText("ead2ese.content.license.europeana.access.free");
+        } else if (AjaxConversionOptionsConstants.ORPHAN_WORKS.equalsIgnoreCase(option_default_rights)) {
+            // Orphan works.
+            option_default_rights_text = getText("ead2ese.content.license.europeana.access.orphan");
+        } else if (AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
+            // Out of copyright - no commercial re-use.
+            option_default_rights_text = getText("ead2ese.content.license.out.of.copyright");
+        } else if (AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
+            // Paid access – no re-use.
+            option_default_rights_text = getText("ead2ese.content.license.europeana.access.paid");
+        } else if (AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK.equalsIgnoreCase(option_default_rights)) {
+            // Public Domain Mark.
+            option_default_rights_text = getText("content.message.rights.public.domain");
+        } else {
+            // Unknown.
+            option_default_rights_text = getText("content.message.rights.unknown");
+        }
 
-		return option_default_rights_text;
-	}
+        return option_default_rights_text;
+    }
 
-	public String addIngestionprofile() throws Exception {
+    public String addIngestionprofile() throws Exception {
         setUp();
 
         IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
@@ -420,7 +436,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         inheritUnittitle = Boolean.toString(false);
 
         this.lastSelection = this.profilelist;
-        
+
         return SUCCESS;
     }
 
@@ -463,8 +479,10 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         //Europeana preferences
         conversiontypeSet.add(new SelectItem("true", this.getText("ead2ese.label.minimal.conversion")));
         conversiontypeSet.add(new SelectItem("false", this.getText("ead2ese.label.full.conversion")));
-        sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<","&#60;")));
-        sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<","&#60;")));
+        sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
+        sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
+        sourceOfFondsTitleSet.add(new SelectItem(IngestionprofilesAction.OPTION_ARCHDESC_UNITTITLE, this.getText("ead2ese.label.fondstitle.archdescUnittitle").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
+        sourceOfFondsTitleSet.add(new SelectItem(IngestionprofilesAction.OPTION_TITLESTMT_TITLEPROPER, this.getText("ead2ese.label.fondstitle.titlestmtTitleproper").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
@@ -492,42 +510,43 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
         this.europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/unknown/", this.getText("content.message.rights.unknown")));
 
-        if(DAOFactory.instance().getXslUploadDAO().hasXslUpload(getAiId())) {
+        if (DAOFactory.instance().getXslUploadDAO().hasXslUpload(getAiId())) {
             List<XslUpload> xslUploads = DAOFactory.instance().getXslUploadDAO().getXslUploads(getAiId());
             getXslFiles().add(new SelectItem("-1", "DEFAULT"));
-            for(XslUpload xslUpload : xslUploads) {
+            for (XslUpload xslUpload : xslUploads) {
                 getXslFiles().add(new SelectItem(xslUpload.getId(), xslUpload.getReadableName()));
             }
         }
     }
 
     /**
-     * Method to create the set with all the available rights statements for EAD data.
+     * Method to create the set with all the available rights statements for EAD
+     * data.
      *
      * @return Set with all the available rights statements for EAD data.
      */
     private Set<SelectItem> addRightsOptions() {
-    	Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES, getText("content.message.rights.creative.attribution.no.derivates")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
+        Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES, getText("content.message.rights.creative.attribution.no.derivates")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
 
-    	return rightsSet;
+        return rightsSet;
     }
 
     public String showIngestionProfiles() {
-    	return Action.SUCCESS;
+        return Action.SUCCESS;
     }
 
     public Set<SelectItem> getIngestionprofiles() {
@@ -587,34 +606,34 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     }
 
     /**
-	 * @return the rightsDigitalObjects
-	 */
-	public Set<SelectItem> getRightsDigitalObjects() {
-		return this.rightsDigitalObjects;
-	}
+     * @return the rightsDigitalObjects
+     */
+    public Set<SelectItem> getRightsDigitalObjects() {
+        return this.rightsDigitalObjects;
+    }
 
-	/**
-	 * @param rightsDigitalObjects the rightsDigitalObjects to set
-	 */
-	public void setRightsDigitalObjects(Set<SelectItem> rightsDigitalObjects) {
-		this.rightsDigitalObjects = rightsDigitalObjects;
-	}
+    /**
+     * @param rightsDigitalObjects the rightsDigitalObjects to set
+     */
+    public void setRightsDigitalObjects(Set<SelectItem> rightsDigitalObjects) {
+        this.rightsDigitalObjects = rightsDigitalObjects;
+    }
 
-	/**
-	 * @return the rightsEadData
-	 */
-	public Set<SelectItem> getRightsEadData() {
-		return this.rightsEadData;
-	}
+    /**
+     * @return the rightsEadData
+     */
+    public Set<SelectItem> getRightsEadData() {
+        return this.rightsEadData;
+    }
 
-	/**
-	 * @param rightsEadData the rightsEadData to set
-	 */
-	public void setRightsEadData(Set<SelectItem> rightsEadData) {
-		this.rightsEadData = rightsEadData;
-	}
+    /**
+     * @param rightsEadData the rightsEadData to set
+     */
+    public void setRightsEadData(Set<SelectItem> rightsEadData) {
+        this.rightsEadData = rightsEadData;
+    }
 
-	public Set<SelectItem> getConversiontypeSet() {
+    public Set<SelectItem> getConversiontypeSet() {
         return conversiontypeSet;
     }
 
@@ -623,20 +642,28 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     }
 
     /**
-	 * @return the sourceOfIdentifiersSet
-	 */
-	public Set<SelectItem> getSourceOfIdentifiersSet() {
-		return this.sourceOfIdentifiersSet;
-	}
+     * @return the sourceOfIdentifiersSet
+     */
+    public Set<SelectItem> getSourceOfIdentifiersSet() {
+        return this.sourceOfIdentifiersSet;
+    }
 
-	/**
-	 * @param sourceOfIdentifiersSet the sourceOfIdentifiersSet to set
-	 */
-	public void setSourceOfIdentifiersSet(Set<SelectItem> sourceOfIdentifiersSet) {
-		this.sourceOfIdentifiersSet = sourceOfIdentifiersSet;
-	}
+    /**
+     * @param sourceOfIdentifiersSet the sourceOfIdentifiersSet to set
+     */
+    public void setSourceOfIdentifiersSet(Set<SelectItem> sourceOfIdentifiersSet) {
+        this.sourceOfIdentifiersSet = sourceOfIdentifiersSet;
+    }
 
-	public Set<SelectItem> getTypeSet() {
+    public Set<SelectItem> getSourceOfFondsTitleSet() {
+        return sourceOfFondsTitleSet;
+    }
+
+    public void setSourceOfFondsTitleSet(Set<SelectItem> sourceOfFondsTitleSet) {
+        this.sourceOfFondsTitleSet = sourceOfFondsTitleSet;
+    }
+
+    public Set<SelectItem> getTypeSet() {
         return typeSet;
     }
 
@@ -741,90 +768,90 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     }
 
     /**
-	 * @return the rightDigitalObjects
-	 */
-	public String getRightDigitalObjects() {
-		return this.rightDigitalObjects;
-	}
+     * @return the rightDigitalObjects
+     */
+    public String getRightDigitalObjects() {
+        return this.rightDigitalObjects;
+    }
 
-	/**
-	 * @param rightDigitalObjects the rightDigitalObjects to set
-	 */
-	public void setRightDigitalObjects(String rightDigitalObjects) {
-		this.rightDigitalObjects = rightDigitalObjects;
-	}
+    /**
+     * @param rightDigitalObjects the rightDigitalObjects to set
+     */
+    public void setRightDigitalObjects(String rightDigitalObjects) {
+        this.rightDigitalObjects = rightDigitalObjects;
+    }
 
-	/**
-	 * @return the rightDigitalDescription
-	 */
-	public String getRightDigitalDescription() {
-		return this.rightDigitalDescription;
-	}
+    /**
+     * @return the rightDigitalDescription
+     */
+    public String getRightDigitalDescription() {
+        return this.rightDigitalDescription;
+    }
 
-	/**
-	 * @param rightDigitalDescription the rightDigitalDescription to set
-	 */
-	public void setRightDigitalDescription(String rightDigitalDescription) {
-		this.rightDigitalDescription = rightDigitalDescription;
-	}
+    /**
+     * @param rightDigitalDescription the rightDigitalDescription to set
+     */
+    public void setRightDigitalDescription(String rightDigitalDescription) {
+        this.rightDigitalDescription = rightDigitalDescription;
+    }
 
-	/**
-	 * @return the rightDigitalHolder
-	 */
-	public String getRightDigitalHolder() {
-		return this.rightDigitalHolder;
-	}
+    /**
+     * @return the rightDigitalHolder
+     */
+    public String getRightDigitalHolder() {
+        return this.rightDigitalHolder;
+    }
 
-	/**
-	 * @param rightDigitalHolder the rightDigitalHolder to set
-	 */
-	public void setRightDigitalHolder(String rightDigitalHolder) {
-		this.rightDigitalHolder = rightDigitalHolder;
-	}
+    /**
+     * @param rightDigitalHolder the rightDigitalHolder to set
+     */
+    public void setRightDigitalHolder(String rightDigitalHolder) {
+        this.rightDigitalHolder = rightDigitalHolder;
+    }
 
-	/**
-	 * @return the rightEadData
-	 */
-	public String getRightEadData() {
-		return this.rightEadData;
-	}
+    /**
+     * @return the rightEadData
+     */
+    public String getRightEadData() {
+        return this.rightEadData;
+    }
 
-	/**
-	 * @param rightEadData the rightEadData to set
-	 */
-	public void setRightEadData(String rightEadData) {
-		this.rightEadData = rightEadData;
-	}
+    /**
+     * @param rightEadData the rightEadData to set
+     */
+    public void setRightEadData(String rightEadData) {
+        this.rightEadData = rightEadData;
+    }
 
-	/**
-	 * @return the rightEadDescription
-	 */
-	public String getRightEadDescription() {
-		return this.rightEadDescription;
-	}
+    /**
+     * @return the rightEadDescription
+     */
+    public String getRightEadDescription() {
+        return this.rightEadDescription;
+    }
 
-	/**
-	 * @param rightEadDescription the rightEadDescription to set
-	 */
-	public void setRightEadDescription(String rightEadDescription) {
-		this.rightEadDescription = rightEadDescription;
-	}
+    /**
+     * @param rightEadDescription the rightEadDescription to set
+     */
+    public void setRightEadDescription(String rightEadDescription) {
+        this.rightEadDescription = rightEadDescription;
+    }
 
-	/**
-	 * @return the rightEadHolder
-	 */
-	public String getRightEadHolder() {
-		return this.rightEadHolder;
-	}
+    /**
+     * @return the rightEadHolder
+     */
+    public String getRightEadHolder() {
+        return this.rightEadHolder;
+    }
 
-	/**
-	 * @param rightEadHolder the rightEadHolder to set
-	 */
-	public void setRightEadHolder(String rightEadHolder) {
-		this.rightEadHolder = rightEadHolder;
-	}
+    /**
+     * @param rightEadHolder the rightEadHolder to set
+     */
+    public void setRightEadHolder(String rightEadHolder) {
+        this.rightEadHolder = rightEadHolder;
+    }
 
-	public String getConversiontype() {
+    public String getConversiontype() {
         return conversiontype;
     }
 
@@ -833,20 +860,28 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     }
 
     /**
-	 * @return the sourceOfIdentifiers
-	 */
-	public String getSourceOfIdentifiers() {
-		return this.sourceOfIdentifiers;
-	}
+     * @return the sourceOfIdentifiers
+     */
+    public String getSourceOfIdentifiers() {
+        return this.sourceOfIdentifiers;
+    }
 
-	/**
-	 * @param sourceOfIdentifiers the sourceOfIdentifiers to set
-	 */
-	public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
-		this.sourceOfIdentifiers = sourceOfIdentifiers;
-	}
+    /**
+     * @param sourceOfIdentifiers the sourceOfIdentifiers to set
+     */
+    public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
+        this.sourceOfIdentifiers = sourceOfIdentifiers;
+    }
 
-	public String getTextDataProvider() {
+    public String getSourceOfFondsTitle() {
+        return sourceOfFondsTitle;
+    }
+
+    public void setSourceOfFondsTitle(String sourceOfFondsTitle) {
+        this.sourceOfFondsTitle = sourceOfFondsTitle;
+    }
+
+    public String getTextDataProvider() {
         return textDataProvider;
     }
 
@@ -983,12 +1018,12 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     }
 
     public String getLastSelection() {
-		return lastSelection;
-	}
+        return lastSelection;
+    }
 
-	public void setLastSelection(String lastSelection) {
-		this.lastSelection = lastSelection;
-	}
+    public void setLastSelection(String lastSelection) {
+        this.lastSelection = lastSelection;
+    }
 
     public Set<SelectItem> getXslFiles() {
         return xslFiles;

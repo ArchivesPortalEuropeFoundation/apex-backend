@@ -162,6 +162,16 @@
             </td>
         </tr>
         <tr>
+            <td class="inputLabel">
+                <s:label key="ead2ese.label.specify.sourceOfFondsTitle"  for="sourceOfFondsTitle" />:
+            </td>
+            <td>
+                <s:iterator value="sourceOfFondsTitleSet">
+                    <s:radio name="sourceOfFondsTitle" id="sourceOfFondsTitle" list="top" listKey="value" listValue="content"></s:radio><br/>
+                </s:iterator>
+            </td>
+        </tr>
+        <tr>
             <td colspan="2" class="titleLabel">
                 <s:label key="ead2ese.label.specific.settings" />
             </td>
