@@ -78,6 +78,8 @@ public class Ingestionprofile implements Serializable {
     private Boolean europeanaInheritUnittitle = false;
     @Column(name = "source_of_identifiers")
     private String sourceOfIdentifiers;
+    @Column(name = "use_archdesc_unittitle")
+    private Boolean useArchdescUnittitle;
     @Column(name = "rights_of_digital_objects")
     private String rightsOfDigitalObjects;
     @Column(name = "rights_of_digital_description")
@@ -325,131 +327,139 @@ public class Ingestionprofile implements Serializable {
         this.europeanaInheritUnittitle = europeanaInheritUnittitle;
     }
 
-	/**
-	 * @return the sourceOfIdentifiers
-	 */
-	public String getSourceOfIdentifiers() {
-		return this.sourceOfIdentifiers;
-	}
+    /**
+     * @return the sourceOfIdentifiers
+     */
+    public String getSourceOfIdentifiers() {
+        return this.sourceOfIdentifiers;
+    }
 
-	/**
-	 * @param sourceOfIdentifiers the sourceOfIdentifiers to set
-	 */
-	public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
-		this.sourceOfIdentifiers = sourceOfIdentifiers;
-	}
+    /**
+     * @param sourceOfIdentifiers the sourceOfIdentifiers to set
+     */
+    public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
+        this.sourceOfIdentifiers = sourceOfIdentifiers;
+    }
 
-	/**
-	 * @return the rightsOfDigitalObjects
-	 */
-	public String getRightsOfDigitalObjects() {
-		return this.rightsOfDigitalObjects;
-	}
+    public Boolean getUseArchdescUnittitle() {
+        return useArchdescUnittitle;
+    }
 
-	/**
-	 * @param rightsOfDigitalObjects the rightsOfDigitalObjects to set
-	 */
-	public void setRightsOfDigitalObjects(String rightsOfDigitalObjects) {
-		this.rightsOfDigitalObjects = rightsOfDigitalObjects;
-	}
+    public void setUseArchdescUnittitle(Boolean useArchdescUnittitle) {
+        this.useArchdescUnittitle = useArchdescUnittitle;
+    }
 
-	/**
-	 * @return the rightsOfDigitalDescription
-	 */
-	public String getRightsOfDigitalDescription() {
-		return this.rightsOfDigitalDescription;
-	}
+    /**
+     * @return the rightsOfDigitalObjects
+     */
+    public String getRightsOfDigitalObjects() {
+        return this.rightsOfDigitalObjects;
+    }
 
-	/**
-	 * @param rightsOfDigitalDescription the rightsOfDigitalDescription to set
-	 */
-	public void setRightsOfDigitalDescription(String rightsOfDigitalDescription) {
-		this.rightsOfDigitalDescription = rightsOfDigitalDescription;
-	}
+    /**
+     * @param rightsOfDigitalObjects the rightsOfDigitalObjects to set
+     */
+    public void setRightsOfDigitalObjects(String rightsOfDigitalObjects) {
+        this.rightsOfDigitalObjects = rightsOfDigitalObjects;
+    }
 
-	/**
-	 * @return the rightsOfDigitalHolder
-	 */
-	public String getRightsOfDigitalHolder() {
-		return this.rightsOfDigitalHolder;
-	}
+    /**
+     * @return the rightsOfDigitalDescription
+     */
+    public String getRightsOfDigitalDescription() {
+        return this.rightsOfDigitalDescription;
+    }
 
-	/**
-	 * @param rightsOfDigitalHolder the rightsOfDigitalHolder to set
-	 */
-	public void setRightsOfDigitalHolder(String rightsOfDigitalHolder) {
-		this.rightsOfDigitalHolder = rightsOfDigitalHolder;
-	}
+    /**
+     * @param rightsOfDigitalDescription the rightsOfDigitalDescription to set
+     */
+    public void setRightsOfDigitalDescription(String rightsOfDigitalDescription) {
+        this.rightsOfDigitalDescription = rightsOfDigitalDescription;
+    }
 
-	/**
-	 * @return the rightsOfEADData
-	 */
-	public String getRightsOfEADData() {
-		return this.rightsOfEADData;
-	}
+    /**
+     * @return the rightsOfDigitalHolder
+     */
+    public String getRightsOfDigitalHolder() {
+        return this.rightsOfDigitalHolder;
+    }
 
-	/**
-	 * @param rightsOfEADData the rightsOfEADData to set
-	 */
-	public void setRightsOfEADData(String rightsOfEADData) {
-		this.rightsOfEADData = rightsOfEADData;
-	}
+    /**
+     * @param rightsOfDigitalHolder the rightsOfDigitalHolder to set
+     */
+    public void setRightsOfDigitalHolder(String rightsOfDigitalHolder) {
+        this.rightsOfDigitalHolder = rightsOfDigitalHolder;
+    }
 
-	/**
-	 * @return the rightsOfEADDescription
-	 */
-	public String getRightsOfEADDescription() {
-		return this.rightsOfEADDescription;
-	}
+    /**
+     * @return the rightsOfEADData
+     */
+    public String getRightsOfEADData() {
+        return this.rightsOfEADData;
+    }
 
-	/**
-	 * @param rightsOfEADDescription the rightsOfEADDescription to set
-	 */
-	public void setRightsOfEADDescription(String rightsOfEADDescription) {
-		this.rightsOfEADDescription = rightsOfEADDescription;
-	}
+    /**
+     * @param rightsOfEADData the rightsOfEADData to set
+     */
+    public void setRightsOfEADData(String rightsOfEADData) {
+        this.rightsOfEADData = rightsOfEADData;
+    }
 
-	/**
-	 * @return the rightsOfEADHolder
-	 */
-	public String getRightsOfEADHolder() {
-		return this.rightsOfEADHolder;
-	}
+    /**
+     * @return the rightsOfEADDescription
+     */
+    public String getRightsOfEADDescription() {
+        return this.rightsOfEADDescription;
+    }
 
-	/**
-	 * @param rightsOfEADHolder the rightsOfEADHolder to set
-	 */
-	public void setRightsOfEADHolder(String rightsOfEADHolder) {
-		this.rightsOfEADHolder = rightsOfEADHolder;
-	}
+    /**
+     * @param rightsOfEADDescription the rightsOfEADDescription to set
+     */
+    public void setRightsOfEADDescription(String rightsOfEADDescription) {
+        this.rightsOfEADDescription = rightsOfEADDescription;
+    }
 
-	/**
-	 * @return the rightsOfDigitalObjectsText
-	 */
-	public String getRightsOfDigitalObjectsText() {
-		return this.rightsOfDigitalObjectsText;
-	}
+    /**
+     * @return the rightsOfEADHolder
+     */
+    public String getRightsOfEADHolder() {
+        return this.rightsOfEADHolder;
+    }
 
-	/**
-	 * @param rightsOfDigitalObjectsText the rightsOfDigitalObjectsText to set
-	 */
-	public void setRightsOfDigitalObjectsText(String rightsOfDigitalObjectsText) {
-		this.rightsOfDigitalObjectsText = rightsOfDigitalObjectsText;
-	}
+    /**
+     * @param rightsOfEADHolder the rightsOfEADHolder to set
+     */
+    public void setRightsOfEADHolder(String rightsOfEADHolder) {
+        this.rightsOfEADHolder = rightsOfEADHolder;
+    }
 
-	/**
-	 * @return the rightsOfEADDataText
-	 */
-	public String getRightsOfEADDataText() {
-		return this.rightsOfEADDataText;
-	}
+    /**
+     * @return the rightsOfDigitalObjectsText
+     */
+    public String getRightsOfDigitalObjectsText() {
+        return this.rightsOfDigitalObjectsText;
+    }
 
-	/**
-	 * @param rightsOfEADDataText the rightsOfEADDataText to set
-	 */
-	public void setRightsOfEADDataText(String rightsOfEADDataText) {
-		this.rightsOfEADDataText = rightsOfEADDataText;
-	}
+    /**
+     * @param rightsOfDigitalObjectsText the rightsOfDigitalObjectsText to set
+     */
+    public void setRightsOfDigitalObjectsText(String rightsOfDigitalObjectsText) {
+        this.rightsOfDigitalObjectsText = rightsOfDigitalObjectsText;
+    }
+
+    /**
+     * @return the rightsOfEADDataText
+     */
+    public String getRightsOfEADDataText() {
+        return this.rightsOfEADDataText;
+    }
+
+    /**
+     * @param rightsOfEADDataText the rightsOfEADDataText to set
+     */
+    public void setRightsOfEADDataText(String rightsOfEADDataText) {
+        this.rightsOfEADDataText = rightsOfEADDataText;
+    }
 
     public Long getXslUploadId() {
         return xslUploadId;
