@@ -29,7 +29,9 @@ public class LoginAction extends AbstractAction {
 	public String execute() throws Exception {
         if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
         	this.getServletRequest().setAttribute("maintenanceMode", true);
-        }
+        } else if (!APEnetUtilities.getDashboardConfig().isDefaultQueueProcessing()) {
+			this.getServletRequest().setAttribute("queueClosed", true);
+		}
 		if ((this.getUsername() != null) && (this.getPassword() != null)) {
 			LoginResult loginResult = null;
 			try {

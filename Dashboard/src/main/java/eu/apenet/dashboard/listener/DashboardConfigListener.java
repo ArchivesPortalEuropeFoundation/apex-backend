@@ -15,8 +15,6 @@ import eu.archivesportaleurope.commons.config.DashboardConfig;
 public class DashboardConfigListener extends ApePortalAndDashboardConfigListener {
 
 	private static final String CONFIG_PROPERTIES_PATH = "CONFIG_PROPERTIES_PATH";
-	private static final String EUROPEANA_DIR_PATH = "EUROPEANA_DIR_PATH";
-	private static final String EUROPEANA_DIR_PATH_DEFAULT = "/ape/data/europeana/";
 	private static final String SOLR_BASE_INDEX_URL = "SOLR_BASE_INDEX_URL";
 	private static final String XSL_DIR_PATH = "XSL_DIR_PATH";
 	private static final String XSL_DIR_PATH_DEFAULT = "/ape/data/xsl/";
@@ -63,13 +61,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			config.setConfigPropertiesPath(configProperties);
 		}
 		PropertiesUtil.reload(config);
-		String europeanaDirPath = servletContext.getInitParameter(EUROPEANA_DIR_PATH);
-		if (StringUtils.isBlank(europeanaDirPath)) {
-			log.info("No " + EUROPEANA_DIR_PATH + " specified. Using the default: " + EUROPEANA_DIR_PATH_DEFAULT);
-			europeanaDirPath = EUROPEANA_DIR_PATH_DEFAULT;
-		}
-		europeanaDirPath = checkPath(EUROPEANA_DIR_PATH, europeanaDirPath);
-		config.setEuropeanaDirPath(europeanaDirPath);
+
 		/*
 		 * solr indexing
 		 */

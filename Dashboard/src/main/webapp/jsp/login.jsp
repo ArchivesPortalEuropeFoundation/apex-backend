@@ -10,6 +10,9 @@
 		<h1 id="maintenanceMode"><s:text name="user.maintenancemode"/></h1>
 
 	</c:if>
+	<c:if test="${queueClosed}">
+		<h1 id="queueClosedMode"><s:text name="user.queueclosed"/></h1>
+	</c:if>
 	<s:form id="login" action="login" method="post"  focusElement="username">
 	<br></br>
 	<s:actionerror />

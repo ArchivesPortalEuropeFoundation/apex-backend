@@ -10,8 +10,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 public class DashboardConfig extends ApePortalAndDashboardConfig{
     protected static final String EMAIL_SEPARATOR = ";";
 	private String tempDirPath;
-   
-	private String europeanaDirPath;
+
     private String baseSolrIndexUrl;
     private String xslDirPath;
     private XPathFactory xpathFactory;
@@ -21,14 +20,6 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
     private boolean defaultHarvestingProcessing = false;
     private String configPropertiesPath;
 
-	public String getEuropeanaDirPath() {
-		return europeanaDirPath;
-	}
-
-	public void setEuropeanaDirPath(String europeanaDirPath) {
-		checkConfigured();	
-		this.europeanaDirPath = europeanaDirPath;
-	}
 	public String getBaseSolrIndexUrl() {
 		return baseSolrIndexUrl;
 	}

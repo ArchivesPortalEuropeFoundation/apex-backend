@@ -1136,6 +1136,10 @@ table.defaultlayout {
 	color:red;
 	padding-top: 20px;
 }
+#queueClosedMode {
+	color: #ff8c16;
+	padding-top: 20px;
+}
 .alEUp{
 	min-height:250px;
 	overflow:auto;
