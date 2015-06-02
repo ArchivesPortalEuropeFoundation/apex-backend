@@ -22,13 +22,16 @@ public class ManualFTPEADUploader extends ManualUploader {
 	private String user;
 	private String password;
 	private String serverUrl;
+        private String serverFolder;
 	private Integer serverPort;
 	private String userDir;
 
     public ManualFTPEADUploader(String user, String password, String serverUrl, Integer serverPort){
         this.user = user;
         this.password = password;
-        this.serverUrl = serverUrl.replace("ftp://", "");
+        serverUrl = serverUrl.replace("ftp://", "");
+        this.serverFolder = serverUrl.substring(serverUrl.indexOf("/"));
+        this.serverUrl = serverUrl.substring(0, serverUrl.indexOf("/"));
         if(serverPort != null)
             this.serverPort = serverPort;
         else
@@ -58,6 +61,14 @@ public class ManualFTPEADUploader extends ManualUploader {
 	public void setServerUrl(String serverUrl) {
 		this.serverUrl = serverUrl;
 	}
+
+    public String getServerFolder() {
+        return serverFolder;
+    }
+
+    public void setServerFolder(String serverFolder) {
+        this.serverFolder = serverFolder;
+    }
 
 	public Integer getServerPort() {
 		return serverPort;
@@ -91,6 +102,12 @@ public class ManualFTPEADUploader extends ManualUploader {
         ftpClient.enterRemotePassiveMode();
         ftpClient.enterLocalPassiveMode();
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        
+        if(StringUtils.isNotBlank(this.serverFolder)){
+            if(ftpClient.changeWorkingDirectory(this.serverFolder)){
+                ftpClient.listFiles(this.serverFolder);
+            }
+        }
 
         if(FTPReply.isPositiveCompletion(reply)){
             log.debug("Connected to " + serverUrl + " server: " + ftpClient.getReplyString());
