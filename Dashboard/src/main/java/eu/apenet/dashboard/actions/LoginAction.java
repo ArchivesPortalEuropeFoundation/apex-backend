@@ -2,6 +2,7 @@ package eu.apenet.dashboard.actions;
 
 import java.util.Date;
 
+import eu.apenet.dashboard.listener.QueueDaemon;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -29,7 +30,7 @@ public class LoginAction extends AbstractAction {
 	public String execute() throws Exception {
         if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
         	this.getServletRequest().setAttribute("maintenanceMode", true);
-        } else if (!APEnetUtilities.getDashboardConfig().isDefaultQueueProcessing()) {
+        } else if (!QueueDaemon.isActive()) {
 			this.getServletRequest().setAttribute("queueClosed", true);
 		}
 		if ((this.getUsername() != null) && (this.getPassword() != null)) {

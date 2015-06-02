@@ -2,6 +2,7 @@ package eu.apenet.dashboard.actions;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
+import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.security.SecurityContext;
 
 /**
@@ -33,7 +34,9 @@ public class IndexAction extends AbstractAction {
         }
         if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){ 
         	this.getServletRequest().setAttribute("maintenanceMode", true); //flag for maintenance mode
-        }
+        } else if (!QueueDaemon.isActive()) {
+			this.getServletRequest().setAttribute("queueClosed", true);
+		}
         return ERROR;
     }
 }

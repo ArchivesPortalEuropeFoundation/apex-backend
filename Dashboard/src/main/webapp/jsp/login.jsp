@@ -11,7 +11,7 @@
 
 	</c:if>
 	<c:if test="${queueClosed}">
-		<h1 id="queueClosedMode"><s:text name="user.queueclosed"/></h1>
+		<h2 id="queueClosedMode"><s:text name="user.queueclosed"/></h2>
 	</c:if>
 	<s:form id="login" action="login" method="post"  focusElement="username">
 	<br></br>
