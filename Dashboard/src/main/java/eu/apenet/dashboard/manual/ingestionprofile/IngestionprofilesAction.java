@@ -418,6 +418,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
         conversiontype = "1";
         sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
+        sourceOfFondsTitle = IngestionprofilesAction.OPTION_ARCHDESC_UNITTITLE;
         textDataProvider = getAiname();
         dataProviderCheck = Boolean.toString(true);
         europeanaDaoType = "";
