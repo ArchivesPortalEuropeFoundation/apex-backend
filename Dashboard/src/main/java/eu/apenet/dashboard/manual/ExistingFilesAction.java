@@ -33,6 +33,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	private List<FileUnit> filesSuccessful;		//This attribute contains all the files with a format not proper for APEnet
 	private List<FileUnit> filesWithErrors;		//This attribute contains all the files with a format not proper for APEnet
 	private List<FileUnit> filesWithEmptyEadid;		//This attribute contains all the files with empty EADID.
+	private List<FileUnit> filesWithEadidTooLong;		//This attribute contains all the files with EADID too long.
 	private List<FileUnit> filesNotUploaded;	//This attribute contains all the files not uploaded to APEnet
 	private List<FileUnit> filesBlocked;		//This attribute contains all the files blocked because of Europeana is harvesting and those files are FAs which have ESE files published
 	private Map<String, String> existingFilesChoice = new LinkedHashMap<String, String>(); //This list contains all the possible actions a user can do when a file is already stored in his Dashboard
@@ -78,6 +79,13 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 
 	public void setFilesWithEmptyEadid(List<FileUnit> filesWithEmptyEadid) {
 		this.filesWithEmptyEadid = filesWithEmptyEadid;
+	}
+	public List<FileUnit> getFilesWithEadidTooLong() {
+		return filesWithEadidTooLong;
+	}
+
+	public void setFilesWithEadidTooLong(List<FileUnit> filesWithEadidTooLong) {
+		this.filesWithEadidTooLong = filesWithEadidTooLong;
 	}
 
     public List<FileUnit> getExistingFiles() {
@@ -257,6 +265,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		this.filesSuccessful = new ArrayList<FileUnit>();
 		this.filesWithErrors = new ArrayList<FileUnit>();
 		this.filesWithEmptyEadid = new ArrayList<FileUnit>();
+		this.filesWithEadidTooLong = new ArrayList<FileUnit>();
 		this.existingFiles = new ArrayList<FileUnit>();
 		this.filesNotUploaded = new ArrayList<FileUnit>();
 		this.filesBlocked = new ArrayList<FileUnit>();
@@ -337,7 +346,14 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		}
 		this.filesWithEmptyEadid=null;
 
-        if(existingNewXslFilesUploaded.size() == 0 && existingNewXmlFilesUploaded.size() == 0 && filesWithErrors.size() == 0 && filesNotUploaded.size() == 0){
+		if(filesWithEadidTooLong.size() > 0) {
+			for(FileUnit fileUnit : filesWithEadidTooLong) {
+				checker.deleteUpFile(fileUnit);
+			}
+			filesWithEadidTooLong.clear();
+		}
+
+        if(existingNewXslFilesUploaded.size() == 0 && existingNewXmlFilesUploaded.size() == 0 && filesWithErrors.size() == 0 && filesNotUploaded.size() == 0 && filesWithEadidTooLong.size() == 0){
         	if (DAOFactory.instance().getUpFileDAO().hasNewUpFiles(getAiId(), FileType.XML)){
         		return "filesLeft";
         	}else {
@@ -449,6 +465,9 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 				this.filesWithEmptyEadid.add(fileUnit);
 				//this.filesSuccessful.add(fileUnit);
 				//this.filesWithErrors.add(fileUnit);
+			} else if (result.equals(ExistingFilesChecker.STATUS_EADID_TOO_LONG)){
+				this.filesWithEadidTooLong.add(fileUnit);
+				this.filesNotUploaded.add(fileUnit);
 			}
 			else if (result.equals(ExistingFilesChecker.STATUS_ERROR)){
 				this.filesWithErrors.add(fileUnit);
@@ -470,7 +489,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		this.existingNewXmlFilesUploaded = null;
 		checker = null;
 		if (filesSuccessful.size() >0 && filesWithEmptyEadid.size() == 0 &&
-				filesWithErrors.size() == 0 && filesNotUploaded.size() == 0 && filesBlocked.size() == 0 && existingFiles.size() == 0){
+				filesWithErrors.size() == 0 && filesNotUploaded.size() == 0 && filesBlocked.size() == 0 && existingFiles.size() == 0 && filesWithEadidTooLong.size() == 0){
         	if (DAOFactory.instance().getUpFileDAO().hasNewUpFiles(getAiId(), FileType.XML)){
         		return "filesLeft";
         	}else {

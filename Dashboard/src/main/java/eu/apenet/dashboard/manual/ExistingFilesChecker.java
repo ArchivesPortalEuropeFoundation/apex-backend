@@ -62,6 +62,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class ExistingFilesChecker {
 
     public final static String STATUS_EMPTY = "empty";
+    public final static String STATUS_EADID_TOO_LONG = "eadid too long";
     public final static String STATUS_EXISTS = "exists";
     public final static String STATUS_ERROR = "error";
     public final static String STATUS_NO_EXIST = "no exists";
@@ -329,6 +330,9 @@ public class ExistingFilesChecker {
                 if (eadid.equals(STATUS_EMPTY)) { //eadid is empty
                     fileUnit.setEadType(xmlType.getName());
                     result = STATUS_EMPTY;
+                } else if (StringUtils.length(eadid) > 255) {
+                    fileUnit.setEadType(xmlType.getName());
+                    result = STATUS_EADID_TOO_LONG;
                 } else if (eadid.equals(STATUS_ERROR) || StringUtils.isBlank(eadid)) { //No eadid or several eadid
                     LOG.info("The " + xmlType.getName() + " " + fileUnit.getFileName() + " doesn't have a proper format: it doesn't have eadid or it has several");
                     try {
@@ -774,6 +778,19 @@ public class ExistingFilesChecker {
             }
         }
         return "ok";
+    }
+
+    public void deleteUpFile(FileUnit fileUnit) {
+        try {
+            deleteFileFromDDBB(fileUnit.getFileId());
+            File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
+            if(file.exists()) {
+                FileUtils.forceDelete(file);
+                LOG.info("The file " + fileUnit.getFileName() + " has been removed from Dashboard and its file system");
+            }
+        } catch (Exception e) {
+            LOG.error("We could not delete the upFile", e);
+        }
     }
 
     // This method overwrite (or not) a file in the Dashboard for a user

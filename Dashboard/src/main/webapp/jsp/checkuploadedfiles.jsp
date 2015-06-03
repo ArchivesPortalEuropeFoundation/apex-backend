@@ -3,7 +3,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
 <s:if
-	test="filesSuccessful.size()>0 || filesWithEmptyEadid.size()>0 || filesWithErrors.size()>0 || existingFiles.size()>0 || filesBlocked.size()>0">
+	test="filesSuccessful.size()>0 || filesWithEmptyEadid.size()>0 || filesWithErrors.size()>0 || existingFiles.size()>0 || filesBlocked.size()>0 || filesWithEadidTooLong.size()>0">
 	<form id="overwriteexistingfiles" method="post">
 		<s:if test="filesSuccessful.size()>0">
 			<div id="filesSuccessful" class="uploadedfiles_div">
@@ -68,6 +68,62 @@
 						</s:if>
 						<br />
 						<br />
+					</s:iterator>
+				</div>
+			</div>
+		</s:if>
+		<s:if test="filesWithEadidTooLong.size()>0">
+			<div id="filesWithEadidTooLong" class="uploadedfiles_div">
+				<div id="text_filesWithEadidTooLong">
+					<p class="uploadedfiles_title">
+						<img id="filesWithErrorsHCimage" src="images/expand/menos.gif" />
+						<s:property
+								value="getText('content.message.titlefileswitherrors')" />
+					</p>
+					<hr />
+				</div>
+				<div id="content_filesWithEadidTooLong" style="display: inline;">
+					<s:property value="getText('content.message.filesWithEadidTooLong')" />
+					<br> <br> <br>
+					<s:iterator value="filesWithEadidTooLong" status="stat">
+						<span id="warnId<s:property value="#stat.index"/>"
+							  class="linkText"> <s:property
+								value="%{(#stat.index+1) + '- ' + top.fileName}" />
+							<s:if test="top.errorInformation != null"> (<s:property
+									value="getText('label.moreinf')" />)</s:if>
+						</span>
+						<s:if test="top.errorInformation != null">
+							<div id="warnErrorId<s:property value="#stat.index"/>"
+								 style="display: none;" class="warnErrorId">
+								<s:property value="%{top.errorInformation}" />
+							</div>
+							<script type="text/javascript">
+								$('#warnId<s:property value="#stat.index"/>').click(function() {
+									if ($('#warnErrorId<s:property value="#stat.index"/>').is(":visible")){
+										$(".warnErrorId").hide();
+									} else {
+										$(".warnErrorId").hide();
+										$('#warnErrorId<s:property value="#stat.index"/>').toggle();
+									}
+								});
+							</script>
+						</s:if>
+						<br />
+						<br />
+						<s:hidden name="filesWithEadidTooLong[%{#stat.index}].fileId"
+								  value="%{top.fileId}"></s:hidden>
+						<s:hidden name="filesWithEadidTooLong[%{#stat.index}].fileType"
+								  value="%{top.fileType}"></s:hidden>
+						<s:hidden name="filesWithEadidTooLong[%{#stat.index}].fileName"
+								  value="%{top.fileName}"></s:hidden>
+						<s:hidden name="filesWithEadidTooLong[%{#stat.index}].filePath"
+								  value="%{top.filePath}"></s:hidden>
+						<s:hidden name="filesWithEadidTooLong[%{#stat.index}].eadType"
+								  value="%{top.eadType}"></s:hidden>
+						<s:hidden name="filesWithEadidTooLong[%{#stat.index}].eadid"
+								  value="%{top.eadid}"></s:hidden>
+						<s:hidden name="filesWithEadidTooLong[%{#stat.index}].permId"
+								  value="%{top.permId}"></s:hidden>
 					</s:iterator>
 				</div>
 			</div>
