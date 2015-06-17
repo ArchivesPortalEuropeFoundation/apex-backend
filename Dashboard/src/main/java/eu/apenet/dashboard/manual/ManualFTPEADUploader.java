@@ -18,49 +18,56 @@ import java.util.List;
 public class ManualFTPEADUploader extends ManualUploader {
 
     private final Logger log = Logger.getLogger(getClass());
-    
-	private String user;
-	private String password;
-	private String serverUrl;
-        private String serverFolder;
-	private Integer serverPort;
-	private String userDir;
 
-    public ManualFTPEADUploader(String user, String password, String serverUrl, Integer serverPort){
+    private String user;
+    private String password;
+    private String serverUrl;
+    private String serverFolder;
+    private Integer serverPort;
+    private String userDir;
+
+    public ManualFTPEADUploader(String user, String password, String serverUrl, Integer serverPort) {
         this.user = user;
         this.password = password;
         serverUrl = serverUrl.replace("ftp://", "");
-        this.serverFolder = serverUrl.substring(serverUrl.indexOf("/"));
-        this.serverUrl = serverUrl.substring(0, serverUrl.indexOf("/"));
-        if(serverPort != null)
+        if (serverUrl.indexOf("/") != -1) {
+            this.serverFolder = serverUrl.substring(serverUrl.indexOf("/"));
+            this.serverUrl = serverUrl.substring(0, serverUrl.indexOf("/"));
+        } else {
+            this.serverFolder = "";
+            this.serverUrl = serverUrl;
+
+        }
+        if (serverPort != null) {
             this.serverPort = serverPort;
-        else
+        } else {
             this.serverPort = 21;
+        }
     }
 
-	public String getUser() {
-		return user;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getServerUrl() {
-		return serverUrl;
-	}
+    public String getServerUrl() {
+        return serverUrl;
+    }
 
-	public void setServerUrl(String serverUrl) {
-		this.serverUrl = serverUrl;
-	}
+    public void setServerUrl(String serverUrl) {
+        this.serverUrl = serverUrl;
+    }
 
     public String getServerFolder() {
         return serverFolder;
@@ -70,111 +77,126 @@ public class ManualFTPEADUploader extends ManualUploader {
         this.serverFolder = serverFolder;
     }
 
-	public Integer getServerPort() {
-		return serverPort;
-	}
+    public Integer getServerPort() {
+        return serverPort;
+    }
 
-	public void setServerPort(Integer serverPort) {
-		this.serverPort = serverPort;
-	}
-
-/**
-	@Override
-	public Boolean upload() {
-		return null;
-	}
-**/
+    public void setServerPort(Integer serverPort) {
+        this.serverPort = serverPort;
+    }
 
     /**
-     * Creates the connection (FTPClient) from the server to the remote FTP server
-     * @return An FTPClient which contains the open connection with the FTP server (or null if can't connect)
-     * @throws IOException If the connection is problematic 
+     * @Override public Boolean upload() { return null; }
+*
      */
-	public FTPClient establishConnection() throws IOException {
+    /**
+     * Creates the connection (FTPClient) from the server to the remote FTP
+     * server
+     *
+     * @return An FTPClient which contains the open connection with the FTP
+     * server (or null if can't connect)
+     * @throws IOException If the connection is problematic
+     */
+    public FTPClient establishConnection() throws IOException {
         FTPClient ftpClient = new FTPClient();
         ftpClient.connect(this.serverUrl, this.serverPort);
 
-        if(this.user != null)
+        if (this.user != null) {
             ftpClient.login(this.user, this.password);
+        }
 
         int reply = ftpClient.getReplyCode();
 
         ftpClient.enterRemotePassiveMode();
         ftpClient.enterLocalPassiveMode();
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-        
-        if(StringUtils.isNotBlank(this.serverFolder)){
-            if(ftpClient.changeWorkingDirectory(this.serverFolder)){
+
+        if (StringUtils.isNotBlank(this.serverFolder)) {
+            if (ftpClient.changeWorkingDirectory(this.serverFolder)) {
                 ftpClient.listFiles(this.serverFolder);
+            } else {
+                ftpClient.disconnect();
+                log.error("No folder " + serverFolder + " on server " + serverUrl);
+                throw new IOException("No folder " + serverFolder + " on server " + serverUrl);
             }
         }
 
-        if(FTPReply.isPositiveCompletion(reply)){
+        if (FTPReply.isPositiveCompletion(reply)) {
             log.debug("Connected to " + serverUrl + " server: " + ftpClient.getReplyString());
             return ftpClient;
         }
         ftpClient.disconnect();
         log.error("Connection refused by " + serverUrl + " server");
         return null;
-	}
+    }
 
     /**
      * Download a file from the FTP server to the local server.
+     *
      * @param ftpClient An FTPClient containing the open connection
-     * @param pathFile The path of the file to download within the FTP server's context
-     * @param archivalInstitutionId The id used to create the full path for the saved file
+     * @param pathFile The path of the file to download within the FTP server's
+     * context
+     * @param archivalInstitutionId The id used to create the full path for the
+     * saved file
      * @return The File that has been downloaded
      * @throws IOException If the connection is problematic
      */
-	public File getFile(FTPClient ftpClient, String pathFile,String destFile, int archivalInstitutionId) throws IOException{
-		log.info("Downloading: " +ftpClient.getRemoteAddress() + ":"+ftpClient.getRemotePort()+ " " + pathFile);
+    public File getFile(FTPClient ftpClient, String pathFile, String destFile, int archivalInstitutionId) throws IOException {
+        log.info("Downloading: " + ftpClient.getRemoteAddress() + ":" + ftpClient.getRemotePort() + " " + pathFile);
         String file = pathFile.split("/")[pathFile.split("/").length - 1];
         log.debug("File is: " + file);
-        String dir = pathFile.replace("/"+file, "");
-        dir = dir.equals("")?"/":dir;
+        String dir = pathFile.replace("/" + file, "");
+        dir = dir.equals("") ? "/" : dir;
         log.debug("Dir is: " + dir);
         ftpClient.changeWorkingDirectory(dir);
 
         File dirToSave = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId);
-        if(!dirToSave.exists())
+        if (!dirToSave.exists()) {
             dirToSave.mkdir();
+        }
         File fileToSave = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + destFile);
 
         OutputStream os = new FileOutputStream(fileToSave);
-        if(ftpClient.retrieveFile(file, os)) {
+        if (ftpClient.retrieveFile(file, os)) {
             os.flush();
             os.close();
             return fileToSave;
         }
         return null;
-	}
+    }
 
     /**
      * Disconnect the connection of the FTP server (Logout if necessary)
+     *
      * @param ftpClient FTPClient holding the open connection
      * @return A success boolean
      * @throws IOException If the connection is problematic
      */
     public boolean disconnectFTPServer(FTPClient ftpClient) throws IOException {
         boolean success = ftpClient.logout();
-        if(ftpClient.isConnected())
+        if (ftpClient.isConnected()) {
             ftpClient.disconnect();
+        }
         return success;
     }
 
     /**
      * Reconnects to the FTP server
+     *
      * @return An FTPClient holding the open connection
      * @throws IOException If the connection is problematic
      */
     public FTPClient reconnectFTPServer() throws IOException {
-        if(this.serverUrl == null)
+        if (this.serverUrl == null) {
             return null;
+        }
         return establishConnection();
     }
 
     /**
-     * Get a list of FTPFile from the server containing XML files and directories
+     * Get a list of FTPFile from the server containing XML files and
+     * directories
+     *
      * @param ftpClient An FTPClient holding the open connection
      * @param folder The path of the folder to retrieve files from
      * @return A list of FTPFile containing XML files and directories
@@ -183,28 +205,31 @@ public class ManualFTPEADUploader extends ManualUploader {
     public List<FTPFile> getFTPFiles(FTPClient ftpClient, String folder) throws IOException {
         log.debug("Getting files");
 
-        if(folder!=null && !folder.isEmpty())
+        if (folder != null && !folder.isEmpty()) {
             ftpClient.changeWorkingDirectory(folder);
+        }
         log.debug("Working dir: " + ftpClient.printWorkingDirectory());
-        if(StringUtils.isEmpty(userDir))
+        if (StringUtils.isEmpty(userDir)) {
             userDir = ftpClient.printWorkingDirectory();
+        }
 
         FTPFile[] ftpFiles = ftpClient.listFiles();
         List<FTPFile> ftpFileList = new ArrayList<FTPFile>();
 
-        for(FTPFile ftpFile : ftpFiles){
-            if(ftpFile.getName().endsWith(".xml") || ftpFile.getName().endsWith(".zip") || (ftpFile.isDirectory() && !ftpFile.getName().startsWith(".")))
+        for (FTPFile ftpFile : ftpFiles) {
+            if (ftpFile.getName().endsWith(".xml") || ftpFile.getName().endsWith(".zip") || (ftpFile.isDirectory() && !ftpFile.getName().startsWith("."))) {
                 ftpFileList.add(ftpFile);
+            }
         }
 
         log.debug("File list from server retrieved: " + ftpFileList.size() + " files");
         log.debug("Returning file names");
         return ftpFileList;
     }
-	
-	private Boolean checkFormat(){
-		return null;
-	}
+
+    private Boolean checkFormat() {
+        return null;
+    }
 
     public String getUserDir() {
         return userDir;
