@@ -116,7 +116,7 @@ public class IntegrateMETSParser extends AbstractParser {
 				href = "http://creativecommons.org/publicdomain/mark/1.0/";
 				description = "Public Domain Mark";
 			}else if("CONTRACTUAL".equals(metsInfo.getRightsCategory()) && "Out of copyright - no commercial re-use".equals(metsInfo.getRightsConstraint())){
-				href = "http://www.europeana.eu/portal/rights/out-of-copyright-non-commercial.html";
+				href = "http://www.europeana.eu/portal/rights/out-of-copyright-non-commercial/";
 				description = "Out of copyright - no commercial re-use";				
 			}else if("COPYRIGHTED".equals(metsInfo.getRightsCategory())){
 				if ("CC0".equals(metsInfo.getRightsOtherCategory())){
@@ -149,7 +149,7 @@ public class IntegrateMETSParser extends AbstractParser {
 					href = "http://www.europeana.eu/rights/rr-p/";
 					description = "Paid access – no re-use";						
 				}else if ("ORPHAN WORK".equals(metsInfo.getRightsOtherCategory())){
-					href = "http://www.europeana.eu/portal/rights/orphan-work-eu.html";
+					href = "http://www.europeana.eu/portal/rights/orphan-work-eu/";
 					description = "Orphan work";						
 				}else if ("UNKNOWN".equals(metsInfo.getRightsOtherCategory())){
 					href = "http://www.europeana.eu/rights/unknown/";
