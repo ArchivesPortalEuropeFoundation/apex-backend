@@ -74,8 +74,8 @@
 			<artifactId>commons</artifactId>
 			<exclusions>
 				<exclusion>
-					<artifactId>saxon</artifactId>
-					<groupId>net.sourceforge.saxon</groupId>
+					<groupId>net.sf.saxon</groupId>
+					<artifactId>saxon-HE</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
