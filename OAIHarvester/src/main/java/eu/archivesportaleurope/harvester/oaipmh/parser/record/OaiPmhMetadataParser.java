@@ -51,6 +51,8 @@ public class OaiPmhMetadataParser extends AbstractOaiPmhParser{
 		xmlWriter.writeEndDocument();
 		xmlWriter.flush();
 		xmlWriter.close();
+		fileOutputStream.flush();
+		fileOutputStream.close();
 		return filename;
 	}
 
