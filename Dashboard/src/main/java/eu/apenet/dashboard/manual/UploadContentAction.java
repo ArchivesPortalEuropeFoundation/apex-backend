@@ -283,9 +283,11 @@ public class UploadContentAction extends AbstractInstitutionAction {
     }
 
     /**
-     * AJAX call from the JSP page. Retrieves the data (files and directories) from the FTP server
+     * AJAX call from the JSP page. Retrieves the data (files and directories)
+     * from the FTP server
      *
-     * @return A JSON token containing the files and directories to be added to the tree view in the JSP
+     * @return A JSON token containing the files and directories to be added to
+     * the tree view in the JSP
      */
     public String retrieveFtpData() {
         initializeProfileList();
@@ -343,7 +345,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
             String filePath = APEnetUtilities.convertToFilename(sourceFilePath);
             try {
                 String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
-                uploader_ftp.getFile(client, sourceFilePath,filePath, aiId);
+                uploader_ftp.getFile(client, sourceFilePath, filePath, aiId);
                 if (fileType.equals("xml")) {
                     createDBentry(filePath, "FTP");
                 } else if (fileType.equals("zip")) {
@@ -409,17 +411,18 @@ public class UploadContentAction extends AbstractInstitutionAction {
     }
 
     /**
-     * Will create an entry to the database for the uploaded file;
-     * if file is processed with profile, will directly add it to queue
+     * Will create an entry to the database for the uploaded file; if file is
+     * processed with profile, will directly add it to queue
      *
      * @param filePath The current location of the saved file
-     * @param uploadMethodString Depending if the file has been harvest or downloaded from an FTP server
+     * @param uploadMethodString Depending if the file has been harvest or
+     * downloaded from an FTP server
      */
     private void createDBentry(String filePath, String uploadMethodString) {
         createDBentry(filePath, uploadMethodString, null, null);
     }
 
-        private void createDBentry(String filePath, String uploadMethodString, File srcFile, File destFile) {
+    private void createDBentry(String filePath, String uploadMethodString, File srcFile, File destFile) {
         try {
             // Moving the file
             // Insert file uploaded into up_file table
@@ -437,13 +440,13 @@ public class UploadContentAction extends AbstractInstitutionAction {
             DAOFactory.instance().getUpFileDAO().insertSimple(upFile);
 
             // If method deals with files from a ZIP, move these from temporary location as given in method header
-            if(srcFile != null && destFile != null){
+            if (srcFile != null && destFile != null) {
                 log.info("Moving file " + srcFile.getAbsolutePath() + " to " + destFile.getAbsolutePath());
                 FileUtils.moveFile(srcFile, destFile);
             }
-            
-            if(StringUtils.isNotEmpty(filePath)){
-            	this.filesUploaded.add(filePath);
+
+            if (StringUtils.isNotEmpty(filePath)) {
+                this.filesUploaded.add(filePath);
             }
 
             JpaUtil.commitDatabaseTransaction();
@@ -467,7 +470,8 @@ public class UploadContentAction extends AbstractInstitutionAction {
     /**
      * Creates the JSON string to be displayed in the web page for FTP Client
      *
-     * @param files A list of FTPFiles that contain all needed information to create a JSON string
+     * @param files A list of FTPFiles that contain all needed information to
+     * create a JSON string
      * @return The JSON string containing data to be displayed
      */
     private String createJSONString(List<FTPFile> files, String parentName) {
@@ -499,7 +503,8 @@ public class UploadContentAction extends AbstractInstitutionAction {
     }
 
     /**
-     * Creates a path for the name of the tree objects, used to retrieve tree structure
+     * Creates a path for the name of the tree objects, used to retrieve tree
+     * structure
      *
      * @param directory The directory path of the file
      * @param name The file name of the file
@@ -589,22 +594,22 @@ public class UploadContentAction extends AbstractInstitutionAction {
         properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
         properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
         properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
-        properties.setProperty(QueueItem.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck()+"");
-        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
-        properties.setProperty(QueueItem.INHERIT_UNITTITLE_CHECK, ingestionprofile.getEuropeanaInheritUnittitleCheck()+"");
-        properties.setProperty(QueueItem.INHERIT_UNITTITLE, ingestionprofile.getEuropeanaInheritUnittitle()+"");
-        properties.setProperty(QueueItem.SOURCE_OF_IDENTIFIERS, ingestionprofile.getSourceOfIdentifiers()+"");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS, ingestionprofile.getRightsOfDigitalObjects() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT, ingestionprofile.getRightsOfDigitalObjectsText() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION, ingestionprofile.getRightsOfDigitalDescription() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER, ingestionprofile.getRightsOfDigitalHolder() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA, ingestionprofile.getRightsOfEADData() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT, ingestionprofile.getRightsOfEADDataText() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION, ingestionprofile.getRightsOfEADDescription() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_HOLDER, ingestionprofile.getRightsOfEADHolder() + "");
-        if(ingestionprofile.getXslUpload() != null) {
+        properties.setProperty(QueueItem.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck() + "");
+        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements() + "");
+        properties.setProperty(QueueItem.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck() + "");
+        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin() + "");
+        properties.setProperty(QueueItem.INHERIT_UNITTITLE_CHECK, ingestionprofile.getEuropeanaInheritUnittitleCheck() + "");
+        properties.setProperty(QueueItem.INHERIT_UNITTITLE, ingestionprofile.getEuropeanaInheritUnittitle() + "");
+        properties.setProperty(QueueItem.SOURCE_OF_IDENTIFIERS, ingestionprofile.getSourceOfIdentifiers() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS, ingestionprofile.getRightsOfDigitalObjects() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT, ingestionprofile.getRightsOfDigitalObjectsText() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION, ingestionprofile.getRightsOfDigitalDescription() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER, ingestionprofile.getRightsOfDigitalHolder() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA, ingestionprofile.getRightsOfEADData() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT, ingestionprofile.getRightsOfEADDataText() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION, ingestionprofile.getRightsOfEADDescription() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_HOLDER, ingestionprofile.getRightsOfEADHolder() + "");
+        if (ingestionprofile.getXslUpload() != null) {
             properties.setProperty(QueueItem.XSL_FILE, ingestionprofile.getXslUpload().getName());
         }
         return properties;
@@ -617,7 +622,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
             if (profile != null) {
                 Properties properties = retrieveProperties(profile);
                 try {
-                    if(profile.getFileType() == 2){
+                    if (profile.getFileType() == 2) {
                         EacCpfService.useProfileAction(upFile, properties);
                     } else {
                         EadService.useProfileAction(upFile, properties);
