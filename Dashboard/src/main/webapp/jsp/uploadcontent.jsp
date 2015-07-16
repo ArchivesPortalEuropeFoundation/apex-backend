@@ -39,11 +39,12 @@
             </p>
         </s:form>
         <s:form action="connectFTP" method="post">
-            <s:textfield name="ftpUrl" key="labe.url" value="ftp://" />
-            <s:textfield name="ftpPort" key="label.port" value="21"/>
+            <s:textfield name="ftpUrl" key="labe.url" />
+            <s:textfield name="ftpPort" key="label.port" />
             <s:textfield name="ftpUser" key="label.username" />
-            <s:password name="ftpPwd" key="label.password" />
+            <s:password name="ftpPwd" key="label.password" showPassword="true" />
             <s:submit onclick="document.getElementById('stopButton').style.display='block';" method="connectFTP" key="label.ftpconexion" />
+            <s:checkbox name="ftpRememberData" key="label.rememberLoginData" />
         </s:form>
         <div style="width:100%;float:left;">
             <div style="width:50%;float:left;margin-left: -1em;">&nbsp;</div>

@@ -29,10 +29,12 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ZipManager;
+import eu.apenet.persistence.dao.FtpDAO;
 import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.Ftp;
 import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
@@ -64,6 +66,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
     private String ftpUser;
     private String ftpPwd;
     private int ftpPort;
+    private boolean ftpRememberData;
 
     private String oaiUrl;
     private String oaiSet;
@@ -177,6 +180,14 @@ public class UploadContentAction extends AbstractInstitutionAction {
         }
     }
 
+    public boolean getFtpRememberData() {
+        return ftpRememberData;
+    }
+
+    public void setFtpRememberData(boolean ftpRememberData) {
+        this.ftpRememberData = ftpRememberData;
+    }
+
     public String getOaiUrl() {
         return oaiUrl;
     }
@@ -251,6 +262,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     @Override
     public String execute() throws Exception {
+        retrieveFtpLogin();
         initializeProfileList();
         return SUCCESS;
     }
@@ -269,6 +281,9 @@ public class UploadContentAction extends AbstractInstitutionAction {
             if (client != null) {
                 session.put("ftpClient", client);
                 initializeProfileList();
+                if (ftpRememberData) {
+                    saveFtpLoginToDb(ftpUrl, ftpPort, ftpUser, ftpPwd);
+                }
                 return SUCCESS;
             } else {
                 addActionMessage(getText("uploadContent.errUser"));
@@ -642,6 +657,48 @@ public class UploadContentAction extends AbstractInstitutionAction {
             for (Ingestionprofile entry : queryResult) {
                 ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
+        }
+    }
+
+    private void saveFtpLoginToDb(String ftpUrl, int ftpPort, String ftpUser, String ftpPwd) {
+        try {
+            // Init factory, dao and digest.
+            FtpDAO ftpDao = DAOFactory.instance().getFtpDAO();
+            // Init object to store
+            Ftp ftpObject;
+            if (ftpDao.getFtpConfig(getAiId()) == null){
+                ftpObject = new Ftp();
+            } else {
+                ftpObject = ftpDao.getFtpConfig(getAiId());
+            }
+            ftpObject.setAiId(getAiId());
+            ftpObject.setUrl(ftpUrl);
+            ftpObject.setPort(ftpPort);
+            ftpObject.setUsername(ftpUser);
+            ftpObject.setPassword(ftpPwd);
+            // Store object
+            ftpDao.store(ftpObject);
+
+        } catch (Exception ex) {
+            LOG.error("Failed to save FTP login data", ex);
+        }
+    }
+    
+    private void retrieveFtpLogin() {
+        try {
+            FtpDAO ftpDao = DAOFactory.instance().getFtpDAO();
+            Ftp ftpObject = ftpDao.getFtpConfig(getAiId());
+            if (ftpObject != null) {
+                ftpUrl = ftpObject.getUrl();
+                ftpPort = ftpObject.getPort();
+                ftpUser = ftpObject.getUsername();
+                ftpPwd = ftpObject.getPassword();
+            } else {
+                ftpUrl = "ftp://";
+                ftpPort = 21;
+            }
+        } catch (Exception ex) {
+            LOG.error("Failed to retrieve FTP login data: ", ex);
         }
     }
 }
