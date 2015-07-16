@@ -15,7 +15,6 @@ CREATE TABLE ftp
   url character varying(256) NOT NULL,
   port integer,
   username character varying(60),
-  password character varying(60),
   ai_id integer NOT NULL,
   CONSTRAINT ftp_pkey PRIMARY KEY (id),
   CONSTRAINT ai_id_fkey FOREIGN KEY (ai_id)

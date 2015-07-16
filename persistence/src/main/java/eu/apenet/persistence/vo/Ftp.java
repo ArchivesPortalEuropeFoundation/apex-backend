@@ -16,7 +16,6 @@ public class Ftp implements java.io.Serializable{
     private String url;
     private Integer port;
     private String username;
-    private String password;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ai_id", insertable = false, updatable = false)
@@ -54,14 +53,6 @@ public class Ftp implements java.io.Serializable{
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Integer getAiId() {
