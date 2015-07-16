@@ -675,7 +675,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
             ftpObject.setUrl(ftpUrl);
             ftpObject.setPort(ftpPort);
             ftpObject.setUsername(ftpUser);
-            ftpObject.setPassword(ftpPwd);
             // Store object
             ftpDao.store(ftpObject);
 
@@ -692,7 +691,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 ftpUrl = ftpObject.getUrl();
                 ftpPort = ftpObject.getPort();
                 ftpUser = ftpObject.getUsername();
-                ftpPwd = ftpObject.getPassword();
             } else {
                 ftpUrl = "ftp://";
                 ftpPort = 21;
