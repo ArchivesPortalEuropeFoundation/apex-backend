@@ -87,18 +87,18 @@ public class ValidateTask extends AbstractEadTask {
 
                 if (exceptions != null) {
                     errors = true;
-                    int count = 0;
-                    for (SAXParseException exception : exceptions) {
-                        if ((count++) % 2 == 0) {
-                            warn.append("<span class=\"validation-warning\">");
-                        } else {
-                            warn.append("<span class=\"validation-error\">");
-                        }
-                        warn.append("l.").append(exception.getLineNumber()).append(" c.")
-                                .append(exception.getColumnNumber()).append(": ").append(exception.getMessage())
-                                .append("</span>").append("<br />");
-                    }
                     if (ead.isConverted()) {
+                        int count = 0;
+                        for (SAXParseException exception : exceptions) {
+                            if ((count++) % 2 == 0) {
+                                warn.append("<span class=\"validation-warning\">");
+                            } else {
+                                warn.append("<span class=\"validation-error\">");
+                            }
+                            warn.append("l.").append(exception.getLineNumber()).append(" c.")
+                                    .append(exception.getColumnNumber()).append(": ").append(exception.getMessage())
+                                    .append("</span>").append("<br />");
+                        }
                         ead.setValidated(ValidatedState.FATAL_ERROR);
                     }
 
