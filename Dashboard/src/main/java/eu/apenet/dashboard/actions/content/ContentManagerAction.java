@@ -395,10 +395,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
         getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
-        if (countResults>0)
-        	return SUCCESS;
-        else
-        	return "empty";
+        return SUCCESS;
     }
 
     private String processEacCpf(ContentSearchOptions contentSearchOptions) {
@@ -460,12 +457,8 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
         getServletRequest().setAttribute("totalItemsInQueue", queueDAO.countItems());
         getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
-        getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));        
-
-        if (countResults>0)
-        	return "success-eaccpf";
-        else
-        	return "empty";
+        getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));
+        return "success-eaccpf";
     }
 
     public Map<String, String> getConvertedStatusList() {
