@@ -2,6 +2,7 @@ package eu.apenet.dashboard.ead2edm;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -53,8 +54,8 @@ public class ConvertAction extends AbstractInstitutionAction {
     private static final String OPTION_YES = "yes"; // Constant for value "yes".
     private static final String OPTION_NO = "no"; // Constant for value "no".
     // Conversion type.
-    private static final String OPTION_FULL = "full"; // Constant for value "full".
     private static final String OPTION_MINIMAL = "minimal"; // Constant for value "minimal".
+    private static final String OPTION_FULL = "full"; // Constant for value "full".
     // Source of identifiers.
     private static final String OPTION_UNITID = "unitid";
     private static final String OPTION_CID = "cid";
@@ -77,7 +78,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String batchItems;
     private String provider = "Archives Portal Europe";
     private String daoType;
-    private Set<SelectItem> conversionTypeSet = new TreeSet<SelectItem>();
+    private Set<SelectItem> conversionTypeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> sourceOfIdentifiersSet = new TreeSet<SelectItem>();
     private Set<SelectItem> sourceOfFondsTitleSet = new TreeSet<SelectItem>();
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
@@ -198,8 +199,8 @@ public class ConvertAction extends AbstractInstitutionAction {
             this.languages.add(new SelectItem(language, languageDescription));
         }
 
-        this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_FULL, this.getText("ead2ese.label.full.conversion")));
         this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_MINIMAL, this.getText("ead2ese.label.minimal.conversion")));
+        this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_FULL, this.getText("ead2ese.label.full.conversion")));
         this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         this.sourceOfFondsTitleSet.add(new SelectItem(ConvertAction.OPTION_ARCHDESC_UNITTITLE, this.getText("ead2ese.label.fondstitle.archdescUnittitle").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
