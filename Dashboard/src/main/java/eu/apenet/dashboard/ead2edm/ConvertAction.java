@@ -255,29 +255,33 @@ public class ConvertAction extends AbstractInstitutionAction {
             this.setHasArchdescUnittitle(StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle()));
             this.setHasTitlestmtTitleproper(StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper()));
             if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescLicenceType())) {
-                license = ead2EdmInformation.getArchdescLicenceType();
-                if (license == ConvertAction.EUROPEANA) {
-                    if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-f/")) {
-                        europeanaLicense = ConvertAction.EUROPEANA_FREE;
-                    } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("orphan-work-eu/")) {
-                        europeanaLicense = ConvertAction.EUROPEANA_ORPHAN;
-                    } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-p/")) {
-                        europeanaLicense = ConvertAction.EUROPEANA_PAID;
-                    } else {
-                        europeanaLicense = ConvertAction.EUROPEANA_UNKNOWN;
-                    }
-                } else if (license == ConvertAction.CREATIVECOMMONS) {
-                    //TODO: fill with correct parameters if possible
-                }
+//          COMMENTED OUT UNTIL THE RESPECTIVE ISSUE INVOLVING THE CC LICENCE RECOGNITION WILL BE STARTED
+//                
+//                license = ead2EdmInformation.getArchdescLicenceType();
+//                if (license == ConvertAction.EUROPEANA) {
+//                    if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-f/")) {
+//                        europeanaLicense = ConvertAction.EUROPEANA_FREE;
+//                    } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("orphan-work-eu/")) {
+//                        europeanaLicense = ConvertAction.EUROPEANA_ORPHAN;
+//                    } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-p/")) {
+//                        europeanaLicense = ConvertAction.EUROPEANA_PAID;
+//                    } else {
+//                        europeanaLicense = ConvertAction.EUROPEANA_UNKNOWN;
+//                    }
+//                } else if (license == ConvertAction.CREATIVECOMMONS) {
+//                    //TODO: fill with correct parameters if possible
+//                }
                 licenseCheck = true;
-                StringBuilder sBuilder = new StringBuilder();
-                for (String text : ead2EdmInformation.getUserestrictDaoLicenceText()) {
-                    if (sBuilder.length() != 0) {
-                        sBuilder.append(" / ");
-                    }
-                    sBuilder.append(text);
-                }
-                licenseAdditionalInformation = sBuilder.toString();
+//          SAME AS ABOVE
+//                
+//                StringBuilder sBuilder = new StringBuilder();
+//                for (String text : ead2EdmInformation.getArchdescLicenceText()) {
+//                    if (sBuilder.length() != 0) {
+//                        sBuilder.append(" / ");
+//                    }
+//                    sBuilder.append(text);
+//                }
+//                licenseAdditionalInformation = sBuilder.toString();
             }
             this.setBatchConversion(false);
         } else {
