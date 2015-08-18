@@ -143,11 +143,17 @@ public class ConvertAction extends AbstractInstitutionAction {
                 if (this.isNoLanguageOnClevel()) {
                     addFieldError("inheritLanguage", getText("errors.required")
                             + ". " + getText("errors.clevel.without.langmaterial"));
+                } else if (!this.isLanguageOfTheMaterialCheck()) {
+                    addFieldError("LanguageOfTheMaterialCheck", getText("errors.required")
+                            + ". " + getText("errors.provide.language"));
                 }
             } else if (ConvertAction.OPTION_YES.equals(this.getInheritLanguage())) {
                 if (this.isNoLanguageOnParents()) {
                     addFieldError("inheritLanguage", getText("errors.required")
                             + ". " + getText("errors.fa.without.langmaterial"));
+                } else if (!this.isLanguageOfTheMaterialCheck()) {
+                    addFieldError("LanguageOfTheMaterialCheck", getText("errors.required")
+                            + ". " + getText("errors.provide.language"));
                 }
             }
         }
@@ -161,6 +167,26 @@ public class ConvertAction extends AbstractInstitutionAction {
             if (ConvertAction.OPTION_TITLESTMT_TITLEPROPER.equals(this.getSourceOfFondsTitle())) {
                 if (!this.isHasTitlestmtTitleproper()) {
                     addFieldError("sourceOfFondsTitle", getText("ead2edm.errors.fondsTitle.useAlternativeSource"));
+                }
+            }
+        }
+
+        if (!this.isBatchConversion()) {
+            if (ConvertAction.OPTION_NO.equals(this.getInheritRightsInfo())) {
+                if (this.noLicenceOnClevel) {
+                    addFieldError("inheritRightsInfo", getText("errors.required")
+                            + ". " + getText("errors.clevel.without.licence"));
+                } else if (!this.isLicenseCheck()) {
+                    addFieldError("inheritRightsInfo", getText("errors.required")
+                            + ". " + getText("errors.provide.licence"));
+                }
+            } else if (ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo())) {
+                if (this.noLicenceOnParents) {
+                    addFieldError("inheritRightsInfo", getText("errors.required")
+                            + ". " + getText("errors.fa.without.licence"));
+                } else if (!this.isLicenseCheck()) {
+                    addFieldError("inheritRightsInfo", getText("errors.required")
+                            + ". " + getText("errors.provide.licence"));
                 }
             }
         }
@@ -205,7 +231,7 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         this.sourceOfFondsTitleSet.add(new SelectItem(ConvertAction.OPTION_ARCHDESC_UNITTITLE, this.getText("ead2ese.label.fondstitle.archdescUnittitle").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         this.sourceOfFondsTitleSet.add(new SelectItem(ConvertAction.OPTION_TITLESTMT_TITLEPROPER, this.getText("ead2ese.label.fondstitle.titlestmtTitleproper").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
-        //list="#{'IMAGE':'Image', 'TEXT':'Text', 'SOUND':'Sound', 'VIDEO':'Video'}"
+        //list="#{'IMAGE':'Image', 'TEXT':'Text', 'SOUND':'Sound', 'VIDEO':'Video', '3D':'3D'}"
         this.typeSet.add(new SelectItem("", this.getText("ead2ese.content.selectone")));
         this.typeSet.add(new SelectItem(ConvertAction.TYPE_3D, this.getText("ead2ese.content.type.3D")));
         this.typeSet.add(new SelectItem(ConvertAction.TYPE_IMAGE, this.getText("ead2ese.content.type.image")));
@@ -252,6 +278,8 @@ public class ConvertAction extends AbstractInstitutionAction {
             }
             this.setNoLanguageOnClevel(!ead2EdmInformation.isLanguagesOnAllCLevels());
             this.setNoLanguageOnParents(!ead2EdmInformation.isLanguagesOnParent());
+            this.setNoLicenceOnClevel(!ead2EdmInformation.isLicensesOnAllCLevels());
+            this.setNoLicenceOnParents(!ead2EdmInformation.isLicensesOnParent());
             this.setHasArchdescUnittitle(StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle()));
             this.setHasTitlestmtTitleproper(StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper()));
             if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescLicenceType())) {

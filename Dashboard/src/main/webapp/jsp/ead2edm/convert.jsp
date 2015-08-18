@@ -282,7 +282,7 @@
                 </s:else>
                 <s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
                 <s:fielderror fieldName="languageSelection"/>
-                <%-- 				<s:fielderror fieldName="languageOfTheMaterialCheck"/> --%>
+                <s:fielderror fieldName="languageOfTheMaterialCheck"/>
             </td>
         </tr>
 
@@ -295,7 +295,7 @@
                     <s:iterator value="inheritRightsInfoSet">
                         <s:radio name="inheritRightsInfo" id="inheritRightsInfo" list="top" listKey="value" listValue="content"></s:radio><br/>
                     </s:iterator>
-                    <%--<s:fielderror fieldName="inheritRightsInfo"/>--%>
+                    <s:fielderror fieldName="inheritRightsInfo"/>
                 </td>
             </tr>
         </s:if>
