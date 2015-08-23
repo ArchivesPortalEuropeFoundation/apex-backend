@@ -84,7 +84,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> inheritRightsInfoSet = new TreeSet<SelectItem>();
+//    private Set<SelectItem> inheritRightsInfoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> providerSet = new TreeSet<SelectItem>();
     private Set<SelectItem> licenseSet = new TreeSet<SelectItem>();
     private Set<SelectItem> europeanaLicenseSet = new TreeSet<SelectItem>();
@@ -144,7 +144,7 @@ public class ConvertAction extends AbstractInstitutionAction {
                     addFieldError("inheritLanguage", getText("errors.required")
                             + ". " + getText("errors.clevel.without.langmaterial"));
                 } else if (!this.isLanguageOfTheMaterialCheck()) {
-                    addFieldError("LanguageOfTheMaterialCheck", getText("errors.required")
+                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
                             + ". " + getText("errors.provide.language"));
                 }
             } else if (ConvertAction.OPTION_YES.equals(this.getInheritLanguage())) {
@@ -152,7 +152,7 @@ public class ConvertAction extends AbstractInstitutionAction {
                     addFieldError("inheritLanguage", getText("errors.required")
                             + ". " + getText("errors.fa.without.langmaterial"));
                 } else if (!this.isLanguageOfTheMaterialCheck()) {
-                    addFieldError("LanguageOfTheMaterialCheck", getText("errors.required")
+                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
                             + ". " + getText("errors.provide.language"));
                 }
             }
@@ -171,25 +171,25 @@ public class ConvertAction extends AbstractInstitutionAction {
             }
         }
 
-        if (!this.isBatchConversion()) {
-            if (ConvertAction.OPTION_NO.equals(this.getInheritRightsInfo())) {
-                if (this.noLicenceOnClevel) {
-                    addFieldError("inheritRightsInfo", getText("errors.required")
-                            + ". " + getText("errors.clevel.without.licence"));
-                } else if (!this.isLicenseCheck()) {
-                    addFieldError("inheritRightsInfo", getText("errors.required")
-                            + ". " + getText("errors.provide.licence"));
-                }
-            } else if (ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo())) {
-                if (this.noLicenceOnParents) {
-                    addFieldError("inheritRightsInfo", getText("errors.required")
-                            + ". " + getText("errors.fa.without.licence"));
-                } else if (!this.isLicenseCheck()) {
-                    addFieldError("inheritRightsInfo", getText("errors.required")
-                            + ". " + getText("errors.provide.licence"));
-                }
-            }
-        }
+//        if (!this.isBatchConversion()) {
+//            if (ConvertAction.OPTION_NO.equals(this.getInheritRightsInfo())) {
+//                if (this.noLicenceOnClevel) {
+//                    addFieldError("inheritRightsInfo", getText("errors.required")
+//                            + ". " + getText("errors.clevel.without.licence"));
+//                } else if (!this.isLicenseCheck()) {
+//                    addFieldError("inheritRightsInfo", getText("errors.required")
+//                            + ". " + getText("errors.provide.licence"));
+//                }
+//            } else if (ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo())) {
+//                if (this.noLicenceOnParents) {
+//                    addFieldError("inheritRightsInfo", getText("errors.required")
+//                            + ". " + getText("errors.fa.without.licence"));
+//                } else if (!this.isLicenseCheck()) {
+//                    addFieldError("inheritRightsInfo", getText("errors.required")
+//                            + ". " + getText("errors.provide.licence"));
+//                }
+//            }
+//        }
 
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             if (StringUtils.isBlank(this.getEuropeanaLicense())) {
@@ -243,9 +243,9 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.language.select")));
-        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
-        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
-        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.license.select")));
+//        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
+//        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
+//        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.license.select")));
         this.licenseSet.add(new SelectItem(ConvertAction.EUROPEANA, this.getText("ead2ese.content.license.europeana")));
         this.licenseSet.add(new SelectItem(ConvertAction.OUT_OF_COPYRIGHT, this.getText("ead2ese.content.license.out.of.copyright")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS, this.getText("ead2ese.content.license.creativecommons")));
@@ -595,13 +595,13 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.inheritLanguageSet = inheritLanguageSet;
     }
 
-    public Set<SelectItem> getInheritRightsInfoSet() {
-        return inheritRightsInfoSet;
-    }
-
-    public void setInheritRightsInfoSet(Set<SelectItem> inheritRightsInfoSet) {
-        this.inheritRightsInfoSet = inheritRightsInfoSet;
-    }
+//    public Set<SelectItem> getInheritRightsInfoSet() {
+//        return inheritRightsInfoSet;
+//    }
+//
+//    public void setInheritRightsInfoSet(Set<SelectItem> inheritRightsInfoSet) {
+//        this.inheritRightsInfoSet = inheritRightsInfoSet;
+//    }
 
     public Set<SelectItem> getProviderSet() {
         return providerSet;

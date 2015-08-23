@@ -286,7 +286,7 @@
             </td>
         </tr>
 
-        <s:if test="batchConversion==false">
+<%--        <s:if test="batchConversion==false">
             <tr id="trInheritRightsInfo">
                 <td class="inputLabel">
                     <s:label key="ead2ese.label.inherit.license" for="inheritRightsInfo" /><span class="required">*</span>:
@@ -298,7 +298,7 @@
                     <s:fielderror fieldName="inheritRightsInfo"/>
                 </td>
             </tr>
-        </s:if>
+        </s:if>--%>
         <tr>
             <td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
             <td>
