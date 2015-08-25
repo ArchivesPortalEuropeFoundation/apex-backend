@@ -267,6 +267,7 @@ public class ConvertAction extends AbstractInstitutionAction {
                     ead.getPathApenetead());
             Ead2EdmInformation ead2EdmInformation = new Ead2EdmInformation(file, "", getAiname());
             textDataProvider = ead2EdmInformation.getArchdescRepository();
+            LOG.info(ead2EdmInformation.getArchdescRepository());
             daoType = ead2EdmInformation.getRoleType();
             if (StringUtils.isBlank(textDataProvider)) {
                 Ead2EdmInformation ead2EseInformationParent = new Ead2EdmInformation(file, "", null);
