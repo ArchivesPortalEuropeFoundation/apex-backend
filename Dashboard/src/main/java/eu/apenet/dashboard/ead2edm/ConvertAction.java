@@ -364,8 +364,8 @@ public class ConvertAction extends AbstractInstitutionAction {
         config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
         config.setInheritUnittitle(ConvertAction.OPTION_YES.equals(this.getInheritUnittitle()));
 
+        config.setInheritLanguage(false);
         if (this.isBatchConversion()) {
-            config.setInheritLanguage(true);
             String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
             config.setLanguage(parseLanguages);
         } else {
