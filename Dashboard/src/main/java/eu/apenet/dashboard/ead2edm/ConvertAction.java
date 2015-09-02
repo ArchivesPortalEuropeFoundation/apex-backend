@@ -190,7 +190,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 //                }
 //            }
 //        }
-
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             if (StringUtils.isBlank(this.getEuropeanaLicense())) {
                 addFieldError("europeanaLicense", getText("errors.required"));
@@ -366,11 +365,17 @@ public class ConvertAction extends AbstractInstitutionAction {
 
         config.setInheritLanguage(true);
         if (this.isBatchConversion()) {
+            if (!this.isLanguageOfTheMaterialCheck()) {
+                config.setInheritLanguage(false);
+            }
             String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
             config.setLanguage(parseLanguages);
         } else {
             config.setInheritLanguage(!ConvertAction.OPTION_NO.equals(this.getInheritLanguage()));
             if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
+                if (!this.isLanguageOfTheMaterialCheck()) {
+                    config.setInheritLanguage(false);
+                }
                 String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
                 config.setLanguage(parseLanguages);
             }
@@ -387,11 +392,11 @@ public class ConvertAction extends AbstractInstitutionAction {
             config.setDataProvider(this.getTextDataProvider());
         }
 
-        if (this.isBatchConversion()) {
+//        if (this.isBatchConversion()) {
             config.setInheritRightsInfo(true);
-        } else {
-            config.setInheritRightsInfo(ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo()));
-        }
+//        } else {
+//            config.setInheritRightsInfo(ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo()));
+//        }
         config.setUseExistingRightsInfo(this.isLicenseCheck());
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             config.setRights(this.getEuropeanaLicense());
@@ -602,7 +607,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 //    public void setInheritRightsInfoSet(Set<SelectItem> inheritRightsInfoSet) {
 //        this.inheritRightsInfoSet = inheritRightsInfoSet;
 //    }
-
     public Set<SelectItem> getProviderSet() {
         return providerSet;
     }
