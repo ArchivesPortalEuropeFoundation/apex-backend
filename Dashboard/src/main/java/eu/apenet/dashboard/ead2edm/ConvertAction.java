@@ -364,12 +364,12 @@ public class ConvertAction extends AbstractInstitutionAction {
         config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
         config.setInheritUnittitle(ConvertAction.OPTION_YES.equals(this.getInheritUnittitle()));
 
-        config.setInheritLanguage(false);
+        config.setInheritLanguage(true);
         if (this.isBatchConversion()) {
             String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
             config.setLanguage(parseLanguages);
         } else {
-            config.setInheritLanguage(ConvertAction.OPTION_YES.equals(this.getInheritLanguage()));
+            config.setInheritLanguage(!ConvertAction.OPTION_NO.equals(this.getInheritLanguage()));
             if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
                 String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
                 config.setLanguage(parseLanguages);
