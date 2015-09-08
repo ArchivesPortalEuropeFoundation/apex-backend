@@ -388,7 +388,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
         getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
-        getServletRequest().setAttribute("errorItems", convert(DAOFactory.instance().getQueueItemDAO().getItemsOfInstitution(getAiId())));
+        getServletRequest().setAttribute("errorItems", convert(DAOFactory.instance().getQueueItemDAO().getErrorItemsOfInstitution(getAiId())));
         return SUCCESS;
     }
 

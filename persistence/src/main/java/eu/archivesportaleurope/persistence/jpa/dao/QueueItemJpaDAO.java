@@ -128,6 +128,14 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
         return query.getResultList();
     }
 
+    public List<QueueItem> getErrorItemsOfInstitution(Integer aiId) {
+        TypedQuery<QueueItem> query = getEntityManager().createQuery(
+                "SELECT queueItem FROM QueueItem queueItem WHERE aiId = :aiId AND priority = 0 AND errors IS NOT NULL ORDER BY priority desc, id asc",
+                QueueItem.class);
+        query.setParameter("aiId", aiId);
+        return query.getResultList();
+    }
+
     public void setPriorityToQueueOfArchivalInstitution(Integer aiId, Integer priority) {
         getEntityManager().getTransaction().begin();
         Query query = getEntityManager().createQuery(
