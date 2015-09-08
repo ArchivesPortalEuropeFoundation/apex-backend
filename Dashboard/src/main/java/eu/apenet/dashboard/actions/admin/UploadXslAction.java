@@ -105,6 +105,10 @@ public class UploadXslAction extends AbstractAction {
                 ingestionprofileDAO.store(ingestionprofile);
             }
         }
+        String filenameSaved = xslUpload.getName();
+        String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath() + APEnetUtilities.FILESEPARATOR + filenameSaved;
+        File xslToDelete = new File(xslFilePath);
+        FileUtils.deleteQuietly(xslToDelete);
         xslUploadDAO.delete(xslUpload);
         return SUCCESS;
     }
