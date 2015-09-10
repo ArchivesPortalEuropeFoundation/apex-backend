@@ -16,9 +16,7 @@ import java.util.Map;
  *
  * @author Paul
  */
-public abstract class DAOFactory {
-
-    public static final Class<HibernateDAOFactory> HIBERNATE = eu.apenet.oaiserver.config.other.dao.HibernateDAOFactory.class;
+public class DAOFactory {
     public static final Class<?> DEFAULT;
     @SuppressWarnings("rawtypes")
     private static Map<Class<? extends GenericDAO>, GenericDAO> daos = new HashMap<Class<? extends GenericDAO>, GenericDAO>();
@@ -29,7 +27,7 @@ public abstract class DAOFactory {
      */
     static {
         try {
-            DEFAULT = HIBERNATE;
+            DEFAULT = DAOFactory.class;
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);
         }
@@ -78,6 +76,11 @@ public abstract class DAOFactory {
         }
     }
 
-    public abstract EadObjectDAO getEadObjectDAO();
-    public abstract ResumptionTokenDAO getResumptionTokenDAO();
+    public EadObjectDAO getEadObjectDAO() {
+        return (EadObjectDAO) instantiateDAO(EadObjectDAO.class);
+    }
+
+    public ResumptionTokenDAO getResumptionTokenDAO() {
+        return (ResumptionTokenDAO) instantiateDAO(ResumptionTokenDAO.class);
+    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by yoannmoranville on 09/04/15.
  */
-public class ResumptionTokenDAO extends AbstractHibernateDAO<ResumptionToken, Integer> implements GenericDAO<ResumptionToken, Integer> {
+public class ResumptionTokenDAO extends AbstractJpaDAO<ResumptionToken, Integer> implements GenericDAO<ResumptionToken, Integer> {
     public List<ResumptionToken> getOldResumptionTokensThan(Date referenceDate) {
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "resumptionToken");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);

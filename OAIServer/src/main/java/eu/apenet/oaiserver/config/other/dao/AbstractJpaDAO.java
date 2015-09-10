@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import eu.apenet.oaiserver.config.other.jpa.JpaUtil;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 
 /**
  *
@@ -167,6 +168,10 @@ public abstract class AbstractJpaDAO <T, ID extends Serializable> extends Generi
 
     public final void clear() {
         getEntityManager().clear();
+    }
+
+    protected Session getSession() {
+        return (Session) JpaUtil.getEntityManager().getDelegate();
     }
 
 }

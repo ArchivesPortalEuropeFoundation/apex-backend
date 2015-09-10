@@ -44,11 +44,7 @@ public class ListRecordsOrIdentifiers {
 		int limit = Configuration.EAD_RECORDS_LIMIT;
 		if (!showRecords){
 			limit = Configuration.IDENTIFIERS_LIMIT;
-		} else {
-            if(metadataFormats.equals(MetadataFormats.DC)) {
-                limit = Configuration.DC_RECORDS_LIMIT;
-            }
-        }
+		}
 		if (metadataFormats != null) {
 			try {
 				if (from != null) {
@@ -103,6 +99,7 @@ public class ListRecordsOrIdentifiers {
 			new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
 			return false;
 		}
+//        limit = setLimit(metadataFormats);
 		List<MetadataObject> metadataObjects = metadataObjectDAOFront.getMetadataObjects(fromDate, untilDate, metadataFormats, set, start, limit);
 		ResumptionTokens resToken = null;
 		if (metadataObjects.isEmpty()) {

@@ -14,7 +14,7 @@
 
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:10111/oaiphp" />
             <property name="javax.persistence.jdbc.user" value="oaiphp" />
-            <property name="javax.persistence.jdbc.password" value="Talmac!" />
+            <property name="javax.persistence.jdbc.password" value="$Talmac!" />
         </properties>
     </persistence-unit>
 </persistence>

@@ -13,7 +13,7 @@ import java.lang.reflect.ParameterizedType;
  */
 
 
-public abstract class GenericAbstractDAO<T, ID extends Serializable> implements eu.apenet.persistence.dao.GenericDAO<T, ID> {
+public abstract class GenericAbstractDAO<T, ID extends Serializable> implements GenericDAO<T, ID> {
 
     private Class<T> persistentClass;
 

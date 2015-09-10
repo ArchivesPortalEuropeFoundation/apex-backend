@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by yoannmoranville on 09/04/15.
  */
-public class EadObjectDAO extends AbstractHibernateDAO<EadObject, Integer> implements GenericDAO<EadObject, Integer> {
+public class EadObjectDAO extends AbstractJpaDAO<EadObject, Integer> implements GenericDAO<EadObject, Integer> {
     private static final Logger LOG = Logger.getLogger(EadObjectDAO.class);
 
     public List<EadObject> getEadsByArguments(Date from, Date until, String metadataFormats, String set, Integer start, Integer limitPerResponse) {
@@ -28,5 +28,11 @@ public class EadObjectDAO extends AbstractHibernateDAO<EadObject, Integer> imple
         query.setFirstResult(start);
         query.setMaxResults(limitPerResponse + 1);
         return query.getResultList();
+    }
+
+    public List<String> getSets() {
+        String query = "SELECT DISTINCT(dataSet) FROM EadObject eadObject";
+        TypedQuery<String> typedQuery = getEntityManager().createQuery(query, String.class);
+        return typedQuery.getResultList();
     }
 }
