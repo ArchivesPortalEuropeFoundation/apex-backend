@@ -6,6 +6,7 @@ import eu.apenet.oaiserver.config.main.vo.MetadataObject;
 import eu.apenet.oaiserver.config.other.dao.DAOFactory;
 import eu.apenet.oaiserver.config.other.dao.EadObjectDAO;
 import eu.apenet.oaiserver.config.other.vo.EadObject;
+import eu.apenet.persistence.vo.MetadataFormat;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -32,7 +33,12 @@ public class MetadataObjectDAOFrontImpl implements MetadataObjectDAOFront {
 
     @Override
     public MetadataObject getMetadataObject(String identifier, MetadataFormats metadataFormats) {
-        return null;
+        MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataFormats.getName());
+        EadObject eadObject = eadObjectDAO.getEadObjectByIdentifierAndFormat(identifier, metadataFormat);
+        if(eadObject == null) {
+            return null;
+        }
+        return createMetadataObject(eadObject);
     }
 
     @Override

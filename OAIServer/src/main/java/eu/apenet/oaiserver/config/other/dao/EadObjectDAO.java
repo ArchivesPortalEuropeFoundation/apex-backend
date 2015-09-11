@@ -2,7 +2,10 @@ package eu.apenet.oaiserver.config.other.dao;
 
 import eu.apenet.oaiserver.config.main.vo.MetadataObject;
 import eu.apenet.oaiserver.config.other.vo.EadObject;
+import eu.apenet.persistence.vo.MetadataFormat;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 
 import javax.persistence.TypedQuery;
 import java.util.Date;
@@ -34,5 +37,25 @@ public class EadObjectDAO extends AbstractJpaDAO<EadObject, Integer> implements 
         String query = "SELECT DISTINCT(dataSet) FROM EadObject eadObject";
         TypedQuery<String> typedQuery = getEntityManager().createQuery(query, String.class);
         return typedQuery.getResultList();
+    }
+
+    public EadObject getEadObjectByIdentifierAndFormat(String identifier, MetadataFormat metadataFormat) {
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadObject");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        if (identifier != null) {
+            criteria.add(Restrictions.like("oaiIdentifier", identifier));
+        }
+        if (metadataFormat != null) {
+            criteria.add(Restrictions.eq("metadataFormat", metadataFormat.toString()));
+        }
+        if (identifier != null) {
+            return (EadObject) criteria.uniqueResult();
+        } else if (metadataFormat != null) {
+            List<EadObject> tempList = criteria.list();
+            if (tempList != null && !tempList.isEmpty()) {
+                return (EadObject) tempList.get(0);
+            }
+        }
+        return null;
     }
 }
