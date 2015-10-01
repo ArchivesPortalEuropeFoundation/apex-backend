@@ -61,14 +61,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     //Collections for Europeana tab
     private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> sourceOfIdentifiersSet = new LinkedHashSet<SelectItem>();
+    private Set<SelectItem> sourceOfIdentifiersSet = new TreeSet<SelectItem>();
     private Set<SelectItem> sourceOfFondsTitleSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> typeSet = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> yesNoSet = new LinkedHashSet<SelectItem>();
+    private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
+    private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
-    private Set<SelectItem> licenseSet = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> europeanaLicenseSet = new LinkedHashSet<SelectItem>();
+    private Set<SelectItem> licenseSet = new TreeSet<SelectItem>();
+    private Set<SelectItem> europeanaLicenseSet = new TreeSet<SelectItem>();
 
     //fields for basic tab components
     private String profilelist;
@@ -160,6 +160,9 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 this.setRightEadHolder(ingestionprofile.getRightsOfEADHolder());
 
                 conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
+                if (conversiontype == null || conversiontype.isEmpty()) {
+                    conversiontype = "true";
+                }
                 sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
                 if (sourceOfIdentifiers == null || sourceOfIdentifiers.isEmpty()) {
                     sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
@@ -416,7 +419,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.setRightEadDescription("");
         this.setRightEadHolder("");
 
-        conversiontype = "1";
+        conversiontype = "true";
         sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
         sourceOfFondsTitle = IngestionprofilesAction.OPTION_ARCHDESC_UNITTITLE;
         textDataProvider = getAiname();

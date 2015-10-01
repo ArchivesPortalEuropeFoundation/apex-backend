@@ -1,9 +1,6 @@
 package eu.apenet.dashboard.actions.content;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
@@ -12,18 +9,14 @@ import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.actions.content.eaccpf.EacCpfContentManagerResults;
 import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
 import eu.apenet.dashboard.listener.QueueDaemon;
+import eu.apenet.dashboard.queue.DisplayQueueItem;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.EuropeanaState;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueuingState;
-import eu.apenet.persistence.vo.SourceGuide;
-import eu.apenet.persistence.vo.ValidatedState;
+import eu.apenet.persistence.vo.*;
 
 public class ContentManagerAction extends AbstractInstitutionAction {
 
@@ -395,10 +388,41 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
         getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
-        if (countResults>0)
-        	return SUCCESS;
-        else
-        	return "empty";
+        getServletRequest().setAttribute("errorItems", convert(DAOFactory.instance().getQueueItemDAO().getErrorItemsOfInstitution(getAiId())));
+        return SUCCESS;
+    }
+
+    private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
+        List<DisplayQueueItem> results = new ArrayList<DisplayQueueItem>();
+        for (QueueItem queueItem : queueItems) {
+            DisplayQueueItem displayItem = new DisplayQueueItem();
+            displayItem.setId(queueItem.getId());
+            displayItem.setAction(queueItem.getAction().toString());
+            displayItem.setPriority(queueItem.getPriority());
+            displayItem.setErrors(queueItem.getErrors());
+            try {
+                if (queueItem.getAbstractContent() != null) {
+                    AbstractContent content = queueItem.getAbstractContent();
+                    displayItem.setEadidOrFilename(content.getIdentifier());
+                    displayItem.setArchivalInstitution(content.getArchivalInstitution().getAiname());
+                } else if (queueItem.getUpFile() != null) {
+                    UpFile upFile = queueItem.getUpFile();
+                    displayItem.setEadidOrFilename(upFile.getPath() + upFile.getFilename());
+                    displayItem.setArchivalInstitution(upFile.getArchivalInstitution().getAiname());
+                }
+                if (QueueAction.USE_PROFILE.equals(queueItem.getAction())) {
+                    Properties preferences = EadService.readProperties(queueItem.getPreferences());
+                    IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction
+                            .getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+                    displayItem.setAction(displayItem.getAction() + " ("
+                            + getText(ingestionprofileDefaultUploadAction.getResourceName()) + ")");
+                }
+            } catch (Exception e) {
+
+            }
+            results.add(displayItem);
+        }
+        return results;
     }
 
     private String processEacCpf(ContentSearchOptions contentSearchOptions) {
@@ -460,12 +484,8 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
         getServletRequest().setAttribute("totalItemsInQueue", queueDAO.countItems());
         getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
-        getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));        
-
-        if (countResults>0)
-        	return "success-eaccpf";
-        else
-        	return "empty";
+        getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));
+        return "success-eaccpf";
     }
 
     public Map<String, String> getConvertedStatusList() {

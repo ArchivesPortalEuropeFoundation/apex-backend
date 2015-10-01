@@ -84,34 +84,11 @@
 	<div id="eads">
 		<div id="ead-results-container">
 			<c:choose>
-				<c:when test="${results.totalNumberOfResults > 0 }">
-                    <c:choose>
-                        <c:when test="${xmlTypeId == '2'}">
-                            <jsp:include page="contentmanager-eaccpf-results.jsp" />
-                        </c:when>
-                        <c:otherwise>
-                            <jsp:include page="contentmanager-results.jsp" />
-                        </c:otherwise>
-                    </c:choose>
+				<c:when test="${xmlTypeId == '2'}">
+					<jsp:include page="contentmanager-eaccpf-results.jsp" />
 				</c:when>
 				<c:otherwise>
-					<c:choose>
-                        <c:when test="${xmlTypeId == '1'}">
-						<!-- no results page with HG creation -->
-							<div id="HGnoResults" class="left">
-				                <a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
-			            	</div>
-                            <div id="noresults">
-                            	<s:text name="content.message.noresults" />
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                        <!-- no results page with no HG creation link -->
-                            <div id="noresults">
-                            	<s:text name="content.message.noresults" />
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+					<jsp:include page="contentmanager-results.jsp" />
 				</c:otherwise>
 			</c:choose>
 		</div>

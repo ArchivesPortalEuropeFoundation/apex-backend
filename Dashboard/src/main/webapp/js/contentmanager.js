@@ -11,6 +11,16 @@ function selectSelected(xmlTypeId){
 	$('#newSearchForm_xmlTypeId' + xmlTypeId).attr('checked', true);
 }
 
+function seeFileErrors() {
+	if($('#errorItems').hasClass('hidden')) {
+		$("#errorItems").removeClass("hidden");
+		$("#seeErrors").html("here to hide");
+	} else {
+		$("#errorItems").addClass("hidden");
+		$("#seeErrors").html("here to see");
+	}
+}
+
 function initSearchOptions() {
 	
     if($('#newSearchForm_xmlTypeId0').is(':checked')) {
@@ -94,6 +104,7 @@ function initSubpage() {
 		clearFilesFromSession();
 	});
 	//----------------------------------------------------------
+	$("#seeErrors").bind("click", seeFileErrors);
 
 	count();
 }
