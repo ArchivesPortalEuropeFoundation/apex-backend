@@ -152,7 +152,7 @@ public class EacCpfLoader {
             for (Object object : this.eacCpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry()) {
                 if (object instanceof NameEntryParallel) {
                     NameEntryParallel nameEntryParallel = (NameEntryParallel) object;
-                    for (Object nameEntry : nameEntryParallel.getContent()) {
+                    for (Object nameEntry : nameEntryParallel.getAuthorizedFormOrAlternativeForm()) {
                         if (nameEntry instanceof NameEntry) {
                             NameEntryType nameEntryType = new NameEntryType();
                             nameEntries.add(nameEntryType.fillDataWith((NameEntry) nameEntry, nameEntryParallel));
