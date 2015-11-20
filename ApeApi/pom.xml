@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-    <artifactId>backend-project</artifactId>
-    <groupId>eu.archivesportaleurope.backend</groupId>
-    <version>2015-10-SNAPSHOT</version>
-  </parent>
+        <artifactId>backend-project</artifactId>
+        <groupId>eu.archivesportaleurope.backend</groupId>
+        <version>2015-10-SNAPSHOT</version>
+    </parent>
 
     <groupId>eu.archivesportaleurope.backend</groupId>
     <artifactId>ApeApi</artifactId>
@@ -31,7 +31,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.12</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -46,6 +45,17 @@
             <artifactId>logback-core</artifactId>
             <version>1.1.3</version>
             <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>eu.archivesportaleurope.backend</groupId>
+            <artifactId>persistence</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -70,6 +80,24 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence/>
+                            </rules>
+                        </configuration>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

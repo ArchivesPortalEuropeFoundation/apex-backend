@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="tomcatNode" value="${OS}_${os.version}" />
+    
+
+    <property name="LOG_HOME" value="${catalina.base}/logs/" />
+    <property name="LOG_ARCHIVE" value="${catalina.base}/logs/ApeApiLogsArc" />
+    
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <!-- To enable JMX Management -->
+    <jmxConfigurator />
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+<!--            <Pattern>%-5level %d{yyyy-MM-dd_HH:mm:ss.SSS} %msg  %n</Pattern>-->
+             <pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %logger{100} [%file:%line] %msg%n</pattern> 
+        </encoder>
+    </appender>
+    
+    <appender name="traceFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/ApeApi_${tomcatNode}.log</File>
+        <encoder>
+            <pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{100} [%file:%line] %msg%n</pattern> 
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_ARCHIVE}/ApeApi_${tomcatNode}-%d{yyyy-MM-dd}.%i.zip</FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    
+    <logger name="org.springframework">
+        <level value="DEBUG" />
+    </logger>
+    <logger name="org.hibernate.engine">
+    	<level value="INFO" />
+    </logger>
+
+    <root level="DEBUB">
+        <appender-ref ref="stdout" />
+        <appender-ref ref="traceFileAppender" />
+    </root>
+</configuration>

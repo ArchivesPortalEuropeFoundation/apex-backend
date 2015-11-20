@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa-1.1.xsd
+	    http://www.springframework.org/schema/integration/jdbc
+	    http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd
+        http://www.springframework.org/schema/tx
+	    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <tx:annotation-driven/>
+    
+    <jpa:repositories base-package="eu.archivesportaleurope.apeapi.transacation.repository" />
+    
+    <beans profile="dev">
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <property name="driverClassName" value="org.postgresql.Driver"/>
+            <property name="url" value="jdbc:postgresql:ape"/>
+            <property name="username" value="apenet_dashboard"/>
+            <property name="password" value="AP3n3tSQLD4sh"/>
+            <property name="initialSize" value="10"/>
+            <property name="maxActive" value="100"/>
+            <property name="maxIdle" value="50"/>
+            <property name="minIdle" value="10"/>
+            <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+            <property name="minEvictableIdleTimeMillis" value="6000"/>
+        </bean>
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
+        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="persistenceUnitName" value="devPersistenceUnit"/>
+            <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+            </property>
+        </bean>
+    </beans>
+    
+    <beans profile="unit-test">
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+            <property name="url" value="jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true"/>
+            <property name="username" value="sa"/>
+            <property name="password" value=""/>
+            <property name="initialSize" value="10"/>
+            <property name="maxActive" value="100"/>
+            <property name="maxIdle" value="50"/>
+            <property name="minIdle" value="10"/>
+            <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+            <property name="minEvictableIdleTimeMillis" value="6000"/>
+        </bean>
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
+        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="persistenceUnitName" value="unitTestPersistenceUnit"/>
+            <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+            </property>
+        </bean>
+    </beans>
+    
+    <beans profile="prod">
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <property name="driverClassName" value="org.postgresql.Driver"/>
+            <property name="url" value="jdbc:postgresql://localhost:5432/roz-db"/>
+            <property name="username" value="rozdbAdmin"/>
+            <property name="password" value="R0zDBAdm1n"/>
+            <property name="initialSize" value="10"/>
+            <property name="maxActive" value="100"/>
+            <property name="maxIdle" value="50"/>
+            <property name="minIdle" value="10"/>
+            <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+            <property name="minEvictableIdleTimeMillis" value="6000"/>
+        </bean>
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
+        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="persistenceUnitName" value="prodPersistenceUnit"/>
+            <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+            </property>
+        </bean>
+    </beans>
+</beans>
