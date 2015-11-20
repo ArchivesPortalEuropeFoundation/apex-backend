@@ -51,6 +51,7 @@ public class LoginAction extends AbstractAction {
 					addActionError(getText("user.maintenancemode"));
 					return INPUT;
 				}else {
+                                        log.error("Fail to login with user: "+username);
 					this.setUsername("");
 					addActionError(getText("emailpassword.invalid"));	
 					return INPUT;
