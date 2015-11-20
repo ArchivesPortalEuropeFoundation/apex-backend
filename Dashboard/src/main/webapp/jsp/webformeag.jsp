@@ -37,12 +37,12 @@
 				<s:textfield name="webPage" value="%{webPage}" key="label.ai.web" required="true" cssStyle="width:190%"></s:textfield>
 				<s:textfield name="workingPlaces" value="%{workingPlaces}" key="label.ai.working.places" required="true" cssStyle="width:190%"></s:textfield>
 				<s:textfield name="archivalHoldings" value="%{archivalHoldings}" key="label.ai.extent.archival.holdings" required="true" cssStyle="width:190%"></s:textfield>
-				<s:select list="#{'1':'yes', '2':'no'}" key="label.ai.access" name="access" value="access" required="true"></s:select>
-		    	<s:select list="#{'1':'yes', '2':'no'}" key="label.ai.handicapped" name="handicapped" value="handicapped" required="true"></s:select>
-		    	<s:select list="#{'1':'yes', '2':'no'}" key="label.ai.library" name="library" value="library" required="true"></s:select>
-		    	<s:select list="#{'1':'yes', '2':'no'}" key="label.ai.laboratory" name="laboratory" value="laboratory" required="true"></s:select>
-		    	<s:select list="#{'1':'yes', '2':'no'}" key="label.ai.reproduction" name="reproduction" value="reproduction" required="true"></s:select>
-			    <s:select list="#{'1':'yes', '2':'no'}" key="label.ai.automation" name="automation" value="automation" required="true"></s:select>
+				<s:select list="#@java.util.LinkedHashMap@{'1':'yes', '2':'no'}" key="label.ai.access" name="access" value="access" required="true"></s:select>
+                                <s:select list="#@java.util.LinkedHashMap@{'1':'yes', '2':'no'}" key="label.ai.handicapped" name="handicapped" value="handicapped" required="true"></s:select>
+                                <s:select list="#@java.util.LinkedHashMap@{'1':'yes', '2':'no'}" key="label.ai.library" name="library" value="library" required="true"></s:select>
+                                <s:select list="#@java.util.LinkedHashMap@{'1':'yes', '2':'no'}" key="label.ai.laboratory" name="laboratory" value="laboratory" required="true"></s:select>
+                                <s:select list="#@java.util.LinkedHashMap@{'1':'yes', '2':'no'}" key="label.ai.reproduction" name="reproduction" value="reproduction" required="true"></s:select>
+                                <s:select list="#@java.util.LinkedHashMap@{'1':'yes', '2':'no'}" key="label.ai.automation" name="automation" value="automation" required="true"></s:select>
 	   			
 	   			<s:if test="repositorguideResource.isEmpty()">
 	   				<s:set name="lastIteration" value="0"/>
@@ -69,7 +69,7 @@
 		    						<label for="eagForm_repositorguideResource<s:property value='%{#stat.index}'/>" class="label"><s:property value="getText('label.ai.hg.resource')" />:</label>
 		    					</td>
 		    					<td>
-									<s:select list="#{'1':'External'}" name="repositorguideResource" id="repositorguideResource%{#stat.index}" value="repositorguideResource[#stat.index]" onchange="var currentId = '%{#stat.index}'; var valueSelected = document.getElementById('repositorguideResource' + currentId).value; changerepositorguideURLAvailability('repositorguideURL' + currentId, 'repositorguidePossibleHGTitle' + currentId, valueSelected);" theme="simple"></s:select>
+									<s:select list="#@java.util.LinkedHashMap@{'1':'External'}" name="repositorguideResource" id="repositorguideResource%{#stat.index}" value="repositorguideResource[#stat.index]" onchange="var currentId = '%{#stat.index}'; var valueSelected = document.getElementById('repositorguideResource' + currentId).value; changerepositorguideURLAvailability('repositorguideURL' + currentId, 'repositorguidePossibleHGTitle' + currentId, valueSelected);" theme="simple"></s:select>
 		    					</td>
 							</tr>							
 						</s:if>
@@ -79,7 +79,7 @@
 		    						<label for="eagForm_repositorguideResource<s:property value='%{#stat.index}'/>" class="label"><s:property value="getText('label.ai.hg.resource')" />:</label>
 		    					</td>
 		    					<td>
-									<s:select list="#{'1':'External', '2':'Local'}" name="repositorguideResource" id="repositorguideResource%{#stat.index}" value="repositorguideResource[#stat.index]" onchange="changerepositorguideURLAvailability(this);" theme="simple"></s:select>
+									<s:select list="#@java.util.LinkedHashMap@{'1':'External', '2':'Local'}" name="repositorguideResource" id="repositorguideResource%{#stat.index}" value="repositorguideResource[#stat.index]" onchange="changerepositorguideURLAvailability(this);" theme="simple"></s:select>
 		    					</td>
 							</tr>							
 						</s:else>

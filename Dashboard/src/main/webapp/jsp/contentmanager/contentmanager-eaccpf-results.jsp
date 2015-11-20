@@ -86,7 +86,7 @@
             <div id="resultPerPageContainer">
                 <label class="bold" id="pageSizeLabel" for="updateCurrentSearch_resultPerPage"><s:text
                         name="content.message.resultsperpage" />: </label>
-                    <s:select name="resultPerPage" list="#{'10':'10','20':'20','30':'30','50':'50','100':'100'}" />
+                    <s:select name="resultPerPage" list="#@java.util.LinkedHashMap@{'10':'10','20':'20','30':'30','50':'50','100':'100'}" />
             </div>
             <div id="eadRefreshInterval">
                 <label class="bold" id="pageSizeLabel" for="updateCurrentSearch_resultPerPage"><s:text

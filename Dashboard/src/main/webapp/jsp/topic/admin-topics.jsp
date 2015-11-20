@@ -20,7 +20,7 @@
 	<div id="pager" class="pager">
 		<form>
 			<label class="pageDisplayLabel" for="resultPerPage"><s:property value="getText('content.message.resultsperpage')" />: </label>
-			<s:select onclick="fixPagerTop();" theme="simple" cssClass="pagesize" name="resultPerPage" list="#{'10':'10','20':'20','30':'30','50':'50','100':'100'}" />
+			<s:select onclick="fixPagerTop();" theme="simple" cssClass="pagesize" name="resultPerPage" list="#@java.util.LinkedHashMap@{'10':'10','20':'20','30':'30','50':'50','100':'100'}" />
 			<div class="last" onclick="fixPagerTop();" >&gt;&gt;</div>
 			<div class="next" onclick="fixPagerTop();" >&gt;</div>
 			<input type="text" name="pagedisplay" class="pagedisplay" disabled="disabled" />
