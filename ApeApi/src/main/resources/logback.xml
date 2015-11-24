@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
     <property name="tomcatNode" value="${OS}_${os.version}" />
     
 
-    <property name="LOG_HOME" value="${catalina.base}/logs/" />
+    <property name="LOG_HOME" value="${catalina.base}/logs" />
     <property name="LOG_ARCHIVE" value="${catalina.base}/logs/ApeApiLogsArc" />
     
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
