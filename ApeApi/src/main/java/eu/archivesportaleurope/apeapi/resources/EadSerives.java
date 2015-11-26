@@ -37,7 +37,9 @@ public class EadSerives {
     public Response getIt(@QueryParam("q") @DefaultValue("") String q) {
         try {
             AutocompletionResults results = new AutocompletionResults();
-            results.add(eadUtil.getTermsResponse(q), "archievs");
+            if (q.length() > 2) {
+                results.add(eadUtil.getTermsResponse(q), "archievs");
+            }
             return Response.ok(new Gson().toJson(results)).build();
         } catch (SolrServerException ex) {
             Logger.getLogger(EadSerives.class.getName()).log(Level.SEVERE, null, ex);
