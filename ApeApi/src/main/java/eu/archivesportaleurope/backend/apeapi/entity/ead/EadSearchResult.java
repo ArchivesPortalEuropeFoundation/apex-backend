@@ -40,7 +40,11 @@ public class EadSearchResult {
         this.solrDocument = solrDocument;
         this.id = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ID));
         this.titleWithoutHighlighting = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.TITLE));
-        this.title = this.objectToString(response.getHighlighting().get(id).get(EadFieldDefs.TITLE).get(0));
+        if (response.getHighlighting().get(id).get(EadFieldDefs.TITLE) != null) {
+            this.title = this.objectToString(response.getHighlighting().get(id).get(EadFieldDefs.TITLE).get(0));
+        } else {
+            this.title = this.titleWithoutHighlighting;
+        }
         this.ai = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.AI));
         this.scopecontent = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.SCOPE_CONTENT));
         this.other = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER));
