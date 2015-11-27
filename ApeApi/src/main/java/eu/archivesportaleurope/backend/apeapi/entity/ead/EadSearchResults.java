@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.backend.apeapi.entity.ead;
 
+import eu.archivesportaleurope.backend.apeapi.common.fieldDef.QueryParamNames;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,8 +52,9 @@ public class EadSearchResults {
 
     private void setNextPage(String uri) {
         if (this.start + this.responseHeader.getRows() < this.numFound) {
-            this.nextPage = uri + "?q=" + this.responseHeader.getQ() + "&start="
-                    + (this.start + this.responseHeader.getRows()) + "&count=" + this.responseHeader.getRows();
+            this.nextPage = uri + QueryParamNames.QUESTION + QueryParamNames.Q + QueryParamNames.EQUALS + this.responseHeader.getQ()
+                    + QueryParamNames.AND + QueryParamNames.START + QueryParamNames.EQUALS + (this.start + this.responseHeader.getRows())
+                    + QueryParamNames.AND + QueryParamNames.COUNT + QueryParamNames.EQUALS + this.responseHeader.getRows();
         } else {
             this.nextPage = null;
         }
@@ -61,8 +63,9 @@ public class EadSearchResults {
     private void setPreviousPage(String uri) {
         if (this.start > 0) {
             long preStart = (this.start - this.responseHeader.getRows() < 0) ? 0 : this.start - this.responseHeader.getRows();
-            this.previousPage = uri + "?q=" + this.responseHeader.getQ() + "&start="
-                    + preStart + "&count=" + this.responseHeader.getRows();
+            this.previousPage = uri + QueryParamNames.QUESTION + QueryParamNames.Q + QueryParamNames.EQUALS + this.responseHeader.getQ()
+                    + QueryParamNames.AND + QueryParamNames.START + QueryParamNames.EQUALS + preStart
+                    + QueryParamNames.AND + QueryParamNames.COUNT + QueryParamNames.EQUALS + this.responseHeader.getRows();
         } else {
             this.previousPage = null;
         }

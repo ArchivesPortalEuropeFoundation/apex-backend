@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.resources;
 
 import com.google.gson.Gson;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import eu.archivesportaleurope.backend.apeapi.common.fieldDef.QueryParamNames;
 import eu.archivesportaleurope.backend.apeapi.entity.ead.AutocompletionResults;
 import eu.archivesportaleurope.backend.apeapi.entity.ead.EadSearchResults;
 import java.util.logging.Level;
@@ -38,7 +39,7 @@ public class EadSerives {
     @GET
     @Path("/autocomplete")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getIt(@QueryParam("q") @DefaultValue("") String q) {
+    public Response getIt(@QueryParam(QueryParamNames.Q) @DefaultValue("") String q) {
         try {
             AutocompletionResults results = new AutocompletionResults();
             if (q.length() > 2) {
@@ -54,9 +55,9 @@ public class EadSerives {
     @GET
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response search(@QueryParam("q") @DefaultValue("") String q,
-            @QueryParam("count") @DefaultValue("10") Integer count,
-            @QueryParam("start") @DefaultValue("0") Integer start) {
+    public Response search(@QueryParam(QueryParamNames.Q) @DefaultValue("") String q,
+            @QueryParam(QueryParamNames.COUNT) @DefaultValue("10") Integer count,
+            @QueryParam(QueryParamNames.START) @DefaultValue("0") Integer start) {
         String uri = uriInfo.getRequestUri().getRawPath();
         try {
             SolrQuery query = new SolrQuery(q);
