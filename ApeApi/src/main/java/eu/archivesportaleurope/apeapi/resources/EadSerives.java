@@ -16,8 +16,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -30,6 +32,8 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 public class EadSerives {
 
     private final SolrSearchUtil eadUtil = new SolrSearchUtil("http://localhost:8080/solr", "eads");
+    @Context
+    UriInfo uriInfo;
 
     @GET
     @Path("/autocomplete")
@@ -50,7 +54,10 @@ public class EadSerives {
     @GET
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response search(@QueryParam("q") @DefaultValue("") String q, @QueryParam("count") @DefaultValue("10") Integer count, @QueryParam("start") @DefaultValue("0") Integer start) {
+    public Response search(@QueryParam("q") @DefaultValue("") String q,
+            @QueryParam("count") @DefaultValue("10") Integer count,
+            @QueryParam("start") @DefaultValue("0") Integer start) {
+        String uri = uriInfo.getRequestUri().getRawPath();
         try {
             SolrQuery query = new SolrQuery(q);
             query.setStart(start);
@@ -58,7 +65,7 @@ public class EadSerives {
 
             eadUtil.setQuery(query);
             QueryResponse response = eadUtil.getSearchResponse();
-            return Response.ok(new Gson().toJson(new EadSearchResults(response))).build();
+            return Response.ok(new Gson().toJson(new EadSearchResults(response, uri))).build();
         } catch (SolrServerException ex) {
             Logger.getLogger(EadSerives.class.getName()).log(Level.SEVERE, null, ex);
             return Response.noContent().build();

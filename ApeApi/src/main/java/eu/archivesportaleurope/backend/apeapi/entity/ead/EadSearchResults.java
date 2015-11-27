@@ -23,12 +23,14 @@ public class EadSearchResults {
     private long start;
     private int totalPage;
     private List<EadSearchResult> eadSearchResults;
+    private String nextPage;
+    private String previousPage;
 
     public EadSearchResults() {
         eadSearchResults = new ArrayList<EadSearchResult>();
     }
 
-    public EadSearchResults(QueryResponse response) {
+    public EadSearchResults(QueryResponse response, String uri) {
         this();
 
         SolrDocumentList documentList = response.getResults();
@@ -43,6 +45,35 @@ public class EadSearchResults {
         if ((this.numFound % this.responseHeader.getRows() > 0)) {
             this.totalPage++;
         }
+        this.setNextPage(uri);
+        this.setPreviousPage(uri);
+    }
+
+    private void setNextPage(String uri) {
+        if (this.start + this.responseHeader.getRows() < this.numFound) {
+            this.nextPage = uri + "?q=" + this.responseHeader.getQ() + "&start="
+                    + (this.start + this.responseHeader.getRows()) + "&count=" + this.responseHeader.getRows();
+        } else {
+            this.nextPage = null;
+        }
+    }
+
+    private void setPreviousPage(String uri) {
+        if (this.start > 0) {
+            long preStart = (this.start - this.responseHeader.getRows() < 0) ? 0 : this.start - this.responseHeader.getRows();
+            this.previousPage = uri + "?q=" + this.responseHeader.getQ() + "&start="
+                    + preStart + "&count=" + this.responseHeader.getRows();
+        } else {
+            this.previousPage = null;
+        }
+    }
+
+    public String getNextPage() {
+        return nextPage;
+    }
+
+    public String getPreviousPage() {
+        return previousPage;
     }
 
     public long getNumFound() {
