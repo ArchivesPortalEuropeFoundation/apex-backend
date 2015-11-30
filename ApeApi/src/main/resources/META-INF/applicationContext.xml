@@ -22,4 +22,12 @@
     <bean id="validator" factory-bean="validatorFactory"
           factory-method="getValidator" />
     
+    <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
+      <!--solrUrl-->
+      <constructor-arg index="0" value="http://192.168.64.38:8080/solr"/>
+      <!--sorlCore--> 
+      <constructor-arg index="1" value="eads"/>
+   </bean>
+
+    
 </beans>

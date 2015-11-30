@@ -56,7 +56,7 @@
         </servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>eu.archivesportaleurope.apeapi.resources;eu.archivesportaleurope.apeapi.utils</param-value>
+            <param-value>eu.archivesportaleurope.apeapi.resources;eu.archivesportaleurope.apeapi.response.utils</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
