@@ -70,9 +70,9 @@
     <beans profile="prod">
         <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.postgresql.Driver"/>
-            <property name="url" value="jdbc:postgresql://localhost:5432/roz-db"/>
-            <property name="username" value="rozdbAdmin"/>
-            <property name="password" value="R0zDBAdm1n"/>
+            <property name="url" value="jdbc:postgresql:ape"/>
+            <property name="username" value="apenet_dashboard"/>
+            <property name="password" value=""/>
             <property name="initialSize" value="10"/>
             <property name="maxIdle" value="50"/>
             <property name="minIdle" value="10"/>

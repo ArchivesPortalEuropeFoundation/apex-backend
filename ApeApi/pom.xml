@@ -261,6 +261,18 @@
             <artifactId>cors-filter</artifactId>
             <version>1.9.1</version>
         </dependency>
+        <!--swagger-doc-->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.4</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -296,6 +308,12 @@
                         <configuration>
                             <rules>
                                 <dependencyConvergence/>
+                                <requireMavenVersion>
+                                    <version>3.0</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>1.7</version>
+                                </requireJavaVersion>
                             </rules>
                         </configuration>
                         <goals>
@@ -326,6 +344,53 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- swagger -->
+            <plugin>
+                <groupId>com.github.kongchen</groupId>
+                <artifactId>swagger-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <apiSources>
+                        <apiSource>
+                            <springmvc>false</springmvc>
+                            <locations>eu.archivesportaleurope.apeapi.resources</locations>
+                            <schemes>http,https</schemes>
+                            <!--<host>localhost:8080</host>-->
+                            <basePath>/ApeApi/services</basePath>
+                            <info>
+                                <title>Archives Portal Europe</title>
+                                <version>1.0.0</version>
+                                <description>List of usable API services</description>
+                                <termsOfService>
+                                    http://www.archivesportaleurope.net/terms-of-use
+                                    <!--http://www.github.com/kongchen/swagger-maven-plugin-->
+                                </termsOfService>
+                                <contact>
+                                    <email>root@www.archivesportaleurope.net</email>
+                                    <name>Ape Admin</name>
+                                    <url>http://www.archivesportaleurope.net</url>
+                                </contact>
+                                <!--                                <license>
+                                    <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+                                    <name>Apache 2.0</name>
+                                </license>-->
+                            </info>
+                            <templatePath>${basedir}/src/main/resources/swagger/templates/strapdown.html.hbs</templatePath>
+                            <outputPath>${basedir}/src/main/resources/swagger/generated/document.html</outputPath>
+                            <swaggerDirectory>${basedir}/src/main/webapp/swagger-ui</swaggerDirectory>
+                        </apiSource>
+                    </apiSources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

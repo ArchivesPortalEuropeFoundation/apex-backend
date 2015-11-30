@@ -7,6 +7,10 @@ package eu.archivesportaleurope.apeapi.resources;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -21,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Path("/version")
 //@Produces({"application/vnd.roz-v1+json"})
-//@Api(value = "/configuration", description = "Simple config service")
+@Api(value = "/version")
 public class VersionResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -29,13 +33,17 @@ public class VersionResource {
     @GET
     @Path("current")
 //    @Consumes({"application/vnd.roz-v1+json"})
-//    @ApiOperation(value = "Return current app version 1")
+    @ApiOperation(value = "Return current app version")
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error")
+    })
     public Response appVersion() {
         String appVersion = "{\"version\":1.0}";
-        // assume SLF4J is bound to logback in the current environment
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        // print logback's internal status
-        StatusPrinter.print(lc);
+        //Logback config test
+//        // assume SLF4J is bound to logback in the current environment
+//        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+//        // print logback's internal status
+//        StatusPrinter.print(lc);
         logger.debug("System name: " + System.getProperty("os.name"));
         logger.debug("My current version is " + appVersion);
         return Response.ok(appVersion).build();
@@ -44,8 +52,11 @@ public class VersionResource {
     @GET
     @Path("previous")
 //    @Consumes({"application/vnd.roz-v2+json"})
-//    @ApiOperation(value = "Return current app version 2")
-    public Response appVersion2() {
+    @ApiOperation(value = "Return previous app version")
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public Response appVersionPre() {
         String appVersion = "{\"version\":0.0}";
         logger.debug("My current version is " + appVersion);
         return Response.ok(appVersion).build();

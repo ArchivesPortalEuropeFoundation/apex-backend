@@ -1,0 +1,47 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "List of usable API services",
+    "version" : "1.0.0",
+    "title" : "Archives Portal Europe",
+    "termsOfService" : "http://www.archivesportaleurope.net/terms-of-use",
+    "contact" : {
+      "name" : "Ape Admin",
+      "url" : "http://www.archivesportaleurope.net",
+      "email" : "root@www.archivesportaleurope.net"
+    }
+  },
+  "basePath" : "/ApeApi/services",
+  "tags" : [ {
+    "name" : "version"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/version/current" : {
+      "get" : {
+        "tags" : [ "version" ],
+        "summary" : "Return current app version",
+        "description" : "",
+        "operationId" : "appVersion",
+        "responses" : {
+          "500" : {
+            "description" : "Internal server error"
+          }
+        }
+      }
+    },
+    "/version/previous" : {
+      "get" : {
+        "tags" : [ "version" ],
+        "summary" : "Return previous app version",
+        "description" : "",
+        "operationId" : "appVersionPre",
+        "responses" : {
+          "500" : {
+            "description" : "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}
