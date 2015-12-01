@@ -13,12 +13,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+
 /**
  *
  * @author kaisar
  */
 @XmlRootElement
 public class EadResponseSet {
+
     private long totalResults;
     private long start;
     private int totalPages;
@@ -31,7 +33,7 @@ public class EadResponseSet {
     public EadResponseSet(QueryResponse response) {
         this();
         SearchStatResponse responseHeader = new SearchStatResponse(response);
-        
+
         SolrDocumentList documentList = response.getResults();
         this.totalResults = documentList.getNumFound();
         this.start = documentList.getStart();
@@ -60,7 +62,7 @@ public class EadResponseSet {
     public void setStart(long start) {
         this.start = start;
     }
-    
+
     public List<EadResponse> getEadSearchResults() {
         return Collections.unmodifiableList(eadSearchResults);
     }
@@ -71,7 +73,7 @@ public class EadResponseSet {
         }
     }
 
-    public void addEadSearchResul(EadResponse eadSearchResutl) {
+    public void addEadSearchResult(EadResponse eadSearchResutl) {
         this.eadSearchResults.add(eadSearchResutl);
     }
 
