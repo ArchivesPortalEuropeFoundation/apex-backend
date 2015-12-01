@@ -1,0 +1,118 @@
+{
+	"responseHeader": {
+		"status": 0,
+		"QTtime": 98,
+		"rows": 10,
+		"q": "stukken"
+	},
+	"numFound": 109,
+	"start": 0,
+	"totalPage": 11,
+	"eadSearchResults": [{
+		"id": "C32510158",
+		"title": "Ingekomen \u003cem\u003estukken\u003c/em\u003e.",
+		"titleWithoutHighlighting": "Ingekomen stukken.",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"alterdate": "1846, 1848-1849",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510165",
+		"title": "Ongeclassificeerde \u003cem\u003estukken\u003c/em\u003e",
+		"titleWithoutHighlighting": "Ongeclassificeerde stukken",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510182",
+		"title": "Geclassificeerde \u003cem\u003estukken\u003c/em\u003e",
+		"titleWithoutHighlighting": "Geclassificeerde stukken",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510241",
+		"title": "Ongeclassificeeerde \u003cem\u003estukken\u003c/em\u003e",
+		"titleWithoutHighlighting": "Ongeclassificeeerde stukken",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510006",
+		"title": "Agenda van ingekomen \u003cem\u003estukken\u003c/em\u003e.",
+		"titleWithoutHighlighting": "Agenda van ingekomen stukken.",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"alterdate": "1888 jan 01 - 18 mei 1889",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510097",
+		"title": "Ingekomen \u003cem\u003estukken\u003c/em\u003e \"vertrouwelijk/geheim\"",
+		"titleWithoutHighlighting": "Ingekomen stukken \"vertrouwelijk/geheim\"",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"alterdate": "1913-1917",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510186",
+		"title": "\u003cem\u003eStukken\u003c/em\u003e betreffende de kaderopleiding bij het regiment.",
+		"titleWithoutHighlighting": "Stukken betreffende de kaderopleiding bij het regiment.",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"alterdate": "1928",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510259",
+		"title": "\"Persoonlijk\" geclassificeerde \u003cem\u003estukken\u003c/em\u003e",
+		"titleWithoutHighlighting": "\"Persoonlijk\" geclassificeerde stukken",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32509864",
+		"title": "\u003cem\u003eStukken\u003c/em\u003e betreffende bij het regiment dienende personeel.",
+		"titleWithoutHighlighting": "Stukken betreffende bij het regiment dienende personeel.",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"alterdate": "1940",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}, {
+		"id": "C32510013",
+		"title": "Agenda van uitgaande geheime \u003cem\u003estukken\u003c/em\u003e.",
+		"titleWithoutHighlighting": "Agenda van uitgaande geheime stukken.",
+		"fond": "Inventaris van het archief van de Koninklijke Landmacht: Cavalerie: Diverse Onderdelen, 1840-1940:S24",
+		"fondId": "2.13.55",
+		"ai": "Archives départementales de l\u0027Ain:1385",
+		"country": "FRANCE:G:33",
+		"alterdate": "1892-1898",
+		"level": "clevel",
+		"repositoryCode": "FR-00000001385"
+	}]
+}
