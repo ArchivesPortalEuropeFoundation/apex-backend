@@ -1,6 +1,7 @@
 package eu.archivesportaleurope.apeapi.services.impl;
 
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -24,14 +25,14 @@ public class EadSearchSearvice implements SearchService {
     }
 
     @Override
-    public QueryResponse search(SearchRequest searchRequest) throws SolrServerException {
+    public EadResponseSet search(SearchRequest searchRequest) throws SolrServerException {
         SolrQuery query = new SolrQuery(searchRequest.getQuery());
         query.setStart(searchRequest.getStart());
         query.setRows(searchRequest.getCount());
 
         this.eadSearchUtil.setQuery(query);
-        
+
         QueryResponse response = this.eadSearchUtil.getSearchResponse();
-        return response;
+        return new EadResponseSet(response);
     }
 }
