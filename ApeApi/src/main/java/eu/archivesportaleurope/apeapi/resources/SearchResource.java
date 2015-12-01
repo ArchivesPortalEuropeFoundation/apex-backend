@@ -15,18 +15,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author kaisar
@@ -35,26 +34,26 @@ import org.slf4j.LoggerFactory;
 @Path("/search")
 @Api("/search")
 public class SearchResource {
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     @Autowired
     SearchService eadSearch;
-    
+
     @POST
     @Path("/ead")
-    @ApiOperation(value = "Return search results based on query", 
+    @ApiOperation(value = "Return search results based on query",
             response = EadResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")
     })
+    @Produces(MediaType.APPLICATION_JSON)
     public Response search(
-            @ApiParam(value = "Search EAD units", required = true) 
-                    SearchRequest searchRequest
+            @ApiParam(value = "Search EAD units", required = true) SearchRequest searchRequest
     ) {
         try {
-            QueryResponse response = eadSearch.search(searchRequest);
-            EadResponseSet eadResponseSet = new EadResponseSet(response);
+            EadResponseSet eadResponseSet = eadSearch.search(searchRequest);
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
             logger.error("WebApplicationException", e.getCause());

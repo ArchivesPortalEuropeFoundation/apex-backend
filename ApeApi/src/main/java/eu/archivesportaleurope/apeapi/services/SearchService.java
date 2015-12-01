@@ -6,13 +6,13 @@
 package eu.archivesportaleurope.apeapi.services;
 
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
  *
  * @author Mahbub
  */
 public interface SearchService {
-    QueryResponse search(SearchRequest request) throws SolrServerException;
+    EadResponseSet search(SearchRequest request) throws SolrServerException;
 }
