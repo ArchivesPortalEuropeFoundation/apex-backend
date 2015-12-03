@@ -1,0 +1,267 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 12,
+    "params": {
+      "indent": "true",
+      "start": "545",
+      "q": "*:*",
+      "_": "1448954200613",
+      "wt": "json"
+    }
+  },
+  "response": {
+    "numFound": 668,
+    "start": 545,
+    "docs": [
+      {
+        "id": "H236",
+        "parentId": "H236",
+        "otherunitid": [
+          "Test123"
+        ],
+        "scopecontent": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        "spell": [
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+          "Empty title"
+        ],
+        "title": "Empty title",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "FRANCE:G:33",
+        "repositoryCode": "FR-00000001385",
+        "ai": "Archives départementales de l'Ain:1385",
+        "eadid": "HG_144843872",
+        "unitidfond": "Test123",
+        "dao": false,
+        "leaf": true,
+        "fond": "Empty title:H236",
+        "type": "hg",
+        "H0_s": "Empty title:G:H236",
+        "HID0_s": "H236",
+        "A0_s": "Archives départementales:G:A1384",
+        "AID1_s": "A1385",
+        "A1_s": "Archives départementales de l'Ain:L:A1385",
+        "AID0_s": "A1384",
+        "orderId": 0,
+        "timestamp": "2015-11-25T08:05:53.844Z"
+      },
+      {
+        "id": "F201689",
+        "parentId": "F201689",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.OPG",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201689",
+        "type": "fa",
+        "F0_s": "empty:G:F201689",
+        "FID0_s": "F201689",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.06Z"
+      },
+      {
+        "id": "F201690",
+        "parentId": "F201690",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.KIVI",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201690",
+        "type": "fa",
+        "F0_s": "empty:G:F201690",
+        "FID0_s": "F201690",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.175Z"
+      },
+      {
+        "id": "F201691",
+        "parentId": "F201691",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.MCOF",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201691",
+        "type": "fa",
+        "F0_s": "empty:G:F201691",
+        "FID0_s": "F201691",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.289Z"
+      },
+      {
+        "id": "F201692",
+        "parentId": "F201692",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.VEL",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201692",
+        "type": "fa",
+        "F0_s": "empty:G:F201692",
+        "FID0_s": "F201692",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.402Z"
+      },
+      {
+        "id": "F201693",
+        "parentId": "F201693",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.KADOR-VP",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201693",
+        "type": "fa",
+        "F0_s": "empty:G:F201693",
+        "FID0_s": "F201693",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.526Z"
+      },
+      {
+        "id": "F201694",
+        "parentId": "F201694",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.VELH",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201694",
+        "type": "fa",
+        "F0_s": "empty:G:F201694",
+        "FID0_s": "F201694",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.637Z"
+      },
+      {
+        "id": "F201695",
+        "parentId": "F201695",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.BUZA",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201695",
+        "type": "fa",
+        "F0_s": "empty:G:F201695",
+        "FID0_s": "F201695",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.79Z"
+      },
+      {
+        "id": "F201696",
+        "parentId": "F201696",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.MTSH",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201696",
+        "type": "fa",
+        "F0_s": "empty:G:F201696",
+        "FID0_s": "F201696",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:11.917Z"
+      },
+      {
+        "id": "F201697",
+        "parentId": "F201697",
+        "level": "archdesc",
+        "dateType": "nodate",
+        "country": "NETHERLANDS:G:28",
+        "repositoryCode": "NL-HaNA",
+        "ai": "Nationaal Archief:1355",
+        "eadid": "4.CRF",
+        "dao": false,
+        "other": "Beschrijving van het archief",
+        "spell": [
+          "Beschrijving van het archief"
+        ],
+        "leaf": true,
+        "fond": "empty:F201697",
+        "type": "fa",
+        "F0_s": "empty:G:F201697",
+        "FID0_s": "F201697",
+        "A0_s": "Nationaal Archief:L:A1355",
+        "AID0_s": "A1355",
+        "orderId": 0,
+        "timestamp": "2015-11-30T22:12:12.046Z"
+      }
+    ]
+  }
+}

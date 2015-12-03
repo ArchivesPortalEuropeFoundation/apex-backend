@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.utils;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -17,12 +18,16 @@ import org.apache.solr.client.solrj.response.TermsResponse;
  */
 public class SolrSearchUtil {
 
-    private HttpSolrServer solrServer;
+    private SolrServer solrServer;
     private SolrQuery solrQuery;
     private QueryResponse queryResponse;
 
     public SolrSearchUtil(String url) {
         this.solrServer = new HttpSolrServer(url);
+    }
+    
+    public SolrSearchUtil(SolrServer solrServer) {
+        this.solrServer = solrServer;
     }
 
     public void setQuery(SolrQuery solrQuery) {

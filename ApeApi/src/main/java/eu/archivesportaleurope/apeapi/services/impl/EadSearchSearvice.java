@@ -5,6 +5,7 @@ import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
@@ -14,14 +15,18 @@ import org.apache.solr.client.solrj.response.QueryResponse;
  */
 public class EadSearchSearvice implements SearchService {
 
-    private final String solrUrl;
-    private final String solrCore;
+//    private final String solrUrl;
+//    private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
 
     private EadSearchSearvice(String solrUrl, String solrCore) {
-        this.solrUrl = solrUrl;
-        this.solrCore = solrCore;
-        this.eadSearchUtil = new SolrSearchUtil(this.solrUrl, this.solrCore);
+//        this.solrUrl = solrUrl;
+//        this.solrCore = solrCore;
+        this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
+    }
+    
+    private EadSearchSearvice(SolrServer solrServer) {
+        this.eadSearchUtil = new SolrSearchUtil(solrServer);
     }
 
     @Override

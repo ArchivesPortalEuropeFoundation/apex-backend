@@ -1,5 +1,5 @@
+package eu.archivesportaleurope.apeapi.resources;
 
-import eu.archivesportaleurope.apeapi.resources.VersionResource;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
@@ -11,11 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author kaisar
