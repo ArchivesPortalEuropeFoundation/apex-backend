@@ -25,7 +25,7 @@
 <!--    <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>
     </bean>-->
-    <solr:embedded-solr-server id="eadSolrServer" solrHome="../SolrServerLauncher/src/test/resources/solr"/>
+    <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr"/>
     
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
         <constructor-arg index="0" ref="eadSolrServer"/>
