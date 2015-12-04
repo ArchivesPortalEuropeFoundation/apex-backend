@@ -72,7 +72,7 @@ public class SuggestionResource {
     }
 
     @POST
-    @Path("/")
+    @Path("/spelling")
     @ApiOperation(value = "Return suggestion", response = SuggestionResponseSet.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})

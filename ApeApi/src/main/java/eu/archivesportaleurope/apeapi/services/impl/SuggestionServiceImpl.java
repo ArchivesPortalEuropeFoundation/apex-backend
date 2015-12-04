@@ -11,7 +11,10 @@ import eu.archivesportaleurope.apeapi.services.SuggestionService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
+import javax.ws.rs.core.Context;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.TermsResponse;
 
@@ -24,9 +27,10 @@ public class SuggestionServiceImpl implements SuggestionService {
     private final String solrUrl;
     private final String solrCore;
     private final SolrSearchUtil suggestionSearchUtil;
-
+    //@Context ServletContext context;
     private SuggestionServiceImpl(String solrCore) throws NamingException {
         this.solrUrl = InitialContext.doLookup("java:comp/env/solrHost");
+        //String tmp = context.getInitParameter("SOLR_BASE_SEARCH_URL");
         this.solrCore = solrCore;
         this.suggestionSearchUtil = new SolrSearchUtil(this.solrUrl, this.solrCore);
     }
@@ -35,6 +39,12 @@ public class SuggestionServiceImpl implements SuggestionService {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
         this.suggestionSearchUtil = new SolrSearchUtil(this.solrUrl, this.solrCore);
+    }
+    
+    private SuggestionServiceImpl(SolrServer solrServer) {
+        this.solrUrl = "";
+        this.solrCore = "";
+        this.suggestionSearchUtil = new SolrSearchUtil(solrServer);
     }
 
     @Override

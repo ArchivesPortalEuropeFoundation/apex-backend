@@ -30,4 +30,10 @@
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
         <constructor-arg index="0" ref="eadSolrServer"/>
     </bean>
+    
+    <solr:embedded-solr-server id="eadSuggestionSolrServer" solrHome="src/test/resources/solr"/>
+    
+    <bean id="suggestionService" class="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl">
+        <constructor-arg index="0" ref="eadSuggestionSolrServer"/>
+    </bean>
 </beans>
