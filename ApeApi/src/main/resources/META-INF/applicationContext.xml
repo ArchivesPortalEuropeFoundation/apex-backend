@@ -23,15 +23,34 @@
     <bean id="validator" factory-bean="validatorFactory"
           factory-method="getValidator" />
     
+    <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
+        <!--solrUrl-->
+        <!--<constructor-arg index="0" value="http://localhost:8080/solr"/>-->
+        <!--sorlCore--> 
+        <!--
+        Add this line to context.xml and the value will be solr url
+        <Environment name="solrHost" type="java.lang.String" value="http://localhost:8080/solr" />-->
+        <constructor-arg index="0" value="eads"/>
+    </bean>
+    <bean id="suggestionService" class="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl">
+        <!--solrUrl-->
+        <!--<constructor-arg index="0" value="http://localhost:8080/solr"/>-->
+        <!--sorlCore--> 
+        <!--
+        Add this line to context.xml and the value will be solr url
+        <Environment name="solrHost" type="java.lang.String" value="http://localhost:8080/solr" />-->
+        <constructor-arg index="0" value="eads"/>
+    </bean>
 <!--    <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
       solrUrl
       <constructor-arg index="0" value="http://192.168.64.38:8080/solr"/>
       sorlCore 
       <constructor-arg index="1" value="eads"/>
    </bean>-->
-    <solr:solr-server id="eadSolrServer" url="http://localhost:8080/solr/eads"/>
+<!--    <solr:solr-server id="eadSolrServer" url="http://localhost:8080/solr/eads"/>
+>>>>>>> .r4908
     
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
         <constructor-arg index="0" ref="eadSolrServer"/>
-    </bean>
+    </bean>-->
 </beans>
