@@ -6,10 +6,12 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
+import eu.archivesportaleurope.apeapi.response.common.SuggestionResponseSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -25,12 +27,13 @@ public class EadResponseSet {
     private long start;
     private int totalPages;
     private List<EadResponse> eadSearchResults;
+    private SuggestionResponseSet suggestions;
 
     public EadResponseSet() {
         eadSearchResults = new ArrayList<>();
     }
 
-    public EadResponseSet(QueryResponse response) {
+    public EadResponseSet(QueryResponse response) throws SolrServerException {
         this();
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
@@ -45,6 +48,7 @@ public class EadResponseSet {
         if ((this.totalResults % responseHeader.getRows() > 0)) {
             this.totalPages++;
         }
+        this.suggestions = new SuggestionResponseSet(response);
     }
 
     public long getTotalResults() {
@@ -83,5 +87,9 @@ public class EadResponseSet {
 
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
+    }
+
+    public SuggestionResponseSet getSuggestions() {
+        return suggestions;
     }
 }

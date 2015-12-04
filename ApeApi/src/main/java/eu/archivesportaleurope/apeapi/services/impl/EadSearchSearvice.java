@@ -4,6 +4,8 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -19,12 +21,16 @@ public class EadSearchSearvice implements SearchService {
 //    private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
 
+    private EadSearchSearvice(String solrCore) throws NamingException {
+        this.eadSearchUtil = new SolrSearchUtil((String) InitialContext.doLookup("java:comp/env/solrHost"), solrCore);
+    }
+
     private EadSearchSearvice(String solrUrl, String solrCore) {
 //        this.solrUrl = solrUrl;
 //        this.solrCore = solrCore;
         this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
     }
-    
+
     private EadSearchSearvice(SolrServer solrServer) {
         this.eadSearchUtil = new SolrSearchUtil(solrServer);
     }
@@ -33,7 +39,11 @@ public class EadSearchSearvice implements SearchService {
     public EadResponseSet search(SearchRequest searchRequest) throws SolrServerException {
         SolrQuery query = new SolrQuery(searchRequest.getQuery());
         query.setStart(searchRequest.getStart());
-        query.setRows(searchRequest.getCount());
+        if (searchRequest.getCount() <= 0) {
+            query.setRows(10);
+        } else {
+            query.setRows(searchRequest.getCount());
+        }
 
         this.eadSearchUtil.setQuery(query);
 

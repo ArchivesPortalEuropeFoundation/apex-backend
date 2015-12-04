@@ -57,4 +57,9 @@ public class SolrSearchUtil {
         return this.queryResponse.getTermsResponse();
     }
 
+    public QueryResponse getSuggestion() throws SolrServerException {
+        solrQuery.setRequestHandler("list");
+        solrQuery.set("spellcheck", "true");
+        return solrServer.query(solrQuery);
+    }
 }
