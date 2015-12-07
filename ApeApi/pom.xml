@@ -301,6 +301,14 @@
             <version>1.5.4</version>
             <type>jar</type>
         </dependency>
+
+        <!--Bean validaton-->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-bean-validation</artifactId>
+            <version>2.22.1</version>
+        </dependency>
+        <!-- End Bean validaton-->
     </dependencies>
 
     <build>

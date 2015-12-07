@@ -19,7 +19,11 @@ public class AutocompletionResponse implements Comparable<AutocompletionResponse
     private String term;
     private long frequency;
 
+    public AutocompletionResponse() {
+    }
+
     protected AutocompletionResponse(TermsResponse.Term term, String type) {
+        this();
         this.type = type;
         this.term = term.getTerm();
         this.frequency = term.getFrequency();
@@ -35,6 +39,18 @@ public class AutocompletionResponse implements Comparable<AutocompletionResponse
 
     public long getFrequency() {
         return frequency;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public void setFrequency(long frequency) {
+        this.frequency = frequency;
     }
 
     @Override

@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javax.validation.Valid;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -34,6 +35,7 @@ import org.slf4j.LoggerFactory;
 @Path("/search")
 @Api("/search")
 public class SearchResource {
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -45,11 +47,12 @@ public class SearchResource {
             response = EadResponseSet.class
     )
     @ApiResponses(value = {
-        @ApiResponse(code = 500, message = "Internal server error")
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request")
     })
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(
-            @ApiParam(value = "Search EAD units", required = true) SearchRequest searchRequest
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
         try {
             EadResponseSet eadResponseSet = eadSearch.search(searchRequest);
