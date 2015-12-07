@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 @Path("/search")
 @Api("/search")
 public class SearchResource {
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

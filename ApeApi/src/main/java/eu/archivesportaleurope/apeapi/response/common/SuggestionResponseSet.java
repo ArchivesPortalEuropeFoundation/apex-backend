@@ -20,20 +20,24 @@ import org.apache.solr.client.solrj.response.SpellCheckResponse;
 @XmlRootElement
 public class SuggestionResponseSet {
 
-    private final long numFound;
-    private final long numOfSuggestionFound;
-    private final String type;
-    private final List<SuggestionResponse> suggestionResults;
+    private long numFound;
+    private long numOfSuggestionFound;
+    private String type;
+    private List<SuggestionResponse> suggestionResults;
+
+    public SuggestionResponseSet() {
+        suggestionResults = new ArrayList<>();
+    }
 
     public SuggestionResponseSet(QueryResponse queryResponse) throws SolrServerException {
+        this();
         this.numFound = queryResponse.getResults().getNumFound();
         if (this.numFound > 0) {
             this.type = "others";
         } else {
             this.type = "misspelled";
         }
-
-        suggestionResults = new ArrayList<>();
+        
         List<SpellCheckResponse.Collation> collations = queryResponse.getSpellCheckResponse().getCollatedResults();
         if (collations != null) {
             for (SpellCheckResponse.Collation collation : queryResponse.getSpellCheckResponse().getCollatedResults()) {
@@ -47,16 +51,34 @@ public class SuggestionResponseSet {
         return numFound;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public List<SuggestionResponse> getSuggestionResults() {
-        return Collections.unmodifiableList(suggestionResults);
+    public void setNumFound(long numFound) {
+        this.numFound = numFound;
     }
 
     public long getNumOfSuggestionFound() {
         return numOfSuggestionFound;
+    }
+
+    public void setNumOfSuggestionFound(long numOfSuggestionFound) {
+        this.numOfSuggestionFound = numOfSuggestionFound;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public List<SuggestionResponse> getSuggestionResults() {
+        return Collections.unmodifiableList(suggestionResults);
+    }
+
+    public void setSuggestionResults(List<SuggestionResponse> suggestionResults) {
+        if (suggestionResults != null) {
+            this.suggestionResults = suggestionResults;
+        }
     }
 
 }

@@ -27,7 +27,7 @@ public class SuggestionServiceImpl implements SuggestionService {
     private final String solrUrl;
     private final String solrCore;
     private final SolrSearchUtil suggestionSearchUtil;
-    //@Context ServletContext context;
+    @Context ServletContext context;
     private SuggestionServiceImpl(String solrCore) throws NamingException {
         this.solrUrl = InitialContext.doLookup("java:comp/env/solrHost");
         //String tmp = context.getInitParameter("SOLR_BASE_SEARCH_URL");

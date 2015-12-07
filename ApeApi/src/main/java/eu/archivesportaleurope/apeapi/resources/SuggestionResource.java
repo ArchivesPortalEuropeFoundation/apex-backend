@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Path("/suggestion")
-@Api("/suggestion")
+//@Api("/suggestion")
 public class SuggestionResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -18,6 +18,9 @@ public class SuggestionResponse {
     private String term;
     private long frequency;
 
+    public SuggestionResponse() {
+    }
+    
     public SuggestionResponse(SpellCheckResponse.Collation collation) {
         this.term = collation.getCollationQueryString();
         this.frequency = collation.getNumberOfHits();

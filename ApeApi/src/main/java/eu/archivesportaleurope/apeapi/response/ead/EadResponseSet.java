@@ -27,7 +27,7 @@ public class EadResponseSet {
     private long start;
     private int totalPages;
     private List<EadResponse> eadSearchResults;
-    private SuggestionResponseSet suggestions;
+    //private SuggestionResponseSet suggestions;
 
     public EadResponseSet() {
         eadSearchResults = new ArrayList<>();
@@ -48,7 +48,7 @@ public class EadResponseSet {
         if ((this.totalResults % responseHeader.getRows() > 0)) {
             this.totalPages++;
         }
-        this.suggestions = new SuggestionResponseSet(response);
+//        this.suggestions = new SuggestionResponseSet(response);
     }
 
     public long getTotalResults() {
@@ -89,7 +89,11 @@ public class EadResponseSet {
         this.totalPages = totalPages;
     }
 
-    public SuggestionResponseSet getSuggestions() {
-        return suggestions;
-    }
+//    public SuggestionResponseSet getSuggestions() {
+//        return suggestions;
+//    }
+//
+//    public void setSuggestions(SuggestionResponseSet suggestions) {
+//        this.suggestions = suggestions;
+//    }
 }
