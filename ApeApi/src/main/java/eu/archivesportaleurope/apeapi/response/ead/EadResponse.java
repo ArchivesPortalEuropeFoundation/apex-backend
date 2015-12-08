@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.archivesportaleurope.apeapi.common.fieldDef.EadFieldDefs;
+import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -16,11 +17,12 @@ import org.apache.solr.common.SolrDocument;
  */
 @XmlRootElement
 public class EadResponse {
+
     private String id;
     private String unitId;
     private String unitTitle;
     private String unitTitleWithHighlighting;
-    private String scopecontent;
+    private String scopeContent;
     private String other;
     private String fondsUnitTitle;
     private String fondsUnitId;
@@ -28,8 +30,8 @@ public class EadResponse {
     private String unitidForLink;
     private String country;
     private String language;
-    private String langmaterial;
-    private String otherUnitid;
+    private String langMaterial;
+    private String otherUnitId;
     private String unitDate;
     private String level;
     private String repositoryCode;
@@ -43,21 +45,21 @@ public class EadResponse {
             this.unitTitleWithHighlighting = this.unitTitle;
         }
         this.unitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.UNIT_ID));
-        this.scopecontent = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.SCOPE_CONTENT));
+        this.scopeContent = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.SCOPE_CONTENT));
         this.other = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER));
-        
+
         this.language = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANGUAGE));
-        this.langmaterial = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANG_MATERIAL));
-        this.otherUnitid = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER_UNIT_ID));
+        this.langMaterial = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANG_MATERIAL));
+        this.otherUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER_UNIT_ID));
         this.unitDate = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ALTER_DATE));
         this.level = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LEVEL));
-        
-        this.country = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.COUNTRY));
-        
-        this.fondsUnitTitle = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.FOND));
+
+        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.COUNTRY)), 0);
+
+        this.fondsUnitTitle = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.FOND)), 0);
         this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.UNIT_ID_FOND));
-        
-        this.repository = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.AI));
+
+        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.REPOSITORY_CODE));
     }
 
@@ -104,12 +106,12 @@ public class EadResponse {
         this.language = language;
     }
 
-    public String getLangmaterial() {
-        return langmaterial;
+    public String getLangMaterial() {
+        return langMaterial;
     }
 
-    public void setLangmaterial(String langmaterial) {
-        this.langmaterial = langmaterial;
+    public void setLangMaterial(String langMaterial) {
+        this.langMaterial = langMaterial;
     }
 
     public String getUnitTitleWithHighlighting() {
@@ -121,11 +123,11 @@ public class EadResponse {
     }
 
     public String getScopecontent() {
-        return scopecontent;
+        return scopeContent;
     }
 
-    public void setScopecontent(String scopecontent) {
-        this.scopecontent = scopecontent;
+    public void setScopecontent(String scopeContent) {
+        this.scopeContent = scopeContent;
     }
 
     public String getOther() {
@@ -177,11 +179,11 @@ public class EadResponse {
     }
 
     public String getOtherUnitid() {
-        return otherUnitid;
+        return otherUnitId;
     }
 
-    public void setOtherUnitid(String otherUnitid) {
-        this.otherUnitid = otherUnitid;
+    public void setOtherUnitid(String otherUnitId) {
+        this.otherUnitId = otherUnitId;
     }
 
     public String getUnitDate() {
