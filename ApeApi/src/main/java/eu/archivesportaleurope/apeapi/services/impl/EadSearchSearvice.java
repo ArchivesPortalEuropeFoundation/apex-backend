@@ -4,10 +4,6 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -18,25 +14,27 @@ import org.apache.solr.client.solrj.response.QueryResponse;
  * @author Mahbub
  */
 public class EadSearchSearvice implements SearchService {
-
-    private final String solrUrl;
-//    private final String solrCore;
+    private String solrUrl;
+    private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
-    //@Context ServletContext context;
-    private EadSearchSearvice(String solrCore) throws NamingException {
-        this.solrUrl = InitialContext.doLookup("java:comp/env/solrHost");
-        this.eadSearchUtil = new SolrSearchUtil(this.solrUrl, solrCore);
-    }
 
     private EadSearchSearvice(String solrUrl, String solrCore) {
         this.solrUrl = solrUrl;
-//        this.solrCore = solrCore;
+        this.solrCore = solrCore;
         this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
     }
 
     private EadSearchSearvice(SolrServer solrServer) {
-        this.solrUrl = "";
+        this.solrUrl = this.solrCore = "";
         this.eadSearchUtil = new SolrSearchUtil(solrServer);
+    }
+
+    public String getSolrUrl() {
+        return solrUrl;
+    }
+
+    public void setSolrUrl(String solrUrl) {
+        this.solrUrl = solrUrl;
     }
 
     @Override

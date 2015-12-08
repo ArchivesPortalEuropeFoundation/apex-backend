@@ -28,10 +28,10 @@ public interface EadFieldDefs {
     String LANG_MATERIAL = "langmaterial";
     String EAD_ID = "eadid";
     String AI = "ai";
-    String UNIT_ID_FOND = "unitidfond";
+    String FONDS_UNIT_ID = "unitidfond";
     String OTHER = "other";
     String LEAF = "leaf";
-    String FOND = "fond";
+    String FONDS_TITLE = "fond";
     String TYPE = "type";
     String ALTER_DATE="alterdate";
 }

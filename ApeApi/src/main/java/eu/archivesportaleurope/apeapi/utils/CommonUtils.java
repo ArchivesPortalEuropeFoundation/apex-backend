@@ -13,9 +13,11 @@ public class CommonUtils {
 
     public static String splitByColon(String str, int number) {
         String ret = "";
-        String[] strs = str.split(":");
-        if (strs.length >= number) {
-            ret = strs[number];
+        if (str!=null && !str.isEmpty()) {
+            String[] strs = str.split(":");
+            if (strs.length > number) {
+                ret = strs[number];
+            }
         }
         return ret;
     }

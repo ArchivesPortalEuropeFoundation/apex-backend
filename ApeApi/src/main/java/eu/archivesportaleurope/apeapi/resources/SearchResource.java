@@ -40,7 +40,7 @@ public class SearchResource {
 
     @Autowired
     SearchService eadSearch;
-
+    
     @POST
     @Path("/ead")
     @ApiOperation(value = "Return search results based on query",

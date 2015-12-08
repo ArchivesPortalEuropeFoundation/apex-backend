@@ -23,17 +23,16 @@ public class EadResponse {
     private String unitTitle;
     private String unitTitleWithHighlighting;
     private String scopeContent;
-    private String other;
+    private String scopeContentWithHighlighting;
+//    private String other;
     private String fondsUnitTitle;
     private String fondsUnitId;
     private String repository;
-    private String unitidForLink;
     private String country;
     private String language;
     private String langMaterial;
-    private String otherUnitId;
+//    private String otherUnitId;
     private String unitDate;
-    private String level;
     private String repositoryCode;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {
@@ -46,18 +45,23 @@ public class EadResponse {
         }
         this.unitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.UNIT_ID));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.SCOPE_CONTENT));
-        this.other = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER));
+        if (response.getHighlighting().get(id).get(EadFieldDefs.SCOPE_CONTENT) != null) {
+            this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(EadFieldDefs.SCOPE_CONTENT).get(0));
+        } else {
+            this.scopeContentWithHighlighting = this.scopeContent;
+        }
+        
+//        this.other = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER));
 
         this.language = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANGUAGE));
         this.langMaterial = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANG_MATERIAL));
-        this.otherUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER_UNIT_ID));
+//        this.otherUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER_UNIT_ID));
         this.unitDate = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ALTER_DATE));
-        this.level = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LEVEL));
 
         this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.COUNTRY)), 0);
 
-        this.fondsUnitTitle = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.FOND)), 0);
-        this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.UNIT_ID_FOND));
+        this.fondsUnitTitle = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.FONDS_TITLE)), 0);
+        this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.FONDS_UNIT_ID));
 
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.REPOSITORY_CODE));
@@ -122,20 +126,20 @@ public class EadResponse {
         this.unitTitleWithHighlighting = unitTitleWithHighlighting;
     }
 
-    public String getScopecontent() {
+    public String getScopeContent() {
         return scopeContent;
     }
 
-    public void setScopecontent(String scopeContent) {
+    public void setScopeContent(String scopeContent) {
         this.scopeContent = scopeContent;
     }
 
-    public String getOther() {
-        return other;
+    public String getScopeContentWithHighlighting() {
+        return scopeContentWithHighlighting;
     }
 
-    public void setOther(String other) {
-        this.other = other;
+    public void setScopeContentWithHighlighting(String scopeContentWithHighlighting) {
+        this.scopeContentWithHighlighting = scopeContentWithHighlighting;
     }
 
     public String getFondsUnitTitle() {
@@ -170,36 +174,12 @@ public class EadResponse {
         this.unitId = unitId;
     }
 
-    public String getUnitidForLink() {
-        return unitidForLink;
-    }
-
-    public void setUnitidForLink(String unitidForLink) {
-        this.unitidForLink = unitidForLink;
-    }
-
-    public String getOtherUnitid() {
-        return otherUnitId;
-    }
-
-    public void setOtherUnitid(String otherUnitId) {
-        this.otherUnitId = otherUnitId;
-    }
-
     public String getUnitDate() {
         return unitDate;
     }
 
     public void setUnitDate(String unitDate) {
         this.unitDate = unitDate;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     public String getRepositoryCode() {
