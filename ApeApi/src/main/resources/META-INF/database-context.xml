@@ -20,7 +20,7 @@
     <beans profile="dev">
         <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.postgresql.Driver"/>
-            <property name="url" value="jdbc:postgresql:ape"/>
+            <property name="url" value="jdbc:postgresql:ape2"/>
             <property name="username" value="apenet_dashboard"/>
             <property name="password" value="AP3SQLD4sh"/>
             <property name="initialSize" value="10"/>
@@ -70,7 +70,7 @@
     <beans profile="prod">
         <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.postgresql.Driver"/>
-            <property name="url" value="jdbc:postgresql:ape"/>
+            <property name="url" value="jdbc:postgresql:ape2"/>
             <property name="username" value="apenet_dashboard"/>
             <property name="password" value=""/>
             <property name="initialSize" value="10"/>

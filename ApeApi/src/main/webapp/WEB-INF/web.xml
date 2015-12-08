@@ -18,11 +18,11 @@
             classpath:META-INF/security-context.xml
         </param-value>
     </context-param>
-    <env-entry>
+<!--    <env-entry>
         <env-entry-name>sorl/url</env-entry-name>
-        <env-entry-value>http://localhost:8080/solr</env-entry-value>
         <env-entry-type>java.lang.String</env-entry-type>
-    </env-entry>
+        <env-entry-value>http://localhost:8080/solr</env-entry-value>
+    </env-entry>-->
     <!--    <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
