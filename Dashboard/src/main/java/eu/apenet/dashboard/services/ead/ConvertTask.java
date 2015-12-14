@@ -161,11 +161,13 @@ public class ConvertTask extends AbstractEadTask {
         Map<String, Integer> lines = new LinkedHashMap<String, Integer>();
         String[] xslWarningLines = xslMessages.toString().split("\n");
         for (String warning : xslWarningLines) {
-            if (lines.containsKey(warning)) {
-                Integer value = lines.get(warning);
-                lines.put(warning, value + 1);
-            } else {
-                lines.put(warning, 1);
+            if (StringUtils.isNotBlank(warning)) {
+                if (lines.containsKey(warning)) {
+                    Integer value = lines.get(warning);
+                    lines.put(warning, value + 1);
+                } else {
+                    lines.put(warning, 1);
+                }
             }
         }
         for (Map.Entry<String, Integer> entry : lines.entrySet()) {
