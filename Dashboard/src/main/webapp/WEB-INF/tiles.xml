@@ -170,6 +170,11 @@
 		    <add-attribute type="string" value="/js/webformainame.js"/>
 		</put-list-attribute>
 	</definition>
+        
+        <definition name="webformenableopendata" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.menu.topic.enableapi" />
+		<put-attribute name="body" value="/jsp/webformenableopendata.jsp" />
+	</definition>
 
 	<!-- <definition name="webformainamesuccess" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.ainamewebform.title" />

@@ -6,7 +6,7 @@
         <group name="institutionManagerActions">
             showHome,selectArchive,
             view, edit,contentmanager,updateContentmanager,
-            validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
+            validatechangeainame, changeainame, downloadeag, upload, enableOpenData, checkfilesuploaded,
             httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
             eadActions, batchEadActions, removeEseForFA, displayProfile, applyProfile, showEadReport,
             displayEdmConvert, processEdmConvert, showEdmReport, showwarnings, download, link, removeLink, preview, downloadEdm,

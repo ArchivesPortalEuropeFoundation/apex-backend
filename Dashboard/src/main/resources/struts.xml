@@ -306,6 +306,12 @@
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">uploadcontent</result>
         </action>
+        <action name="enableOpenData" class="eu.apenet.dashboard.EnableOpenDataAction">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">webformenableopendata</result>
+            <result name="error" type="tiles">webformainame</result>
+            <result name="input" type="tiles">webformainame</result>
+        </action>
         <!--Upload: Connection to FTP / Tree page -->
         <action name="connectFTP" class="eu.apenet.dashboard.manual.UploadContentAction" method="connectFTP">
             <result name="success" type="tiles">viewftpfiles</result>
