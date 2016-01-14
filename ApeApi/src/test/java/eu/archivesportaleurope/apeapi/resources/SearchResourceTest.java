@@ -12,37 +12,26 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
-import eu.archivesportaleurope.apeapi.services.SearchService;
-import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.ModifiableSolrParams;
-import org.apache.solr.core.CoreContainer;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.validateMockitoUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -50,8 +39,10 @@ import org.springframework.http.HttpStatus;
  * @author Mahbub
  */
 public class SearchResourceTest extends JerseySpringTest {
+
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
+    Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Before
     public void setUpTest() {
@@ -72,16 +63,16 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setCount(10);
         request.setQuery("Heerlijkheid");
         request.setStart(0);
-        
+
         Response response = super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         response.bufferEntity();
-        
+
         EadResponseSet responseEad = response.readEntity(EadResponseSet.class);
-        
+
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
         Assert.assertEquals(1, responseEad.getTotalResults());
     }
-    
+
     @Test
     public void testSearch_ead_Title() throws FileNotFoundException, SolrServerException, URISyntaxException {
         logger.debug("Test Search Title");
@@ -89,23 +80,39 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setCount(10);
         request.setQuery("Heerlijkheid");
         request.setStart(0);
-        
+
         Response response = super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         response.bufferEntity();
-        
+
         //No idea why directly asking for EadResponseSet.class does not works
         String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
         logger.debug("Response Json: " + jsonResponse);
-        
+
         TypeToken<EadResponseSet> token = new TypeToken<EadResponseSet>() {
         };
         EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
-        
+
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
-        
+
         EadResponse doc = responseEad.getEadSearchResults().get(0);
         Assert.assertEquals("Heerlijkheid Alblasserdam - Kaarten", doc.getUnitTitle());
         logger.debug("Title: " + doc.getUnitTitle());
+    }
+
+    @Test(expected = ProcessingException.class)
+    public void testInvalidRequest() {
+        logger.debug("Test invalid request with count > 50");
+        SearchRequest request = new SearchRequest();
+        request.setCount(51);
+        request.setQuery("Anything");
+        request.setStart(0);
+        Set<ConstraintViolation<SearchRequest>> constraintViolations = validator.validate(request);
+        ConstraintViolation<SearchRequest> constraintViolation = constraintViolations.iterator().next();
+
+        Assert.assertEquals(1, constraintViolations.size());
+        Assert.assertEquals("Count must not be more than 50", constraintViolation.getMessage());
+        Assert.assertEquals("count", constraintViolation.getPropertyPath().toString());
+        super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
     }
 
     @Override
