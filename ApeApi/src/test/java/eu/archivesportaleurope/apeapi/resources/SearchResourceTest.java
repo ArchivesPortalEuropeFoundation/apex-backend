@@ -78,7 +78,7 @@ public class SearchResourceTest extends JerseySpringTest {
         
         EadResponseSet responseEad = response.readEntity(EadResponseSet.class);
         
-        Assert.assertEquals(response.getStatus(), HttpStatus.OK.value());
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
         Assert.assertEquals(1, responseEad.getTotalResults());
     }
     
@@ -101,7 +101,7 @@ public class SearchResourceTest extends JerseySpringTest {
         };
         EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
         
-        Assert.assertEquals(response.getStatus(), HttpStatus.OK.value());
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
         
         EadResponse doc = responseEad.getEadSearchResults().get(0);
         Assert.assertEquals("Heerlijkheid Alblasserdam - Kaarten", doc.getUnitTitle());
