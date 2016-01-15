@@ -22,159 +22,170 @@ import javax.persistence.TemporalType;
 
 import eu.archivesportaleurope.util.ApeUtil;
 
-
 @Entity
 @Table(name = "archival_institution")
 public class ArchivalInstitution implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5793664005280731903L;
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int aiId;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="parent_ai_id")
-	private ArchivalInstitution parent;
-	@Column(name = "parent_ai_id", insertable = false, updatable = false)
-	private Integer parentAiId;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user_id", insertable = false, updatable = false)
-	private User partner;
-	
-	@Column(name = "user_id")
-	private Integer partnerId;
-	@Column(name = "country_id")
-	private Integer countryId;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="country_id", insertable = false, updatable = false)
-	private Country country;
-	private String ainame;
-	@Temporal(TemporalType.DATE)
-	@Column(name = "registration_date")
-	private Date registrationDate;
-	@Column(name = "eag_path")
-	private String eagPath;
-	private String repositorycode;
-	private String autform;
-	@Column(name = "isgroup")
-	private boolean group;
-	@Column(name = "internal_al_id")
-	private String internalAlId;
-	private int alorder;
-	@Column(name = "contain_searchable_items")
-	private boolean containSearchableItems;
-	@Column(name = "content_lastmodified_date")
-	private Date contentLastModifiedDate;
-	
-	@Column(name = "feedback_email")
-	private String feedbackEmail;
-	
-	@Column(name = "using_mets")
-	private boolean usingMets;
-	
-	@OneToMany(mappedBy="archivalInstitution")
-	private Set<AiAlternativeName> aiAlternativeNames = new HashSet<AiAlternativeName>(0);
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5793664005280731903L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int aiId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_ai_id")
+    private ArchivalInstitution parent;
+    @Column(name = "parent_ai_id", insertable = false, updatable = false)
+    private Integer parentAiId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User partner;
 
-	@OneToMany(mappedBy="parent")
-	@OrderColumn(name="alorder")
-	private List<ArchivalInstitution> childArchivalInstitutions = new ArrayList<ArchivalInstitution>(0);
+    @Column(name = "user_id")
+    private Integer partnerId;
+    @Column(name = "country_id")
+    private Integer countryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", insertable = false, updatable = false)
+    private Country country;
+    private String ainame;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "registration_date")
+    private Date registrationDate;
+    @Column(name = "eag_path")
+    private String eagPath;
+    private String repositorycode;
+    private String autform;
+    @Column(name = "isgroup")
+    private boolean group;
+    @Column(name = "internal_al_id")
+    private String internalAlId;
+    private int alorder;
+    @Column(name = "contain_searchable_items")
+    private boolean containSearchableItems;
+    @Column(name = "content_lastmodified_date")
+    private Date contentLastModifiedDate;
 
-	@OneToMany(mappedBy="archivalInstitution")
-	private Set<FindingAid> findingAids = new HashSet<FindingAid>(0);
-	@OneToMany(mappedBy="archivalInstitution")
-	private Set<HoldingsGuide> holdingsGuides = new HashSet<HoldingsGuide>(0);
-	@OneToMany(mappedBy="archivalInstitution")
-	private Set<SourceGuide> sourceGuides = new HashSet<SourceGuide>(0);
-	public int getAiId() {
-		return this.aiId;
-	}
+    @Column(name = "feedback_email")
+    private String feedbackEmail;
 
-	public void setAiId(int aiId) {
-		this.aiId = aiId;
-	}
-	public ArchivalInstitution getParent() {
-		return this.parent;
-	}
-	public void setParent(ArchivalInstitution archivalInstitution) {
-		this.parent = archivalInstitution;
-	}
-	
-	public Integer getParentAiId() {
-		return parentAiId;
-	}
+    @Column(name = "using_mets")
+    private boolean usingMets;
 
-	public void setParentAiId(Integer parentAiId) {
-		this.parentAiId = parentAiId;
-	}
+    @OneToMany(mappedBy = "archivalInstitution")
+    private Set<AiAlternativeName> aiAlternativeNames = new HashSet<AiAlternativeName>(0);
 
-	public User getPartner() {
-		return this.partner;
-	}
+    @OneToMany(mappedBy = "parent")
+    @OrderColumn(name = "alorder")
+    private List<ArchivalInstitution> childArchivalInstitutions = new ArrayList<ArchivalInstitution>(0);
 
-	public void setPartner(User partner) {
-		this.partner = partner;
-	}
+    @OneToMany(mappedBy = "archivalInstitution")
+    private Set<FindingAid> findingAids = new HashSet<FindingAid>(0);
+    @OneToMany(mappedBy = "archivalInstitution")
+    private Set<HoldingsGuide> holdingsGuides = new HashSet<HoldingsGuide>(0);
+    @OneToMany(mappedBy = "archivalInstitution")
+    private Set<SourceGuide> sourceGuides = new HashSet<SourceGuide>(0);
+    
+    @Column(nullable = true)
+    private Boolean openDataEnabled;
+    @Column(nullable = true)
+    private Long totalSolrDocsCount;
+    @Column(nullable = true)
+    private Long unprocessedSolrDocs;
 
-	public String getAiname() {
-		return this.ainame;
-	}
+    public int getAiId() {
+        return this.aiId;
+    }
 
-	public void setAiname(String ainame) {
-		this.ainame = ainame;
-	}
+    public void setAiId(int aiId) {
+        this.aiId = aiId;
+    }
 
-	public Date getRegistrationDate() {
-		return this.registrationDate;
-	}
+    public ArchivalInstitution getParent() {
+        return this.parent;
+    }
 
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
-	}
+    public void setParent(ArchivalInstitution archivalInstitution) {
+        this.parent = archivalInstitution;
+    }
 
-	public String getEagPath() {
-		return this.eagPath;
-	}
+    public Integer getParentAiId() {
+        return parentAiId;
+    }
 
-	public void setEagPath(String eagPath) {
-		this.eagPath = eagPath;
-	}
+    public void setParentAiId(Integer parentAiId) {
+        this.parentAiId = parentAiId;
+    }
 
-	public String getEncodedRepositorycode(){
-		return ApeUtil.encodeRepositoryCode(this.repositorycode);
-	}
+    public User getPartner() {
+        return this.partner;
+    }
 
-	public void setRepositorycode(String repositorycode) {
-		this.repositorycode = repositorycode;
-	}
+    public void setPartner(User partner) {
+        this.partner = partner;
+    }
 
-	public boolean isContainSearchableItems() {
-		return containSearchableItems;
-	}
-	public String getRepositorycode() {
-		return this.repositorycode;
-	}
-	public void setContainSearchableItems(boolean containSearchableItems) {
-		this.containSearchableItems = containSearchableItems;
-	}
+    public String getAiname() {
+        return this.ainame;
+    }
 
-	public String getAutform() {
-		return this.autform;
-	}
+    public void setAiname(String ainame) {
+        this.ainame = ainame;
+    }
 
-	public void setAutform(String autform) {
-		this.autform = autform;
-	}
+    public Date getRegistrationDate() {
+        return this.registrationDate;
+    }
 
-	public boolean isGroup() {
-		return this.group;
-	}
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
+    }
 
-	public void setGroup(boolean group) {
-		this.group = group;
-	}
+    public String getEagPath() {
+        return this.eagPath;
+    }
+
+    public void setEagPath(String eagPath) {
+        this.eagPath = eagPath;
+    }
+
+    public String getEncodedRepositorycode() {
+        return ApeUtil.encodeRepositoryCode(this.repositorycode);
+    }
+
+    public void setRepositorycode(String repositorycode) {
+        this.repositorycode = repositorycode;
+    }
+
+    public boolean isContainSearchableItems() {
+        return containSearchableItems;
+    }
+
+    public String getRepositorycode() {
+        return this.repositorycode;
+    }
+
+    public void setContainSearchableItems(boolean containSearchableItems) {
+        this.containSearchableItems = containSearchableItems;
+    }
+
+    public String getAutform() {
+        return this.autform;
+    }
+
+    public void setAutform(String autform) {
+        this.autform = autform;
+    }
+
+    public boolean isGroup() {
+        return this.group;
+    }
+
+    public void setGroup(boolean group) {
+        this.group = group;
+    }
 
 //	public Set<UpFile> getUpFiles() {
 //		return this.upFiles;
@@ -183,14 +194,13 @@ public class ArchivalInstitution implements java.io.Serializable {
 //	public void setUpFiles(Set<UpFile> upFiles) {
 //		this.upFiles = upFiles;
 //	}
+    public Set<HoldingsGuide> getHoldingsGuides() {
+        return this.holdingsGuides;
+    }
 
-	public Set<HoldingsGuide> getHoldingsGuides() {
-		return this.holdingsGuides;
-	}
-
-	public void setHoldingsGuides(Set<HoldingsGuide> holdingsGuides) {
-		this.holdingsGuides = holdingsGuides;
-	}
+    public void setHoldingsGuides(Set<HoldingsGuide> holdingsGuides) {
+        this.holdingsGuides = holdingsGuides;
+    }
 
     public Set<SourceGuide> getSourceGuides() {
         return sourceGuides;
@@ -200,105 +210,127 @@ public class ArchivalInstitution implements java.io.Serializable {
         this.sourceGuides = sourceGuides;
     }
 
-	public Set<AiAlternativeName> getAiAlternativeNames() {
-		return this.aiAlternativeNames;
-	}
-
-	public void setAiAlternativeNames(Set<AiAlternativeName> aiAlternativeNames) {
-		this.aiAlternativeNames = aiAlternativeNames;
-	}
-
-	public Set<FindingAid> getFindingAids() {
-		return this.findingAids;
-	}
-
-	public void setFindingAids(Set<FindingAid> findingAids) {
-		this.findingAids = findingAids;
-	}
-
-
-	public List<ArchivalInstitution> getChildArchivalInstitutions() {
-		return childArchivalInstitutions;
-	}
-
-	public void setChildArchivalInstitutions(List<ArchivalInstitution> childArchivalInstitutions) {
-		this.childArchivalInstitutions = childArchivalInstitutions;
-	}
-
-	@Override
-        public String toString() {
-        return "ArchivalInstitution{" +
-                
-        		"aiId=" + aiId +
-                ", ainame='" + ainame + '\'' +
-                ", eagPath='" + eagPath + '\'' +
-                ", repositorycode='" + repositorycode + '\'' +
-                ", autform='" + autform + '\'' +
-                '}';
+    public Set<AiAlternativeName> getAiAlternativeNames() {
+        return this.aiAlternativeNames;
     }
 
-	public void setAlorder(int alorder) {
-		this.alorder = alorder;
-	}
+    public void setAiAlternativeNames(Set<AiAlternativeName> aiAlternativeNames) {
+        this.aiAlternativeNames = aiAlternativeNames;
+    }
 
-	public int getAlorder() {
-		return alorder;
-	}
+    public Set<FindingAid> getFindingAids() {
+        return this.findingAids;
+    }
 
-	public String getInternalAlId() {
-		return internalAlId;
-	}
+    public void setFindingAids(Set<FindingAid> findingAids) {
+        this.findingAids = findingAids;
+    }
 
-	public void setInternalAlId(String internalAlId) {
-		this.internalAlId = internalAlId;
-	}
+    public List<ArchivalInstitution> getChildArchivalInstitutions() {
+        return childArchivalInstitutions;
+    }
 
-	public Integer getCountryId() {
-		return countryId;
-	}
+    public void setChildArchivalInstitutions(List<ArchivalInstitution> childArchivalInstitutions) {
+        this.childArchivalInstitutions = childArchivalInstitutions;
+    }
 
-	public void setCountryId(Integer countryId) {
-		this.countryId = countryId;
-	}
+    @Override
+    public String toString() {
+        return "ArchivalInstitution{"
+                + "aiId=" + aiId
+                + ", ainame='" + ainame + '\''
+                + ", eagPath='" + eagPath + '\''
+                + ", repositorycode='" + repositorycode + '\''
+                + ", autform='" + autform + '\''
+                + '}';
+    }
 
-	public Country getCountry() {
-		return country;
-	}
+    public void setAlorder(int alorder) {
+        this.alorder = alorder;
+    }
 
-	public void setCountry(Country country) {
-		this.country = country;
-	}
+    public int getAlorder() {
+        return alorder;
+    }
 
-	public Integer getPartnerId() {
-		return partnerId;
-	}
+    public String getInternalAlId() {
+        return internalAlId;
+    }
 
-	public void setPartnerId(Integer partnerId) {
-		this.partnerId = partnerId;
-	}
+    public void setInternalAlId(String internalAlId) {
+        this.internalAlId = internalAlId;
+    }
 
-	public Date getContentLastModifiedDate() {
-		return contentLastModifiedDate;
-	}
+    public Integer getCountryId() {
+        return countryId;
+    }
 
-	public void setContentLastModifiedDate(Date contentLastModifiedDate) {
-		this.contentLastModifiedDate = contentLastModifiedDate;
-	}
+    public void setCountryId(Integer countryId) {
+        this.countryId = countryId;
+    }
 
-	public boolean isUsingMets() {
-		return usingMets;
-	}
+    public Country getCountry() {
+        return country;
+    }
 
-	public void setUsingMets(boolean usingMets) {
-		this.usingMets = usingMets;
-	}
+    public void setCountry(Country country) {
+        this.country = country;
+    }
 
-	public String getFeedbackEmail() {
-		return feedbackEmail;
-	}
+    public Integer getPartnerId() {
+        return partnerId;
+    }
 
-	public void setFeedbackEmail(String feedbackEmail) {
-		this.feedbackEmail = feedbackEmail;
-	}
-	
+    public void setPartnerId(Integer partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public Date getContentLastModifiedDate() {
+        return contentLastModifiedDate;
+    }
+
+    public void setContentLastModifiedDate(Date contentLastModifiedDate) {
+        this.contentLastModifiedDate = contentLastModifiedDate;
+    }
+
+    public boolean isUsingMets() {
+        return usingMets;
+    }
+
+    public void setUsingMets(boolean usingMets) {
+        this.usingMets = usingMets;
+    }
+
+    public String getFeedbackEmail() {
+        return feedbackEmail;
+    }
+
+    public void setFeedbackEmail(String feedbackEmail) {
+        this.feedbackEmail = feedbackEmail;
+    }
+
+    public boolean isOpenDataEnabled() {
+        return openDataEnabled==null?false: (boolean)openDataEnabled;
+    }
+
+    public void setOpenDataEnabled(boolean openDataEnabled) {
+        this.openDataEnabled = openDataEnabled;
+    }
+
+    public long getTotalSolrDocsCount() {
+        return totalSolrDocsCount == null ? 0 : (long) totalSolrDocsCount;
+    }
+
+    public void setTotalSolrDocsCount(long totalSolrDocsCount) {
+        this.totalSolrDocsCount = totalSolrDocsCount;
+    }
+
+    public long getUnprocessedSolrDocs() {
+        return unprocessedSolrDocs == null ? 0 : (long) unprocessedSolrDocs;
+    }
+
+    public void setUnprocessedSolrDocs(long unprocessedSolrDocs) {
+        this.unprocessedSolrDocs = unprocessedSolrDocs;
+    }
+
 }
