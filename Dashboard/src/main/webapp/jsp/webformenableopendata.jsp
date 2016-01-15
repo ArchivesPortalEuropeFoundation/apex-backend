@@ -19,7 +19,7 @@
     <p><span style="font-weight: bold;font-size:large;"><s:property value="getText('dashboard.menu.topic.enableapi')" /></span><br/><br/></p>
 
     <c:if test="${enableOpenData eq false}">
-        <s:form method="POST" theme="simple">
+        <s:form method="POST" action="doEnableOpenData" theme="simple">
             <s:hidden name="ai_id" value="%{ai_id}"></s:hidden>
                 <table>
                     <tr>

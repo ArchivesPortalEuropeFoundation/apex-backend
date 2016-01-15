@@ -6,6 +6,7 @@
 package eu.apenet.dashboard;
 
 import static com.opensymphony.xwork2.Action.SUCCESS;
+import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -48,6 +49,23 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
         archivalInstitution.getAiname();
+
+        EadSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId());
+
+        if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
+            addActionError(getText("label.ai.changeainame.published.eads"));
+        }
+        return SUCCESS;
+    }
+
+    @Override
+    public String input() throws Exception {
+        this.setAiName();
+
+        ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+        ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
+        archivalInstitution.getAiname();
+
         if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
             addActionError(getText("label.ai.changeainame.published.eads"));
         }
