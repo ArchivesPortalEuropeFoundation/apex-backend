@@ -96,6 +96,7 @@
 	  <field name="places" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />	  
 	  <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 	  <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" />
+          <field name="openData" type="boolean" indexed="true" stored="true" required="false" default="false"/>
 
   </fields>
   <uniqueKey>id</uniqueKey> 
