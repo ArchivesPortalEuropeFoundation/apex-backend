@@ -32,6 +32,7 @@
             if (doIt && (checked ^${enableOpenData})) {
                 $('#submit').hide();
                 $('#cancel').hide();
+                $('#enableOpenData').hide();
                 window.location.href = '/Dashboard/enableOpenData.action';
                 return true;
             }
