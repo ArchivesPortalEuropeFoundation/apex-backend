@@ -9,12 +9,14 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.QueueItem;
 
 public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> implements QueueItemDAO {
 
     private final Logger log = Logger.getLogger(getClass());
 
+    @Override
     public QueueItem getFirstItem() {
         TypedQuery<QueueItem> query = getEntityManager().createQuery(
                 "SELECT queueItem FROM QueueItem queueItem WHERE priority > 0 ORDER BY priority desc, id asc",
@@ -23,6 +25,23 @@ public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> im
         List<QueueItem> results = query.getResultList();
         if (results.size() > 0) {
             return results.get(0);
+        }
+        return null;
+    }
+    
+    @Override
+    public QueueItem getFirstItemWithAI() {
+        TypedQuery<QueueItem> query = getEntityManager().createQuery(
+                "SELECT queueItem FROM QueueItem queueItem WHERE priority > 0 ORDER BY priority desc, id asc",
+                QueueItem.class);
+        query.setMaxResults(1);
+        List<QueueItem> results = query.getResultList();
+        if (results.size() > 0) {
+            QueueItem queueItem = results.get(0);
+            //Lazy Load
+            ArchivalInstitution ai = queueItem.getArchivalInstitution();
+            ai.getAiId();
+            return queueItem;
         }
         return null;
     }

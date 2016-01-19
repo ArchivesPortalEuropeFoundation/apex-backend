@@ -91,7 +91,7 @@ public class ArchivalInstitution implements java.io.Serializable {
     @Column(nullable = true)
     private Boolean openDataEnabled;
     @Column(nullable = true)
-    private Long totalSolrDocsCount;
+    private Long totalSolrDocsForOpenData;
     @Column(nullable = true)
     private Long unprocessedSolrDocs;
 
@@ -317,12 +317,12 @@ public class ArchivalInstitution implements java.io.Serializable {
         this.openDataEnabled = openDataEnabled;
     }
 
-    public long getTotalSolrDocsCount() {
-        return totalSolrDocsCount == null ? 0 : (long) totalSolrDocsCount;
+    public long getTotalSolrDocsForOpenData() {
+        return totalSolrDocsForOpenData == null ? 0 : (long) totalSolrDocsForOpenData;
     }
 
-    public void setTotalSolrDocsCount(long totalSolrDocsCount) {
-        this.totalSolrDocsCount = totalSolrDocsCount;
+    public void setTotalSolrDocsForOpenData(long totalSolrDocsCount) {
+        this.totalSolrDocsForOpenData = totalSolrDocsCount;
     }
 
     public long getUnprocessedSolrDocs() {
