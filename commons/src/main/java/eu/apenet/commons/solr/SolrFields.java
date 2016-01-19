@@ -32,6 +32,7 @@ public final class SolrFields {
 	public final static String TOPIC_FACET = "topic";
 	public final static String DATE_TYPE = "dateType";
 	public final static String PARENT_ID = "parentId";
+        public final static String OPEN_DATA_ENABLE="openData";
 	//public final static String TREE_ID = "treeId";
 	//public final static String FIRST_TREE_ID = "firstTreeId";
 	//public final static String LAST_TREE_ID = "lastTreeId";
