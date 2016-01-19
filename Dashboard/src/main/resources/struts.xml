@@ -314,7 +314,7 @@
         </action>
         <action name="doEnableOpenData" class="eu.apenet.dashboard.EnableOpenDataAction">
             <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">webformenableopendata</result>
+            <result name="success" type="redirect">/enableOpenData.action</result>
             <result name="error" type="tiles">webformainame</result>
             <result name="input" type="tiles">webformenableopendata</result>
         </action>

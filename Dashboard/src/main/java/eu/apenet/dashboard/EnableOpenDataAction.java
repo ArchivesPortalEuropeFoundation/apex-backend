@@ -6,7 +6,9 @@
 package eu.apenet.dashboard;
 
 import static com.opensymphony.xwork2.Action.SUCCESS;
+import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
+import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -48,9 +50,14 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
 
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
-        archivalInstitution.getAiname();
+        if (archivalInstitution.isOpenDataEnabled() != getEnableOpenData()) {
+            archivalInstitution.setOpenDataEnabled(getEnableOpenData());
+            archivalInstitutionDao.update(archivalInstitution);
 
-        EadSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId());
+            EadSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
+            EacCpfSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
+//            EagSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
+        }
 
         if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
             addActionError(getText("label.ai.changeainame.published.eads"));
@@ -64,7 +71,7 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
 
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
-        archivalInstitution.getAiname();
+        this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
 
         if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
             addActionError(getText("label.ai.changeainame.published.eads"));

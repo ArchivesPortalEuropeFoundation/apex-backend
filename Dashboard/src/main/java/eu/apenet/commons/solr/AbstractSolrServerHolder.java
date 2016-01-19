@@ -30,20 +30,22 @@ public abstract class AbstractSolrServerHolder {
         return solrServer != null;
     }
 
-    public long enableOpenDataByAi(String aiName, int aiId) throws SolrServerException {
+    public long enableOpenDataByAi(String aiName, int aiId, boolean isEnable) throws SolrServerException {
         if (isAvailable()) {
             try {
                 long startTime = System.currentTimeMillis();
-                SolrQuery query = new SolrQuery("ai:\"" + aiName + "\\:" + aiId + "\"");
-                long totalNumberOfDocs = solrServer.query(query).getResults().getNumFound();
-                query.setRows((int) totalNumberOfDocs);
+                String queryString = SolrFields.AI + ":\"" + aiName + "\\:" + aiId + "\" ";
+                queryString += "AND " + SolrFields.OPEN_DATA_ENABLE + ":" + Boolean.toString(!isEnable);
+                SolrQuery query = new SolrQuery(queryString);
+                int totalNumberOfDocs = (int) solrServer.query(query).getResults().getNumFound();
+                query.setRows(totalNumberOfDocs);
                 QueryResponse response = solrServer.query(query);
                 for (SolrDocument doc : response.getResults()) {
                     SolrInputDocument inputDocument = ClientUtils.toSolrInputDocument(doc);
                     if (inputDocument.getField("openData") != null) {
-                        inputDocument.getField("openData").setValue(true, 1);
+                        inputDocument.getField("openData").setValue(isEnable, 1);
                     } else {
-                        inputDocument.addField("openData", true, 1);
+                        inputDocument.addField("openData", isEnable, 1);
                     }
                     inputDocument.getField("spell").setValue("", 1);
                     solrServer.add(inputDocument);

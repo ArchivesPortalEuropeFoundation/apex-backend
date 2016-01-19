@@ -15,6 +15,8 @@ import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.dashboard.services.AbstractSolrPublisher;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 
@@ -51,6 +53,9 @@ public class EacCpfSolrPublisher extends AbstractSolrPublisher {
         doc.addField(SolrFields.EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS, eacCpfPublishData.getNumberOfArchivalMaterialRelations());
         doc.addField(SolrFields.EAC_CPF_NUMBER_OF_NAME_RELATIONS, eacCpfPublishData.getNumberOfNameRelations());
         doc.addField(SolrFields.EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS, eacCpfPublishData.getNumberOfInstitutionsRelations());
+        ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+
+        doc.addField(SolrFields.OPEN_DATA_ENABLE, archivalInstitutionDao.findById(archivalInstitution.getAiId()).isOpenDataEnabled());
         addSolrDocument(doc);
     }
 
