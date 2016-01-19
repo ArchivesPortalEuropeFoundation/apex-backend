@@ -11,6 +11,9 @@ import org.apache.solr.common.SolrInputDocument;
 
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
@@ -30,33 +33,35 @@ public abstract class AbstractSolrServerHolder {
         return solrServer != null;
     }
 
-    public long enableOpenDataByAi(String aiName, int aiId, boolean isEnable) throws SolrServerException {
+    public long updateOpenDataByAi(String aiName, int aiId, boolean openDataEnable) throws SolrServerException {
         if (isAvailable()) {
             try {
                 long startTime = System.currentTimeMillis();
-                String queryString = "";
-                if (this instanceof EagSolrServerHolder) {
-                    queryString = SolrFields.ID + ":\"" + aiId + "\" ";
-
-                } else {
-                    queryString = SolrFields.AI + ":\"" + aiName + "\\:" + aiId + "\" ";
-                }
-                queryString += "AND -" + SolrFields.OPEN_DATA_ENABLE + ":" + Boolean.toString(isEnable);
-
-                SolrQuery query = new SolrQuery(queryString);
+                ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+                ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aiId);
+                
+                SolrQuery query = genOpenDataByAiSearchQuery(aiName, aiId, openDataEnable);
+                query.setRows(100);
                 int totalNumberOfDocs = (int) solrServer.query(query).getResults().getNumFound();
-                query.setRows(totalNumberOfDocs);
-                QueryResponse response = solrServer.query(query);
-                for (SolrDocument doc : response.getResults()) {
-                    SolrInputDocument inputDocument = ClientUtils.toSolrInputDocument(doc);
-                    if (inputDocument.getField("openData") != null) {
-                        inputDocument.getField("openData").setValue(isEnable, 1);
-                    } else {
-                        inputDocument.addField("openData", isEnable, 1);
-                    }
-                    inputDocument.getField("spell").setValue("", 1);
-                    solrServer.add(inputDocument);
+                while (totalNumberOfDocs > 0) {
+                    QueryResponse response = solrServer.query(query);
+                    long foundDocsCount = response.getResults().size();
 
+                    for (SolrDocument doc : response.getResults()) {
+                        SolrInputDocument inputDocument = ClientUtils.toSolrInputDocument(doc);
+                        if (inputDocument.getField("openData") == null) {
+                            inputDocument.addField("openData", openDataEnable, 1);
+                        } else {
+                            inputDocument.getField("openData").setValue(openDataEnable, 1);
+                        }
+                        inputDocument.getField("spell").setValue("", 1);
+                        solrServer.add(inputDocument);
+                    }
+                    
+                    solrServer.commit(true, true);
+                    totalNumberOfDocs -=  foundDocsCount;
+                    archivalInstitution.setUnprocessedSolrDocs(archivalInstitution.getUnprocessedSolrDocs()-foundDocsCount);
+                    archivalInstitutionDao.store(archivalInstitution);
                 }
                 return System.currentTimeMillis() - startTime;
             } catch (IOException e) {
@@ -65,6 +70,31 @@ public abstract class AbstractSolrServerHolder {
         } else {
             throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
         }
+    }
+
+    private SolrQuery genOpenDataByAiSearchQuery(String aiName, int aiId, boolean openDataEnable) throws SolrServerException {
+        String queryString = "";
+        if (this instanceof EagSolrServerHolder) {
+            queryString = SolrFields.ID + ":\"" + aiId + "\" ";
+
+        } else {
+            queryString = SolrFields.AI + ":\"" + aiName + "\\:" + aiId + "\" ";
+        }
+        queryString += "AND -" + SolrFields.OPEN_DATA_ENABLE + ":" + Boolean.toString(openDataEnable);
+        SolrQuery query = new SolrQuery(queryString);
+        query.setRows(0);
+
+        return query;
+    }
+
+    public long getTotalSolrDocsForOpenData(String aiName, int aiId, boolean openDataEnable) throws SolrServerException {
+        if (isAvailable()) {
+            SolrQuery query = genOpenDataByAiSearchQuery(aiName, aiId, openDataEnable);
+            return solrServer.query(query).getResults().getNumFound();
+        } else {
+            throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
+        }
+
     }
 
     public long deleteByQuery(String query) throws SolrServerException {

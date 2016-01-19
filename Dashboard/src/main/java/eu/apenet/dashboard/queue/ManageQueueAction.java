@@ -19,6 +19,7 @@ import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.services.eag.xml.stream.XmlEagParser;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
+import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -111,6 +112,14 @@ public class ManageQueueAction extends AbstractAction {
                     UpFile upFile = queueItem.getUpFile();
                     displayItem.setEadidOrFilename(upFile.getPath() + upFile.getFilename());
                     displayItem.setArchivalInstitution(upFile.getArchivalInstitution().getAiname());
+                } else if (queueItem.getArchivalInstitution() != null) {
+                    Properties preferences = EadService.readProperties(queueItem.getPreferences());
+                    if (preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY)) {
+                        boolean openData = Boolean.valueOf(preferences.getProperty(OpenDataService.ENABLE_OPEN_DATA_KEY));
+                        displayItem.setEadidOrFilename(getText("admin.queuemanagement.openData")+": "+queueItem.getArchivalInstitution().getUnprocessedSolrDocs());
+                        displayItem.setAction(displayItem.getAction() + " "+ (openData?getText("admin.queuemanagement.enable"):getText("admin.queuemanagement.disable")));
+                    }
+                    displayItem.setArchivalInstitution(queueItem.getArchivalInstitution().getAiname());
                 }
                 if (QueueAction.USE_PROFILE.equals(queueItem.getAction())) {
                     Properties preferences = EadService.readProperties(queueItem.getPreferences());

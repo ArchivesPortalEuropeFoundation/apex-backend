@@ -17,6 +17,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.exception.PersistenceException;
@@ -137,7 +138,7 @@ public class QueueTask implements Runnable {
                  * lock ead and queue item before going to process.
                  */
                 JpaUtil.beginDatabaseTransaction();
-                QueueItem queueItem = queueItemDAO.getFirstItem();
+                QueueItem queueItem = queueItemDAO.getFirstItemWithAI();
 
                 if (queueItem == null) {
                     JpaUtil.rollbackDatabaseTransaction();
@@ -173,6 +174,12 @@ public class QueueTask implements Runnable {
                                 } else {
                                     EadService.processQueueItem(queueItem);
                                 }
+                            }
+                        } else if (!queueItem.getPreferences().isEmpty()) {
+                            Properties preferences = EadService.readProperties(queueItem.getPreferences());
+                            boolean hasKey = preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY);
+                            if (hasKey) {
+                                OpenDataService.processQueueItem(queueItem);
                             }
                         }
                     }

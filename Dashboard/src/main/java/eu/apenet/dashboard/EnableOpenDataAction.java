@@ -6,13 +6,20 @@
 package eu.apenet.dashboard;
 
 import static com.opensymphony.xwork2.Action.SUCCESS;
+import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
+import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
+import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  *
@@ -21,19 +28,10 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 public class EnableOpenDataAction extends AbstractInstitutionAction {
 
     private Boolean enableOpenData = false;
-    private int aiId;
-    private String aiName;
-
-    public void setAiId() {
-        this.aiId = this.getAiId();
-    }
-
-    public void setAiName() {
-        this.aiName = this.getAiname();
-    }
+    private final Logger log = Logger.getLogger(EnableOpenDataAction.class);
 
     public String getAiName() {
-        return aiName;
+        return this.getAiname();
     }
 
     public Boolean getEnableOpenData() {
@@ -45,30 +43,35 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
     }
 
     @Override
-    public String execute() throws Exception {
-        this.setAiName();
+    public String execute() throws IOException {
 
-        ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-        ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
-        if (archivalInstitution.isOpenDataEnabled() != getEnableOpenData()) {
-            archivalInstitution.setOpenDataEnabled(getEnableOpenData());
-            archivalInstitutionDao.update(archivalInstitution);
+        try {
+            long eadTotalDoc = EadSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
+            long eacTotalDoc = EacCpfSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
+            Properties preferences = new Properties();
+            preferences.setProperty(OpenDataService.ENABLE_OPEN_DATA_KEY, getEnableOpenData().toString());
+            preferences.setProperty(OpenDataService.TOTAL_SOLAR_DOC_KEY, (eadTotalDoc + eacTotalDoc) + "");
 
-            EadSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
-            EacCpfSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
-            EagSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
-        }
+            OpenDataService.openDataPublish(this.getAiId(), preferences);
 
-        if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
-            addActionError(getText("label.ai.changeainame.published.eads"));
+//            EadSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
+//            EacCpfSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
+//            EagSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
+//        } else {
+//            
+//        }
+        } catch (SolrServerException ex) {
+            log.error("Solr Server exception: " + ex.getMessage());
+            return ERROR;
+        } catch (ProcessBusyException ex) {
+            log.warn("Inistitute: "+this.getAiName()+"/"+this.getAiId()+" is trying to add multiple open data operations!");
+            addActionError(getText("label.ai.enableopendata.inprogress"));
         }
         return SUCCESS;
     }
 
     @Override
     public String input() throws Exception {
-        this.setAiName();
-
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
         this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
