@@ -34,8 +34,15 @@ public abstract class AbstractSolrServerHolder {
         if (isAvailable()) {
             try {
                 long startTime = System.currentTimeMillis();
-                String queryString = SolrFields.AI + ":\"" + aiName + "\\:" + aiId + "\" ";
-                queryString += "AND " + SolrFields.OPEN_DATA_ENABLE + ":" + Boolean.toString(!isEnable);
+                String queryString = "";
+                if (this instanceof EagSolrServerHolder) {
+                    queryString = SolrFields.ID + ":\"" + aiId + "\" ";
+
+                } else {
+                    queryString = SolrFields.AI + ":\"" + aiName + "\\:" + aiId + "\" ";
+                }
+                queryString += "AND -" + SolrFields.OPEN_DATA_ENABLE + ":" + Boolean.toString(isEnable);
+
                 SolrQuery query = new SolrQuery(queryString);
                 int totalNumberOfDocs = (int) solrServer.query(query).getResults().getNumFound();
                 query.setRows(totalNumberOfDocs);
