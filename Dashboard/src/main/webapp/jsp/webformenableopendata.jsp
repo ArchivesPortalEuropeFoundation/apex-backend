@@ -9,40 +9,23 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var checked = false;
-//        $('#submit').hide();
         $('#submit').prop('disabled', true);
         $('#enableOpenData').click(function () {
             if ($('#enableOpenData').attr('checked') === 'checked') {
-                checked = true;
-            }
-            else {
-                checked = false;
-            }
-            if (!(checked ^${enableOpenData})) {
-                $('#submit').prop('disabled', true);
-            }
-            else {
                 $('#submit').prop('disabled', false);
             }
         });
         $("#submit").click(function () {
-            if ($('#enableOpenData').attr('checked') === 'checked')
-                checked = true;
-            var doIt = confirm("Are you sure!!!");
-            if (doIt && (checked ^${enableOpenData})) {
-                window.location.href = '/Dashboard/enableOpenData.action';
-                return true;
+            if ($('#enableOpenData').attr('checked') === 'checked') {
+                var doIt = confirm("<s:property value="getText('content.message.opendata.comfirm')" />");
+                if (doIt) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
-            else if (doIt === false || (doIt === true && (checked ^${enableOpenData} === false))) {
-                location.reload();
-                return false;
-            }
-            else {
-                window.location.href = '/Dashboard/dashboardHome.action';
-                return false;
-            }
-            return doIt;
+            return false;
         });
     });
 </script>
@@ -57,22 +40,28 @@
     <c:if test="${enableOpenData eq true}">
         <s:property value="getText('label.ai.enableopendata.enabled')" />
     </c:if>
+    <c:if test="${enableOpenData eq false}">
+        <s:property value="getText('label.ai.enableopendata.disabled')" />
+    </c:if>
     <s:form method="POST" action="doEnableOpenData" theme="simple">
         <s:hidden name="ai_id" value="%{ai_id}"></s:hidden>
             <table>
                 <tr>
-                    <td colspan="15"><s:property value="getText('dashboard.menu.topic.enableapi')" />: 
+                    <td colspan="15">
                     <c:if test="${enableOpenData eq true}">
-                        <s:checkbox name="enableOpenData" id="enableOpenData" fieldValue="true" value="true"></s:checkbox>
+                        <s:property value="getText('label.ai.enableopendata.disable')" />: 
+                        <s:checkbox name="checkBoxValue" id="enableOpenData" fieldValue="true"></s:checkbox>
                     </c:if>
                     <c:if test="${enableOpenData eq false}">
-                        <s:checkbox name="enableOpenData" id="enableOpenData" fieldValue="true"></s:checkbox>
+                        <s:property value="getText('label.ai.enableopendata.enable')" />: 
+                        <s:checkbox name="checkBoxValue" id="enableOpenData" fieldValue="true"></s:checkbox>
                     </c:if>
                 </td>
             </tr>
             <tr>
                 <td colspan="2" style="float: right">
-                    <s:submit id="submit" key="label.ok" cssClass="mainButton"/>
+                    <br>
+                <s:submit id="submit" key="label.submit" cssClass="mainButton" cssStyle="width:75px; height:25px"/>
                 </td>
             </tr>
         </table>

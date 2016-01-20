@@ -10,16 +10,15 @@ import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
-import eu.apenet.commons.solr.EagSolrServerHolder;
-import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.struts2.ServletActionContext;
 
 /**
  *
@@ -28,6 +27,8 @@ import org.apache.solr.client.solrj.SolrServerException;
 public class EnableOpenDataAction extends AbstractInstitutionAction {
 
     private Boolean enableOpenData = false;
+    private Boolean checkBoxValue = false;
+    private String errorMsg = "";
     private final Logger log = Logger.getLogger(EnableOpenDataAction.class);
 
     public String getAiName() {
@@ -42,8 +43,30 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
         this.enableOpenData = enableOpenData;
     }
 
+    public Boolean getCheckBoxValue() {
+        return checkBoxValue;
+    }
+
+    public void setCheckBoxValue(Boolean checkBoxValue) {
+        this.checkBoxValue = checkBoxValue;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
     @Override
     public String execute() throws IOException {
+        ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+        ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
+        this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
+        if (getCheckBoxValue() == true) {
+            setEnableOpenData(!getEnableOpenData());
+        }
 
         try {
             long eadTotalDoc = EadSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
@@ -54,21 +77,13 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
 
             OpenDataService.openDataPublish(this.getAiId(), preferences);
 
-//            EadSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
-//            EacCpfSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
-//            EagSolrServerHolder.getInstance().enableOpenDataByAi(this.getAiName(), this.getAiId(), getEnableOpenData());
-//        } else {
-//            
-//        }
         } catch (SolrServerException ex) {
             log.error("Solr Server exception: " + ex.getMessage());
             return ERROR;
         } catch (ProcessBusyException ex) {
             log.warn("Inistitute: " + this.getAiName() + "/" + this.getAiId() + " is trying to add multiple open data operations!");
+            this.setErrorMsg(getText("label.ai.enableopendata.inprogress"));
             addActionError(getText("label.ai.enableopendata.inprogress"));
-            ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-            ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
-            this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
             return ERROR;
         }
         return SUCCESS;
@@ -76,10 +91,16 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
 
     @Override
     public String input() throws Exception {
+        String paramValue = ServletActionContext.getRequest().getParameter("errorMsg");
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
         this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
-        return SUCCESS;
+        if (paramValue == null || StringUtils.isBlank(NONE)) {
+            return SUCCESS;
+        } else {
+            addActionError(paramValue);
+            return SUCCESS;
+        }
     }
 
 }
