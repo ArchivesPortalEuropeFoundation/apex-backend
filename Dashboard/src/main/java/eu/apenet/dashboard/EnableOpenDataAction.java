@@ -64,8 +64,12 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
             log.error("Solr Server exception: " + ex.getMessage());
             return ERROR;
         } catch (ProcessBusyException ex) {
-            log.warn("Inistitute: "+this.getAiName()+"/"+this.getAiId()+" is trying to add multiple open data operations!");
+            log.warn("Inistitute: " + this.getAiName() + "/" + this.getAiId() + " is trying to add multiple open data operations!");
             addActionError(getText("label.ai.enableopendata.inprogress"));
+            ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+            ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
+            this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
+            return ERROR;
         }
         return SUCCESS;
     }
@@ -75,10 +79,6 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
         this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
-
-        if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
-            addActionError(getText("label.ai.changeainame.published.eads"));
-        }
         return SUCCESS;
     }
 

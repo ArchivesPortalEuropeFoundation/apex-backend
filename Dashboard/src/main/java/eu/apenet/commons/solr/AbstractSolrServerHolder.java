@@ -39,7 +39,7 @@ public abstract class AbstractSolrServerHolder {
                 long startTime = System.currentTimeMillis();
                 ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
                 ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aiId);
-                
+
                 SolrQuery query = genOpenDataByAiSearchQuery(aiName, aiId, openDataEnable);
                 query.setRows(100);
                 int totalNumberOfDocs = (int) solrServer.query(query).getResults().getNumFound();
@@ -54,13 +54,17 @@ public abstract class AbstractSolrServerHolder {
                         } else {
                             inputDocument.getField("openData").setValue(openDataEnable, 1);
                         }
-                        inputDocument.getField("spell").setValue("", 1);
+                        if (inputDocument.getField("spell") == null) {
+                            inputDocument.addField("spell", "", 1);
+                        } else {
+                            inputDocument.getField("spell").setValue("", 1);
+                        }
                         solrServer.add(inputDocument);
                     }
-                    
+
                     solrServer.commit(true, true);
-                    totalNumberOfDocs -=  foundDocsCount;
-                    archivalInstitution.setUnprocessedSolrDocs(archivalInstitution.getUnprocessedSolrDocs()-foundDocsCount);
+                    totalNumberOfDocs -= foundDocsCount;
+                    archivalInstitution.setUnprocessedSolrDocs(archivalInstitution.getUnprocessedSolrDocs() - foundDocsCount);
                     archivalInstitutionDao.store(archivalInstitution);
                 }
                 return System.currentTimeMillis() - startTime;

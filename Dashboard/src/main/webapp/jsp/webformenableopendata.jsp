@@ -10,7 +10,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var checked = false;
-        $('#submit').hide();
+//        $('#submit').hide();
+        $('#submit').prop('disabled', true);
         $('#enableOpenData').click(function () {
             if ($('#enableOpenData').attr('checked') === 'checked') {
                 checked = true;
@@ -19,10 +20,10 @@
                 checked = false;
             }
             if (!(checked ^${enableOpenData})) {
-                $('#submit').hide();
+                $('#submit').prop('disabled', true);
             }
             else {
-                $('#submit').show();
+                $('#submit').prop('disabled', false);
             }
         });
         $("#submit").click(function () {
@@ -30,9 +31,6 @@
                 checked = true;
             var doIt = confirm("Are you sure!!!");
             if (doIt && (checked ^${enableOpenData})) {
-                $('#submit').hide();
-                $('#cancel').hide();
-                $('#enableOpenData').hide();
                 window.location.href = '/Dashboard/enableOpenData.action';
                 return true;
             }
@@ -51,6 +49,11 @@
 <div align="center">
     <p><span style="font-weight: bold;font-size:large;"><s:property value="getText('dashboard.menu.topic.enableapi')" /></span><br/><br/></p>
 
+    <s:if test="hasActionErrors()">
+        <div class="errors">
+            <s:actionerror/>
+        </div>
+    </s:if>
     <c:if test="${enableOpenData eq true}">
         <s:property value="getText('label.ai.enableopendata.enabled')" />
     </c:if>
@@ -70,7 +73,6 @@
             <tr>
                 <td colspan="2" style="float: right">
                     <s:submit id="submit" key="label.ok" cssClass="mainButton"/>
-                    <s:submit id="cancel" key="label.cancel" action="dashboardHome" name="Cancel" onclick="form.onsubmit=null"/>
                 </td>
             </tr>
         </table>
