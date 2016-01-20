@@ -9,6 +9,7 @@ import static com.opensymphony.xwork2.Action.SUCCESS;
 import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
+import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -71,9 +72,10 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
         try {
             long eadTotalDoc = EadSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
             long eacTotalDoc = EacCpfSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
+            long eagTotalDoc = EagSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
             Properties preferences = new Properties();
             preferences.setProperty(OpenDataService.ENABLE_OPEN_DATA_KEY, getEnableOpenData().toString());
-            preferences.setProperty(OpenDataService.TOTAL_SOLAR_DOC_KEY, (eadTotalDoc + eacTotalDoc) + "");
+            preferences.setProperty(OpenDataService.TOTAL_SOLAR_DOC_KEY, (eadTotalDoc + eacTotalDoc + eagTotalDoc) + "");
 
             OpenDataService.openDataPublish(this.getAiId(), preferences);
 

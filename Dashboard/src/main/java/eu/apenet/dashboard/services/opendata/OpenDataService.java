@@ -8,6 +8,7 @@ package eu.apenet.dashboard.services.opendata;
 import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
+import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
@@ -70,6 +71,7 @@ public class OpenDataService {
         boolean openData = Boolean.valueOf(preferences.getProperty(OpenDataService.ENABLE_OPEN_DATA_KEY));
         EadSolrServerHolder.getInstance().updateOpenDataByAi(queueItem.getArchivalInstitution().getAiname(), queueItem.getArchivalInstitution().getAiId(), openData);
         EacCpfSolrServerHolder.getInstance().updateOpenDataByAi(queueItem.getArchivalInstitution().getAiname(), queueItem.getArchivalInstitution().getAiId(), openData);
+        EagSolrServerHolder.getInstance().updateOpenDataByAi(queueItem.getArchivalInstitution().getAiname(), queueItem.getArchivalInstitution().getAiId(), openData);
         queueItemDAO.delete(queueItem);
         return queueAction;
     }

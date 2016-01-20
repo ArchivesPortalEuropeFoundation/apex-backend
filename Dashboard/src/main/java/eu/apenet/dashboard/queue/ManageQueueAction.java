@@ -29,6 +29,7 @@ import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
+import java.io.IOException;
 
 public class ManageQueueAction extends AbstractAction {
 
@@ -116,8 +117,8 @@ public class ManageQueueAction extends AbstractAction {
                     Properties preferences = EadService.readProperties(queueItem.getPreferences());
                     if (preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY)) {
                         boolean openData = Boolean.valueOf(preferences.getProperty(OpenDataService.ENABLE_OPEN_DATA_KEY));
-                        displayItem.setEadidOrFilename(getText("admin.queuemanagement.openData")+": "+queueItem.getArchivalInstitution().getUnprocessedSolrDocs());
-                        displayItem.setAction(displayItem.getAction() + " "+ (openData?getText("admin.queuemanagement.enable"):getText("admin.queuemanagement.disable")));
+                        displayItem.setEadidOrFilename(getText("admin.queuemanagement.openData") + ": " + queueItem.getArchivalInstitution().getUnprocessedSolrDocs());
+                        displayItem.setAction(displayItem.getAction() + ": " + (openData ? getText("admin.queuemanagement.enable") : getText("admin.queuemanagement.disable")));
                     }
                     displayItem.setArchivalInstitution(queueItem.getArchivalInstitution().getAiname());
                 }
@@ -141,7 +142,7 @@ public class ManageQueueAction extends AbstractAction {
             QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
             QueueItem queueItem = queueDAO.findById(queueItemId);
             if ("DELETE".equals(selectedAction)) {
-                EadService.deleteFromQueue(queueItem);
+                deleteQueueItem(queueItem);
             } else {
                 queueItem.setErrors(null);
                 if ("DISABLE".equals(selectedAction)) {
@@ -165,7 +166,7 @@ public class ManageQueueAction extends AbstractAction {
             List<QueueItem> queueItems = queueDAO.getItemsWithErrors();
             for (QueueItem queueItem : queueItems) {
                 try {
-                    EadService.deleteFromQueue(queueItem);
+                    deleteQueueItem(queueItem);
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage(), e);
                 }
@@ -262,21 +263,32 @@ public class ManageQueueAction extends AbstractAction {
             if ("DELETE".equals(selectedAction)) {
                 List<QueueItem> queueItems = queueDAO.getItemsOfInstitution(aiId);
                 for (QueueItem queueItem : queueItems) {
-                    EadService.deleteFromQueue(queueItem);
+                    deleteQueueItem(queueItem);
                 }
-            } else {
-                if ("DISABLE".equals(selectedAction)) {
-                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 0);
-                } else if ("ENABLE".equals(selectedAction)) {
-                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 1000);
-                } else if ("HIGHEST".equals(selectedAction)) {
-                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 5000);
-                } else if ("LOWEST".equals(selectedAction)) {
-                    queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 1);
-                }
+            } else if ("DISABLE".equals(selectedAction)) {
+                queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 0);
+            } else if ("ENABLE".equals(selectedAction)) {
+                queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 1000);
+            } else if ("HIGHEST".equals(selectedAction)) {
+                queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 5000);
+            } else if ("LOWEST".equals(selectedAction)) {
+                queueDAO.setPriorityToQueueOfArchivalInstitution(aiId, 1);
             }
         }
         return SUCCESS;
     }
 
+    private static void deleteQueueItem(QueueItem queueItem) throws Exception {
+        Properties preferences = EadService.readProperties(queueItem.getPreferences());
+        if (preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY)) {
+            if (queueItem.getAiId() != null ) {
+                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(queueItem.getAiId());
+                archivalInstitution.setUnprocessedSolrDocs(0);
+                DAOFactory.instance().getArchivalInstitutionDAO().store(archivalInstitution);
+            }
+            DAOFactory.instance().getQueueItemDAO().delete(queueItem);
+        } else {
+            EadService.deleteFromQueue(queueItem);
+        }
+    }
 }
