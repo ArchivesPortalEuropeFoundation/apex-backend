@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.request;
 
+import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import javax.validation.constraints.Max;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -17,7 +18,7 @@ public class SearchRequest {
 
     String query;
 
-    @Max(value= 50, message = "Count must not be more than 50")
+    @Max(value = 50, message = "Count must not be more than 50")
     int count;
     int start;
 
@@ -26,7 +27,7 @@ public class SearchRequest {
     }
 
     public void setQuery(String query) {
-        this.query = query;
+        this.query = CommonUtils.getGenericQueryString(query);
     }
 
     public int getCount() {

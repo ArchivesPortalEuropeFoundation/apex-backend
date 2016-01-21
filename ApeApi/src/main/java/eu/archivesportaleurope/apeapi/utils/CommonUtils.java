@@ -13,13 +13,18 @@ public class CommonUtils {
 
     public static String splitByColon(String str, int number) {
         String ret = "";
-        if (str!=null && !str.isEmpty()) {
+        if (str != null && !str.isEmpty()) {
             String[] strs = str.split(":");
             if (strs.length > number) {
                 ret = strs[number];
             }
         }
         return ret;
+    }
+
+    public static String getGenericQueryString(String q) {
+        q = q + " AND openData:true";
+        return q;
     }
 
 }
