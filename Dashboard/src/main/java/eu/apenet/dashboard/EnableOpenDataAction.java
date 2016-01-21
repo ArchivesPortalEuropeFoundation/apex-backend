@@ -97,7 +97,9 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
         this.setEnableOpenData(archivalInstitution.isOpenDataEnabled());
-        if (paramValue == null || StringUtils.isBlank(NONE)) {
+        if (archivalInstitution.getUnprocessedSolrDocs() == 0) {
+            return SUCCESS;
+        } else if (paramValue == null || StringUtils.isBlank(NONE)) {
             return SUCCESS;
         } else {
             addActionError(paramValue);
