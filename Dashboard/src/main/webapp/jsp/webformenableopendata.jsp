@@ -10,13 +10,21 @@
     .enableCheckbox{
         width: 13px;height: 15px;padding: 0;margin:0;vertical-align: middle;position: relative;top: -1px;*overflow: hidden;
     }
+    .disabledButton {
+        color: gray !important;
+        cursor: default !important;
+    }
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#submit').prop('disabled', true);
         $('#enableOpenData').click(function () {
             if ($('#enableOpenData').attr('checked') === 'checked') {
                 $('#submit').prop('disabled', false);
+                $('#submit').addClass('mainButton');
+                $('#submit').removeClass('disabledButton');
+            } else {
+                $('#submit').removeClass('mainButton');
+                $('#submit').addClass('disabledButton');
             }
         });
         $("#submit").click(function () {
@@ -79,7 +87,7 @@
                 <tr>
                     <td colspan="2" style="float: right">
                         <br>
-                        <s:submit id="submit" key="label.submit" cssClass="mainButton" cssStyle="width:75px; height:25px"/>
+                    <s:submit id="submit" key="label.submit" cssClass="disabledButton" cssStyle="width:75px; height:25px" disabled="true"/>
                     </td>
                 </tr>
             </table>
