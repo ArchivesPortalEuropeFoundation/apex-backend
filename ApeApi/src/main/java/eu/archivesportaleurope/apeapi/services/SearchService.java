@@ -14,5 +14,6 @@ import org.apache.solr.client.solrj.SolrServerException;
  * @author Mahbub
  */
 public interface SearchService {
-    EadResponseSet search(SearchRequest request) throws SolrServerException;
+    EadResponseSet search(SearchRequest request, String extraSearchParam) throws SolrServerException;
+    EadResponseSet searchOpenData(SearchRequest request) throws SolrServerException;
 }

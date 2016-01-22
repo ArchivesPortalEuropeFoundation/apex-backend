@@ -27,7 +27,7 @@ public class SearchRequest {
     }
 
     public void setQuery(String query) {
-        this.query = CommonUtils.getGenericQueryString(query);
+        this.query = query;
     }
 
     public int getCount() {

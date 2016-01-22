@@ -38,8 +38,11 @@ public class EadSearchSearvice implements SearchService {
     }
 
     @Override
-    public EadResponseSet search(SearchRequest searchRequest) throws SolrServerException {
-        SolrQuery query = new SolrQuery(searchRequest.getQuery());
+    public EadResponseSet search(SearchRequest searchRequest, String extraSearchParam) throws SolrServerException {
+        if (extraSearchParam==null) {
+            extraSearchParam = "";
+        }
+        SolrQuery query = new SolrQuery(searchRequest.getQuery() + extraSearchParam);
         query.setStart(searchRequest.getStart());
         if (searchRequest.getCount() <= 0) {
             query.setRows(10);
@@ -51,5 +54,10 @@ public class EadSearchSearvice implements SearchService {
 
         QueryResponse response = this.eadSearchUtil.getSearchResponse();
         return new EadResponseSet(response);
+    }
+    
+    @Override
+    public EadResponseSet searchOpenData(SearchRequest request) throws SolrServerException {
+        return this.search(request, " AND openData:true");
     }
 }

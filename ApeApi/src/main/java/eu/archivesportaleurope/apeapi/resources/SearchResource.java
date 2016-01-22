@@ -55,7 +55,7 @@ public class SearchResource {
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
         try {
-            EadResponseSet eadResponseSet = eadSearch.search(searchRequest);
+            EadResponseSet eadResponseSet = eadSearch.searchOpenData(searchRequest);
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
             logger.error("WebApplicationException", e.getCause());

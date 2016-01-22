@@ -21,10 +21,4 @@ public class CommonUtils {
         }
         return ret;
     }
-
-    public static String getGenericQueryString(String q) {
-        q = q + " AND openData:true";
-        return q;
-    }
-
 }
