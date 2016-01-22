@@ -41,7 +41,9 @@ public abstract class AbstractSolrServerHolder {
                 ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aiId);
 
                 SolrQuery query = genOpenDataByAiSearchQuery(aiName, aiId, openDataEnable);
-                query.setRows(100);
+                //709 which 127th prime, which is 31th prime, which is 11th prime, which is 5th prime, which is 3rd prime, which is 2nd prime, which is 1st prime. >:)
+                query.setRows(709);
+                
                 int totalNumberOfDocs = (int) solrServer.query(query).getResults().getNumFound();
                 while (totalNumberOfDocs > 0) {
                     QueryResponse response = solrServer.query(query);
