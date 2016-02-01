@@ -25,11 +25,18 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  *
  * @author kaisar
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EnableOpenDataTest {
 
     private static String baseUrl;
@@ -50,7 +57,7 @@ public class EnableOpenDataTest {
         InputStream is = ClassLoader.getSystemResourceAsStream("config.properties");
         properties.load(is);
         baseUrl = properties.getProperty("baseUrl", "https://development.archivesportaleurope.net/Dashboard/");
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.get(baseUrl);
         screenshotHelper = new ScreenshotHelper();
@@ -71,13 +78,17 @@ public class EnableOpenDataTest {
     }
 
     @Test
-    public void testEnableOpenDataFromInsManagerAccount() throws InterruptedException, IOException {
+    public void testAEnableOpenDataFromInsManagerAccount() throws InterruptedException, IOException {
         Thread.sleep(1000);
         try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("login_label_login")));
+
             driver.findElement(By.id("username")).sendKeys(properties.getProperty("insManagerUserName", "k.ali@cimsolutions.nl"));
             driver.findElement(By.id("login_password")).sendKeys(properties.getProperty("insManagerPassword", "Test@2010"));
             driver.findElement(By.id("login_dropOtherSession")).click();
-            driver.findElement(By.id("login_label_login")).click();
+            element.click();
+            //driver.findElement(By.id("login_label_login")).click();
             Thread.sleep(5000);
 
             captureScreen(name.getMethodName() + "_login");
@@ -85,10 +96,14 @@ public class EnableOpenDataTest {
             Select aiSelector = new Select(driver.findElement(By.id("Ai_selected")));
             aiSelector.selectByVisibleText(properties.getProperty("aiName", "TestArchivalInstitution"));
             driver.findElement(By.id("selectArchive_0")).click();
+            
+            Thread.sleep(5000);
 
             captureScreen(name.getMethodName() + "_home");
 
             driver.findElement(By.linkText(properties.getProperty("openDataLinkText", "Manage open data for API"))).click();
+            
+            Thread.sleep(5000);
 
             captureScreen(name.getMethodName() + "_openData");
 
@@ -98,6 +113,8 @@ public class EnableOpenDataTest {
             Thread.sleep(1000);
             Alert jsAlert = driver.switchTo().alert();
             jsAlert.accept();
+            
+            Thread.sleep(5000);
             captureScreen(name.getMethodName() + "_changeOpenDataFlag");
             Thread.sleep(100);
             driver.findElement(By.linkText("Logout")).click();
@@ -110,7 +127,7 @@ public class EnableOpenDataTest {
             Thread.sleep(1000);
             driver.findElement(By.linkText(properties.getProperty("queueManagementLinkText", "Queue management"))).click();
             Thread.sleep(1000);
-
+            
             String aiName = driver.findElements(By.tagName("table")).get(3)
                     .findElements(By.tagName("tr")).get(1)
                     .findElements(By.tagName("td")).get(0).getText();

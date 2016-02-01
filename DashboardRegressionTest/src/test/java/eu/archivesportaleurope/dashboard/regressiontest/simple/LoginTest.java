@@ -22,17 +22,25 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
+import org.junit.FixMethodOrder;
+import org.junit.rules.TestName;
+import org.junit.runners.MethodSorters;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
  *
  * @author kaisar
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LoginTest {
 
     private static String baseUrl;
     private static WebDriver driver;
     private static ScreenshotHelper screenshotHelper;
     private Properties properties;
+    
+    @Rule 
+    public final TestName testName = new TestName();
 
     @Rule
     public ErrorCollector errCollector = new ErrorCollector();
@@ -54,7 +62,7 @@ public class LoginTest {
         InputStream is = ClassLoader.getSystemResourceAsStream("config.properties");
         properties.load(is);
         baseUrl = properties.getProperty("baseUrl", "https://development.archivesportaleurope.net/Dashboard/");
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.get(baseUrl);
         screenshotHelper = new ScreenshotHelper();
@@ -62,12 +70,12 @@ public class LoginTest {
 
     @After
     public void tearDown() throws IOException {
-        screenshotHelper.saveScreenshot("login.png", driver);
+        screenshotHelper.saveScreenshot("login_"+testName.getMethodName()+".png", driver);
         driver.quit();
     }
 
     @Test
-    public void testLoginWithWrongCredentials() throws InterruptedException, IOException {
+    public void testALoginWithWrongCredentials() throws InterruptedException, IOException {
         WebElement element = null;
         Thread.sleep(5000);
         try {
@@ -89,7 +97,7 @@ public class LoginTest {
     }
 
     @Test
-    public void testLoginWithCorrectCredentials() throws InterruptedException, IOException {
+    public void testBLoginWithCorrectCredentials() throws InterruptedException, IOException {
         Thread.sleep(3000);
         try {
             driver.findElement(By.id("username")).sendKeys(properties.getProperty("adminUserName", "Kaisar.Ali@nationaalarchief.nl"));
@@ -112,7 +120,7 @@ public class LoginTest {
     }
 
     @Test
-    public void testLogout() throws InterruptedException {
+    public void testCLogout() throws InterruptedException {
         WebElement element = null;
         Thread.sleep(2000);
         try {

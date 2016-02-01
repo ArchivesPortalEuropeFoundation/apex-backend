@@ -19,6 +19,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
  *
@@ -44,7 +45,7 @@ public class GoogleTest {
     @Before
     public void setUp() {
         baseUrl = "http://www.google.com";
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.get(baseUrl);
         screenshotHelper = new ScreenshotHelper();
