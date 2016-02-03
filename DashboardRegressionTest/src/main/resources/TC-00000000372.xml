@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" audience="external">
+    <control>
+        <recordId>TC-00000000372</recordId>
+        <otherRecordId localType="no">TC-00000000372</otherRecordId>
+        <maintenanceAgency>
+            <agencyCode>TC-00000000372</agencyCode>
+            <agencyName>testAi</agencyName>
+        </maintenanceAgency>
+        <maintenanceStatus>new</maintenanceStatus>
+        <maintenanceHistory>
+            <maintenanceEvent>
+                <agent>automatically created agent</agent>
+                <agentType>machine</agentType>
+                <eventDateTime standardDateTime="2016-02-03T10:58:49">03.02.2016</eventDateTime>
+                <eventType>created</eventType>
+            </maintenanceEvent>
+        </maintenanceHistory>
+        <conventionDeclaration>
+            <abbreviation>EAG</abbreviation>
+            <citation>EAG (Encoded Archival Guide) 2012</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISDIAH</abbreviation>
+            <citation>International Standard for Describing Institutions with Archival Holdings</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 639-2b</abbreviation>
+            <citation>Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 3166-1</abbreviation>
+            <citation>Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 8601</abbreviation>
+            <citation>Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15511</abbreviation>
+            <citation>International Standard Identifier for Libraries and Related Organisations</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15924</abbreviation>
+            <citation>Codes for the representation of names of scripts</citation>
+        </conventionDeclaration>
+        <localControl localType="detailLevel">
+            <term lastDateTimeVerified="2016-02-03T10:58:49" vocabularySource="http://www.archivesportaleurope.eu/vocabularies/EAG/" scriptCode="Latn">extended</term>
+        </localControl>
+    </control>
+    <archguide>
+        <identity>
+            <repositorid countrycode="TC" repositorycode="TC-00000000372"/>
+            <otherRepositorId>TC-00000000372</otherRepositorId>
+            <autform>testAi</autform>
+        </identity>
+        <desc>
+            <repositories>
+                <repository>
+                    <geogarea>Europe</geogarea>
+                    <location localType="visitors address">
+                        <country xml:lang="eng">country.testcountry</country>
+                        <municipalityPostalcode xml:lang="eng">Virtual City. 420420</municipalityPostalcode>
+                        <street xml:lang="eng">No Street</street>
+                    </location>
+                    <timetable>
+                        <opening>Never opened</opening>
+                    </timetable>
+                    <access question="yes"/>
+                    <accessibility question="yes"/>
+                </repository>
+            </repositories>
+        </desc>
+    </archguide>
+</eag>

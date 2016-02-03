@@ -66,12 +66,12 @@ public class SolrUtils {
 
     public void clearAllCore() {
         for (Cores c : Cores.values()) {
-            clearCore(c.toString());
+            clearCore(c);
         }
     }
 
-    public void clearCore(String coreName) {
-        HttpSolrServer solr = new HttpSolrServer(this.getBaseSolrUrl() + "/" + coreName);
+    public void clearCore(Cores coreName) {
+        HttpSolrServer solr = new HttpSolrServer(this.getBaseSolrUrl() + "/" + coreName.toString());
         try {
             solr.deleteByQuery("*:*");
         } catch (SolrServerException | IOException ex) {
