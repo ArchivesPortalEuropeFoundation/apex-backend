@@ -101,12 +101,14 @@ public class EnableOpenDataTest {
         WebElement createCountryLink = wait.until(ExpectedConditions
                 .elementToBeClickable(By.partialLinkText("Create country")));
         createCountryLink.click();
+        
+        WebElement createCountry = wait.until(ExpectedConditions.elementToBeClickable(By.id("accept")));
         driver.findElement(By.id("storeCountry_englishCountryName"))
                 .sendKeys(properties.getProperty("testCountryName", "TESTCOUNTRY"));
         driver.findElement(By.id("storeCountry_isoCountryName"))
                 .sendKeys(properties.getProperty("testCountryISO", "TC"));
-        WebElement createCountry = wait.until(ExpectedConditions.elementToBeClickable(By.id("accept")));
         createCountry.click();
+        Thread.sleep(5000);
         if ("Country already stored in the system".equals(driver.findElement(By.id("storeCountry_")).findElement(By.tagName("li"))
                 .findElement(By.tagName("span")).getText())) {
             userManagementLink = wait.until(ExpectedConditions
@@ -119,6 +121,8 @@ public class EnableOpenDataTest {
         userManagementLink = wait.until(ExpectedConditions
                 .elementToBeClickable(By.partialLinkText("User management")));
         userManagementLink.click();
+        wait.until(ExpectedConditions
+                .elementToBeClickable(By.id("dashboard")));
         Assert.assertNotNull(driver.findElement(By.partialLinkText(properties
                 .getProperty("testCountryName", "TESTCOUNTRY"))));
     }

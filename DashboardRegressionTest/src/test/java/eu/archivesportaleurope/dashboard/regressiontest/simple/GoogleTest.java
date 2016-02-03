@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.dashboard.regressiontest.simple;
 
+import eu.archivesportaleurope.dashboard.test.utils.DBManager;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,10 +16,10 @@ import static org.junit.Assert.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
+import java.sql.SQLException;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
@@ -57,7 +58,7 @@ public class GoogleTest {
         driver.quit();
     }
 
-    @Test
+    //@Test
     public void test() {
         assertEquals("Check google Page title", "Google", driver.getTitle());
 
@@ -74,5 +75,10 @@ public class GoogleTest {
 
                 }));
     }
-
+    
+    @Test
+    public void testDB () throws SQLException, IOException {
+        DBManager dbManager = DBManager.getInstance();
+        dbManager.executeSqlScript(new String[]{""});
+    }
 }

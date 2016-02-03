@@ -23,6 +23,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.rules.TestName;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -31,6 +32,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  *
  * @author kaisar
  */
+@Ignore
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LoginTest {
 
