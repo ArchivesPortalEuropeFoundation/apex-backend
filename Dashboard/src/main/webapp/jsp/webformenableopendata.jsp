@@ -14,6 +14,9 @@
         color: gray !important;
         cursor: default !important;
     }
+    p{
+        padding: 5px;
+    }
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -50,14 +53,18 @@
             <s:actionerror/>
         </div>
     </s:if>
-    <c:if test="${enableOpenData eq true}">
-        <s:property value="getText('label.ai.enableopendata.enabled')" />
-    </c:if>
-    <c:if test="${enableOpenData eq false}">
-        <s:property value="getText('label.ai.enableopendata.disabled')" />
-    </c:if>
-    <br><br>
     <s:if test="!hasActionErrors()">
+        <c:if test="${enableOpenData eq true}">
+            <p><s:property value="getText('label.ai.enableopendata.enabled')" /></P>
+            <p><s:property value="getText('label.ai.enableopendata.enabled.explanation')" /></p>
+            <p><s:property value="getText('label.ai.enableopendata.enabled.manual')" /></p>
+        </c:if>
+        <c:if test="${enableOpenData eq false}">
+            <p><s:property value="getText('label.ai.enableopendata.disabled')" /></p>
+            <p><s:property value="getText('label.ai.enableopendata.disabled.explanation')" /></p>
+            <p><s:property value="getText('label.ai.enableopendata.disabled.manual')" /></p>
+        </c:if>
+        <br><br>
         <s:form method="POST" action="doEnableOpenData" theme="simple">
             <s:hidden name="ai_id" value="%{ai_id}"></s:hidden>
                 <table>
@@ -87,7 +94,7 @@
                 <tr>
                     <td colspan="2" style="float: right">
                         <br>
-                    <s:submit id="submit" key="label.submit" cssClass="disabledButton" cssStyle="width:75px; height:25px" disabled="true"/>
+                        <s:submit id="submit" key="label.submit" cssClass="disabledButton" cssStyle="width:75px; height:25px" disabled="true"/>
                     </td>
                 </tr>
             </table>
