@@ -23,6 +23,13 @@ import org.openqa.selenium.WebDriver;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.Alert;
@@ -44,6 +51,7 @@ public class EnableOpenDataTest {
     private static WebDriver driver;
     private static ScreenshotHelper screenshotHelper;
     private static final Properties properties = new Properties();
+    private static HttpClient client;
 
     public EnableOpenDataTest() {
     }
@@ -62,10 +70,20 @@ public class EnableOpenDataTest {
         driver.manage().window().maximize();
         driver.get(baseUrl);
         screenshotHelper = new ScreenshotHelper();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass
-    public static void tearDownClass() {
+    public static void tearDownClass() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Home")));
+        if (driver.getPageSource().contains("Switch back to")) {
+            driver.findElement(By.partialLinkText("Switch back to")).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Logout"))).click();
+        } else {
+            driver.findElement(By.partialLinkText("Logout")).click();
+        }
+
         driver.quit();
     }
 
@@ -101,7 +119,7 @@ public class EnableOpenDataTest {
         WebElement createCountryLink = wait.until(ExpectedConditions
                 .elementToBeClickable(By.partialLinkText("Create country")));
         createCountryLink.click();
-        
+
         WebElement createCountry = wait.until(ExpectedConditions.elementToBeClickable(By.id("accept")));
         driver.findElement(By.id("storeCountry_englishCountryName"))
                 .sendKeys(properties.getProperty("testCountryName", "TESTCOUNTRY"));
@@ -109,14 +127,18 @@ public class EnableOpenDataTest {
                 .sendKeys(properties.getProperty("testCountryISO", "TC"));
         createCountry.click();
         Thread.sleep(5000);
-        if ("Country already stored in the system".equals(driver.findElement(By.id("storeCountry_")).findElement(By.tagName("li"))
-                .findElement(By.tagName("span")).getText())) {
-            userManagementLink = wait.until(ExpectedConditions
-                    .elementToBeClickable(By.partialLinkText("User management")));
-            userManagementLink.click();
-            Assert.assertNotNull(driver.findElement(By.partialLinkText(properties
-                    .getProperty("testCountryName", "TESTCOUNTRY"))));
-            Assert.fail("Country Already Created");
+        try {
+            if ("Country already stored in the system".equals(driver.findElement(By.id("storeCountry_")).findElement(By.tagName("li"))
+                    .findElement(By.tagName("span")).getText())) {
+                userManagementLink = wait.until(ExpectedConditions
+                        .elementToBeClickable(By.partialLinkText("User management")));
+                userManagementLink.click();
+                Assert.assertNotNull(driver.findElement(By.partialLinkText(properties
+                        .getProperty("testCountryName", "TESTCOUNTRY"))));
+                Assert.fail("Country Already Created");
+            }
+        } catch (NoSuchElementException ex) {
+            Logger.getLogger(EnableOpenDataTest.class.getName()).log(Level.FINE, null, ex);
         }
         userManagementLink = wait.until(ExpectedConditions
                 .elementToBeClickable(By.partialLinkText("User management")));
@@ -146,6 +168,15 @@ public class EnableOpenDataTest {
             WebElement okButton = wait.until(ExpectedConditions.elementToBeClickable(By
                     .id("createCountryManager_okButton")));
             okButton.click();
+
+            WebElement homeLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Home")));
+            if (driver.getPageSource().contains("An Internal Server Error occurred")) {
+                homeLink.click();
+                wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("User management"))).click();
+            }
+
+            wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText(properties.getProperty("countryManagerEmail", "test@test.TC"))));
+
             Assert.assertEquals(properties.getProperty("countryManagerEmail", "test@test.TC"),
                     driver.findElement(By.partialLinkText(properties.getProperty("countryManagerEmail", "test@test.TC"))).getText());
         } catch (NoSuchElementException e) {
@@ -209,6 +240,46 @@ public class EnableOpenDataTest {
         driver.findElement(By.id("uploadowneag_httpFile")).sendKeys(ClassLoader.getSystemResource("TC-00000000372.xml").getPath());
         uploadButton.click();
         Assert.assertTrue(driver.getPageSource().contains("Your EAG file has been uploaded correctly"));
+    }
+
+    @Test
+    public void testEUploadFindingAid() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
+        WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
+        driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTH.ead.xml").getPath());
+        uploadButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        Assert.assertTrue(driver.getPageSource().contains("4.VTH"));
+    }
+
+    @Test
+    public void testFConvertValidatePublish() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        driver.findElement(By.id("check_1")).click();
+        new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
+        driver.findElement(By.id("batchActionButton")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
+        while (!driver.getPageSource().contains("Queue size: 0")) {
+            Thread.sleep(5000);
+            driver.navigate().refresh();
+        }
+        Assert.assertTrue(driver.getPageSource().contains("Queue size: 0"));
+    }
+
+    @Test
+    public void testGNoDataFromSolr() throws IOException {
+        HttpPost post = new HttpPost(properties.getProperty("apiBaseUrl", "http://localhost:9090/ApeApi/services/") + "search/ead");
+        String data = "{\n"
+                + "  \"query\": \"*\",\n"
+                + "  \"count\": 0,\n"
+                + "  \"start\": 0\n"
+                + "}";
+        post.setEntity(new StringEntity(data, ContentType.create("application/json", "UTF-8")));
+        HttpResponse response = client.execute(post);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
 //    @Test
