@@ -21,7 +21,7 @@ public class SolrUtils {
 
     public static enum Cores {
 
-        EAG("eag"), EAD("ead"), EAC_CPF("eac-cpfs");
+        EAG("eags"), EAD("eads"), EAC_CPF("eac-cpfs");
         private final String coreName;
 
         private Cores(final String coreName) {
@@ -30,7 +30,7 @@ public class SolrUtils {
 
         @Override
         public String toString() {
-            return coreName;
+            return this.coreName;
         }
     }
 
@@ -43,7 +43,7 @@ public class SolrUtils {
         try {
             InputStream is = ClassLoader.getSystemResourceAsStream("config.properties");
             PROPERTIES.load(is);
-            this.baseSolrUrl = PROPERTIES.getProperty("baseSolrUrl", "http://localhost:8080");
+            this.baseSolrUrl = PROPERTIES.getProperty("baseSolrUrl", "http://localhost:8080/solr");
         } catch (IOException ex) {
             Logger.getLogger(SolrUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -72,6 +72,7 @@ public class SolrUtils {
 
     public void clearCore(Cores coreName) {
         HttpSolrServer solr = new HttpSolrServer(this.getBaseSolrUrl() + "/" + coreName.toString());
+        Logger.getLogger(SolrUtils.class.getName()).log(Level.INFO, this.getBaseSolrUrl() + "/" + coreName.toString());
         try {
             solr.deleteByQuery("*:*");
         } catch (SolrServerException | IOException ex) {
@@ -84,4 +85,7 @@ public class SolrUtils {
         return getSolrUtil();
     }
 
+//    public static void main(String args[]) {
+//        SolrUtils.getSolrUtil().clearAllCore();
+//    }
 }

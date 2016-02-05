@@ -5,6 +5,8 @@
  */
 package eu.archivesportaleurope.dashboard.regressiontest.opendata;
 
+import com.google.gson.Gson;
+import eu.archivesportaleurope.dashboard.regressiontest.opendata.pojo.EadResponseSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -21,8 +23,10 @@ import org.junit.rules.TestName;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
+import eu.archivesportaleurope.dashboard.test.utils.SolrUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -52,6 +56,8 @@ public class EnableOpenDataTest {
     private static ScreenshotHelper screenshotHelper;
     private static final Properties properties = new Properties();
     private static HttpClient client;
+    private static Gson gson;
+    private static Logger logger = Logger.getLogger(EnableOpenDataTest.class.getName());
 
     public EnableOpenDataTest() {
     }
@@ -63,6 +69,7 @@ public class EnableOpenDataTest {
 
     @BeforeClass
     public static void setUpClass() throws IOException, InterruptedException {
+        logger.info("::: Setting up test environment :::");
         InputStream is = ClassLoader.getSystemResourceAsStream("config.properties");
         properties.load(is);
         baseUrl = properties.getProperty("baseUrl", "https://development.archivesportaleurope.net/Dashboard/");
@@ -71,6 +78,9 @@ public class EnableOpenDataTest {
         driver.get(baseUrl);
         screenshotHelper = new ScreenshotHelper();
         client = HttpClients.createDefault();
+        gson = new Gson();
+        logger.info("::: Removing Solr index :::");
+        SolrUtils.getSolrUtil().clearAllCore();
     }
 
     @AfterClass
@@ -85,6 +95,8 @@ public class EnableOpenDataTest {
         }
 
         driver.quit();
+        logger.info("::: Removing Solr index :::");
+        SolrUtils.getSolrUtil().clearAllCore();
     }
 
     @Before
@@ -98,6 +110,7 @@ public class EnableOpenDataTest {
 
     @Test
     public void testALoginWithAdmin() throws IOException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("login_label_login")));
         driver.findElement(By.id("username")).sendKeys(properties.getProperty("adminUserName", "Kaisar.Ali@nationaalarchief.nl"));
@@ -110,6 +123,7 @@ public class EnableOpenDataTest {
 
     @Test
     public void testBCreateCountry() throws InterruptedException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement userManagementLink = wait.until(ExpectedConditions
                 .elementToBeClickable(By.partialLinkText("User management")));
@@ -151,9 +165,11 @@ public class EnableOpenDataTest {
 
     @Test
     public void testCCreateCountryManger() throws InterruptedException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement createCountrymanagerButton;
         try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText(properties.getProperty("testCountryName", "TESTCOUNTRY"))));
             createCountrymanagerButton = driver.findElement(By
                     .partialLinkText(properties.getProperty("testCountryName", "TESTCOUNTRY")))
                     .findElement(By.xpath("../..")).findElement(By.id("displayCreateCountryManager_createCountryManager"));
@@ -186,7 +202,7 @@ public class EnableOpenDataTest {
 
     @Test
     public void testDCreateArchivalInstitute() {
-
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement changeToThisAccount, editArchivalLandscape, countryNameInTree,
                 aiNameTextBox, addToTheList;
@@ -198,6 +214,7 @@ public class EnableOpenDataTest {
             editArchivalLandscape = wait.until(ExpectedConditions.elementToBeClickable(driver
                     .findElement(By.partialLinkText("Edit archival landscape"))));
             editArchivalLandscape.click();
+            Thread.sleep(5000);
             countryNameInTree = wait.until(ExpectedConditions.elementToBeClickable(driver
                     .findElement(By.partialLinkText(properties.getProperty("testCountryName", "TESTCOUNTRY").toLowerCase()))));
             countryNameInTree.click();
@@ -222,6 +239,7 @@ public class EnableOpenDataTest {
 
     @Test
     public void testDUploadEAG() throws InterruptedException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement manageContentLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage content")));
         manageContentLink.click();
@@ -244,6 +262,7 @@ public class EnableOpenDataTest {
 
     @Test
     public void testEUploadFindingAid() throws InterruptedException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
         WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
@@ -256,10 +275,12 @@ public class EnableOpenDataTest {
 
     @Test
     public void testFConvertValidatePublish() throws InterruptedException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
         driver.findElement(By.id("check_1")).click();
         new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
-        driver.findElement(By.id("batchActionButton")).click();
+        batchActionButton.click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
         Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
         while (!driver.getPageSource().contains("Queue size: 0")) {
@@ -271,6 +292,7 @@ public class EnableOpenDataTest {
 
     @Test
     public void testGNoDataFromSolr() throws IOException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         HttpPost post = new HttpPost(properties.getProperty("apiBaseUrl", "http://localhost:9090/ApeApi/services/") + "search/ead");
         String data = "{\n"
                 + "  \"query\": \"*\",\n"
@@ -280,6 +302,41 @@ public class EnableOpenDataTest {
         post.setEntity(new StringEntity(data, ContentType.create("application/json", "UTF-8")));
         HttpResponse response = client.execute(post);
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        EadResponseSet eads = gson.fromJson(IOUtils.toString(response.getEntity().getContent()), EadResponseSet.class);
+        System.out.println("!!!!!!!!!!!" + eads.getTotalResults());
+        Assert.assertEquals(0, eads.getTotalResults());
+    }
+
+    @Test
+    public void testHEnableOpenData() throws InterruptedException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
+        WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
+        Assert.assertTrue(driver.getPageSource().contains("Open data flag is disabled."));
+
+        checkBox.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("submit"))).click();
+        Thread.sleep(1000);
+
+        Alert jsAlert = driver.switchTo().alert();
+        jsAlert.accept();
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Switch back to"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties
+                .getProperty("queueManagementLinkText", "Queue management")))).click();
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Home")));
+        String aiName = driver.findElements(By.tagName("table")).get(3)
+                .findElements(By.tagName("tr")).get(1)
+                .findElements(By.tagName("td")).get(0).getText();
+        String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
+                .findElements(By.tagName("tr")).get(1)
+                .findElements(By.tagName("td")).get(2).getText();
+
+        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
+        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
     }
 
 //    @Test
