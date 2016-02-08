@@ -35,6 +35,7 @@ public class SolrUtils {
     }
 
     private String baseSolrUrl;
+    private Logger logger = Logger.getLogger(SolrUtils.class.getName());
 
     private static final Properties PROPERTIES = new Properties();
     private static SolrUtils solrUtils;
@@ -45,7 +46,7 @@ public class SolrUtils {
             PROPERTIES.load(is);
             this.baseSolrUrl = PROPERTIES.getProperty("baseSolrUrl", "http://localhost:8080/solr");
         } catch (IOException ex) {
-            Logger.getLogger(SolrUtils.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -65,6 +66,7 @@ public class SolrUtils {
     }
 
     public void clearAllCore() {
+
         for (Cores c : Cores.values()) {
             clearCore(c);
         }
@@ -72,11 +74,11 @@ public class SolrUtils {
 
     public void clearCore(Cores coreName) {
         HttpSolrServer solr = new HttpSolrServer(this.getBaseSolrUrl() + "/" + coreName.toString());
-        Logger.getLogger(SolrUtils.class.getName()).log(Level.INFO, this.getBaseSolrUrl() + "/" + coreName.toString());
+        logger.log(Level.INFO, "{0}/{1} is cleaning now!!!", new Object[]{this.getBaseSolrUrl(), coreName.toString()});
         try {
             solr.deleteByQuery("*:*");
         } catch (SolrServerException | IOException ex) {
-            Logger.getLogger(SolrUtils.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 

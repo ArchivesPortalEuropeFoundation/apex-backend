@@ -95,8 +95,6 @@ public class EnableOpenDataTest {
         }
 
         driver.quit();
-        logger.info("::: Removing Solr index :::");
-        SolrUtils.getSolrUtil().clearAllCore();
     }
 
     @Before
@@ -293,17 +291,7 @@ public class EnableOpenDataTest {
     @Test
     public void testGNoDataFromSolr() throws IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        HttpPost post = new HttpPost(properties.getProperty("apiBaseUrl", "http://localhost:9090/ApeApi/services/") + "search/ead");
-        String data = "{\n"
-                + "  \"query\": \"*\",\n"
-                + "  \"count\": 0,\n"
-                + "  \"start\": 0\n"
-                + "}";
-        post.setEntity(new StringEntity(data, ContentType.create("application/json", "UTF-8")));
-        HttpResponse response = client.execute(post);
-        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-        EadResponseSet eads = gson.fromJson(IOUtils.toString(response.getEntity().getContent()), EadResponseSet.class);
-        System.out.println("!!!!!!!!!!!" + eads.getTotalResults());
+        EadResponseSet eads = this.searchAllEad();
         Assert.assertEquals(0, eads.getTotalResults());
     }
 
@@ -337,78 +325,134 @@ public class EnableOpenDataTest {
 
         Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
         Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
+        while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
+            Thread.sleep(5000);
+            driver.navigate().refresh();
+        }
+        logger.log(Level.INFO, "::: Enable openData is done!!! Solr reindex has been completed :::");
     }
 
-//    @Test
-    public void testAEnableOpenDataFromInsManagerAccount() throws InterruptedException, IOException {
+    @Test
+    public void testISearchDataFromSolr() throws IOException, InterruptedException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+
+        EadResponseSet eads = this.searchAllEad();
+        Assert.assertNotEquals(0, eads.getTotalResults());
+    }
+
+    @Test
+    public void testJUploadAndPublishFindingAidWithOpenDataEnabled() throws InterruptedException, IOException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+
+        long numberOfSearchResultBeforePublishingNewDoc = searchAllEad().getTotalResults();
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Manage content"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
+        WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
+        driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTHR.ead.xml").getPath());
+        uploadButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        Assert.assertTrue(driver.getPageSource().contains("4.VTHR"));
+        WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        driver.findElement(By.id("check_2")).click();
+        new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
+        batchActionButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
+        while (!driver.getPageSource().contains("Queue size: 0")) {
+            Thread.sleep(5000);
+            driver.navigate().refresh();
+        }
+        Thread.sleep(5000);
+        Assert.assertTrue(searchAllEad().getTotalResults() > numberOfSearchResultBeforePublishingNewDoc);
+    }
+
+    @Test
+    public void testKDisableOpenData() throws InterruptedException, IOException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
+        WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
+        Assert.assertTrue(driver.getPageSource().contains("Open data flag is enabled."));
+
+        checkBox.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("submit"))).click();
         Thread.sleep(1000);
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("login_label_login")));
 
-            driver.findElement(By.id("username")).sendKeys(properties.getProperty("insManagerUserName", "k.ali@cimsolutions.nl"));
-            driver.findElement(By.id("login_password")).sendKeys(properties.getProperty("insManagerPassword", "Test@2010"));
-            driver.findElement(By.id("login_dropOtherSession")).click();
-            element.click();
-            //driver.findElement(By.id("login_label_login")).click();
+        Alert jsAlert = driver.switchTo().alert();
+        jsAlert.accept();
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Switch back to"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties
+                .getProperty("queueManagementLinkText", "Queue management")))).click();
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Home")));
+        String aiName = driver.findElements(By.tagName("table")).get(3)
+                .findElements(By.tagName("tr")).get(1)
+                .findElements(By.tagName("td")).get(0).getText();
+        String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
+                .findElements(By.tagName("tr")).get(1)
+                .findElements(By.tagName("td")).get(2).getText();
+
+        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
+        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
+        while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
             Thread.sleep(5000);
-
-            captureScreen(name.getMethodName() + "_login");
-
-            Select aiSelector = new Select(driver.findElement(By.id("Ai_selected")));
-            aiSelector.selectByVisibleText(properties.getProperty("aiName", "TestArchivalInstitution"));
-            driver.findElement(By.id("selectArchive_0")).click();
-
-            Thread.sleep(5000);
-
-            captureScreen(name.getMethodName() + "_home");
-
-            driver.findElement(By.linkText(properties.getProperty("openDataLinkText", "Manage open data for API"))).click();
-
-            Thread.sleep(5000);
-
-            captureScreen(name.getMethodName() + "_openData");
-
-            driver.findElement(By.id("enableOpenData")).click();
-            Thread.sleep(1000);
-            driver.findElement(By.id("submit")).click();
-            Thread.sleep(1000);
-            Alert jsAlert = driver.switchTo().alert();
-            jsAlert.accept();
-
-            Thread.sleep(5000);
-            captureScreen(name.getMethodName() + "_changeOpenDataFlag");
-            Thread.sleep(100);
-            driver.findElement(By.linkText("Logout")).click();
-            Thread.sleep(500);
-
-            driver.findElement(By.id("username")).sendKeys(properties.getProperty("adminUserName", "Kaisar.Ali@nationaalarchief.nl"));
-            driver.findElement(By.id("login_password")).sendKeys(properties.getProperty("adminPassword", "test2010"));
-            driver.findElement(By.id("login_dropOtherSession")).click();
-            driver.findElement(By.id("login_label_login")).click();
-            Thread.sleep(1000);
-            driver.findElement(By.linkText(properties.getProperty("queueManagementLinkText", "Queue management"))).click();
-            Thread.sleep(1000);
-
-            String aiName = driver.findElements(By.tagName("table")).get(3)
-                    .findElements(By.tagName("tr")).get(1)
-                    .findElements(By.tagName("td")).get(0).getText();
-            String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
-                    .findElements(By.tagName("tr")).get(1)
-                    .findElements(By.tagName("td")).get(2).getText();
-
-            Assert.assertEquals(properties.getProperty("aiName", "TestArchivalInstitution"), aiName);
-            Assert.assertEquals(properties.getProperty("aiName", "TestArchivalInstitution"), aiNameInQueueItemList);
-
-        } catch (NoSuchElementException ex) {
-            fail("No Such Element " + ex.getMessage());
+            driver.navigate().refresh();
         }
-        try {
-            Thread.sleep(1000);
-        } catch (Throwable t) {
-            fail("Expected AI was not found in the Queue!!!");
-            errCollector.addError(t);
+        logger.log(Level.INFO, "::: Disable openData is done!!! Solr reindex has been completed :::");
+        Assert.assertEquals(0, searchAllEad().getTotalResults());
+    }
+
+    @Test
+    public void testLUploadAndPublishFindingAidWithOpenDataDisabled() throws InterruptedException, IOException {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Manage content"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
+        WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
+        driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_3.01.01.ead.xml").getPath());
+        uploadButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        Assert.assertTrue(driver.getPageSource().contains("3.01.01"));
+        WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        driver.findElement(By.id("check_3")).click();
+        new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
+        batchActionButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+        Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
+        while (!driver.getPageSource().contains("Queue size: 0")) {
+            Thread.sleep(5000);
+            driver.navigate().refresh();
         }
+        Thread.sleep(5000);
+        System.out.println("!!!!!!!!!!!!!!!!!!"+searchAllEad().getTotalResults());
+        Assert.assertEquals(0, searchAllEad().getTotalResults());
+    }
+
+    private EadResponseSet searchAllEad() throws IOException {
+        HttpPost post = new HttpPost(properties.getProperty("apiBaseUrl", "http://localhost:9090/ApeApi/services/") + "search/ead");
+        String data = "{\n"
+                + "  \"query\": \"*\",\n"
+                + "  \"count\": 0,\n"
+                + "  \"start\": 0\n"
+                + "}";
+        post.setEntity(new StringEntity(data, ContentType.create("application/json", "UTF-8")));
+        HttpResponse response = client.execute(post);
+        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        EadResponseSet eads = gson.fromJson(IOUtils.toString(response.getEntity().getContent()), EadResponseSet.class);
+        return eads;
     }
 
     private void captureScreen(String name) throws IOException {
