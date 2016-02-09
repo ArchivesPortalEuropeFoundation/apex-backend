@@ -24,6 +24,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
 import eu.archivesportaleurope.dashboard.test.utils.SolrUtils;
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
@@ -229,21 +234,22 @@ public class EnableOpenDataTest {
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), driver
                     .findElement(By.partialLinkText(properties.getProperty("aiName", "testAi"))).getText());
         } catch (NoSuchElementException nEx) {
-
+            Assert.fail("Element not found: " + nEx.getMessage());
         } catch (InterruptedException ex) {
             Logger.getLogger(EnableOpenDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Test
-    public void testDUploadEAG() throws InterruptedException {
+    public void testDUploadEAG() throws InterruptedException, AWTException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement manageContentLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage content")));
         manageContentLink.click();
+        WebElement goButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0")));
         Select aiSelector = new Select(driver.findElement(By.id("Ai_selected")));
         aiSelector.selectByVisibleText(properties.getProperty("aiName", "TestArchivalInstitution"));
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
+        goButton.click();
 
         Assert.assertTrue(driver.getPageSource().contains("This is your first time to enter your dashboard. "
                 + "It is mandatory to create a new EAG file or to upload an existing one in order to ingest "
@@ -253,7 +259,22 @@ public class EnableOpenDataTest {
 
         WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadowneag_label_upload")));
 
-        driver.findElement(By.id("uploadowneag_httpFile")).sendKeys(ClassLoader.getSystemResource("TC-00000000372.xml").getPath());
+        driver.findElement(By.id("uploadowneag_httpFile")).click();
+        wait.until(ExpectedConditions.alertIsPresent());
+
+        // switch to the file upload window
+        Alert alert = driver.switchTo().alert();
+
+        // enter the filename
+        alert.sendKeys(ClassLoader.getSystemResource("TC-00000000372.xml").getPath());
+
+        // hit enter
+        Robot r = new Robot();
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);
+
+        // switch back
+        driver.switchTo().activeElement();
         uploadButton.click();
         Assert.assertTrue(driver.getPageSource().contains("Your EAG file has been uploaded correctly"));
     }
@@ -437,7 +458,7 @@ public class EnableOpenDataTest {
             driver.navigate().refresh();
         }
         Thread.sleep(5000);
-        System.out.println("!!!!!!!!!!!!!!!!!!"+searchAllEad().getTotalResults());
+        System.out.println("!!!!!!!!!!!!!!!!!!" + searchAllEad().getTotalResults());
         Assert.assertEquals(0, searchAllEad().getTotalResults());
     }
 

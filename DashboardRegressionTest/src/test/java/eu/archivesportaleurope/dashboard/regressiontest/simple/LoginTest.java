@@ -31,16 +31,16 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  *
  * @author kaisar
  */
-@Ignore
+//@Ignore
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LoginTest {
 
     private static String baseUrl;
     private static WebDriver driver;
     private static ScreenshotHelper screenshotHelper;
-    private Properties properties;
-    
-    @Rule 
+    private static Properties properties;
+
+    @Rule
     public final TestName testName = new TestName();
 
     @Rule
@@ -50,15 +50,7 @@ public class LoginTest {
     }
 
     @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() throws IOException {
+    public static void setUpClass() throws IOException {
         properties = new Properties();
         InputStream is = ClassLoader.getSystemResourceAsStream("config.properties");
         properties.load(is);
@@ -69,10 +61,19 @@ public class LoginTest {
         screenshotHelper = new ScreenshotHelper();
     }
 
+    @AfterClass
+    public static void tearDownClass() {
+        driver.quit();
+    }
+
+    @Before
+    public void setUp() throws IOException {
+
+    }
+
     @After
     public void tearDown() throws IOException {
-        screenshotHelper.saveScreenshot("login_"+testName.getMethodName()+".png", driver);
-        driver.quit();
+        screenshotHelper.saveScreenshot("login_" + testName.getMethodName() + ".png", driver);
     }
 
     @Test
@@ -124,22 +125,20 @@ public class LoginTest {
     public void testCLogout() throws InterruptedException {
         WebElement element = null;
         Thread.sleep(2000);
+//        driver.findElement(By.id("username")).sendKeys(properties.getProperty("adminUserName", "Kaisar.Ali@nationaalarchief.nl"));
+//        driver.findElement(By.id("login_password")).sendKeys(properties.getProperty("adminPassword", "test2010"));
+//        driver.findElement(By.id("login_dropOtherSession")).click();
+//        driver.findElement(By.id("login_label_login")).click();
         try {
-            driver.findElement(By.id("username")).sendKeys(properties.getProperty("adminUserName", "Kaisar.Ali@nationaalarchief.nl"));
-            driver.findElement(By.id("login_password")).sendKeys(properties.getProperty("adminPassword", "test2010"));
-            driver.findElement(By.id("login_dropOtherSession")).click();
-            driver.findElement(By.id("login_label_login")).click();
             element = driver.findElement(By.id("userFeatures")).findElements(By.tagName("a")).get(0);
-        } catch (NoSuchElementException ex) {
-            fail("No Such Element " + ex.getAdditionalInformation());
-        }
-        try {
             assertEquals("Logout", element.getText());
             Thread.sleep(1000);
             element.click();
             Thread.sleep(2000);
             assertEquals("Login", driver.getTitle());
             Thread.sleep(1000);
+        } catch (NoSuchElementException ex) {
+            fail("No Such Element " + ex.getAdditionalInformation());
         } catch (Throwable t) {
             fail("Expected Text was : Login, But found : " + driver.getTitle());
             errCollector.addError(t);
