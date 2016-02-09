@@ -11,11 +11,19 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.opencsv.CSVReader;
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
+import org.openqa.selenium.By;
 
 public class Utils {
 
-    public List<String[]> getFileData(String fileLocation) throws IOException {
+    public static List<String[]> getFileData(String fileLocation) throws IOException {
         CSVReader reader = null;
         FileReader freader;
         freader = new FileReader(new File(Thread.currentThread().getContextClassLoader().getResource(fileLocation).getFile()));
@@ -27,16 +35,47 @@ public class Utils {
 
     }
 
-    public String getElementXPath(WebDriver driver, WebElement element) {
+    public static String getElementXPath(WebDriver driver, WebElement element) {
         return (String) ((JavascriptExecutor) driver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", element);
     }
 
-    public String[] getStatementsFromFile(String fileLocation) throws IOException, SQLException {
+    public static String[] getStatementsFromFile(String fileLocation) throws IOException, SQLException {
         File file = new File(Thread.currentThread().getContextClassLoader().getResource(fileLocation).getFile());
         String stringSqlFromFile = new String(Files.readAllBytes(file.toPath())); // read entire file content into one string
         System.out.println("File read!");
         String[] statements = stringSqlFromFile.split(";"); // create an array with individual SQL statements
         System.out.println("Split into statements!");
         return statements;
+    }
+
+    public static void uploadFile(WebElement fileBrowser, String fileName) throws URISyntaxException, IOException, InterruptedException, AWTException {
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            fileBrowser.click();
+            File file = new File(new URI(ClassLoader.getSystemResource(fileName).toExternalForm()));
+            String path = file.getAbsolutePath();
+            //Runtime.getRuntime().exec("E:\\codes\\autoit\\uploadScript.exe " + path);
+            StringSelection selection = new StringSelection(path);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+//            System.out.println("!!!!!!!!" + Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
+            Thread.sleep(5000);
+            Robot robot = new Robot();
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            Thread.sleep(100);
+            robot.keyPress(KeyEvent.VK_A);
+            Thread.sleep(100);
+            robot.keyRelease(KeyEvent.VK_A);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+            Thread.sleep(100);
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            robot.keyPress(KeyEvent.VK_V);
+            Thread.sleep(100);
+            robot.keyRelease(KeyEvent.VK_V);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+            Thread.sleep(100);
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+        } else {
+            fileBrowser.sendKeys(ClassLoader.getSystemResource(fileName).getPath());
+        }
     }
 }
