@@ -13,7 +13,6 @@ import java.util.Properties;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -26,12 +25,6 @@ import eu.archivesportaleurope.dashboard.test.utils.ScreenshotHelper;
 import eu.archivesportaleurope.dashboard.test.utils.SolrUtils;
 import eu.archivesportaleurope.dashboard.test.utils.Utils;
 import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -275,7 +268,7 @@ public class EnableOpenDataTest {
                     + "content into the Archives Portal Europe."));
 
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Upload EAG file"))).click();
-
+            
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadowneag_label_upload")));
             WebElement fileBrowser = driver.findElement(By.id("uploadowneag_httpFile"));
             Utils.uploadFile(fileBrowser, "TC-00000000372.xml");
@@ -487,7 +480,6 @@ public class EnableOpenDataTest {
             driver.navigate().refresh();
         }
         Thread.sleep(5000);
-        System.out.println("!!!!!!!!!!!!!!!!!!" + searchAllEad().getTotalResults());
         Assert.assertEquals(0, searchAllEad().getTotalResults());
     }
 
