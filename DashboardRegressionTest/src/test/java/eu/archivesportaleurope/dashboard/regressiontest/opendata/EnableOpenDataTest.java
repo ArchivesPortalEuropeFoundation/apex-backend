@@ -55,6 +55,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class EnableOpenDataTest {
 
     private static String baseUrl;
+    private static final int MAX_WAIT = 360000;
+    private static final int MAX_TIMEOUT = 120;
     private static WebDriver driver;
     private static ScreenshotHelper screenshotHelper;
     private static final Properties properties = new Properties();
@@ -88,7 +90,7 @@ public class EnableOpenDataTest {
 
     @AfterClass
     public static void tearDownClass() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Home")));
         if (driver.getPageSource().contains("Switch back to")) {
             driver.findElement(By.partialLinkText("Switch back to")).click();
@@ -113,7 +115,7 @@ public class EnableOpenDataTest {
     public void testALoginWithAdmin() throws IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("login_label_login")));
             driver.findElement(By.id("username")).sendKeys(properties.getProperty("adminUserName", "Kaisar.Ali@nationaalarchief.nl"));
             driver.findElement(By.id("login_password")).sendKeys(properties.getProperty("adminPassword", "test2010"));
@@ -122,7 +124,9 @@ public class EnableOpenDataTest {
             Assert.assertEquals("DASHBOARD", driver.getTitle());
             Thread.sleep(1);
             captureScreen(name.getMethodName() + "_AdminLogin");
+            logger.info("::: Logged in successful :::");
         } catch (NoSuchElementException | TimeoutException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         } catch (InterruptedException ex) {
             logger.log(Level.INFO, "Thread sleep exception.");
@@ -133,7 +137,7 @@ public class EnableOpenDataTest {
     public void testBCreateCountry() {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
             WebElement userManagementLink = wait.until(ExpectedConditions
                     .elementToBeClickable(By.partialLinkText("User management")));
             userManagementLink.click();
@@ -167,7 +171,10 @@ public class EnableOpenDataTest {
                     .elementToBeClickable(By.id("dashboard")));
             Assert.assertNotNull(driver.findElement(By.partialLinkText(properties
                     .getProperty("testCountryName", "TESTCOUNTRY"))));
+
+            logger.info("::: Country created successfully :::");
         } catch (NoSuchElementException | TimeoutException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         } catch (InterruptedException ex) {
             logger.log(Level.INFO, "Thread sleep exception.");
@@ -177,7 +184,7 @@ public class EnableOpenDataTest {
     @Test
     public void testCCreateCountryManger() {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         WebElement createCountrymanagerButton;
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText(properties.getProperty("testCountryName", "TESTCOUNTRY"))));
@@ -199,6 +206,7 @@ public class EnableOpenDataTest {
 
             WebElement homeLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Home")));
             if (driver.getPageSource().contains("An Internal Server Error occurred")) {
+                logger.info("::: Internal server error occurred due to mail server not configured :::");
                 homeLink.click();
                 wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("User management"))).click();
             }
@@ -207,7 +215,10 @@ public class EnableOpenDataTest {
 
             Assert.assertEquals(properties.getProperty("countryManagerEmail", "test@test.TC"),
                     driver.findElement(By.partialLinkText(properties.getProperty("countryManagerEmail", "test@test.TC"))).getText());
+
+            logger.info("::: Country manager created successfully :::");
         } catch (NoSuchElementException | TimeoutException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         } catch (InterruptedException ex) {
             logger.log(Level.INFO, "Thread sleep exception.");
@@ -217,7 +228,7 @@ public class EnableOpenDataTest {
     @Test
     public void testDCreateArchivalInstitute() {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         WebElement changeToThisAccount, editArchivalLandscape, countryNameInTree,
                 aiNameTextBox, addToTheList;
         try {
@@ -244,7 +255,10 @@ public class EnableOpenDataTest {
 
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), driver
                     .findElement(By.partialLinkText(properties.getProperty("aiName", "testAi"))).getText());
+
+            logger.info("::: Archival Institute created successfully :::");
         } catch (NoSuchElementException | TimeoutException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         } catch (InterruptedException ex) {
             logger.log(Level.INFO, "Thread sleep exception.");
@@ -254,7 +268,7 @@ public class EnableOpenDataTest {
     @Test
     public void testDUploadEAG() throws InterruptedException, AWTException, IOException, URISyntaxException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             WebElement manageContentLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage content")));
             manageContentLink.click();
@@ -285,7 +299,9 @@ public class EnableOpenDataTest {
             driver.switchTo().activeElement();
             uploadButton.click();
             Assert.assertTrue(driver.getPageSource().contains("Your EAG file has been uploaded correctly"));
+            logger.info("::: EAG for test AI uploaded successfully :::");
         } catch (NoSuchElementException | TimeoutException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         } catch (InterruptedException ex) {
             logger.log(Level.INFO, "Thread sleep exception.");
@@ -295,7 +311,7 @@ public class EnableOpenDataTest {
     @Test
     public void testEUploadFindingAid() throws InterruptedException, AWTException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
@@ -305,7 +321,9 @@ public class EnableOpenDataTest {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("4.VTH"));
+            logger.info("::: Finding aid Uploaded :::");
         } catch (NoSuchElementException | TimeoutException | IOException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         } catch (URISyntaxException ex) {
             Logger.getLogger(EnableOpenDataTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -315,7 +333,7 @@ public class EnableOpenDataTest {
     @Test
     public void testFConvertValidatePublish() throws InterruptedException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             driver.findElement(By.id("check_1")).click();
@@ -323,12 +341,18 @@ public class EnableOpenDataTest {
             batchActionButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
-            while (!driver.getPageSource().contains("Queue size: 0")) {
+            int waited = 0;
+            logger.info("::: Waiting for the file to be converted/validated/published :::");
+            while (!driver.getPageSource().contains("Queue size: 0") && waited <= MAX_WAIT) {
                 Thread.sleep(5000);
+                waited += 5000;
                 driver.navigate().refresh();
+                logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
             Assert.assertTrue(driver.getPageSource().contains("Queue size: 0"));
+            logger.info("::: File is converted/validated/published :::");
         } catch (NoSuchElementException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         }
     }
@@ -343,7 +367,7 @@ public class EnableOpenDataTest {
     @Test
     public void testHEnableOpenData() throws InterruptedException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
@@ -371,12 +395,18 @@ public class EnableOpenDataTest {
 
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
-            while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
+            int waited = 0;
+            logger.info("::: waiting for openData to be enabled :::");
+            while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi")) && waited <= MAX_WAIT) {
                 Thread.sleep(5000);
+                waited += 5000;
                 driver.navigate().refresh();
+                logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
             logger.log(Level.INFO, "::: Enable openData is done!!! Solr reindex has been completed :::");
+            logger.info("::: openData enabling is done :::");
         } catch (NoSuchElementException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         }
     }
@@ -395,7 +425,7 @@ public class EnableOpenDataTest {
 
         long numberOfSearchResultBeforePublishingNewDoc = searchAllEad().getTotalResults();
 
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
@@ -415,13 +445,19 @@ public class EnableOpenDataTest {
             batchActionButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
-            while (!driver.getPageSource().contains("Queue size: 0")) {
+            int waited = 0;
+            logger.info("::: waiting for the finding aid to be converted/validated/published :::");
+            while (!driver.getPageSource().contains("Queue size: 0") && waited <= MAX_WAIT) {
                 Thread.sleep(5000);
+                waited += 5000;
                 driver.navigate().refresh();
+                logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
             Thread.sleep(5000);
             Assert.assertTrue(searchAllEad().getTotalResults() > numberOfSearchResultBeforePublishingNewDoc);
+            logger.info("::: convert/validate/publish is successful :::");
         } catch (NoSuchElementException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         }
     }
@@ -429,7 +465,7 @@ public class EnableOpenDataTest {
     @Test
     public void testKDisableOpenData() throws InterruptedException, IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
@@ -457,13 +493,18 @@ public class EnableOpenDataTest {
 
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
-            while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
+            int waited = 0;
+            logger.info("::: Waiting for the openData to be disabled :::");
+            while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi")) && waited <= MAX_WAIT) {
                 Thread.sleep(5000);
+                waited += 5000;
                 driver.navigate().refresh();
+                logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
             logger.log(Level.INFO, "::: Disable openData is done!!! Solr reindex has been completed :::");
             Assert.assertEquals(0, searchAllEad().getTotalResults());
         } catch (NoSuchElementException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         }
     }
@@ -472,7 +513,7 @@ public class EnableOpenDataTest {
     public void testLUploadAndPublishFindingAidWithOpenDataDisabled() throws InterruptedException, IOException, URISyntaxException, AWTException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
 
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
@@ -492,13 +533,19 @@ public class EnableOpenDataTest {
             batchActionButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
-            while (!driver.getPageSource().contains("Queue size: 0")) {
+            int waited = 0;
+            logger.info("::: waiting for the Finding aid to be converted/validated/publishd :::");
+            while (!driver.getPageSource().contains("Queue size: 0") && waited <= MAX_WAIT) {
                 Thread.sleep(5000);
+                waited += 5000;
                 driver.navigate().refresh();
+                logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
             Thread.sleep(5000);
             Assert.assertEquals(0, searchAllEad().getTotalResults());
+            logger.info("::: Finding aid converted/validated/publishd :::");
         } catch (NoSuchElementException nEx) {
+            logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         }
     }
