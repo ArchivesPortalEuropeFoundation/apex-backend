@@ -20,7 +20,7 @@
     <beans profile="dev">
         <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.postgresql.Driver"/>
-            <property name="url" value="jdbc:postgresql:ape2"/>
+            <property name="url" value="jdbc:postgresql:ape"/>
             <property name="username" value="apenet_dashboard"/>
             <property name="password" value="AP3SQLD4sh"/>
             <property name="initialSize" value="10"/>
@@ -35,6 +35,31 @@
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
             <property name="dataSource" ref="dataSource"/>
             <property name="persistenceUnitName" value="devPersistenceUnit"/>
+            <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+            </property>
+        </bean>
+    </beans>
+    
+    <beans profile="test">
+        <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+            <property name="driverClassName" value="org.postgresql.Driver"/>
+            <property name="url" value="jdbc:postgresql:ape_test"/>
+            <property name="username" value="apenet_dashboard"/>
+            <property name="password" value="AP3SQLD4sh"/>
+            <property name="initialSize" value="10"/>
+            <property name="maxIdle" value="50"/>
+            <property name="minIdle" value="10"/>
+            <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+            <property name="minEvictableIdleTimeMillis" value="6000"/>
+        </bean>
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
+        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="persistenceUnitName" value="testPersistenceUnit"/>
             <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
             <property name="jpaVendorAdapter">
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>

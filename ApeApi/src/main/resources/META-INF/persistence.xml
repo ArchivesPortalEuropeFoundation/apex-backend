@@ -15,6 +15,15 @@
             <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
+    <persistence-unit name="testPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgresPlusDialect" />
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+            <property name="hibernate.show_sql" value="true"/>
+        </properties>
+    </persistence-unit>
     
     <persistence-unit name="unitTestPersistenceUnit" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
