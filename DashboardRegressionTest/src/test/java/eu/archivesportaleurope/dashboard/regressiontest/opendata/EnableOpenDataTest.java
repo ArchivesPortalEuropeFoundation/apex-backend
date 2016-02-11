@@ -62,7 +62,7 @@ public class EnableOpenDataTest {
     private static final Properties properties = new Properties();
     private static HttpClient client;
     private static Gson gson;
-    private static Logger logger = Logger.getLogger(EnableOpenDataTest.class.getName());
+    private static final Logger logger = Logger.getLogger(EnableOpenDataTest.class.getName());
 
     public EnableOpenDataTest() {
     }
@@ -77,7 +77,7 @@ public class EnableOpenDataTest {
         logger.info("::: Setting up test environment :::");
         InputStream is = ClassLoader.getSystemResourceAsStream("config.properties");
         properties.load(is);
-        baseUrl = properties.getProperty("baseUrl", "https://development.archivesportaleurope.net/Dashboard/");
+        baseUrl = properties.getProperty("baseUrl", "https://test.archivesportaleurope.net/Dashboard/");
         driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.get(baseUrl);
@@ -154,15 +154,6 @@ public class EnableOpenDataTest {
                     .sendKeys(properties.getProperty("testCountryISO", "TC"));
             createCountry.click();
             Thread.sleep(5000);
-//            if ("Country already stored in the system".equals(driver.findElement(By.id("storeCountry_")).findElement(By.tagName("li"))
-//                    .findElement(By.tagName("span")).getText())) {
-//                userManagementLink = wait.until(ExpectedConditions
-//                        .elementToBeClickable(By.partialLinkText("User management")));
-//                userManagementLink.click();
-//                Assert.assertNotNull(driver.findElement(By.partialLinkText(properties
-//                        .getProperty("testCountryName", "TESTCOUNTRY"))));
-//                Assert.fail("Country Already Created");
-//            }
 
             userManagementLink = wait.until(ExpectedConditions
                     .elementToBeClickable(By.partialLinkText("User management")));
@@ -286,18 +277,10 @@ public class EnableOpenDataTest {
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadowneag_label_upload")));
             WebElement fileBrowser = driver.findElement(By.id("uploadowneag_httpFile"));
             Utils.uploadFile(fileBrowser, "TC-00000000372.xml");
-//            if (System.getProperty("os.name").toLowerCase().contains("win")) {
-//                fileBrowser.click();
-//                File file = new File(new URI(ClassLoader.getSystemResource("TC-00000000372.xml").toExternalForm()));
-//                String path = file.getAbsolutePath();
-//                //path.re
-//                Runtime.getRuntime().exec("E:\\codes\\autoit\\uploadScript.exe " + path);
-//            } else {
-//                driver.findElement(By.id("uploadowneag_httpFile")).sendKeys(ClassLoader.getSystemResource("TC-00000000372.xml").getPath());
-//            }
             Thread.sleep(5000);
-            driver.switchTo().activeElement();
+//            driver.switchTo().activeElement();
             uploadButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("View/modify EAG file")));
             Assert.assertTrue(driver.getPageSource().contains("Your EAG file has been uploaded correctly"));
             logger.info("::: EAG for test AI uploaded successfully :::");
         } catch (NoSuchElementException | TimeoutException nEx) {
@@ -305,6 +288,8 @@ public class EnableOpenDataTest {
             Assert.fail("Element not found: " + nEx.getMessage());
         } catch (InterruptedException ex) {
             logger.log(Level.INFO, "Thread sleep exception.");
+        } finally {
+            logger.info("EAG upload method done.");
         }
     }
 

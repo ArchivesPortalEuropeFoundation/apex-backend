@@ -19,10 +19,12 @@ import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openqa.selenium.By;
 
 public class Utils {
-
+    private static final Logger logger = Logger.getLogger(Utils.class.getName());
     public static List<String[]> getFileData(String fileLocation) throws IOException {
         CSVReader reader = null;
         FileReader freader;
@@ -50,13 +52,12 @@ public class Utils {
 
     public static void uploadFile(WebElement fileBrowser, String fileName) throws URISyntaxException, IOException, InterruptedException, AWTException {
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            logger.info("Windows file upload");
             fileBrowser.click();
             File file = new File(new URI(ClassLoader.getSystemResource(fileName).toExternalForm()));
             String path = file.getAbsolutePath();
-            //Runtime.getRuntime().exec("E:\\codes\\autoit\\uploadScript.exe " + path);
             StringSelection selection = new StringSelection(path);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
-//            System.out.println("!!!!!!!!" + Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
             Thread.sleep(5000);
             Robot robot = new Robot();
             robot.keyPress(KeyEvent.VK_CONTROL);
@@ -75,6 +76,7 @@ public class Utils {
             robot.keyPress(KeyEvent.VK_ENTER);
             robot.keyRelease(KeyEvent.VK_ENTER);
         } else {
+            logger.info("Unix file upload");
             fileBrowser.sendKeys(ClassLoader.getSystemResource(fileName).getPath());
         }
     }
