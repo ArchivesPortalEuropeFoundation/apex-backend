@@ -6,8 +6,7 @@
 package eu.archivesportaleurope.dashboard.regressiontest;
 
 import eu.archivesportaleurope.dashboard.regressiontest.opendata.EnableOpenDataTest;
-import eu.archivesportaleurope.dashboard.regressiontest.simple.GoogleTest;
-import eu.archivesportaleurope.dashboard.regressiontest.simple.LoginTest;
+import eu.archivesportaleurope.dashboard.regressiontest.util.StopOnFirstFailureSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -15,8 +14,9 @@ import org.junit.runners.Suite;
  *
  * @author Mahbub
  */
-@RunWith (Suite.class)
-@Suite.SuiteClasses({/*GoogleTest.class, LoginTest.class,*/ EnableOpenDataTest.class})
+@RunWith(Suite.class)
+//@RunWith (StopOnFirstFailureSuite.class) : if stop on first fail needed
+@Suite.SuiteClasses({/*GoogleTest.class, LoginTest.class,*/EnableOpenDataTest.class})
 public class TestSuite001 {
-    
+
 }

@@ -268,7 +268,7 @@ public class EnableOpenDataTest {
                     + "content into the Archives Portal Europe."));
 
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Upload EAG file"))).click();
-            
+
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadowneag_label_upload")));
             WebElement fileBrowser = driver.findElement(By.id("uploadowneag_httpFile"));
             Utils.uploadFile(fileBrowser, "TC-00000000372.xml");
@@ -316,17 +316,21 @@ public class EnableOpenDataTest {
     public void testFConvertValidatePublish() throws InterruptedException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        driver.findElement(By.id("check_1")).click();
-        new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
-        batchActionButton.click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
-        while (!driver.getPageSource().contains("Queue size: 0")) {
-            Thread.sleep(5000);
-            driver.navigate().refresh();
+        try {
+            WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            driver.findElement(By.id("check_1")).click();
+            new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
+            batchActionButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
+            while (!driver.getPageSource().contains("Queue size: 0")) {
+                Thread.sleep(5000);
+                driver.navigate().refresh();
+            }
+            Assert.assertTrue(driver.getPageSource().contains("Queue size: 0"));
+        } catch (NoSuchElementException nEx) {
+            Assert.fail("Element not found: " + nEx.getMessage());
         }
-        Assert.assertTrue(driver.getPageSource().contains("Queue size: 0"));
     }
 
     @Test
@@ -340,37 +344,41 @@ public class EnableOpenDataTest {
     public void testHEnableOpenData() throws InterruptedException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
-        WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
-        Assert.assertTrue(driver.getPageSource().contains("Open data flag is disabled."));
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
+            WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
+            Assert.assertTrue(driver.getPageSource().contains("Open data flag is disabled."));
 
-        checkBox.click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("submit"))).click();
-        Thread.sleep(1000);
+            checkBox.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("submit"))).click();
+            Thread.sleep(1000);
 
-        Alert jsAlert = driver.switchTo().alert();
-        jsAlert.accept();
+            Alert jsAlert = driver.switchTo().alert();
+            jsAlert.accept();
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Switch back to"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties
-                .getProperty("queueManagementLinkText", "Queue management")))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Switch back to"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties
+                    .getProperty("queueManagementLinkText", "Queue management")))).click();
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Home")));
-        String aiName = driver.findElements(By.tagName("table")).get(3)
-                .findElements(By.tagName("tr")).get(1)
-                .findElements(By.tagName("td")).get(0).getText();
-        String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
-                .findElements(By.tagName("tr")).get(1)
-                .findElements(By.tagName("td")).get(2).getText();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Home")));
+            String aiName = driver.findElements(By.tagName("table")).get(3)
+                    .findElements(By.tagName("tr")).get(1)
+                    .findElements(By.tagName("td")).get(0).getText();
+            String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
+                    .findElements(By.tagName("tr")).get(1)
+                    .findElements(By.tagName("td")).get(2).getText();
 
-        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
-        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
-        while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
-            Thread.sleep(5000);
-            driver.navigate().refresh();
+            Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
+            Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
+            while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
+                Thread.sleep(5000);
+                driver.navigate().refresh();
+            }
+            logger.log(Level.INFO, "::: Enable openData is done!!! Solr reindex has been completed :::");
+        } catch (NoSuchElementException nEx) {
+            Assert.fail("Element not found: " + nEx.getMessage());
         }
-        logger.log(Level.INFO, "::: Enable openData is done!!! Solr reindex has been completed :::");
     }
 
     @Test
@@ -388,68 +396,76 @@ public class EnableOpenDataTest {
         long numberOfSearchResultBeforePublishingNewDoc = searchAllEad().getTotalResults();
 
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Manage content"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
-        WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
-        //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTHR.ead.xml").getPath());
-        Utils.uploadFile(driver.findElement(By.id("httpFile")), "NL-HaNA_4.VTHR.ead.xml");
-        uploadButton.click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        Assert.assertTrue(driver.getPageSource().contains("4.VTHR"));
-        WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        driver.findElement(By.id("check_2")).click();
-        new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
-        batchActionButton.click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
-        while (!driver.getPageSource().contains("Queue size: 0")) {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Manage content"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
+            WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
+            //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTHR.ead.xml").getPath());
+            Utils.uploadFile(driver.findElement(By.id("httpFile")), "NL-HaNA_4.VTHR.ead.xml");
+            uploadButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            Assert.assertTrue(driver.getPageSource().contains("4.VTHR"));
+            WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            driver.findElement(By.id("check_2")).click();
+            new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
+            batchActionButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
+            while (!driver.getPageSource().contains("Queue size: 0")) {
+                Thread.sleep(5000);
+                driver.navigate().refresh();
+            }
             Thread.sleep(5000);
-            driver.navigate().refresh();
+            Assert.assertTrue(searchAllEad().getTotalResults() > numberOfSearchResultBeforePublishingNewDoc);
+        } catch (NoSuchElementException nEx) {
+            Assert.fail("Element not found: " + nEx.getMessage());
         }
-        Thread.sleep(5000);
-        Assert.assertTrue(searchAllEad().getTotalResults() > numberOfSearchResultBeforePublishingNewDoc);
     }
 
     @Test
     public void testKDisableOpenData() throws InterruptedException, IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
-        WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
-        Assert.assertTrue(driver.getPageSource().contains("Open data flag is enabled."));
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
+            WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
+            Assert.assertTrue(driver.getPageSource().contains("Open data flag is enabled."));
 
-        checkBox.click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("submit"))).click();
-        Thread.sleep(1000);
+            checkBox.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("submit"))).click();
+            Thread.sleep(1000);
 
-        Alert jsAlert = driver.switchTo().alert();
-        jsAlert.accept();
+            Alert jsAlert = driver.switchTo().alert();
+            jsAlert.accept();
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Switch back to"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties
-                .getProperty("queueManagementLinkText", "Queue management")))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Switch back to"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties
+                    .getProperty("queueManagementLinkText", "Queue management")))).click();
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Home")));
-        String aiName = driver.findElements(By.tagName("table")).get(3)
-                .findElements(By.tagName("tr")).get(1)
-                .findElements(By.tagName("td")).get(0).getText();
-        String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
-                .findElements(By.tagName("tr")).get(1)
-                .findElements(By.tagName("td")).get(2).getText();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Home")));
+            String aiName = driver.findElements(By.tagName("table")).get(3)
+                    .findElements(By.tagName("tr")).get(1)
+                    .findElements(By.tagName("td")).get(0).getText();
+            String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
+                    .findElements(By.tagName("tr")).get(1)
+                    .findElements(By.tagName("td")).get(2).getText();
 
-        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
-        Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
-        while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
-            Thread.sleep(5000);
-            driver.navigate().refresh();
+            Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
+            Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
+            while (driver.getPageSource().contains(properties.getProperty("aiName", "testAi"))) {
+                Thread.sleep(5000);
+                driver.navigate().refresh();
+            }
+            logger.log(Level.INFO, "::: Disable openData is done!!! Solr reindex has been completed :::");
+            Assert.assertEquals(0, searchAllEad().getTotalResults());
+        } catch (NoSuchElementException nEx) {
+            Assert.fail("Element not found: " + nEx.getMessage());
         }
-        logger.log(Level.INFO, "::: Disable openData is done!!! Solr reindex has been completed :::");
-        Assert.assertEquals(0, searchAllEad().getTotalResults());
     }
 
     @Test
@@ -457,30 +473,34 @@ public class EnableOpenDataTest {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
 
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Manage content"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
-        WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
-        //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_3.01.01.ead.xml").getPath());
-        Utils.uploadFile(driver.findElement(By.id("httpFile")), "NL-HaNA_3.01.01.ead.xml");
-        uploadButton.click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        Assert.assertTrue(driver.getPageSource().contains("3.01.01"));
-        WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        driver.findElement(By.id("check_3")).click();
-        new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
-        batchActionButton.click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
-        Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
-        while (!driver.getPageSource().contains("Queue size: 0")) {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Manage content"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
+            WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
+            //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_3.01.01.ead.xml").getPath());
+            Utils.uploadFile(driver.findElement(By.id("httpFile")), "NL-HaNA_3.01.01.ead.xml");
+            uploadButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            Assert.assertTrue(driver.getPageSource().contains("3.01.01"));
+            WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            driver.findElement(By.id("check_3")).click();
+            new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
+            batchActionButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
+            while (!driver.getPageSource().contains("Queue size: 0")) {
+                Thread.sleep(5000);
+                driver.navigate().refresh();
+            }
             Thread.sleep(5000);
-            driver.navigate().refresh();
+            Assert.assertEquals(0, searchAllEad().getTotalResults());
+        } catch (NoSuchElementException nEx) {
+            Assert.fail("Element not found: " + nEx.getMessage());
         }
-        Thread.sleep(5000);
-        Assert.assertEquals(0, searchAllEad().getTotalResults());
     }
 
     private EadResponseSet searchAllEad() throws IOException {
