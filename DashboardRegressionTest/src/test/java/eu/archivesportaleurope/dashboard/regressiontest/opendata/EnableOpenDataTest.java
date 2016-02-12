@@ -278,8 +278,11 @@ public class EnableOpenDataTest {
             WebElement fileBrowser = driver.findElement(By.id("uploadowneag_httpFile"));
             Utils.uploadFile(fileBrowser, "TC-00000000372.xml");
             Thread.sleep(5000);
+            captureScreen("EAG_file_select");
 //            driver.switchTo().activeElement();
             uploadButton.click();
+            Thread.sleep(5000);
+            captureScreen("EAG Upload");
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("modify EAG file")));
             Assert.assertTrue(driver.getPageSource().contains("Your EAG file has been uploaded correctly"));
             logger.info("::: EAG for test AI uploaded successfully :::");
