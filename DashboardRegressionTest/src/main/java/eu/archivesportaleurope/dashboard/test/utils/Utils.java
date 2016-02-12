@@ -49,35 +49,22 @@ public class Utils {
         System.out.println("Split into statements!");
         return statements;
     }
-
-    public static void uploadFile(WebElement fileBrowser, String fileName) throws URISyntaxException, IOException, InterruptedException, AWTException {
+//
+    public static void uploadFile(WebDriver driver, String elementName, String fileName) throws URISyntaxException, IOException, InterruptedException {
+        WebElement fileBrowser = driver.findElement(By.id(elementName));
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             logger.info("Windows file upload");
             fileBrowser.click();
             File file = new File(new URI(ClassLoader.getSystemResource(fileName).toExternalForm()));
             String path = file.getAbsolutePath();
-            StringSelection selection = new StringSelection(path);
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
-            Thread.sleep(5000);
-            Robot robot = new Robot();
-            robot.keyPress(KeyEvent.VK_CONTROL);
-            Thread.sleep(100);
-            robot.keyPress(KeyEvent.VK_A);
-            Thread.sleep(100);
-            robot.keyRelease(KeyEvent.VK_A);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
-            Thread.sleep(100);
-            robot.keyPress(KeyEvent.VK_CONTROL);
-            robot.keyPress(KeyEvent.VK_V);
-            Thread.sleep(100);
-            robot.keyRelease(KeyEvent.VK_V);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
-            Thread.sleep(100);
-            robot.keyPress(KeyEvent.VK_ENTER);
-            robot.keyRelease(KeyEvent.VK_ENTER);
+            File script = new File(new URI(ClassLoader.getSystemResource("selenium/windows/uploadScript.exe").toExternalForm()));
+            String scriptPath = script.getAbsolutePath();
+            Runtime.getRuntime().exec(scriptPath+ " " + path);
+            driver.switchTo().activeElement();
         } else {
             logger.info("Unix file upload");
             fileBrowser.sendKeys(ClassLoader.getSystemResource(fileName).getPath());
         }
+        Thread.sleep(7000);
     }
 }
