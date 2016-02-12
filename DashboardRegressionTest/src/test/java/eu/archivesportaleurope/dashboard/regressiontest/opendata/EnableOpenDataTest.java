@@ -280,7 +280,7 @@ public class EnableOpenDataTest {
             Thread.sleep(5000);
 //            driver.switchTo().activeElement();
             uploadButton.click();
-            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("View/modify EAG file")));
+            wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("modify EAG file")));
             Assert.assertTrue(driver.getPageSource().contains("Your EAG file has been uploaded correctly"));
             logger.info("::: EAG for test AI uploaded successfully :::");
         } catch (NoSuchElementException | TimeoutException nEx) {
