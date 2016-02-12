@@ -72,8 +72,8 @@ public class LoginTest {
     }
 
     @After
-    public void tearDown() throws IOException {
-        screenshotHelper.saveScreenshot("login_" + testName.getMethodName() + ".png", driver);
+    public void tearDown() throws IOException, InterruptedException {
+        screenshotHelper.saveScreenshot("login_" + testName.getMethodName(), driver);
     }
 
     @Test
@@ -125,10 +125,6 @@ public class LoginTest {
     public void testCLogout() throws InterruptedException {
         WebElement element = null;
         Thread.sleep(2000);
-//        driver.findElement(By.id("username")).sendKeys(properties.getProperty("adminUserName", "Kaisar.Ali@nationaalarchief.nl"));
-//        driver.findElement(By.id("login_password")).sendKeys(properties.getProperty("adminPassword", "test2010"));
-//        driver.findElement(By.id("login_dropOtherSession")).click();
-//        driver.findElement(By.id("login_label_login")).click();
         try {
             element = driver.findElement(By.id("userFeatures")).findElements(By.tagName("a")).get(0);
             assertEquals("Logout", element.getText());

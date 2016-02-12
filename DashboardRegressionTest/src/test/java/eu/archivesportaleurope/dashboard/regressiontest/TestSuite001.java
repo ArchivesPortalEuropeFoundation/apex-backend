@@ -6,7 +6,12 @@
 package eu.archivesportaleurope.dashboard.regressiontest;
 
 import eu.archivesportaleurope.dashboard.regressiontest.opendata.EnableOpenDataTest;
+import eu.archivesportaleurope.dashboard.regressiontest.simple.GoogleTest;
+import eu.archivesportaleurope.dashboard.regressiontest.simple.LoginTest;
 import eu.archivesportaleurope.dashboard.regressiontest.util.StopOnFirstFailureSuite;
+import eu.archivesportaleurope.dashboard.test.utils.SolrUtils;
+import java.util.logging.Logger;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -16,7 +21,14 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 //@RunWith (StopOnFirstFailureSuite.class) : if stop on first fail needed
-@Suite.SuiteClasses({/*GoogleTest.class, LoginTest.class,*/EnableOpenDataTest.class})
+@Suite.SuiteClasses({GoogleTest.class, LoginTest.class, EnableOpenDataTest.class})
 public class TestSuite001 {
 
+    private static final Logger logger = Logger.getLogger(EnableOpenDataTest.class.getName());
+
+    @BeforeClass
+    public static void setUpClass() {
+        logger.info("::: Removing Solr index :::");
+        SolrUtils.getSolrUtil().clearAllCore();
+    }
 }

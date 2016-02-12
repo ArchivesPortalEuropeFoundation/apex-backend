@@ -84,8 +84,8 @@ public class EnableOpenDataTest {
         screenshotHelper = new ScreenshotHelper();
         client = HttpClients.createDefault();
         gson = new Gson();
-        logger.info("::: Removing Solr index :::");
-        SolrUtils.getSolrUtil().clearAllCore();
+//        logger.info("::: Removing Solr index :::");
+//        SolrUtils.getSolrUtil().clearAllCore();
     }
 
     @AfterClass
@@ -313,7 +313,7 @@ public class EnableOpenDataTest {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
             captureScreen(name.getMethodName() + "_upload_content");
-            Utils.uploadFile(driver,"httpFile", "NL-HaNA_4.VTH.ead.xml");
+            Utils.uploadFile(driver, "httpFile", "NL-HaNA_4.VTH.ead.xml");
             //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTH.ead.xml").getPath());
             uploadButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
@@ -439,7 +439,7 @@ public class EnableOpenDataTest {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
             //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTHR.ead.xml").getPath());
-            Utils.uploadFile(driver,"httpFile", "NL-HaNA_4.VTHR.ead.xml");
+            Utils.uploadFile(driver, "httpFile", "NL-HaNA_4.VTHR.ead.xml");
             uploadButton.click();
             captureScreen(name.getMethodName() + "_upload_FA_openData_true");
             wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
@@ -533,7 +533,7 @@ public class EnableOpenDataTest {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("selectArchive_0"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
-            Utils.uploadFile(driver,"httpFile", "NL-HaNA_3.01.01.ead.xml");
+            Utils.uploadFile(driver, "httpFile", "NL-HaNA_3.01.01.ead.xml");
             uploadButton.click();
             captureScreen(name.getMethodName() + "_upload_FA_openData_false");
             wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
@@ -579,9 +579,7 @@ public class EnableOpenDataTest {
     }
 
     private void captureScreen(String name) throws IOException, InterruptedException {
-        Thread.sleep(10);
-        screenshotHelper.saveScreenshot("screenShot/openData_" + name + ".png", driver);
-        System.out.println("Screenshot succesfully made! openData_" + name + ".png");
+        screenshotHelper.saveScreenshot(name, driver);
     }
 
 }

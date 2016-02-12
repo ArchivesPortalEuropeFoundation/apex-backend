@@ -72,12 +72,11 @@ public class GoogleTest {
 
     @After
     public void tearDown() throws IOException {
-        screenshotHelper.saveScreenshot("searchGoogle.png", driver);
         driver.quit();
     }
 
-    //@Test
-    public void test() {
+    @Test
+    public void test() throws IOException, InterruptedException {
         assertEquals("Check google Page title", "Google", driver.getTitle());
 
         WebElement searchField = driver.findElement(By.name("q"));
@@ -92,9 +91,10 @@ public class GoogleTest {
                     }
 
                 }));
+        screenshotHelper.saveScreenshot("Google", driver);
     }
 
-    @Test
+//    @Test
     public void testPost() throws MalformedURLException, IOException {
 
         HttpClient client = HttpClients.createDefault();
