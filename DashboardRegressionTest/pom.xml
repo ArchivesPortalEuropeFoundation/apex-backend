@@ -129,12 +129,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <systemProperties>
+<!--                    <systemProperties>
                         <property>
                             <name>webdriver.chrome.driver</name>
                             <value>${project.basedir}/chromedriver/chromedriver${driver.extension}</value>
                         </property>
-                    </systemProperties>
+                    </systemProperties>-->
                     <includes>
                         <include>${runSuite}</include>
                     </includes>

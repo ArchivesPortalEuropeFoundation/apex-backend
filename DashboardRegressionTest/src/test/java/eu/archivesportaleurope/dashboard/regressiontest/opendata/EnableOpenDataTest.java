@@ -108,7 +108,8 @@ public class EnableOpenDataTest {
     }
 
     @After
-    public void saveScreenshotAndCloseBrowser() throws IOException {
+    public void saveScreenshotAndCloseBrowser() throws IOException, InterruptedException {
+        captureScreen(name.getMethodName());
     }
 
     @Test
@@ -134,18 +135,20 @@ public class EnableOpenDataTest {
     }
 
     @Test
-    public void testBCreateCountry() {
+    public void testBCreateCountry() throws IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         try {
             WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
             WebElement userManagementLink = wait.until(ExpectedConditions
                     .elementToBeClickable(By.partialLinkText("User management")));
             userManagementLink.click();
+            captureScreen(name.getMethodName() + "_User_Management");
 
             driver.navigate().back();
             WebElement createCountryLink = wait.until(ExpectedConditions
                     .elementToBeClickable(By.partialLinkText("Create country")));
             createCountryLink.click();
+            captureScreen(name.getMethodName() + "_create_country");
 
             WebElement createCountry = wait.until(ExpectedConditions.elementToBeClickable(By.id("accept")));
             driver.findElement(By.id("storeCountry_englishCountryName"))
@@ -154,6 +157,8 @@ public class EnableOpenDataTest {
                     .sendKeys(properties.getProperty("testCountryISO", "TC"));
             createCountry.click();
             Thread.sleep(5000);
+
+            captureScreen(name.getMethodName() + "_after_create_country");
 
             userManagementLink = wait.until(ExpectedConditions
                     .elementToBeClickable(By.partialLinkText("User management")));
@@ -173,7 +178,7 @@ public class EnableOpenDataTest {
     }
 
     @Test
-    public void testCCreateCountryManger() {
+    public void testCCreateCountryManger() throws IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         WebElement createCountrymanagerButton;
@@ -183,8 +188,10 @@ public class EnableOpenDataTest {
                     .partialLinkText(properties.getProperty("testCountryName", "TESTCOUNTRY")))
                     .findElement(By.xpath("../..")).findElement(By.id("displayCreateCountryManager_createCountryManager"));
             createCountrymanagerButton = wait.until(ExpectedConditions.elementToBeClickable(createCountrymanagerButton));
+            captureScreen(name.getMethodName() + "_create_country_manager_page");
             createCountrymanagerButton.click();
             Thread.sleep(1);
+            captureScreen(name.getMethodName() + "_create_country_manager");
             driver.findElement(By.id("createCountryManager_firstName"))
                     .sendKeys(properties.getProperty("countryManagerFirstName", "test"));
             driver.findElement(By.id("createCountryManager_lastName"))
@@ -194,6 +201,7 @@ public class EnableOpenDataTest {
             WebElement okButton = wait.until(ExpectedConditions.elementToBeClickable(By
                     .id("createCountryManager_okButton")));
             okButton.click();
+            captureScreen(name.getMethodName() + "_after_create_country_manager");
 
             WebElement homeLink = wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Home")));
             if (driver.getPageSource().contains("An Internal Server Error occurred")) {
@@ -217,7 +225,7 @@ public class EnableOpenDataTest {
     }
 
     @Test
-    public void testDCreateArchivalInstitute() {
+    public void testDCreateArchivalInstitute() throws IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         WebElement changeToThisAccount, editArchivalLandscape, countryNameInTree,
@@ -227,13 +235,16 @@ public class EnableOpenDataTest {
                     .partialLinkText(properties.getProperty("testCountryName", "TESTCOUNTRY")))
                     .findElement(By.xpath("../..")).findElement(By.id("changeToCountryManager"))));
             changeToThisAccount.click();
+            captureScreen(name.getMethodName() + "_create_test_AI");
             editArchivalLandscape = wait.until(ExpectedConditions.elementToBeClickable(driver
                     .findElement(By.partialLinkText("Edit archival landscape"))));
             editArchivalLandscape.click();
+            captureScreen(name.getMethodName() + "_AI_landscape");
             Thread.sleep(5000);
             countryNameInTree = wait.until(ExpectedConditions.elementToBeClickable(driver
                     .findElement(By.partialLinkText(properties.getProperty("testCountryName", "TESTCOUNTRY").toLowerCase()))));
             countryNameInTree.click();
+            captureScreen(name.getMethodName() + "_create_AI_landscape_page");
 
             Thread.sleep(5000);
 
@@ -243,6 +254,7 @@ public class EnableOpenDataTest {
             addToTheList.click();
 
             Thread.sleep(5000);
+            captureScreen(name.getMethodName() + "after_AI_landscape_created");
 
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), driver
                     .findElement(By.partialLinkText(properties.getProperty("aiName", "testAi"))).getText());
@@ -303,11 +315,13 @@ public class EnableOpenDataTest {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Upload content"))).click();
             WebElement uploadButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("uploadButton")));
+            captureScreen(name.getMethodName() + "_upload_content");
             Utils.uploadFile(driver.findElement(By.id("httpFile")), "NL-HaNA_4.VTH.ead.xml");
             //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTH.ead.xml").getPath());
             uploadButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            captureScreen(name.getMethodName() + "_content_is_uploaded");
             Assert.assertTrue(driver.getPageSource().contains("4.VTH"));
             logger.info("::: Finding aid Uploaded :::");
         } catch (NoSuchElementException | TimeoutException | IOException nEx) {
@@ -319,17 +333,19 @@ public class EnableOpenDataTest {
     }
 
     @Test
-    public void testFConvertValidatePublish() throws InterruptedException {
+    public void testFConvertValidatePublish() throws InterruptedException, IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             driver.findElement(By.id("check_1")).click();
+            captureScreen(name.getMethodName() + "_convert_validate_publish");
             new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
             batchActionButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
             int waited = 0;
+            captureScreen(name.getMethodName() + "_convert_validate_publish_ongoing");
             logger.info("::: Waiting for the file to be converted/validated/published :::");
             while (!driver.getPageSource().contains("Queue size: 0") && waited <= MAX_WAIT) {
                 Thread.sleep(5000);
@@ -337,6 +353,7 @@ public class EnableOpenDataTest {
                 driver.navigate().refresh();
                 logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
+            captureScreen(name.getMethodName() + "_convert_validate_publish_done");
             Assert.assertTrue(driver.getPageSource().contains("Queue size: 0"));
             logger.info("::: File is converted/validated/published :::");
         } catch (NoSuchElementException nEx) {
@@ -353,12 +370,13 @@ public class EnableOpenDataTest {
     }
 
     @Test
-    public void testHEnableOpenData() throws InterruptedException {
+    public void testHEnableOpenData() throws InterruptedException, IOException {
         logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
         WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
+            captureScreen(name.getMethodName() + "_openData_page_disabled");
             WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
             Assert.assertTrue(driver.getPageSource().contains("Open data flag is disabled."));
 
@@ -380,6 +398,8 @@ public class EnableOpenDataTest {
             String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
                     .findElements(By.tagName("tr")).get(1)
                     .findElements(By.tagName("td")).get(2).getText();
+
+            captureScreen(name.getMethodName() + "_openData_queue_management");
 
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
@@ -424,16 +444,19 @@ public class EnableOpenDataTest {
             //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_4.VTHR.ead.xml").getPath());
             Utils.uploadFile(driver.findElement(By.id("httpFile")), "NL-HaNA_4.VTHR.ead.xml");
             uploadButton.click();
+            captureScreen(name.getMethodName() + "_upload_FA_openData_true");
             wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("4.VTHR"));
             WebElement batchActionButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             driver.findElement(By.id("check_2")).click();
+            captureScreen(name.getMethodName() + "_convert_validate_publish_FA_openData_true");
             new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
             batchActionButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
             int waited = 0;
+            captureScreen(name.getMethodName() + "_upload_FA_openData_true_ongoing");
             logger.info("::: waiting for the finding aid to be converted/validated/published :::");
             while (!driver.getPageSource().contains("Queue size: 0") && waited <= MAX_WAIT) {
                 Thread.sleep(5000);
@@ -444,6 +467,7 @@ public class EnableOpenDataTest {
             Thread.sleep(5000);
             Assert.assertTrue(searchAllEad().getTotalResults() > numberOfSearchResultBeforePublishingNewDoc);
             logger.info("::: convert/validate/publish is successful :::");
+            captureScreen(name.getMethodName() + "_upload_FA_openData_true_done");
         } catch (NoSuchElementException nEx) {
             logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
@@ -457,6 +481,7 @@ public class EnableOpenDataTest {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText(properties.getProperty("aiName", "testAi")))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Manage open data"))).click();
+            captureScreen(name.getMethodName() + "_openData_disable");
             WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.id("enableOpenData")));
             Assert.assertTrue(driver.getPageSource().contains("Open data flag is enabled."));
 
@@ -478,6 +503,7 @@ public class EnableOpenDataTest {
             String aiNameInQueueItemList = driver.findElements(By.tagName("table")).get(4)
                     .findElements(By.tagName("tr")).get(1)
                     .findElements(By.tagName("td")).get(2).getText();
+            captureScreen(name.getMethodName() + "_openData_disable_queue_management");
 
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiName);
             Assert.assertEquals(properties.getProperty("aiName", "testAi"), aiNameInQueueItemList);
@@ -489,6 +515,7 @@ public class EnableOpenDataTest {
                 driver.navigate().refresh();
                 logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
+            captureScreen(name.getMethodName() + "_openData_disable_queue_done");
             logger.log(Level.INFO, "::: Disable openData is done!!! Solr reindex has been completed :::");
             Assert.assertEquals(0, searchAllEad().getTotalResults());
         } catch (NoSuchElementException nEx) {
@@ -512,6 +539,7 @@ public class EnableOpenDataTest {
             //driver.findElement(By.id("httpFile")).sendKeys(ClassLoader.getSystemResource("NL-HaNA_3.01.01.ead.xml").getPath());
             Utils.uploadFile(driver.findElement(By.id("httpFile")), "NL-HaNA_3.01.01.ead.xml");
             uploadButton.click();
+            captureScreen(name.getMethodName() + "_upload_FA_openData_false");
             wait.until(ExpectedConditions.elementToBeClickable(By.id("checkexistingfiles_label_accept"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
             Assert.assertTrue(driver.getPageSource().contains("3.01.01"));
@@ -520,6 +548,7 @@ public class EnableOpenDataTest {
             new Select(driver.findElement(By.id("batchSelectedAction"))).selectByValue("convert_validate_publish");
             batchActionButton.click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("batchActionButton")));
+            captureScreen(name.getMethodName() + "_upload_FA_openData_false_ongoing");
             Assert.assertTrue(driver.getPageSource().contains("Number of your files in the queue: 1, Queue size: 1"));
             int waited = 0;
             logger.info("::: waiting for the Finding aid to be converted/validated/publishd :::");
@@ -530,6 +559,7 @@ public class EnableOpenDataTest {
                 logger.log(Level.INFO, "::: Still waiting : Waited for :  {0} :::", waited);
             }
             Thread.sleep(5000);
+            captureScreen(name.getMethodName() + "_upload_FA_openData_false_done");
             Assert.assertEquals(0, searchAllEad().getTotalResults());
             logger.info("::: Finding aid converted/validated/publishd :::");
         } catch (NoSuchElementException nEx) {
@@ -552,7 +582,8 @@ public class EnableOpenDataTest {
         return eads;
     }
 
-    private void captureScreen(String name) throws IOException {
+    private void captureScreen(String name) throws IOException, InterruptedException {
+        Thread.sleep(10);
         screenshotHelper.saveScreenshot("openData_" + name + ".png", driver);
         System.out.println("Screenshot succesfully made! openData_" + name + ".png");
     }
