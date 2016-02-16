@@ -143,25 +143,27 @@ public class FillRelationsObjectJAXB extends AbstractObjectJAXB implements Objec
             }
             boolean found = false;
             //if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){ //TODO: current situation from ticket 543 
-            for (int x = 0; x < this.eag.getRelations().getResourceRelation().size(); x++) {
-                if (this.eag.getRelations().getResourceRelation().get(x) != null
-                        && (this.eag.getRelations().getResourceRelation().get(x).getHref() != null
-                        && this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref())
-                        || (this.eag.getRelations().getResourceRelation().get(x).getHref() == null
-                        && resourceRelation.getHref() == null))
-                        && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry() != null
-                        && ((this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() != null
-                        && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang()))
-                        || (this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() == null
-                        && (relationEntry.getLang() == null
-                        || relationEntry.getLang().equalsIgnoreCase(Eag2012.OPTION_NONE)))
-                        || (this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() == null
-                        && (relationEntry.getContent() == null
-                        || relationEntry.getContent().isEmpty())))) {
-                    found = true;
-                    if (resourceRelation.getDescriptiveNote() != null) { //priority for descriptive note
-                        //TODO: current situation from ticket 543 
-                        this.eag.getRelations().getResourceRelation().set(x, resourceRelation);
+            if (this.eag.getRelations() != null && this.eag.getRelations().getResourceRelation() != null) {
+                for (int x = 0; x < this.eag.getRelations().getResourceRelation().size(); x++) {
+                    if (this.eag.getRelations().getResourceRelation().get(x) != null
+                            && (this.eag.getRelations().getResourceRelation().get(x).getHref() != null
+                            && this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref())
+                            || (this.eag.getRelations().getResourceRelation().get(x).getHref() == null
+                            && resourceRelation.getHref() == null))
+                            && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry() != null
+                            && ((this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() != null
+                            && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang()))
+                            || (this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() == null
+                            && (relationEntry.getLang() == null
+                            || relationEntry.getLang().equalsIgnoreCase(Eag2012.OPTION_NONE)))
+                            || (this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() == null
+                            && (relationEntry.getContent() == null
+                            || relationEntry.getContent().isEmpty())))) {
+                        found = true;
+                        if (resourceRelation.getDescriptiveNote() != null) { //priority for descriptive note
+                            //TODO: current situation from ticket 543 
+                            this.eag.getRelations().getResourceRelation().set(x, resourceRelation);
+                        }
                     }
                 }
             }
@@ -307,13 +309,14 @@ public class FillRelationsObjectJAXB extends AbstractObjectJAXB implements Objec
      * Method to Fill EagRelationType element
      *
      * @param valueList {@link List<String>> the valueList
-     * @param j null     {@link int} the j
+     * @param j null null     {@link int} the j
 	 */
     private void getEagRelationType(int j, List<String> valueList) {
         this.log.debug("Method start: \"getEagRelationType\"");
         // eag/relations/eagRelation/eagRelationType
         if (this.eag2012.getEagRelationEagRelationType() != null
-                && !this.eag2012.getEagRelationEagRelationType().isEmpty()) {
+                && !this.eag2012.getEagRelationEagRelationType().isEmpty()
+                && !this.eag2012.getEagRelationEagRelationType().equals("none")) {
             if (Eag2012.OPTION_CHILD.equalsIgnoreCase(this.eag2012.getEagRelationEagRelationType().get(j))) {
                 eagRelation.setEagRelationType(Eag2012.OPTION_CHILD_TEXT);
             }
