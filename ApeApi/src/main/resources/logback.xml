@@ -17,14 +17,14 @@
         <target>System.out</target>
         <encoder>
 <!--            <Pattern>%-5level %d{yyyy-MM-dd_HH:mm:ss.SSS} %msg  %n</Pattern>-->
-             <pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %logger{100} [%file:%line] %msg%n</pattern> 
+             <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %logger{100} [%file:%line] %msg%n</pattern> 
         </encoder>
     </appender>
     
     <appender name="traceFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_HOME}/ApeApi_${tomcatNode}.log</File>
         <encoder>
-            <pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{100} [%file:%line] %msg%n</pattern> 
+            <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{100} [%file:%line] %msg%n</pattern> 
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${LOG_ARCHIVE}/ApeApi_${tomcatNode}-%d{yyyy-MM-dd}.%i.zip</FileNamePattern>
