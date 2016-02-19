@@ -8,7 +8,6 @@ package eu.archivesportaleurope.dashboard.regressiontest;
 import eu.archivesportaleurope.dashboard.regressiontest.opendata.EnableOpenDataTest;
 import eu.archivesportaleurope.dashboard.regressiontest.simple.GoogleTest;
 import eu.archivesportaleurope.dashboard.regressiontest.simple.LoginTest;
-import eu.archivesportaleurope.dashboard.regressiontest.util.StopOnFirstFailureSuite;
 import eu.archivesportaleurope.dashboard.test.utils.SolrUtils;
 import java.util.logging.Logger;
 import org.junit.BeforeClass;

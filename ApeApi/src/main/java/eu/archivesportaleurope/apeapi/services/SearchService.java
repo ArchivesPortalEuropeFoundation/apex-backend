@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  * Any search service will have to implement this interface.
+ * 
  * @author Mahbub
  */
 public interface SearchService {
