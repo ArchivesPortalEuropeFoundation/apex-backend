@@ -22,7 +22,6 @@ import org.junit.runners.Suite;
 //@RunWith (StopOnFirstFailureSuite.class) : if stop on first fail needed
 @Suite.SuiteClasses({GoogleTest.class, LoginTest.class, EnableOpenDataTest.class})
 public class TestSuite001 {
-
     private static final Logger LOGGER = Logger.getLogger(EnableOpenDataTest.class.getName());
 
     @BeforeClass
