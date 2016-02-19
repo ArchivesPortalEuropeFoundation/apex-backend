@@ -24,11 +24,11 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({GoogleTest.class, LoginTest.class, EnableOpenDataTest.class})
 public class TestSuite001 {
 
-    private static final Logger logger = Logger.getLogger(EnableOpenDataTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EnableOpenDataTest.class.getName());
 
     @BeforeClass
     public static void setUpClass() {
-        logger.info("::: Removing Solr index :::");
+        LOGGER.info("::: Removing Solr index :::");
         SolrUtils.getSolrUtil().clearAllCore();
     }
 }
