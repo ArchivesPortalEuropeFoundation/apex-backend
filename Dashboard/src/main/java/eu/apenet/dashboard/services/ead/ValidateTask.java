@@ -26,6 +26,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
+import org.apache.commons.lang.StringUtils;
 
 public class ValidateTask extends AbstractEadTask {
 
@@ -117,7 +118,7 @@ public class ValidateTask extends AbstractEadTask {
                             }
                         }
                     }
-                    if (!warningExists) {
+                    if (!warningExists && StringUtils.isNotBlank(warn.toString())) {
                         Warnings warnings = new Warnings();
                         warnings.setAbstract_(warn.toString());
                         warnings.setIswarning(true);
