@@ -116,6 +116,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		QueueDaemon.stop();
 		HarvesterDaemon.stop(true);
+                MaintenanceDaemon.stop();
 	}
 
 }
