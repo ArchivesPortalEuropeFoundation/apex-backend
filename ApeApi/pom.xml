@@ -18,7 +18,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -26,7 +26,7 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <!--Logging tools-->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -40,7 +40,28 @@
             <version>2.7.8</version>
         </dependency>
         <!--End Logging tools-->
-        
+
+        <!--        Spring security-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>4.0.3.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>4.0.3.RELEASE</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>4.0.3.RELEASE</version>
+        </dependency>
+        <!--    .....    -->
+
         <!--......Unit test......-->
         <!--In memory webserver-->
         <dependency>

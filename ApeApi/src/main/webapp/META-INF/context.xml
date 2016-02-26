@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/ApeApi">
-    <Environment name="solr/url" type="java.lang.String" value="http://localhost:8080/solr" />
+    <Environment name="solr/url" type="java.lang.String" value="http://localhost:8080/solr"/>
 </Context>

@@ -2,10 +2,18 @@
 <configuration>
     <property name="tomcatNode" value="${OS}_${os.version}" />
     
+     <if condition='isDefined("catalina.base")'>
+        <then>
+            <property name="LOG_HOME" value="${catalina.home}/logs"/>
+            <property name="LOG_ARCHIVE" value="${catalina.base}/logs/ApeApiLogsArc" />
+        </then>
+        <!--during build time-->
+        <else>
+            <property name="LOG_HOME" value="./target/logs"/>
+            <property name="LOG_ARCHIVE" value="./target/logs/ApeApiLogsArc" />
+        </else>
+    </if>
 
-    <property name="LOG_HOME" value="${catalina.base}/logs" />
-    <property name="LOG_ARCHIVE" value="${catalina.base}/logs/ApeApiLogsArc" />
-    
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
     </contextListener>

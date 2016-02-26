@@ -5,7 +5,6 @@
  */
 package eu.archivesportaleurope.apeapi.request;
 
-import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import javax.validation.constraints.Max;
 import javax.xml.bind.annotation.XmlRootElement;
 
