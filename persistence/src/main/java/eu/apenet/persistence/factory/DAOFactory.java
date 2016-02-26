@@ -26,7 +26,8 @@ public abstract class DAOFactory {
     private static Map<Class<? extends GenericDAO>, GenericDAO> daos = new HashMap<Class<? extends GenericDAO>, GenericDAO>();
 
     /*
-     *  For the moment we use only Hibernate factory, this method can grow f.i. throught a config.properties
+     * For the moment we use only Hibernate factory, this method can grow f.i.
+     * throught a config.properties
      */
     static {
         try {
@@ -81,33 +82,62 @@ public abstract class DAOFactory {
     }
 
     public abstract SentMailRegisterDAO getSentMailRegisterDAO();
+
     public abstract FindingAidDAO getFindingAidDAO();
+
     public abstract UpFileDAO getUpFileDAO();
+
     public abstract HoldingsGuideDAO getHoldingsGuideDAO();
+
     public abstract WarningsDAO getWarningsDAO();
+
     public abstract ArchivalInstitutionDAO getArchivalInstitutionDAO();
+
     public abstract UserDAO getUserDAO();
+
     public abstract CountryDAO getCountryDAO();
+
     public abstract LangDAO getLangDAO();
+
     public abstract EseDAO getEseDAO();
+
     public abstract UploadMethodDAO getUploadMethodDAO();
+
     public abstract EseStateDAO getEseStateDAO();
+
     public abstract ArchivalInstitutionOaiPmhDAO getArchivalInstitutionOaiPmhDAO();
+
     public abstract CLevelDAO getCLevelDAO();
+
     public abstract EadContentDAO getEadContentDAO();
+
     public abstract AiAlternativeNameDAO getAiAlternativeNameDAO();
+
     public abstract CouAlternativeNameDAO getCouAlternativeNameDAO();
+
     public abstract DptUpdateDAO getDptUpdateDAO();
+
     public abstract ResumptionTokenDAO getResumptionTokenDAO();
+
     public abstract QueueItemDAO getQueueItemDAO();
+
     public abstract UserRoleDAO getUserRoleDAO();
+
     public abstract EadDAO getEadDAO();
+
     public abstract HgSgFaRelationDAO getHgSgFaRelationDAO();
+
     public abstract IngestionprofileDAO getIngestionprofileDAO();
+
     public abstract CoordinatesDAO getCoordinatesDAO();
+
     public abstract EacCpfDAO getEacCpfDAO();
+
     public abstract TopicDAO getTopicDAO();
+
     public abstract TopicMappingDAO getTopicMappingDAO();
+
     public abstract XslUploadDAO getXslUploadDAO();
+
     public abstract FtpDAO getFtpDAO();
 }

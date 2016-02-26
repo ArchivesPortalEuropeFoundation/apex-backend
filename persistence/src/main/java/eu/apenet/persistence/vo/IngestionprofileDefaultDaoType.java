@@ -19,46 +19,51 @@ public enum IngestionprofileDefaultDaoType {
     private int id;
     private String resourceType;
 
-    private IngestionprofileDefaultDaoType(int id, String resourceType){
+    private IngestionprofileDefaultDaoType(int id, String resourceType) {
         this.id = id;
         this.resourceType = resourceType;
     }
 
-    public boolean isText(){
+    public boolean isText() {
         return TEXT.equals(this);
     }
 
-    public boolean isImage(){
+    public boolean isImage() {
         return IMAGE.equals(this);
     }
 
-    public boolean isSound(){
+    public boolean isSound() {
         return SOUND.equals(this);
     }
 
-    public boolean isVideo(){
+    public boolean isVideo() {
         return VIDEO.equals(this);
     }
 
-    public boolean is3D(){
+    public boolean is3D() {
         return THREE_D.equals(this);
     }
 
-    public boolean isUnspecified(){
+    public boolean isUnspecified() {
         return UNSPECIFIED.equals(this);
     }
 
     public String getDaoText() {
-        if(isText())
+        if (isText()) {
             return "TEXT";
-        if(isImage())
+        }
+        if (isImage()) {
             return "IMAGE";
-        if(isSound())
+        }
+        if (isSound()) {
             return "SOUND";
-        if(isVideo())
+        }
+        if (isVideo()) {
             return "VIDEO";
-        if(is3D())
+        }
+        if (is3D()) {
             return "3D";
+        }
         return "UNSPECIFIED";
     }
 
@@ -66,14 +71,16 @@ public enum IngestionprofileDefaultDaoType {
         return id;
     }
 
-    public String getResourceType(){
+    public String getResourceType() {
         return resourceType;
     }
 
-    public static IngestionprofileDefaultDaoType getDaoType(String id){
-        for(IngestionprofileDefaultDaoType daoType : IngestionprofileDefaultDaoType.values()){
-            if(daoType.id == Integer.parseInt(id))
+    public static IngestionprofileDefaultDaoType getDaoType(String id) {
+        for (IngestionprofileDefaultDaoType daoType
+                : IngestionprofileDefaultDaoType.values()) {
+            if (daoType.id == Integer.parseInt(id)) {
                 return daoType;
+            }
         }
         return null;
     }
