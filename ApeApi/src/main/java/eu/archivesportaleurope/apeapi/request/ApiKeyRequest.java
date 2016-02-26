@@ -8,7 +8,7 @@ package eu.archivesportaleurope.apeapi.request;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * API key request class
+ * API key request class.
  * @author Mahbub
  */
 @XmlRootElement
