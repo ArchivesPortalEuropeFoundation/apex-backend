@@ -5,9 +5,7 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
                                 http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd
                                 ">
-    <!--                                http://www.springframework.org/schema/tx
-    http://www.springframework.org/schema/tx/spring-tx.xsd-->
-    <persistence-unit name="ape-database" transaction-type="JTA">
+    <persistence-unit name="ape-database" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <jta-data-source>java:/comp/env/jdbc/APEnetDatabaseDashboard</jta-data-source>
         <class>eu.apenet.persistence.vo.UserRole</class>
@@ -50,5 +48,4 @@
             <!--<property name="hibernate.show_sql" value="true" />-->
         </properties>
     </persistence-unit>
-    <!--<tx:annotation-driven/>-->
 </persistence>
