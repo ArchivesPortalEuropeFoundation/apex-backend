@@ -140,4 +140,6 @@ public abstract class DAOFactory {
     public abstract XslUploadDAO getXslUploadDAO();
 
     public abstract FtpDAO getFtpDAO();
+    
+    public abstract ApiKeyDAO getApiKeyDAO();
 }

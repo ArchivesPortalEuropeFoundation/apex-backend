@@ -174,9 +174,14 @@ public class HibernateDAOFactory extends DAOFactory {
     public XslUploadDAO getXslUploadDAO() {
         return (XslUploadDAO) instantiateDAO(XslUploadJpaDAO.class);
     }
-    
+
     @Override
     public FtpDAO getFtpDAO() {
         return (FtpDAO) instantiateDAO(FtpJpaDAO.class);
+    }
+
+    @Override
+    public ApiKeyDAO getApiKeyDAO() {
+        return (ApiKeyDAO) instantiateDAO(ApiKeyDAO.class);
     }
 }
