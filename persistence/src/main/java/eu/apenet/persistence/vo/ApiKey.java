@@ -21,37 +21,32 @@ import org.hibernate.validator.constraints.URL;
  */
 @Entity
 @Table(name = "api_key")
-public class ApiKey implements Serializable {
-
-    private static final long serialVersionUID = 6596971098640916650L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-
+public class ApiKey extends BaseEntity {
+    private long liferayUserId;
+    
     private String firstName;
     private String lastName;
 
     @Email
+    @Column(nullable=false)
     private String emailAddress;
 
     @URL
     private String url;
 
-    @Column(length = 36)
+    @Column(length = 36, nullable=false)
     private String apiKey;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getApiKey() {
         return apiKey;
+    }
+
+    public long getLiferayUserId() {
+        return liferayUserId;
+    }
+
+    public void setLiferayUserId(long liferayUserId) {
+        this.liferayUserId = liferayUserId;
     }
 
     public void setApiKey(String apiKey) {
@@ -89,5 +84,4 @@ public class ApiKey implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
-
 }
