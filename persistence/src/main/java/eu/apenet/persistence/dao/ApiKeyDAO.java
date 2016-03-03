@@ -13,6 +13,6 @@ import eu.apenet.persistence.vo.ApiKey;
  */
 public interface ApiKeyDAO extends GenericDAO<ApiKey, Integer> {
 
-    public ApiKey findByEmail(String emailAddress);
+    public ApiKey findByLiferayUserId(long liferayUserId);
 
 }

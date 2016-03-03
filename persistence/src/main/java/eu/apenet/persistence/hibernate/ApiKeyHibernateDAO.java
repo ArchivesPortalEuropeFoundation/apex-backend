@@ -7,6 +7,7 @@ package eu.apenet.persistence.hibernate;
 
 import eu.apenet.persistence.dao.ApiKeyDAO;
 import eu.apenet.persistence.vo.ApiKey;
+import eu.apenet.persistence.vo.BaseEntity;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -18,10 +19,15 @@ import org.hibernate.criterion.Restrictions;
 public class ApiKeyHibernateDAO extends AbstractHibernateDAO<ApiKey, Integer> implements ApiKeyDAO {
 
     @Override
-    public ApiKey findByEmail(String emailAddress) {
+    public ApiKey findByLiferayUserId(long liferayUserId) {
+        ApiKey apiKey = null;
+        getSession().clear();
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "apiKey");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria.add(Restrictions.like("emailAddress", emailAddress, MatchMode.EXACT).ignoreCase());
-        return (ApiKey) criteria.uniqueResult();
+        criteria.add(Restrictions.eq("liferayUserId", liferayUserId));
+        criteria.add(Restrictions.like("status", BaseEntity.STATUS_CREATED, MatchMode.EXACT));
+        apiKey = (ApiKey) criteria.uniqueResult();
+        return apiKey;
     }
+
 }
