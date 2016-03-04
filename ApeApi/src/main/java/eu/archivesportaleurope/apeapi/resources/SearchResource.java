@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
@@ -43,6 +44,7 @@ public class SearchResource {
     
     @POST
     @Path("/ead")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Return search results based on query",
             response = EadResponseSet.class
     )

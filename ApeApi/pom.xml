@@ -17,6 +17,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <persistence.jar>persistence-${project.version}.jar</persistence.jar>
     </properties>
 
     <dependencies>
@@ -124,7 +125,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-solr</artifactId>
-            <version>1.5.0.RELEASE</version>
+            <version>1.5.4.RELEASE</version>
         </dependency>
         
         <!--JSon object-->
@@ -215,11 +216,10 @@
         </dependency>
             
         <!--Spring+hibernet-->
-        
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.9.0.RELEASE</version>
+            <version>1.9.4.RELEASE</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-orm</artifactId>
@@ -250,16 +250,17 @@
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
-            <version>4.2.2.RELEASE</version>
+            <version>4.2.5.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-jdbc</artifactId>
-            <version>4.2.1.RELEASE</version>
+            <version>4.2.5.RELEASE</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -339,6 +340,22 @@
 
     <build>
         <finalName>ApeApi</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/persistence.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/persistence.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -406,6 +423,18 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>persistence</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>         
                     </execution>
                 </executions>
             </plugin>

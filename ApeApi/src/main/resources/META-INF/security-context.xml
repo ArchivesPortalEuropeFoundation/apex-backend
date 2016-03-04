@@ -6,5 +6,35 @@
        xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" >
     
+    <bean id="userDetailsServiceImpl"
+          class="eu.archivesportaleurope.apeapi.authentication.AuthenticationUserDetailsServiceImpl">
+        <property name="apiKeyRepo" ref="apiKeyRepo" />
+    </bean>
+
+    <bean id="preAuthenticatedProcessingFilterEntryPoint"
+          class="eu.archivesportaleurope.apeapi.authentication.CustomPreAuthenticationEntryPoint" />
+     
+    <bean id="preAuthenticationProvider"
+          class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+        <property name="preAuthenticatedUserDetailsService"
+                  ref="userDetailsServiceImpl" />
+    </bean>
+
+    <bean id="preAuthFilter"
+          class="eu.archivesportaleurope.apeapi.authentication.UrlParametersAuthenticationFilter">
+        <property name="authenticationManager" ref="appControlAuthenticationManager" />
+    </bean>
+
+    <security:authentication-manager alias="appControlAuthenticationManager">
+        <security:authentication-provider ref="preAuthenticationProvider" />
+    </security:authentication-manager>
     
+    <!-- Configuring security not finished!! -->
+    <security:http create-session="stateless" use-expressions="true" auto-config="false"
+                   entry-point-ref="preAuthenticatedProcessingFilterEntryPoint">
+        <security:intercept-url pattern="/services/**" access="permitAll" />
+        <security:custom-filter position="PRE_AUTH_FILTER" ref="preAuthFilter" />
+        <security:csrf disabled="true"/>
+    </security:http>
+    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" />
 </beans>

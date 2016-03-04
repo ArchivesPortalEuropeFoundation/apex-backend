@@ -7,4 +7,5 @@
 
     <context:component-scan base-package="eu.archivesportaleurope.apeapi.transacation.repository" />
     <context:component-scan base-package="eu.archivesportaleurope.apeapi.resources" />
+    <!--<context:component-scan base-package="eu.apenet.persistence.vo" />-->
 </beans>

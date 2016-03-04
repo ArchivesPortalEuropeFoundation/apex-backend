@@ -7,7 +7,7 @@ package eu.archivesportaleurope.apeapi.resources;
 
 import eu.archivesportaleurope.apeapi.request.ApiKeyRequest;
 import eu.archivesportaleurope.apeapi.response.ApiKeyResponse;
-import eu.apenet.persistence.hibernate.ApiKeyRepo;
+import eu.archivesportaleurope.apeapi.transaction.repository.ApiKeyRepo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
