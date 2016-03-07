@@ -14,6 +14,7 @@
           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.1.xsd">
     <import resource="classpath:META-INF/component-scan-context.xml" />
+    <import resource="classpath:META-INF/mongo-context.xml"/>
     <import resource="classpath:META-INF/database-context.xml" />
     <aop:config>
         <aop:pointcut id="allServiceMethods"

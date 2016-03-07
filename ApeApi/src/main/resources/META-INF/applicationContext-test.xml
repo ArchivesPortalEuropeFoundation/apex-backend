@@ -13,6 +13,7 @@
           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
     
     <import resource="classpath:META-INF/component-scan-context.xml" />
+    <import resource="classpath:META-INF/mongo-context.xml"/>
     <import resource="classpath:META-INF/database-context.xml" />
     <aop:config>
         <aop:pointcut id="allServiceMethods"
@@ -23,7 +24,7 @@
           factory-method="buildDefaultValidatorFactory" />
     <bean id="validator" factory-bean="validatorFactory"
           factory-method="getValidator" />
-<!--    <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
+    <!--    <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>
     </bean>-->
     <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr"/>

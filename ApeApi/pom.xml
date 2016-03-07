@@ -214,7 +214,17 @@
             <artifactId>solr-solrj</artifactId>
             <version>4.7.0</version>
         </dependency>
-            
+        <!--Mongo DB-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>1.8.4.RELEASE</version>
+        </dependency>
         <!--Spring+hibernet-->
         <dependency>
             <groupId>org.springframework.data</groupId>

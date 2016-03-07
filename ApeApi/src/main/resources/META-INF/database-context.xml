@@ -40,6 +40,15 @@
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
             </property>
         </bean>
+        <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+            <constructor-arg name="mongo" ref="mongo" />
+            <constructor-arg name="databaseName" value="ape" />
+            <constructor-arg name="userCredentials" ref="userCredentials"/>
+        </bean>
+        <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+            <constructor-arg name="username" value="apenet_dashboard"/>
+            <constructor-arg name="password" value="AP3SQLD4sh"/>
+        </bean>
     </beans>
     
     <beans profile="test">
@@ -64,6 +73,15 @@
             <property name="jpaVendorAdapter">
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
             </property>
+        </bean>
+        <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+            <constructor-arg name="mongo" ref="mongo" />
+            <constructor-arg name="databaseName" value="test" />
+            <constructor-arg name="userCredentials" ref="userCredentials"/>
+        </bean>
+        <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+            <constructor-arg name="username" value="apenet_dashboard"/>
+            <constructor-arg name="password" value="AP3SQLD4sh"/>
         </bean>
     </beans>
     
@@ -90,6 +108,15 @@
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
             </property>
         </bean>
+        <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+            <constructor-arg name="mongo" ref="mongo" />
+            <constructor-arg name="databaseName" value="unit-test" />
+            <constructor-arg name="userCredentials" ref="userCredentials"/>
+        </bean>
+        <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+            <constructor-arg name="username" value="apenet_dashboard"/>
+            <constructor-arg name="password" value="AP3SQLD4sh"/>
+        </bean>
     </beans>
     
     <beans profile="prod">
@@ -114,6 +141,15 @@
             <property name="jpaVendorAdapter">
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
             </property>
+        </bean>
+        <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+            <constructor-arg name="mongo" ref="mongo" />
+            <constructor-arg name="databaseName" value="ape" />
+            <constructor-arg name="userCredentials" ref="userCredentials"/>
+        </bean>
+        <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+            <constructor-arg name="username" value="apenet_dashboard"/>
+            <constructor-arg name="password" value="AP3SQLD4sh"/>
         </bean>
     </beans>
 </beans>
