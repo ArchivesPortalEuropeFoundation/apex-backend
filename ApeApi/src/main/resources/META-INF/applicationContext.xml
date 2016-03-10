@@ -35,6 +35,9 @@
     
     <jee:jndi-lookup id="solrUrl" jndi-name="solr/url"/>
     
+    <bean id="requestLogger" class="eu.archivesportaleurope.apeapi.services.impl.HttpRequstLoggerMongoImpl" />
+
+    
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
         <!--solrUrl-->
         <constructor-arg index="0" ref="solrUrl" />

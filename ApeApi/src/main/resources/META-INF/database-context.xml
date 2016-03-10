@@ -42,12 +42,12 @@
         </bean>
         <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
             <constructor-arg name="mongo" ref="mongo" />
-            <constructor-arg name="databaseName" value="ape" />
+            <constructor-arg name="databaseName" value="apeapi_db" />
             <constructor-arg name="userCredentials" ref="userCredentials"/>
         </bean>
         <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
-            <constructor-arg name="username" value="apenet_dashboard"/>
-            <constructor-arg name="password" value="AP3SQLD4sh"/>
+            <constructor-arg name="username" value="apeapi_dba"/>
+            <constructor-arg name="password" value="AP3N0SQL4p1"/>
         </bean>
     </beans>
     

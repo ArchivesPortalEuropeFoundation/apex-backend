@@ -24,14 +24,12 @@ public class EadResponse {
     private String unitTitleWithHighlighting;
     private String scopeContent;
     private String scopeContentWithHighlighting;
-//    private String other;
     private String fondsUnitTitle;
     private String fondsUnitId;
     private String repository;
     private String country;
     private String language;
     private String langMaterial;
-//    private String otherUnitId;
     private String unitDate;
     private String repositoryCode;
 
@@ -51,11 +49,9 @@ public class EadResponse {
             this.scopeContentWithHighlighting = this.scopeContent;
         }
         
-//        this.other = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER));
 
         this.language = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANGUAGE));
         this.langMaterial = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANG_MATERIAL));
-//        this.otherUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.OTHER_UNIT_ID));
         this.unitDate = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ALTER_DATE));
 
         this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.COUNTRY)), 0);

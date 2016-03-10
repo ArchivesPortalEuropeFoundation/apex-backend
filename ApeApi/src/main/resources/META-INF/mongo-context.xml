@@ -9,6 +9,6 @@
 
     <mongo:mongo id="mongo" />
 
-    <mongo:repositories base-package="eu.archivesportaleurope.apeapi.transaction.repository"/>
+    <mongo:repositories base-package="eu.archivesportaleurope.apeapi.transaction.repository.mongo"/>
 
 </beans>
