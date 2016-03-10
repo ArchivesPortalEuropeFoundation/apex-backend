@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.services.impl;
 import com.google.common.net.HttpHeaders;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import com.mongodb.util.JSONParseException;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.services.HttpRequestLogger;
 import eu.archivesportaleurope.apeapi.transaction.entity.nosql.UserHttpRequest;
@@ -44,7 +45,7 @@ public class HttpRequstLoggerMongoImpl implements HttpRequestLogger {
             try {
                 parameterStr = IOUtils.toString(request.getInputStream());
                 paramObject = (DBObject) JSON.parse(parameterStr);
-            } catch (IOException ex) {
+            } catch (IOException | JSONParseException ex) {
                 logger.debug("Post method parameter body read exception: " + ex.getMessage());
             }
         }
