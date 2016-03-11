@@ -26,27 +26,32 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author mahbub
  */
 public class HttpRequstLoggerMongoImpl implements HttpRequestLogger {
+
     @Autowired
     private UserHttpRequestRepo userHttpRequestRepo;
-    
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     @Override
     public void log(HttpServletRequest request) {
         String apiKey = request.getHeader(ServerConstants.HEADER_API_KEY);
-        if (apiKey==null) {
-            apiKey="N/A";
+        if (apiKey == null) {
+            apiKey = "N/A";
         }
-        
+
         String url = request.getRequestURL().toString();
         String parameterStr = request.getQueryString();
         Object paramObject = parameterStr;
+        String bodyContent = "";
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             try {
-                parameterStr = IOUtils.toString(request.getInputStream());
+                bodyContent = IOUtils.toString(request.getInputStream());
+                parameterStr = bodyContent;
                 paramObject = (DBObject) JSON.parse(parameterStr);
             } catch (IOException | JSONParseException ex) {
                 logger.debug("Post method parameter body read exception: " + ex.getMessage());
+                logger.debug("Saving content as text/plain");
+                paramObject = bodyContent;
             }
         }
         String requestMethod = request.getMethod();
@@ -67,5 +72,5 @@ public class HttpRequstLoggerMongoImpl implements HttpRequestLogger {
             logger.debug("Mongo Exception: " + Arrays.toString(ex.getStackTrace()));
         }
     }
-    
+
 }
