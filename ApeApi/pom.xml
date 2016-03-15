@@ -468,8 +468,6 @@
                         <apiSource>
                             <springmvc>false</springmvc>
                             <locations>eu.archivesportaleurope.apeapi.resources</locations>
-                            <schemes>http,https</schemes>
-                            <!--<host>localhost:8080</host>-->
                             <basePath>/ApeApi/services</basePath>
                             <info>
                                 <title>Archives Portal Europe</title>
