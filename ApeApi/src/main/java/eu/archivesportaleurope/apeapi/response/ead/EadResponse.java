@@ -32,6 +32,7 @@ public class EadResponse {
     private String langMaterial;
     private String unitDate;
     private String repositoryCode;
+    private boolean hasDigitalObject = false;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {
         this.id = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ID));
@@ -48,7 +49,6 @@ public class EadResponse {
         } else {
             this.scopeContentWithHighlighting = this.scopeContent;
         }
-        
 
         this.language = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANGUAGE));
         this.langMaterial = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANG_MATERIAL));
@@ -61,6 +61,9 @@ public class EadResponse {
 
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.REPOSITORY_CODE));
+        if (solrDocument.getFieldValue(EadFieldDefs.HAS_DIGITAL_OBJECT) != null) {
+            this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(EadFieldDefs.HAS_DIGITAL_OBJECT);
+        }
     }
 
     public EadResponse() {
@@ -184,5 +187,13 @@ public class EadResponse {
 
     public void setRepositoryCode(String repositoryCode) {
         this.repositoryCode = repositoryCode;
+    }
+
+    public boolean isHasDigitalObject() {
+        return hasDigitalObject;
+    }
+
+    public void setHasDigitalObject(boolean hasDigitalObject) {
+        this.hasDigitalObject = hasDigitalObject;
     }
 }

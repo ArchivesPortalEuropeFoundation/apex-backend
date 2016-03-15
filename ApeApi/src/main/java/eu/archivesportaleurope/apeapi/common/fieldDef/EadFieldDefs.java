@@ -10,6 +10,7 @@ package eu.archivesportaleurope.apeapi.common.fieldDef;
  * @author kaisar
  */
 public interface EadFieldDefs {
+
     String ID = "id";
     String PARENT_ID = "parentId";
     String OTHER_UNIT_ID = "otherunitid";
@@ -33,5 +34,6 @@ public interface EadFieldDefs {
     String LEAF = "leaf";
     String FONDS_TITLE = "fond";
     String TYPE = "type";
-    String ALTER_DATE="alterdate";
+    String ALTER_DATE = "alterdate";
+    String HAS_DIGITAL_OBJECT = "dao";
 }
