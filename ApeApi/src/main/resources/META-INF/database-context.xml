@@ -16,19 +16,22 @@
     <tx:annotation-driven/>
     
     <jpa:repositories base-package="eu.archivesportaleurope.apeapi.transaction.repository" />
+    <beans profile="dev, test, prod">
+        <bean id="mongoUser"
+              class="org.springframework.web.context.support.ServletContextParameterFactoryBean">
+            <property name="initParamName" value="MongoUser" />
+        </bean>
+        <bean id="mongoPassword"
+              class="org.springframework.web.context.support.ServletContextParameterFactoryBean">
+            <property name="initParamName" value="MongoPassword" />
+        </bean>
+    </beans>
     
     <beans profile="dev">
-        <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="org.postgresql.Driver"/>
-            <property name="url" value="jdbc:postgresql:ape"/>
-            <property name="username" value="apenet_dashboard"/>
-            <property name="password" value="AP3SQLD4sh"/>
-            <property name="initialSize" value="10"/>
-            <property name="maxIdle" value="50"/>
-            <property name="minIdle" value="10"/>
-            <property name="timeBetweenEvictionRunsMillis" value="30000"/>
-            <property name="minEvictableIdleTimeMillis" value="6000"/>
+        <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="java:comp/env/jdbc/APEnetDatabaseDashboard"/>
         </bean>
+
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
             <property name="entityManagerFactory" ref="entityManagerFactory"/>
         </bean>
@@ -46,22 +49,14 @@
             <constructor-arg name="userCredentials" ref="userCredentials"/>
         </bean>
         <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
-            <constructor-arg name="username" value="apeapi_dba"/>
-            <constructor-arg name="password" value="AP3N0SQL4p1"/>
+            <constructor-arg name="username" value="#{mongoUser}"/>
+            <constructor-arg name="password" value="#{mongoPassword}"/>
         </bean>
     </beans>
     
     <beans profile="test">
-        <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="org.postgresql.Driver"/>
-            <property name="url" value="jdbc:postgresql:ape_test"/>
-            <property name="username" value="apenet_dashboard"/>
-            <property name="password" value="AP3SQLD4sh"/>
-            <property name="initialSize" value="10"/>
-            <property name="maxIdle" value="50"/>
-            <property name="minIdle" value="10"/>
-            <property name="timeBetweenEvictionRunsMillis" value="30000"/>
-            <property name="minEvictableIdleTimeMillis" value="6000"/>
+        <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="java:comp/env/jdbc/APEnetDatabaseDashboard"/>
         </bean>
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
             <property name="entityManagerFactory" ref="entityManagerFactory"/>
@@ -80,8 +75,8 @@
             <constructor-arg name="userCredentials" ref="userCredentials"/>
         </bean>
         <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
-            <constructor-arg name="username" value="apenet_dashboard"/>
-            <constructor-arg name="password" value="AP3SQLD4sh"/>
+            <constructor-arg name="username" value="#{mongoUser}"/>
+            <constructor-arg name="password" value="#{mongoPassword}"/>
         </bean>
     </beans>
     
@@ -111,25 +106,17 @@
         <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
             <constructor-arg name="mongo" ref="mongo" />
             <constructor-arg name="databaseName" value="unit-test" />
-            <constructor-arg name="userCredentials" ref="userCredentials"/>
+            <!--<constructor-arg name="userCredentials" ref="userCredentials"/>-->
         </bean>
-        <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
-            <constructor-arg name="username" value="apenet_dashboard"/>
-            <constructor-arg name="password" value="AP3SQLD4sh"/>
-        </bean>
+        <!--        <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+            <constructor-arg name="username" value="#{mongoUser}"/>
+            <constructor-arg name="password" value="#{mongoPassword}"/>
+        </bean>-->
     </beans>
     
     <beans profile="prod">
-        <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="org.postgresql.Driver"/>
-            <property name="url" value="jdbc:postgresql:ape2"/>
-            <property name="username" value="apenet_dashboard"/>
-            <property name="password" value=""/>
-            <property name="initialSize" value="10"/>
-            <property name="maxIdle" value="50"/>
-            <property name="minIdle" value="10"/>
-            <property name="timeBetweenEvictionRunsMillis" value="30000"/>
-            <property name="minEvictableIdleTimeMillis" value="6000"/>
+        <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="java:comp/env/jdbc/APEnetDatabaseDashboard"/>
         </bean>
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
             <property name="entityManagerFactory" ref="entityManagerFactory"/>
@@ -148,8 +135,8 @@
             <constructor-arg name="userCredentials" ref="userCredentials"/>
         </bean>
         <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
-            <constructor-arg name="username" value="apenet_dashboard"/>
-            <constructor-arg name="password" value="AP3SQLD4sh"/>
+            <constructor-arg name="username" value="#{mongoUser}"/>
+            <constructor-arg name="password" value="#{mongoPassword}"/>
         </bean>
     </beans>
 </beans>
