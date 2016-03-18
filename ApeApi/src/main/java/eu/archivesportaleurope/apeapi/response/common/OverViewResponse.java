@@ -6,7 +6,6 @@
 package eu.archivesportaleurope.apeapi.response.common;
 
 import eu.apenet.commons.types.XmlType;
-import eu.apenet.persistence.vo.CLevel;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -17,10 +16,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class OverViewResponse {
 
     private XmlType xmlType;
-    private CLevel currentLevel;
+    private String overViewXml;
+    private Long clevelId;
+    private String unitId;
+    private String unitTitle;
     private int aiId;
-    private String aiRepoCode;
-    private String eadId;
 
     public XmlType getXmlType() {
         return xmlType;
@@ -30,12 +30,12 @@ public class OverViewResponse {
         this.xmlType = xmlType;
     }
 
-    public CLevel getCurrentLevel() {
-        return currentLevel;
+    public String getOverViewXml() {
+        return overViewXml;
     }
 
-    public void setCurrentLevel(CLevel currentLevel) {
-        this.currentLevel = currentLevel;
+    public void setOverViewXml(String overViewXml) {
+        this.overViewXml = overViewXml;
     }
 
     public int getAiId() {
@@ -46,20 +46,27 @@ public class OverViewResponse {
         this.aiId = aiId;
     }
 
-    public String getAiRepoCode() {
-        return aiRepoCode;
+    public Long getClevelId() {
+        return clevelId;
     }
 
-    public void setAiRepoCode(String aiRepoCode) {
-        this.aiRepoCode = aiRepoCode;
+    public void setClevelId(Long clevelId) {
+        this.clevelId = clevelId;
     }
 
-    public String getEadId() {
-        return eadId;
+    public String getUnitId() {
+        return unitId;
     }
 
-    public void setEadId(String eadId) {
-        this.eadId = eadId;
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
     }
 
+    public String getUnitTitle() {
+        return unitTitle;
+    }
+
+    public void setUnitTitle(String unitTitle) {
+        this.unitTitle = unitTitle;
+    }
 }
