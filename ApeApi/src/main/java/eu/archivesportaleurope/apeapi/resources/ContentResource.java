@@ -5,9 +5,11 @@
  */
 package eu.archivesportaleurope.apeapi.resources;
 
+import eu.archivesportaleurope.apeapi.response.common.OverViewFrontPageResponse;
 import eu.archivesportaleurope.apeapi.response.common.OverViewResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.CurrentLevelService;
+import eu.archivesportaleurope.apeapi.services.EadContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -32,17 +34,17 @@ import org.springframework.stereotype.Component;
 @Path("/content")
 @Api("/content")
 public class ContentResource {
-
+    
     @Autowired
     CurrentLevelService currentLevelService;
+    @Autowired
+    EadContentService eadContentService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    
     public void setCurrentLevelService(CurrentLevelService currentLevelService) {
         this.currentLevelService = currentLevelService;
     }
-
-   
-
+    
     @GET
     @Path("/{id}/overview")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -55,7 +57,20 @@ public class ContentResource {
     })
     @Produces(MediaType.APPLICATION_JSON)
     public Response getContentOverview(@PathParam("id") String id) {
-        OverViewResponse overViewResponse = currentLevelService.findOverviewByClId(new Long(id.substring(1)));
+        OverViewFrontPageResponse frontPageResponse = eadContentService.findEadContent(id);
+        OverViewResponse overViewResponse = new OverViewResponse();
+        overViewResponse.setAiId(frontPageResponse.getAiId());
+        if (frontPageResponse.getEadContent() != null) {
+            overViewResponse.setOverViewXml(frontPageResponse.getEadContent().getXml());
+            overViewResponse.setUnitId(frontPageResponse.getEadContent().getEadid());
+            overViewResponse.setUnitTitle(frontPageResponse.getEadContent().getUnittitle());
+        } else {
+            overViewResponse.setUnitId(frontPageResponse.getCurrentLevel().getUnitid());
+            overViewResponse.setClevelId(frontPageResponse.getCurrentLevel().getId());
+            overViewResponse.setOverViewXml(frontPageResponse.getCurrentLevel().getXml());
+            overViewResponse.setUnitTitle(frontPageResponse.getCurrentLevel().getUnittitle());
+        }
+        overViewResponse.setXmlType(frontPageResponse.getXmlType());
         return Response.ok().entity(overViewResponse).build();
     }
 }
