@@ -9,7 +9,8 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
-import eu.archivesportaleurope.apeapi.response.common.OverViewResponse;
+import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
+import eu.archivesportaleurope.apeapi.response.OverViewResponse;
 import eu.archivesportaleurope.apeapi.services.CurrentLevelService;
 import eu.archivesportaleurope.apeapi.transaction.repository.CLevelRepo;
 
@@ -28,6 +29,11 @@ public class CurrentLevelServiceImpl implements CurrentLevelService {
     @Transactional
     public OverViewResponse findOverviewByClId(Long id) {
         CLevel currentLevel = cLevelRepo.findById(id);
+        
+        if (currentLevel == null) {
+            throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id"+id);
+        }
+        
         Ead ead = currentLevel.getEadContent().getEad();
         
         ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
@@ -37,7 +43,7 @@ public class CurrentLevelServiceImpl implements CurrentLevelService {
         overViewResponse.setXmlType(xmlType);
         overViewResponse.setOverViewXml(currentLevel.getXml());
         overViewResponse.setAiId(archivalInstitution.getAiId());
-        overViewResponse.setClevelId(id);
+        overViewResponse.setId(currentLevel.getId()+"");
         overViewResponse.setUnitId(currentLevel.getUnitid());
         overViewResponse.setUnitTitle(currentLevel.getUnittitle());
         return overViewResponse;

@@ -10,10 +10,10 @@ import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
 
 /**
- *
+ * 
  * @author kaisar
  */
-public class OverViewFrontPageResponse {
+public class OverViewFrontPageContent {
 
     private XmlType xmlType;
     private EadContent eadContent;

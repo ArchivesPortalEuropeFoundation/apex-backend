@@ -13,7 +13,8 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.archivesportaleurope.apeapi.response.common.OverViewFrontPageResponse;
+import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
+import eu.archivesportaleurope.apeapi.response.common.OverViewFrontPageContent;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
 import eu.archivesportaleurope.apeapi.transaction.repository.ArchivalInstitutionDao;
 import eu.archivesportaleurope.apeapi.transaction.repository.CLevelRepo;
@@ -37,21 +38,23 @@ public class EadContentServiceImpl implements EadContentService {
 
     @Transactional
     @Override
-    public OverViewFrontPageResponse findEadContent(String id) {
-        OverViewFrontPageResponse pageResponse = new OverViewFrontPageResponse();
+    public OverViewFrontPageContent findEadContent(String id) {
+        OverViewFrontPageContent pageResponse = new OverViewFrontPageContent();
         if (StringUtils.isNotBlank(id)) {
             if (id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
                 Long idLong = new Long(id.substring(1));
                 CLevel currentLevel = cLevelRepo.findById(idLong);
-                if (currentLevel != null) {
-                    Ead ead = currentLevel.getEadContent().getEad();
-                    ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
-                    pageResponse.setXmlType(XmlType.getContentType(ead));
-                    pageResponse.setCurrentLevel(currentLevel);
-                    pageResponse.setAiId(archivalInstitution.getAiId());
-                    pageResponse.setAiRepoCode(archivalInstitution.getEncodedRepositorycode());
-                    pageResponse.setEadId(ead.getEncodedIdentifier());
+                if (currentLevel == null) {
+                    throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
                 }
+                Ead ead = currentLevel.getEadContent().getEad();
+                ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
+                pageResponse.setXmlType(XmlType.getContentType(ead));
+                pageResponse.setCurrentLevel(currentLevel);
+                pageResponse.setAiId(archivalInstitution.getAiId());
+                pageResponse.setAiRepoCode(archivalInstitution.getEncodedRepositorycode());
+                pageResponse.setEadId(ead.getEncodedIdentifier());
+
             } else {
                 String solrPrefix = id.substring(0, 1);
                 XmlType xmlType = XmlType.getTypeBySolrPrefix(solrPrefix);
@@ -65,6 +68,9 @@ public class EadContentServiceImpl implements EadContentService {
                         eadContent = contentRepo.findByHgId(idLong);
                     } else {
                         eadContent = contentRepo.findBySgId(idLong);
+                    }
+                    if (eadContent == null) {
+                        throw new ResourceNotFoundException("Couldn't find any item with the given id", "EadContent Item not found, id" + id);
                     }
                     Ead ead = eadContent.getEad();
                     ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.archivesportaleurope.apeapi.response.common;
+package eu.archivesportaleurope.apeapi.response;
 
 import eu.apenet.commons.types.XmlType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -14,13 +14,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class OverViewResponse {
-
+    private String id;
     private XmlType xmlType;
     private String overViewXml;
-    private Long clevelId;
     private String unitId;
     private String unitTitle;
     private int aiId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public XmlType getXmlType() {
         return xmlType;
@@ -44,14 +51,6 @@ public class OverViewResponse {
 
     public void setAiId(int aiId) {
         this.aiId = aiId;
-    }
-
-    public Long getClevelId() {
-        return clevelId;
-    }
-
-    public void setClevelId(Long clevelId) {
-        this.clevelId = clevelId;
     }
 
     public String getUnitId() {

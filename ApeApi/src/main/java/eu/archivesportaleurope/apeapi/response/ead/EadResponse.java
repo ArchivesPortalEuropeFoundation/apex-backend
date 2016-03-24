@@ -5,6 +5,8 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
+import eu.apenet.commons.solr.SolrValues;
+import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.common.fieldDef.EadFieldDefs;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -33,9 +35,20 @@ public class EadResponse {
     private String unitDate;
     private String repositoryCode;
     private boolean hasDigitalObject = false;
+    private String docType;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {
         this.id = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ID));
+        XmlType xmlType = XmlType.getTypeBySolrPrefix(this.id.substring(0, 1));
+        if (xmlType == null) {
+            if (this.id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
+                this.docType = "Descriptive Unit";
+            } else {
+                this.docType = "Unknown";
+            }
+        } else {
+            this.docType = xmlType.getName();
+        }
         this.unitTitle = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.TITLE));
         if (response.getHighlighting().get(id).get(EadFieldDefs.TITLE) != null) {
             this.unitTitleWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(EadFieldDefs.TITLE).get(0));
@@ -83,6 +96,14 @@ public class EadResponse {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDocType() {
+        return docType;
+    }
+
+    public void setDocType(String docType) {
+        this.docType = docType;
     }
 
     public String getUnitTitle() {

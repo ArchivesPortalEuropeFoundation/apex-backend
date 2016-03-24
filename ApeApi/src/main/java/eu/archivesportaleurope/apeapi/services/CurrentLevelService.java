@@ -5,8 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.services;
 
-import eu.apenet.persistence.vo.Ead;
-import eu.archivesportaleurope.apeapi.response.common.OverViewResponse;
+import eu.archivesportaleurope.apeapi.response.OverViewResponse;
 
 /**
  *
