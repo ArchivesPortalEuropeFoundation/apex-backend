@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.resources;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
@@ -65,7 +66,7 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setQuery("Heerlijkheid");
         request.setStart(0);
 
-        Response response = super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
         EadResponseSet responseEad = response.readEntity(EadResponseSet.class);
@@ -82,7 +83,7 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setQuery("Heerlijkheid");
         request.setStart(0);
 
-        Response response = super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
         //No idea why directly asking for EadResponseSet.class does not works
@@ -133,7 +134,7 @@ public class SearchResourceTest extends JerseySpringTest {
         Assert.assertEquals(1, constraintViolations.size());
         Assert.assertEquals("Count must not be more than 50", constraintViolation.getMessage());
         Assert.assertEquals("count", constraintViolation.getPropertyPath().toString());
-        super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
+        super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
     }
 
     @Override

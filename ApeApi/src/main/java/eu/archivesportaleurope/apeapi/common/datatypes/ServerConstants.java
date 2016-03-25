@@ -15,4 +15,5 @@ public final class ServerConstants {
     }
     
     public static final String HEADER_API_KEY = "APIkey";
+    public static final String APE_API_V1 = "application/vnd.ape-v1+json";
 }

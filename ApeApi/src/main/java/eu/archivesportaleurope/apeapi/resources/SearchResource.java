@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.resources;
 
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.validation.Valid;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -35,6 +37,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Component
 @Path("/search")
 @Api("/search")
+@Produces({ServerConstants.APE_API_V1})
 public class SearchResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -52,7 +55,7 @@ public class SearchResource {
         @ApiResponse(code = 500, message = "Internal server error"),
         @ApiResponse(code = 400, message = "Bad request")
     })
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({ServerConstants.APE_API_V1})
     public Response search(
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {

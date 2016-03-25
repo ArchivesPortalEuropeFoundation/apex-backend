@@ -14,7 +14,7 @@ import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
-import eu.archivesportaleurope.apeapi.response.common.OverViewFrontPageContent;
+import eu.archivesportaleurope.apeapi.response.common.DetailContent;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
 import eu.archivesportaleurope.apeapi.transaction.repository.ArchivalInstitutionDao;
 import eu.archivesportaleurope.apeapi.transaction.repository.CLevelRepo;
@@ -38,8 +38,7 @@ public class EadContentServiceImpl implements EadContentService {
 
     @Transactional
     @Override
-    public OverViewFrontPageContent findEadContent(String id) {
-        OverViewFrontPageContent pageResponse = new OverViewFrontPageContent();
+    public DetailContent findClevelContent(String id) {
         if (StringUtils.isNotBlank(id)) {
             if (id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
                 Long idLong = new Long(id.substring(1));
@@ -47,45 +46,47 @@ public class EadContentServiceImpl implements EadContentService {
                 if (currentLevel == null) {
                     throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
                 }
-                Ead ead = currentLevel.getEadContent().getEad();
-                ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
-                pageResponse.setXmlType(XmlType.getContentType(ead));
-                pageResponse.setCurrentLevel(currentLevel);
-                pageResponse.setAiId(archivalInstitution.getAiId());
-                pageResponse.setAiRepoCode(archivalInstitution.getEncodedRepositorycode());
-                pageResponse.setEadId(ead.getEncodedIdentifier());
-
-            } else {
-                String solrPrefix = id.substring(0, 1);
-                XmlType xmlType = XmlType.getTypeBySolrPrefix(solrPrefix);
-                EadContent eadContent;
-                if (xmlType != null) {
-                    Integer idLong = Integer.parseInt(id.substring(1));
-                    //get search term from previous request
-                    if (xmlType.getClazz().equals(FindingAid.class)) {
-                        eadContent = contentRepo.findByFaId(idLong);
-                    } else if (xmlType.getClazz().equals(HoldingsGuide.class)) {
-                        eadContent = contentRepo.findByHgId(idLong);
-                    } else {
-                        eadContent = contentRepo.findBySgId(idLong);
-                    }
-                    if (eadContent == null) {
-                        throw new ResourceNotFoundException("Couldn't find any item with the given id", "EadContent Item not found, id" + id);
-                    }
-                    Ead ead = eadContent.getEad();
-                    ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
-                    pageResponse.setXmlType(xmlType);
-                    pageResponse.setEadContent(eadContent);
-                    pageResponse.setAiId(archivalInstitution.getAiId());
-                    pageResponse.setAiRepoCode(archivalInstitution.getEncodedRepositorycode());
-                    pageResponse.setEadId(ead.getEncodedIdentifier());
-                    pageResponse.setXmlTypeName(xmlType.getResourceName());
-                } else {
-                    //consider it as AI and fill AI details from DisplayPreviewContoller
-                }
-
+                //lazy load
+                ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
+                ai.getAiname();
+                DetailContent pageResponse = new DetailContent(currentLevel);
+                return pageResponse;
             }
         }
-        return pageResponse;
+        throw new ResourceNotFoundException("Not a descriptive unit id", "Not a descriptive unit id: " + id);
+    }
+
+    @Transactional
+    @Override
+    public DetailContent findEadContent(String id) {
+        if (StringUtils.isNotBlank(id)) {
+
+            String solrPrefix = id.substring(0, 1);
+            XmlType xmlType = XmlType.getTypeBySolrPrefix(solrPrefix);
+            EadContent eadContent;
+            if (xmlType != null) {
+                Integer idLong = Integer.parseInt(id.substring(1));
+                //get search term from previous request
+                if (xmlType.getClazz().equals(FindingAid.class)) {
+                    eadContent = contentRepo.findByFaId(idLong);
+                } else if (xmlType.getClazz().equals(HoldingsGuide.class)) {
+                    eadContent = contentRepo.findByHgId(idLong);
+                } else {
+                    eadContent = contentRepo.findBySgId(idLong);
+                }
+                if (eadContent == null) {
+                    throw new ResourceNotFoundException("Couldn't find any item with the given id", "EadContent Item not found, id" + id);
+                }
+
+                DetailContent pageResponse = new DetailContent(eadContent);
+                ArchivalInstitution ai = eadContent.getEad().getArchivalInstitution();
+                ai.getAiname();
+                return pageResponse;
+
+            } else {
+                //consider it as AI and fill AI details from DisplayPreviewContoller
+            }
+        }
+        throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
     }
 }

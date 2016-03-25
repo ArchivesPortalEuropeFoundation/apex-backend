@@ -5,12 +5,13 @@
  */
 package eu.archivesportaleurope.apeapi.services;
 
-import eu.archivesportaleurope.apeapi.response.common.OverViewFrontPageContent;
+import eu.archivesportaleurope.apeapi.response.common.DetailContent;
 
 /**
  *
  * @author kaisar
  */
 public interface EadContentService {
-    OverViewFrontPageContent findEadContent(String id);
+    DetailContent findClevelContent(String id);
+    DetailContent findEadContent(String id);
 }

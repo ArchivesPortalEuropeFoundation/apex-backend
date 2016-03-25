@@ -1,5 +1,6 @@
 package eu.archivesportaleurope.apeapi.resources;
 
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
@@ -32,17 +33,17 @@ public class VersionResourceTest extends JerseySpringTest {
     @Test
     public void testCurrentAppVersion() {
         logger.debug("Application current version Version");
-        Response response = super.target("version").path("current").request().header("Content-Type", "application/json").get(Response.class);
+        Response response = super.target("version").path("current").request().get(Response.class);
         Assert.assertEquals(response.getStatus(), HttpStatus.OK.value());
         response.bufferEntity();
-        String appVersion = "{\"version\":1.0}";
+        String appVersion = "{\"version\":\""+ServerConstants.APE_API_V1+"\"}";
         Assert.assertEquals(appVersion, response.readEntity(String.class));
     }
 
     @Test
     public void testPreviousAppVersion() {
         logger.debug("Application previous version Version");
-        Response response = super.target("version").path("previous").request().header("Content-Type", "application/json").get(Response.class);
+        Response response = super.target("version").path("previous").request().get(Response.class);
         String appVersion = "{\"version\":0.0}";
         Assert.assertEquals(appVersion, response.readEntity(String.class));
     }

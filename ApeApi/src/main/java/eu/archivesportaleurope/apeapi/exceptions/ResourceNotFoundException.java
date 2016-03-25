@@ -12,7 +12,7 @@ package eu.archivesportaleurope.apeapi.exceptions;
 public class ResourceNotFoundException extends AppException {
 
     public ResourceNotFoundException(String message, String developerMessage) {
-        super(400, 400, message, developerMessage, "");
+        super(404, 404, message, developerMessage, "");
     }
 
 }

@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.resources;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,7 +39,7 @@ public class VersionResource {
         @ApiResponse(code = 500, message = "Internal server error")
     })
     public Response appVersion() {
-        String appVersion = "{\"version\":1.0}";
+        String appVersion = "{\"version\":\""+ServerConstants.APE_API_V1+"\"}";
         //Logback config test
 //        // assume SLF4J is bound to logback in the current environment
 //        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
