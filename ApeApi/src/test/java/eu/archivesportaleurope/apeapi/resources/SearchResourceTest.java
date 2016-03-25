@@ -12,6 +12,7 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
+import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -97,6 +98,26 @@ public class SearchResourceTest extends JerseySpringTest {
         EadResponse doc = responseEad.getEadSearchResults().get(0);
         Assert.assertEquals("Heerlijkheid Alblasserdam - Kaarten", doc.getUnitTitle());
         logger.debug("Title: " + doc.getUnitTitle());
+    }
+
+    @Test
+    public void testWithDefaultCount() {
+        logger.debug("Test Search with default count");
+        SearchRequest request = new SearchRequest();
+        request.setQuery("Heerlijkheid");
+        request.setStart(0);
+
+        Response response = super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadResponseSet> token = new TypeToken<EadResponseSet>() {
+        };
+        EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+        Assert.assertTrue(Integer.parseInt(new PropertiesUtil("resource.properties").getValueFromKey("search.request.default.count")) >= responseEad.getEadSearchResults().size());
     }
 
     @Test(expected = ProcessingException.class)

@@ -34,6 +34,7 @@
     
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
         <constructor-arg index="0" ref="eadSolrServer"/>
+        <constructor-arg index="1" value="resource.properties"/>
     </bean>
     
     <solr:embedded-solr-server id="eadSuggestionSolrServer" solrHome="src/test/resources/solr"/>
