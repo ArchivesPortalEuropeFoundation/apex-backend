@@ -105,10 +105,11 @@ public class SearchResourceTest extends JerseySpringTest {
     public void testWithDefaultCount() {
         logger.debug("Test Search with default count");
         SearchRequest request = new SearchRequest();
+        request.setCount(0);
         request.setQuery("Heerlijkheid");
         request.setStart(0);
 
-        Response response = super.target("search").path("ead").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
         //No idea why directly asking for EadResponseSet.class does not works
@@ -118,6 +119,9 @@ public class SearchResourceTest extends JerseySpringTest {
         TypeToken<EadResponseSet> token = new TypeToken<EadResponseSet>() {
         };
         EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        logger.info(new PropertiesUtil("resource.properties").getValueFromKey("search.request.default.count"));
         Assert.assertTrue(Integer.parseInt(new PropertiesUtil("resource.properties").getValueFromKey("search.request.default.count")) >= responseEad.getEadSearchResults().size());
     }
 

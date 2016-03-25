@@ -9,6 +9,8 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -20,6 +22,7 @@ public class EadSearchSearvice implements SearchService {
     private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
     private PropertiesUtil propertiesUtil;
+    final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
@@ -50,6 +53,7 @@ public class EadSearchSearvice implements SearchService {
         SolrQuery query = new SolrQuery(searchRequest.getQuery() + extraSearchParam);
         query.setStart(searchRequest.getStart());
         if (searchRequest.getCount() <= 0) {
+            logger.info(":::Default Count vale from prop is : "+propertiesUtil.getValueFromKey("search.request.default.count"));
             query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
         } else {
             query.setRows(searchRequest.getCount());

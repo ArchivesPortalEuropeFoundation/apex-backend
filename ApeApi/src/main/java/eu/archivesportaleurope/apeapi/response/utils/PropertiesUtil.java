@@ -32,7 +32,7 @@ public class PropertiesUtil {
     }
 
     public String getValueFromKey(String key) {
-        return properties.getProperty(key);
+        return properties.getProperty(key,"10");
     }
 
 }
