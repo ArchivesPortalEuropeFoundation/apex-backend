@@ -55,7 +55,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>SharedResources</artifactId>
-            <version>2015-10-SNAPSHOT</version>
+            <version>2016-03-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <profiles>
@@ -113,7 +113,7 @@
                 <version>1.5</version>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>eu.archivesportaleurope.backend:SharedResources:2015-10-SNAPSHOT</resourceBundle>
+                        <resourceBundle>eu.archivesportaleurope.backend:SharedResources:2016-03-SNAPSHOT</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>
