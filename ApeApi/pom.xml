@@ -354,7 +354,7 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
-            <version>2015-10-SNAPSHOT</version>
+            <version>2016-03-SNAPSHOT</version>
         </dependency>
         <!--Access-Control-Allow-Origin-->
         <dependency>
