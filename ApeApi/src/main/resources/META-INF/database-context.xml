@@ -29,7 +29,7 @@
     
     <beans profile="dev">
         <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-            <property name="jndiName" value="java:comp/env/jdbc/APEnetDatabaseDashboard"/>
+            <property name="jndiName" value="java:/comp/env/jdbc/APEnetDatabaseDashboard"/>
         </bean>
 
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -56,7 +56,7 @@
     
     <beans profile="test">
         <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-            <property name="jndiName" value="java:comp/env/jdbc/APEnetDatabaseDashboard"/>
+            <property name="jndiName" value="java:/comp/env/jdbc/APEnetDatabaseDashboard"/>
         </bean>
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
             <property name="entityManagerFactory" ref="entityManagerFactory"/>
@@ -106,17 +106,12 @@
         <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
             <constructor-arg name="mongo" ref="mongo" />
             <constructor-arg name="databaseName" value="unit-test" />
-            <!--<constructor-arg name="userCredentials" ref="userCredentials"/>-->
         </bean>
-        <!--        <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
-            <constructor-arg name="username" value="#{mongoUser}"/>
-            <constructor-arg name="password" value="#{mongoPassword}"/>
-        </bean>-->
     </beans>
     
     <beans profile="prod">
         <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-            <property name="jndiName" value="java:comp/env/jdbc/APEnetDatabaseDashboard"/>
+            <property name="jndiName" value="java:/comp/env/jdbc/APEnetDatabaseDashboard"/>
         </bean>
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
             <property name="entityManagerFactory" ref="entityManagerFactory"/>
