@@ -113,7 +113,7 @@
                 <version>1.5</version>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>eu.archivesportaleurope.backend:SharedResources:2016-03-SNAPSHOT</resourceBundle>
+                        <resourceBundle>eu.archivesportaleurope.backend:SharedResources:${project.version}</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>
