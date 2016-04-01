@@ -5,15 +5,12 @@
  */
 package eu.archivesportaleurope.apeapi.resources;
 
-import com.google.gson.Gson;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
-import eu.archivesportaleurope.apeapi.response.ContentResponse;
 import eu.archivesportaleurope.apeapi.response.ContentResponseClevel;
 import eu.archivesportaleurope.apeapi.response.ContentResponseEad;
 import eu.archivesportaleurope.apeapi.response.common.DetailContent;
-import eu.archivesportaleurope.apeapi.response.OverViewResponse;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
 import gov.loc.ead.C;
 import gov.loc.ead.Ead;
@@ -29,7 +26,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

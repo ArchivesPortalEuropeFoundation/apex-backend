@@ -49,7 +49,7 @@ public class HttpRequstLoggerMongoImpl implements HttpRequestLogger {
                 parameterStr = bodyContent;
                 paramObject = (DBObject) JSON.parse(parameterStr);
             } catch (IOException | JSONParseException ex) {
-                logger.debug("Post method parameter body read exception: " + ex.getMessage());
+                logger.debug("Post method parameter body read exception", ex);
                 logger.debug("Saving content as text/plain");
                 paramObject = bodyContent;
             }
@@ -69,7 +69,7 @@ public class HttpRequstLoggerMongoImpl implements HttpRequestLogger {
             userHttpRequestRepo.save(userRequest);
         } catch (Exception ex) {
             logger.error("Faild to save request: " + userRequest);
-            logger.debug("Mongo Exception: " + Arrays.toString(ex.getStackTrace()));
+            logger.debug("Mongo Exception: " + Arrays.toString(ex.getStackTrace()), ex);
         }
     }
 

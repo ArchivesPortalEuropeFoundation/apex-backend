@@ -48,13 +48,13 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
                 stringBuilder.append("");
             }
         } catch (IOException ex) {
-            logger.error("Error reading the request body...");
+            logger.error("Error reading the request body!", ex);
         } finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException ex) {
-                    logger.error("Error closing bufferedReader...");
+                    logger.error("Error closing bufferedReader!!", ex);
                 }
             }
         }
