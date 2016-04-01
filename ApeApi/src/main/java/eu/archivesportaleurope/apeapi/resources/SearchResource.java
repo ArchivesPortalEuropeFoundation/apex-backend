@@ -62,8 +62,8 @@ public class SearchResource {
             EadResponseSet eadResponseSet = eadSearch.searchOpenData(searchRequest);
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());

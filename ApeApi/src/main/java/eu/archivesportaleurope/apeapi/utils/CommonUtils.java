@@ -11,6 +11,9 @@ package eu.archivesportaleurope.apeapi.utils;
  */
 public class CommonUtils {
 
+    private CommonUtils() {
+    }
+
     public static String splitByColon(String str, int number) {
         String ret = "";
         if (str != null && !str.isEmpty()) {

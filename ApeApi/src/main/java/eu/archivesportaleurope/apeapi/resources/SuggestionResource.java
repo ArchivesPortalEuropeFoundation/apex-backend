@@ -62,8 +62,8 @@ public class SuggestionResource {
             }
             return Response.ok().entity(gson.toJson(responseSet)).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
@@ -82,8 +82,8 @@ public class SuggestionResource {
             SuggestionResponseSet suggestionResponseSet = suggestionService.suggest(term);
             return Response.ok().entity(suggestionResponseSet).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
@@ -104,8 +104,8 @@ public class SuggestionResource {
             EacCpfDAO eca = DAOFactory.instance().getEacCpfDAO();
             return Response.ok().entity(eadDAO.getTotalCountOfUnits() + " " + eca.findAll().size()).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());

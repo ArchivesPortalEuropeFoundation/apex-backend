@@ -32,8 +32,9 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;
 
-        try {
-            InputStream inputStream = request.getInputStream();
+        try (
+                InputStream inputStream = request.getInputStream();
+            ) {
 
             if (inputStream != null) {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));

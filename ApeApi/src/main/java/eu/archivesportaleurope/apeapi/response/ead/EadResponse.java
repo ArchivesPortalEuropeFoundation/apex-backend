@@ -78,7 +78,10 @@ public class EadResponse {
             this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(EadFieldDefs.HAS_DIGITAL_OBJECT);
         }
     }
-
+    
+    /**
+     * Default constructor
+     */
     public EadResponse() {
     }
 

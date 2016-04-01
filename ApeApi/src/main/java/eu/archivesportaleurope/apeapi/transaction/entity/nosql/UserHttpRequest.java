@@ -17,7 +17,10 @@ public class UserHttpRequest extends BaseEntityNoSql {
     private String clientIP;
     private String requestOrigin;
     private String clientAgent;
-
+    
+    /**
+     * Default constructor
+     */
     public UserHttpRequest() {
     }
 

@@ -34,8 +34,6 @@ public class AuthenticationUserDetailsServiceImpl implements
 
     Collection<GrantedAuthority> grantedAuthorities;
 
-    String update, create, view;
-
     public void setApiKeyRepo(ApiKeyRepo apiKeyRepo) {
         this.apiKeyRepo = apiKeyRepo;
     }
@@ -43,12 +41,12 @@ public class AuthenticationUserDetailsServiceImpl implements
     @Override
     public UserDetails loadUserDetails(Authentication token)
             throws UsernameNotFoundException {
-        UserDetails userDetails = null;
+        UserDetails userDetails;
 
         String[] credentials = (String[]) token.getCredentials();
-        boolean principal = Boolean.valueOf(token.getPrincipal().toString());
+        boolean principal = Boolean.parseBoolean(token.getPrincipal().toString());
 
-        if (credentials == null || principal == false) {
+        if (credentials == null || !principal) {
             userDetails = null;
         } else {
             String apiKey = credentials[0];

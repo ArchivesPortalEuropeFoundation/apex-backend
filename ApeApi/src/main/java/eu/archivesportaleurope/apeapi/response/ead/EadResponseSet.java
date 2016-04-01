@@ -45,7 +45,7 @@ public class EadResponseSet {
             this.eadSearchResults.add(new EadResponse(document, response));
         }
         this.totalPages = (int) (this.totalResults / responseHeader.getRows());
-        if ((this.totalResults % responseHeader.getRows() > 0)) {
+        if (this.totalResults % responseHeader.getRows() > 0) {
             this.totalPages++;
         }
 //        this.suggestions = new SuggestionResponseSet(response);

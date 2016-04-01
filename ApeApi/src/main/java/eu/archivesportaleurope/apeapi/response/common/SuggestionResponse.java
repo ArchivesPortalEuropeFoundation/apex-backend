@@ -17,7 +17,10 @@ public class SuggestionResponse {
 
     private String term;
     private long frequency;
-
+    
+    /**
+     * Default constructor
+     */
     public SuggestionResponse() {
     }
     

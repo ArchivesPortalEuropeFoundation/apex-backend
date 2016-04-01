@@ -27,15 +27,17 @@ public class AutocompletionResponseSet {
     }
 
     public void add(TermsResponse termsResponse, String type) {
-        if (termsResponse != null) {
-            for (Map.Entry<String, List<TermsResponse.Term>> entry : termsResponse.getTermMap().entrySet()) {
-                for (TermsResponse.Term termItem : entry.getValue()) {
-                    if (autocompletionResults.size() < 10) {
-                        autocompletionResults.add(new AutocompletionResponse(termItem, type));
-                    }
+        if (termsResponse == null) {
+            return;
+        }
+        for (Map.Entry<String, List<TermsResponse.Term>> entry : termsResponse.getTermMap().entrySet()) {
+            for (TermsResponse.Term termItem : entry.getValue()) {
+                if (autocompletionResults.size() < 10) {
+                    autocompletionResults.add(new AutocompletionResponse(termItem, type));
                 }
             }
         }
+
     }
 
     public List<AutocompletionResponse> getAutocompletionResults() {

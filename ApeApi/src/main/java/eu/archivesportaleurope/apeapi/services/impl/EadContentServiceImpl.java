@@ -39,19 +39,17 @@ public class EadContentServiceImpl implements EadContentService {
     @Transactional
     @Override
     public DetailContent findClevelContent(String id) {
-        if (StringUtils.isNotBlank(id)) {
-            if (id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
-                Long idLong = new Long(id.substring(1));
-                CLevel currentLevel = cLevelRepo.findById(idLong);
-                if (currentLevel == null) {
-                    throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
-                }
-                //lazy load
-                ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
-                ai.getAiname();
-                DetailContent pageResponse = new DetailContent(currentLevel);
-                return pageResponse;
+        if (StringUtils.isNotBlank(id) && id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
+            Long idLong = new Long(id.substring(1));
+            CLevel currentLevel = cLevelRepo.findById(idLong);
+            if (currentLevel == null) {
+                throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
             }
+            //lazy load
+            ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
+            ai.getAiname();
+            DetailContent pageResponse = new DetailContent(currentLevel);
+            return pageResponse;
         }
         throw new ResourceNotFoundException("Not a descriptive unit id", "Not a descriptive unit id: " + id);
     }
