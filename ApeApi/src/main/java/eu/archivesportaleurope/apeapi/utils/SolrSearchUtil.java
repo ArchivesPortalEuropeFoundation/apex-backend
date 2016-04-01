@@ -25,17 +25,17 @@ public class SolrSearchUtil {
     public SolrSearchUtil(String url) {
         this.solrServer = new HttpSolrServer(url);
     }
-    
+
     public SolrSearchUtil(SolrServer solrServer) {
         this.solrServer = solrServer;
+    }
+    
+    public SolrSearchUtil(String baseUrl, String coreName) {
+        this(baseUrl + "/" + coreName);
     }
 
     public void setQuery(SolrQuery solrQuery) {
         this.solrQuery = solrQuery;
-    }
-
-    public SolrSearchUtil(String baseUrl, String coreName) {
-        this(baseUrl + "/" + coreName);
     }
 
     public QueryResponse getSearchResponse() throws SolrServerException {

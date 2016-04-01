@@ -67,7 +67,7 @@ public class SuggestionResource {
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 
@@ -87,7 +87,7 @@ public class SuggestionResource {
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 
@@ -97,7 +97,7 @@ public class SuggestionResource {
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})
     @Produces(MediaType.TEXT_PLAIN)
-    public Response DBTest() {
+    public Response dBTest() {
         try {
             JpaUtil.init();
             EadDAO eadDAO = DAOFactory.instance().getEadDAO();
@@ -109,7 +109,7 @@ public class SuggestionResource {
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 }

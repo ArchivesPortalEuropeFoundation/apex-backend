@@ -32,7 +32,7 @@ public class JsonMessageBodyWriter implements MessageBodyWriter {
 
     @Override
     public boolean isWriteable(Class type, Type genericType,
-            Annotation annotations[], MediaType mediaType) {
+            Annotation[] annotations, MediaType mediaType) {
         return true;
     }
 

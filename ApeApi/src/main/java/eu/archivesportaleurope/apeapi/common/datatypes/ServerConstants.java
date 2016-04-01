@@ -10,10 +10,9 @@ package eu.archivesportaleurope.apeapi.common.datatypes;
  * @author M.Mozadded
  */
 public final class ServerConstants {
-
-    private ServerConstants() {
-    }
-    
     public static final String HEADER_API_KEY = "APIkey";
     public static final String APE_API_V1 = "application/vnd.ape-v1+json";
+    
+    private ServerConstants() {
+    }
 }

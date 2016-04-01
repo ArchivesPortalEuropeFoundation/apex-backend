@@ -21,8 +21,8 @@ public class EadSearchSearvice implements SearchService {
     private String solrUrl;
     private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
-    private PropertiesUtil propertiesUtil;
-    final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final PropertiesUtil propertiesUtil;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;

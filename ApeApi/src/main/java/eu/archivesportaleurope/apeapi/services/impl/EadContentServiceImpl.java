@@ -9,7 +9,6 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -48,8 +47,7 @@ public class EadContentServiceImpl implements EadContentService {
             //lazy load
             ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
             ai.getAiname();
-            DetailContent pageResponse = new DetailContent(currentLevel);
-            return pageResponse;
+            return new DetailContent(currentLevel);
         }
         throw new ResourceNotFoundException("Not a descriptive unit id", "Not a descriptive unit id: " + id);
     }

@@ -97,7 +97,7 @@ public class ContentResource {
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 //*/
@@ -137,7 +137,7 @@ public class ContentResource {
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 //*/

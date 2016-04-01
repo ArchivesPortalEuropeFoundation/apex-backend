@@ -22,6 +22,7 @@ public class SuggestionResponse {
      * Default constructor
      */
     public SuggestionResponse() {
+        //Do nothing
     }
     
     public SuggestionResponse(SpellCheckResponse.Collation collation) {

@@ -10,7 +10,7 @@ package eu.archivesportaleurope.apeapi.transaction.entity.nosql;
  * @author mahbub
  */
 public class UserHttpRequest extends BaseEntityNoSql {
-    private String ApiKey;
+    private String apiKey;
     private String url;
     private Object parameter;
     private String requestMethod;
@@ -22,10 +22,11 @@ public class UserHttpRequest extends BaseEntityNoSql {
      * Default constructor
      */
     public UserHttpRequest() {
+        //Do nothing
     }
 
-    public UserHttpRequest(String ApiKey, String url, Object parameter, String requestMethod, String clientIP, String requestOrigin, String clientAgent) {
-        this.ApiKey = ApiKey;
+    public UserHttpRequest(String apiKey, String url, Object parameter, String requestMethod, String clientIP, String requestOrigin, String clientAgent) {
+        this.apiKey = apiKey;
         this.url = url;
         this.parameter = parameter;
         this.requestMethod = requestMethod;
@@ -36,11 +37,11 @@ public class UserHttpRequest extends BaseEntityNoSql {
     
 
     public String getApiKey() {
-        return ApiKey;
+        return apiKey;
     }
 
-    public void setApiKey(String ApiKey) {
-        this.ApiKey = ApiKey;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public String getUrl() {
@@ -93,7 +94,7 @@ public class UserHttpRequest extends BaseEntityNoSql {
 
     @Override
     public String toString() {
-        return "UserHttpRequest{" + "id=" + this.getId() + ", ApiKey=" + ApiKey + ", url=" + url + ", parameter=" + parameter + ", requestMethod=" + requestMethod + ", clientIP=" + clientIP + ", requestOrigin=" + requestOrigin + ", clientAgent=" + clientAgent + ", date=" + this.getDate() + '}';
+        return "UserHttpRequest{" + "id=" + this.getId() + ", ApiKey=" + apiKey + ", url=" + url + ", parameter=" + parameter + ", requestMethod=" + requestMethod + ", clientIP=" + clientIP + ", requestOrigin=" + requestOrigin + ", clientAgent=" + clientAgent + ", date=" + this.getDate() + '}';
     }
     
 }
