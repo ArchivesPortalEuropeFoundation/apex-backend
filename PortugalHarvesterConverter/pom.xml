@@ -4,8 +4,8 @@
     <parent>
         <groupId>eu.archivesportaleurope.backend</groupId>
         <artifactId>backend-project</artifactId>
-		<version>2.2.2-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+        <version>2.2.1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
     <artifactId>PortugalHarvesterConverter</artifactId>
     <packaging>jar</packaging>
