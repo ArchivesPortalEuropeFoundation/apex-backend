@@ -16,7 +16,7 @@ public class XslUpload {
     private String readableName;
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "archival_institution_id")
+    @JoinColumn(name = "archival_institution_id", foreignKey = @ForeignKey(name = "archival_institution_id_fkey"))
     private ArchivalInstitution archivalInstitution;
     @Column(name = "archival_institution_id", updatable = false, insertable = false)
     private Integer archivalInstitutionId;
@@ -24,6 +24,7 @@ public class XslUpload {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }

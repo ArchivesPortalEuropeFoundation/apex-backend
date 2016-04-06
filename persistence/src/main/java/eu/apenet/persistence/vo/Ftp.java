@@ -18,7 +18,7 @@ public class Ftp implements java.io.Serializable{
     private String username;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ai_id", insertable = false, updatable = false)
+    @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "ai_id_fkey"), insertable = false, updatable = false)
     private ArchivalInstitution archivalInstitution;
     @Column(name = "ai_id")
     private Integer aiId;

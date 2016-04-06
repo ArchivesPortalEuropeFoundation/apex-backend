@@ -3,6 +3,7 @@ package eu.apenet.persistence.vo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,116 +14,115 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "hg_sg_fa_relation")
 public class HgSgFaRelation {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="fa_id",insertable=false, updatable=false)
-	private FindingAid findingAid;
-	@Column(name = "fa_id")
-	private Integer faId;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="hg_id",insertable=false, updatable=false)
-	private HoldingsGuide holdingsGuide;
-	@Column(name = "hg_id")
-	private Integer hgId;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="sg_id",insertable=false, updatable=false)
-	private SourceGuide sourceGuide;
-	@Column(name = "sg_id")
-	private Integer sgId;
-	
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="hg_sg_clevel_id", insertable=false, updatable=false)
-	private CLevel hgSgClevel;
-	
-	@Column(name = "hg_sg_clevel_id")
-	private Long hgSgClevelId;
 
-	@Column(name = "ai_id")
-	private Integer aiId;
-	
-	public Long getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fa_id", foreignKey = @ForeignKey(name = "hg_sg_fa_relation_fa_id_fkey"), insertable = false, updatable = false)
+    private FindingAid findingAid;
+    @Column(name = "fa_id")
+    private Integer faId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hg_id", foreignKey = @ForeignKey(name = "hg_sg_fa_relation_hg_id_fkey"), insertable = false, updatable = false)
+    private HoldingsGuide holdingsGuide;
+    @Column(name = "hg_id")
+    private Integer hgId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sg_id", foreignKey = @ForeignKey(name = "hg_sg_fa_relation_sg_id_fkey"), insertable = false, updatable = false)
+    private SourceGuide sourceGuide;
+    @Column(name = "sg_id")
+    private Integer sgId;
 
-	public FindingAid getFindingAid() {
-		return findingAid;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hg_sg_clevel_id", foreignKey = @ForeignKey(name = "hg_sg_fa_relation_hg_sg_clevel_id_fkey"), insertable = false, updatable = false)
+    private CLevel hgSgClevel;
 
-	public void setFindingAid(FindingAid findingAid) {
-		this.findingAid = findingAid;
-	}
+    @Column(name = "hg_sg_clevel_id")
+    private Long hgSgClevelId;
 
-	public Integer getFaId() {
-		return faId;
-	}
+    @Column(name = "ai_id")
+    private Integer aiId;
 
-	public void setFaId(Integer faId) {
-		this.faId = faId;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public HoldingsGuide getHoldingsGuide() {
-		return holdingsGuide;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setHoldingsGuide(HoldingsGuide holdingsGuide) {
-		this.holdingsGuide = holdingsGuide;
-	}
+    public FindingAid getFindingAid() {
+        return findingAid;
+    }
 
-	public Integer getHgId() {
-		return hgId;
-	}
+    public void setFindingAid(FindingAid findingAid) {
+        this.findingAid = findingAid;
+    }
 
-	public void setHgId(Integer hgId) {
-		this.hgId = hgId;
-	}
+    public Integer getFaId() {
+        return faId;
+    }
 
-	public SourceGuide getSourceGuide() {
-		return sourceGuide;
-	}
+    public void setFaId(Integer faId) {
+        this.faId = faId;
+    }
 
-	public void setSourceGuide(SourceGuide sourceGuide) {
-		this.sourceGuide = sourceGuide;
-	}
+    public HoldingsGuide getHoldingsGuide() {
+        return holdingsGuide;
+    }
 
-	public Integer getSgId() {
-		return sgId;
-	}
+    public void setHoldingsGuide(HoldingsGuide holdingsGuide) {
+        this.holdingsGuide = holdingsGuide;
+    }
 
-	public void setSgId(Integer sgId) {
-		this.sgId = sgId;
-	}
+    public Integer getHgId() {
+        return hgId;
+    }
 
-	public CLevel getHgSgClevel() {
-		return hgSgClevel;
-	}
+    public void setHgId(Integer hgId) {
+        this.hgId = hgId;
+    }
 
-	public void setHgSgClevel(CLevel hgSgClevel) {
-		this.hgSgClevel = hgSgClevel;
-	}
+    public SourceGuide getSourceGuide() {
+        return sourceGuide;
+    }
 
-	public Long getHgSgClevelId() {
-		return hgSgClevelId;
-	}
+    public void setSourceGuide(SourceGuide sourceGuide) {
+        this.sourceGuide = sourceGuide;
+    }
 
-	public void setHgSgClevelId(Long hgSgClevelId) {
-		this.hgSgClevelId = hgSgClevelId;
-	}
+    public Integer getSgId() {
+        return sgId;
+    }
 
-	public Integer getAiId() {
-		return aiId;
-	}
+    public void setSgId(Integer sgId) {
+        this.sgId = sgId;
+    }
 
-	public void setAiId(Integer aiId) {
-		this.aiId = aiId;
-	}
-	
-	
+    public CLevel getHgSgClevel() {
+        return hgSgClevel;
+    }
+
+    public void setHgSgClevel(CLevel hgSgClevel) {
+        this.hgSgClevel = hgSgClevel;
+    }
+
+    public Long getHgSgClevelId() {
+        return hgSgClevelId;
+    }
+
+    public void setHgSgClevelId(Long hgSgClevelId) {
+        this.hgSgClevelId = hgSgClevelId;
+    }
+
+    public Integer getAiId() {
+        return aiId;
+    }
+
+    public void setAiId(Integer aiId) {
+        this.aiId = aiId;
+    }
+
 }

@@ -1,12 +1,12 @@
 package eu.apenet.persistence.vo;
 
 // Generated 25-may-2011 10:17:22 by Hibernate Tools 3.4.0.CR1
-
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,97 +23,92 @@ import javax.persistence.TemporalType;
 @Table(name = "sent_mail_register")
 public class SentMailRegister implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -806058556121126786L;
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ai_id")
-	private ArchivalInstitution archivalInstitution;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -806058556121126786L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	//bi-directional many-to-one association to User
-	@ManyToOne(fetch=FetchType.LAZY)
-	private User user;
-	@Column(name = "validation_link")
-	private String validationLink;
-	@Temporal(TemporalType.DATE)
-	private Date date;
-	@Column(name = "email_address")
-	private String emailAddress;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "sent_mail_register_ai_id_fkey"))
+    private ArchivalInstitution archivalInstitution;
 
-	public SentMailRegister() {
-	}
+    //bi-directional many-to-one association to User
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+    @Column(name = "validation_link")
+    private String validationLink;
+    @Temporal(TemporalType.DATE)
+    private Date date;
+    @Column(name = "email_address")
+    private String emailAddress;
 
-	public SentMailRegister(int smrId, String validationLink, Date date,
-			String emailAddress) {
-		this.id = smrId;
-		this.validationLink = validationLink;
-		this.date = date;
-		this.emailAddress = emailAddress;
-	}
+    public SentMailRegister() {
+    }
 
-	
-	public SentMailRegister(String validationLink, Date date,
-			String emailAddress) {
-		this.validationLink = validationLink;
-		this.date = date;
-		this.emailAddress = emailAddress;
-	}
+    public SentMailRegister(int smrId, String validationLink, Date date,
+            String emailAddress) {
+        this.id = smrId;
+        this.validationLink = validationLink;
+        this.date = date;
+        this.emailAddress = emailAddress;
+    }
 
+    public SentMailRegister(String validationLink, Date date,
+            String emailAddress) {
+        this.validationLink = validationLink;
+        this.date = date;
+        this.emailAddress = emailAddress;
+    }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public User getUser() {
+        return this.user;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setUser(User partner) {
+        this.user = partner;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public ArchivalInstitution getArchivalInstitution() {
+        return this.archivalInstitution;
+    }
 
-	public User getUser() {
-		return this.user;
-	}
+    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+        this.archivalInstitution = archivalInstitution;
+    }
 
-	public void setUser(User partner) {
-		this.user = partner;
-	}
+    public String getValidationLink() {
+        return this.validationLink;
+    }
 
-	public ArchivalInstitution getArchivalInstitution() {
-		return this.archivalInstitution;
-	}
+    public void setValidationLink(String validationLink) {
+        this.validationLink = validationLink;
+    }
 
-	public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
-		this.archivalInstitution = archivalInstitution;
-	}
+    public Date getDate() {
+        return this.date;
+    }
 
-	public String getValidationLink() {
-		return this.validationLink;
-	}
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-	public void setValidationLink(String validationLink) {
-		this.validationLink = validationLink;
-	}
+    public String getEmailAddress() {
+        return this.emailAddress;
+    }
 
-	public Date getDate() {
-		return this.date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public String getEmailAddress() {
-		return this.emailAddress;
-	}
-
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
 }

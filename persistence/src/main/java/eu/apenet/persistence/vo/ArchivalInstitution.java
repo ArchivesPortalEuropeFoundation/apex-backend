@@ -44,7 +44,7 @@ public class ArchivalInstitution implements java.io.Serializable {
     private Integer parentAiId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name="archival_institution_p_id_fkey"), insertable = false, updatable = false)
     private User partner;
 
     @Column(name = "user_id")
@@ -54,7 +54,7 @@ public class ArchivalInstitution implements java.io.Serializable {
     private Integer countryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", insertable = false, updatable = false)
+    @JoinColumn(name = "country_id", foreignKey = @ForeignKey(name="archival_institution_cou_id_fkey"), insertable = false, updatable = false)
     private Country country;
 
     private String ainame;

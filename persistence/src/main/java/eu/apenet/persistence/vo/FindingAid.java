@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,251 +23,256 @@ import javax.persistence.TemporalType;
 @Table(name = "finding_aid")
 public class FindingAid extends Ead {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8833722976902370936L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String eadid;
-	private String title;
-	@Column(name = "path_apenetead")
-	private String pathApenetead;
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "upload_date")
-	private Date uploadDate;
-	@Column(name = "publish_date")
-	private Date publishDate;
-	/*
-	 * states
-	 */
-	private boolean converted = false;
-	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
-	private boolean published = false;
-	private boolean dynamic = false;
-	private QueuingState queuing = QueuingState.NO;
-	private EuropeanaState europeana = EuropeanaState.NOT_CONVERTED;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "um_id")
-	private UploadMethod uploadMethod;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ai_id")
-	private ArchivalInstitution archivalInstitution;
-	@Column(name = "ai_id", updatable = false, insertable = false)
-	private Integer aiId;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8833722976902370936L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String eadid;
+    private String title;
+    @Column(name = "path_apenetead")
+    private String pathApenetead;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "upload_date")
+    private Date uploadDate;
+    @Column(name = "publish_date")
+    private Date publishDate;
+    /*
+     * states
+     */
+    private boolean converted = false;
+    private ValidatedState validated = ValidatedState.NOT_VALIDATED;
+    private boolean published = false;
+    private boolean dynamic = false;
+    private QueuingState queuing = QueuingState.NO;
+    private EuropeanaState europeana = EuropeanaState.NOT_CONVERTED;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "um_id", foreignKey = @ForeignKey(name = "finding_aid_um_id_fkey"))
+    private UploadMethod uploadMethod;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "finding_aid_ai_id_fkey"))
+    private ArchivalInstitution archivalInstitution;
+    @Column(name = "ai_id", updatable = false, insertable = false)
+    private Integer aiId;
     @Column(name = "total_number_of_web_resource_edm")
-	private Long totalNumberOfWebResourceEdm = 0l;
-	private Long totalNumberOfChos = 0l;
-	private Long totalNumberOfDaos = 0l;
-	private Long totalNumberOfUnits = 0l;
-	private Long totalNumberOfUnitsWithDao = 0l;
-	@OneToMany(mappedBy = "findingAid")
-	private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "findingAid")
-	private Set<Warnings> warningses = new HashSet<Warnings>(0);
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "findingAid")
-	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
-	@OneToMany(mappedBy="findingAid")
-	private Set<HgSgFaRelation> hgSgFaRelations = new HashSet<HgSgFaRelation>();
-	public Integer getId() {
-		return id;
-	}
+    private Long totalNumberOfWebResourceEdm = 0l;
+    private Long totalNumberOfChos = 0l;
+    private Long totalNumberOfDaos = 0l;
+    private Long totalNumberOfUnits = 0l;
+    private Long totalNumberOfUnitsWithDao = 0l;
+    @OneToMany(mappedBy = "findingAid")
+    private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "findingAid")
+    private Set<Warnings> warningses = new HashSet<Warnings>(0);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "findingAid")
+    private Set<EadContent> eadContents = new HashSet<EadContent>(0);
+    @OneToMany(mappedBy = "findingAid")
+    private Set<HgSgFaRelation> hgSgFaRelations = new HashSet<HgSgFaRelation>();
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getEadid() {
-		return eadid;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setEadid(String eadid) {
-		this.eadid = eadid;
-	}
+    public String getEadid() {
+        return eadid;
+    }
 
-	public Date getUploadDate() {
-		return uploadDate;
-	}
+    public void setEadid(String eadid) {
+        this.eadid = eadid;
+    }
 
-	public void setUploadDate(Date uploadDate) {
-		this.uploadDate = uploadDate;
-	}
+    public Date getUploadDate() {
+        return uploadDate;
+    }
 
-	public String getPathApenetead() {
-		return pathApenetead;
-	}
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
 
-	public void setPathApenetead(String pathApenetead) {
-		this.pathApenetead = pathApenetead;
-	}
+    public String getPathApenetead() {
+        return pathApenetead;
+    }
 
-	public UploadMethod getUploadMethod() {
-		return uploadMethod;
-	}
+    public void setPathApenetead(String pathApenetead) {
+        this.pathApenetead = pathApenetead;
+    }
 
-	public void setUploadMethod(UploadMethod uploadMethod) {
-		this.uploadMethod = uploadMethod;
-	}
+    public UploadMethod getUploadMethod() {
+        return uploadMethod;
+    }
 
-	public ArchivalInstitution getArchivalInstitution() {
-		return archivalInstitution;
-	}
+    public void setUploadMethod(UploadMethod uploadMethod) {
+        this.uploadMethod = uploadMethod;
+    }
 
-	public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
-		this.archivalInstitution = archivalInstitution;
-	}
+    public ArchivalInstitution getArchivalInstitution() {
+        return archivalInstitution;
+    }
 
-	public Integer getAiId() {
-		return aiId;
-	}
+    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+        this.archivalInstitution = archivalInstitution;
+    }
 
-	public void setAiId(Integer aiId) {
-		this.aiId = aiId;
-	}
+    public Integer getAiId() {
+        return aiId;
+    }
 
-	public Long getTotalNumberOfDaos() {
-		return totalNumberOfDaos;
-	}
+    public void setAiId(Integer aiId) {
+        this.aiId = aiId;
+    }
 
-	public void setTotalNumberOfDaos(Long totalNumberOfDaos) {
-		this.totalNumberOfDaos = totalNumberOfDaos;
-	}
+    public Long getTotalNumberOfDaos() {
+        return totalNumberOfDaos;
+    }
 
-	public Long getTotalNumberOfUnits() {
-		return totalNumberOfUnits;
-	}
+    public void setTotalNumberOfDaos(Long totalNumberOfDaos) {
+        this.totalNumberOfDaos = totalNumberOfDaos;
+    }
 
-	public void setTotalNumberOfUnits(Long totalNumberOfUnits) {
-		this.totalNumberOfUnits = totalNumberOfUnits;
-	}
+    public Long getTotalNumberOfUnits() {
+        return totalNumberOfUnits;
+    }
 
-	public Long getTotalNumberOfUnitsWithDao() {
-		return totalNumberOfUnitsWithDao;
-	}
+    public void setTotalNumberOfUnits(Long totalNumberOfUnits) {
+        this.totalNumberOfUnits = totalNumberOfUnits;
+    }
 
-	public void setTotalNumberOfUnitsWithDao(Long totalNumberOfUnitsWithDao) {
-		this.totalNumberOfUnitsWithDao = totalNumberOfUnitsWithDao;
-	}
+    public Long getTotalNumberOfUnitsWithDao() {
+        return totalNumberOfUnitsWithDao;
+    }
 
-	public boolean isPublished() {
-		return published;
-	}
+    public void setTotalNumberOfUnitsWithDao(Long totalNumberOfUnitsWithDao) {
+        this.totalNumberOfUnitsWithDao = totalNumberOfUnitsWithDao;
+    }
 
-	public void setPublished(boolean searchable) {
-		this.published = searchable;
-	}
+    public boolean isPublished() {
+        return published;
+    }
 
-	public Set<QueueItem> getQueueItems() {
-		return queueItems;
-	}
+    public void setPublished(boolean searchable) {
+        this.published = searchable;
+    }
 
-	public void setQueueItems(Set<QueueItem> indexQueues) {
-		this.queueItems = indexQueues;
-	}
+    public Set<QueueItem> getQueueItems() {
+        return queueItems;
+    }
 
-	public Set<Warnings> getWarningses() {
-		return warningses;
-	}
+    public void setQueueItems(Set<QueueItem> indexQueues) {
+        this.queueItems = indexQueues;
+    }
 
-	public void setWarningses(Set<Warnings> warningses) {
-		this.warningses = warningses;
-	}
+    public Set<Warnings> getWarningses() {
+        return warningses;
+    }
 
-	public Set<EadContent> getEadContents() {
-		return eadContents;
-	}
+    public void setWarningses(Set<Warnings> warningses) {
+        this.warningses = warningses;
+    }
 
-	public void setEadContents(Set<EadContent> eadContents) {
-		this.eadContents = eadContents;
-	}
+    public Set<EadContent> getEadContents() {
+        return eadContents;
+    }
 
-	@OneToMany(mappedBy = "findingAid")
-	private Set<Ese> eses = new HashSet<Ese>(0);
+    public void setEadContents(Set<EadContent> eadContents) {
+        this.eadContents = eadContents;
+    }
 
-	public Set<Ese> getEses() {
-		return this.eses;
-	}
+    @OneToMany(mappedBy = "findingAid")
+    private Set<Ese> eses = new HashSet<Ese>(0);
 
-	public void setEses(Set<Ese> eses) {
-		this.eses = eses;
-	}
+    public Set<Ese> getEses() {
+        return this.eses;
+    }
 
-	public ValidatedState getValidated() {
-		return validated;
-	}
+    public void setEses(Set<Ese> eses) {
+        this.eses = eses;
+    }
 
-	public void setValidated(ValidatedState validated) {
-		this.validated = validated;
-	}
+    public ValidatedState getValidated() {
+        return validated;
+    }
 
-	public boolean isConverted() {
-		return converted;
-	}
+    public void setValidated(ValidatedState validated) {
+        this.validated = validated;
+    }
 
-	public void setConverted(boolean converted) {
-		this.converted = converted;
-	}
+    public boolean isConverted() {
+        return converted;
+    }
 
-	public EuropeanaState getEuropeana() {
-		return europeana;
-	}
+    public void setConverted(boolean converted) {
+        this.converted = converted;
+    }
 
-	public void setEuropeana(EuropeanaState europeana) {
-		this.europeana = europeana;
-	}
+    public EuropeanaState getEuropeana() {
+        return europeana;
+    }
 
-	public QueuingState getQueuing() {
-		return queuing;
-	}
+    public void setEuropeana(EuropeanaState europeana) {
+        this.europeana = europeana;
+    }
 
-	public void setQueuing(QueuingState queuing) {
-		this.queuing = queuing;
-	}
+    public QueuingState getQueuing() {
+        return queuing;
+    }
 
-	public Long getTotalNumberOfChos() {
-		return totalNumberOfChos;
-	}
+    public void setQueuing(QueuingState queuing) {
+        this.queuing = queuing;
+    }
 
-	public void setTotalNumberOfChos(Long totalNumberOfChos) {
-		this.totalNumberOfChos = totalNumberOfChos;
-	}
-	public Set<HgSgFaRelation> getHgSgFaRelations() {
-		return hgSgFaRelations;
-	}
-	public void setHgSgFaRelations(Set<HgSgFaRelation> hgSgFaRelations) {
-		this.hgSgFaRelations = hgSgFaRelations;
-	}
+    public Long getTotalNumberOfChos() {
+        return totalNumberOfChos;
+    }
+
+    public void setTotalNumberOfChos(Long totalNumberOfChos) {
+        this.totalNumberOfChos = totalNumberOfChos;
+    }
+
+    public Set<HgSgFaRelation> getHgSgFaRelations() {
+        return hgSgFaRelations;
+    }
+
+    public void setHgSgFaRelations(Set<HgSgFaRelation> hgSgFaRelations) {
+        this.hgSgFaRelations = hgSgFaRelations;
+    }
+
     public HgSgFaRelation getHgSgFaRelation() {
         Set<HgSgFaRelation> set = getHgSgFaRelations();
-        if(set == null || set.isEmpty())
+        if (set == null || set.isEmpty()) {
             return null;
+        }
         return set.iterator().next();
     }
 
-	public boolean isDynamic() {
-		return dynamic;
-	}
+    public boolean isDynamic() {
+        return dynamic;
+    }
 
-	public void setDynamic(boolean dynamic) {
-		this.dynamic = dynamic;
-	}
+    public void setDynamic(boolean dynamic) {
+        this.dynamic = dynamic;
+    }
 
-	public Date getPublishDate() {
-		return publishDate;
-	}
+    public Date getPublishDate() {
+        return publishDate;
+    }
 
-	public void setPublishDate(Date publishDate) {
-		this.publishDate = publishDate;
-	}
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
 
     public Long getTotalNumberOfWebResourceEdm() {
         return totalNumberOfWebResourceEdm;
@@ -276,8 +282,8 @@ public class FindingAid extends Ead {
         this.totalNumberOfWebResourceEdm = totalNumberOfWebResourceEdm;
     }
 
-	@Override
-	public void setPath(String path) {
-		this.pathApenetead = path;
-	}
+    @Override
+    public void setPath(String path) {
+        this.pathApenetead = path;
+    }
 }
