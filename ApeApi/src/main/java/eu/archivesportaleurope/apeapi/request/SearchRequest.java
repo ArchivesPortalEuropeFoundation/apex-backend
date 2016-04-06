@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.request;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -15,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class SearchRequest {
 
+    @NotNull
     String query;
 
     @Max(value = 50, message = "Count must not be more than 50")

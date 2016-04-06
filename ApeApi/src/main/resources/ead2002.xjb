@@ -27,6 +27,11 @@
                                 name="c" />
             </annox:annotate>
         </jaxb:bindings>
+        <jaxb:bindings node="//xs:complexType[substring(@name, string-length(@name)-string-length('')+1)='']" multiple="true">
+            <annox:annotate>
+                <annox:annotate annox:class="com.fasterxml.jackson.annotation.JsonInclude" value = "NON_EMPTY"></annox:annotate>
+            </annox:annotate>
+        </jaxb:bindings>
     </jaxb:bindings>
 
 </jaxb:bindings>

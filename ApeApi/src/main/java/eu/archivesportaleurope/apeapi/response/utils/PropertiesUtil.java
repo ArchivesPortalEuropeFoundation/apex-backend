@@ -26,7 +26,7 @@ public class PropertiesUtil {
         try {
             properties.load(inputStream);
         } catch (IOException ex) {
-            logger.error("Properties file not foud!!!:" + ex.getMessage());
+            logger.error("Properties file not found!!!:" + ex.getMessage());
         }
 
     }
