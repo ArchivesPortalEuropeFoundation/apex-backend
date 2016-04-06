@@ -12,6 +12,7 @@
         <developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/tags/backend-project-2.2.1</developerConnection>
     </scm>
     <properties>
+        <additionalparam>-Xdoclint:none</additionalparam>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.2.2.RELEASE</spring.version>
         <postgresql.version>9.4-1205-jdbc41</postgresql.version>
