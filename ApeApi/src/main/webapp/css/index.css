@@ -12811,9 +12811,9 @@ Copyright (c) 2015 Daniel Eden
     font-family: "budicon-font";
     src:url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.eot");
     src:url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.eot?#iefix") format("embedded-opentype"),
-    url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.woff") format("woff"),
-    url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.ttf") format("truetype"),
-    url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.svg#budicon-font") format("svg");
+        url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.woff") format("woff"),
+        url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.ttf") format("truetype"),
+        url("https://cdn.auth0.com/fonts/budicons/fonts/budicon-font.svg#budicon-font") format("svg");
     font-weight: normal;
     font-style: normal;
 
@@ -13035,7 +13035,7 @@ Copyright (c) 2015 Daniel Eden
     content: "!";
 }
 .icon-budicon-63:before {
-    content: "\"";
+    content: "\";
 }
 .icon-budicon-64:before {
     content: "#";
@@ -15851,14 +15851,14 @@ a.btn.btn-lg {
 /*
 .btn.btn-success,
 a.btn.btn-success {
-    background-color: #eb5424;
-    color: #fff;
-    border-color: transparent;
+background-color: #eb5424;
+color: #fff;
+border-color: transparent;
 }
 .btn.btn-success:hover,
 a.btn.btn-success:hover {
-    background-color: #ae3610;
-    color: #fff;
+background-color: #ae3610;
+color: #fff;
 }
 */
 .btn.btn-success,
