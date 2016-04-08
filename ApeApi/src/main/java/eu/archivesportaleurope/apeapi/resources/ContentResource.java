@@ -92,12 +92,12 @@ public class ContentResource {
             return Response.ok().entity(contentResponse).build();
 
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 //*/
@@ -132,12 +132,12 @@ public class ContentResource {
             return Response.ok().entity(contentResponse).build();
 
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 //*/

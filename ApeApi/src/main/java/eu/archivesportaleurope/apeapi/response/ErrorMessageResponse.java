@@ -2,12 +2,9 @@ package eu.archivesportaleurope.apeapi.response;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @XmlRootElement
 public class ErrorMessageResponse {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * contains the same HTTP Status code returned by the server
      */
@@ -76,8 +73,5 @@ public class ErrorMessageResponse {
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public ErrorMessageResponse() {
     }
 }

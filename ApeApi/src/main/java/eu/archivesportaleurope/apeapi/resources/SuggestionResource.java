@@ -62,12 +62,12 @@ public class SuggestionResource {
             }
             return Response.ok().entity(gson.toJson(responseSet)).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 
@@ -82,12 +82,12 @@ public class SuggestionResource {
             SuggestionResponseSet suggestionResponseSet = suggestionService.suggest(term);
             return Response.ok().entity(suggestionResponseSet).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 
@@ -97,19 +97,19 @@ public class SuggestionResource {
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})
     @Produces(MediaType.TEXT_PLAIN)
-    public Response DBTest() {
+    public Response dBTest() {
         try {
             JpaUtil.init();
             EadDAO eadDAO = DAOFactory.instance().getEadDAO();
             EacCpfDAO eca = DAOFactory.instance().getEacCpfDAO();
             return Response.ok().entity(eadDAO.getTotalCountOfUnits() + " " + eca.findAll().size()).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e.getCause());
-            return ((WebApplicationException) e).getResponse();
+            logger.error("WebApplicationException", e);
+            return  e.getResponse();
         } catch (Exception e) {
             logger.error("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
-            return ((WebApplicationException) errMsg).getResponse();
+            return errMsg.getResponse();
         }
     }
 }

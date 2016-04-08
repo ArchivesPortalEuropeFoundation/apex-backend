@@ -26,14 +26,42 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String body;
 
+    private class ServletInputStreamReader extends ServletInputStream {
+        final ByteArrayInputStream byteArrayInputStream;
+
+        public ServletInputStreamReader(ByteArrayInputStream byteArrayInputStream) {
+            this.byteArrayInputStream = byteArrayInputStream;
+        }
+        
+        @Override
+        public int read() throws IOException {
+            return byteArrayInputStream.read();
+        }
+
+        @Override
+        public boolean isFinished() {
+            return byteArrayInputStream.available() == 0;
+        }
+
+        @Override
+        public boolean isReady() {
+            return byteArrayInputStream.available() > 0;
+        }
+
+        @Override
+        public void setReadListener(ReadListener readListener) {
+            throw new UnsupportedOperationException();
+        }
+    };
+
     public MultiReadHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
 
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;
 
-        try {
-            InputStream inputStream = request.getInputStream();
+        try (
+                InputStream inputStream = request.getInputStream();) {
 
             if (inputStream != null) {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -48,17 +76,17 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
                 stringBuilder.append("");
             }
         } catch (IOException ex) {
-            logger.error("Error reading the request body...");
+            logger.error("Error reading the request body!", ex);
         } finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException ex) {
-                    logger.error("Error closing bufferedReader...");
+                    logger.error("Error closing bufferedReader!!", ex);
                 }
             }
         }
-        
+
         body = stringBuilder.toString();
     }
 
@@ -66,28 +94,6 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
     public ServletInputStream getInputStream() throws IOException {
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
         
-        ServletInputStream inputStream = new ServletInputStream() {
-            @Override
-            public int read() throws IOException {
-                return byteArrayInputStream.read();
-            }
-
-            @Override
-            public boolean isFinished() {
-                return byteArrayInputStream.available() == 0;
-            }
-
-            @Override
-            public boolean isReady() {
-                return byteArrayInputStream.available() > 0;
-            }
-
-            @Override
-            public void setReadListener(ReadListener readListener) {
-                
-            }
-        };
-
-        return inputStream;
+        return new ServletInputStreamReader(byteArrayInputStream);
     }
 }

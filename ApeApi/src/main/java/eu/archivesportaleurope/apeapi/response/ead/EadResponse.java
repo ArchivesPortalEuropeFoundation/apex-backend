@@ -7,7 +7,7 @@ package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
-import eu.archivesportaleurope.apeapi.common.fieldDef.EadFieldDefs;
+import eu.archivesportaleurope.apeapi.common.datatypes.EadFieldDefs;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -78,8 +78,12 @@ public class EadResponse {
             this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(EadFieldDefs.HAS_DIGITAL_OBJECT);
         }
     }
-
+    
+    /**
+     * Default constructor
+     */
     public EadResponse() {
+        //Do nothing
     }
 
     private String objectToString(Object o) {

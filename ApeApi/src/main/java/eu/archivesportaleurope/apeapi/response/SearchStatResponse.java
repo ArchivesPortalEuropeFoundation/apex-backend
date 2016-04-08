@@ -22,8 +22,11 @@ public class SearchStatResponse {
         this.rows = Integer.parseInt(((NamedList) response.getResponseHeader().get("params")).get("rows").toString());
         this.q = ((NamedList) response.getResponseHeader().get("params")).get("q").toString();
     }
-
+    /**
+     * Default constructor
+     */
     public SearchStatResponse() {
+        this.q = "";
     }
 
     public int getQueryTime() {

@@ -28,20 +28,20 @@ public class SuggestionServiceImpl implements SuggestionService {
     private final String solrCore;
     private final SolrSearchUtil suggestionSearchUtil;
     @Context ServletContext context;
-    private SuggestionServiceImpl(String solrCore) throws NamingException {
+    
+    public SuggestionServiceImpl(String solrCore) throws NamingException {
         this.solrUrl = InitialContext.doLookup("java:comp/env/solrHost");
-        //String tmp = context.getInitParameter("SOLR_BASE_SEARCH_URL");
         this.solrCore = solrCore;
         this.suggestionSearchUtil = new SolrSearchUtil(this.solrUrl, this.solrCore);
     }
 
-    private SuggestionServiceImpl(String solrUrl, String solrCore) {
+    public SuggestionServiceImpl(String solrUrl, String solrCore) {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
         this.suggestionSearchUtil = new SolrSearchUtil(this.solrUrl, this.solrCore);
     }
     
-    private SuggestionServiceImpl(SolrServer solrServer) {
+    public SuggestionServiceImpl(SolrServer solrServer) {
         this.solrUrl = "";
         this.solrCore = "";
         this.suggestionSearchUtil = new SolrSearchUtil(solrServer);

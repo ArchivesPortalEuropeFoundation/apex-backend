@@ -5,7 +5,6 @@ package eu.archivesportaleurope.apeapi.resources;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -25,7 +24,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * @author M.Mozadded
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:META-INF/applicationContext-test.xml")
+@ContextConfiguration(locations = {"classpath:META-INF/applicationContext-test.xml"})
 @ActiveProfiles("unit-test")
 @WebAppConfiguration
 public abstract class JerseySpringTest {

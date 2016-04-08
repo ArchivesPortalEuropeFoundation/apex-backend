@@ -21,17 +21,17 @@ public class EadSearchSearvice implements SearchService {
     private String solrUrl;
     private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
-    private PropertiesUtil propertiesUtil;
-    final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final PropertiesUtil propertiesUtil;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
+    public EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
         this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
-    private EadSearchSearvice(SolrServer solrServer, String propFileName) {
+    public EadSearchSearvice(SolrServer solrServer, String propFileName) {
         this.solrUrl = this.solrCore = "";
         this.eadSearchUtil = new SolrSearchUtil(solrServer);
         this.propertiesUtil = new PropertiesUtil(propFileName);
@@ -47,10 +47,11 @@ public class EadSearchSearvice implements SearchService {
 
     @Override
     public EadResponseSet search(SearchRequest searchRequest, String extraSearchParam) throws SolrServerException {
-        if (extraSearchParam == null) {
-            extraSearchParam = "";
+        String extraParam = "";
+        if (extraSearchParam != null) {
+            extraParam = extraSearchParam;
         }
-        SolrQuery query = new SolrQuery(searchRequest.getQuery() + extraSearchParam);
+        SolrQuery query = new SolrQuery(searchRequest.getQuery() + extraParam);
         query.setStart(searchRequest.getStart());
         if (searchRequest.getCount() <= 0) {
             logger.info(":::Default Count vale from prop is : "+propertiesUtil.getValueFromKey("search.request.default.count"));

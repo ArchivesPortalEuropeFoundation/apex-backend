@@ -41,10 +41,10 @@ public class VersionResource {
     public Response appVersion() {
         String appVersion = "{\"version\":\""+ServerConstants.APE_API_V1+"\"}";
         //Logback config test
-//        // assume SLF4J is bound to logback in the current environment
-//        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-//        // print logback's internal status
-//        StatusPrinter.print(lc);
+        // assume SLF4J is bound to logback in the current environment
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        // print logback's internal status
+        StatusPrinter.print(lc);
         logger.debug("System name: " + System.getProperty("os.name"));
         logger.debug("My current version is " + appVersion);
         return Response.ok(appVersion).build();

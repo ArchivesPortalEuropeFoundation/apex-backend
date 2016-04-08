@@ -13,13 +13,16 @@ import org.apache.solr.client.solrj.response.TermsResponse;
  * @author kaisar
  */
 @XmlRootElement
-public class AutocompletionResponse implements Comparable<AutocompletionResponse> {
+public class AutocompletionResponse {
 
     private String type;
     private String term;
     private long frequency;
 
     public AutocompletionResponse() {
+        this.type = "";
+        this.term = "";
+        this.frequency = 0;
     }
 
     protected AutocompletionResponse(TermsResponse.Term term, String type) {
@@ -51,16 +54,6 @@ public class AutocompletionResponse implements Comparable<AutocompletionResponse
 
     public void setFrequency(long frequency) {
         this.frequency = frequency;
-    }
-
-    @Override
-    public int compareTo(AutocompletionResponse o) {
-        if (frequency > o.getFrequency()) {
-            return -1;
-        } else if (frequency < o.getFrequency()) {
-            return 1;
-        }
-        return 0;
     }
 
 }

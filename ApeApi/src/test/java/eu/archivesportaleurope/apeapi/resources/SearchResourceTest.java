@@ -23,7 +23,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -66,7 +65,7 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setQuery("Heerlijkheid");
         request.setStart(0);
 
-        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
+        Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
         EadResponseSet responseEad = response.readEntity(EadResponseSet.class);

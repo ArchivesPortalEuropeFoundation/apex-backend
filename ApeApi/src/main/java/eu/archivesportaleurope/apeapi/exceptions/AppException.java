@@ -21,7 +21,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class AppException extends WebApplicationException {
-    final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final long serialVersionUID = -8999932578270387947L;
 
     /**
@@ -40,7 +41,7 @@ public class AppException extends WebApplicationException {
      * link documenting the exception
      */
     private final String link;
-    
+
     private final String message;
 
     /**
@@ -77,7 +78,7 @@ public class AppException extends WebApplicationException {
     public String getMessage() {
         return this.message;
     }
-    
+
     public String getDeveloperMessage() {
         return developerMessage;
     }
@@ -85,7 +86,7 @@ public class AppException extends WebApplicationException {
     public String getLink() {
         return link;
     }
-    
+
     @Override
     public Response getResponse() {
         return Response.status(status).type(MediaType.APPLICATION_JSON_TYPE)
