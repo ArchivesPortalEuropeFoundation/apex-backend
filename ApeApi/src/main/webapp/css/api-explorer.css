@@ -833,7 +833,7 @@
 }
 
 .swagger-section .token-generator .scope-selector .controls {
-    width: calc(100% - 5px)
+    width: 100%
 }
 
 .swagger-section .token-generator .scope-selector .cta {
@@ -1391,8 +1391,7 @@ body {
 }
 
 #api2-explorer .btn {
-    outline: 0;
-    display: none
+    outline: 0
 }
 
 #api2-explorer code.json {
