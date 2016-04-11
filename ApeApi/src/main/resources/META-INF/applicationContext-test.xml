@@ -25,7 +25,6 @@
     <bean id="validator" factory-bean="validatorFactory"
           factory-method="getValidator" />
     <bean id="requestLogger" class="eu.archivesportaleurope.apeapi.services.impl.HttpRequstLoggerMongoImpl" />
-    <bean id="currentLevelService" class="eu.archivesportaleurope.apeapi.services.impl.CurrentLevelServiceImpl" />
     <bean id="eadContentService" class="eu.archivesportaleurope.apeapi.services.impl.EadContentServiceImpl" />
     <!--    <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>

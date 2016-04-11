@@ -63,7 +63,7 @@ public class SearchResourceTest extends JerseySpringTest {
         SearchRequest request = new SearchRequest();
         request.setCount(10);
         request.setQuery("Heerlijkheid");
-        request.setStart(0);
+        request.setStartIndex(0);
 
         Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
@@ -80,7 +80,7 @@ public class SearchResourceTest extends JerseySpringTest {
         SearchRequest request = new SearchRequest();
         request.setCount(10);
         request.setQuery("Heerlijkheid");
-        request.setStart(0);
+        request.setStartIndex(0);
 
         Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
@@ -106,7 +106,7 @@ public class SearchResourceTest extends JerseySpringTest {
         SearchRequest request = new SearchRequest();
         request.setCount(0);
         request.setQuery("Heerlijkheid");
-        request.setStart(0);
+        request.setStartIndex(0);
 
         Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
@@ -130,7 +130,7 @@ public class SearchResourceTest extends JerseySpringTest {
         SearchRequest request = new SearchRequest();
         request.setCount(51);
         request.setQuery("Anything");
-        request.setStart(0);
+        request.setStartIndex(0);
         Set<ConstraintViolation<SearchRequest>> constraintViolations = validator.validate(request);
         ConstraintViolation<SearchRequest> constraintViolation = constraintViolations.iterator().next();
 

@@ -5,15 +5,28 @@
  */
 package eu.archivesportaleurope.apeapi.response;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author mahbub
  */
+@ApiModel
 public class ContentResponse {
+    @ApiModelProperty(required = true, value="Internal APE identifier of the Descriptive Unit, Finding Aid, Holdings Guide or Source Guide. The same as your request parameter \"id\". ")
     private String id;
+    
+    @ApiModelProperty(required = true, value="Original identifier of the information provided by the repository.")
     private String unitId;
+    
+    @ApiModelProperty(required = true, value="Title of the information provided by the repository.")
     private String unitTitle;
+    
+    @ApiModelProperty(required = true, value="Internal APE identifier of the repository.")
     private int repositoryId;
+    
+    @ApiModelProperty(required = true, value="Name of the repository.")
     private String repository;
 
     public String getId() {
