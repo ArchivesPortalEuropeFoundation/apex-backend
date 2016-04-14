@@ -9,31 +9,35 @@ package eu.archivesportaleurope.apeapi.common.datatypes;
  *
  * @author kaisar
  */
-public interface EadFieldDefs {
+public class EadFieldDefs {
 
-    String ID = "id";
-    String PARENT_ID = "parentId";
-    String OTHER_UNIT_ID = "otherunitid";
-    String UNIT_ID = "unitid";
-    String DUPLICATE_UNIT_ID = "duplicateUnitid";
-    String SCOPE_CONTENT = "scopecontent";
-    String SPELL = "spell";
-    String TITLE = "title";
-    String LEVEL = "level";
-    String START_DATE = "startdate";
-    String END_DATE = "enddate";
-    String DATE_TYPE = "dateType";
-    String COUNTRY = "country";
-    String REPOSITORY_CODE = "repositoryCode";
-    String LANGUAGE = "language";
-    String LANG_MATERIAL = "langmaterial";
-    String EAD_ID = "eadid";
-    String AI = "ai";
-    String FONDS_UNIT_ID = "unitidfond";
-    String OTHER = "other";
-    String LEAF = "leaf";
-    String FONDS_TITLE = "fond";
-    String TYPE = "type";
-    String ALTER_DATE = "alterdate";
-    String HAS_DIGITAL_OBJECT = "dao";
+    public static final String ID = "id";
+    public static final String PARENT_ID = "parentId";
+    public static final String OTHER_UNIT_ID = "otherunitid";
+    public static final String UNIT_ID = "unitid";
+    public static final String DUPLICATE_UNIT_ID = "duplicateUnitid";
+    public static final String SCOPE_CONTENT = "scopecontent";
+    public static final String SPELL = "spell";
+    public static final String TITLE = "title";
+    public static final String LEVEL = "level";
+    public static final String START_DATE = "startdate";
+    public static final String END_DATE = "enddate";
+    public static final String DATE_TYPE = "dateType";
+    public static final String COUNTRY = "country";
+    public static final String REPOSITORY_CODE = "repositoryCode";
+    public static final String LANGUAGE = "language";
+    public static final String LANG_MATERIAL = "langmaterial";
+    public static final String EAD_ID = "eadid";
+    public static final String AI = "ai";
+    public static final String FONDS_UNIT_ID = "unitidfond";
+    public static final String OTHER = "other";
+    public static final String LEAF = "leaf";
+    public static final String FONDS_TITLE = "fond";
+    public static final String TYPE = "type";
+    public static final String ALTER_DATE = "alterdate";
+    public static final String HAS_DIGITAL_OBJECT = "dao";
+
+    private EadFieldDefs() {
+    }
+    
 }
