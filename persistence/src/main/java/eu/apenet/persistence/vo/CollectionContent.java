@@ -5,6 +5,7 @@ package eu.apenet.persistence.vo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,13 +24,13 @@ public class CollectionContent implements java.io.Serializable {
 	@Column(name = "id")
 	private Long id;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_collection")
+	@JoinColumn(name = "id_collection", foreignKey = @ForeignKey(name="collection_content_fkey_collection"))
 	private Collection collection;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_search")
+	@JoinColumn(name = "id_search", foreignKey = @ForeignKey(name="collection_content_fkey_search"))
 	private EadSavedSearch eadSavedSearch;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_bookmarks")
+	@JoinColumn(name = "id_bookmarks", foreignKey = @ForeignKey(name="collection_content_fkey_saved_bookmarks"))
 	private SavedBookmarks savedBookmarks;
 
 	public CollectionContent() {

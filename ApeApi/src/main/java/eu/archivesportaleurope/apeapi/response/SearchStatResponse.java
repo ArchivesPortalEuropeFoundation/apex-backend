@@ -26,7 +26,7 @@ public class SearchStatResponse {
      * Default constructor
      */
     public SearchStatResponse() {
-        //Do nothing
+        this.q = "";
     }
 
     public int getQueryTime() {

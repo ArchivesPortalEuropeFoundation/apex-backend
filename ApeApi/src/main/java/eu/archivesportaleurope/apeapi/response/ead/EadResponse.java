@@ -9,6 +9,8 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.common.datatypes.EadFieldDefs;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -18,23 +20,54 @@ import org.apache.solr.common.SolrDocument;
  * @author kaisar
  */
 @XmlRootElement
+@ApiModel
 public class EadResponse {
-
+    @ApiModelProperty(required = true, value="Internal APE identifier of the result")
     private String id;
+    
+    @ApiModelProperty(required = true, value="Identifier of the result provided by the repository")
     private String unitId;
+    
+    @ApiModelProperty(required = true, value="Description of the result")
     private String unitTitle;
+    
+    @ApiModelProperty(required = true, value="Description of the result, with the mark <b>&lt;em&gt;</b> to emphasize the search term that was used in the search request.")
     private String unitTitleWithHighlighting;
+    
+    @ApiModelProperty(required = true, value="More descriptive information about the result. ")
     private String scopeContent;
+    
+    @ApiModelProperty(required = true, value="More descriptive information about the result, with the mark <b>&lt;em&gt;</b> to emphasize the search term that was used in the search request.")
     private String scopeContentWithHighlighting;
+    
+    @ApiModelProperty(required = true, value="Title of the finding aid. ")
     private String fondsUnitTitle;
+    
+    @ApiModelProperty(required = true, value="Identifier of the fonds provided by the repository.")
     private String fondsUnitId;
+    
+    @ApiModelProperty(required = true, value="Name of the repository holding the fonds")
     private String repository;
+    
+    @ApiModelProperty(required = true, value="Name of the country where the repository is. In English. ")
     private String country;
+    
+    @ApiModelProperty(required = true, value="Language of the description of the result.")
     private String language;
+    
+    @ApiModelProperty(required = true, value="Language in which the result is created.")
     private String langMaterial;
+    
+    @ApiModelProperty(required = true, value="Date of creation of the result.")
     private String unitDate;
+    
+    @ApiModelProperty(required = true, value="Code of the repository holding the fonds. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
     private String repositoryCode;
+    
+    @ApiModelProperty(required = true, value="True if the unit has one or more digital object")
     private boolean hasDigitalObject = false;
+    
+    @ApiModelProperty(required = true, value="Type of the description of the result: \"Descriptive Unit\", \"Finding Aid\", \"Holdings Guide\" or \"Source Guide\"")
     private String docType;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {

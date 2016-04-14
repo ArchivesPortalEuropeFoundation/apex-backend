@@ -3,6 +3,7 @@ package eu.apenet.persistence.vo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,10 +29,10 @@ public class CouAlternativeName implements java.io.Serializable {
 	@Column(name = "id")
 	private int couAnId;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "lng_id")
+	@JoinColumn(name = "lng_id", foreignKey = @ForeignKey(name="lng_id"))
 	private Lang lang;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cou_id")
+	@JoinColumn(name = "cou_id", foreignKey = @ForeignKey(name="country_cou_id_fkey"))
 	private Country country;
 	@Column(name = "cou_an_name")
 	private String couAnName;

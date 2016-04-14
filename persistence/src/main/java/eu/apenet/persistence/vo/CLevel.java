@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import eu.archivesportaleurope.util.ApeUtil;
+import javax.persistence.ForeignKey;
 
 @Entity
 @Table(name = "c_level")
@@ -38,7 +39,7 @@ public class CLevel implements Serializable{
 	@Column(name = "ec_id")
 	private Long ecId;
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ec_id", insertable=false, updatable=false)
+	@JoinColumn(name="ec_id", foreignKey = @ForeignKey(name="c_level_ec_id_fkey"), insertable=false, updatable=false)
 	private EadContent eadContent;
 	private String unittitle;
 	private String unitid;
@@ -47,7 +48,7 @@ public class CLevel implements Serializable{
 	@Column(name = "cid")
 	private String cid;
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="parent_cl_id", insertable=false, updatable=false)
+	@JoinColumn(name="parent_cl_id", foreignKey = @ForeignKey(name="c_level_parent_cl_id_fkey"), insertable=false, updatable=false)
 	private CLevel parent;
 	
 	@Column(name = "parent_cl_id")

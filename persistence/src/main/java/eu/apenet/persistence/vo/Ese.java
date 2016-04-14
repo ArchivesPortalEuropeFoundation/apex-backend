@@ -1,7 +1,6 @@
 package eu.apenet.persistence.vo;
 
 // Generated 20-abr-2011 12:04:49 by Hibernate Tools 3.2.4.GA
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,168 +23,169 @@ import javax.persistence.Table;
 @Table(name = "ese")
 public class Ese implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1880474004952476059L;
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer eseId;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1880474004952476059L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer eseId;
 
-	@Column(name="creation_date")
-	private Date creationDate;
+    @Column(name = "creation_date")
+    private Date creationDate;
 
-	private String eset;
+    private String eset;
 
-	@Column(name="modification_date")
-	private Date modificationDate;
+    @Column(name = "modification_date")
+    private Date modificationDate;
 
-	@Column(name="number_of_records")
-	private Integer numberOfRecords;
+    @Column(name = "number_of_records")
+    private Integer numberOfRecords;
 
-    @Column(name="number_of_web_resource")
+    @Column(name = "number_of_web_resource")
     private Integer numberOfWebResource;
 
-	@Column(name="oai_identifier")
-	private String oaiIdentifier;
+    @Column(name = "oai_identifier")
+    private String oaiIdentifier;
 
-	private String path;
+    private String path;
 
-	@Column(name="path_html")
-	private String pathHtml;
+    @Column(name = "path_html")
+    private String pathHtml;
 
-	//bi-directional many-to-one association to EseState
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="es_id")
-	private EseState eseState;
+    //bi-directional many-to-one association to EseState
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "es_id", foreignKey = @ForeignKey(name = "ese_es_id_fkey"))
+    private EseState eseState;
 
-	//bi-directional many-to-one association to FindingAid
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="fa_id")
-	private FindingAid findingAid;
-	
-	@Enumerated(EnumType.STRING)
-	private MetadataFormat metadataFormat = MetadataFormat.EDM;
+    //bi-directional many-to-one association to FindingAid
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fa_id", foreignKey = @ForeignKey(name = "ese_fa_id_fkey"))
+    private FindingAid findingAid;
 
-	public Ese() {
-	}
+    @Enumerated(EnumType.STRING)
+    private MetadataFormat metadataFormat = MetadataFormat.EDM;
 
-	public Ese(int eseId, MetadataFormat metadataFormat, EseState eseState,
-			Date creationDate, String eset, String path, String oaiIdentifier) {
-		this.eseId = eseId;
-		this.metadataFormat = metadataFormat;
-		this.eseState = eseState;
-		this.creationDate = creationDate;
-		this.eset = eset;
-		this.path = path;
-		this.oaiIdentifier = oaiIdentifier;
-	}
-	@Deprecated
-	public Ese(int eseId, MetadataFormat metadataFormat, EseState eseState,
-			FindingAid findingAid, Date creationDate, Date modificationDate,
-			String eset, String path, String pathHtml, Integer numberOfRecords,
-			String oaiIdentifier) {
-		this.eseId = eseId;
-		this.metadataFormat = metadataFormat;
-		this.eseState = eseState;
-		this.findingAid = findingAid;
-		this.creationDate = creationDate;
-		this.modificationDate = modificationDate;
-		this.eset = eset;
-		this.path = path;
-		this.pathHtml = pathHtml;
-		this.numberOfRecords = numberOfRecords;
-		this.oaiIdentifier = oaiIdentifier;
-	}
+    public Ese() {
+    }
 
-	public int getEseId() {
-		return this.eseId;
-	}
+    public Ese(int eseId, MetadataFormat metadataFormat, EseState eseState,
+            Date creationDate, String eset, String path, String oaiIdentifier) {
+        this.eseId = eseId;
+        this.metadataFormat = metadataFormat;
+        this.eseState = eseState;
+        this.creationDate = creationDate;
+        this.eset = eset;
+        this.path = path;
+        this.oaiIdentifier = oaiIdentifier;
+    }
 
-	public void setEseId(int eseId) {
-		this.eseId = eseId;
-	}
+    @Deprecated
+    public Ese(int eseId, MetadataFormat metadataFormat, EseState eseState,
+            FindingAid findingAid, Date creationDate, Date modificationDate,
+            String eset, String path, String pathHtml, Integer numberOfRecords,
+            String oaiIdentifier) {
+        this.eseId = eseId;
+        this.metadataFormat = metadataFormat;
+        this.eseState = eseState;
+        this.findingAid = findingAid;
+        this.creationDate = creationDate;
+        this.modificationDate = modificationDate;
+        this.eset = eset;
+        this.path = path;
+        this.pathHtml = pathHtml;
+        this.numberOfRecords = numberOfRecords;
+        this.oaiIdentifier = oaiIdentifier;
+    }
 
-	public MetadataFormat getMetadataFormat() {
-		return this.metadataFormat;
-	}
+    public int getEseId() {
+        return this.eseId;
+    }
 
-	public void setMetadataFormat(MetadataFormat metadataFormat) {
-		this.metadataFormat = metadataFormat;
-	}
+    public void setEseId(int eseId) {
+        this.eseId = eseId;
+    }
 
-	public EseState getEseState() {
-		return this.eseState;
-	}
+    public MetadataFormat getMetadataFormat() {
+        return this.metadataFormat;
+    }
 
-	public void setEseState(EseState eseState) {
-		this.eseState = eseState;
-	}
+    public void setMetadataFormat(MetadataFormat metadataFormat) {
+        this.metadataFormat = metadataFormat;
+    }
 
-	public FindingAid getFindingAid() {
-		return this.findingAid;
-	}
+    public EseState getEseState() {
+        return this.eseState;
+    }
 
-	public void setFindingAid(FindingAid findingAid) {
-		this.findingAid = findingAid;
-	}
+    public void setEseState(EseState eseState) {
+        this.eseState = eseState;
+    }
 
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
+    public FindingAid getFindingAid() {
+        return this.findingAid;
+    }
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
+    public void setFindingAid(FindingAid findingAid) {
+        this.findingAid = findingAid;
+    }
 
-	public Date getModificationDate() {
-		return this.modificationDate;
-	}
+    public Date getCreationDate() {
+        return this.creationDate;
+    }
 
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
-	}
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
-	public String getEset() {
-		return this.eset;
-	}
+    public Date getModificationDate() {
+        return this.modificationDate;
+    }
 
-	public void setEset(String eset) {
-		this.eset = eset;
-	}
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
 
-	public String getPath() {
-		return this.path;
-	}
+    public String getEset() {
+        return this.eset;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public void setEset(String eset) {
+        this.eset = eset;
+    }
 
-	public String getPathHtml() {
-		return this.pathHtml;
-	}
+    public String getPath() {
+        return this.path;
+    }
 
-	public void setPathHtml(String pathHtml) {
-		this.pathHtml = pathHtml;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-	public Integer getNumberOfRecords() {
-		return this.numberOfRecords;
-	}
+    public String getPathHtml() {
+        return this.pathHtml;
+    }
 
-	public void setNumberOfRecords(Integer numberOfRecords) {
-		this.numberOfRecords = numberOfRecords;
-	}
+    public void setPathHtml(String pathHtml) {
+        this.pathHtml = pathHtml;
+    }
 
-	public void setOaiIdentifier(String oaiIdentifier) {
-		this.oaiIdentifier = oaiIdentifier;
-	}
+    public Integer getNumberOfRecords() {
+        return this.numberOfRecords;
+    }
 
-	public String getOaiIdentifier() {
-		return oaiIdentifier;
-	}
+    public void setNumberOfRecords(Integer numberOfRecords) {
+        this.numberOfRecords = numberOfRecords;
+    }
+
+    public void setOaiIdentifier(String oaiIdentifier) {
+        this.oaiIdentifier = oaiIdentifier;
+    }
+
+    public String getOaiIdentifier() {
+        return oaiIdentifier;
+    }
 
     public Integer getNumberOfWebResource() {
         return numberOfWebResource;

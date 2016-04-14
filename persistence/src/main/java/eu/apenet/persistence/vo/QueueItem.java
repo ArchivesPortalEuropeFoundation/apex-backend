@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "queue")
 public class QueueItem implements java.io.Serializable {
+
     public static final String XML_TYPE = "ape.xmltype";
     public static final String NO_EADID_ACTION = "ape.noeadidaction";
     public static final String EXIST_ACTION = "ape.existaction";
@@ -54,196 +56,197 @@ public class QueueItem implements java.io.Serializable {
     public static final String XSL_FILE = "ape.xslFile";
 
     /**
-	 *
-	 */
-	private static final long serialVersionUID = -4266955613706066708L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hg_id")
-	private HoldingsGuide holdingsGuide;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fa_id")
-	private FindingAid findingAid;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sg_id")
-	private SourceGuide sourceGuide;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "eac_cpf_id")
-	private EacCpf eacCpf;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uf_id")
-	private UpFile upFile;
-	@Column(name = "uf_id", updatable = false, insertable = false)
-	private Integer upFileId;
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "queue_date")
-	private Date queueDate;
-	private String errors;
-	private Integer priority;
-	@Enumerated(EnumType.STRING)
-	private QueueAction action;
-	private String preferences;
+     *
+     */
+    private static final long serialVersionUID = -4266955613706066708L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ai_id", updatable = false, insertable = false)
+    @JoinColumn(name = "hg_id", foreignKey = @ForeignKey(name = "index_queue_hg_id_fkey"))
+    private HoldingsGuide holdingsGuide;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fa_id", foreignKey = @ForeignKey(name = "index_queue_fa_id_fkey"))
+    private FindingAid findingAid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sg_id", foreignKey = @ForeignKey(name = "index_queue_sg_id_fkey"))
+    private SourceGuide sourceGuide;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "eac_cpf_id", foreignKey = @ForeignKey(name = "index_queue_eac_id_fkey"))
+    private EacCpf eacCpf;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "uf_id", foreignKey = @ForeignKey(name = "queue_uf_id_fkey"))
+    private UpFile upFile;
+    @Column(name = "uf_id", updatable = false, insertable = false)
+    private Integer upFileId;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "queue_date")
+    private Date queueDate;
+    private String errors;
+    private Integer priority;
+    @Enumerated(EnumType.STRING)
+    private QueueAction action;
+    private String preferences;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "queue_ai_id_fkey"), updatable = false, insertable = false)
     private ArchivalInstitution archivalInstitution;
     @Column(name = "ai_id")
     private Integer aiId;
-	
-	public QueueItem() {
-	}
 
-	public int getId() {
-		return id;
-	}
+    public QueueItem() {
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public HoldingsGuide getHoldingsGuide() {
-		return this.holdingsGuide;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setHoldingsGuide(HoldingsGuide holdingsGuide) {
-		this.holdingsGuide = holdingsGuide;
-	}
+    public HoldingsGuide getHoldingsGuide() {
+        return this.holdingsGuide;
+    }
 
-	public FindingAid getFindingAid() {
-		return this.findingAid;
-	}
+    public void setHoldingsGuide(HoldingsGuide holdingsGuide) {
+        this.holdingsGuide = holdingsGuide;
+    }
 
-	public void setFindingAid(FindingAid findingAid) {
-		this.findingAid = findingAid;
-	}
+    public FindingAid getFindingAid() {
+        return this.findingAid;
+    }
 
-	public SourceGuide getSourceGuide() {
-		return sourceGuide;
-	}
+    public void setFindingAid(FindingAid findingAid) {
+        this.findingAid = findingAid;
+    }
 
-	public void setSourceGuide(SourceGuide sourceGuide) {
-		this.sourceGuide = sourceGuide;
-	}
-	
+    public SourceGuide getSourceGuide() {
+        return sourceGuide;
+    }
 
+    public void setSourceGuide(SourceGuide sourceGuide) {
+        this.sourceGuide = sourceGuide;
+    }
 
-	public EacCpf getEacCpf() {
-		return eacCpf;
-	}
+    public EacCpf getEacCpf() {
+        return eacCpf;
+    }
 
-	public void setEacCpf(EacCpf eacCpf) {
-		this.eacCpf = eacCpf;
-	}
+    public void setEacCpf(EacCpf eacCpf) {
+        this.eacCpf = eacCpf;
+    }
 
-	public Date getQueueDate() {
-		return queueDate;
-	}
+    public Date getQueueDate() {
+        return queueDate;
+    }
 
-	public void setQueueDate(Date queueDate) {
-		this.queueDate = queueDate;
-	}
+    public void setQueueDate(Date queueDate) {
+        this.queueDate = queueDate;
+    }
 
-	public String getErrors() {
-		return errors;
-	}
+    public String getErrors() {
+        return errors;
+    }
 
-	public void setErrors(String errors) {
-		this.errors = errors;
-	}
+    public void setErrors(String errors) {
+        this.errors = errors;
+    }
 
-	public Integer getPriority() {
-		return priority;
-	}
+    public Integer getPriority() {
+        return priority;
+    }
 
-	public void setPriority(Integer priority) {
-		this.priority = priority;
-	}
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
 
-	public QueueAction getAction() {
-		return action;
-	}
+    public QueueAction getAction() {
+        return action;
+    }
 
-	public void setAction(QueueAction action) {
-		this.action = action;
-	}
+    public void setAction(QueueAction action) {
+        this.action = action;
+    }
 
-	public String getPreferences() {
-		return preferences;
-	}
+    public String getPreferences() {
+        return preferences;
+    }
 
-	public void setPreferences(String preferences) {
-		this.preferences = preferences;
-	}
+    public void setPreferences(String preferences) {
+        this.preferences = preferences;
+    }
 
-	public AbstractContent getAbstractContent(){
-		if (this.findingAid != null) {
-			return this.findingAid;
-		} else if (this.holdingsGuide != null) {
-			return this.holdingsGuide;
-		} else if (this.sourceGuide != null){
-			return this.sourceGuide;
-		}
-		return this.eacCpf;		
-	}
-	public Ead getEad(){
-		if (this.findingAid != null) {
-			return this.findingAid;
-		} else if (this.holdingsGuide != null) {
-			return this.holdingsGuide;
-		} else if (this.sourceGuide != null){
-			return this.sourceGuide;
-		}
-		return null;
-	}
-	public void setAbstractContent(AbstractContent content) {
-		if (content == null) {
-			this.findingAid = null;
-			this.holdingsGuide = null;
-			this.sourceGuide = null;
-			this.eacCpf = null;
-		} else {
-			if (content instanceof FindingAid) {
-				this.findingAid = (FindingAid) content;
-			} else if (content instanceof HoldingsGuide) {
-				this.holdingsGuide = (HoldingsGuide) content;
-			} else if (content instanceof SourceGuide) {
-				this.sourceGuide = (SourceGuide)content;
-			} 
-			this.eacCpf = (EacCpf)content;
-		}
-	}	
-	public void setEad(Ead ead) {
-		if (ead == null) {
-			this.findingAid = null;
-			this.holdingsGuide = null;
-			this.sourceGuide = null;
-		} else {
-			if (ead instanceof FindingAid) {
-				this.findingAid = (FindingAid) ead;
-			} else if (ead instanceof HoldingsGuide) {
-				this.holdingsGuide = (HoldingsGuide) ead;
-			} else if (ead instanceof SourceGuide) {
-				this.sourceGuide = (SourceGuide)ead;
-			} 
-		}
-	}
+    public AbstractContent getAbstractContent() {
+        if (this.findingAid != null) {
+            return this.findingAid;
+        } else if (this.holdingsGuide != null) {
+            return this.holdingsGuide;
+        } else if (this.sourceGuide != null) {
+            return this.sourceGuide;
+        }
+        return this.eacCpf;
+    }
 
-	public UpFile getUpFile() {
-		return upFile;
-	}
+    public Ead getEad() {
+        if (this.findingAid != null) {
+            return this.findingAid;
+        } else if (this.holdingsGuide != null) {
+            return this.holdingsGuide;
+        } else if (this.sourceGuide != null) {
+            return this.sourceGuide;
+        }
+        return null;
+    }
 
-	public void setUpFile(UpFile upFile) {
-		this.upFile = upFile;
-	}
+    public void setAbstractContent(AbstractContent content) {
+        if (content == null) {
+            this.findingAid = null;
+            this.holdingsGuide = null;
+            this.sourceGuide = null;
+            this.eacCpf = null;
+        } else {
+            if (content instanceof FindingAid) {
+                this.findingAid = (FindingAid) content;
+            } else if (content instanceof HoldingsGuide) {
+                this.holdingsGuide = (HoldingsGuide) content;
+            } else if (content instanceof SourceGuide) {
+                this.sourceGuide = (SourceGuide) content;
+            }
+            this.eacCpf = (EacCpf) content;
+        }
+    }
 
-	public Integer getUpFileId() {
-		return upFileId;
-	}
+    public void setEad(Ead ead) {
+        if (ead == null) {
+            this.findingAid = null;
+            this.holdingsGuide = null;
+            this.sourceGuide = null;
+        } else {
+            if (ead instanceof FindingAid) {
+                this.findingAid = (FindingAid) ead;
+            } else if (ead instanceof HoldingsGuide) {
+                this.holdingsGuide = (HoldingsGuide) ead;
+            } else if (ead instanceof SourceGuide) {
+                this.sourceGuide = (SourceGuide) ead;
+            }
+        }
+    }
 
-	public void setUpFileId(Integer upFileId) {
-		this.upFileId = upFileId;
-	}
+    public UpFile getUpFile() {
+        return upFile;
+    }
+
+    public void setUpFile(UpFile upFile) {
+        this.upFile = upFile;
+    }
+
+    public Integer getUpFileId() {
+        return upFileId;
+    }
+
+    public void setUpFileId(Integer upFileId) {
+        this.upFileId = upFileId;
+    }
 
     public ArchivalInstitution getArchivalInstitution() {
         return archivalInstitution;

@@ -21,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import eu.archivesportaleurope.util.ApeUtil;
+import javax.persistence.ForeignKey;
 
 @Entity
 @Table(name = "archival_institution")
@@ -34,37 +35,52 @@ public class ArchivalInstitution implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int aiId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_ai_id")
+    @JoinColumn(name = "parent_ai_id", foreignKey = @ForeignKey(name="archival_institution_parent_ai_id_fkey"))
     private ArchivalInstitution parent;
+
     @Column(name = "parent_ai_id", insertable = false, updatable = false)
     private Integer parentAiId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name="archival_institution_p_id_fkey"), insertable = false, updatable = false)
     private User partner;
 
     @Column(name = "user_id")
     private Integer partnerId;
+
     @Column(name = "country_id")
     private Integer countryId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", insertable = false, updatable = false)
+    @JoinColumn(name = "country_id", foreignKey = @ForeignKey(name="archival_institution_cou_id_fkey"), insertable = false, updatable = false)
     private Country country;
+
     private String ainame;
+
     @Temporal(TemporalType.DATE)
     @Column(name = "registration_date")
     private Date registrationDate;
+
     @Column(name = "eag_path")
     private String eagPath;
+
     private String repositorycode;
+
     private String autform;
+
     @Column(name = "isgroup")
     private boolean group;
+
     @Column(name = "internal_al_id")
     private String internalAlId;
+
     private int alorder;
+
     @Column(name = "contain_searchable_items")
     private boolean containSearchableItems;
+    
     @Column(name = "content_lastmodified_date")
     private Date contentLastModifiedDate;
 
@@ -83,11 +99,13 @@ public class ArchivalInstitution implements java.io.Serializable {
 
     @OneToMany(mappedBy = "archivalInstitution")
     private Set<FindingAid> findingAids = new HashSet<FindingAid>(0);
+    
     @OneToMany(mappedBy = "archivalInstitution")
     private Set<HoldingsGuide> holdingsGuides = new HashSet<HoldingsGuide>(0);
+    
     @OneToMany(mappedBy = "archivalInstitution")
     private Set<SourceGuide> sourceGuides = new HashSet<SourceGuide>(0);
-    
+
     @Column(nullable = true)
     private Boolean openDataEnabled;
     @Column(nullable = true)
@@ -310,7 +328,7 @@ public class ArchivalInstitution implements java.io.Serializable {
     }
 
     public boolean isOpenDataEnabled() {
-        return openDataEnabled==null?false: (boolean)openDataEnabled;
+        return openDataEnabled == null ? false : (boolean) openDataEnabled;
     }
 
     public void setOpenDataEnabled(boolean openDataEnabled) {

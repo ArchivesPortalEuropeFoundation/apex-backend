@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +27,7 @@ public class Ingestionprofile implements Serializable {
     @Column(name = "ai_id")
     private Integer aiId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ai_id", insertable = false, updatable = false)
+    @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "ingestionprofile_ai_id_fkey"), insertable = false, updatable = false)
     private ArchivalInstitution archivalInstitution;
     @Column(name = "name_profile")
     private String nameProfile;
@@ -99,7 +100,7 @@ public class Ingestionprofile implements Serializable {
     @Column(name = "xsl_upload_id")
     private Long xslUploadId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "xsl_upload_id", insertable = false, updatable = false)
+    @JoinColumn(name = "xsl_upload_id", foreignKey = @ForeignKey(name = "xsl_upload_id_fkey"), insertable = false, updatable = false)
     private XslUpload xslUpload;
 
     public Ingestionprofile() {

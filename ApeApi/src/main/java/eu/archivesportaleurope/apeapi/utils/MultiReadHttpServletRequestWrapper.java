@@ -26,6 +26,34 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String body;
 
+    private class ServletInputStreamReader extends ServletInputStream {
+        final ByteArrayInputStream byteArrayInputStream;
+
+        public ServletInputStreamReader(ByteArrayInputStream byteArrayInputStream) {
+            this.byteArrayInputStream = byteArrayInputStream;
+        }
+        
+        @Override
+        public int read() throws IOException {
+            return byteArrayInputStream.read();
+        }
+
+        @Override
+        public boolean isFinished() {
+            return byteArrayInputStream.available() == 0;
+        }
+
+        @Override
+        public boolean isReady() {
+            return byteArrayInputStream.available() > 0;
+        }
+
+        @Override
+        public void setReadListener(ReadListener readListener) {
+            throw new UnsupportedOperationException();
+        }
+    };
+
     public MultiReadHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
 
@@ -33,8 +61,7 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
         BufferedReader bufferedReader = null;
 
         try (
-                InputStream inputStream = request.getInputStream();
-            ) {
+                InputStream inputStream = request.getInputStream();) {
 
             if (inputStream != null) {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -59,7 +86,7 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
                 }
             }
         }
-        
+
         body = stringBuilder.toString();
     }
 
@@ -67,28 +94,6 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
     public ServletInputStream getInputStream() throws IOException {
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
         
-        ServletInputStream inputStream = new ServletInputStream() {
-            @Override
-            public int read() throws IOException {
-                return byteArrayInputStream.read();
-            }
-
-            @Override
-            public boolean isFinished() {
-                return byteArrayInputStream.available() == 0;
-            }
-
-            @Override
-            public boolean isReady() {
-                return byteArrayInputStream.available() > 0;
-            }
-
-            @Override
-            public void setReadListener(ReadListener readListener) {
-                
-            }
-        };
-
-        return inputStream;
+        return new ServletInputStreamReader(byteArrayInputStream);
     }
 }

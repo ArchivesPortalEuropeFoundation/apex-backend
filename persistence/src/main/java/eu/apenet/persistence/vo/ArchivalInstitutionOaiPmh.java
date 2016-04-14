@@ -56,13 +56,13 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     @Column(name="ai_id")
     private Integer aiId;
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="ai_id", insertable=false, updatable=false)
+    @JoinColumn(name="ai_id", foreignKey = @ForeignKey(name="archival_institution_oai_pmh_ai_id_fkey"), insertable=false, updatable=false)
     private ArchivalInstitution archivalInstitution;
 
     @Column(name="profile_id")
     private Long profileId;
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="profile_id", insertable=false, updatable=false)
+    @JoinColumn(name="profile_id", foreignKey = @ForeignKey(name="archival_institutition_oai_pmh_profile_id_fkey"), insertable=false, updatable=false)
     private Ingestionprofile ingestionprofile;
 
     @Column(name="interval_harvesting")

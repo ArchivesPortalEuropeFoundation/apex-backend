@@ -12,6 +12,7 @@
         <developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/trunk</developerConnection>
     </scm>
     <properties>
+        <additionalparam>-Xdoclint:none</additionalparam>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.2.2.RELEASE</spring.version>
         <postgresql.version>9.4-1205-jdbc41</postgresql.version>
@@ -140,11 +141,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
-            <url>https://build.archivesportaleurope.net/nexus/content/repositories/snapshots/</url>
+            <url>http://nexus.archivesportaleurope.net/content/repositories/snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>releases</id>
-            <url>https://build.archivesportaleurope.net/nexus/content/repositories/releases/</url>
+            <url>http://nexus.archivesportaleurope.net/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
     <modules>

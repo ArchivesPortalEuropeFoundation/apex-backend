@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,14 +27,14 @@ public class User implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "country_id")
+	@JoinColumn(name = "country_id", foreignKey = @ForeignKey(name="partner_cou_id_fkey"))
 	private Country country;
 	@Column(name = "country_id", insertable = false, updatable = false)
 	private Integer countryId;
     @Column(name = "is_active")
 	private boolean isActive;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_role_id")
+	@JoinColumn(name = "user_role_id", foreignKey = @ForeignKey(name="partner_role_id_fkey"))
 	private UserRole userRole;
 	@Column(name = "email_address")
 	private String emailAddress;

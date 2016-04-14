@@ -52,7 +52,7 @@ public class EadSearchSearvice implements SearchService {
             extraParam = extraSearchParam;
         }
         SolrQuery query = new SolrQuery(searchRequest.getQuery() + extraParam);
-        query.setStart(searchRequest.getStart());
+        query.setStart(searchRequest.getStartIndex());
         if (searchRequest.getCount() <= 0) {
             logger.info(":::Default Count vale from prop is : "+propertiesUtil.getValueFromKey("search.request.default.count"));
             query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));

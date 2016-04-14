@@ -66,7 +66,7 @@ public class ContentResource {
     @GET
     @Path("/descriptiveUnit/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Return overview response of Descriptive Unit",
+    @ApiOperation(value = "Return content response of descriptive unit",
             response = ContentResponseClevel.class
     )
     @ApiResponses(value = {
@@ -106,7 +106,7 @@ public class ContentResource {
     @GET
     @Path("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Return overview response of an EAD item",
+    @ApiOperation(value = "Return content response of an EAD item",
             response = ContentResponseEad.class
     )
     @ApiResponses(value = {

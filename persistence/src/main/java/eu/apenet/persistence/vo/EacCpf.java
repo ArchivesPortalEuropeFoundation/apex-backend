@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,10 +36,10 @@ public class EacCpf extends AbstractContent {
 	private Date uploadDate;
 	private String path;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "um_id")
+	@JoinColumn(name = "um_id", foreignKey = @ForeignKey(name="eac_cpf_um_id_fkey"))
 	private UploadMethod uploadMethod;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ai_id")
+	@JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name="eac_cpf_ai_id_fkey"))
 	private ArchivalInstitution archivalInstitution;
 	@Column(name = "ai_id", updatable = false, insertable = false)
 	private Integer aiId;

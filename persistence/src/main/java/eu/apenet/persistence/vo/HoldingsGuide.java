@@ -1,4 +1,5 @@
 package eu.apenet.persistence.vo;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,217 +23,213 @@ import javax.persistence.TemporalType;
 @Table(name = "holdings_guide")
 public class HoldingsGuide extends Ead {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2297086401601854142L;
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
-	private String eadid;
-	private String title;
-	@Column(name = "path_apenetead")
-	private String pathApenetead;
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="upload_date")
-	private Date uploadDate;
-	@Column(name = "publish_date")
-	private Date publishDate;
-	/*
-	 * states
-	 */
-	private boolean converted = false;
-	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
-	private boolean published = false;
-	private boolean dynamic = false;
-	private QueuingState queuing = QueuingState.NO;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="um_id")
-	private UploadMethod uploadMethod;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ai_id")
-	private ArchivalInstitution archivalInstitution;
-	@Column(name="ai_id", updatable = false, insertable = false)
-	private Integer aiId;
-	private Long totalNumberOfDaos =0l;
-	private Long totalNumberOfUnits =0l;
-	private Long totalNumberOfUnitsWithDao =0l;
-	@OneToMany(mappedBy = "holdingsGuide")
-	private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "holdingsGuide")
-	private Set<Warnings> warningses = new HashSet<Warnings>(0);
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "holdingsGuide")
-	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
-	public Integer getId() {
-		return id;
-	}
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2297086401601854142L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String eadid;
+    private String title;
+    @Column(name = "path_apenetead")
+    private String pathApenetead;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "upload_date")
+    private Date uploadDate;
+    @Column(name = "publish_date")
+    private Date publishDate;
+    /*
+     * states
+     */
+    private boolean converted = false;
+    private ValidatedState validated = ValidatedState.NOT_VALIDATED;
+    private boolean published = false;
+    private boolean dynamic = false;
+    private QueuingState queuing = QueuingState.NO;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "um_id", foreignKey = @ForeignKey(name = "holdings_guide_um_id_fkey"))
+    private UploadMethod uploadMethod;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "holdings_guide_ai_id_fkey"))
+    private ArchivalInstitution archivalInstitution;
+    @Column(name = "ai_id", updatable = false, insertable = false)
+    private Integer aiId;
+    private Long totalNumberOfDaos = 0l;
+    private Long totalNumberOfUnits = 0l;
+    private Long totalNumberOfUnitsWithDao = 0l;
+    @OneToMany(mappedBy = "holdingsGuide")
+    private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "holdingsGuide")
+    private Set<Warnings> warningses = new HashSet<Warnings>(0);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "holdingsGuide")
+    private Set<EadContent> eadContents = new HashSet<EadContent>(0);
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getEadid() {
-		return eadid;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setEadid(String eadid) {
-		this.eadid = eadid;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public Date getUploadDate() {
-		return uploadDate;
-	}
+    public String getEadid() {
+        return eadid;
+    }
 
-	public void setUploadDate(Date uploadDate) {
-		this.uploadDate = uploadDate;
-	}
+    public void setEadid(String eadid) {
+        this.eadid = eadid;
+    }
 
-	public boolean isPublished() {
-		return published;
-	}
+    public Date getUploadDate() {
+        return uploadDate;
+    }
 
-	public void setPublished(boolean searchable) {
-		this.published = searchable;
-	}
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
 
-	public String getPathApenetead() {
-		return pathApenetead;
-	}
+    public boolean isPublished() {
+        return published;
+    }
 
-	public void setPathApenetead(String pathApenetead) {
-		this.pathApenetead = pathApenetead;
-	}
+    public void setPublished(boolean searchable) {
+        this.published = searchable;
+    }
 
+    public String getPathApenetead() {
+        return pathApenetead;
+    }
 
-	public UploadMethod getUploadMethod() {
-		return uploadMethod;
-	}
+    public void setPathApenetead(String pathApenetead) {
+        this.pathApenetead = pathApenetead;
+    }
 
-	public void setUploadMethod(UploadMethod uploadMethod) {
-		this.uploadMethod = uploadMethod;
-	}
+    public UploadMethod getUploadMethod() {
+        return uploadMethod;
+    }
 
-	public ArchivalInstitution getArchivalInstitution() {
-		return archivalInstitution;
-	}
+    public void setUploadMethod(UploadMethod uploadMethod) {
+        this.uploadMethod = uploadMethod;
+    }
 
-	public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
-		this.archivalInstitution = archivalInstitution;
-	}
+    public ArchivalInstitution getArchivalInstitution() {
+        return archivalInstitution;
+    }
 
-	public Integer getAiId() {
-		return aiId;
-	}
+    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+        this.archivalInstitution = archivalInstitution;
+    }
 
-	public void setAiId(Integer aiId) {
-		this.aiId = aiId;
-	}
+    public Integer getAiId() {
+        return aiId;
+    }
 
-	public Long getTotalNumberOfDaos() {
-		return totalNumberOfDaos;
-	}
+    public void setAiId(Integer aiId) {
+        this.aiId = aiId;
+    }
 
-	public void setTotalNumberOfDaos(Long totalNumberOfDaos) {
-		this.totalNumberOfDaos = totalNumberOfDaos;
-	}
+    public Long getTotalNumberOfDaos() {
+        return totalNumberOfDaos;
+    }
 
-	public Long getTotalNumberOfUnits() {
-		return totalNumberOfUnits;
-	}
+    public void setTotalNumberOfDaos(Long totalNumberOfDaos) {
+        this.totalNumberOfDaos = totalNumberOfDaos;
+    }
 
-	public void setTotalNumberOfUnits(Long totalNumberOfUnits) {
-		this.totalNumberOfUnits = totalNumberOfUnits;
-	}
+    public Long getTotalNumberOfUnits() {
+        return totalNumberOfUnits;
+    }
 
-	public Long getTotalNumberOfUnitsWithDao() {
-		return totalNumberOfUnitsWithDao;
-	}
+    public void setTotalNumberOfUnits(Long totalNumberOfUnits) {
+        this.totalNumberOfUnits = totalNumberOfUnits;
+    }
 
-	public void setTotalNumberOfUnitsWithDao(Long totalNumberOfUnitsWithDao) {
-		this.totalNumberOfUnitsWithDao = totalNumberOfUnitsWithDao;
-	}
+    public Long getTotalNumberOfUnitsWithDao() {
+        return totalNumberOfUnitsWithDao;
+    }
 
-	
-	
-	public Set<QueueItem> getQueueItems() {
-		return queueItems;
-	}
+    public void setTotalNumberOfUnitsWithDao(Long totalNumberOfUnitsWithDao) {
+        this.totalNumberOfUnitsWithDao = totalNumberOfUnitsWithDao;
+    }
 
-	public void setQueueItems(Set<QueueItem> indexQueues) {
-		this.queueItems = indexQueues;
-	}
+    public Set<QueueItem> getQueueItems() {
+        return queueItems;
+    }
 
-	public Set<Warnings> getWarningses() {
-		return warningses;
-	}
+    public void setQueueItems(Set<QueueItem> indexQueues) {
+        this.queueItems = indexQueues;
+    }
 
-	public void setWarningses(Set<Warnings> warningses) {
-		this.warningses = warningses;
-	}
+    public Set<Warnings> getWarningses() {
+        return warningses;
+    }
 
-	public Set<EadContent> getEadContents() {
-		return eadContents;
-	}
+    public void setWarningses(Set<Warnings> warningses) {
+        this.warningses = warningses;
+    }
 
-	public void setEadContents(Set<EadContent> eadContents) {
-		this.eadContents = eadContents;
-	}
+    public Set<EadContent> getEadContents() {
+        return eadContents;
+    }
 
+    public void setEadContents(Set<EadContent> eadContents) {
+        this.eadContents = eadContents;
+    }
 
-	public HoldingsGuide() {
-	}
+    public HoldingsGuide() {
+    }
 
+    public boolean isConverted() {
+        return converted;
+    }
 
-	public boolean isConverted() {
-		return converted;
-	}
+    public void setConverted(boolean converted) {
+        this.converted = converted;
+    }
 
-	public void setConverted(boolean converted) {
-		this.converted = converted;
-	}
+    public ValidatedState getValidated() {
+        return validated;
+    }
 
-	public ValidatedState getValidated() {
-		return validated;
-	}
+    public void setValidated(ValidatedState validated) {
+        this.validated = validated;
+    }
 
-	public void setValidated(ValidatedState validated) {
-		this.validated = validated;
-	}
+    public QueuingState getQueuing() {
+        return queuing;
+    }
 
-	public QueuingState getQueuing() {
-		return queuing;
-	}
+    public void setQueuing(QueuingState queuing) {
+        this.queuing = queuing;
+    }
 
-	public void setQueuing(QueuingState queuing) {
-		this.queuing = queuing;
-	}
+    public boolean isDynamic() {
+        return dynamic;
+    }
 
-	public boolean isDynamic() {
-		return dynamic;
-	}
+    public void setDynamic(boolean dynamic) {
+        this.dynamic = dynamic;
+    }
 
-	public void setDynamic(boolean dynamic) {
-		this.dynamic = dynamic;
-	}
+    public Date getPublishDate() {
+        return publishDate;
+    }
 
-	public Date getPublishDate() {
-		return publishDate;
-	}
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
 
-	public void setPublishDate(Date publishDate) {
-		this.publishDate = publishDate;
-	}
-
-	@Override
-	public void setPath(String path) {
-		this.pathApenetead = path;
-	}
+    @Override
+    public void setPath(String path) {
+        this.pathApenetead = path;
+    }
 }

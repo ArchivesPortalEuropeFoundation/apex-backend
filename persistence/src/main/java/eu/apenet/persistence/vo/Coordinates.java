@@ -4,6 +4,7 @@ package eu.apenet.persistence.vo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +25,7 @@ public class Coordinates implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private int id;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ai_id", nullable = false)
+	@JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name="coordinates_archival_institution_fkey"), nullable = false)
 	private ArchivalInstitution archivalInstitution;
 	@Column(name = "ai_id", insertable=false, updatable=false)
 	private int aiId;
