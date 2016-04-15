@@ -60,6 +60,50 @@ ALTER TABLE ai_alternative_name_id_seq OWNER TO apenet_dashboard;
 
 ALTER SEQUENCE ai_alternative_name_id_seq OWNED BY ai_alternative_name.id;
 
+--
+-- TOC entry 183 (class 1259 OID 16391)
+-- Name: api_key; Type: TABLE; Schema: public; Owner: apenet_dashboard
+--
+
+CREATE TABLE api_key (
+    id integer NOT NULL,
+    apikey character varying(36),
+    emailaddress character varying(255),
+    firstname character varying(255),
+    lastname character varying(255),
+    url character varying(255),
+    creationtime timestamp without time zone,
+    status character varying(255),
+    uuid character varying(36),
+    version timestamp without time zone,
+    liferayuserid bigint NOT NULL
+);
+
+
+ALTER TABLE api_key OWNER TO apenet_dashboard;
+
+--
+-- TOC entry 184 (class 1259 OID 16397)
+-- Name: api_key_id_seq; Type: SEQUENCE; Schema: public; Owner: apenet_dashboard
+--
+
+CREATE SEQUENCE api_key_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE api_key_id_seq OWNER TO apenet_dashboard;
+
+--
+-- TOC entry 2729 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: api_key_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apenet_dashboard
+--
+
+ALTER SEQUENCE api_key_id_seq OWNED BY api_key.id;
 
 --
 -- TOC entry 182 (class 1259 OID 37494)
@@ -327,7 +371,7 @@ ALTER SEQUENCE collection_id_seq OWNED BY collection.id;
 CREATE TABLE coordinates (
     id integer NOT NULL,
     ai_id integer NOT NULL,
-    name_institution character varying NOT NULL,
+    name_institution character varying(255) NOT NULL,
     lat numeric,
     lon numeric,
     street character varying(255) NOT NULL,
@@ -1631,6 +1675,14 @@ ALTER TABLE ONLY ai_alternative_name ALTER COLUMN id SET DEFAULT nextval('ai_alt
 
 
 --
+-- TOC entry 2254 (class 2604 OID 16727)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: apenet_dashboard
+--
+
+ALTER TABLE ONLY api_key ALTER COLUMN id SET DEFAULT nextval('api_key_id_seq'::regclass);
+
+
+--
 -- TOC entry 2210 (class 2604 OID 37820)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: apenet_dashboard
 --
@@ -1886,6 +1938,14 @@ ALTER TABLE ONLY xsl_upload ALTER COLUMN id SET DEFAULT nextval('xsl_upload_id_s
 ALTER TABLE ONLY ai_alternative_name
     ADD CONSTRAINT alternative_name_pkey PRIMARY KEY (id);
 
+
+--
+-- TOC entry 2380 (class 2606 OID 16799)
+-- Name: api_key_pkey; Type: CONSTRAINT; Schema: public; Owner: apenet_dashboard
+--
+
+ALTER TABLE ONLY api_key
+    ADD CONSTRAINT api_key_pkey PRIMARY KEY (id);
 
 --
 -- TOC entry 2335 (class 2606 OID 37854)
