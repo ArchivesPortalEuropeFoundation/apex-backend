@@ -149,6 +149,7 @@
         </repository>
     </distributionManagement>
     <modules>
+        <module>SharedResources</module>
         <module>OAIHarvester</module>
         <module>commons</module>
         <module>persistence</module>
@@ -160,7 +161,6 @@
         <module>PortugalHarvesterConverter</module>
         <module>files</module>
         <module>ApeApi</module>
-        <module>SharedResources</module>
     </modules>
     <dependencyManagement>
         <dependencies>
