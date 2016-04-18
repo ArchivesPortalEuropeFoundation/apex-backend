@@ -14,6 +14,8 @@ import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
@@ -43,13 +45,15 @@ public abstract class AbstractSolrServerHolder {
                 SolrQuery query = genOpenDataByAiSearchQuery(aiName, aiId, openDataEnable);
                 //709 which 127th prime, which is 31th prime, which is 11th prime, which is 5th prime, which is 3rd prime, which is 2nd prime, which is 1st prime. >:)
                 query.setRows(709);
-                
+
                 int totalNumberOfDocs = (int) solrServer.query(query).getResults().getNumFound();
                 while (totalNumberOfDocs > 0) {
                     QueryResponse response = solrServer.query(query);
                     long foundDocsCount = response.getResults().size();
 
                     for (SolrDocument doc : response.getResults()) {
+                        addUnStoredFields(doc, archivalInstitution);
+                        
                         SolrInputDocument inputDocument = ClientUtils.toSolrInputDocument(doc);
                         if (inputDocument.getField("openData") == null) {
                             inputDocument.addField("openData", openDataEnable, 1);
@@ -76,6 +80,31 @@ public abstract class AbstractSolrServerHolder {
         } else {
             throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
         }
+    }
+
+    private void addUnStoredFields(SolrDocument doc, ArchivalInstitution archivalInstitution) {
+        doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountryId());
+
+        if (this instanceof EadSolrServerHolder) {
+            doc.addField(SolrFields.FOND_ID, getIdFromFiled(doc.getFieldValue(SolrFields.TITLE_OF_FOND).toString()));
+        }
+
+        if (this instanceof EagSolrServerHolder) {
+            ArchivalInstitution ai = archivalInstitution.getParent();
+            List<String> ais = new ArrayList<String>();
+            while (ai != null) {
+                ais.add(ai.getAiId() + "");
+                ai = ai.getParent();
+            }
+            doc.addField(SolrFields.EAG_AI_GROUP_ID, ais);
+        } else {
+            doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
+        }
+    }
+
+    private String getIdFromFiled(String field) {
+        String[] arr = field.split(":");
+        return arr[arr.length - 1];
     }
 
     private SolrQuery genOpenDataByAiSearchQuery(String aiName, int aiId, boolean openDataEnable) throws SolrServerException {
