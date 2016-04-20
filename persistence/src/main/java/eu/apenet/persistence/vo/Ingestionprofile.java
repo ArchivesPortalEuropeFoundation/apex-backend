@@ -5,6 +5,7 @@
 package eu.apenet.persistence.vo;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,7 @@ public class Ingestionprofile implements Serializable {
     private Long id;
     @Column(name = "ai_id")
     private Integer aiId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "ingestionprofile_ai_id_fkey"), insertable = false, updatable = false)
     private ArchivalInstitution archivalInstitution;
     @Column(name = "name_profile")
