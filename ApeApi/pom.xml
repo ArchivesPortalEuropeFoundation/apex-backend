@@ -645,7 +645,7 @@
                             <fileset>
                                 <basedir>${project.build.directory}/maven-shared-archive-resources/</basedir>
                                 <includes>
-                                    <include>2_add_admin.sql</include>
+                                    <include>2_add_admin_hsqldb.sql</include>
                                     <include>1_global_filling_script.sql</include>
                                 </includes>
                             </fileset>

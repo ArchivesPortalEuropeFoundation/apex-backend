@@ -10,6 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <shared.resource.version>2.2.3-SNAPSHOT</shared.resource.version>
         <runSuite>**/TestSuite001.class</runSuite>
     </properties>
     <dependencies>
@@ -27,25 +28,29 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>2.49.1</version>
+            <version>2.53.0</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>3.4</version>
+            <version>3.7</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.13</version>
+            <version>1.7.21</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.13</version>
+            <version>1.7.21</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
@@ -55,7 +60,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>SharedResources</artifactId>
-            <version>${project.version}</version>
+            <version>${shared.resource.version}</version>
         </dependency>
     </dependencies>
     <profiles>
@@ -113,7 +118,7 @@
                 <version>1.5</version>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>eu.archivesportaleurope.backend:SharedResources:${project.version}</resourceBundle>
+                        <resourceBundle>eu.archivesportaleurope.backend:SharedResources:${shared.resource.version}</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>
@@ -129,7 +134,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-<!--                    <systemProperties>
+                    <!--                    <systemProperties>
                         <property>
                             <name>webdriver.chrome.driver</name>
                             <value>${project.basedir}/chromedriver/chromedriver${driver.extension}</value>

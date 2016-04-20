@@ -18,7 +18,7 @@ public class EadSolrServerHolder extends AbstractSolrServerHolder {
 	}
 
 	@Override
-	protected String getSolrUrl() {
+	public String getSolrUrl() {
 		return APEnetUtilities.getDashboardConfig().getBaseSolrIndexUrl() + "/eads";
 	}
 }

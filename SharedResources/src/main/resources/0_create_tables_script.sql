@@ -499,7 +499,7 @@ ALTER SEQUENCE country_id_seq OWNED BY country.id;
 --
 
 CREATE TABLE dashboard_user (
-    id integer NOT NULL,
+    id  SERIAL,
     email_address character varying(256) NOT NULL,
     password character varying(60) NOT NULL,
     country_id integer,

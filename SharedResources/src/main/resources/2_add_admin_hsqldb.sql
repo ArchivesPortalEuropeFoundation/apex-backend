@@ -1,0 +1,1 @@
+INSERT INTO dashboard_user (id, email_address, password, secret_question, secret_answer, user_role_id, first_name, last_name, is_active) VALUES (1, 'apeAdmin@gmail.com','5JgP8LV83cuhtvwYmd6Z9hOVLA4=','What is your surname?','APE',3,'Admin','APE', true);

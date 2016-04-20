@@ -6,9 +6,11 @@
 package eu.apenet.dashboard.services.opendata;
 
 import eu.apenet.commons.exceptions.ProcessBusyException;
+import eu.apenet.commons.solr.AbstractSolrServerHolder;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
+import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
@@ -20,11 +22,18 @@ import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrInputDocument;
 
 /**
  *
@@ -36,44 +45,155 @@ public class OpenDataService {
     public static final String TOTAL_SOLAR_DOC_KEY = "totalSolarDoc";
     public static final String ENABLE_OPEN_DATA_KEY = "enableOpenData";
 
-    public static boolean openDataPublish(Integer aid, Properties preferences) throws IOException, ProcessBusyException {
+    private OpenDataService() {
+    }
+
+    private static class OpenDataServiceHolder {
+
+        private static final OpenDataService ODS = new OpenDataService();
+    };
+
+    public static OpenDataService getInstance() {
+        return OpenDataServiceHolder.ODS;
+    }
+
+    public boolean openDataPublish(Integer aid, Properties preferences) throws IOException, ProcessBusyException {
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aid);
 
         SecurityContext.get().checkAuthorized(aid);
-        if (archivalInstitution.getUnprocessedSolrDocs()<=0) {
+        if (archivalInstitution.getUnprocessedSolrDocs() <= 0) {
             archivalInstitution.setTotalSolrDocsForOpenData(Long.parseLong(preferences.getProperty(TOTAL_SOLAR_DOC_KEY, "0")));
             archivalInstitution.setUnprocessedSolrDocs(Long.parseLong(preferences.getProperty(TOTAL_SOLAR_DOC_KEY, "0")));
-            
+
             archivalInstitution.setOpenDataEnabled(Boolean.parseBoolean(preferences.getProperty(ENABLE_OPEN_DATA_KEY, "false")));
-            
+
             archivalInstitutionDao.store(archivalInstitution);
-            
+
             addToQueue(archivalInstitution, QueueAction.ENABLE_OPEN_DATA, preferences);
-            
+
             return true;
         } else {
             throw new ProcessBusyException();
         }
     }
 
-    private static void addToQueue(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences) throws IOException {
+    private void addToQueue(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences) throws IOException {
         QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 
         QueueItem queueItem = fillQueueItem(archivalInstitution, queueAction, preferences);
         indexqueueDao.store(queueItem);
     }
-    
-    public static QueueAction processQueueItem(QueueItem queueItem) throws Exception { 
+
+    public QueueAction processQueueItem(QueueItem queueItem) throws Exception {
         QueueAction queueAction = queueItem.getAction();
         QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
         Properties preferences = EadService.readProperties(queueItem.getPreferences());
         boolean openData = Boolean.valueOf(preferences.getProperty(OpenDataService.ENABLE_OPEN_DATA_KEY));
-        EadSolrServerHolder.getInstance().updateOpenDataByAi(queueItem.getArchivalInstitution().getAiname(), queueItem.getArchivalInstitution().getAiId(), openData);
-        EacCpfSolrServerHolder.getInstance().updateOpenDataByAi(queueItem.getArchivalInstitution().getAiname(), queueItem.getArchivalInstitution().getAiId(), openData);
-        EagSolrServerHolder.getInstance().updateOpenDataByAi(queueItem.getArchivalInstitution().getAiname(), queueItem.getArchivalInstitution().getAiId(), openData);
+        updateOpenDataByAi(EadSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
+        updateOpenDataByAi(EacCpfSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
+        updateOpenDataByAi(EagSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
         queueItemDAO.delete(queueItem);
         return queueAction;
+    }
+
+    public long updateOpenDataByAi(AbstractSolrServerHolder solrHolder, ArchivalInstitution aInstitution, boolean openDataEnable) throws SolrServerException {
+        if (solrHolder.isAvailable()) {
+            try {
+                long startTime = System.currentTimeMillis();
+                ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+                ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aInstitution.getAiId());
+
+                SolrQuery query = genOpenDataByAiSearchQuery(solrHolder, archivalInstitution, openDataEnable);
+                //709 which 127th prime, which is 31th prime, which is 11th prime, which is 5th prime, which is 3rd prime, which is 2nd prime, which is 1st prime. >:)
+                query.setRows(709);
+
+                int totalNumberOfDocs = (int) solrHolder.executeQuery(query).getResults().getNumFound();
+                List<SolrInputDocument> docList = new ArrayList<SolrInputDocument>();
+                
+                while (totalNumberOfDocs > 0) {
+                    QueryResponse response = solrHolder.executeQuery(query);
+                    long foundDocsCount = response.getResults().size();
+                    docList.clear();
+                    for (SolrDocument doc : response.getResults()) {
+                        addUnStoredFields(solrHolder, doc, archivalInstitution);
+
+                        SolrInputDocument inputDocument = ClientUtils.toSolrInputDocument(doc);
+                        if (inputDocument.getField("openData") == null) {
+                            inputDocument.addField("openData", openDataEnable, 1);
+                        } else {
+                            inputDocument.getField("openData").setValue(openDataEnable, 1);
+                        }
+                        if (inputDocument.getField("spell") == null) {
+                            inputDocument.addField("spell", "", 1);
+                        } else {
+                            inputDocument.getField("spell").setValue("", 1);
+                        }
+                        docList.add(inputDocument);
+                    }
+                    solrHolder.add(docList);
+                    solrHolder.hardCommit();
+                    totalNumberOfDocs -= foundDocsCount;
+                    archivalInstitution.setUnprocessedSolrDocs(archivalInstitution.getUnprocessedSolrDocs() - foundDocsCount);
+                    archivalInstitutionDao.store(archivalInstitution);
+                }
+                return System.currentTimeMillis() - startTime;
+            } catch (Exception e) {
+                throw new SolrServerException("Could not enable open data for Ai: " + aInstitution.getAiname(), e);
+            }
+        } else {
+            throw new SolrServerException("Solr server " + solrHolder.getSolrUrl() + " is not available");
+        }
+    }
+
+    private void addUnStoredFields(AbstractSolrServerHolder solrHolder, SolrDocument doc, ArchivalInstitution archivalInstitution) {
+        doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountryId());
+
+        if (solrHolder instanceof EadSolrServerHolder) {
+            doc.addField(SolrFields.FOND_ID, getIdFromFiled(doc.getFieldValue(SolrFields.TITLE_OF_FOND).toString()));
+        }
+
+        if (solrHolder instanceof EagSolrServerHolder) {
+            ArchivalInstitution ai = archivalInstitution.getParent();
+            List<String> ais = new ArrayList<String>();
+            while (ai != null) {
+                ais.add(ai.getAiId() + "");
+                ai = ai.getParent();
+            }
+            doc.addField(SolrFields.EAG_AI_GROUP_ID, ais);
+        } else {
+            doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
+        }
+    }
+
+    private String getIdFromFiled(String field) {
+        String[] arr = field.split(":");
+        return arr[arr.length - 1];
+    }
+
+    private SolrQuery genOpenDataByAiSearchQuery(AbstractSolrServerHolder solrHolder, ArchivalInstitution archivalInstitution, boolean openDataEnable) throws SolrServerException {
+        String queryString = "";
+        if (solrHolder instanceof EagSolrServerHolder) {
+            queryString = SolrFields.ID + ":\"" + archivalInstitution.getAiId() + "\" ";
+
+        } else {
+            queryString = SolrFields.AI + ":\"" + archivalInstitution.getAiname() + "\\:" + archivalInstitution.getAiId() + "\" ";
+        }
+        queryString += "AND -" + SolrFields.OPEN_DATA_ENABLE + ":" + Boolean.toString(openDataEnable);
+        SolrQuery query = new SolrQuery(queryString);
+        query.setRows(0);
+
+        return query;
+    }
+
+    public long getTotalSolrDocsForOpenData(AbstractSolrServerHolder solrHolder, ArchivalInstitution archivalInstitution, boolean openDataEnable) throws SolrServerException {
+        if (solrHolder.isAvailable()) {
+            SolrQuery query = genOpenDataByAiSearchQuery(solrHolder, archivalInstitution, openDataEnable);
+            return solrHolder.executeQuery(query).getResults().getNumFound();
+        } else {
+            throw new SolrServerException("Solr server " + solrHolder.getSolrUrl() + " is not available");
+        }
+
     }
 
     /**
@@ -85,7 +205,7 @@ public class OpenDataService {
      * @return {@link QueueItem> An item <i>queue</i>.
      * @throws IOException
      */
-    private static QueueItem fillQueueItem(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences) throws IOException {
+    private QueueItem fillQueueItem(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences) throws IOException {
         return fillQueueItem(archivalInstitution, queueAction, preferences, 1000);
     }
 
@@ -100,7 +220,7 @@ public class OpenDataService {
      * @return {@link QueueItem} An item <i>queue</i>.
      * @throws IOException
      */
-    private static QueueItem fillQueueItem(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
+    private QueueItem fillQueueItem(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
         QueueItem queueItem = new QueueItem();
         queueItem.setArchivalInstitution(archivalInstitution);
         queueItem.setAiId(archivalInstitution.getAiId());
@@ -123,7 +243,7 @@ public class OpenDataService {
      * @return String The preferences to write.
      * @throws IOException
      */
-    private static String writeProperties(Properties properties) throws IOException {
+    private String writeProperties(Properties properties) throws IOException {
         StringWriter stringWriter = new StringWriter();
         properties.store(stringWriter, "");
         String result = stringWriter.toString();

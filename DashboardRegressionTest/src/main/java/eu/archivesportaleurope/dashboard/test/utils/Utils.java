@@ -11,15 +11,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.opencsv.CSVReader;
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openqa.selenium.By;
 
@@ -53,7 +47,7 @@ public class Utils {
     public static void uploadFile(WebDriver driver, String elementName, String fileName) throws URISyntaxException, IOException, InterruptedException {
         WebElement fileBrowser = driver.findElement(By.id(elementName));
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            logger.info("Windows file upload");
+            logger.info("Windows file upload: "+fileName);
             fileBrowser.click();
             File file = new File(new URI(ClassLoader.getSystemResource(fileName).toExternalForm()));
             String path = file.getAbsolutePath();
@@ -62,7 +56,7 @@ public class Utils {
             Runtime.getRuntime().exec(scriptPath+ " " + path);
             driver.switchTo().activeElement();
         } else {
-            logger.info("Unix file upload");
+            logger.info("Unix file upload "+fileName);
             fileBrowser.sendKeys(ClassLoader.getSystemResource(fileName).getPath());
         }
         Thread.sleep(7000);

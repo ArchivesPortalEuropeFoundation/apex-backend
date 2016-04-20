@@ -70,14 +70,14 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
         }
 
         try {
-            long eadTotalDoc = EadSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
-            long eacTotalDoc = EacCpfSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
-            long eagTotalDoc = EagSolrServerHolder.getInstance().getTotalSolrDocsForOpenData(this.getAiName(), this.getAiId(), getEnableOpenData());
+            long eadTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EadSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
+            long eacTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EacCpfSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
+            long eagTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EagSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
             Properties preferences = new Properties();
             preferences.setProperty(OpenDataService.ENABLE_OPEN_DATA_KEY, getEnableOpenData().toString());
             preferences.setProperty(OpenDataService.TOTAL_SOLAR_DOC_KEY, (eadTotalDoc + eacTotalDoc + eagTotalDoc) + "");
 
-            OpenDataService.openDataPublish(this.getAiId(), preferences);
+            OpenDataService.getInstance().openDataPublish(this.getAiId(), preferences);
 
         } catch (SolrServerException ex) {
             log.error("Solr Server exception: " + ex.getMessage());
