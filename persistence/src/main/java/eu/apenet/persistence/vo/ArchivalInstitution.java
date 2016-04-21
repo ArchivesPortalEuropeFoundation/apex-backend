@@ -21,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import eu.archivesportaleurope.util.ApeUtil;
+import javax.persistence.CascadeType;
 import javax.persistence.ForeignKey;
 
 @Entity
@@ -105,6 +106,9 @@ public class ArchivalInstitution implements java.io.Serializable {
     
     @OneToMany(mappedBy = "archivalInstitution")
     private Set<SourceGuide> sourceGuides = new HashSet<SourceGuide>(0);
+    
+    @OneToMany(mappedBy = "archivalInstitution", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Ingestionprofile> ingestionprofile = new HashSet<Ingestionprofile>();
 
     @Column(nullable = true)
     private Boolean openDataEnabled;
@@ -251,6 +255,15 @@ public class ArchivalInstitution implements java.io.Serializable {
     public void setChildArchivalInstitutions(List<ArchivalInstitution> childArchivalInstitutions) {
         this.childArchivalInstitutions = childArchivalInstitutions;
     }
+
+    public Set<Ingestionprofile> getIngestionprofile() {
+        return ingestionprofile;
+    }
+
+    public void setIngestionprofile(Set<Ingestionprofile> ingestionprofile) {
+        this.ingestionprofile = ingestionprofile;
+    }
+    
 
     @Override
     public String toString() {
