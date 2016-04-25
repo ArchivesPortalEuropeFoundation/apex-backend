@@ -648,8 +648,27 @@
             <result name="success">/jsp/contentmanager/linktohgsg-ajax.jsp</result>
         </action>
 
+        <action name="displayUnlinkFromHg" class="eu.apenet.dashboard.actions.content.ead.UnlinkFromHgAction" method="input" >
+            <result name="success" type="tiles">content.unlinkfromhg</result>
+            <result name="input" type="tiles">content.unlinkfromhg</result>
+            <result name="errorUnlinkHg" type="redirectAction">
+                <param name="actionName">contentmanager</param>
+                <param name="errorUnlinkHg">true</param>
+            </result>
+        </action>
+
         <action name="linkToHgSg" class="eu.apenet.dashboard.actions.content.ead.LinkToHgSgAction">
             <result name="input" type="tiles">content.linktohgsg</result>
+            <result name="success" type="redirectAction">
+                <param name="actionName">contentmanager</param>
+            </result>
+            <result name="cancel" type="redirectAction">
+                <param name="actionName">contentmanager</param>
+            </result>
+        </action>
+
+        <action name="unlinkFromHg" class="eu.apenet.dashboard.actions.content.ead.UnlinkFromHgAction">
+            <result name="input" type="tiles">content.unlinkfromhg</result>
             <result name="success" type="redirectAction">
                 <param name="actionName">contentmanager</param>
             </result>

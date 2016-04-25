@@ -15,7 +15,7 @@ public class EagSolrServerHolder extends AbstractSolrServerHolder {
 		return instance;
 	}
 	@Override
-	protected String getSolrUrl() {
+	public String getSolrUrl() {
 		return APEnetUtilities.getDashboardConfig().getBaseSolrIndexUrl() + "/eags";
 	}
 

@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "ingestionprofile")
 public class Ingestionprofile implements Serializable {
@@ -26,9 +27,11 @@ public class Ingestionprofile implements Serializable {
     private Long id;
     @Column(name = "ai_id")
     private Integer aiId;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "ingestionprofile_ai_id_fkey"), insertable = false, updatable = false)
     private ArchivalInstitution archivalInstitution;
+    
     @Column(name = "name_profile")
     private String nameProfile;
     @Column(name = "file_type")

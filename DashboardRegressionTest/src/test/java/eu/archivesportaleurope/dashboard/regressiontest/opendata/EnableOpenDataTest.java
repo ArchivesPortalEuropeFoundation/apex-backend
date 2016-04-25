@@ -569,9 +569,10 @@ public class EnableOpenDataTest {
         String data = "{\n"
                 + "  \"query\": \"*\",\n"
                 + "  \"count\": 0,\n"
-                + "  \"start\": 0\n"
+                + "  \"startIndex\": 0\n"
                 + "}";
-        post.setEntity(new StringEntity(data, ContentType.create("application/json", "UTF-8")));
+        post.setHeader("APIkey", "");
+        post.setEntity(new StringEntity(data, ContentType.create("application/vnd.ape-v1+json", "UTF-8")));
         HttpResponse response = client.execute(post);
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         EadResponseSet eads = gson.fromJson(IOUtils.toString(response.getEntity().getContent()), EadResponseSet.class);

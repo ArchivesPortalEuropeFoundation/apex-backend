@@ -179,7 +179,7 @@ public class QueueTask implements Runnable {
                             Properties preferences = EadService.readProperties(queueItem.getPreferences());
                             boolean hasKey = preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY);
                             if (hasKey) {
-                                OpenDataService.processQueueItem(queueItem);
+                                OpenDataService.getInstance().processQueueItem(queueItem);
                             }
                         }
                     }

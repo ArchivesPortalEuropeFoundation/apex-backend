@@ -79,7 +79,7 @@ public class EadSolrPublisher {
         for (TopicMapping mapping : mappings) {
             if (mapping.getSgId() != null) {
                 if (ead instanceof FindingAid) {
-                    boolean exist = hgSgFaRelationDAO.existHgSgFaRelations(mapping.getSgId(), ead.getId());
+                    boolean exist = hgSgFaRelationDAO.existSgFaRelations(mapping.getSgId(), ead.getId());
                     if (exist) {
                         topicsBySourceGuides.add(mapping.getTopic().getPropertyKey());
                     }

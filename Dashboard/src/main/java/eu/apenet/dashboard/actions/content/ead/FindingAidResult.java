@@ -14,7 +14,7 @@ public class FindingAidResult extends EadResult {
     private Long totalNumberOfChos;
     private Long totalNumberOfWebResourceEdm;
     private boolean hasEseEdmFiles = false;
-    private String holdingsGuideTitle;
+    private int numberOfHgSgRelations;
 
     public FindingAidResult(Ead ead) {
         super(ead);
@@ -26,7 +26,7 @@ public class FindingAidResult extends EadResult {
         this.totalNumberOfChos = findingAid.getTotalNumberOfChos();
         this.totalNumberOfWebResourceEdm = findingAid.getTotalNumberOfWebResourceEdm();
         hasEseEdmFiles = (convertedToEseEdm || deliveredToEuropeana) && totalNumberOfChos > 0;
-        holdingsGuideTitle = findingAid.getHgSgFaRelations().size() + "";
+        numberOfHgSgRelations = findingAid.getHgSgFaRelations().size();
     }
 
     public boolean isConvertedToEseEdm() {
@@ -94,9 +94,13 @@ public class FindingAidResult extends EadResult {
     public boolean isEditable() {
         return isValidated() && !isPublished() && !(convertedToEseEdm || deliveredToEuropeana);
     }
+    
+    public int getNumberOfHgSgRelations() {
+        return numberOfHgSgRelations;
+    }
 
     public String getHoldingsGuideTitle() {
-        return holdingsGuideTitle;
+        return numberOfHgSgRelations + "";
     }
 
     public Long getTotalNumberOfWebResourceEdm() {

@@ -13,7 +13,7 @@
             batchAction, previewEdm, htmlPreview,
             displayConvertEseBatch, startConvertEseBatch,
             generateTreeJSON, generateTreeJSONWithoutPreface,
-            downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
+            downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,displayUnlinkFromHg,unlinkFromHg,
             eacCpfActions, batchEacCpfActions, downloadEacCpf, 
 			manageTopicMappings,displayCreateEditTopicMapping,createEditTopicMapping,deleteTopicMapping,
             GoDashboard, dashboardHome, GoDashboardByInstitutionManager,setFeedbackEmailaddress,displaySetFeedbackEmailaddress,

@@ -642,6 +642,86 @@
                 </executions>
             </plugin>
             
+            <plugin> <!--remote resouce reader-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <resourceBundles>
+                        <resourceBundle>eu.archivesportaleurope.backend:SharedResources:${project.version}</resourceBundle>
+                    </resourceBundles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                
+                <dependencies>
+                    <!--specify the dependent jdbc driver here--> 
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.3.3</version>
+                    </dependency>
+                </dependencies>
+                <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>org.hsqldb.jdbcDriver</driver>
+                    <url>jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true;sql.syntax_pgs=true</url>
+                    <username>sa</username>
+                    <password />
+                    <!-- You can comment out username/password configurations and
+                         have maven to look them up in your settings.xml using ${settingsKey}
+                    -->
+                    <settingsKey>sensibleKey</settingsKey>
+                    <!--all executions are ignored if -Dmaven.test.skip=true-->
+                    <!--<skip>${skipTests}</skip>-->
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>create-schema</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>${project.build.directory}/maven-shared-archive-resources/0_create_tables_script_hsqldb.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>create-data</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <orderFile>ascending</orderFile>
+                            <fileset>
+                                <basedir>${project.build.directory}/maven-shared-archive-resources/</basedir>
+                                <includes>
+                                    <include>2_add_admin_hsqldb.sql</include>
+                                    <include>1_global_filling_script.sql</include>
+                                </includes>
+                            </fileset>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <!-- Plugin required to build java classes from XSD using XJC -->
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>

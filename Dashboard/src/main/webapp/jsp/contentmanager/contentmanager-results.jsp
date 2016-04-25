@@ -5,7 +5,7 @@
 <%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         //${securityContext.refresh_interval} is defined in SecurityContext.java to store in session the refresh timeout.
         initResultsHandlers(${securityContext.refresh_interval}, '<s:property value="getText('content.message.please.select.rights.statement')" />');
         drawColumns(${results.findingAid}, ${results.holdingsGuide}, ${results.sourceGuide}, false);
@@ -13,13 +13,13 @@
 </script>
 <div id="queueSize">
     <c:if test="${aiItemsInQueue > 0}"><s:text name="content.message.queue.size.youritems" /> ${aiItemsInQueue}, </c:if><s:text name="content.message.queue.size.allitems" /> ${totalItemsInQueue}<c:if test="${!empty positionInQueue}">, <s:text name="content.message.queue.size.itemsbeforeyou" /> ${positionInQueue}</c:if>
-    <br />
+        <br />
     <c:if test="${not empty errorItems}">There are problems in the queue with your files, click <span class="link" id="seeErrors">here to see</span>.
-    <div class="hidden" id="errorItems">
-        <c:forEach var="errorItem" items="${errorItems}">
-            ${errorItem.eadidOrFilename} - ${errorItem.action}: ${errorItem.errors}<br/>
-        </c:forEach>
-    </div></c:if>
+        <div class="hidden" id="errorItems">
+            <c:forEach var="errorItem" items="${errorItems}">
+                ${errorItem.eadidOrFilename} - ${errorItem.action}: ${errorItem.errors}<br/>
+            </c:forEach>
+        </div></c:if>
     </div>
     <div id="batchBlock">
         <form id="batchActionsForm">
@@ -434,6 +434,11 @@
                                                     <s:text name="content.message.linktohgsg" />
                                                 </option>
                                             </c:if>
+                                            <%--<c:if test="${eadResult.validated and eadResult.numberOfHgSgRelations > 0}">
+                                                <option value="_self|displayUnlinkFromHg.action">
+                                                    <s:text name="content.message.unlinkfromhg" />
+                                                </option>
+                                            </c:if>--%>
                                         </c:if>
 
                                         <option value="action|delete">
