@@ -44,6 +44,8 @@ public class OpenDataService {
     protected static final Logger LOGGER = Logger.getLogger(EacCpfService.class);
     public static final String TOTAL_SOLAR_DOC_KEY = "totalSolarDoc";
     public static final String ENABLE_OPEN_DATA_KEY = "enableOpenData";
+    
+    private final List<SolrInputDocument> docList = new ArrayList<SolrInputDocument>();
 
     private OpenDataService() {
     }
@@ -60,29 +62,36 @@ public class OpenDataService {
     public boolean openDataPublish(Integer aid, Properties preferences) throws IOException, ProcessBusyException {
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aid);
-
         SecurityContext.get().checkAuthorized(aid);
-        if (archivalInstitution.getUnprocessedSolrDocs() <= 0) {
+        
+        QueueItem oldQueue = null; 
+        
+        if (archivalInstitution.getOpenDataQueueId() != null) {
+            oldQueue = DAOFactory.instance().getQueueItemDAO().findById(archivalInstitution.getOpenDataQueueId());
+        }
+        
+        if (oldQueue==null) {
             archivalInstitution.setTotalSolrDocsForOpenData(Long.parseLong(preferences.getProperty(TOTAL_SOLAR_DOC_KEY, "0")));
             archivalInstitution.setUnprocessedSolrDocs(Long.parseLong(preferences.getProperty(TOTAL_SOLAR_DOC_KEY, "0")));
 
             archivalInstitution.setOpenDataEnabled(Boolean.parseBoolean(preferences.getProperty(ENABLE_OPEN_DATA_KEY, "false")));
 
+            QueueItem queueItem = addToQueue(archivalInstitution, QueueAction.ENABLE_OPEN_DATA, preferences);
+            
+            archivalInstitution.setOpenDataQueueId(queueItem.getId());
+
             archivalInstitutionDao.store(archivalInstitution);
-
-            addToQueue(archivalInstitution, QueueAction.ENABLE_OPEN_DATA, preferences);
-
             return true;
         } else {
             throw new ProcessBusyException();
         }
     }
 
-    private void addToQueue(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences) throws IOException {
+    private QueueItem addToQueue(ArchivalInstitution archivalInstitution, QueueAction queueAction, Properties preferences) throws IOException {
         QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 
         QueueItem queueItem = fillQueueItem(archivalInstitution, queueAction, preferences);
-        indexqueueDao.store(queueItem);
+        return indexqueueDao.store(queueItem);
     }
 
     public QueueAction processQueueItem(QueueItem queueItem) throws Exception {
@@ -90,7 +99,8 @@ public class OpenDataService {
         QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
         Properties preferences = EadService.readProperties(queueItem.getPreferences());
         boolean openData = Boolean.valueOf(preferences.getProperty(OpenDataService.ENABLE_OPEN_DATA_KEY));
-        updateOpenDataByAi(EadSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
+        long updateEadTime = updateOpenDataByAi(EadSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
+        LOGGER.info("Total time needed for enable opendata for Eads: "+updateEadTime+"ms");
         updateOpenDataByAi(EacCpfSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
         updateOpenDataByAi(EagSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
         queueItemDAO.delete(queueItem);
@@ -105,11 +115,10 @@ public class OpenDataService {
                 ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aInstitution.getAiId());
 
                 SolrQuery query = genOpenDataByAiSearchQuery(solrHolder, archivalInstitution, openDataEnable);
-                //709 which 127th prime, which is 31th prime, which is 11th prime, which is 5th prime, which is 3rd prime, which is 2nd prime, which is 1st prime. >:)
-                query.setRows(709);
+                //52711 which is 5381th prime, which is 709th prime, which is 127th prime, which is 31th prime, which is 11th prime, which is 5th prime, which is 3rd prime, which is 2nd prime, which is 1st prime. >:)
+                query.setRows(52711);
 
                 int totalNumberOfDocs = (int) solrHolder.executeQuery(query).getResults().getNumFound();
-                List<SolrInputDocument> docList = new ArrayList<SolrInputDocument>();
                 
                 while (totalNumberOfDocs > 0) {
                     QueryResponse response = solrHolder.executeQuery(query);

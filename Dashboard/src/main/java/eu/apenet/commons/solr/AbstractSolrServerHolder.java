@@ -11,14 +11,7 @@ import org.apache.solr.common.SolrInputDocument;
 
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.util.ClientUtils;
-import org.apache.solr.common.SolrDocument;
 
 public abstract class AbstractSolrServerHolder {
 
@@ -28,7 +21,7 @@ public abstract class AbstractSolrServerHolder {
     private final static Integer HTTP_LONG_TIMEOUT = PropertiesUtil.getInt(PropertiesKeys.APE_SOLR_HTTP_LONG_TIMEOUT);
 
     public abstract String getSolrUrl();
-    private HttpSolrServer solrServer;
+    private HttpSolrServer solrServer = null;
 
     public boolean isAvailable() {
         initSolrServer();
