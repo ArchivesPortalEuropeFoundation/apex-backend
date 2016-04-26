@@ -246,3 +246,4 @@ DELETE FROM user_role;
 INSERT INTO user_role (id, role) VALUES (1, 'countryManager');
 INSERT INTO user_role (id, role) VALUES (2, 'institutionManager');
 INSERT INTO user_role (id, role) VALUES (3, 'admin');
+INSERT INTO user_role (id, role) VALUES (8, 'countryManagerCoordinator');
