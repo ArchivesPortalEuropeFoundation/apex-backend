@@ -31,12 +31,12 @@ CREATE TABLE api_key (
 
 ALTER TABLE api_key OWNER TO apenet_dashboard;
 
-CREATE SEQUENCE pk_seq
-    START WITH 1
-    INCREMENT BY 50
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+--CREATE SEQUENCE pk_seq
+--    START WITH 1
+--    INCREMENT BY 50
+--    NO MINVALUE
+--    NO MAXVALUE
+--    CACHE 1;
 
 
 ALTER TABLE pk_seq OWNER TO apenet_dashboard;
@@ -44,12 +44,12 @@ ALTER TABLE pk_seq OWNER TO apenet_dashboard;
 ALTER TABLE archival_institution
 	ADD COLUMN opendataenabled boolean,
 	ADD COLUMN totalsolrdocscount bigint,
-	ADD COLUMN unprocessedsolrdocs bigint,
-	ADD COLUMN totalsolrdocsforopendata bigint,
+--	ADD COLUMN unprocessedsolrdocs bigint,
+--	ADD COLUMN totalsolrdocsforopendata bigint,
 	ADD COLUMN opendataqueueid integer;
 
-ALTER SEQUENCE api_key_id_seq
-	OWNED BY api_key.id;
+--ALTER SEQUENCE api_key_id_seq
+--	OWNED BY api_key.id;
 
 ALTER TABLE api_key
 	ADD CONSTRAINT api_key_pkey PRIMARY KEY (id);
