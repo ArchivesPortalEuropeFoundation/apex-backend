@@ -29,6 +29,18 @@ CREATE TABLE api_key (
 	liferayuserid bigint NOT NULL
 );
 
+ALTER TABLE api_key OWNER TO apenet_dashboard;
+
+CREATE SEQUENCE pk_seq
+    START WITH 1
+    INCREMENT BY 50
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE pk_seq OWNER TO apenet_dashboard;
+
 ALTER TABLE archival_institution
 	ADD COLUMN opendataenabled boolean,
 	ADD COLUMN totalsolrdocscount bigint,
@@ -54,8 +66,8 @@ ALTER TABLE source_guide
 ALTER TABLE warnings
 	ADD CONSTRAINT "warnings_ec_id_fkey -> eac_cpf" FOREIGN KEY (eac_id) REFERENCES eac_cpf(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-CREATE INDEX c_level__nodes_idx ON c_level USING btree (ec_id) WHERE (leaf = false);
+-- CREATE INDEX c_level__nodes_idx ON c_level USING btree (ec_id) WHERE (leaf = false);
 
-CREATE INDEX c_level__unitid_ec_id_idx ON c_level USING btree (unitid, ec_id);
+-- CREATE INDEX c_level__unitid_ec_id_idx ON c_level USING btree (unitid, ec_id);
 
-CREATE INDEX ead_content__source_guide_idx ON ead_content USING btree (sg_id);
+-- CREATE INDEX ead_content__source_guide_idx ON ead_content USING btree (sg_id);
