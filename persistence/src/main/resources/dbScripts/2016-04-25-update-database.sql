@@ -7,39 +7,31 @@ ALTER TABLE ingestionprofile
 
 DROP INDEX c_level__nodes_idx;
 
-CREATE SEQUENCE api_key_id_seq
-	START WITH 1
-	INCREMENT BY 1
-	NO MAXVALUE
-	NO MINVALUE
-	CACHE 1;
+CREATE SEQUENCE public.pk_seq
+  INCREMENT 50
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.pk_seq
+  OWNER TO apenet_dashboard;
 
-
-CREATE TABLE api_key (
-	id integer DEFAULT nextval('api_key_id_seq'::regclass) NOT NULL,
-	apikey character varying(36),
-	emailaddress character varying(255),
-	firstname character varying(255),
-	lastname character varying(255),
-	url character varying(255),
-	creationtime timestamp without time zone,
-	status character varying(255),
-	uuid character varying(36),
-	version timestamp without time zone,
-	liferayuserid bigint NOT NULL
+CREATE TABLE public.api_key (
+  id serial PRIMARY KEY,
+  apikey character varying(36),
+  emailaddress character varying(255),
+  firstname character varying(255),
+  lastname character varying(255),
+  url character varying(255),
+  creationtime timestamp without time zone,
+  status character varying(255),
+  uuid character varying(36),
+  version timestamp without time zone,
+  liferayuserid bigint NOT NULL
+) WITH (
+  OIDS=FALSE
 );
-
 ALTER TABLE api_key OWNER TO apenet_dashboard;
-
---CREATE SEQUENCE pk_seq
---    START WITH 1
---    INCREMENT BY 50
---    NO MINVALUE
---    NO MAXVALUE
---    CACHE 1;
-
-
-ALTER TABLE pk_seq OWNER TO apenet_dashboard;
 
 ALTER TABLE archival_institution
 	ADD COLUMN opendataenabled boolean,
@@ -48,11 +40,6 @@ ALTER TABLE archival_institution
 --	ADD COLUMN totalsolrdocsforopendata bigint,
 	ADD COLUMN opendataqueueid integer;
 
---ALTER SEQUENCE api_key_id_seq
---	OWNED BY api_key.id;
-
-ALTER TABLE api_key
-	ADD CONSTRAINT api_key_pkey PRIMARY KEY (id);
 
 ALTER TABLE archival_institution
 	ADD CONSTRAINT archival_institution_parent_ai_id_fkey FOREIGN KEY (parent_ai_id) REFERENCES archival_institution(id);
