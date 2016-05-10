@@ -48,7 +48,7 @@ public class HttpRequstLoggerMongoImpl implements HttpRequestLogger {
                 bodyContent = IOUtils.toString(request.getInputStream());
                 parameterStr = bodyContent;
                 paramObject = (DBObject) JSON.parse(parameterStr);
-            } catch (IOException | JSONParseException ex) {
+            } catch (Exception ex) {
                 logger.debug("Post method parameter body read exception", ex);
                 logger.debug("Saving content as text/plain");
                 paramObject = bodyContent;

@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
  * @author kaisar
  */
 @Component
-@Path("/suggestion")
+//@Path("/suggestion")
 //@Api("/suggestion")
 public class SuggestionResource {
 
@@ -46,8 +46,8 @@ public class SuggestionResource {
     @Autowired
     SuggestionService suggestionService;
 
-    @POST
-    @Path("/autocompletion")
+    //@POST
+    //@Path("/autocompletion")
     @ApiOperation(value = "Return autocompletion", response = AutocompletionResponseSet.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})
@@ -71,8 +71,8 @@ public class SuggestionResource {
         }
     }
 
-    @POST
-    @Path("/spelling")
+    //@POST
+    //@Path("/spelling")
     @ApiOperation(value = "Return suggestion", response = SuggestionResponseSet.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})
@@ -91,8 +91,8 @@ public class SuggestionResource {
         }
     }
 
-    @POST
-    @Path("/test")
+    //@POST
+    //@Path("/test")
     @ApiOperation(value = "Return DB", response = String.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})

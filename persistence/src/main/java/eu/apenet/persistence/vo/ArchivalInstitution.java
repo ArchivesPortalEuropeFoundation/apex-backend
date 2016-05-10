@@ -116,6 +116,8 @@ public class ArchivalInstitution implements java.io.Serializable {
     private Long totalSolrDocsForOpenData;
     @Column(nullable = true)
     private Long unprocessedSolrDocs;
+    @Column(nullable = true)
+    private Integer openDataQueueId;
 
     public int getAiId() {
         return this.aiId;
@@ -208,14 +210,7 @@ public class ArchivalInstitution implements java.io.Serializable {
     public void setGroup(boolean group) {
         this.group = group;
     }
-
-//	public Set<UpFile> getUpFiles() {
-//		return this.upFiles;
-//	}
-//
-//	public void setUpFiles(Set<UpFile> upFiles) {
-//		this.upFiles = upFiles;
-//	}
+    
     public Set<HoldingsGuide> getHoldingsGuides() {
         return this.holdingsGuides;
     }
@@ -364,4 +359,11 @@ public class ArchivalInstitution implements java.io.Serializable {
         this.unprocessedSolrDocs = unprocessedSolrDocs;
     }
 
+    public Integer getOpenDataQueueId() {
+        return openDataQueueId;
+    }
+
+    public void setOpenDataQueueId(Integer openDataQueueId) {
+        this.openDataQueueId = openDataQueueId;
+    }
 }

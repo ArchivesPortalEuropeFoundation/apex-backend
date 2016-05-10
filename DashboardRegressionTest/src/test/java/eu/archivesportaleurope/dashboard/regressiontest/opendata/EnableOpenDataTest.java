@@ -430,11 +430,7 @@ public class EnableOpenDataTest {
 
         long numberOfSearchResultBeforePublishingNewDoc = searchAllEad().getTotalResults();
 
-        logger.log(Level.INFO, "::: Totla number of published doc {0} :::", numberOfSearchResultBeforePublishingNewDoc);
-
         WebDriverWait wait = new WebDriverWait(driver, MAX_TIMEOUT);
-
-        logger.info(":::" + wait.toString() + ":::");
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText("User management"))).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.id("changeToCountryManager_changeToCountryManager"))).click();
@@ -575,7 +571,7 @@ public class EnableOpenDataTest {
                 + "  \"count\": 0,\n"
                 + "  \"startIndex\": 0\n"
                 + "}";
-        post.setHeader("APIkey", properties.getProperty("APIkey", "myApiKeyXXXX123456789"));
+        post.setHeader("APIkey", "");
         post.setEntity(new StringEntity(data, ContentType.create("application/vnd.ape-v1+json", "UTF-8")));
         HttpResponse response = client.execute(post);
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());

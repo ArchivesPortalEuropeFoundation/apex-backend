@@ -39,6 +39,7 @@ public class QueueDaemon {
         clean();
         if (isActive()) {
             if (isQueueProcessing()) {
+                LOGGER.info("Queue is in progress...");
                 scheduler.shutdown();
             } else {
                 scheduler.shutdownNow();
