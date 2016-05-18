@@ -96,6 +96,7 @@ public class StatisticsAction extends AbstractAction {
 	private InstitutionStatistics getInstitutionStatistics(Country country, ArchivalInstitution archivalInstitution) {
 		InstitutionStatistics institutionStatistics = new InstitutionStatistics(country.getCname(),
 				archivalInstitution.getAiname());
+                institutionStatistics.openDataEnabled = archivalInstitution.isOpenDataEnabled();
 		institutionStatistics.hasEag = StringUtils.isNotBlank(archivalInstitution.getEagPath());
 		if (institutionStatistics.hasEag) {
 			institutionStatistics.repositoryCode = archivalInstitution.getRepositorycode();
@@ -165,6 +166,7 @@ public class StatisticsAction extends AbstractAction {
 		long totalChosDeliveredToEuropeana = 0;
 		long totalChos = 0;
 		long webResources = 0;
+                boolean openDataEnabled = false;
 
 		public InstitutionStatistics(String country, String archivalInstitution) {
 			this.country = country;
@@ -251,6 +253,8 @@ public class StatisticsAction extends AbstractAction {
 			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
             colNumber++;
             fillHeaderCell(colNumber, rowNumber, "#EDM(webResources)");
+            colNumber++;
+                    fillHeaderCell(colNumber, rowNumber, "Is OpenData Enabled");
 			rowNumber++;
 		}
 
@@ -294,6 +298,13 @@ public class StatisticsAction extends AbstractAction {
 			fillCell(colNumber, rowNumber, institutionStatistics.totalChosDeliveredToEuropeana);
             colNumber++;
             fillCell(colNumber, rowNumber, institutionStatistics.webResources);
+            colNumber++;
+            if(institutionStatistics.openDataEnabled){
+                fillCell(colNumber, rowNumber, 1);
+            }
+            else{
+                fillCell(colNumber, rowNumber, 0);
+            }
 			rowNumber++;
 		}
 
