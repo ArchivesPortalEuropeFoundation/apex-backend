@@ -83,7 +83,8 @@
     <beans profile="unit-test">
         <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
-            <property name="url" value="jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true"/>
+            <!--<property name="url" value="jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true"/>-->
+            <property name="url" value="jdbc:hsqldb:target/database.0=mem:temp;sql.enforce_strict_size=true;"/>
             <property name="username" value="sa"/>
             <property name="password" value=""/>
             <property name="initialSize" value="10"/>

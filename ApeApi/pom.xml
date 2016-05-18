@@ -78,7 +78,7 @@
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
             <!--<artifactId>jersey-test-framework-provider-jetty</artifactId>-->
-            <version>2.22.1</version>
+            <version>2.22.2</version>
             <scope>test</scope>
         </dependency>
         <!--In memory db-->
@@ -609,9 +609,10 @@
                 <!-- common configuration shared by all executions -->
                 <configuration>
                     <driver>org.hsqldb.jdbcDriver</driver>
-                    <url>jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true;sql.syntax_pgs=true</url>
+                    <!--<url>jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true;sql.syntax_pgs=true</url>-->
+                    <url>jdbc:hsqldb:target/database.0=mem:temp;sql.enforce_strict_size=true;sql.syntax_pgs=true;shutdown=true</url>
                     <username>sa</username>
-                    <password />
+                    <password></password>
                     <!-- You can comment out username/password configurations and
                          have maven to look them up in your settings.xml using ${settingsKey}
                     -->

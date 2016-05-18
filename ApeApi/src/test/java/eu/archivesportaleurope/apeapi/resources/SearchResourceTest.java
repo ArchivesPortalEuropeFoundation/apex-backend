@@ -82,7 +82,7 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setQuery("Heerlijkheid");
         request.setStartIndex(0);
 
-        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
+        Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
         //No idea why directly asking for EadResponseSet.class does not works
@@ -108,7 +108,7 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setQuery("Heerlijkheid");
         request.setStartIndex(0);
 
-        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
+        Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
         //No idea why directly asking for EadResponseSet.class does not works
