@@ -254,7 +254,7 @@ public class StatisticsAction extends AbstractAction {
             colNumber++;
             fillHeaderCell(colNumber, rowNumber, "#EDM(webResources)");
             colNumber++;
-                    fillHeaderCell(colNumber, rowNumber, "Is OpenData Enabled");
+                    fillHeaderCell(colNumber, rowNumber, "OpenData Enabled");
 			rowNumber++;
 		}
 
