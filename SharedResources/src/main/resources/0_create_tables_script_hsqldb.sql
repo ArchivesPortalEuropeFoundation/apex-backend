@@ -1,3 +1,5 @@
+drop schema public cascade;
+
 CREATE TABLE ai_alternative_name (
     id integer NOT NULL,
     ai_a_name character varying(255) NOT NULL,
