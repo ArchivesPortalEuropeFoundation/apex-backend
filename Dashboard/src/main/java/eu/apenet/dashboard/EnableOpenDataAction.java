@@ -10,6 +10,7 @@ import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -69,6 +70,13 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
             setEnableOpenData(!getEnableOpenData());
         }
 
+        String performer = "";
+        if (SecurityContext.get().isChild()) {
+            performer = SecurityContext.get().getName() + ", Email : " + SecurityContext.get().getEmailAddress() + " (with parent user : " + SecurityContext.get().getParentName() + ")";
+        } else {
+            performer = SecurityContext.get().getName() + ", Email : " + SecurityContext.get().getEmailAddress();
+        }
+
         try {
             long eadTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EadSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
             long eacTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EacCpfSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
@@ -76,6 +84,13 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
             Properties preferences = new Properties();
             preferences.setProperty(OpenDataService.ENABLE_OPEN_DATA_KEY, getEnableOpenData().toString());
             preferences.setProperty(OpenDataService.TOTAL_SOLAR_DOC_KEY, (eadTotalDoc + eacTotalDoc + eagTotalDoc) + "");
+
+            log.info("Open Data enable : " + getEnableOpenData().toString()
+                    + " Action is started by : " + performer + " For the country : "
+                    + SecurityContext.get().getCountryName()
+                    + " (" + SecurityContext.get().getCountryId().toString()
+                    + ") and institute : " + archivalInstitution.getAiname()
+                    + " (" + archivalInstitution.getAiId() + ")");
 
             OpenDataService.getInstance().openDataPublish(this.getAiId(), preferences);
 
