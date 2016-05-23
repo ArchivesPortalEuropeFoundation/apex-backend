@@ -1,4 +1,4 @@
-package eu.archivesportaleurope.apeapi.resources;
+package eu.archivesportaleurope.apeapi.jersey;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -36,7 +36,7 @@ import org.springframework.web.context.ContextLoaderListener;
  * @author M.Mozadded
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:META-INF/applicationContext-test.xml", "classpath:META-INF/security-context.xml"})
+@ContextConfiguration(locations = {"classpath:META-INF/applicationContext-mock-test.xml"})
 @ActiveProfiles("unit-test")
 @WebAppConfiguration
 public abstract class JerseySpringTest {
@@ -60,35 +60,16 @@ public abstract class JerseySpringTest {
     @Autowired
     public void setApplicationContext(final ApplicationContext context) {
         _jerseyTest = new JerseyTest() {
-             @Override
-            public TestContainerFactory getTestContainerFactory() {
-                return new GrizzlyWebTestContainerFactory();
-            }
-            
-            @Override
-            public DeploymentContext configureDeployment() {
-                super.configureDeployment();
-                Application config = configure();
-                return ServletDeploymentContext
-                    .forServlet(new ServletContainer((ResourceConfig) config))
-                    .addFilter(CustormDelegatingFilterProxy.class, "springSecurityFilterChain")
-                        .addListener(ContextLoaderListener.class)
-                        .contextParam("spring.profiles.active", "unit-test")
-                        .contextParam("contextConfigLocation", "classpath:META-INF/applicationContext-test.xml,classpath:META-INF/security-context.xml")
-                    .build();
-            }
 
             @Override
             protected Application configure() {
                 enable(TestProperties.LOG_TRAFFIC);
                 enable(TestProperties.DUMP_ENTITY);
                 ResourceConfig application = JerseySpringTest.this.configure();
-//                application.register(SecurityEntityFilteringFeature.class)
-//                        .property("jersey.config.server.tracing.type", "ALL")
-//                        .property("jersey.config.server.tracing.threshold", "TRACE");
-//                application.register(CustormDelegatingFilterProxy.class);
-//                application.property("springSecurityFilterChain", "/services/*");
-//                application.property("contextConfig", context);
+                application.register(SecurityEntityFilteringFeature.class)
+                        .property("jersey.config.server.tracing.type", "ALL")
+                        .property("jersey.config.server.tracing.threshold", "TRACE");
+                application.property("contextConfig", context);
                 return application;
             }
 

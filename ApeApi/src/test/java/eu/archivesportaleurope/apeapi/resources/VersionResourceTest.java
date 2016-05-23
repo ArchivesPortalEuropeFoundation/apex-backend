@@ -1,5 +1,6 @@
 package eu.archivesportaleurope.apeapi.resources;
 
+import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -16,7 +17,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author kaisar
  */
-public class VersionResourceTest extends JerseySpringTest {
+public class VersionResourceTest extends JerseySpringWithSecurityTest {
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
 

@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SearchRequest {
 
     @ApiModelProperty(value="Search query string")
-    @NotNull
+    @NotNull(message="Search query can not be null")
     String query;
     
     @ApiModelProperty(value="Number of items to retrieve. Default is 5, maximum is 50.")

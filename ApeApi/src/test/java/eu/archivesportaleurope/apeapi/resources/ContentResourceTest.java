@@ -5,21 +5,19 @@
  */
 package eu.archivesportaleurope.apeapi.resources;
 
-import eu.archivesportaleurope.apeapi.response.common.DetailContent;
-import javax.ws.rs.core.Response;
+import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author mahbub
  */
-public class ContentResourceTest  extends JerseySpringTest {
+public class ContentResourceTest  extends JerseySpringWithSecurityTest {
     
     public ContentResourceTest() {
     }

@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.resources;
 
+import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -17,10 +18,6 @@ import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -30,7 +27,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Mockito.validateMockitoUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,22 +35,18 @@ import org.springframework.http.HttpStatus;
  *
  * @author Mahbub
  */
-public class SearchResourceTest extends JerseySpringTest {
+public class SearchResourceTest extends JerseySpringWithSecurityTest {
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
-    Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
+    
     @Before
     public void setUpTest() {
-//        Mockito.reset(eadSearchUtil);
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
     }
 
     @After
     public void tearDownTest() {
-        validateMockitoUsage();
-        //server.shutdown();
     }
 
     @Test
@@ -131,13 +123,37 @@ public class SearchResourceTest extends JerseySpringTest {
         request.setCount(51);
         request.setQuery("Anything");
         request.setStartIndex(0);
-        Set<ConstraintViolation<SearchRequest>> constraintViolations = validator.validate(request);
-        ConstraintViolation<SearchRequest> constraintViolation = constraintViolations.iterator().next();
-
-        Assert.assertEquals(1, constraintViolations.size());
-        Assert.assertEquals("Count must not be more than 50", constraintViolation.getMessage());
-        Assert.assertEquals("count", constraintViolation.getPropertyPath().toString());
         super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
+    }
+    
+    @Test
+    public void testNullAPIkeyRequest() {
+        logger.debug("Test Null apikey");
+        SearchRequest request = new SearchRequest();
+        request.setCount(5);
+        request.setQuery("Anything");
+        request.setStartIndex(0);
+        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
+        //Should be 
+//        Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+        //But we have this issue: https://java.net/jira/browse/JERSEY-2627
+        //ToDo: if the above issue get fixed then response should be HttpStatus.UNAUTHORIZED
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+    }
+    
+    @Test
+    public void testInvalidAPIkeyRequest() {
+        logger.debug("Test Null apikey");
+        SearchRequest request = new SearchRequest();
+        request.setCount(5);
+        request.setQuery("Anything");
+        request.setStartIndex(0);
+        Response response = super.target("search").path("ead").request().header("APIkey", "Blabal").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        //Should be 
+//        Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+        //But we have this issue: https://java.net/jira/browse/JERSEY-2627
+        //ToDo: if the above issue get fixed then response should be HttpStatus.UNAUTHORIZED
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
     }
 
     @Override
