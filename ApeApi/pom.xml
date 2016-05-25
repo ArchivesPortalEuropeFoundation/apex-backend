@@ -610,7 +610,7 @@
                 <configuration>
                     <driver>org.hsqldb.jdbcDriver</driver>
                     <!--<url>jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true;sql.syntax_pgs=true</url>-->
-                    <url>jdbc:hsqldb:target/database.0=mem:temp;sql.enforce_strict_size=true;sql.syntax_pgs=true;shutdown=true</url>
+                    <url>jdbc:hsqldb:file:tmpdb;sql.enforce_strict_size=true;sql.syntax_pgs=true;shutdown=true</url>
                     <username>sa</username>
                     <password></password>
                     <!-- You can comment out username/password configurations and
