@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,6 +41,7 @@ public class ArchivalInstituteStatResource {
 
     @GET
     @Path("/getInstitute/{start}/{limit}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "return list of Archival institute", response = ArchivalInstitutesResponse.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})
