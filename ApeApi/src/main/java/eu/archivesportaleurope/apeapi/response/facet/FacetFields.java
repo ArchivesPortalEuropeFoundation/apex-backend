@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.LoggerFactory;
@@ -24,43 +24,100 @@ import org.slf4j.LoggerFactory;
 @XmlRootElement
 public class FacetFields {
 
-    private final List<Country> country;
+    private List<NameCountPair> country;
+    private List<NameCountPair> topic;
+    private final List<NameCountPair> ai;
+    private final List<NameCountPair> type;
+    private final List<NameCountPair> level;
+    private final List<NameCountPair> dao;
+    private final List<NameCountPair> roledao;
+    private final List<NameCountPair> dateType;
+    private final List<NameCountPair> startdate;
+    private final List<NameCountPair> enddate;
+    
     final private transient org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     public FacetFields() {
         this.country = new ArrayList<>();
+        this.topic = new ArrayList<>();
+        this.ai = new ArrayList<>();
+        this.type = new ArrayList<>();
+        this.level = new ArrayList<>();
+        this.dao = new ArrayList<>();
+        this.roledao = new ArrayList<>();
+        this.dateType = new ArrayList<>();
+        this.startdate = new ArrayList<>();
+        this.enddate = new ArrayList<>();
     }
     
     public FacetFields(QueryResponse queryResponse) {
         this();
-        Class<?> thisClass = FacetFields.class;
+        Class<?> thisClass = this.getClass();
         List<ListFacetSettings> defaultEadListFacetSettings = FacetType.getDefaultEadListFacetSettings();
         for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
             try {
-                Method setMethod = thisClass.getMethod("set"+StringUtils.capitalize(facetSettings.getFacetType().getName()), String.class);
-                setMethod.invoke(this, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
+                Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
+                //+StringUtils.capitalize(facetSettings.getFacetType().getName())
+                Method setMethod = thisClass.getMethod("setValue", List.class, FacetField.class);
+                setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 logger.debug("Reflecion exception: ",ex);
             }
         }
     }
 
-    public List<Country> getCountry() {
+    public List<NameCountPair> getCountry() {
         return country;
     }
+
+    public List<NameCountPair> getTopic() {
+        return topic;
+    }
+
+    public List<NameCountPair> getAi() {
+        return ai;
+    }
+
+    public List<NameCountPair> getType() {
+        return type;
+    }
+
+    public List<NameCountPair> getLevel() {
+        return level;
+    }
+
+    public List<NameCountPair> getDao() {
+        return dao;
+    }
+
+    public List<NameCountPair> getRoledao() {
+        return roledao;
+    }
+
+    public List<NameCountPair> getDateType() {
+        return dateType;
+    }
+
+    public List<NameCountPair> getStartdate() {
+        return startdate;
+    }
+
+    public List<NameCountPair> getEnddate() {
+        return enddate;
+    }
     
-    public void setCountry(FacetField countryValues) {
-        if (countryValues == null) {
+    public void setValue(List<NameCountPair> field, FacetField values) {
+        if (values == null) {
             return;
         }
-        List<FacetField.Count> counts = countryValues.getValues();
+        List<FacetField.Count> counts = values.getValues();
         for (int i = 0; i < counts.size(); i++) {
-            Country tmpCountry = new Country();
+            NameCountPair tmpCountry = new NameCountPair();
             FacetField.Count countObj = counts.get(i);
             String[] arr = countObj.getName().split(":");
             tmpCountry.setName(arr[0]);
             tmpCountry.setId(arr[arr.length-1]);
             tmpCountry.setFrequency(countObj.getCount());
-            country.add(tmpCountry);
+            field.add(tmpCountry);
         }
     }
 }

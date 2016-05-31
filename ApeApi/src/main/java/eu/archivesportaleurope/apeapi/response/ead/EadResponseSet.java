@@ -35,14 +35,15 @@ public class EadResponseSet {
     @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
     private List<EadResponse> eadSearchResults;
     
-    private FacetFields facetFields = new FacetFields();
+    private FacetFields facetFields;
 
     public EadResponseSet() {
         eadSearchResults = new ArrayList<>();
+        facetFields = new FacetFields();
     }
 
     public EadResponseSet(QueryResponse response) throws SolrServerException {
-        this();
+        eadSearchResults = new ArrayList<>();
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
         SolrDocumentList documentList = response.getResults();
@@ -56,11 +57,9 @@ public class EadResponseSet {
         if (this.totalResults % responseHeader.getRows() > 0) {
             this.totalPages++;
         }
-        facetFields.setCountry(response.getFacetField("country"));
-//        List<FacetField> facets = response.getFacetFields();
-//        for (FacetField ff : facets) {
-//            facetFields.setCountries(ff.);
-//        }
+        this.facetFields = new FacetFields(response);
+//        facetFields.setCountry(response.getFacetField("country"));
+
     }
 
     public long getTotalResults() {

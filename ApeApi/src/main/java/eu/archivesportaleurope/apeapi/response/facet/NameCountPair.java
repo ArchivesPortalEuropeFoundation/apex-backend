@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author mahbub
  */
 @XmlRootElement
-public class Country {
+public class NameCountPair {
     private String id;
     private String name;
     private long frequency;
