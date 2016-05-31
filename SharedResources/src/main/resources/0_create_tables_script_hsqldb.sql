@@ -93,6 +93,7 @@ CREATE TABLE archival_institution (
     using_mets boolean DEFAULT false,
     feedback_email character varying(255) DEFAULT NULL,
     opendataenabled boolean,
+    opendataqueueid integer,
     totalsolrdocscount bigint,
     unprocessedsolrdocs bigint,
     totalsolrdocsforopendata bigint
