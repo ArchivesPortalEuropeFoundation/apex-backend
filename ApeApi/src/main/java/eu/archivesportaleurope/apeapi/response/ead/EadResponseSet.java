@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
+import eu.archivesportaleurope.apeapi.response.facet.FacetFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -32,6 +34,8 @@ public class EadResponseSet {
     private int totalPages;
     @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
     private List<EadResponse> eadSearchResults;
+    
+    private FacetFields facetFields = new FacetFields();
 
     public EadResponseSet() {
         eadSearchResults = new ArrayList<>();
@@ -52,6 +56,11 @@ public class EadResponseSet {
         if (this.totalResults % responseHeader.getRows() > 0) {
             this.totalPages++;
         }
+        facetFields.setCountry(response.getFacetField("country"));
+//        List<FacetField> facets = response.getFacetFields();
+//        for (FacetField ff : facets) {
+//            facetFields.setCountries(ff.);
+//        }
     }
 
     public long getTotalResults() {
@@ -91,4 +100,13 @@ public class EadResponseSet {
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
     }
+
+    public FacetFields getFacetFields() {
+        return facetFields;
+    }
+
+    public void setFacetFields(FacetFields facetFields) {
+        this.facetFields = facetFields;
+    }
+    
 }

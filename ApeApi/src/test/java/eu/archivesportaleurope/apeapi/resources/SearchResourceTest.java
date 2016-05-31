@@ -60,10 +60,16 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
-        EadResponseSet responseEad = response.readEntity(EadResponseSet.class);
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadResponseSet> token = new TypeToken<EadResponseSet>() {
+        };
+        EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
 
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
-        Assert.assertEquals(1, responseEad.getTotalResults());
+        Assert.assertTrue(responseEad.getTotalResults() > 0);
     }
 
     @Test
@@ -134,11 +140,8 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         request.setQuery("Anything");
         request.setStartIndex(0);
         Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
-        //Should be 
-//        Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
-        //But we have this issue: https://java.net/jira/browse/JERSEY-2627
-        //ToDo: if the above issue get fixed then response should be HttpStatus.UNAUTHORIZED
-        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+        
+        Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
     
     @Test
@@ -149,11 +152,8 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         request.setQuery("Anything");
         request.setStartIndex(0);
         Response response = super.target("search").path("ead").request().header("APIkey", "Blabal").post(Entity.entity(request, ServerConstants.APE_API_V1));
-        //Should be 
-//        Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
-        //But we have this issue: https://java.net/jira/browse/JERSEY-2627
-        //ToDo: if the above issue get fixed then response should be HttpStatus.UNAUTHORIZED
-        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+        
+        Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 
     @Override

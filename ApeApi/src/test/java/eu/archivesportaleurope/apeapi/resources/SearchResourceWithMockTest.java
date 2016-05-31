@@ -14,6 +14,7 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
 import eu.archivesportaleurope.apeapi.services.SearchService;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -63,7 +64,7 @@ public class SearchResourceWithMockTest extends JerseySpringTest {
     }
     
     @Test
-    public void testInternalServerException() throws SolrServerException {
+    public void testInternalServerException() throws SolrServerException, ParseException {
         logger.debug("Test exception");
         SearchRequest request = new SearchRequest();
         request.setCount(0);
@@ -78,7 +79,7 @@ public class SearchResourceWithMockTest extends JerseySpringTest {
     }
     
     @Test
-    public void testWebAppException() throws SolrServerException {
+    public void testWebAppException() throws SolrServerException, ParseException {
         logger.debug("Test exception");
         SearchRequest request = new SearchRequest();
         request.setCount(0);

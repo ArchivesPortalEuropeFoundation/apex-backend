@@ -66,8 +66,8 @@ public abstract class JerseySpringWithSecurityTest {
                 super.configureDeployment();
                 Application config = configure();
                 return ServletDeploymentContext
-                    .forServlet(new ServletContainer((ResourceConfig) config))
-                    .addFilter(CustormDelegatingFilterProxy.class, "springSecurityFilterChain")
+                        .forServlet(new ServletContainer((ResourceConfig) config))
+                        .addFilter(CustormDelegatingFilterProxy.class, "springSecurityFilterChain")
                         .addListener(ContextLoaderListener.class)
                         .contextParam("spring.profiles.active", "unit-test")
                         .contextParam("contextConfigLocation", "classpath:META-INF/applicationContext-test.xml,classpath:META-INF/security-context.xml")
@@ -79,6 +79,7 @@ public abstract class JerseySpringWithSecurityTest {
                 enable(TestProperties.LOG_TRAFFIC);
                 enable(TestProperties.DUMP_ENTITY);
                 ResourceConfig application = JerseySpringWithSecurityTest.this.configure();
+                application.packages("eu.archivesportaleurope.apeapi.resources", "eu.archivesportaleurope.apeapi.response.utils");
                 return application;
             }
 

@@ -45,7 +45,7 @@
     </appender>
     
     <logger name="org.springframework">
-        <level value="DEBUG" />
+        <level value="ERROR" />
     </logger>
     <logger name="org.hibernate.engine">
     	<level value="INFO" />

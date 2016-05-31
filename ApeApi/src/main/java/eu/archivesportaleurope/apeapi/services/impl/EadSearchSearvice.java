@@ -1,10 +1,16 @@
 package eu.archivesportaleurope.apeapi.services.impl;
 
+import eu.apenet.commons.solr.SolrQueryBuilder;
+import eu.apenet.commons.solr.facet.FacetType;
+import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.text.ParseException;
+import java.util.List;
+import java.util.logging.Level;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -19,6 +25,7 @@ import org.slf4j.LoggerFactory;
 public class EadSearchSearvice implements SearchService {
 
     private String solrUrl;
+    private SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
     private final PropertiesUtil propertiesUtil;
@@ -27,12 +34,14 @@ public class EadSearchSearvice implements SearchService {
     public EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
+        logger.debug("Solr server got created!");
         this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
     public EadSearchSearvice(SolrServer solrServer, String propFileName) {
         this.solrUrl = this.solrCore = "";
+        logger.debug("Solr server got created!");
         this.eadSearchUtil = new SolrSearchUtil(solrServer);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
@@ -46,20 +55,22 @@ public class EadSearchSearvice implements SearchService {
     }
 
     @Override
-    public EadResponseSet search(SearchRequest searchRequest, String extraSearchParam) throws SolrServerException {
+    public EadResponseSet search(SearchRequest searchRequest, String extraSearchParam) throws SolrServerException, ParseException {
         String extraParam = "";
         if (extraSearchParam != null) {
             extraParam = extraSearchParam;
         }
-        SolrQuery query = new SolrQuery(searchRequest.getQuery() + extraParam);
-        query.setStart(searchRequest.getStartIndex());
+        List<ListFacetSettings> facetSettingsList = FacetType.getDefaultEadListFacetSettings();
+        SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
+        query.setQuery(searchRequest.getQuery() + extraParam);
+        
         if (searchRequest.getCount() <= 0) {
-            logger.info(":::Default Count vale from prop is : "+propertiesUtil.getValueFromKey("search.request.default.count"));
+            logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
             query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
         } else {
             query.setRows(searchRequest.getCount());
         }
-
+        logger.debug("Final search query: "+query.getFields());
         this.eadSearchUtil.setQuery(query);
 
         QueryResponse response = this.eadSearchUtil.getSearchResponse();
@@ -67,7 +78,7 @@ public class EadSearchSearvice implements SearchService {
     }
 
     @Override
-    public EadResponseSet searchOpenData(SearchRequest request) throws SolrServerException {
+    public EadResponseSet searchOpenData(SearchRequest request) throws SolrServerException, ParseException {
         return this.search(request, " AND openData:true");
     }
 }
