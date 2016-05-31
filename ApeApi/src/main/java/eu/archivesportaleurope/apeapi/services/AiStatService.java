@@ -13,5 +13,5 @@ import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
  */
 public interface AiStatService {
 
-    ArchivalInstitutesResponse getAiWithOpenDataEnabled(int start, int limit);
+    ArchivalInstitutesResponse getAiWithOpenDataEnabled(int page, int limit);
 }

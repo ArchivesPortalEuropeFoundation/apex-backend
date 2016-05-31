@@ -129,7 +129,11 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         request.setCount(51);
         request.setQuery("Anything");
         request.setStartIndex(0);
-        super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
+        Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse+"BAL");
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
     
     @Test

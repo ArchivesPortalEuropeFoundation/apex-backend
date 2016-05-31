@@ -10,8 +10,11 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.services.AiStatService;
+import eu.archivesportaleurope.apeapi.transaction.repository.ArchivalInstituteRepo;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
 /**
  *
@@ -19,14 +22,14 @@ import java.util.List;
  */
 public class AiStatServiceImpl implements AiStatService {
 
+    @Autowired
+    ArchivalInstituteRepo archivalInstituteRepo;
+
     @Override
-    public ArchivalInstitutesResponse getAiWithOpenDataEnabled(int start, int limit) {
-        JpaUtil.init();
-        ArchivalInstitutionDAO aidao = DAOFactory.instance().getArchivalInstitutionDAO();
-        int totla = aidao.countArchivalInstitutionsWithOpenDataEnabled();
-        List<ArchivalInstitution> ais = aidao.getArchivalInstitutionsWithOpenDataEnabled(start, limit);
+    public ArchivalInstitutesResponse getAiWithOpenDataEnabled(int page, int limit) {
+        List<ArchivalInstitution> ais = archivalInstituteRepo.findByOpenDataEnabled(new PageRequest(page, limit));
         ArchivalInstitutesResponse aisResponse = new ArchivalInstitutesResponse(ais);
-        aisResponse.setTotal(totla);
+        aisResponse.setTotal(archivalInstituteRepo.getCount());
         return aisResponse;
     }
 

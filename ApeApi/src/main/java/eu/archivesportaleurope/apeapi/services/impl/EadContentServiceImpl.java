@@ -15,7 +15,6 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
 import eu.archivesportaleurope.apeapi.response.common.DetailContent;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
-import eu.archivesportaleurope.apeapi.transaction.repository.ArchivalInstitutionDao;
 import eu.archivesportaleurope.apeapi.transaction.repository.CLevelRepo;
 import eu.archivesportaleurope.apeapi.transaction.repository.EadContentRepo;
 import org.apache.commons.lang.StringUtils;
@@ -32,8 +31,6 @@ public class EadContentServiceImpl implements EadContentService {
     EadContentRepo contentRepo;
     @Autowired
     CLevelRepo cLevelRepo;
-    @Autowired
-    ArchivalInstitutionDao institutionDao;
 
     @Transactional
     @Override

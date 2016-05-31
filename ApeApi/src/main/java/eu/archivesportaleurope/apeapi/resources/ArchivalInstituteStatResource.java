@@ -11,6 +11,7 @@ import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.services.AiStatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.ws.rs.GET;
@@ -40,15 +41,21 @@ public class ArchivalInstituteStatResource {
     AiStatService aiStatService;
 
     @GET
-    @Path("/getInstitute/{start}/{limit}")
+    @Path("/getInstitute/{page}/{limit}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "return list of Archival institute", response = ArchivalInstitutesResponse.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error")})
     @Produces({"application/vnd.ape-v1+json"})
-    public Response getInsByOpenData(@PathParam("start") int start, @PathParam("limit") int limit) {
+    public Response getInsByOpenData(@ApiParam(value = "Page number (Starts form 0)", required = true) @PathParam("page") int page, @ApiParam(value = "limit can't be more than 50", required = true) @PathParam("limit") int limit) {
+        if (page < 0) {
+            page = 0;
+        }
+        if (limit < 0 || limit > 50) {
+            limit = 50;
+        }
         try {
-            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled(start, limit)).build();
+            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled(page, limit)).build();
         } catch (WebApplicationException e) {
             logger.error("WebApplicationException", e);
             return e.getResponse();
