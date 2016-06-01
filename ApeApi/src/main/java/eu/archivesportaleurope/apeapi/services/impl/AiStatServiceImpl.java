@@ -5,13 +5,10 @@
  */
 package eu.archivesportaleurope.apeapi.services.impl;
 
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.services.AiStatService;
 import eu.archivesportaleurope.apeapi.transaction.repository.ArchivalInstituteRepo;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

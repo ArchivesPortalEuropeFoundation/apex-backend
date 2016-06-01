@@ -5,9 +5,9 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
+import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
-import eu.archivesportaleurope.apeapi.common.datatypes.EadFieldDefs;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -71,7 +71,7 @@ public class EadResponse {
     private String docType;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {
-        this.id = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ID));
+        this.id = this.objectToString(solrDocument.getFieldValue(SolrFields.ID));
         XmlType xmlType = XmlType.getTypeBySolrPrefix(this.id.substring(0, 1));
         if (xmlType == null) {
             if (this.id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
@@ -82,33 +82,33 @@ public class EadResponse {
         } else {
             this.docType = xmlType.getName();
         }
-        this.unitTitle = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.TITLE));
-        if (response.getHighlighting().get(id).get(EadFieldDefs.TITLE) != null) {
-            this.unitTitleWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(EadFieldDefs.TITLE).get(0));
+        this.unitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE));
+        if (response.getHighlighting().get(id).get(SolrFields.TITLE) != null) {
+            this.unitTitleWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.TITLE).get(0));
         } else {
             this.unitTitleWithHighlighting = this.unitTitle;
         }
-        this.unitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.UNIT_ID));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.SCOPE_CONTENT));
-        if (response.getHighlighting().get(id).get(EadFieldDefs.SCOPE_CONTENT) != null) {
-            this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(EadFieldDefs.SCOPE_CONTENT).get(0));
+        this.unitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID));
+        this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
+        if (response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT) != null) {
+            this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT).get(0));
         } else {
             this.scopeContentWithHighlighting = this.scopeContent;
         }
 
-        this.language = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANGUAGE));
-        this.langMaterial = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.LANG_MATERIAL));
-        this.unitDate = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.ALTER_DATE));
+        this.language = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGUAGE));
+        this.langMaterial = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGMATERIAL));
+        this.unitDate = this.objectToString(solrDocument.getFieldValue(SolrFields.ALTERDATE));
 
-        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.COUNTRY)), 0);
+        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
 
-        this.fondsUnitTitle = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.FONDS_TITLE)), 0);
-        this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.FONDS_UNIT_ID));
+        this.fondsUnitTitle = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE_OF_FOND)), 0);
+        this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
 
-        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(EadFieldDefs.AI)), 0);
-        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(EadFieldDefs.REPOSITORY_CODE));
-        if (solrDocument.getFieldValue(EadFieldDefs.HAS_DIGITAL_OBJECT) != null) {
-            this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(EadFieldDefs.HAS_DIGITAL_OBJECT);
+        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
+        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
+        if (solrDocument.getFieldValue(SolrFields.DAO) != null) {
+            this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(SolrFields.DAO);
         }
     }
     

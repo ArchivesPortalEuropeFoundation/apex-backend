@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.facet;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import java.lang.reflect.InvocationTargetException;
@@ -26,10 +27,13 @@ public class FacetFields {
 
     private List<NameCountPair> country;
     private List<NameCountPair> topic;
+    @JsonProperty("repository")
     private final List<NameCountPair> ai;
     private final List<NameCountPair> type;
     private final List<NameCountPair> level;
+    @JsonProperty("hasDigitalObject")
     private final List<NameCountPair> dao;
+    @JsonProperty("digitalObjectType")
     private final List<NameCountPair> roledao;
     private final List<NameCountPair> dateType;
     private final List<NameCountPair> startdate;
@@ -56,7 +60,6 @@ public class FacetFields {
         for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
             try {
                 Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
-                //+StringUtils.capitalize(facetSettings.getFacetType().getName())
                 Method setMethod = thisClass.getMethod("setValue", List.class, FacetField.class);
                 setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
