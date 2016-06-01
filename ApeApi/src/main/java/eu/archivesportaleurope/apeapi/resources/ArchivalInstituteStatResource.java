@@ -53,14 +53,11 @@ public class ArchivalInstituteStatResource {
     @Produces({"application/vnd.ape-v1+json"})
     public Response getInsByOpenData(@ApiParam(value = "Start Index (Starts form 0)", required = true) @PathParam("startIndex") int startIndex, 
             @ApiParam(value = "Count can't be more than 50", required = true) @PathParam("count") int count) {
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
         if (count < 1 || count > 50) {
             throw new ViolationException("Count can not be less than one and greater than 50", "Count was: "+count);
         }
         try {
-            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled(startIndex, count)).build();
+            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled((startIndex<0) ? 0 : startIndex, count)).build();
         } catch (WebApplicationException e) {
             logger.debug("WebApplicationException", e);
             return e.getResponse();

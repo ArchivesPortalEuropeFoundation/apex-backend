@@ -69,6 +69,9 @@ public class EadResponse {
     
     @ApiModelProperty(required = true, value="Type of the description of the result: \"Descriptive Unit\", \"Finding Aid\", \"Holdings Guide\" or \"Source Guide\"")
     private String docType;
+    
+    @ApiModelProperty(required = true, value="Type of result: \"archdesc\" for highest level description or \"clevel\" for subordinate components")
+    private String level;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {
         this.id = this.objectToString(solrDocument.getFieldValue(SolrFields.ID));
@@ -76,11 +79,13 @@ public class EadResponse {
         if (xmlType == null) {
             if (this.id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
                 this.docType = "Descriptive Unit";
+                this.level = "clevel";
             } else {
                 this.docType = "Unknown";
             }
         } else {
             this.docType = xmlType.getName();
+            this.level = "archdesc";
         }
         this.unitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE));
         if (response.getHighlighting().get(id).get(SolrFields.TITLE) != null) {
@@ -143,6 +148,14 @@ public class EadResponse {
         this.docType = docType;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+    
     public String getUnitTitle() {
         return unitTitle;
     }

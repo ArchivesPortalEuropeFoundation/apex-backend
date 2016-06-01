@@ -26,17 +26,22 @@ import org.slf4j.LoggerFactory;
 public class FacetFields {
 
     private List<NameCountPair> country;
+    @JsonProperty("subject")
     private List<NameCountPair> topic;
     @JsonProperty("repository")
     private final List<NameCountPair> ai;
+    @JsonProperty("docType")
     private final List<NameCountPair> type;
     private final List<NameCountPair> level;
     @JsonProperty("hasDigitalObject")
     private final List<NameCountPair> dao;
     @JsonProperty("digitalObjectType")
     private final List<NameCountPair> roledao;
+    @JsonProperty("unitDateType")
     private final List<NameCountPair> dateType;
+    @JsonProperty("fromDate")
     private final List<NameCountPair> startdate;
+    @JsonProperty("toDate")
     private final List<NameCountPair> enddate;
     
     final private transient org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());

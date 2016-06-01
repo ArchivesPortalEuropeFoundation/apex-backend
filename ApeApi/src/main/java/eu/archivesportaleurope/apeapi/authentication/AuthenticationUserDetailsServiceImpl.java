@@ -41,14 +41,12 @@ public class AuthenticationUserDetailsServiceImpl implements
     @Override
     public UserDetails loadUserDetails(Authentication token)
             throws UsernameNotFoundException {
-        UserDetails userDetails;
+        UserDetails userDetails = null;
 
         String[] credentials = (String[]) token.getCredentials();
         boolean principal = Boolean.parseBoolean(token.getPrincipal().toString());
 
-        if (credentials == null || !principal) {
-            userDetails = null;
-        } else {
+        if (credentials != null && principal) {
             String apiKey = credentials[0];
             ApiKey apiKeyUser = apiKeyRepo.findByApiKey(apiKey);
             if (apiKeyUser == null) {
