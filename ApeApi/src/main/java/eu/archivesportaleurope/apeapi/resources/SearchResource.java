@@ -54,7 +54,8 @@ public class SearchResource {
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
-        @ApiResponse(code = 400, message = "Bad request")
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response search(

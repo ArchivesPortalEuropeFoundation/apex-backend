@@ -71,7 +71,8 @@ public class ContentResource {
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
-        @ApiResponse(code = 400, message = "Bad request")
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getClevelContent(@PathParam("id") String id) {
@@ -111,7 +112,8 @@ public class ContentResource {
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
-        @ApiResponse(code = 400, message = "Bad request")
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getContent(@PathParam("id") String id) {
@@ -132,10 +134,10 @@ public class ContentResource {
             return Response.ok().entity(contentResponse).build();
 
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e);
+            logger.debug("WebApplicationException", e);
             return  e.getResponse();
         } catch (Exception e) {
-            logger.error("Exception", e);
+            logger.debug("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
             return errMsg.getResponse();
         }

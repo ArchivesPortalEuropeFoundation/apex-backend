@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.resources;
 
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
+import eu.archivesportaleurope.apeapi.exceptions.ViolationException;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.services.AiStatService;
 import io.swagger.annotations.Api;
@@ -41,26 +42,30 @@ public class ArchivalInstituteStatResource {
     AiStatService aiStatService;
 
     @GET
-    @Path("/getInstitute/{page}/{limit}")
+    @Path("/getInstitute/{startIndex}/{count}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "return list of Archival institute", response = ArchivalInstitutesResponse.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 500, message = "Internal server error")})
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @Produces({"application/vnd.ape-v1+json"})
-    public Response getInsByOpenData(@ApiParam(value = "Page number (Starts form 0)", required = true) @PathParam("page") int page, @ApiParam(value = "limit can't be more than 50", required = true) @PathParam("limit") int limit) {
-        if (page < 0) {
-            page = 0;
+    public Response getInsByOpenData(@ApiParam(value = "Start Index (Starts form 0)", required = true) @PathParam("startIndex") int startIndex, 
+            @ApiParam(value = "Count can't be more than 50", required = true) @PathParam("count") int count) {
+        if (startIndex < 0) {
+            startIndex = 0;
         }
-        if (limit < 0 || limit > 50) {
-            limit = 50;
+        if (count < 1 || count > 50) {
+            throw new ViolationException("Count can not be less than one and greater than 50", "Count was: "+count);
         }
         try {
-            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled(page, limit)).build();
+            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled(startIndex, count)).build();
         } catch (WebApplicationException e) {
-            logger.error("WebApplicationException", e);
+            logger.debug("WebApplicationException", e);
             return e.getResponse();
         } catch (Exception e) {
-            logger.error("Exception", e);
+            logger.debug("Exception", e);
             AppException errMsg = new InternalErrorException(e.getMessage());
             return errMsg.getResponse();
         }
