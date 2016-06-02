@@ -143,13 +143,4 @@ public class OffsetBasedPageRequest implements Pageable, Serializable {
                 .append(sort)
                 .toHashCode();
     }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("limit", limit)
-                .append("offset", offset)
-                .append("sort", sort)
-                .toString();
-    }
 }
