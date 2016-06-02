@@ -107,6 +107,20 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
 
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
+    
+    @Test
+    public void testInvalidRequestNeg() {
+        logger.debug("Test invalid request with count < 0");
+        int start = 1;
+        int count = -51;
+        Response response = super.target("institute").path("getInstitute").path(String.valueOf(start))
+                .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
+        response.bufferEntity();
+        String jsonResponse = response.readEntity(String.class);
+        logger.debug("Response Json: " + jsonResponse);
+
+        Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
 
     @Override
     protected ResourceConfig configure() {
