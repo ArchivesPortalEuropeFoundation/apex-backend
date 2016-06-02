@@ -9,13 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
-import eu.archivesportaleurope.apeapi.exceptions.ViolationException;
 import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
-import eu.archivesportaleurope.apeapi.services.AiStatService;
 import java.util.Date;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
@@ -24,10 +21,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -38,8 +33,6 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
-    @Autowired
-    private AiStatService aiStatService;
 
     public ArchivalInstituteStatResourceTest() {
     }
