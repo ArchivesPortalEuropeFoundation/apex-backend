@@ -17,12 +17,16 @@ public class ArchivalInstituteResponse {
     private int id;
     private String country;
     private int countryId;
+    private int numberOfFindingAids;
+    private String repositoryCode;
 
     public ArchivalInstituteResponse(ArchivalInstitution ai) {
         this.name = ai.getAiname();
         this.country = ai.getCountry().getCname();
         this.id = ai.getAiId();
         this.countryId = ai.getCountryId();
+        this.numberOfFindingAids = ai.getFindingAids().size();
+        this.repositoryCode = ai.getRepositorycode();
     }
 
     public String getName() {
@@ -55,5 +59,21 @@ public class ArchivalInstituteResponse {
 
     public void setCountryId(int countryId) {
         this.countryId = countryId;
+    }
+
+    public int getNumberOfFindingAids() {
+        return numberOfFindingAids;
+    }
+
+    public void setNumberOfFindingAids(int numberOfFindingAids) {
+        this.numberOfFindingAids = numberOfFindingAids;
+    }
+
+    public String getRepositoryCode() {
+        return repositoryCode;
+    }
+
+    public void setRepositoryCode(String repositoryCode) {
+        this.repositoryCode = repositoryCode;
     }
 }
