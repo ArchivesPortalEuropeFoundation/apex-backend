@@ -80,9 +80,7 @@ public class ArchivalInstituteStatResourceWithMockTest extends JerseySpringTest 
         logger.debug("Test invalid request with  exception");
         int startIndex = 1;
         int count = 5;
-        Thread.sleep(1000);
         Mockito.when(aiStatService.getAiWithOpenDataEnabled(startIndex, count)).thenThrow(new NullPointerException("Intentional Exception"));
-        Thread.sleep(1000);
         Response response = super.target("institute").path("getInstitute").path(String.valueOf(startIndex))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
