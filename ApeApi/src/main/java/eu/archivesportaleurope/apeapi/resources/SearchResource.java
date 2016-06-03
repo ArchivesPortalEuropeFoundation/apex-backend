@@ -16,7 +16,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.text.ParseException;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -24,7 +23,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
@@ -65,10 +63,10 @@ public class SearchResource {
             EadResponseSet eadResponseSet = eadSearch.searchOpenData(searchRequest);
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
-            logger.debug("WebApplicationException", e);
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return  e.getResponse();
-        } catch (SolrServerException | ParseException e) {
-            logger.debug("Exception", e);
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
             AppException errMsg = new InternalErrorException(e.getMessage());
             return errMsg.getResponse();
         }

@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.resources;
 
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.exceptions.ViolationException;
@@ -59,10 +60,10 @@ public class ArchivalInstituteStatResource {
         try {
             return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled((startIndex<0) ? 0 : startIndex, count)).build();
         } catch (WebApplicationException e) {
-            logger.debug("WebApplicationException", e);
-            return e.getResponse();
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return  e.getResponse();
         } catch (Exception e) {
-            logger.debug("Exception", e);
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
             AppException errMsg = new InternalErrorException(e.getMessage());
             return errMsg.getResponse();
         }

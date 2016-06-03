@@ -3,6 +3,7 @@ package eu.archivesportaleurope.apeapi.services.impl;
 import eu.apenet.commons.solr.SolrQueryBuilder;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
@@ -10,7 +11,7 @@ import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
 import java.util.List;
-import java.util.logging.Level;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -55,30 +56,34 @@ public class EadSearchSearvice implements SearchService {
     }
 
     @Override
-    public EadResponseSet search(SearchRequest searchRequest, String extraSearchParam) throws SolrServerException, ParseException {
-        String extraParam = "";
-        if (extraSearchParam != null) {
-            extraParam = extraSearchParam;
+    public EadResponseSet search(SearchRequest searchRequest, String extraSearchParam) {
+        try {
+            String extraParam = "";
+            if (extraSearchParam != null) {
+                extraParam = extraSearchParam;
+            }
+            List<ListFacetSettings> facetSettingsList = FacetType.getDefaultEadListFacetSettings();
+            SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
+            query.setQuery(searchRequest.getQuery() + extraParam);
+            
+            if (searchRequest.getCount() <= 0) {
+                logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
+                query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
+            } else {
+                query.setRows(searchRequest.getCount());
+            }
+            logger.debug("Final search query: "+query.getFields());
+            this.eadSearchUtil.setQuery(query);
+            
+            QueryResponse response = this.eadSearchUtil.getSearchResponse();
+            return new EadResponseSet(response);
+        } catch (SolrServerException | ParseException ex) {
+            throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
-        List<ListFacetSettings> facetSettingsList = FacetType.getDefaultEadListFacetSettings();
-        SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
-        query.setQuery(searchRequest.getQuery() + extraParam);
-        
-        if (searchRequest.getCount() <= 0) {
-            logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
-            query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
-        } else {
-            query.setRows(searchRequest.getCount());
-        }
-        logger.debug("Final search query: "+query.getFields());
-        this.eadSearchUtil.setQuery(query);
-
-        QueryResponse response = this.eadSearchUtil.getSearchResponse();
-        return new EadResponseSet(response);
     }
 
     @Override
-    public EadResponseSet searchOpenData(SearchRequest request) throws SolrServerException, ParseException {
+    public EadResponseSet searchOpenData(SearchRequest request) {
         return this.search(request, " AND openData:true");
     }
 }

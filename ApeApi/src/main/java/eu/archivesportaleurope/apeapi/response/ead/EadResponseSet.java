@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -47,26 +46,24 @@ public class EadResponseSet {
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
         SolrDocumentList documentList = response.getResults();
-        this.totalResults = documentList.getNumFound();
-        this.startIndex = documentList.getStart();
+        this.setTotalResults(documentList.getNumFound());
+        this.setStartIndex(documentList.getStart());
 
         for (SolrDocument document : documentList) {
             this.eadSearchResults.add(new EadResponse(document, response));
         }
-        this.totalPages = (int) (this.totalResults / responseHeader.getRows());
+        this.setTotalPages((int)(this.totalResults / responseHeader.getRows()));
         if (this.totalResults % responseHeader.getRows() > 0) {
             this.totalPages++;
         }
-        this.facetFields = new FacetFields(response);
-//        facetFields.setCountry(response.getFacetField("country"));
-
+        this.setFacetFields(new FacetFields(response));
     }
 
     public long getTotalResults() {
         return totalResults;
     }
 
-    public void setTotalResults(long totalResults) {
+    public final void setTotalResults(long totalResults) {
         this.totalResults = totalResults;
     }
 
@@ -74,7 +71,7 @@ public class EadResponseSet {
         return startIndex;
     }
 
-    public void setStartIndex(long startIndex) {
+    public final void setStartIndex(long startIndex) {
         this.startIndex = startIndex;
     }
 
@@ -82,7 +79,7 @@ public class EadResponseSet {
         return Collections.unmodifiableList(eadSearchResults);
     }
 
-    public void setEadSearchResults(List<EadResponse> eadSearchResutls) {
+    public final void setEadSearchResults(List<EadResponse> eadSearchResutls) {
         if (eadSearchResutls != null) {
             this.eadSearchResults = eadSearchResutls;
         }
@@ -96,7 +93,7 @@ public class EadResponseSet {
         return totalPages;
     }
 
-    public void setTotalPages(int totalPages) {
+    public final void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
     }
 
@@ -104,7 +101,7 @@ public class EadResponseSet {
         return facetFields;
     }
 
-    public void setFacetFields(FacetFields facetFields) {
+    public final void setFacetFields(FacetFields facetFields) {
         this.facetFields = facetFields;
     }
     

@@ -22,17 +22,18 @@ public class ArchivalInstituteResponse {
     private String repositoryCode;
 
     public ArchivalInstituteResponse(ArchivalInstitution ai) {
+        this.setName(ai.getAiname());
+        this.setName(ai.getCountry().getCname());
+        this.setId(ai.getAiId());
+        this.setCountryId(ai.getCountryId());
         int numberOfPublishedItem = 0;
-        this.name = ai.getAiname();
-        this.country = ai.getCountry().getCname();
-        this.id = ai.getAiId();
-        this.countryId = ai.getCountryId();
+
         for (FindingAid fa : ai.getFindingAids()) {
             if (fa.isPublished()) {
                 numberOfPublishedItem++;
             }
         }
-        this.numberOfFindingAids = numberOfPublishedItem;
+        this.setNumberOfFindingAids(numberOfPublishedItem);
         this.repositoryCode = ai.getRepositorycode();
     }
 
@@ -40,7 +41,7 @@ public class ArchivalInstituteResponse {
         return name;
     }
 
-    public void setName(String name) {
+    public final void setName(String name) {
         this.name = name;
     }
 
@@ -48,7 +49,7 @@ public class ArchivalInstituteResponse {
         return country;
     }
 
-    public void setCountry(String country) {
+    public final void setCountry(String country) {
         this.country = country;
     }
 
@@ -56,7 +57,7 @@ public class ArchivalInstituteResponse {
         return id;
     }
 
-    public void setId(int id) {
+    public final void setId(int id) {
         this.id = id;
     }
 
@@ -64,7 +65,7 @@ public class ArchivalInstituteResponse {
         return countryId;
     }
 
-    public void setCountryId(int countryId) {
+    public final void setCountryId(int countryId) {
         this.countryId = countryId;
     }
 
@@ -72,7 +73,7 @@ public class ArchivalInstituteResponse {
         return numberOfFindingAids;
     }
 
-    public void setNumberOfFindingAids(int numberOfFindingAids) {
+    public final void setNumberOfFindingAids(int numberOfFindingAids) {
         this.numberOfFindingAids = numberOfFindingAids;
     }
 

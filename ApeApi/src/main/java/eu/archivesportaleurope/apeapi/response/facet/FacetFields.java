@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -44,7 +45,8 @@ public class FacetFields {
     @JsonProperty("toDate")
     private final List<NameCountPair> enddate;
     
-    final private transient org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     public FacetFields() {
         this.country = new ArrayList<>();
         this.topic = new ArrayList<>();
