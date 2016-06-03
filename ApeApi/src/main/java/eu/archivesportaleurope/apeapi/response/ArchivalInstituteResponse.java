@@ -23,7 +23,7 @@ public class ArchivalInstituteResponse {
 
     public ArchivalInstituteResponse(ArchivalInstitution ai) {
         this.setName(ai.getAiname());
-        this.setName(ai.getCountry().getCname());
+        this.setCountry(ai.getCountry().getCname());
         this.setId(ai.getAiId());
         this.setCountryId(ai.getCountryId());
         int numberOfPublishedItem = 0;
