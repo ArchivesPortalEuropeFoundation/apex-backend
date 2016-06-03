@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.response;
 
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.FindingAid;
 
 /**
  *
@@ -17,15 +18,21 @@ public class ArchivalInstituteResponse {
     private int id;
     private String country;
     private int countryId;
-    private int numberOfFindingAids;
+    private int numberOfPublishedFindingAids;
     private String repositoryCode;
 
     public ArchivalInstituteResponse(ArchivalInstitution ai) {
+        int numberOfPublishedItem = 0;
         this.name = ai.getAiname();
         this.country = ai.getCountry().getCname();
         this.id = ai.getAiId();
         this.countryId = ai.getCountryId();
-        this.numberOfFindingAids = ai.getFindingAids().size();
+        for (FindingAid fa : ai.getFindingAids()) {
+            if (fa.isPublished()) {
+                numberOfPublishedItem++;
+            }
+        }
+        this.numberOfPublishedFindingAids = numberOfPublishedItem;
         this.repositoryCode = ai.getRepositorycode();
     }
 
@@ -61,12 +68,12 @@ public class ArchivalInstituteResponse {
         this.countryId = countryId;
     }
 
-    public int getNumberOfFindingAids() {
-        return numberOfFindingAids;
+    public int getNumberOfPublishedFindingAids() {
+        return numberOfPublishedFindingAids;
     }
 
-    public void setNumberOfFindingAids(int numberOfFindingAids) {
-        this.numberOfFindingAids = numberOfFindingAids;
+    public void setNumberOfPublishedFindingAids(int numberOfPublishedFindingAids) {
+        this.numberOfPublishedFindingAids = numberOfPublishedFindingAids;
     }
 
     public String getRepositoryCode() {
