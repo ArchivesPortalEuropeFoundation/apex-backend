@@ -26,14 +26,14 @@ import org.slf4j.LoggerFactory;
  * @author Mahbub
  */
 public class EadSearchSearvice implements SearchService {
-
+    
     private String solrUrl;
     private SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    
     public EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
@@ -41,22 +41,22 @@ public class EadSearchSearvice implements SearchService {
         this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
-
+    
     public EadSearchSearvice(SolrServer solrServer, String propFileName) {
         this.solrUrl = this.solrCore = "";
         logger.debug("Solr server got created!");
         this.eadSearchUtil = new SolrSearchUtil(solrServer);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
-
+    
     public String getSolrUrl() {
         return solrUrl;
     }
-
+    
     public void setSolrUrl(String solrUrl) {
         this.solrUrl = solrUrl;
     }
-
+    
     @Override
     public QueryResponse search(SearchRequest searchRequest, String extraSearchParam, boolean includeFacet) {
         try {
@@ -72,7 +72,7 @@ public class EadSearchSearvice implements SearchService {
                 query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), null, null, null, null, false);
             }
             query.setQuery(searchRequest.getQuery() + extraParam);
-
+            
             if (searchRequest.getCount() <= 0) {
                 logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
                 query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
@@ -81,18 +81,18 @@ public class EadSearchSearvice implements SearchService {
             }
             logger.debug("Final search query: " + query.getFields());
             this.eadSearchUtil.setQuery(query);
-
+            
             return this.eadSearchUtil.getSearchResponse();
         } catch (SolrServerException | ParseException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-
+    
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
         return this.search(request, " AND openData:true", true);
     }
-
+    
     @Override
     public QueryResponse searchDocPerInstitute(InstituteDocRequest request) {
         SearchRequest searchRequest = new SearchRequest();
@@ -102,7 +102,7 @@ public class EadSearchSearvice implements SearchService {
                 + " AND id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
         return this.search(searchRequest, "", false);
     }
-
+    
     @Override
     public QueryResponse searchInstituteInGroup(int startIndex, int count) {
         try {
@@ -110,13 +110,15 @@ public class EadSearchSearvice implements SearchService {
             query.setQuery("id:F*" + " AND openData:true");
             query.add("group", "true");
             query.add("group.field", "ai");
+            query.add("group.query", "true");
+            query.add("group.ngroups", "true");
             query.setStart(startIndex);
             query.setRows(count);
             query.setParam("fl", "country,repositoryCode");
             query.setSort("orderId", SolrQuery.ORDER.asc);
             logger.debug("real query is " + query.toString());
             this.eadSearchUtil.setQuery(query);
-
+            
             return this.eadSearchUtil.getSearchResponse();
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
