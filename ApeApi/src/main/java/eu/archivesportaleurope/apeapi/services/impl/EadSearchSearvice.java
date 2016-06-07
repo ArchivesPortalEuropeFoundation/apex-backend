@@ -7,13 +7,12 @@ import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
-import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -73,16 +72,16 @@ public class EadSearchSearvice implements SearchService {
                 query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), null, null, null, null, false);
             }
             query.setQuery(searchRequest.getQuery() + extraParam);
-            
+
             if (searchRequest.getCount() <= 0) {
                 logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
                 query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
             } else {
                 query.setRows(searchRequest.getCount());
             }
-            logger.debug("Final search query: "+query.getFields());
+            logger.debug("Final search query: " + query.getFields());
             this.eadSearchUtil.setQuery(query);
-            
+
             return this.eadSearchUtil.getSearchResponse();
         } catch (SolrServerException | ParseException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
@@ -93,14 +92,34 @@ public class EadSearchSearvice implements SearchService {
     public QueryResponse searchOpenData(SearchRequest request) {
         return this.search(request, " AND openData:true", true);
     }
-    
+
     @Override
     public QueryResponse searchDocPerInstitute(InstituteDocRequest request) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setCount(request.getCount());
         searchRequest.setStartIndex(request.getStartIndex());
-        searchRequest.setQuery("openData:true AND ai:*"+request.getInstituteId()
-                + " AND id:"+XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix()+"*");
+        searchRequest.setQuery("openData:true AND ai:*" + request.getInstituteId()
+                + " AND id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
         return this.search(searchRequest, "", false);
+    }
+
+    @Override
+    public QueryResponse searchInstituteInGroup(int startIndex, int count) {
+        try {
+            SolrQuery query = new SolrQuery();
+            query.setQuery("id:F*" + " AND openData:true");
+            query.add("group", "true");
+            query.add("group.field", "ai");
+            query.setStart(startIndex);
+            query.setRows(count);
+            query.setParam("fl", "country,repositoryCode");
+            query.setSort("orderId", SolrQuery.ORDER.asc);
+            logger.debug("real query is " + query.toString());
+            this.eadSearchUtil.setQuery(query);
+
+            return this.eadSearchUtil.getSearchResponse();
+        } catch (SolrServerException ex) {
+            throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
+        }
     }
 }

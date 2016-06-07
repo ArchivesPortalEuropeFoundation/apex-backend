@@ -8,6 +8,8 @@ package eu.archivesportaleurope.apeapi.response;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.solr.client.solrj.response.Group;
+import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
  *
@@ -25,7 +27,14 @@ public class ArchivalInstitutesResponse {
     public ArchivalInstitutesResponse(List<ArchivalInstitution> ais) {
         this();
         for (ArchivalInstitution ai : ais) {
-            institutes.add(new ArchivalInstituteResponse(ai));
+            this.addInstitutes(new ArchivalInstituteResponse(ai));
+        }
+    }
+
+    public ArchivalInstitutesResponse(QueryResponse response) {
+        this();
+        for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
+            this.addInstitutes(new ArchivalInstituteResponse(group));
         }
     }
 
@@ -45,7 +54,7 @@ public class ArchivalInstitutesResponse {
         this.institutes = institutes;
     }
 
-    public void addInstitutes(ArchivalInstituteResponse ai) {
+    public final void addInstitutes(ArchivalInstituteResponse ai) {
         this.institutes.add(ai);
     }
 

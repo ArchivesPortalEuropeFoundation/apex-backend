@@ -7,7 +7,6 @@ package eu.archivesportaleurope.apeapi.services;
 
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
@@ -18,4 +17,5 @@ public interface SearchService {
     QueryResponse search(SearchRequest request, String extraSearchParam, boolean includeFacet);
     QueryResponse searchOpenData(SearchRequest request);
     QueryResponse searchDocPerInstitute(InstituteDocRequest request);
+    QueryResponse searchInstituteInGroup(int startIndex, int count);
 }

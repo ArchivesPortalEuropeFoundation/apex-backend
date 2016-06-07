@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.response;
 
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.FindingAid;
+import org.apache.solr.client.solrj.response.Group;
 
 /**
  *
@@ -35,6 +36,25 @@ public class ArchivalInstituteResponse {
         }
         this.setNumberOfFindingAids(numberOfPublishedItem);
         this.repositoryCode = ai.getRepositorycode();
+    }
+    
+    public ArchivalInstituteResponse(Group group){
+        String groupValue = group.getGroupValue();
+        String[] groupValueSplitted = groupValue.split(":");
+        String countryInfo = group.getResult().get(0).get("country").toString();
+        String[] countrySplitted = countryInfo.split(":");
+        String repoCode = group.getResult().get(0).get("repositoryCode").toString();
+        long numberOfPublishedItem = group.getResult().getNumFound();
+        
+        this.setName(groupValueSplitted[0]);
+        this.setId(Integer.parseInt(groupValueSplitted[1]));
+        
+        this.setCountry(countrySplitted[0]);
+        this.setCountryId(Integer.parseInt(countrySplitted[2]));
+        this.setRepositoryCode(repoCode);
+        this.setNumberOfFindingAids((int)numberOfPublishedItem);
+        
+        
     }
 
     public String getName() {
@@ -81,7 +101,7 @@ public class ArchivalInstituteResponse {
         return repositoryCode;
     }
 
-    public void setRepositoryCode(String repositoryCode) {
+    public final void setRepositoryCode(String repositoryCode) {
         this.repositoryCode = repositoryCode;
     }
 }

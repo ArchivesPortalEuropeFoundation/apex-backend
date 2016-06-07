@@ -49,7 +49,7 @@ public class ArchivalInstituteStatResource {
 
     @Autowired
     AiStatService aiStatService;
-    
+
     @Autowired
     SearchService eadSearch;
 
@@ -62,23 +62,25 @@ public class ArchivalInstituteStatResource {
         @ApiResponse(code = 400, message = "Bad request"),
         @ApiResponse(code = 401, message = "Unauthorized")
     })
-    public Response getInsByOpenData(@ApiParam(value = "Start Index (Starts form 0)", required = true) @PathParam("startIndex") int startIndex, 
+    public Response getInsByOpenData(@ApiParam(value = "Start Index (Starts form 0)", required = true) @PathParam("startIndex") int startIndex,
             @ApiParam(value = "Count can't be more than 50", required = true) @PathParam("count") int count) {
         if (count < 1 || count > 50) {
-            throw new ViolationException("Count can not be less than one and greater than 50", "Count was: "+count);
+            throw new ViolationException("Count can not be less than one and greater than 50", "Count was: " + count);
         }
         try {
-            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled((startIndex<0) ? 0 : startIndex, count)).build();
+            QueryResponse resp = eadSearch.searchInstituteInGroup((startIndex < 0) ? 0 : startIndex, count);
+            logger.info("Number fo group command " + resp.getGroupResponse());
+            return Response.ok().entity(new ArchivalInstitutesResponse(resp)).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
+            return e.getResponse();
         } catch (Exception e) {
             logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
             AppException errMsg = new InternalErrorException(e.getMessage());
             return errMsg.getResponse();
         }
     }
-    
+
     @POST
     @Path("/getDocs")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -90,14 +92,14 @@ public class ArchivalInstituteStatResource {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getInsDocument(@ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true)
-                                    @Valid InstituteDocRequest request) {
+            @Valid InstituteDocRequest request) {
         try {
             QueryResponse queryResponse = eadSearch.searchDocPerInstitute(request);
             EadResponseSet eadResponseSet = new EadResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
+            return e.getResponse();
         } catch (Exception e) {
             logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
             AppException errMsg = new InternalErrorException(e.getMessage());
