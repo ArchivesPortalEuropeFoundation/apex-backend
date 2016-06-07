@@ -17,7 +17,8 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 
 /**
- *
+ * Refactored code, to reduce code duplication. Original author is (most probably) bastiaan
+ * 
  * @author mahbub
  */
 public class SolrQueryBuilder {

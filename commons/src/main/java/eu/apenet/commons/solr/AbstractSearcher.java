@@ -32,7 +32,7 @@ public abstract class AbstractSearcher {
     private static final Pattern NORMAL_TERM_PATTERN = Pattern.compile("[\\p{L}\\p{Digit}\\s]+");
     private static final String QUERY_TYPE_LIST = "list";
     protected static final String COLON = ":";
-    protected final static SimpleDateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final static Logger LOGGER = Logger.getLogger(AbstractSearcher.class);
     protected static Integer TIME_ALLOWED;
     protected static Integer TIME_ALLOWED_TREE;

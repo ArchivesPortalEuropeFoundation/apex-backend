@@ -15,6 +15,11 @@ import eu.apenet.commons.ResourceBundleSource;
 import eu.apenet.commons.solr.DateGap;
 import eu.apenet.commons.utils.DisplayUtils;
 
+/**
+ * Refactored code, to reduce code duplication. Original author is (most probably) bastiaan
+ * 
+ * @author mahbub
+ */
 public class FacetValue {
 	private final static Logger LOGGER = Logger.getLogger(FacetValue.class);
 	private final static SimpleDateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");

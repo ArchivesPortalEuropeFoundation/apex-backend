@@ -1,7 +1,11 @@
 package eu.apenet.commons.solr;
 
 import java.util.Calendar;
-
+/**
+ * Refactored code, to reduce code duplication. Original author is (most probably) bastiaan
+ * 
+ * @author mahbub
+ */
 public enum DateGap {
 
 	TIME_SPAN_1("1",  "200YEARS", 200, Calendar.YEAR, 10, DateGap.ONLY_YEAR), 
