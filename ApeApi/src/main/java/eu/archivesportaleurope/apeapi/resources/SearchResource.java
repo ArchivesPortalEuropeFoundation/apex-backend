@@ -9,6 +9,7 @@ import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
@@ -23,6 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
@@ -48,7 +50,7 @@ public class SearchResource {
     @Path("/ead")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Return search results based on query",
-            response = EadResponseSet.class
+            response = EadFactedResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
@@ -60,7 +62,8 @@ public class SearchResource {
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
         try {
-            EadResponseSet eadResponseSet = eadSearch.searchOpenData(searchRequest);
+            QueryResponse queryResponse = eadSearch.searchOpenData(searchRequest);
+            EadFactedResponseSet eadResponseSet = new EadFactedResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);

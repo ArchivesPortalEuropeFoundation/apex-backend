@@ -33,12 +33,9 @@ public class EadResponseSet {
     private int totalPages;
     @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
     private List<EadResponse> eadSearchResults;
-    
-    private FacetFields facetFields;
 
     public EadResponseSet() {
         eadSearchResults = new ArrayList<>();
-        facetFields = new FacetFields();
     }
 
     public EadResponseSet(QueryResponse response) throws SolrServerException {
@@ -50,13 +47,12 @@ public class EadResponseSet {
         this.setStartIndex(documentList.getStart());
 
         for (SolrDocument document : documentList) {
-            this.eadSearchResults.add(new EadResponse(document, response));
+            this.addEadSearchResult(new EadResponse(document, response));
         }
         this.setTotalPages((int)(this.totalResults / responseHeader.getRows()));
         if (this.totalResults % responseHeader.getRows() > 0) {
             this.totalPages++;
         }
-        this.setFacetFields(new FacetFields(response));
     }
 
     public long getTotalResults() {
@@ -85,8 +81,10 @@ public class EadResponseSet {
         }
     }
 
-    public void addEadSearchResult(EadResponse eadSearchResutl) {
-        this.eadSearchResults.add(eadSearchResutl);
+    public final void addEadSearchResult(EadResponse eadSearchResutl) {
+        if (eadSearchResutl != null) {
+            this.eadSearchResults.add(eadSearchResutl);
+        }
     }
 
     public int getTotalPages() {
@@ -96,13 +94,4 @@ public class EadResponseSet {
     public final void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
     }
-
-    public FacetFields getFacetFields() {
-        return facetFields;
-    }
-
-    public final void setFacetFields(FacetFields facetFields) {
-        this.facetFields = facetFields;
-    }
-    
 }

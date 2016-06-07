@@ -43,7 +43,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Path("/content")
 @Api("/content")
-@Produces({"application/vnd.ape-v1+json"})
+@Produces({ServerConstants.APE_API_V1})
 public class ContentResource {
 
     @Autowired

@@ -6,10 +6,12 @@
 package eu.archivesportaleurope.apeapi.response.facet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.apenet.commons.solr.DateGap;
 import eu.apenet.commons.solr.facet.FacetType;
+import eu.apenet.commons.solr.facet.FacetValue;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -67,9 +69,14 @@ public class FacetFields {
         for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
             try {
                 Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
-                Method setMethod = thisClass.getMethod("setValue", List.class, FacetField.class);
-                setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                if (facetSettings.getFacetType().isDate()) {
+                    Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
+                    setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
+                } else {
+                    Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
+                    setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
+                }
+            } catch (Exception ex) {
                 logger.debug("Reflecion exception: ",ex);
             }
         }
@@ -115,19 +122,35 @@ public class FacetFields {
         return enddate;
     }
     
-    public void setValue(List<NameCountPair> field, FacetField values) {
+    public void setDate(List<NameCountPair> field, FacetField values) throws ParseException {
         if (values == null) {
             return;
         }
         List<FacetField.Count> counts = values.getValues();
         for (int i = 0; i < counts.size(); i++) {
-            NameCountPair tmpCountry = new NameCountPair();
+            NameCountPair pair = new NameCountPair();
+            FacetField.Count countObj = counts.get(i);
+            String[] arr = countObj.getName().split("T");
+            pair.setName(FacetValue.getDateSpan(DateGap.TIME_SPAN_1, arr[0]));
+            pair.setId(arr[0]+"_2"); //Why "_2" u ask? Look at SolrQueryBuilder->buildDateRefinement(...) method - which is NOT my code
+            pair.setFrequency(countObj.getCount());
+            field.add(pair);
+        }
+    }
+    
+    public void setField(List<NameCountPair> field, FacetField values) {
+        if (values == null) {
+            return;
+        }
+        List<FacetField.Count> counts = values.getValues();
+        for (int i = 0; i < counts.size(); i++) {
+            NameCountPair pair = new NameCountPair();
             FacetField.Count countObj = counts.get(i);
             String[] arr = countObj.getName().split(":");
-            tmpCountry.setName(arr[0]);
-            tmpCountry.setId(arr[arr.length-1]);
-            tmpCountry.setFrequency(countObj.getCount());
-            field.add(tmpCountry);
+            pair.setName(arr[0]);
+            pair.setId(arr[arr.length-1]);
+            pair.setFrequency(countObj.getCount());
+            field.add(pair);
         }
     }
 }

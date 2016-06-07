@@ -5,14 +5,17 @@
  */
 package eu.archivesportaleurope.apeapi.services;
 
+import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
+import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
  * Any search service will have to implement this interface.
  * @author Mahbub
  */
 public interface SearchService {
-    EadResponseSet search(SearchRequest request, String extraSearchParam);
-    EadResponseSet searchOpenData(SearchRequest request);
+    QueryResponse search(SearchRequest request, String extraSearchParam, boolean includeFacet);
+    QueryResponse searchOpenData(SearchRequest request);
+    QueryResponse searchDocPerInstitute(InstituteDocRequest request);
 }

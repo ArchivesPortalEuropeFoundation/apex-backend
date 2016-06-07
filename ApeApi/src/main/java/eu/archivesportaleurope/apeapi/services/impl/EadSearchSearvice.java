@@ -3,8 +3,11 @@ package eu.archivesportaleurope.apeapi.services.impl;
 import eu.apenet.commons.solr.SolrQueryBuilder;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
+import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
@@ -56,14 +59,19 @@ public class EadSearchSearvice implements SearchService {
     }
 
     @Override
-    public EadResponseSet search(SearchRequest searchRequest, String extraSearchParam) {
+    public QueryResponse search(SearchRequest searchRequest, String extraSearchParam, boolean includeFacet) {
         try {
             String extraParam = "";
             if (extraSearchParam != null) {
                 extraParam = extraSearchParam;
             }
-            List<ListFacetSettings> facetSettingsList = FacetType.getDefaultEadListFacetSettings();
-            SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
+            SolrQuery query;
+            if (includeFacet) {
+                List<ListFacetSettings> facetSettingsList = FacetType.getDefaultEadListFacetSettings();
+                query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
+            } else {
+                query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), null, null, null, null, false);
+            }
             query.setQuery(searchRequest.getQuery() + extraParam);
             
             if (searchRequest.getCount() <= 0) {
@@ -75,15 +83,24 @@ public class EadSearchSearvice implements SearchService {
             logger.debug("Final search query: "+query.getFields());
             this.eadSearchUtil.setQuery(query);
             
-            QueryResponse response = this.eadSearchUtil.getSearchResponse();
-            return new EadResponseSet(response);
+            return this.eadSearchUtil.getSearchResponse();
         } catch (SolrServerException | ParseException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
 
     @Override
-    public EadResponseSet searchOpenData(SearchRequest request) {
-        return this.search(request, " AND openData:true");
+    public QueryResponse searchOpenData(SearchRequest request) {
+        return this.search(request, " AND openData:true", true);
+    }
+    
+    @Override
+    public QueryResponse searchDocPerInstitute(InstituteDocRequest request) {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setCount(request.getCount());
+        searchRequest.setStartIndex(request.getStartIndex());
+        searchRequest.setQuery("openData:true AND ai:*"+request.getInstituteId()
+                + " AND id:"+XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix()+"*");
+        return this.search(searchRequest, "", false);
     }
 }
