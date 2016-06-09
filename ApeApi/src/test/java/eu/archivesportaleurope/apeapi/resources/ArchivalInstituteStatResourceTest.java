@@ -20,7 +20,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,6 @@ import org.springframework.http.HttpStatus;
  *
  * @author kaisar
  */
-@Ignore
 public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityTest {
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -74,8 +72,8 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         TypeToken<ArchivalInstitutesResponse> token = new TypeToken<ArchivalInstitutesResponse>() {
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
-        Assert.assertEquals(2, ais.getInstitutes().size());
-        Assert.assertEquals(3, ais.getTotal());
+        Assert.assertEquals(1, ais.getInstitutes().size());
+        Assert.assertEquals(1, ais.getTotal());
     }
 
     @Test
@@ -92,8 +90,8 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         TypeToken<ArchivalInstitutesResponse> token = new TypeToken<ArchivalInstitutesResponse>() {
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
-        Assert.assertEquals(2, ais.getInstitutes().size());
-        Assert.assertEquals(3, ais.getTotal());
+        Assert.assertEquals(1, ais.getInstitutes().size());
+        Assert.assertEquals(1, ais.getTotal());
     }
 
     @Test
