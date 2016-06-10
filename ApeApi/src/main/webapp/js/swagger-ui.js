@@ -1118,7 +1118,10 @@ SwaggerClient.prototype.buildFromSpec = function (response) {
 
   this.apis = {};
   this.apisArray = [];
-  this.basePath = response.basePath || '';
+  var subPath = document.location.pathname;
+  subPath = subPath.substring(0, subPath.length-1);
+  this.basePath = subPath+response.basePath || '';
+  console.log("basePath:"+this.basePath);
   this.consumes = response.consumes;
   this.host = response.host || '';
   this.info = response.info || {};
@@ -2068,6 +2071,7 @@ SwaggerSpecConverter.prototype.convert = function (obj, clientAuthorizations, ca
   
   // take basePath into account
   if (obj.basePath) {
+    console.log("Object basePath: "+obj.basePath);
     this.setDocumentationLocation(obj.basePath);
   }
 
