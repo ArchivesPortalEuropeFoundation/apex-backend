@@ -14,6 +14,7 @@ public final class ServerConstants {
     public static final String APE_API_V1 = "application/vnd.ape-v1+json";
     public static final String WEB_APP_EXCEPTION = "WebApplicationException occurred: ";
     public static final String UNKNOWN_EXCEPTION = "Exception occurred: ";
+    public static final String REPOSITORY_DIR_PATH = "REPOSITORY_DIR_PATH";
     
     private ServerConstants() {
     }

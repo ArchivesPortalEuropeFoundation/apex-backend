@@ -19,14 +19,24 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ResourceContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -40,14 +50,18 @@ import org.springframework.stereotype.Component;
  *
  * @author mahbub
  */
-@Component
+@Provider
 @Path("/content")
 @Api("/content")
 @Produces({ServerConstants.APE_API_V1})
 public class ContentResource {
 
     @Autowired
-    EadContentService eadContentService;
+    private EadContentService eadContentService;
+    
+    @Context
+    private ServletContext servletContext;
+    
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final JAXBContext eadContext;
@@ -133,6 +147,39 @@ public class ContentResource {
             contentResponse.setContent(ead);
             return Response.ok().entity(contentResponse).build();
 
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return  e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+//*/
+    //*
+
+    @GET
+    @Path("download/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Download raw xml of an EAD item",
+            response = String.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response downloadXmlContent(@PathParam("id") String id) {
+        try {
+            eu.apenet.persistence.vo.Ead ead = eadContentService.findEadById(id);
+            String repoPath = this.servletContext.getInitParameter(ServerConstants.REPOSITORY_DIR_PATH);
+            File file = new File(repoPath + ead.getPath());
+            ResponseBuilder response = Response.ok((Object) file);
+            response.header("Content-Disposition", "attachment; filename="+id+".xml");
+            return response.build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return  e.getResponse();

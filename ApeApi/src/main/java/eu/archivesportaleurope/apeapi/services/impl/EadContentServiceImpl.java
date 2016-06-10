@@ -9,6 +9,7 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -17,6 +18,9 @@ import eu.archivesportaleurope.apeapi.response.common.DetailContent;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
 import eu.archivesportaleurope.apeapi.transaction.repository.CLevelRepo;
 import eu.archivesportaleurope.apeapi.transaction.repository.EadContentRepo;
+import eu.archivesportaleurope.apeapi.transaction.repository.FindingAidRepo;
+import eu.archivesportaleurope.apeapi.transaction.repository.HoldingsGuideRepo;
+import eu.archivesportaleurope.apeapi.transaction.repository.SourceGuideRepo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +33,18 @@ public class EadContentServiceImpl implements EadContentService {
 
     @Autowired
     EadContentRepo contentRepo;
+    
     @Autowired
     CLevelRepo cLevelRepo;
+    
+    @Autowired
+    FindingAidRepo findingAidRepo;
+    
+    @Autowired
+    HoldingsGuideRepo holdingsGuideRepo;
+    
+    @Autowired
+    SourceGuideRepo sourceGuideRepo;
 
     @Transactional
     @Override
@@ -49,6 +63,36 @@ public class EadContentServiceImpl implements EadContentService {
         throw new ResourceNotFoundException("Not a descriptive unit id", "Not a descriptive unit id: " + id);
     }
 
+    @Transactional
+    @Override
+    public Ead findEadById(String id) {
+        if (StringUtils.isNotBlank(id)) {
+
+            String solrPrefix = id.substring(0, 1);
+            XmlType xmlType = XmlType.getTypeBySolrPrefix(solrPrefix);
+            Ead ead;
+            if (xmlType != null) {
+                Integer idLong = Integer.parseInt(id.substring(1));
+                //get search term from previous request
+                if (xmlType.getClazz().equals(FindingAid.class)) {
+                    ead = findingAidRepo.findById(idLong);
+                } else if (xmlType.getClazz().equals(HoldingsGuide.class)) {
+                    ead = holdingsGuideRepo.findById(idLong);
+                } else {
+                    ead = sourceGuideRepo.findById(idLong);
+                }
+                if (ead == null) {
+                    throw new ResourceNotFoundException("Couldn't find any item with the given id", "EadContent Item not found, id" + id);
+                }
+                return ead;
+
+            } else {
+                //consider it as AI and fill AI details from DisplayPreviewContoller
+            }
+        }
+        throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
+    }
+    
     @Transactional
     @Override
     public DetailContent findEadContent(String id) {

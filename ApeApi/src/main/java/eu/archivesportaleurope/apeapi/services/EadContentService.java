@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.services;
 
+import eu.apenet.persistence.vo.Ead;
 import eu.archivesportaleurope.apeapi.response.common.DetailContent;
 
 /**
@@ -14,4 +15,5 @@ import eu.archivesportaleurope.apeapi.response.common.DetailContent;
 public interface EadContentService {
     DetailContent findClevelContent(String id);
     DetailContent findEadContent(String id);
+    Ead findEadById(String id);
 }
