@@ -12,7 +12,6 @@ import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class EadSearchSearvice implements SearchService {
     
     private String solrUrl;
-    private SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
+    private final SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final String solrCore;
     private final SolrSearchUtil eadSearchUtil;
     private final PropertiesUtil propertiesUtil;

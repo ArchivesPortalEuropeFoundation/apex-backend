@@ -75,6 +75,9 @@ public class EadResponse {
     
     @ApiModelProperty(required = true, value="Type of result: \"archdesc\" for highest level description or \"clevel\" for subordinate components")
     private String level;
+    
+    @ApiModelProperty(required = true, value="Date of publication of this document")
+    private String indexDate;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {
         this.id = this.objectToString(solrDocument.getFieldValue(SolrFields.ID));
@@ -117,6 +120,7 @@ public class EadResponse {
 
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
+        this.indexDate = this.objectToString(solrDocument.getFieldValue(SolrFields.TIMESTAMP));
         if (solrDocument.getFieldValue(SolrFields.DAO) != null) {
             this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(SolrFields.DAO);
         }
@@ -279,5 +283,13 @@ public class EadResponse {
 
     public void setHasDigitalObject(boolean hasDigitalObject) {
         this.hasDigitalObject = hasDigitalObject;
+    }
+
+    public String getIndexDate() {
+        return indexDate;
+    }
+
+    public void setIndexDate(String indexDate) {
+        this.indexDate = indexDate;
     }
 }

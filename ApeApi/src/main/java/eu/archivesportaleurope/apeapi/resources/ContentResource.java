@@ -51,6 +51,7 @@ import org.springframework.stereotype.Component;
  * @author mahbub
  */
 @Provider
+@Component
 @Path("/content")
 @Api("/content")
 @Produces({ServerConstants.APE_API_V1})

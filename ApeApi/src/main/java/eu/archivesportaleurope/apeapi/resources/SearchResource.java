@@ -10,7 +10,6 @@ import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
-import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
