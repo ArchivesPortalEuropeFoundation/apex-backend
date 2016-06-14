@@ -4,7 +4,7 @@
     <parent>
         <groupId>eu.archivesportaleurope.backend</groupId>
         <artifactId>backend-project</artifactId>
-        <version>2.2.6-SNAPSHOT</version>
+        <version>2.2.6</version>
     </parent>
     <artifactId>SharedResources</artifactId>
     <name>SharedResources</name>
