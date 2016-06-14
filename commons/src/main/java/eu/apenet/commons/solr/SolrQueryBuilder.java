@@ -44,8 +44,8 @@ public class SolrQueryBuilder {
             if (withStartdateAndEnddate) {
                 buildDateRefinement(query, startDate, endDate, true);
             }
+            query.setParam("facet.method", "enum");
         }
-        query.setParam("facet.method", "enum");
         query.setStart(start);
         
         // query.setFacetLimit(ListFacetSettings.DEFAULT_FACET_VALUE_LIMIT);
