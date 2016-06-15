@@ -15,13 +15,19 @@ import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
+import eu.archivesportaleurope.test.util.JsonToObject;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Date;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrInputDocument;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Assert;
@@ -29,6 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -37,11 +44,19 @@ import org.springframework.http.HttpStatus;
  */
 public class SearchResourceTest extends JerseySpringWithSecurityTest {
 
+    @Autowired
+    SolrServer eadSolrServer;
+
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
-    
+
     @Before
-    public void setUpTest() {
+    public void setUpTest() throws SolrServerException, IOException {
+        JsonToObject jsonToObject = new JsonToObject();
+        Collection<SolrInputDocument> docs = jsonToObject.getEadSolrDocs(jsonToObject.getObject("EadMockData.json", EadResponseSet.class));
+        logger.info(":::::::::: docs number " + docs.size());
+        UpdateResponse up = eadSolrServer.add(docs);
+        logger.info("::: Solr doc added with update header " + up.getResponseHeader().toString());
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
     }
 
@@ -132,10 +147,10 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
-        logger.debug("Response Json: " + jsonResponse+"BAL");
+        logger.debug("Response Json: " + jsonResponse);
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    
+
     @Test
     public void testNullAPIkeyRequest() {
         logger.debug("Test Null apikey");
@@ -144,10 +159,10 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         request.setQuery("Anything");
         request.setStartIndex(0);
         Response response = super.target("search").path("ead").request().post(Entity.entity(request, ServerConstants.APE_API_V1));
-        
+
         Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
-    
+
     @Test
     public void testInvalidAPIkeyRequest() {
         logger.debug("Test Null apikey");
@@ -156,7 +171,7 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         request.setQuery("Anything");
         request.setStartIndex(0);
         Response response = super.target("search").path("ead").request().header("APIkey", "Blabal").post(Entity.entity(request, ServerConstants.APE_API_V1));
-        
+
         Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 
