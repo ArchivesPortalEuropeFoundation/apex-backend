@@ -26,7 +26,7 @@ public class AiStatServiceImpl implements AiStatService {
     public ArchivalInstitutesResponse getAiWithOpenDataEnabled(int startIndex, int limit) {
         List<ArchivalInstitution> ais = archivalInstituteRepo.findByOpenDataEnabled(new OffsetBasedPageRequest(startIndex, limit));
         ArchivalInstitutesResponse aisResponse = new ArchivalInstitutesResponse(ais);
-        aisResponse.setTotal(archivalInstituteRepo.getCount());
+        aisResponse.setTotalResults(archivalInstituteRepo.getCount());
         return aisResponse;
     }
 }

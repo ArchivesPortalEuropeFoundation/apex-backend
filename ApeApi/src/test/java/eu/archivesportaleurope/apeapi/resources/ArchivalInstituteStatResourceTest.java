@@ -63,7 +63,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         int start = 0;
         int count = 2;
 
-        Response response = super.target("institute").path("getInstitute").path(String.valueOf(start))
+        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);
@@ -73,7 +73,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
         Assert.assertEquals(1, ais.getInstitutes().size());
-        Assert.assertEquals(1, ais.getTotal());
+        Assert.assertEquals(1, ais.getTotalResults());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         logger.debug(":::Test Get Institute that has open data enabled with start less than zero");
         int start = -1;
         int count = 2;
-        Response response = super.target("institute").path("getInstitute").path(String.valueOf(start))
+        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);
@@ -91,7 +91,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
         Assert.assertEquals(1, ais.getInstitutes().size());
-        Assert.assertEquals(1, ais.getTotal());
+        Assert.assertEquals(1, ais.getTotalResults());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         logger.debug("Test invalid request with count > 50");
         int start = 1;
         int count = 51;
-        Response response = super.target("institute").path("getInstitute").path(String.valueOf(start))
+        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);
@@ -113,7 +113,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
         logger.debug("Test invalid request with count < 0");
         int start = 1;
         int count = -51;
-        Response response = super.target("institute").path("getInstitute").path(String.valueOf(start))
+        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);

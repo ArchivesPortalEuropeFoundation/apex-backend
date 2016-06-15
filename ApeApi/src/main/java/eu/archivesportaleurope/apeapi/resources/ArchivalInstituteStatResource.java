@@ -12,6 +12,7 @@ import eu.archivesportaleurope.apeapi.exceptions.ViolationException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.InstituteEadResponseSet;
 import eu.archivesportaleurope.apeapi.services.AiStatService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
@@ -54,7 +55,7 @@ public class ArchivalInstituteStatResource {
     SearchService eadSearch;
 
     @GET
-    @Path("/getInstitute/{startIndex}/{count}")
+    @Path("/getInstitutes/{startIndex}/{count}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "return list of Archival institute", response = ArchivalInstitutesResponse.class)
     @ApiResponses(value = {
@@ -95,7 +96,7 @@ public class ArchivalInstituteStatResource {
             @Valid InstituteDocRequest request) {
         try {
             QueryResponse queryResponse = eadSearch.searchDocPerInstitute(request);
-            EadResponseSet eadResponseSet = new EadResponseSet(queryResponse);
+            InstituteEadResponseSet eadResponseSet = new InstituteEadResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);

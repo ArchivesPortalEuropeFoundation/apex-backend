@@ -20,20 +20,20 @@ import org.apache.solr.common.SolrDocumentList;
 
 /**
  *
- * @author kaisar
+ * @author mahbub
  */
 @XmlRootElement
 @ApiModel
-public class EadResponseSet extends ResponseSet {
+public class InstituteEadResponseSet extends ResponseSet {
     @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
-    private List<EadResponse> eadSearchResults;
+    private List<InstituteEadResponse> eadResults;
 
-    public EadResponseSet() {
-        eadSearchResults = new ArrayList<>();
+    public InstituteEadResponseSet() {
+        eadResults = new ArrayList<>();
     }
 
-    public EadResponseSet(QueryResponse response) throws SolrServerException {
-        eadSearchResults = new ArrayList<>();
+    public InstituteEadResponseSet(QueryResponse response) throws SolrServerException {
+        eadResults = new ArrayList<>();
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
         SolrDocumentList documentList = response.getResults();
@@ -42,7 +42,7 @@ public class EadResponseSet extends ResponseSet {
 
         for (SolrDocument document : documentList) {
             
-            this.addEadSearchResult(new EadResponse(document, response));
+            this.addEadSearchResult(new InstituteEadResponse(document, response));
         }
         this.setTotalPages((int)(super.totalResults / responseHeader.getRows()));
         if (super.totalResults % responseHeader.getRows() > 0) {
@@ -50,19 +50,22 @@ public class EadResponseSet extends ResponseSet {
         }
     }
 
-    public List<EadResponse> getEadSearchResults() {
-        return Collections.unmodifiableList(eadSearchResults);
+    
+    public List<InstituteEadResponse> getEadResults() {
+        return Collections.unmodifiableList(eadResults);
     }
 
-    public final void setEadSearchResults(List<EadResponse> eadSearchResutls) {
+    public final void setEadResults(List<InstituteEadResponse> eadSearchResutls) {
         if (eadSearchResutls != null) {
-            this.eadSearchResults = eadSearchResutls;
+            this.eadResults = eadSearchResutls;
         }
     }
 
-    public final void addEadSearchResult(EadResponse eadSearchResutl) {
+    public final void addEadSearchResult(InstituteEadResponse eadSearchResutl) {
         if (eadSearchResutl != null) {
-            this.eadSearchResults.add(eadSearchResutl);
+            this.eadResults.add(eadSearchResutl);
         }
     }
+
+    
 }

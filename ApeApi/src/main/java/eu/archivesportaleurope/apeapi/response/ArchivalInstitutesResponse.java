@@ -17,7 +17,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
  */
 public class ArchivalInstitutesResponse {
 
-    private long total;
+    private long totalResults;
     private List<ArchivalInstituteResponse> institutes;
 
     public ArchivalInstitutesResponse() {
@@ -33,18 +33,18 @@ public class ArchivalInstitutesResponse {
 
     public ArchivalInstitutesResponse(QueryResponse response) {
         this();
-        this.setTotal(response.getGroupResponse().getValues().get(0).getNGroups());
+        this.setTotalResults(response.getGroupResponse().getValues().get(0).getNGroups());
         for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
             this.addInstitutes(new ArchivalInstituteResponse(group));
         }
     }
 
-    public long getTotal() {
-        return total;
+    public long getTotalResults() {
+        return totalResults;
     }
 
-    public final void setTotal(long total) {
-        this.total = total;
+    public final void setTotalResults(long totalResults) {
+        this.totalResults = totalResults;
     }
 
     public List<ArchivalInstituteResponse> getInstitutes() {
