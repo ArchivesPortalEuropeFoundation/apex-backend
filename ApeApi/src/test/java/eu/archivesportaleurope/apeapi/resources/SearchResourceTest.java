@@ -52,11 +52,6 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
 
     @Before
     public void setUpTest() throws SolrServerException, IOException {
-        JsonToObject jsonToObject = new JsonToObject();
-        Collection<SolrInputDocument> docs = jsonToObject.getEadSolrDocs(jsonToObject.getObject("EadMockData.json", EadResponseSet.class));
-        logger.info(":::::::::: docs number " + docs.size());
-        UpdateResponse up = eadSolrServer.add(docs);
-        logger.info("::: Solr doc added with update header " + up.getResponseHeader().toString());
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
     }
 
