@@ -30,7 +30,7 @@ public class JsonToObject {
         T object = mapper.readValue(file, type);
         return object;
     }
-
+    
     public List<SolrInputDocument> getEadSolrDocs(EadResponseSet eads) {
         List<SolrInputDocument> solrDocs = new ArrayList<>();
         for (EadResponse ead : eads.getEadSearchResults()) {
@@ -48,6 +48,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
             solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
+            solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;

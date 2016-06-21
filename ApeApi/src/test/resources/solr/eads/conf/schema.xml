@@ -153,7 +153,7 @@
 	  <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" />
 	<field name="depth" type="int" indexed="true" stored="true" required="false"/>
 	<field name="orderId" type="int" indexed="true" stored="true" required="false"/>
-        <field name="openData" type="boolean" indexed="true" stored="true" required="false" default="false"/>
+        <field name="openData" type="boolean" indexed="true" stored="true" required="false" default="true"/>
    <dynamicField name="*_i"  type="int"    indexed="true"  stored="true"/>
    <dynamicField name="*_s"  type="string"  indexed="true"  stored="true"/>
 

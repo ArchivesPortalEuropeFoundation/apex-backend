@@ -25,7 +25,7 @@
 
 
     </updateHandler>
-
+    <dataDir>target/tmp-solr/data</dataDir>
 
     <query>
 

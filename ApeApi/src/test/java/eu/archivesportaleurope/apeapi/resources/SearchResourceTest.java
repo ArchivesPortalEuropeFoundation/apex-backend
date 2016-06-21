@@ -9,6 +9,7 @@ import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
@@ -24,14 +25,19 @@ import java.util.Date;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +51,34 @@ import org.springframework.http.HttpStatus;
 public class SearchResourceTest extends JerseySpringWithSecurityTest {
 
     @Autowired
-    SolrServer eadSolrServer;
+    public SolrServer eadSolrServer;
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
-
+    
     @Before
-    public void setUpTest() throws SolrServerException, IOException {
+    public void setUpTest() throws SolrServerException, IOException, InterruptedException {
+        //*
+        JsonToObject jsonToObject = new JsonToObject();
+        Collection<SolrInputDocument> docs = jsonToObject.getEadSolrDocs(jsonToObject.getObject("EadMockData.json", EadResponseSet.class));
+        logger.info(":::::::::: docs number " + docs.size());
+        logger.debug("Solr server got created! "+eadSolrServer.hashCode());
+        UpdateResponse up = eadSolrServer.add(docs);
+        eadSolrServer.commit(false, false, false);
+        Thread.sleep(15000);
+        SolrQuery query = new SolrQuery("* AND openData:true");
+        query.setRows(10);
+        query.setStart(0);
+        query.setHighlight(true);
+        query.setRequestHandler("list");
+        QueryResponse queryResponse = eadSolrServer.query(query);
+        SolrDocumentList documentList = queryResponse.getResults();
+        for (SolrDocument document : documentList) {
+            System.out.println("------> "+document.getFieldValue(SolrFields.TITLE));
+            System.out.println("------> "+document.getFieldValue("openData"));
+        }
+        logger.info("::: Solr doc added with update header " + up.getResponseHeader().toString());
+        //*/
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
     }
 
@@ -64,7 +91,7 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         logger.debug("Test Search TotalResultCount");
         SearchRequest request = new SearchRequest();
         request.setCount(10);
-        request.setQuery("Heerlijkheid");
+        request.setQuery("*");
         request.setStartIndex(0);
 
         Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
@@ -87,7 +114,7 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         logger.debug("Test Search Title");
         SearchRequest request = new SearchRequest();
         request.setCount(10);
-        request.setQuery("Heerlijkheid");
+        request.setQuery("Nepal");
         request.setStartIndex(0);
 
         Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
@@ -104,7 +131,7 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
 
         EadResponse doc = responseEad.getEadSearchResults().get(0);
-        Assert.assertEquals("Heerlijkheid Alblasserdam - Kaarten", doc.getUnitTitle());
+        Assert.assertEquals("Nepal. 1967 - 1973", doc.getUnitTitle());
         logger.debug("Title: " + doc.getUnitTitle());
     }
 
@@ -113,7 +140,7 @@ public class SearchResourceTest extends JerseySpringWithSecurityTest {
         logger.debug("Test Search with default count");
         SearchRequest request = new SearchRequest();
         request.setCount(0);
-        request.setQuery("Heerlijkheid");
+        request.setQuery("Nepal");
         request.setStartIndex(0);
 
         Response response = super.target("search").path("ead").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
