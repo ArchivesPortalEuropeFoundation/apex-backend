@@ -13,15 +13,22 @@ import org.apache.solr.common.util.NamedList;
  * @author kaisar
  */
 public class SearchStatResponse {
+
     private int queryTime;
     private int rows;
     private String q;
 
     public SearchStatResponse(QueryResponse response) {
         this.queryTime = response.getQTime();
-        this.rows = Integer.parseInt(((NamedList) response.getResponseHeader().get("params")).get("rows").toString());
+        Object row = ((NamedList) response.getResponseHeader().get("params")).get("rows");
+        if (row != null) {
+            this.rows = Integer.parseInt(row.toString());
+        } else {
+            this.rows = 0;
+        }
         this.q = ((NamedList) response.getResponseHeader().get("params")).get("q").toString();
     }
+
     /**
      * Default constructor
      */

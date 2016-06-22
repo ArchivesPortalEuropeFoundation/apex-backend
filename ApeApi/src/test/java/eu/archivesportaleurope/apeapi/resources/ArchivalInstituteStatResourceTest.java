@@ -12,8 +12,12 @@ import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
+import eu.archivesportaleurope.test.util.FeedToSolr;
+import java.io.IOException;
 import java.util.Date;
 import javax.ws.rs.core.Response;
+import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,6 +28,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -32,6 +37,10 @@ import org.springframework.http.HttpStatus;
  */
 @Ignore
 public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityTest {
+
+    @Autowired
+    public SolrServer eadSolrServer;
+    private static int called = 0;
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
@@ -48,7 +57,11 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, SolrServerException, InterruptedException {
+        if (called == 0) {
+            new FeedToSolr(eadSolrServer).feed();
+        }
+        called++;
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
     }
 
@@ -109,7 +122,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
 
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
-    
+
     @Test
     public void testInvalidRequestNeg() {
         logger.debug("Test invalid request with count < 0");
