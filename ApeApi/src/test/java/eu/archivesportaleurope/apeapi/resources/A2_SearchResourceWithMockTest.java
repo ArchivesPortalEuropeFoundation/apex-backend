@@ -43,7 +43,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author mahbub
  */
-public class SearchResourceWithMockTest extends JerseySpringTest {
+public class A2_SearchResourceWithMockTest extends JerseySpringTest {
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

@@ -30,14 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author kaisar
  */
-public class ArchivalInstituteStatResourceWithMockTest extends JerseySpringTest {
+public class B2_ArchivalInstituteStatResourceWithMockTest extends JerseySpringTest {
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
     @Autowired
     private AiStatService aiStatService;
 
-    public ArchivalInstituteStatResourceWithMockTest() {
+    public B2_ArchivalInstituteStatResourceWithMockTest() {
     }
 
     @BeforeClass

@@ -17,9 +17,9 @@ import org.junit.Test;
  *
  * @author mahbub
  */
-public class ContentResourceTest  extends JerseySpringWithSecurityTest {
+public class C1_ContentResourceTest  extends JerseySpringWithSecurityTest {
     
-    public ContentResourceTest() {
+    public C1_ContentResourceTest() {
     }
     
     @BeforeClass

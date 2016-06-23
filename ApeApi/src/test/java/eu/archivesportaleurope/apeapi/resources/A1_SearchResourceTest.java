@@ -39,7 +39,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author Mahbub
  */
-public class SearchResourceTest extends JerseySpringWithSecurityTest {
+public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
 
     @Autowired
     public SolrServer eadSolrServer;

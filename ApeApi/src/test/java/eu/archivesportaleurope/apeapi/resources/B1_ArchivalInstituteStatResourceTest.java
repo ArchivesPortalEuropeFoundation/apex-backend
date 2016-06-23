@@ -35,8 +35,8 @@ import org.springframework.http.HttpStatus;
  *
  * @author kaisar
  */
-@Ignore
-public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityTest {
+//@Ignore
+public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityTest {
 
     @Autowired
     public SolrServer eadSolrServer;
@@ -45,7 +45,7 @@ public class ArchivalInstituteStatResourceTest extends JerseySpringWithSecurityT
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
 
-    public ArchivalInstituteStatResourceTest() {
+    public B1_ArchivalInstituteStatResourceTest() {
     }
 
     @BeforeClass

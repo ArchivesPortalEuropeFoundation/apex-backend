@@ -30,12 +30,11 @@ public class FeedToSolr {
 
     public void feed() throws IOException, SolrServerException, InterruptedException {
         JsonToObject jsonToObject = new JsonToObject();
-//        this.server.deleteByQuery("*:*");
         Collection<SolrInputDocument> docs = jsonToObject.getEadSolrDocs(jsonToObject.getObject("EadMockData.json", EadResponseSet.class));
         logger.info(":::::::::: docs number " + docs.size());
         logger.debug("Solr server got created! " + server.hashCode());
         this.server.add(docs);
-        this.server.commit(false, false, false);
+        this.server.commit(true, true, false);
     }
 
 }

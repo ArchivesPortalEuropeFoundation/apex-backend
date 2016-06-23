@@ -709,20 +709,21 @@
                             <info>
                                 <title>Archives Portal Europe</title>
                                 <version>1.0.0</version>
-                                <description>List of usable API services</description>
+                                <description>This is a list of usable API services available from Archives Portal Europe. Here you can test these services, but to do so you need API key.
+                                    Please register at &lt;a href="https://www.archivesportaleurope.net/get-api-key"&gt;APE server&lt;/a&gt; to get your API key.
+                                </description>
                                 <termsOfService>
                                     http://www.archivesportaleurope.net/terms-of-use
-                                    <!--http://www.github.com/kongchen/swagger-maven-plugin-->
                                 </termsOfService>
                                 <contact>
                                     <email>root@www.archivesportaleurope.net</email>
                                     <name>Ape Admin</name>
-                                    <url>http://www.archivesportaleurope.net</url>
+                                    <url>http://www.archivesportaleurope.net/contact</url>
                                 </contact>
-                                <!--                                <license>
-                                    <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-                                    <name>Apache 2.0</name>
-                                </license>-->
+                                <license>
+                                    <url>https://creativecommons.org/publicdomain/zero/1.0/</url>
+                                    <name>CreativeCommons0 1.0</name>
+                                </license>
                             </info>
                             <templatePath>${basedir}/src/main/resources/swagger/templates/strapdown.html.hbs</templatePath>
                             <outputPath>${basedir}/src/main/resources/swagger/generated/document.html</outputPath>
