@@ -161,7 +161,7 @@ this["Handlebars"]["templates"]["main"] = Handlebars.template({"1":function(dept
   stack1 = lambda(((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.description : stack1), depth0);
   if (stack1 != null) { buffer += stack1; }
   return buffer + "</span>\n";
-},"3":function(depth0,helpers,partials,data) {
+},/*"3":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "                        <span class='info_email'>\n                            Contact: <a href=\"mailto:"
     + escapeExpression(lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.contact : stack1)) != null ? stack1.email : stack1), depth0))
@@ -170,6 +170,11 @@ this["Handlebars"]["templates"]["main"] = Handlebars.template({"1":function(dept
     + "\">"
     + escapeExpression(lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.contact : stack1)) != null ? stack1.name : stack1), depth0))
     + "</a>\n                        </span><br><br>\n";
+},*/"3":function(depth0,helpers,partials,data) {
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
+  var value = escapeExpression(lambda(((stack1 = ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.contact : stack1)) != null ? stack1.url : stack1), depth0));
+  return "<br>                    <span style=\"font-variant: small-caps\">Contact</span>: "
+    + (value != null ? "<a target='_blank' href='"+value+"'>Link</a><br>" : stack1);
 },"5":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "<br>                    <span style=\"font-variant: small-caps\">api version</span>: "
@@ -179,6 +184,11 @@ this["Handlebars"]["templates"]["main"] = Handlebars.template({"1":function(dept
   var stack1;
   return "<br>                    <span style=\"font-variant: small-caps\">Terms of use</span>: "
     + ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? "<a target='_blank' href='"+stack1.termsOfService+"'>Link</a>" : stack1);
+},"9":function(depth0,helpers,partials,data) {
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
+  escapeExpression(lambda( (stack1 = ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.license : stack1)), depth0));
+  return "<br>                    <span style=\"font-variant: small-caps\">License</span>: "
+    + (stack1 != null ? "<a target='_blank' href='"+stack1.url+"'>"+stack1.name+"</a>" : stack1);
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div id=\"swagger_sidebar\">\n    <div class=\"sticky-nav-placeholder\">\n        <div class=\"sticky-nav\">\n            <div class=\"mobile-nav\">\n                <span class=\"select-label\">API Reference: </span><span data-selected-value></span>\n            </div>\n\n            <div class=\"token-generator hide\">\n                <span data-close class=\"icon-budicon-471\"></span>\n                <!--label for=\"input-api-token\">Url</label>\n                <input type=\"text\" autocorrect=\"off\" class=\"form-control\" id=\"input_baseUrl\"\n                       placeholder=\"http://example.com/api\"-->\n\n                <div class=\"scope-selector\">\n                    <label for=\"scopes\">Token</label>\n\n                    <div class=\"area controls\">\n                        <input type=\"text\" autocorrect=\"off\" class=\"form-control\" id=\"input_apiKey\"\n                               placeholder=\"Enter api key or token\">\n                    </div>\n\n                    </div>\n\n            </div>\n            <div data-navigator>\n                <div data-resource=\"\" label=\"Tools\">\n                    <div class=\"item\" data-tg-switch=\"\">Swagger resource <span class=\"status\"></span></div>\n                </div>\n                <div id=\"resources_nav\">\n                </div>\n            </div>\n\n            <p class=\"changes-disclaimer\">\n                <span class='info' id='api_info'>\n";
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.info : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
@@ -191,7 +201,9 @@ this["Handlebars"]["templates"]["main"] = Handlebars.template({"1":function(dept
     + "\n";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.version : stack1), {"name":"if","hash":{},"fn":this.program(5, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.version : stack1), {"name":"if","hash":{},"fn":this.program(7, data),"inverse":this.noop,"data":data});
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.termsOfService : stack1), {"name":"if","hash":{},"fn":this.program(7, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 != null ? depth0.info : depth0)) != null ? stack1.license : stack1), {"name":"if","hash":{},"fn":this.program(9, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "            </p>\n        </div>\n    </div>\n</div>\n\n<div id='resources_container'>\n    <ul id='resources' class=\"samples-collapsed\"></ul>\n</div>\n";
 },"useData":true});
