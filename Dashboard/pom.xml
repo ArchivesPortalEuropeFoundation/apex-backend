@@ -4,7 +4,7 @@
     <parent>
         <groupId>eu.archivesportaleurope.backend</groupId>
         <artifactId>backend-project</artifactId>
-        <version>2016-04-SNAPSHOT</version>
+        <version>2016-06-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>Dashboard</artifactId>
