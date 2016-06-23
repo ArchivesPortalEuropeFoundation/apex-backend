@@ -4,12 +4,12 @@
     <parent>
         <artifactId>backend-project</artifactId>
         <groupId>eu.archivesportaleurope.backend</groupId>
-        <version>2016-06-SNAPSHOT</version>
+        <version>2016-06</version>
     </parent>
 
     <groupId>eu.archivesportaleurope.backend</groupId>
     <artifactId>ApeApi</artifactId>
-    <version>2016-06-SNAPSHOT</version>
+    <version>2016-06</version>
     <packaging>war</packaging>
 
     <name>ApeApi</name>
@@ -612,7 +612,7 @@
                     <!--<url>jdbc:hsqldb:mem:postduif;sql.enforce_strict_size=true;sql.syntax_pgs=true</url>-->
                     <url>jdbc:hsqldb:file:${project.basedir}/target/hsqldb/tmpdb;sql.enforce_strict_size=true;sql.syntax_pgs=true;shutdown=true</url>
                     <username>sa</username>
-                    <password></password>
+                    <password />
                     <!-- You can comment out username/password configurations and
                          have maven to look them up in your settings.xml using ${settingsKey}
                     -->
