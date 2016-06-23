@@ -12,9 +12,10 @@ import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
-import eu.archivesportaleurope.test.util.FeedToSolr;
+import eu.archivesportaleurope.test.util.EmbeddedSolrManager;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
 import javax.ws.rs.core.Response;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -24,7 +25,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,6 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
 
     @Autowired
     public SolrServer eadSolrServer;
-    private static int called = 0;
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
@@ -50,6 +49,11 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
 
     @BeforeClass
     public static void setUpClass() {
+        try {
+            EmbeddedSolrManager.setupData("/EadMockData.json", "eads");
+        } catch (IOException | SolrServerException | InterruptedException ex) {
+            java.util.logging.Logger.getLogger(B1_ArchivalInstituteStatResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @AfterClass
@@ -57,11 +61,7 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
     }
 
     @Before
-    public void setUp() throws IOException, SolrServerException, InterruptedException {
-        if (called == 0) {
-            new FeedToSolr(eadSolrServer).feed();
-        }
-        called++;
+    public void setUp() {
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
     }
 
@@ -97,6 +97,10 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         int start = -1;
         int count = 2;
         Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
+                .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
+        response.bufferEntity();
+
+        response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);

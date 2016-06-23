@@ -15,11 +15,12 @@ import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
-import eu.archivesportaleurope.test.util.FeedToSolr;
+import eu.archivesportaleurope.test.util.EmbeddedSolrManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.logging.Level;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -29,6 +30,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,16 +45,21 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
 
     @Autowired
     public SolrServer eadSolrServer;
-    private static int called = 0;
+
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
-
+    
+    @BeforeClass
+    public static void setUpClass() {
+        try {
+            EmbeddedSolrManager.setupData("/EadMockData.json", "eads");
+        } catch (IOException | SolrServerException | InterruptedException ex) {
+            java.util.logging.Logger.getLogger(B1_ArchivalInstituteStatResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @Before
     public void setUpTest() throws SolrServerException, IOException, InterruptedException {
-        if (called == 0) {
-            new FeedToSolr(eadSolrServer).feed();
-        }
-        called++;
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
     }
 

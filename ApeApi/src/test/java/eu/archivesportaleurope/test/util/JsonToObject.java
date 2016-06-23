@@ -25,8 +25,8 @@ public class JsonToObject {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public <T> T getObject(String filePath, Class<T> type) throws IOException {
-        URL url = Thread.currentThread().getContextClassLoader().getResource(filePath);
-        File file = new File(url.getPath());
+//        URL url = Thread.currentThread().getContextClassLoader().getResource(filePath);
+        File file = new File(filePath);
         T object = mapper.readValue(file, type);
         return object;
     }
