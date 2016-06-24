@@ -6,10 +6,8 @@
 package eu.archivesportaleurope.test.util;
 
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import org.apache.commons.io.FileUtils;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
@@ -30,15 +28,13 @@ public class EmbeddedSolrManager {
         String resource = "src/test/resources";
         String solrHome = resource + "/solr";
         
-        File index = new File (solrHome + "/" + coreName + "/data/index/"); 
-        if (index.exists()) { 
-            FileUtils.cleanDirectory(index); 
-        } 
-        
         coreContainer = new CoreContainer(solrHome);
         coreContainer.load();
         SolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
-
+        
+        solr.deleteByQuery("*:*");
+        solr.commit();
+        
         JsonToObject jsonToObject = new JsonToObject();
         Collection<SolrInputDocument> docs = jsonToObject.getEadSolrDocs(jsonToObject.getObject(resource+dataFile, EadResponseSet.class));
         LOGGER.info(":::::::::: docs number " + docs.size());

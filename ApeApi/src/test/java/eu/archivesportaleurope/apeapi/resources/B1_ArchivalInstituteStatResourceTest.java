@@ -87,8 +87,8 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         TypeToken<ArchivalInstitutesResponse> token = new TypeToken<ArchivalInstitutesResponse>() {
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
-        Assert.assertEquals(1, ais.getInstitutes().size());
-        Assert.assertEquals(1, ais.getTotalResults());
+        Assert.assertEquals(2, ais.getInstitutes().size());
+        Assert.assertEquals(2, ais.getTotalResults());
     }
 
     @Test
@@ -99,18 +99,15 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
-
-        response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
-                .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
-        response.bufferEntity();
+        
         String jsonResponse = response.readEntity(String.class);
         logger.debug("Response Json: " + jsonResponse);
 
         TypeToken<ArchivalInstitutesResponse> token = new TypeToken<ArchivalInstitutesResponse>() {
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
-        Assert.assertEquals(1, ais.getInstitutes().size());
-        Assert.assertEquals(1, ais.getTotalResults());
+        Assert.assertEquals(2, ais.getInstitutes().size());
+        Assert.assertEquals(2, ais.getTotalResults());
     }
 
     @Test

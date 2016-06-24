@@ -11,7 +11,6 @@ import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.solr.common.SolrInputDocument;
@@ -25,7 +24,6 @@ public class JsonToObject {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public <T> T getObject(String filePath, Class<T> type) throws IOException {
-//        URL url = Thread.currentThread().getContextClassLoader().getResource(filePath);
         File file = new File(filePath);
         T object = mapper.readValue(file, type);
         return object;
