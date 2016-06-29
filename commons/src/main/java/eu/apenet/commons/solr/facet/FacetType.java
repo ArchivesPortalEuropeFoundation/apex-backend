@@ -102,6 +102,15 @@ public enum FacetType {
         }
         return null;
     }
+    
+    public static List<ListFacetSettings> getDefaultDateListFacetSettings(){
+    	List<ListFacetSettings> result = new ArrayList<ListFacetSettings>();
+        
+    	result.add(new ListFacetSettings(FacetType.START_DATE));
+    	result.add(new ListFacetSettings(FacetType.END_DATE));     	
+        return result;
+    }
+    
     public static List<ListFacetSettings> getDefaultEadListFacetSettings(){
     	List<ListFacetSettings> result = new ArrayList<ListFacetSettings>();
     	result.add(new ListFacetSettings(FacetType.COUNTRY));

@@ -9,6 +9,7 @@ import static eu.apenet.commons.solr.AbstractSearcher.SOLR_DATE_FORMAT;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +18,9 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 
 /**
- * Refactored code, to reduce code duplication. Original author is (most probably) bastiaan
- * 
+ * Refactored code, to reduce code duplication. Original author is (most
+ * probably) bastiaan
+ *
  * @author mahbub
  */
 public class SolrQueryBuilder {
@@ -47,7 +49,7 @@ public class SolrQueryBuilder {
             query.setParam("facet.method", "enum");
         }
         query.setStart(start);
-        
+
         // query.setFacetLimit(ListFacetSettings.DEFAULT_FACET_VALUE_LIMIT);
         if (orderByField != null && orderByField.length() > 0 && !"relevancy".equals(orderByField)) {
             query.addSort(orderByField, SolrQuery.ORDER.asc);
@@ -55,8 +57,28 @@ public class SolrQueryBuilder {
                 query.addSort("enddate", SolrQuery.ORDER.asc);
             }
         }
-        
+
         return query;
+    }
+    
+    public void addFromDateFilter(SolrQuery query, String fromDateId) throws SolrServerException, ParseException {
+        this.buildDateRefinement(query, fromDateId, "", true);
+    }
+    
+    public void addToDateFilter(SolrQuery query, String toDateId) throws SolrServerException, ParseException {
+        this.buildDateRefinement(query, "", toDateId, true);
+    }
+
+    public void addFilters(SolrQuery query, FacetType facet, ArrayList<String> values) {
+        if (query != null && facet != null) {
+            this.addFilters(query, facet.getRefinementFieldWithLabel(), values);
+        }
+    }
+
+    public void addFilters(SolrQuery query, String criteria, ArrayList<String> values) {
+        if (query != null && criteria != null && !criteria.isEmpty()) {
+            query.addFilterQuery(criteria + ":" + SearchUtil.convertToOrQuery(values));
+        }
     }
 
     private boolean addFacets(SolrQuery query, List<ListFacetSettings> facetSettingsList) {
