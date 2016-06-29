@@ -7,6 +7,8 @@ package eu.archivesportaleurope.apeapi.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.Collections;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,6 +31,12 @@ public class SearchRequest {
     
     @ApiModelProperty(value="Offset the list of returned results by this amount. Default is zero.")
     int startIndex;
+    
+    @ApiModelProperty(value="List of search filters using facet filed")
+    ArrayList<SearchFilterRequest> filters;
+    
+    @ApiModelProperty(value="List of search filters using date")
+    ArrayList<DateFilterRequest> dateFilters;
 
     public String getQuery() {
         return query;
@@ -54,4 +62,25 @@ public class SearchRequest {
         this.startIndex = startIndex;
     }
 
+    public ArrayList<SearchFilterRequest> getFilters() {
+        if (filters == null) {
+            filters = new ArrayList<>();
+        }
+        return filters;
+    }
+
+    public void setFilters(ArrayList<SearchFilterRequest> filters) {
+        this.filters = filters;
+    }
+
+    public ArrayList<DateFilterRequest> getDateFilters() {
+        if (dateFilters == null) {
+            dateFilters = new ArrayList<>();
+        }
+        return dateFilters;
+    }
+
+    public void setDateFilters(ArrayList<DateFilterRequest> dateFilters) {
+        this.dateFilters = dateFilters;
+    }
 }

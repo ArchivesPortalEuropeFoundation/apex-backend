@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
+import eu.archivesportaleurope.apeapi.response.facet.FacetDateFields;
 import eu.archivesportaleurope.apeapi.response.facet.FacetFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,14 +22,19 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 public class EadFactedResponseSet extends EadResponseSet {
     @ApiModelProperty(required = true, value="Array of facet fileds.")
     private FacetFields facetFields;
+    
+    @ApiModelProperty(required = true, value="Array of facet date fileds.")
+    private FacetDateFields facetDateFields;
 
     public EadFactedResponseSet() {
         this.facetFields = new FacetFields();
+        this.facetDateFields = new FacetDateFields();
     }
 
     public EadFactedResponseSet(QueryResponse response) throws SolrServerException {
         super(response);
         this.setFacetFields(new FacetFields(response));
+        this.setFacetDateFields(new FacetDateFields(response));
     }
     
     
@@ -39,4 +45,14 @@ public class EadFactedResponseSet extends EadResponseSet {
     public final void setFacetFields(FacetFields facetFields) {
         this.facetFields = facetFields;
     }
+
+    public FacetDateFields getFacetDateFields() {
+        return facetDateFields;
+    }
+
+    public final void setFacetDateFields(FacetDateFields facetDateFields) {
+        this.facetDateFields = facetDateFields;
+    }
+    
+    
 }

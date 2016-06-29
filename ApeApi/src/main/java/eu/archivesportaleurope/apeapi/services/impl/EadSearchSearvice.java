@@ -5,8 +5,12 @@ import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
+import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
+import eu.archivesportaleurope.apeapi.request.SearchFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.response.facet.FacetDateFields;
+import eu.archivesportaleurope.apeapi.response.facet.FacetFields;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
@@ -69,6 +73,20 @@ public class EadSearchSearvice implements SearchService {
                 query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
             } else {
                 query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), null, null, null, null, false);
+            }
+            
+            for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
+                queryBuilder.addFilters(query, 
+                        FacetType.getFacetByName(FacetFields.getOriginalFieldName(searchFilter.getFacetFiledName())),
+                        searchFilter.getFacetFieldIds());
+            }
+            
+            for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {
+                if (dateFilter.getDateFiledName().equalsIgnoreCase("fromDate")) {
+                    queryBuilder.addFromDateFilter(query, dateFilter.getDateFiledId());
+                } else if (dateFilter.getDateFiledName().equalsIgnoreCase("toDate")) {
+                    queryBuilder.addToDateFilter(query, dateFilter.getDateFiledId());
+                }
             }
             query.setQuery(searchRequest.getQuery() + extraParam);
             

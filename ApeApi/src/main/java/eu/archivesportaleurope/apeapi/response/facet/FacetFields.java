@@ -5,15 +5,19 @@
  */
 package eu.archivesportaleurope.apeapi.response.facet;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.apenet.commons.solr.DateGap;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.FacetValue;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -42,13 +46,24 @@ public class FacetFields {
     private final List<NameCountPair> roledao;
     @JsonProperty("unitDateType")
     private final List<NameCountPair> dateType;
-    @JsonProperty("fromDate")
-    private final List<NameCountPair> startdate;
-    @JsonProperty("toDate")
-    private final List<NameCountPair> enddate;
     
+    private static final transient Map<String, String> FIELDNAMES = new HashMap<>();
+    
+    static {
+        Field[] fields = FacetFields.class.getDeclaredFields();
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(JsonProperty.class)) {
+                String annotationValue = field.getAnnotation(JsonProperty.class).value();
+                FIELDNAMES.put(annotationValue, field.getName());
+            } else {
+                FIELDNAMES.put(field.getName(), field.getName());
+            }
+        }
+    }
+
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     public FacetFields() {
         this.country = new ArrayList<>();
         this.topic = new ArrayList<>();
@@ -58,26 +73,21 @@ public class FacetFields {
         this.dao = new ArrayList<>();
         this.roledao = new ArrayList<>();
         this.dateType = new ArrayList<>();
-        this.startdate = new ArrayList<>();
-        this.enddate = new ArrayList<>();
     }
-    
+
     public FacetFields(QueryResponse queryResponse) {
         this();
         Class<?> thisClass = this.getClass();
         List<ListFacetSettings> defaultEadListFacetSettings = FacetType.getDefaultEadListFacetSettings();
         for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
             try {
-                Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
-                if (facetSettings.getFacetType().isDate()) {
-                    Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
-                    setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
-                } else {
+                if (!facetSettings.getFacetType().isDate()) {
+                    Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
                 }
             } catch (Exception ex) {
-                logger.debug("Reflecion exception: ",ex);
+                logger.debug("Reflecion exception: ", ex);
             }
         }
     }
@@ -114,30 +124,10 @@ public class FacetFields {
         return dateType;
     }
 
-    public List<NameCountPair> getStartdate() {
-        return startdate;
+    public static String getOriginalFieldName(String annotName) {
+        return FIELDNAMES.get(annotName);
     }
 
-    public List<NameCountPair> getEnddate() {
-        return enddate;
-    }
-    
-    public void setDate(List<NameCountPair> field, FacetField values) throws ParseException {
-        if (values == null) {
-            return;
-        }
-        List<FacetField.Count> counts = values.getValues();
-        for (int i = 0; i < counts.size(); i++) {
-            NameCountPair pair = new NameCountPair();
-            FacetField.Count countObj = counts.get(i);
-            String[] arr = countObj.getName().split("T");
-            pair.setName(FacetValue.getDateSpan(DateGap.TIME_SPAN_1, arr[0]));
-            pair.setId(arr[0]+"_2"); //Why "_2" u ask? Look at SolrQueryBuilder->buildDateRefinement(...) method - which is NOT my code
-            pair.setFrequency(countObj.getCount());
-            field.add(pair);
-        }
-    }
-    
     public void setField(List<NameCountPair> field, FacetField values) {
         if (values == null) {
             return;
@@ -148,7 +138,7 @@ public class FacetFields {
             FacetField.Count countObj = counts.get(i);
             String[] arr = countObj.getName().split(":");
             pair.setName(arr[0]);
-            pair.setId(arr[arr.length-1]);
+            pair.setId(arr[arr.length - 1]);
             pair.setFrequency(countObj.getCount());
             field.add(pair);
         }
