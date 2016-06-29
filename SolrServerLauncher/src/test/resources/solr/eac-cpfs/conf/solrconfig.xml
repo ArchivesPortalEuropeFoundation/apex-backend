@@ -134,7 +134,7 @@
 				names^1.3 description other^0.5 places^0.7 mandates^0.7 functions^0.7 occupations^0.7 dateDescription
 			</str>
 			<str name="fl">
-				id,names,dateDescription,country,ai,repositoryCode,entityTypeFacet,recordId,numberOfArchivalMaterialRelations,numberOfNameRelations,numberOfInstitutions
+				id,names,dateDescription,country,ai,repositoryCode,entityTypeFacet,recordId,numberOfArchivalMaterialRelations,numberOfNameRelations,numberOfInstitutions,description,other
 			</str>
 			<str name="q.alt">*:*</str>
 			<str name="hl.fl">names places mandates description other functions occupations dateDescription</str>
