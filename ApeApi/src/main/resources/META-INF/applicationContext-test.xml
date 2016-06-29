@@ -37,6 +37,11 @@
         <constructor-arg index="1" value="resource.properties"/>
     </bean>
     
+    <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchService">
+        <constructor-arg index="0" ref="eadSolrServer"/>
+        <constructor-arg index="1" value="resource.properties"/>
+    </bean>
+    
     <!--<solr:embedded-solr-server id="eadSuggestionSolrServer" solrHome="src/test/resources/solr"/>-->
     
     <bean id="suggestionService" class="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl">

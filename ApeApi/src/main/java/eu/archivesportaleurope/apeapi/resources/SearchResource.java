@@ -9,6 +9,7 @@ import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
@@ -44,7 +45,9 @@ public class SearchResource {
 
     @Autowired
     SearchService eadSearch;
-    
+    @Autowired
+    SearchService eacCpfSearch;
+
     @POST
     @Path("/ead")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -66,11 +69,39 @@ public class SearchResource {
             return Response.ok().entity(eadResponseSet).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
+            return e.getResponse();
         } catch (Exception e) {
             logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
             AppException errMsg = new InternalErrorException(e.getMessage());
             return errMsg.getResponse();
         }
     }
+
+    @POST
+    @Path("/eac-cpf")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Return eac-cpf search results based on query",
+            response = EacCpfFacetedResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+
+    @Consumes({ServerConstants.APE_API_V1})
+    public Response eacCpfSearch(@ApiParam(value = "Search EAC units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest) {
+        try {
+            return Response.ok().entity(new EacCpfFacetedResponseSet(eacCpfSearch
+                    .searchOpenData(searchRequest))).build();
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+
 }

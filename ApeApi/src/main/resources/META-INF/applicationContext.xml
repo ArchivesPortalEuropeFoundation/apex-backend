@@ -48,6 +48,14 @@
         
         <constructor-arg index="2" value="resource.properties"/>
     </bean>
+    <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchService">
+        <!--solrUrl-->
+        <constructor-arg index="0" ref="solrUrl" />
+        <!--sorlCore-->
+        <constructor-arg index="1" value="eac-cpfs"/>
+        
+        <constructor-arg index="2" value="resource.properties"/>
+    </bean>
     <bean id="suggestionService" class="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl">
         <!--solrUrl-->
         <constructor-arg index="0" ref="solrUrl" />

@@ -30,6 +30,9 @@
     <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>
     </bean>
+    <bean id="eacCpfSearch" name="eacCpfSearch" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchService"/>
+    </bean>
     
     <bean id="suggestionService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl"/>
