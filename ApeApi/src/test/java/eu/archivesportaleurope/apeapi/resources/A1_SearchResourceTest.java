@@ -48,16 +48,16 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
-    
+
     @BeforeClass
     public static void setUpClass() {
         try {
-            EmbeddedSolrManager.setupData("/EadMockData.json", "eads");
+            EmbeddedSolrManager.setupData("/EadMockData.json", "eads", EadResponseSet.class);
         } catch (IOException | SolrServerException | InterruptedException ex) {
-            java.util.logging.Logger.getLogger(B1_ArchivalInstituteStatResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(A1_SearchResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Before
     public void setUpTest() throws SolrServerException, IOException, InterruptedException {
         gson = new GsonBuilder().serializeNulls().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();

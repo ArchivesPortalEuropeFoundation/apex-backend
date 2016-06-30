@@ -21,22 +21,24 @@ import org.slf4j.LoggerFactory;
  * @author kaisar
  */
 public class EmbeddedSolrManager {
+
     final private static transient Logger LOGGER = LoggerFactory.getLogger(EmbeddedSolrManager.class);
 
-    public static void setupData(String dataFile, String coreName) throws IOException, SolrServerException, InterruptedException {
+    public static <T> void setupData(String dataFile, String coreName, Class<T> type) throws IOException, SolrServerException, InterruptedException {
         CoreContainer coreContainer;
         String resource = "src/test/resources";
         String solrHome = resource + "/solr";
-        
+
         coreContainer = new CoreContainer(solrHome);
         coreContainer.load();
         SolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
-        
+
         solr.deleteByQuery("*:*");
         solr.commit();
-        
+
         JsonToObject jsonToObject = new JsonToObject();
-        Collection<SolrInputDocument> docs = jsonToObject.getEadSolrDocs(jsonToObject.getObject(resource+dataFile, EadResponseSet.class));
+        Collection<SolrInputDocument> docs;
+        docs = jsonToObject.getSolrDocs(jsonToObject.getObject(resource + dataFile, type));
         LOGGER.info(":::::::::: docs number " + docs.size());
         solr.add(docs);
         solr.commit(true, true, false);

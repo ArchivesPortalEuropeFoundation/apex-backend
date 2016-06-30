@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
+import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
 import eu.archivesportaleurope.test.util.EmbeddedSolrManager;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
     @BeforeClass
     public static void setUpClass() {
         try {
-            EmbeddedSolrManager.setupData("/EadMockData.json", "eads");
+            EmbeddedSolrManager.setupData("/EadMockData.json", "eads", EadResponseSet.class);
         } catch (IOException | SolrServerException | InterruptedException ex) {
             java.util.logging.Logger.getLogger(B1_ArchivalInstituteStatResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,7 +100,7 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
                 .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
         response.bufferEntity();
-        
+
         String jsonResponse = response.readEntity(String.class);
         logger.debug("Response Json: " + jsonResponse);
 

@@ -27,21 +27,21 @@ import org.slf4j.LoggerFactory;
 public class EacCpfSearchService extends SearchService {
 
     private String solrUrl;
-    private final SolrSearchUtil eadSearchUtil;
+    private final SolrSearchUtil eacSearchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public EacCpfSearchService(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
         logger.debug("Solr server got created!");
-        this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
+        this.eacSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
     public EacCpfSearchService(SolrServer solrServer, String propFileName) {
         this.solrUrl = "";
         logger.debug("Solr server got created!");
-        this.eadSearchUtil = new SolrSearchUtil(solrServer);
+        this.eacSearchUtil = new SolrSearchUtil(solrServer);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
@@ -61,7 +61,7 @@ public class EacCpfSearchService extends SearchService {
             if (includeFacet) {
                 facetSettingsList = FacetType.getDefaultEacCPfListFacetSettings();
             }
-            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eadSearchUtil);
+            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eacSearchUtil);
             
         } catch (InternalErrorException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
