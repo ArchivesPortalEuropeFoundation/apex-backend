@@ -54,7 +54,7 @@ public abstract class SearchService {
 
             for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
                 queryBuilder.addFilters(query,
-                        FacetType.getFacetByName(FacetFields.getOriginalFieldName(searchFilter.getFacetFiledName())),
+                        FacetType.getFacetByName(FacetFields.getOriginalFieldName(searchFilter.getFacetFieldName())),
                         searchFilter.getFacetFieldIds());
             }
 
