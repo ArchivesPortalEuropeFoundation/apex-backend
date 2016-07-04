@@ -20,18 +20,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SearchFilterRequest {
     @ApiModelProperty(value="Name of the facet field")
     @NotNull(message="Field name can not be null")
-    String facetFiledName;
+    String facetFieldName;
     
     @ApiModelProperty(value="List of field ids")
     @NotNull(message="Field value can not be null")
     ArrayList<String> facetFieldIds;
 
-    public String getFacetFiledName() {
-        return facetFiledName;
+    public String getFacetFieldName() {
+        return facetFieldName;
     }
 
-    public void setFacetFiledName(String facetFiledName) {
-        this.facetFiledName = facetFiledName;
+    public void setFacetFieldName(String facetFieldName) {
+        this.facetFieldName = facetFieldName;
     }
 
     public ArrayList<String> getFacetFieldIds() {
