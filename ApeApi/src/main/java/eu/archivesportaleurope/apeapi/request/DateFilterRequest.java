@@ -19,26 +19,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DateFilterRequest {
     @ApiModelProperty(value="Name of the date field")
     @NotNull(message="Field name can not be null")
-    String dateFiledName;
+    String dateFieldName;
     
     @ApiModelProperty(value="Date field id")
     @NotNull(message="Date field id can not be null")
-    String dateFiledId;
+    String dateFieldId;
 
-    public String getDateFiledName() {
-        return dateFiledName;
+    public String getDateFieldName() {
+        return dateFieldName;
     }
 
-    public void setDateFiledName(String dateFiledName) {
-        this.dateFiledName = dateFiledName;
+    public void setDateFieldName(String dateFieldName) {
+        this.dateFieldName = dateFieldName;
     }
 
-    public String getDateFiledId() {
-        return dateFiledId;
+    public String getDateFieldId() {
+        return dateFieldId;
     }
 
-    public void setDateFiledId(String dateFiledId) {
-        this.dateFiledId = dateFiledId;
+    public void setDateFieldId(String dateFieldId) {
+        this.dateFieldId = dateFieldId;
     }
     
     

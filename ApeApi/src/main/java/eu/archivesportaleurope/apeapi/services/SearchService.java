@@ -59,10 +59,10 @@ public abstract class SearchService {
             }
 
             for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {
-                if (dateFilter.getDateFiledName().equalsIgnoreCase("fromDate")) {
-                    queryBuilder.addFromDateFilter(query, dateFilter.getDateFiledId());
-                } else if (dateFilter.getDateFiledName().equalsIgnoreCase("toDate")) {
-                    queryBuilder.addToDateFilter(query, dateFilter.getDateFiledId());
+                if (dateFilter.getDateFieldName().equalsIgnoreCase("fromDate")) {
+                    queryBuilder.addFromDateFilter(query, dateFilter.getDateFieldId());
+                } else if (dateFilter.getDateFieldName().equalsIgnoreCase("toDate")) {
+                    queryBuilder.addToDateFilter(query, dateFilter.getDateFieldId());
                 }
             }
             query.setQuery(searchRequest.getQuery() + extraParam);
