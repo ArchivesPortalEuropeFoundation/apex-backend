@@ -13,7 +13,8 @@ import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.response.facet.FacetFields;
+import eu.archivesportaleurope.apeapi.response.facet.EacFacetFields;
+import eu.archivesportaleurope.apeapi.response.facet.EadFacetFields;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
@@ -44,7 +45,7 @@ public abstract class SearchService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected QueryResponse search(SearchRequest searchRequest, String extraSearchParam,
-            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil) {
+            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil, String type) {
         try {
             String extraParam = "";
             if (extraSearchParam != null) {
@@ -53,9 +54,16 @@ public abstract class SearchService {
             SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
 
             for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
-                queryBuilder.addFilters(query,
-                        FacetType.getFacetByName(FacetFields.getOriginalFieldName(searchFilter.getFacetFieldName())),
-                        searchFilter.getFacetFieldIds());
+                if ("eac".equals(type)) {
+                    queryBuilder.addFilters(query,
+                            FacetType.getFacetByName(EacFacetFields.getOriginalFieldName(searchFilter.getFacetFieldName())),
+                            searchFilter.getFacetFieldIds());
+                }
+                if ("ead".equals(type)) {
+                    queryBuilder.addFilters(query,
+                            FacetType.getFacetByName(EadFacetFields.getOriginalFieldName(searchFilter.getFacetFieldName())),
+                            searchFilter.getFacetFieldIds());
+                }
             }
 
             for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {

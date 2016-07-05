@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author mahbub
  */
 @XmlRootElement
-public class FacetFields {
+public class EadFacetFields {
 
     private List<NameCountPair> country;
     @JsonProperty("subject")
@@ -50,7 +50,7 @@ public class FacetFields {
     private static final transient Map<String, String> FIELDNAMES = new HashMap<>();
     
     static {
-        Field[] fields = FacetFields.class.getDeclaredFields();
+        Field[] fields = EadFacetFields.class.getDeclaredFields();
 
         for (Field field : fields) {
             if (field.isAnnotationPresent(JsonProperty.class)) {
@@ -64,7 +64,7 @@ public class FacetFields {
 
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public FacetFields() {
+    public EadFacetFields() {
         this.country = new ArrayList<>();
         this.topic = new ArrayList<>();
         this.ai = new ArrayList<>();
@@ -75,7 +75,7 @@ public class FacetFields {
         this.dateType = new ArrayList<>();
     }
 
-    public FacetFields(QueryResponse queryResponse) {
+    public EadFacetFields(QueryResponse queryResponse) {
         this();
         Class<?> thisClass = this.getClass();
         List<ListFacetSettings> defaultEadListFacetSettings = FacetType.getDefaultEadListFacetSettings();

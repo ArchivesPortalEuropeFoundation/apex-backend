@@ -60,8 +60,8 @@ public class EadSearchSearvice extends SearchService {
             if (includeFacet) {
                 facetSettingsList = FacetType.getDefaultEadListFacetSettings();
             }
-            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eadSearchUtil);
-            
+            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eadSearchUtil, "ead");
+
         } catch (InternalErrorException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }

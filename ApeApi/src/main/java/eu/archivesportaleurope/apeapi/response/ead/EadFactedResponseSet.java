@@ -6,7 +6,7 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.archivesportaleurope.apeapi.response.facet.FacetDateFields;
-import eu.archivesportaleurope.apeapi.response.facet.FacetFields;
+import eu.archivesportaleurope.apeapi.response.facet.EadFacetFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -21,28 +21,28 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 @ApiModel
 public class EadFactedResponseSet extends EadResponseSet {
     @ApiModelProperty(required = true, value="Array of facet fileds.")
-    private FacetFields facetFields;
+    private EadFacetFields facetFields;
     
     @ApiModelProperty(required = true, value="Array of facet date fileds.")
     private FacetDateFields facetDateFields;
 
     public EadFactedResponseSet() {
-        this.facetFields = new FacetFields();
+        this.facetFields = new EadFacetFields();
         this.facetDateFields = new FacetDateFields();
     }
 
     public EadFactedResponseSet(QueryResponse response) throws SolrServerException {
         super(response);
-        this.setFacetFields(new FacetFields(response));
+        this.setFacetFields(new EadFacetFields(response));
         this.setFacetDateFields(new FacetDateFields(response));
     }
     
     
-    public FacetFields getFacetFields() {
+    public EadFacetFields getFacetFields() {
         return this.facetFields;
     }
 
-    public final void setFacetFields(FacetFields facetFields) {
+    public final void setFacetFields(EadFacetFields facetFields) {
         this.facetFields = facetFields;
     }
 
