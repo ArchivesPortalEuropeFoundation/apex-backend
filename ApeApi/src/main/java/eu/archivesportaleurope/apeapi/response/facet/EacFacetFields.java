@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.response.facet;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,36 +30,19 @@ import org.slf4j.LoggerFactory;
 public class EacFacetFields {
 
     private List<NameCountPair> country;
-    @JsonProperty("repository")
-    private List<NameCountPair> ai;
-    @JsonProperty("entityType")
-    private List<NameCountPair> entityTypeFacet;
-    @JsonProperty("place")
-    private List<NameCountPair> placesFacet;
+    private List<NameCountPair> repository;
+    private List<NameCountPair> entityType;
+    private List<NameCountPair> place;
     private List<NameCountPair> language;
     private List<NameCountPair> dateType;
-
-    private static final transient Map<String, String> FIELDNAMES = new HashMap<>();
+    
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    static {
-        Field[] fields = EacFacetFields.class.getDeclaredFields();
-
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(JsonProperty.class)) {
-                String annotationValue = field.getAnnotation(JsonProperty.class).value();
-                FIELDNAMES.put(annotationValue, field.getName());
-            } else {
-                FIELDNAMES.put(field.getName(), field.getName());
-            }
-        }
-    }
 
     public EacFacetFields() {
         this.country = new ArrayList<>();
-        this.ai = new ArrayList<>();
-        this.entityTypeFacet = new ArrayList<>();
-        this.placesFacet = new ArrayList<>();
+        this.repository = new ArrayList<>();
+        this.entityType = new ArrayList<>();
+        this.place = new ArrayList<>();
         this.language = new ArrayList<>();
         this.dateType = new ArrayList<>();
     }
@@ -70,7 +54,8 @@ public class EacFacetFields {
         for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
             try {
                 if (!facetSettings.getFacetType().isDate()) {
-                    Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
+                    Object field = FieldUtils.readField(this, 
+                            ServerResponseDictionary.getResponseFiledName(facetSettings.getFacetType().getName()), true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
                 }
@@ -88,28 +73,28 @@ public class EacFacetFields {
         this.country = country;
     }
 
-    public List<NameCountPair> getAi() {
-        return ai;
+    public List<NameCountPair> getRepository() {
+        return repository;
     }
 
-    public void setAi(List<NameCountPair> ai) {
-        this.ai = ai;
+    public void setRepository(List<NameCountPair> repository) {
+        this.repository = repository;
     }
 
-    public List<NameCountPair> getEntityTypeFacet() {
-        return entityTypeFacet;
+    public List<NameCountPair> getEntityType() {
+        return entityType;
     }
 
-    public void setEntityTypeFacet(List<NameCountPair> entityTypeFacet) {
-        this.entityTypeFacet = entityTypeFacet;
+    public void setEntityType(List<NameCountPair> entityType) {
+        this.entityType = entityType;
     }
 
-    public List<NameCountPair> getPlacesFacet() {
-        return placesFacet;
+    public List<NameCountPair> getPlace() {
+        return place;
     }
 
-    public void setPlacesFacet(List<NameCountPair> placesFacet) {
-        this.placesFacet = placesFacet;
+    public void setPlace(List<NameCountPair> place) {
+        this.place = place;
     }
 
     public List<NameCountPair> getLanguage() {
@@ -126,10 +111,6 @@ public class EacFacetFields {
 
     public void setDateType(List<NameCountPair> dateType) {
         this.dateType = dateType;
-    }
-
-    public static String getOriginalFieldName(String annotName) {
-        return FIELDNAMES.get(annotName);
     }
 
     public void setField(List<NameCountPair> field, FacetField values) {

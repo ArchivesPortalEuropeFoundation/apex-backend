@@ -26,7 +26,7 @@ public class EadSearchSearvice extends SearchService {
 
     private String solrUrl;
     private final String solrCore;
-    private final SolrSearchUtil eadSearchUtil;
+    private final SolrSearchUtil searchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -34,14 +34,14 @@ public class EadSearchSearvice extends SearchService {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
         logger.debug("Solr server got created!");
-        this.eadSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
+        this.searchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
     public EadSearchSearvice(SolrServer solrServer, String propFileName) {
         this.solrUrl = this.solrCore = "";
         logger.debug("Solr server got created!");
-        this.eadSearchUtil = new SolrSearchUtil(solrServer);
+        this.searchUtil = new SolrSearchUtil(solrServer);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
@@ -60,7 +60,7 @@ public class EadSearchSearvice extends SearchService {
             if (includeFacet) {
                 facetSettingsList = FacetType.getDefaultEadListFacetSettings();
             }
-            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eadSearchUtil, "ead");
+            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, searchUtil);
 
         } catch (InternalErrorException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
@@ -96,9 +96,9 @@ public class EadSearchSearvice extends SearchService {
             query.setParam("fl", "country,repositoryCode");
             query.setSort("orderId", SolrQuery.ORDER.asc);
             logger.debug("real query is " + query.toString());
-            this.eadSearchUtil.setQuery(query);
+            this.searchUtil.setQuery(query);
 
-            return this.eadSearchUtil.getSearchResponse();
+            return this.searchUtil.getSearchResponse();
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }

@@ -10,6 +10,7 @@ import eu.apenet.commons.solr.DateGap;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.FacetValue;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -30,32 +31,14 @@ import org.slf4j.LoggerFactory;
  */
 @XmlRootElement
 public class FacetDateFields {
-
-    @JsonProperty("fromDate")
-    private final List<NameCountPair> startdate;
-    @JsonProperty("toDate")
-    private final List<NameCountPair> enddate;
-
-    private static final transient Map<String, String> DATE_FIELDNAMES = new HashMap<>();
-
-    static {
-        Field[] fields = FacetDateFields.class.getDeclaredFields();
-
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(JsonProperty.class)) {
-                String annotationValue = field.getAnnotation(JsonProperty.class).value();
-                DATE_FIELDNAMES.put(annotationValue, field.getName());
-            } else {
-                DATE_FIELDNAMES.put(field.getName(), field.getName());
-            }
-        }
-    }
+    private final List<NameCountPair> fromDate;
+    private final List<NameCountPair> toDate;
 
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public FacetDateFields() {
-        this.startdate = new ArrayList<>();
-        this.enddate = new ArrayList<>();
+        this.fromDate = new ArrayList<>();
+        this.toDate = new ArrayList<>();
     }
 
     public FacetDateFields(QueryResponse queryResponse) {
@@ -64,7 +47,8 @@ public class FacetDateFields {
         List<ListFacetSettings> defaultDateListFacetSettings = FacetType.getDefaultDateListFacetSettings();
         for (ListFacetSettings facetSettings : defaultDateListFacetSettings) {
             try {
-                Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
+                Object field = FieldUtils.readField(this, 
+                        ServerResponseDictionary.getResponseFiledName(facetSettings.getFacetType().getName()), true);
                 Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
                 setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
             } catch (Exception ex) {
@@ -73,16 +57,12 @@ public class FacetDateFields {
         }
     }
 
-    public List<NameCountPair> getStartdate() {
-        return startdate;
+    public List<NameCountPair> getFromDate() {
+        return fromDate;
     }
 
-    public List<NameCountPair> getEnddate() {
-        return enddate;
-    }
-
-    public static String getOriginalFieldName(String annotName) {
-        return DATE_FIELDNAMES.get(annotName);
+    public List<NameCountPair> getToDate() {
+        return toDate;
     }
 
     public void setDate(List<NameCountPair> field, FacetField values) throws ParseException {

@@ -61,7 +61,7 @@ public class EacCpfSearchService extends SearchService {
             if (includeFacet) {
                 facetSettingsList = FacetType.getDefaultEacCPfListFacetSettings();
             }
-            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eacSearchUtil, "eac");
+            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eacSearchUtil);
 
         } catch (InternalErrorException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));

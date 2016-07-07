@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.services;
 import eu.apenet.commons.solr.SolrQueryBuilder;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
@@ -45,7 +46,7 @@ public abstract class SearchService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected QueryResponse search(SearchRequest searchRequest, String extraSearchParam,
-            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil, String type) {
+            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil) {
         try {
             String extraParam = "";
             if (extraSearchParam != null) {
@@ -54,16 +55,9 @@ public abstract class SearchService {
             SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
 
             for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
-                if ("eac".equals(type)) {
-                    queryBuilder.addFilters(query,
-                            FacetType.getFacetByName(EacFacetFields.getOriginalFieldName(searchFilter.getFacetFieldName())),
-                            searchFilter.getFacetFieldIds());
-                }
-                if ("ead".equals(type)) {
-                    queryBuilder.addFilters(query,
-                            FacetType.getFacetByName(EadFacetFields.getOriginalFieldName(searchFilter.getFacetFieldName())),
-                            searchFilter.getFacetFieldIds());
-                }
+                queryBuilder.addFilters(query,
+                        FacetType.getFacetByName(ServerResponseDictionary.getSolrFieldName(searchFilter.getFacetFieldName())),
+                        searchFilter.getFacetFieldIds());
             }
 
             for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {

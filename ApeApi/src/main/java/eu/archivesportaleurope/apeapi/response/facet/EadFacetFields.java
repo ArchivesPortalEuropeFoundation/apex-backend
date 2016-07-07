@@ -5,15 +5,11 @@
  */
 package eu.archivesportaleurope.apeapi.response.facet;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.apenet.commons.solr.DateGap;
 import eu.apenet.commons.solr.facet.FacetType;
-import eu.apenet.commons.solr.facet.FacetValue;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,54 +21,35 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
 /**
  *
  * @author mahbub
  */
 @XmlRootElement
 public class EadFacetFields {
-
+    
     private List<NameCountPair> country;
-    @JsonProperty("subject")
-    private List<NameCountPair> topic;
-    @JsonProperty("repository")
-    private final List<NameCountPair> ai;
-    @JsonProperty("docType")
-    private final List<NameCountPair> type;
-    private final List<NameCountPair> level;
-    @JsonProperty("hasDigitalObject")
-    private final List<NameCountPair> dao;
-    @JsonProperty("digitalObjectType")
-    private final List<NameCountPair> roledao;
-    @JsonProperty("unitDateType")
-    private final List<NameCountPair> dateType;
+    private List<NameCountPair> subject;    
+    private final List<NameCountPair> repository;    
+    private final List<NameCountPair> docType;
+    private final List<NameCountPair> level;    
+    private final List<NameCountPair> hasDigitalObject;
+    private final List<NameCountPair> digitalObjectType;
+    private final List<NameCountPair> unitDateType;
     
-    private static final transient Map<String, String> FIELDNAMES = new HashMap<>();
     
-    static {
-        Field[] fields = EadFacetFields.class.getDeclaredFields();
-
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(JsonProperty.class)) {
-                String annotationValue = field.getAnnotation(JsonProperty.class).value();
-                FIELDNAMES.put(annotationValue, field.getName());
-            } else {
-                FIELDNAMES.put(field.getName(), field.getName());
-            }
-        }
-    }
-
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public EadFacetFields() {
         this.country = new ArrayList<>();
-        this.topic = new ArrayList<>();
-        this.ai = new ArrayList<>();
-        this.type = new ArrayList<>();
+        this.subject = new ArrayList<>();
+        this.repository = new ArrayList<>();
+        this.docType = new ArrayList<>();
         this.level = new ArrayList<>();
-        this.dao = new ArrayList<>();
-        this.roledao = new ArrayList<>();
-        this.dateType = new ArrayList<>();
+        this.hasDigitalObject = new ArrayList<>();
+        this.digitalObjectType = new ArrayList<>();
+        this.unitDateType = new ArrayList<>();
     }
 
     public EadFacetFields(QueryResponse queryResponse) {
@@ -82,7 +59,8 @@ public class EadFacetFields {
         for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
             try {
                 if (!facetSettings.getFacetType().isDate()) {
-                    Object field = FieldUtils.readField(this, facetSettings.getFacetType().getName(), true);
+                    String name = ServerResponseDictionary.getResponseFiledName(facetSettings.getFacetType().getName());
+                    Object field = FieldUtils.readField(this, name, true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
                 }
@@ -96,36 +74,32 @@ public class EadFacetFields {
         return country;
     }
 
-    public List<NameCountPair> getTopic() {
-        return topic;
+    public List<NameCountPair> getSubject() {
+        return subject;
     }
 
-    public List<NameCountPair> getAi() {
-        return ai;
+    public List<NameCountPair> getRepository() {
+        return repository;
     }
 
-    public List<NameCountPair> getType() {
-        return type;
+    public List<NameCountPair> getDocType() {
+        return docType;
     }
 
     public List<NameCountPair> getLevel() {
         return level;
     }
 
-    public List<NameCountPair> getDao() {
-        return dao;
+    public List<NameCountPair> getHasDigitalObject() {
+        return hasDigitalObject;
     }
 
-    public List<NameCountPair> getRoledao() {
-        return roledao;
+    public List<NameCountPair> getDigitalObjectType() {
+        return digitalObjectType;
     }
 
-    public List<NameCountPair> getDateType() {
-        return dateType;
-    }
-
-    public static String getOriginalFieldName(String annotName) {
-        return FIELDNAMES.get(annotName);
+    public List<NameCountPair> getUnitDateType() {
+        return unitDateType;
     }
 
     public void setField(List<NameCountPair> field, FacetField values) {
