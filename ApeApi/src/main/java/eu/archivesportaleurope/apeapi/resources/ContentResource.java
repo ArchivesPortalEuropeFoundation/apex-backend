@@ -56,9 +56,6 @@ public class ContentResource {
     @Autowired
     private EadContentService eadContentService;
     
-    @Autowired
-    private ServletContext servletContext;
-    
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final JAXBContext eadContext;
@@ -75,7 +72,7 @@ public class ContentResource {
 
     //*
     @GET
-    @Path("/descriptiveUnit/{id}")
+    @Path("/ead/clevel/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Return content response of descriptive unit",
             response = ContentResponseClevel.class
@@ -116,7 +113,7 @@ public class ContentResource {
     //*
 
     @GET
-    @Path("/{id}")
+    @Path("/ead/archdesc/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Return content response of an EAD item",
             response = ContentResponseEad.class
@@ -127,7 +124,7 @@ public class ContentResource {
         @ApiResponse(code = 401, message = "Unauthorized")
     })
     @Consumes({ServerConstants.APE_API_V1})
-    public Response getContent(@PathParam("id") String id) {
+    public Response getEadContent(@PathParam("id") String id) {
         try {
             DetailContent detailContent = eadContentService.findEadContent(id);
 
@@ -157,10 +154,10 @@ public class ContentResource {
     //*
 
     @GET
-    @Path("download/{id}")
+    @Path("/eac-cpf/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Download raw xml of an EAD item",
-            response = String.class
+    @ApiOperation(value = "Return content response of an EAC-CPF item",
+            response = ContentResponseEad.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
@@ -168,15 +165,23 @@ public class ContentResource {
         @ApiResponse(code = 401, message = "Unauthorized")
     })
     @Consumes({ServerConstants.APE_API_V1})
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response downloadXmlContent(@PathParam("id") String id) {
+    public Response getEacCpfContent(@PathParam("id") String id) {
         try {
-            eu.apenet.persistence.vo.Ead ead = eadContentService.findEadById(id);
-            String repoPath = this.servletContext.getInitParameter(ServerConstants.REPOSITORY_DIR_PATH);
-            File file = new File(repoPath + ead.getPath());
-            ResponseBuilder response = Response.ok((Object) file);
-            response.header("Content-Disposition", "attachment; filename="+id+".xml");
-            return response.build();
+            DetailContent detailContent = eadContentService.findEadContent(id);
+
+            ContentResponseEad contentResponse = new ContentResponseEad();
+
+            contentResponse.setId(id);
+            contentResponse.setRepositoryId(detailContent.getAiId());
+            contentResponse.setRepository(detailContent.getAiRepoName());
+            contentResponse.setUnitId(detailContent.getUnitId());
+            contentResponse.setUnitTitle(detailContent.getUnitTitle());
+
+            InputStream stream = new ByteArrayInputStream(detailContent.getXml().getBytes());
+            Ead ead = (Ead) eadUnmarshaller.unmarshal(stream);
+            contentResponse.setContent(ead);
+            return Response.ok().entity(contentResponse).build();
+
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return  e.getResponse();
