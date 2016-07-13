@@ -5,12 +5,15 @@
  */
 package eu.archivesportaleurope.apeapi.resources;
 
+import de.staatsbibliothek_berlin.eac.EacCpf;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.response.ContentResponseClevel;
+import eu.archivesportaleurope.apeapi.response.ContentResponseEacCpf;
 import eu.archivesportaleurope.apeapi.response.ContentResponseEad;
 import eu.archivesportaleurope.apeapi.response.common.DetailContent;
+import eu.archivesportaleurope.apeapi.services.EacCpfContentService;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
 import gov.loc.ead.C;
 import gov.loc.ead.Ead;
@@ -20,6 +23,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -28,11 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -56,18 +55,32 @@ public class ContentResource {
     @Autowired
     private EadContentService eadContentService;
     
+    @Autowired
+    private EacCpfContentService eacCpfContentService;
+    
+    @Autowired
+    private ServletContext servletContext;
+    
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final JAXBContext eadContext;
-    private final JAXBContext clevelContext;
     private final Unmarshaller eadUnmarshaller;
+    
+    private final JAXBContext eacCpfContext;
+    private final Unmarshaller eacCpfUnmarshaller;
+    
+    private final JAXBContext clevelContext;    
     private final Unmarshaller cUnmarshaller;
 
     public ContentResource() throws JAXBException {
         this.eadContext = JAXBContext.newInstance(Ead.class);
-        this.clevelContext = JAXBContext.newInstance(C.class);
         this.eadUnmarshaller = eadContext.createUnmarshaller();
+        
+        this.clevelContext = JAXBContext.newInstance(C.class);
         this.cUnmarshaller = clevelContext.createUnmarshaller();
+        
+        this.eacCpfContext = JAXBContext.newInstance(EacCpf.class);
+        this.eacCpfUnmarshaller = eacCpfContext.createUnmarshaller();
     }
 
     //*
@@ -157,7 +170,7 @@ public class ContentResource {
     @Path("/eac-cpf/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Return content response of an EAC-CPF item",
-            response = ContentResponseEad.class
+            response = ContentResponseEacCpf.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
@@ -167,19 +180,13 @@ public class ContentResource {
     @Consumes({ServerConstants.APE_API_V1})
     public Response getEacCpfContent(@PathParam("id") String id) {
         try {
-            DetailContent detailContent = eadContentService.findEadContent(id);
-
-            ContentResponseEad contentResponse = new ContentResponseEad();
-
-            contentResponse.setId(id);
-            contentResponse.setRepositoryId(detailContent.getAiId());
-            contentResponse.setRepository(detailContent.getAiRepoName());
-            contentResponse.setUnitId(detailContent.getUnitId());
-            contentResponse.setUnitTitle(detailContent.getUnitTitle());
-
-            InputStream stream = new ByteArrayInputStream(detailContent.getXml().getBytes());
-            Ead ead = (Ead) eadUnmarshaller.unmarshal(stream);
-            contentResponse.setContent(ead);
+            eu.apenet.persistence.vo.EacCpf eacCpf = eacCpfContentService.findEacCpfById(id);
+            String repoPath = this.servletContext.getInitParameter(ServerConstants.REPOSITORY_DIR_PATH);
+            File file = new File(repoPath + eacCpf.getPath());
+            FileInputStream fins = new FileInputStream(file);
+            ContentResponseEacCpf contentResponse = new ContentResponseEacCpf();
+            EacCpf eacCpfJson = (EacCpf) eacCpfUnmarshaller.unmarshal(fins);
+            contentResponse.setContent(eacCpfJson);
             return Response.ok().entity(contentResponse).build();
 
         } catch (WebApplicationException e) {

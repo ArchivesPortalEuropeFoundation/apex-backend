@@ -1,5 +1,6 @@
 package eu.archivesportaleurope.apeapi.services.impl;
 
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.apenet.commons.types.XmlType;
@@ -86,7 +87,7 @@ public class EadSearchSearvice extends SearchService {
     public QueryResponse searchInstituteInGroup(int startIndex, int count) {
         try {
             SolrQuery query = new SolrQuery();
-            query.setQuery("id:F*" + " AND openData:true");
+            query.setQuery("(id:"+SolrValues.FA_PREFIX+"* OR id:"+SolrValues.HG_PREFIX+"* OR id:"+SolrValues.SG_PREFIX+"*)" + " AND openData:true");
             query.add("group", "true");
             query.add("group.field", "ai");
             query.add("group.query", "true");
