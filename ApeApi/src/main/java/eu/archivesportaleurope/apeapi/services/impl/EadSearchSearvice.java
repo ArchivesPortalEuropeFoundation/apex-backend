@@ -31,13 +31,13 @@ import org.slf4j.LoggerFactory;
  * @author Mahbub
  */
 public class EadSearchSearvice extends SearchService {
-    
+
     private String solrUrl;
     private final String solrCore;
     private final SolrSearchUtil searchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     public EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
@@ -45,22 +45,22 @@ public class EadSearchSearvice extends SearchService {
         this.searchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
-    
+
     public EadSearchSearvice(SolrServer solrServer, String propFileName) {
         this.solrUrl = this.solrCore = "";
         logger.debug("Solr server got created!");
         this.searchUtil = new SolrSearchUtil(solrServer);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
-    
+
     public String getSolrUrl() {
         return solrUrl;
     }
-    
+
     public void setSolrUrl(String solrUrl) {
         this.solrUrl = solrUrl;
     }
-    
+
     @Override
     public QueryResponse search(SearchRequest searchRequest, String extraSearchParam, boolean includeFacet) {
         try {
@@ -69,17 +69,17 @@ public class EadSearchSearvice extends SearchService {
                 facetSettingsList = FacetType.getDefaultEadListFacetSettings();
             }
             return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, searchUtil);
-            
+
         } catch (InternalErrorException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-    
+
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
         return this.search(request, " AND openData:true", true);
     }
-    
+
     @Override
     public QueryResponse searchDocPerInstitute(InstituteDocRequest request) {
         SearchRequest searchRequest = new SearchRequest();
@@ -89,7 +89,7 @@ public class EadSearchSearvice extends SearchService {
                 + " AND id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
         return this.search(searchRequest, "", false);
     }
-    
+
     @Override
     public QueryResponse searchInstituteInGroup(int startIndex, int count) {
         try {
@@ -105,20 +105,24 @@ public class EadSearchSearvice extends SearchService {
             query.setSort("orderId", SolrQuery.ORDER.asc);
             logger.debug("real query is " + query.toString());
             this.searchUtil.setQuery(query);
-            
+
             return this.searchUtil.getSearchResponse();
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-    
+
     private QueryResponse getFonds(SearchRequest searchRequest, String field) {
         try {
             SolrQuery query = new SolrQuery(searchRequest.getQuery());
             query.addFacetField(field);
             query.setFacetSort(FacetParams.FACET_SORT_COUNT);
             query.setParam("facet.offset", searchRequest.getStartIndex() + "");
-            query.setFacetLimit(searchRequest.getCount());
+            if (searchRequest.getCount() <= 0) {
+                query.setFacetLimit(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
+            } else {
+                query.setFacetLimit(searchRequest.getCount());
+            }
             query.setFacetMinCount(1);
             query.setRows(0);
             query.setHighlight(false);
@@ -130,7 +134,7 @@ public class EadSearchSearvice extends SearchService {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-    
+
     @Override
     public TreeFacetValueSet getEadList(SearchRequest searchRequest) {
         List<FacetField.Count> counts = new ArrayList<>();
