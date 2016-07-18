@@ -6,16 +6,17 @@ import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
+import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
+import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.response.TreeFacetValue;
-import eu.archivesportaleurope.apeapi.response.TreeFacetValueSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadDocResponse;
+import eu.archivesportaleurope.apeapi.response.ead.EadDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -112,23 +113,35 @@ public class EadSearchSearvice extends SearchService {
         }
     }
 
-    private QueryResponse getFonds(SearchRequest searchRequest, String field) {
+    private QueryResponse getFonds(SearchDocRequest searchRequest) {
         try {
-            SolrQuery query = new SolrQuery(searchRequest.getQuery());
-            query.addFacetField(field);
-            query.setFacetSort(FacetParams.FACET_SORT_COUNT);
-            query.setParam("facet.offset", searchRequest.getStartIndex() + "");
-            if (searchRequest.getCount() <= 0) {
-                query.setFacetLimit(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
+            SolrQuery queryContext = new SolrQuery(searchRequest.getQuery());
+            if (searchRequest.getDocType().equalsIgnoreCase("fa")) {
+                queryContext.addFacetField(SolrFields.FA_DYNAMIC_NAME);
+            } else if (searchRequest.getDocType().equalsIgnoreCase("hg")) {
+                queryContext.addFacetField(SolrFields.HG_DYNAMIC_NAME);
+            } else if (searchRequest.getDocType().equalsIgnoreCase("sg")) {
+                queryContext.addFacetField(SolrFields.SG_DYNAMIC_NAME);
             } else {
-                query.setFacetLimit(searchRequest.getCount());
+                throw new ResourceNotFoundException("Given type is unknown: "+searchRequest.getDocType(), "Unknow docType: "+searchRequest.getDocType());
             }
-            query.setFacetMinCount(1);
-            query.setRows(0);
-            query.setHighlight(false);
-            query.setParam("facet.method", "enum");
-            query.setRequestHandler("context");
-            this.searchUtil.setQuery(query);
+            
+            queryContext.setFacetSort(FacetParams.FACET_SORT_COUNT);
+            queryContext.setParam("facet.offset", searchRequest.getStartIndex() + "");
+            if (searchRequest.getCount() <= 0) {
+                queryContext.setFacetLimit(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
+            } else {
+                queryContext.setFacetLimit(searchRequest.getCount());
+            }
+            
+            queryContext.setFacetMinCount(1);
+            queryContext.setParam("facet.numTerms", "true");
+            queryContext.setParam("openData", "true");
+            queryContext.setRows(0);
+            queryContext.setHighlight(false);
+            queryContext.setParam("facet.method", "enum");
+            queryContext.setRequestHandler("context");
+            this.searchUtil.setQuery(queryContext);
             return this.searchUtil.getSearchResponse();
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
@@ -136,28 +149,21 @@ public class EadSearchSearvice extends SearchService {
     }
 
     @Override
-    public TreeFacetValueSet getEadList(SearchRequest searchRequest) {
+    public EadDocResponseSet getEadList(SearchDocRequest searchRequest) {
         List<FacetField.Count> counts = new ArrayList<>();
-        QueryResponse findingAidResponse = this.getFonds(searchRequest, SolrFields.FA_DYNAMIC_NAME);
-        FacetField findingAids = findingAidResponse.getFacetFields().get(0);
-        QueryResponse holdingsGuideResponse = this.getFonds(searchRequest, SolrFields.HG_DYNAMIC_NAME);
-        FacetField holdingGuides = holdingsGuideResponse.getFacetFields().get(0);
-        QueryResponse sourceGuideResponse = this.getFonds(searchRequest, SolrFields.SG_DYNAMIC_NAME);
-        FacetField sourceGuides = sourceGuideResponse.getFacetFields().get(0);
-        List<FacetField.Count> faCounts = findingAids.getValues();
-        List<FacetField.Count> hgCounts = holdingGuides.getValues();
-        List<FacetField.Count> sgCounts = sourceGuides.getValues();
-        if (faCounts != null) {
-            counts.addAll(faCounts);
+        QueryResponse queryResponse = this.getFonds(searchRequest);
+        
+        int totalRes = 0;
+        for (FacetField facetField : queryResponse.getFacetFields()) {
+            List<FacetField.Count> faCounts = facetField.getValues();
+            totalRes += facetField.getValueCount();
+            if (faCounts != null) {
+                counts.addAll(faCounts);
+            }
         }
-        if (hgCounts != null) {
-            counts.addAll(hgCounts);
-        }
-        if (sgCounts != null) {
-            counts.addAll(sgCounts);
-        }
-        searchRequest.setCount((int) findingAidResponse.getResults().getNumFound());
-        logger.info(":::: " + findingAidResponse.getResults().getNumFound() + " " + holdingsGuideResponse.getResults().getNumFound() + " " + sourceGuideResponse.getResults().getNumFound());
-        return new TreeFacetValueSet(searchRequest, counts, TreeFacetValue.Type.FOND);
+
+        searchRequest.setCount((int) queryResponse.getResults().getNumFound());
+        logger.info(":::: " + queryResponse.getResults().getNumFound());
+        return new EadDocResponseSet(searchRequest, counts, totalRes, EadDocResponse.Type.FOND);
     }
 }

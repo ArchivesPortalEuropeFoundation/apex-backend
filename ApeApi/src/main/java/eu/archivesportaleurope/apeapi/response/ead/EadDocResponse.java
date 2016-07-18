@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.archivesportaleurope.apeapi.response;
+package eu.archivesportaleurope.apeapi.response.ead;
 
 /**
  *
  * @author kaisar
  */
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 
 import eu.apenet.commons.solr.SolrValues;
@@ -17,18 +18,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @ApiModel
-public class TreeFacetValue {
+public class EadDocResponse {
 
     public enum Type {
         CLEVEL, FOND
     }
     private final String id;
     private final String name;
-    private long orderId;
+    private long levelDepth;
     private final long count;
+    @JsonProperty("isLeaf")
     private final boolean leaf;
 
-    public TreeFacetValue(Count count, Type type) {
+    public EadDocResponse(Count count, Type type) {
 
         String temp = count.getName();
         int lastColonIndex = temp.lastIndexOf(":");
@@ -40,7 +42,7 @@ public class TreeFacetValue {
         temp = temp.substring(0, lastColonIndex);
         if (Type.CLEVEL.equals(type)) {
             int firstColonIndex = temp.indexOf(":");
-            orderId = Long.parseLong(temp.substring(0, firstColonIndex));
+            levelDepth = Long.parseLong(temp.substring(0, firstColonIndex));
             name = temp.substring(firstColonIndex + 1);
         } else {
             name = temp.substring(0);
@@ -61,8 +63,8 @@ public class TreeFacetValue {
         return count;
     }
 
-    public long getOrderId() {
-        return orderId;
+    public long getLevelDepth() {
+        return levelDepth;
     }
 
     public boolean isLeaf() {

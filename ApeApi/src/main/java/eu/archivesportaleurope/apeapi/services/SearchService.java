@@ -12,11 +12,10 @@ import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
+import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.response.TreeFacetValueSet;
-import eu.archivesportaleurope.apeapi.response.facet.EacFacetFields;
-import eu.archivesportaleurope.apeapi.response.facet.EadFacetFields;
+import eu.archivesportaleurope.apeapi.response.ead.EadDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
@@ -24,7 +23,6 @@ import java.util.List;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +42,7 @@ public abstract class SearchService {
 
     public abstract QueryResponse searchInstituteInGroup(int startIndex, int count);
 
-    public abstract TreeFacetValueSet getEadList(SearchRequest searchRequest);
+    public abstract EadDocResponseSet getEadList(SearchDocRequest searchRequest);
 
     private final SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

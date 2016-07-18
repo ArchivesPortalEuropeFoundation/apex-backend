@@ -96,7 +96,7 @@
         </httpCaching>
     </requestDispatcher>
 
-
+    
     <requestHandler name="standard" class="solr.StandardRequestHandler"
                         default="true">
         <lst name="defaults">
