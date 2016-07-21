@@ -40,7 +40,9 @@ public class EadDocResponseSet extends ResponseSet {
         super.setStartIndex(request.getStartIndex());
 
         for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
-            this.addEadDoc(new EadDocResponse(group, type));
+            if (group.getGroupValue() != null) {
+                this.addEadDoc(new EadDocResponse(group, type));
+            }
         }
     }
 
