@@ -120,7 +120,7 @@ public class SearchResource {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response context(
-            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchDocRequest searchRequest
     ) {
         try {
             QueryResponse response = eadSearch.getEadList(searchRequest);

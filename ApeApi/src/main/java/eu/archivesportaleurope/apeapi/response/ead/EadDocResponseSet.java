@@ -5,7 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
-import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import io.swagger.annotations.ApiModel;
 import java.util.ArrayList;
@@ -26,18 +26,20 @@ public class EadDocResponseSet extends ResponseSet {
     private String searchTerm;
     private int totalDocs;
     private List<EadDocResponse> eadDocList;
+    private String type;
 
     public EadDocResponseSet() {
         eadDocList = new ArrayList<>();
     }
 
-    public EadDocResponseSet(SearchRequest request, QueryResponse response, EadDocResponse.Type type) {
+    public EadDocResponseSet(SearchDocRequest request, QueryResponse response, EadDocResponse.Type type) {
         this();
         GroupCommand command = response.getGroupResponse().getValues().get(0);
         this.setTotalDocs(command.getNGroups());
         this.setSearchTerm(request.getQuery());
         super.setTotalResults(command.getMatches());
         super.setStartIndex(request.getStartIndex());
+        this.type = request.getDocType();
 
         for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
             if (group.getGroupValue() != null) {

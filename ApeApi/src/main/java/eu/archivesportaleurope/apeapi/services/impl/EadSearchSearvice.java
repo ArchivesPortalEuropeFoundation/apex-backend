@@ -7,6 +7,7 @@ import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
+import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
@@ -93,9 +94,9 @@ public class EadSearchSearvice extends SearchService {
         return this.groupByQuery(searchRequest, SolrFields.AI, true);
     }
 
-    private QueryResponse groupByQueryOpenData(SearchRequest searchRequest, String groupByFieldName, boolean resultNeeded) {
+    private QueryResponse groupByQueryOpenData(SearchDocRequest searchRequest, String groupByFieldName, boolean resultNeeded) {
         SearchRequest request = new SearchRequest();
-        request.setQuery(searchRequest.getQuery() + " AND openData:true");
+        request.setQuery(searchRequest.getQuery() + " AND type:" + searchRequest.getDocType() + " AND openData:true");
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
         return this.groupByQuery(request, groupByFieldName, resultNeeded);
@@ -129,7 +130,7 @@ public class EadSearchSearvice extends SearchService {
     }
 
     @Override
-    public QueryResponse getEadList(SearchRequest searchRequest) {
+    public QueryResponse getEadList(SearchDocRequest searchRequest) {
         return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC_NAME, false);
     }
 }
