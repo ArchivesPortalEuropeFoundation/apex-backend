@@ -12,6 +12,7 @@ import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadDocResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
@@ -119,10 +120,11 @@ public class SearchResource {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response context(
-            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchDocRequest searchRequest
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
         try {
-            return Response.ok().entity(eadSearch.getEadList(searchRequest)).build();
+            QueryResponse response = eadSearch.getEadList(searchRequest);
+            return Response.ok().entity(new EadDocResponseSet(searchRequest, response, EadDocResponse.Type.FOND)).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

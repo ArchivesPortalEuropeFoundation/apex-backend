@@ -42,7 +42,7 @@ public abstract class SearchService {
 
     public abstract QueryResponse searchInstituteInGroup(int startIndex, int count);
 
-    public abstract EadDocResponseSet getEadList(SearchDocRequest searchRequest);
+    public abstract QueryResponse getEadList(SearchRequest searchRequest);
 
     private final SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

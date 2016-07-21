@@ -5,13 +5,15 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
-import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
+import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import io.swagger.annotations.ApiModel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.Group;
+import org.apache.solr.client.solrj.response.GroupCommand;
+import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
  *
@@ -29,18 +31,16 @@ public class EadDocResponseSet extends ResponseSet {
         eadDocList = new ArrayList<>();
     }
 
-    public EadDocResponseSet(SearchDocRequest request, List<FacetField.Count> eads, int totalRes, EadDocResponse.Type type) {
+    public EadDocResponseSet(SearchRequest request, QueryResponse response, EadDocResponse.Type type) {
         this();
-        this.totalDocs = totalRes;
+        GroupCommand command = response.getGroupResponse().getValues().get(0);
+        this.setTotalDocs(command.getNGroups());
         this.setSearchTerm(request.getQuery());
-        super.setTotalResults(request.getCount()); ///todo:change
+        super.setTotalResults(command.getMatches());
         super.setStartIndex(request.getStartIndex());
 
-        if (eads != null) {
-            for (FacetField.Count ead : eads) {
-                EadDocResponse value = new EadDocResponse(ead, type);
-                this.eadDocList.add(value);
-            }
+        for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
+            this.addEadDoc(new EadDocResponse(group, type));
         }
     }
 
@@ -48,10 +48,10 @@ public class EadDocResponseSet extends ResponseSet {
         return totalDocs;
     }
 
-    public void setTotalDocs(int totalDocs) {
+    public final void setTotalDocs(int totalDocs) {
         this.totalDocs = totalDocs;
     }
-    
+
     public String getSearchTerm() {
         return searchTerm;
     }
@@ -62,6 +62,10 @@ public class EadDocResponseSet extends ResponseSet {
 
     public List<EadDocResponse> getEadDocList() {
         return eadDocList;
+    }
+
+    public final void addEadDoc(EadDocResponse docResponse) {
+        eadDocList.add(docResponse);
     }
 
     public void setEadDocList(List<EadDocResponse> eadDocList) {

@@ -15,6 +15,7 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import eu.apenet.commons.solr.SolrValues;
 import io.swagger.annotations.ApiModel;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.solr.client.solrj.response.Group;
 
 @XmlRootElement
 @ApiModel
@@ -30,9 +31,29 @@ public class EadDocResponse {
     @JsonProperty("isLeaf")
     private final boolean leaf;
 
-    public EadDocResponse(Count count, Type type) {
+//    public EadDocResponse(Count count, Type type) {
+//
+//        String temp = count.getName();
+//        int lastColonIndex = temp.lastIndexOf(":");
+//        id = temp.substring(lastColonIndex + 1);
+//        temp = temp.substring(0, lastColonIndex);
+//        lastColonIndex = temp.lastIndexOf(":");
+//        String leaf = temp.substring(lastColonIndex + 1);
+//        this.leaf = SolrValues.TYPE_LEAF.equals(leaf);
+//        temp = temp.substring(0, lastColonIndex);
+//        if (Type.CLEVEL.equals(type)) {
+//            int firstColonIndex = temp.indexOf(":");
+//            levelDepth = Long.parseLong(temp.substring(0, firstColonIndex));
+//            name = temp.substring(firstColonIndex + 1);
+//        } else {
+//            name = temp.substring(0);
+//        }
+//        this.count = count.getCount();
+//
+//    }
 
-        String temp = count.getName();
+    public EadDocResponse(Group group, Type type) {
+        String temp = group.getGroupValue();
         int lastColonIndex = temp.lastIndexOf(":");
         id = temp.substring(lastColonIndex + 1);
         temp = temp.substring(0, lastColonIndex);
@@ -47,8 +68,7 @@ public class EadDocResponse {
         } else {
             name = temp.substring(0);
         }
-        this.count = count.getCount();
-
+        this.count = group.getResult().getNumFound();
     }
 
     public String getId() {
