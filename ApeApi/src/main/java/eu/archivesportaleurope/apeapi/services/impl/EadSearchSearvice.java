@@ -130,7 +130,15 @@ public class EadSearchSearvice extends SearchService {
     }
 
     @Override
-    public QueryResponse getEadList(SearchDocRequest searchRequest) {
-        return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC_NAME, false);
+    public QueryResponse getEadList(SearchDocRequest searchRequest) throws InternalErrorException {
+        if ("fa".equals(searchRequest.getDocType())) {
+            return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC_NAME, false);
+        } else if ("hg".equals(searchRequest.getDocType())) {
+            return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC_NAME, false);
+        } else if ("sg".equals(searchRequest.getDocType())) {
+            return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC_NAME, false);
+        } else {
+            throw new InternalErrorException("No such type available");
+        }
     }
 }
