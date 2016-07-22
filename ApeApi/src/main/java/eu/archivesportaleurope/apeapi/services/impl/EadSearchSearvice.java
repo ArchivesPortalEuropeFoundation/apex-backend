@@ -131,14 +131,22 @@ public class EadSearchSearvice extends SearchService {
 
     @Override
     public QueryResponse getEadList(SearchDocRequest searchRequest) throws InternalErrorException {
-        if ("fa".equals(searchRequest.getDocType())) {
-            return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC_NAME, false);
-        } else if ("hg".equals(searchRequest.getDocType())) {
-            return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC_NAME, false);
-        } else if ("sg".equals(searchRequest.getDocType())) {
-            return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC_NAME, false);
+        if (null != searchRequest.getDocType()) {
+            if (searchRequest.getCount() <= 0) {
+                searchRequest.setCount(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
+            }
+            switch (searchRequest.getDocType()) {
+                case "fa":
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC_NAME, false);
+                case "hg":
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC_NAME, false);
+                case "sg":
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC_NAME, false);
+                default:
+                    throw new InternalErrorException("No such type available");
+            }
         } else {
-            throw new InternalErrorException("No such type available");
+            throw new InternalErrorException("Invalid Search request");
         }
     }
 }

@@ -25,8 +25,8 @@ public class EadDocResponseSet extends ResponseSet {
 
     private String searchTerm;
     private int totalDocs;
-    private List<EadDocResponse> eadDocList;
     private String type;
+    private List<EadDocResponse> eadDocList;
 
     public EadDocResponseSet() {
         eadDocList = new ArrayList<>();
@@ -39,7 +39,11 @@ public class EadDocResponseSet extends ResponseSet {
         this.setSearchTerm(request.getQuery());
         super.setTotalResults(command.getMatches());
         super.setStartIndex(request.getStartIndex());
-        this.type = request.getDocType();
+        super.setTotalPages((int) (this.totalDocs / request.getCount()));
+        if (this.totalDocs % request.getCount() > 0) {
+            super.totalPages++;
+        }
+        this.setType(request.getDocType());
 
         for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
             if (group.getGroupValue() != null) {
@@ -64,6 +68,14 @@ public class EadDocResponseSet extends ResponseSet {
         this.searchTerm = searchTerm;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public final void setType(String type) {
+        this.type = type;
+    }
+
     public List<EadDocResponse> getEadDocList() {
         return eadDocList;
     }
@@ -75,5 +87,4 @@ public class EadDocResponseSet extends ResponseSet {
     public void setEadDocList(List<EadDocResponse> eadDocList) {
         this.eadDocList = eadDocList;
     }
-
 }
