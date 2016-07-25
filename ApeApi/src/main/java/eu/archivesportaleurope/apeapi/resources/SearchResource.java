@@ -110,7 +110,7 @@ public class SearchResource {
     @POST
     @Path("/ead/docList")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Return search results based on query",
+    @ApiOperation(value = "EAD docList search based on query",
             response = EadDocResponseSet.class
     )
     @ApiResponses(value = {

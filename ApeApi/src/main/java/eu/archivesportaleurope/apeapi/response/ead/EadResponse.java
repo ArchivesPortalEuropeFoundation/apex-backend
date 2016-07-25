@@ -6,9 +6,6 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.apenet.commons.solr.SolrFields;
-import eu.apenet.commons.solr.SolrValues;
-import eu.apenet.commons.types.XmlType;
-import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -42,15 +39,12 @@ public class EadResponse extends InstituteEadResponse {
         this.unitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE));
         if (response.getHighlighting().get(id).get(SolrFields.TITLE) != null) {
             this.unitTitleWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.TITLE).get(0));
-        } else {
-            this.unitTitleWithHighlighting = this.unitTitle;
         }
+        
         this.unitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
         if (response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT) != null) {
             this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT).get(0));
-        } else {
-            this.scopeContentWithHighlighting = this.scopeContent;
         }
     }
     

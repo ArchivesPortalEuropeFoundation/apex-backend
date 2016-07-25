@@ -21,43 +21,43 @@ public class InstituteEadResponse {
     @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     protected String id;
 
-    @ApiModelProperty(required = true, value = "Title of the finding aid. ")
+    @ApiModelProperty(value = "Title of the finding aid. ")
     private String fondsUnitTitle;
 
-    @ApiModelProperty(required = true, value = "Identifier of the fonds provided by the repository.")
+    @ApiModelProperty(value = "Identifier of the fonds provided by the repository.")
     private String fondsUnitId;
 
-    @ApiModelProperty(required = true, value = "Name of the repository holding the fonds")
+    @ApiModelProperty(value = "Name of the repository holding the fonds")
     private String repository;
 
-    @ApiModelProperty(required = true, value = "Name of the country where the repository is. In English. ")
+    @ApiModelProperty(value = "Name of the country where the repository is. In English. ")
     private String country;
 
-    @ApiModelProperty(required = true, value = "Language of the description of the result.")
+    @ApiModelProperty(value = "Language of the description of the result.")
     private String language;
 
-    @ApiModelProperty(required = true, value = "Language in which the result is created.")
+    @ApiModelProperty(value = "Language in which the result is created.")
     private String langMaterial;
 
-    @ApiModelProperty(required = true, value = "Date of creation of the result.")
+    @ApiModelProperty(value = "Date of creation of the result.")
     private String unitDate;
 
-    @ApiModelProperty(required = true, value = "Code of the repository holding the fonds. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
+    @ApiModelProperty(value = "Code of the repository holding the fonds. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
     private String repositoryCode;
 
-    @ApiModelProperty(required = true, value = "True if the unit has one or more digital object")
+    @ApiModelProperty(value = "True if the unit has one or more digital object")
     private boolean hasDigitalObject = false;
 
-    @ApiModelProperty(required = true, value = "Type of the description of the result: \"Descriptive Unit\", \"Finding Aid\", \"Holdings Guide\" or \"Source Guide\"")
+    @ApiModelProperty(value = "Type of the description of the result: \"Descriptive Unit\", \"Finding Aid\", \"Holdings Guide\" or \"Source Guide\"")
     private String docType;
 
-    @ApiModelProperty(required = true, value = "Id of the doc type")
+    @ApiModelProperty(value = "Id of the doc type")
     private String docTypeId;
 
-    @ApiModelProperty(required = true, value = "Type of result: \"archdesc\" for highest level description or \"clevel\" for subordinate components")
+    @ApiModelProperty(value = "Type of result: \"archdesc\" for highest level description or \"clevel\" for subordinate components")
     private String level;
 
-    @ApiModelProperty(required = true, value = "Date of publication of this document")
+    @ApiModelProperty(value = "Date of publication of this document")
     private String indexDate;
 
     public InstituteEadResponse(SolrDocument solrDocument, QueryResponse response) {

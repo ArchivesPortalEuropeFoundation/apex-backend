@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.services.impl;
 
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
 import eu.archivesportaleurope.apeapi.services.EacCpfContentService;
@@ -32,6 +33,10 @@ public class EacCpfContentServiceImpl implements EacCpfContentService {
             Integer idInt = Integer.parseInt(id);
             
             eacCpf = eacCpfRepo.findById(idInt);
+            
+            //lazy load
+            ArchivalInstitution ai = eacCpf.getArchivalInstitution();
+            ai.getAiname();
 
             if (eacCpf == null) {
                 throw new ResourceNotFoundException("Couldn't find any item with the given id", "EadContent Item not found, id" + id);

@@ -184,8 +184,10 @@ public class ContentResource {
             String repoPath = this.servletContext.getInitParameter(ServerConstants.REPOSITORY_DIR_PATH);
             File file = new File(repoPath + eacCpf.getPath());
             FileInputStream fins = new FileInputStream(file);
-            ContentResponseEacCpf contentResponse = new ContentResponseEacCpf();
+            ContentResponseEacCpf contentResponse = new ContentResponseEacCpf(eacCpf);
+            
             EacCpf eacCpfJson = (EacCpf) eacCpfUnmarshaller.unmarshal(fins);
+            
             contentResponse.setContent(eacCpfJson);
             return Response.ok().entity(contentResponse).build();
 

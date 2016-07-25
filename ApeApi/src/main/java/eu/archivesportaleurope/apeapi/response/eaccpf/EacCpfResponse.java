@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,24 +23,54 @@ import org.apache.solr.common.SolrDocument;
  */
 @XmlRootElement
 @ApiModel
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EacCpfResponse {
 
+    @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     private String id;
+
+    @ApiModelProperty(value = "")
     private String recordId;
+
+    @ApiModelProperty(value = "")
     private String entityType;
+
+    @ApiModelProperty(value = "")
     private List<String> nameEntries;
+
+    @ApiModelProperty(value = "")
     private List<String> nameEntriesWithHighlighting;
+
+    @ApiModelProperty(value = "")
     private String existDates;
+
+    @ApiModelProperty(value = "")
     private String description;
+
+    @ApiModelProperty(value = "")
     private String descriptionWithHighlighting;
+
+    @ApiModelProperty(value = "")
     private String other;
+
+    @ApiModelProperty(value = "")
     private String otherWithHighlighting;
+
+    @ApiModelProperty(value = "")
     private String repository;
+
+    @ApiModelProperty(value = "")
     private String repositoryCode;
+
+    @ApiModelProperty(value = "")
     private String country;
+
+    @ApiModelProperty(value = "")
     private String countryId;
+
+    @ApiModelProperty(value = "")
     private String numberOfArchivalMaterialRelations;
+
+    @ApiModelProperty(value = "")
     private String numberOfNameRelations;
 
     public EacCpfResponse(SolrDocument solrDocument, QueryResponse response) {
