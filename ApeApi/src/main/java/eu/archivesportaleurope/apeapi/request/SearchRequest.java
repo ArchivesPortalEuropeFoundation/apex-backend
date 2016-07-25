@@ -19,18 +19,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @ApiModel
-public class SearchRequest {
+public class SearchRequest extends PageRequest {
 
-    @ApiModelProperty(value="Search query string")
+    @ApiModelProperty(value="Search query string", example="*")
     @NotNull(message="Search query can not be null")
     String query;
-    
-    @ApiModelProperty(value="Number of items to retrieve. Default is 5, maximum is 50.")
-    @Max(value = 50, message = "Count must not be more than 50")
-    int count;
-    
-    @ApiModelProperty(value="Offset the list of returned results by this amount. Default is zero.")
-    int startIndex;
     
     @ApiModelProperty(value="List of search filters using facet filed")
     ArrayList<SearchFilterRequest> filters;
@@ -44,22 +37,6 @@ public class SearchRequest {
 
     public void setQuery(String query) {
         this.query = query;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public void setStartIndex(int startIndex) {
-        this.startIndex = startIndex;
     }
 
     public ArrayList<SearchFilterRequest> getFilters() {

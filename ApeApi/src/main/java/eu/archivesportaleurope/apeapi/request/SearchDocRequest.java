@@ -17,22 +17,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @ApiModel
-public class SearchDocRequest {
+public class SearchDocRequest extends PageRequest {
 
-    @ApiModelProperty(value = "Search query string")
+    @ApiModelProperty(value = "Search query string", example="*")
     @NotNull(message = "Search query can not be null")
     String query;
 
     @ApiModelProperty(value = "Document type")
     @NotNull(message = "Document type can not be null")
     String docType;
-
-    @ApiModelProperty(value = "Number of items to retrieve. Default is 5, maximum is 50.")
-    @Max(value = 50, message = "Count must not be more than 50")
-    int count;
-
-    @ApiModelProperty(value = "Offset the list of returned results by this amount. Default is zero.")
-    int startIndex;
 
     public String getQuery() {
         return query;
@@ -49,21 +42,4 @@ public class SearchDocRequest {
     public void setDocType(String docType) {
         this.docType = docType;
     }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public void setStartIndex(int startIndex) {
-        this.startIndex = startIndex;
-    }
-
 }

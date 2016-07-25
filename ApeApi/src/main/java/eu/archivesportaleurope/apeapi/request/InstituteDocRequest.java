@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @ApiModel
-public class InstituteDocRequest {
+public class InstituteDocRequest extends PageRequest {
 
     @ApiModelProperty(value="Institute's ID")
     @NotNull(message="Institute's ID can not be null")
@@ -27,13 +27,6 @@ public class InstituteDocRequest {
     @NotNull(message="Document type can not be null")
     String docType;
     
-    @ApiModelProperty(value="Number of items to retrieve. Default is 5, maximum is 50.")
-    @Max(value = 50, message = "Count must not be more than 50")
-    int count;
-    
-    @ApiModelProperty(value="Offset the list of returned results by this amount. Default is zero.")
-    int startIndex;
-
     public String getInstituteId() {
         return instituteId;
     }
@@ -49,21 +42,4 @@ public class InstituteDocRequest {
     public void setDocType(String docType) {
         this.docType = docType;
     }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public void setStartIndex(int startIndex) {
-        this.startIndex = startIndex;
-    }
-
 }

@@ -8,8 +8,8 @@ package eu.archivesportaleurope.apeapi.resources;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
-import eu.archivesportaleurope.apeapi.exceptions.ViolationException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
+import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.InstituteEadResponseSet;
@@ -25,7 +25,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -54,8 +53,8 @@ public class ArchivalInstituteStatResource {
     @Autowired
     SearchService eadSearch;
 
-    @GET
-    @Path("/getInstitutes/{startIndex}/{count}")
+    @POST
+    @Path("/getInstitutes")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "return list of Archival institute", response = ArchivalInstitutesResponse.class)
     @ApiResponses(value = {
@@ -63,13 +62,10 @@ public class ArchivalInstituteStatResource {
         @ApiResponse(code = 400, message = "Bad request"),
         @ApiResponse(code = 401, message = "Unauthorized")
     })
-    public Response getInsByOpenData(@ApiParam(value = "Start Index (Starts form 0)", required = true) @PathParam("startIndex") int startIndex,
-            @ApiParam(value = "Count can't be more than 50", required = true) @PathParam("count") int count) {
-        if (count < 1 || count > 50) {
-            throw new ViolationException("Count can not be less than one and greater than 50", "Count was: " + count);
-        }
+    public Response getInsByOpenData(@ApiParam(value = "Page request by count and startIndex", required = true)
+            @Valid PageRequest request) {
         try {
-            QueryResponse resp = eadSearch.searchInstituteInGroup((startIndex < 0) ? 0 : startIndex, count);
+            QueryResponse resp = eadSearch.searchInstituteInGroup((request.getStartIndex() < 0) ? 0 : request.getStartIndex(), request.getCount());
             logger.info("Number fo group command " + resp.getGroupResponse());
             return Response.ok().entity(new ArchivalInstitutesResponse(resp)).build();
         } catch (WebApplicationException e) {

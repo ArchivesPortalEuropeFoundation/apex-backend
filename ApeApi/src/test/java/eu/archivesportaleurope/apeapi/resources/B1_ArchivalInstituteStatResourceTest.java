@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
+import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
@@ -17,6 +18,8 @@ import eu.archivesportaleurope.test.util.EmbeddedSolrManager;
 import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Level;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -76,11 +79,11 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
     @Test
     public void testGetInsByOpenData() {
         logger.debug(":::Test Get Institute that has open data enabled");
-        int start = 0;
-        int count = 2;
+        PageRequest request = new PageRequest();
+        request.setStartIndex(0);
+        request.setCount(2);
 
-        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
-                .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
+        Response response = super.target("institute").path("getInstitutes").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);
         logger.debug("Response Json: " + jsonResponse);
@@ -95,10 +98,10 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
     @Test
     public void testWithStartLessThanZero() {
         logger.debug(":::Test Get Institute that has open data enabled with start less than zero");
-        int start = -1;
-        int count = 2;
-        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
-                .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
+        PageRequest request = new PageRequest();
+        request.setStartIndex(-1);
+        request.setCount(2);
+        Response response = super.target("institute").path("getInstitutes").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
 
         String jsonResponse = response.readEntity(String.class);
@@ -111,13 +114,14 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         Assert.assertEquals(2, ais.getTotalResults());
     }
 
-    @Test
+    @Test(expected = ProcessingException.class)
     public void testInvalidRequest() {
         logger.debug("Test invalid request with count > 50");
-        int start = 1;
-        int count = 51;
-        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
-                .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
+        PageRequest request = new PageRequest();
+        request.setStartIndex(1);
+        request.setCount(51);
+
+        Response response = super.target("institute").path("getInstitutes").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);
         logger.debug("Response Json: " + jsonResponse);
@@ -125,13 +129,14 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
-    @Test
+    @Test(expected = ProcessingException.class)
     public void testInvalidRequestNeg() {
         logger.debug("Test invalid request with count < 0");
-        int start = 1;
-        int count = -51;
-        Response response = super.target("institute").path("getInstitutes").path(String.valueOf(start))
-                .path(String.valueOf(count)).request().header("APIkey", "myApiKeyXXXX123456789").header("Content-Type", ServerConstants.APE_API_V1).accept(ServerConstants.APE_API_V1).get();
+        PageRequest request = new PageRequest();
+        request.setStartIndex(1);
+        request.setCount(-51);
+
+        Response response = super.target("institute").path("getInstitutes").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
         String jsonResponse = response.readEntity(String.class);
         logger.debug("Response Json: " + jsonResponse);
