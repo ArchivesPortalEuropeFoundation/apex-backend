@@ -54,7 +54,7 @@ public class SearchResource {
     @POST
     @Path("/ead")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Return search results based on query",
+    @ApiOperation(value = "Search for EAD",
             response = EadFactedResponseSet.class
     )
     @ApiResponses(value = {
@@ -83,7 +83,7 @@ public class SearchResource {
     @POST
     @Path("/eac-cpf")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Return eac-cpf search results based on query",
+    @ApiOperation(value = "Search for EAC-CPF",
             response = EacCpfFacetedResponseSet.class
     )
     @ApiResponses(value = {
@@ -110,14 +110,14 @@ public class SearchResource {
     @POST
     @Path("/ead/docList")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "EAD docList search based on query",
-            response = EadDocResponseSet.class
-    )
-    @ApiResponses(value = {
-        @ApiResponse(code = 500, message = "Internal server error"),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 401, message = "Unauthorized")
-    })
+//    @ApiOperation(value = "Search for EAD docList",
+//            response = EadDocResponseSet.class
+//    )
+//    @ApiResponses(value = {
+//        @ApiResponse(code = 500, message = "Internal server error"),
+//        @ApiResponse(code = 400, message = "Bad request"),
+//        @ApiResponse(code = 401, message = "Unauthorized")
+//    })
     @Consumes({ServerConstants.APE_API_V1})
     public Response context(
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchDocRequest searchRequest

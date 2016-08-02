@@ -56,7 +56,7 @@ public class ArchivalInstituteStatResource {
     @POST
     @Path("/getInstitutes")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "return list of Archival institute", response = ArchivalInstitutesResponse.class)
+    @ApiOperation(value = "List of Archival institute", response = ArchivalInstitutesResponse.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
         @ApiResponse(code = 400, message = "Bad request"),
@@ -81,7 +81,7 @@ public class ArchivalInstituteStatResource {
     @POST
     @Path("/getDocs")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "return list of documents of given type from the given Archival institute", response = EadResponseSet.class)
+    @ApiOperation(value = "List of documents of the given type from the given Archival institute", response = EadResponseSet.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
         @ApiResponse(code = 400, message = "Bad request"),

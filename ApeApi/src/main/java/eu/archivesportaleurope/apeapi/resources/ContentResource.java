@@ -87,7 +87,7 @@ public class ContentResource {
     @GET
     @Path("/ead/clevel/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Return content response of descriptive unit",
+    @ApiOperation(value = "Return content response of clevel",
             response = ContentResponseClevel.class
     )
     @ApiResponses(value = {

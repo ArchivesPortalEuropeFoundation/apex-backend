@@ -89,7 +89,7 @@ public class DownloadResource {
     @GET
     @Path("eac-cpf/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Download raw xml of an EAD item",
+    @ApiOperation(value = "Download raw xml of an EAC-CPF item",
             response = String.class
     )
     @ApiResponses(value = {
