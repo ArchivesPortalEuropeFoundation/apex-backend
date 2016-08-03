@@ -8,8 +8,8 @@
     <name>Backend Project</name>
     <description>Maven Project for building the Dashboard/OAI-PMH server and common libraries</description>
     <scm>
-        <connection>scm:svn:https://build.archivesportaleurope.net/svn/apex/branches/backend-project-2.3</connection>
-        <developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/branches/backend-project-2.3</developerConnection>
+        <connection>scm:svn:https://build.archivesportaleurope.net/svn/apex/trunk</connection>
+        <developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/trunk</developerConnection>
     </scm>
     <properties>
         <additionalparam>-Xdoclint:none</additionalparam>
