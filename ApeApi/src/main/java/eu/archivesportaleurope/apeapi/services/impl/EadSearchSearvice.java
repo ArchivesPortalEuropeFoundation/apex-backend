@@ -96,14 +96,14 @@ public class EadSearchSearvice extends SearchService {
     
     private QueryResponse groupByQueryOpenData(SearchDocRequest searchRequest, String groupByFieldName, boolean resultNeeded) {
         SearchRequest request = new SearchRequest();
-        if (searchRequest.getLevel() > 0 && searchRequest.getParentId() != null) {
-            request.setQuery(searchRequest.getQuery()
-                    + " AND type:" + searchRequest.getDocType()
-                    + " AND " + this.typeToFieldDynamicIdTranslator(searchRequest.getDocType()) + (searchRequest.getLevel() - 1) + "_s:" + searchRequest.getParentId()
-                    + " AND openData:true");
-        } else {
+//        if (searchRequest.getLevel() > 0 && searchRequest.getParentId() != null) {
+//            request.setQuery(searchRequest.getQuery()
+//                    + " AND type:" + searchRequest.getDocType()
+//                    + " AND " + this.typeToFieldDynamicIdTranslator(searchRequest.getDocType()) + (searchRequest.getLevel() - 1) + "_s:" + searchRequest.getParentId()
+//                    + " AND openData:true");
+//        } else {
             request.setQuery(searchRequest.getQuery() + " AND type:" + searchRequest.getDocType() + " AND openData:true");
-        }
+//        }
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
@@ -155,13 +155,13 @@ public class EadSearchSearvice extends SearchService {
             if (searchRequest.getCount() <= 0) {
                 searchRequest.setCount(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
             }
-            switch (searchRequest.getDocType()) {
+            switch (searchRequest.getDocType().toLowerCase()) {
                 case "fa":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC + searchRequest.getLevel() + "_s", false);
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC + "0_s", false);
                 case "hg":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC + searchRequest.getLevel() + "_s", false);
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC + "0_s", false);
                 case "sg":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC + searchRequest.getLevel() + "_s", false);
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC + "0_s", false);
                 default:
                     throw new InternalErrorException("No such type available");
             }

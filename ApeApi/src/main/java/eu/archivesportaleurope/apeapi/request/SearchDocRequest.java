@@ -17,30 +17,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @ApiModel
-public class SearchDocRequest extends PageRequest {
-
-    @ApiModelProperty(value = "Search query string", example = "*")
-    @NotNull(message = "Search query can not be null")
-    String query;
-
-    @ApiModelProperty(value = "Parent Id", example = "*")
-    String parentId;
-
-    @ApiModelProperty(value = "level", example = "*")
-    @NotNull(message = "level can not be null")
-    int level;
-
+public class SearchDocRequest extends QueryPageRequest {
     @ApiModelProperty(value = "Document type")
     @NotNull(message = "Document type can not be null")
     String docType;
-
-    public String getQuery() {
-        return query;
-    }
-
-    public void setQuery(String query) {
-        this.query = query;
-    }
 
     public String getDocType() {
         return docType;
@@ -49,21 +29,4 @@ public class SearchDocRequest extends PageRequest {
     public void setDocType(String docType) {
         this.docType = docType;
     }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
 }

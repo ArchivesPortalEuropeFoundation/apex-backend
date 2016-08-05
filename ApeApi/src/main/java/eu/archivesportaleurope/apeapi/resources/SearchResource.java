@@ -110,14 +110,14 @@ public class SearchResource {
     @POST
     @Path("/ead/docList")
     @PreAuthorize("hasRole('ROLE_USER')")
-//    @ApiOperation(value = "Search for EAD docList",
-//            response = EadDocResponseSet.class
-//    )
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 500, message = "Internal server error"),
-//        @ApiResponse(code = 400, message = "Bad request"),
-//        @ApiResponse(code = 401, message = "Unauthorized")
-//    })
+    @ApiOperation(value = "Search for EAD docList",
+            response = EadDocResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @Consumes({ServerConstants.APE_API_V1})
     public Response context(
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchDocRequest searchRequest

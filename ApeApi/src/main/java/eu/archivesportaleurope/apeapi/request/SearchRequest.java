@@ -8,9 +8,6 @@ package eu.archivesportaleurope.apeapi.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
-import java.util.Collections;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -19,25 +16,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @ApiModel
-public class SearchRequest extends PageRequest {
+public class SearchRequest extends QueryPageRequest {
 
-    @ApiModelProperty(value="Search query string", example="*")
-    @NotNull(message="Search query can not be null")
-    String query;
-    
-    @ApiModelProperty(value="List of search filters using facet filed")
+    @ApiModelProperty(value = "List of search filters using facet filed")
     ArrayList<SearchFilterRequest> filters;
-    
-    @ApiModelProperty(value="List of search filters using date")
+
+    @ApiModelProperty(value = "List of search filters using date")
     ArrayList<DateFilterRequest> dateFilters;
-
-    public String getQuery() {
-        return query;
-    }
-
-    public void setQuery(String query) {
-        this.query = query;
-    }
 
     public ArrayList<SearchFilterRequest> getFilters() {
         if (filters == null) {
