@@ -34,12 +34,12 @@
     <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr-ead"/>
     <solr:embedded-solr-server id="eacSolrServer" solrHome="src/test/resources/solr-eac"/>
     
-    <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
+    <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearviceImpl">
         <constructor-arg index="0" ref="eadSolrServer"/>
         <constructor-arg index="1" value="resource.properties"/>
     </bean>
     
-    <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchService">
+    <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchServiceImpl">
         <constructor-arg index="0" ref="eacSolrServer"/>
         <constructor-arg index="1" value="resource.properties"/>
     </bean>

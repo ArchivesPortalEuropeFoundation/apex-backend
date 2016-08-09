@@ -25,21 +25,21 @@ import org.slf4j.LoggerFactory;
  *
  * @author kaisar
  */
-public class EacCpfSearchService extends SearchService {
+public class EacCpfSearchServiceImpl extends SearchService {
 
     private String solrUrl;
     private final SolrSearchUtil eacSearchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public EacCpfSearchService(String solrUrl, String solrCore, String propFileName) {
+    public EacCpfSearchServiceImpl(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
         logger.debug("Solr server got created!");
         this.eacSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
-    public EacCpfSearchService(SolrServer solrServer, String propFileName) {
+    public EacCpfSearchServiceImpl(SolrServer solrServer, String propFileName) {
         this.solrUrl = "";
         logger.debug("Solr server got created!");
         this.eacSearchUtil = new SolrSearchUtil(solrServer);
@@ -73,20 +73,4 @@ public class EacCpfSearchService extends SearchService {
     public QueryResponse searchOpenData(SearchRequest request) {
         return this.search(request, " AND openData:true", true);
     }
-
-    @Override
-    public QueryResponse searchDocPerInstitute(InstituteDocRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public QueryResponse searchInstituteInGroup(int startIndex, int count) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public QueryResponse getEadList(SearchDocRequest searchRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

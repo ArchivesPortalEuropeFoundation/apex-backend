@@ -10,7 +10,7 @@ import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
-import eu.archivesportaleurope.apeapi.services.SearchService;
+import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.util.List;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Mahbub
  */
-public class EadSearchSearvice extends SearchService {
+public class EadSearchSearviceImpl extends EadSearchService {
     
     private String solrUrl;
     private final String solrCore;
@@ -33,7 +33,7 @@ public class EadSearchSearvice extends SearchService {
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    public EadSearchSearvice(String solrUrl, String solrCore, String propFileName) {
+    public EadSearchSearviceImpl(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
         logger.debug("Solr server got created!");
@@ -41,7 +41,7 @@ public class EadSearchSearvice extends SearchService {
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
     
-    public EadSearchSearvice(SolrServer solrServer, String propFileName) {
+    public EadSearchSearviceImpl(SolrServer solrServer, String propFileName) {
         this.solrUrl = this.solrCore = "";
         logger.debug("Solr server got created!");
         this.searchUtil = new SolrSearchUtil(solrServer);

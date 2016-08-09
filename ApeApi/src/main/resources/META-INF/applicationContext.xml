@@ -41,7 +41,7 @@
     <bean id="aiStatService" class="eu.archivesportaleurope.apeapi.services.impl.AiStatServiceImpl" />
 
     
-    <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">
+    <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearviceImpl">
         <!--solrUrl-->
         <constructor-arg index="0" ref="solrUrl" />
         <!--sorlCore-->
@@ -49,7 +49,7 @@
         
         <constructor-arg index="2" value="resource.properties"/>
     </bean>
-    <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchService">
+    <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchServiceImpl">
         <!--solrUrl-->
         <constructor-arg index="0" ref="solrUrl" />
         <!--sorlCore-->

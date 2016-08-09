@@ -14,6 +14,7 @@ import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.InstituteEadResponseSet;
 import eu.archivesportaleurope.apeapi.services.AiStatService;
+import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,7 +52,7 @@ public class ArchivalInstituteStatResource {
     AiStatService aiStatService;
 
     @Autowired
-    SearchService eadSearch;
+    EadSearchService eadSearch;
 
     @POST
     @Path("/getInstitutes")

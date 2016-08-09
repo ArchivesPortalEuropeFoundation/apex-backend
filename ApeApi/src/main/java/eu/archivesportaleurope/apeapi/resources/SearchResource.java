@@ -8,12 +8,14 @@ package eu.archivesportaleurope.apeapi.resources;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
+import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadDocResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
+import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -47,7 +50,7 @@ public class SearchResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    SearchService eadSearch;
+    EadSearchService eadSearch;
     @Autowired
     SearchService eacCpfSearch;
 
@@ -125,6 +128,36 @@ public class SearchResource {
         try {
             QueryResponse response = eadSearch.getEadList(searchRequest);
             return Response.ok().entity(new EadDocResponseSet(searchRequest, response, EadDocResponse.Type.FOND)).build();
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+    
+    @POST
+    @Path("/ead/{id}/descendants")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Search the term in all descendants of a given id",
+            response = EadDocResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
+    public Response getDescendants(
+            @PathParam("id") String id,
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
+    ) {
+        try {
+//            QueryResponse response = eadSearch.getEadList(searchRequest);
+//            return Response.ok().entity(new EadDocResponseSet(searchRequest, response, EadDocResponse.Type.FOND)).build();
+              return null;
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

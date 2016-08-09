@@ -32,6 +32,9 @@ public class EadDocResponse {
     private final boolean leaf;
 
     public EadDocResponse(Group group, Type type) {
+        //ToDo: change this
+        //ex: Inventaris van het archief van de Nederlandse Ambassade in Nepal, 1965-1974:G:F124
+        //00000000:Algemeen:G:C4541
         String temp = group.getGroupValue();
         int lastColonIndex = temp.lastIndexOf(":");
         this.id = temp.substring(lastColonIndex + 1);

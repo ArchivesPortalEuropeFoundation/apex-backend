@@ -38,12 +38,6 @@ public abstract class SearchService {
 
     public abstract QueryResponse searchOpenData(SearchRequest request);
 
-    public abstract QueryResponse searchDocPerInstitute(InstituteDocRequest request);
-
-    public abstract QueryResponse searchInstituteInGroup(int startIndex, int count);
-
-    public abstract QueryResponse getEadList(SearchDocRequest searchRequest);
-
     private final SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
