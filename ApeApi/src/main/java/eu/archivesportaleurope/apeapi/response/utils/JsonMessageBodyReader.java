@@ -1,6 +1,7 @@
 package eu.archivesportaleurope.apeapi.response.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -24,7 +25,7 @@ import javax.ws.rs.ext.Provider;
  * @author M.Mozadded
  */
 @Provider
-@Produces({"application/vnd.ape-v1+json", "application/json"})
+@Produces({ServerConstants.APE_API_V1, "application/json"})
 public class JsonMessageBodyReader implements MessageBodyReader {
     @Override
     public boolean isReadable(Class type, Type genericType, Annotation[] annotations, MediaType mediaType) {
