@@ -15,6 +15,7 @@ import eu.archivesportaleurope.apeapi.response.ead.EadDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadDocResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
@@ -137,7 +138,7 @@ public class SearchResource {
             return errMsg.getResponse();
         }
     }
-    
+
     @POST
     @Path("/ead/{id}/descendants")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -155,9 +156,8 @@ public class SearchResource {
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
     ) {
         try {
-//            QueryResponse response = eadSearch.getEadList(searchRequest);
-//            return Response.ok().entity(new EadDocResponseSet(searchRequest, response, EadDocResponse.Type.FOND)).build();
-              return null;
+            QueryResponse response = eadSearch.getDescendants(id, searchRequest);
+            return Response.ok().entity(new EadResponseSet(response)).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

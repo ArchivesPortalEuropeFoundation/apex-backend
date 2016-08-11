@@ -71,6 +71,6 @@ public class EacCpfSearchServiceImpl extends SearchService {
 
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
-        return this.search(request, " AND openData:true", true);
+        return this.search(request, "openData:true", true);
     }
 }
