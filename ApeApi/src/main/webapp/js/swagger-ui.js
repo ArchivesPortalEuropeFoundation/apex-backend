@@ -21966,6 +21966,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
 
   // show the status codes
   showCompleteStatus: function (data, parent) {
+    console.log("show the status codes");
     $('#modal-' + parent.parentId + '_' + parent.nickname).modal();
     parent.showStatus(data);
   },
@@ -22056,12 +22057,15 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       content = response.content.data;
       url = response.request.url;
     }
+//    console.log("Contest: ");
+//    console.log(content);
     var headers = response.headers;
-
+    
     // if server is nice, and sends content-type back, we can use it
     var contentType = null;
     if (headers) {
       contentType = headers['Content-Type'] || headers['content-type'];
+      console.log("Response content type: "+contentType);
       if (contentType) {
         contentType = contentType.split(';')[0].trim();
       }
@@ -22073,7 +22077,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       var audioElement = document.createElement('audio');
       return !!(audioElement.canPlayType && audioElement.canPlayType(contentType).replace(/no/, ''));
     };
-
+    console.log("Start showing response type:"+contentType);
     var pre;
     var code;
     if (!content) {
@@ -22116,11 +22120,10 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       pre = $('<audio controls>').append($('<source>').attr('src', url).attr('type', contentType));
 
       // Download
-    } else if (headers['Content-Disposition'].test(/attachment/) ||
-      headers['content-disposition'].test(/attachment/) ||
-      headers['Content-Description'].test(/File Transfer/) ||
-      headers['content-description'].test(/File Transfer/)) {
-
+    } else if ( /attachment/.test(headers['Content-Disposition']) ||
+            /attachment/.test(headers['content-disposition']) ||
+            /File Transfer/.test(headers['Content-Description']) ||
+            /File Transfer/.test(headers['content-disposition'])) {
       if ('Blob' in window) {
         var type = contentType || 'text/html';
         var blob = new Blob([content], {type: type});
@@ -22144,6 +22147,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
 
       // Anything else (CORS)
     } else {
+      console.log("unknown content");
       code = $('<code />').text(content);
       pre = $('<pre class="json" />').append(code);
     }
