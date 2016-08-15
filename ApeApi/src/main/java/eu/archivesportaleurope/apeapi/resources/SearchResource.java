@@ -168,4 +168,33 @@ public class SearchResource {
         }
     }
 
+    @POST
+    @Path("/ead/{id}/children")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Search the term in all children of a given id",
+            response = EadDocResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
+    public Response getChildren(
+            @PathParam("id") String id,
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
+    ) {
+        try {
+            QueryResponse response = eadSearch.getChildren(id, searchRequest);
+            return Response.ok().entity(new EadResponseSet(response)).build();
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+
 }

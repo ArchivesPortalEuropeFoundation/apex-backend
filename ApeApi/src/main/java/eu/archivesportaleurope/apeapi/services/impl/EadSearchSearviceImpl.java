@@ -11,7 +11,6 @@ import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
@@ -96,7 +95,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setCount(count);
         searchRequest.setStartIndex(startIndex);
-        searchRequest.setQuery("(id:" + SolrValues.FA_PREFIX + "* OR id:" + SolrValues.HG_PREFIX + "* OR id:" + SolrValues.SG_PREFIX + "*)" + " AND"+this.onlyOpenData);
+        searchRequest.setQuery("(id:" + SolrValues.FA_PREFIX + "* OR id:" + SolrValues.HG_PREFIX + "* OR id:" + SolrValues.SG_PREFIX + "*)" + " AND" + this.onlyOpenData);
         return this.groupByQuery(searchRequest, SolrFields.AI, true);
     }
 
@@ -108,7 +107,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
 //                    + " AND " + this.typeToFieldDynamicIdTranslator(searchRequest.getDocType()) + (searchRequest.getLevel() - 1) + "_s:" + searchRequest.getParentId()
 //                    + " AND openData:true");
 //        } else {
-        request.setQuery(searchRequest.getQuery() + " AND type:" + searchRequest.getDocType() + " AND"+this.onlyOpenData);
+        request.setQuery(searchRequest.getQuery() + " AND type:" + searchRequest.getDocType() + " AND" + this.onlyOpenData);
 //        }
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
@@ -183,9 +182,9 @@ public class EadSearchSearviceImpl extends EadSearchService {
         request.setQuery(searchRequest.getQuery());
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
-        return this.search(request, levelStr[0]+":"+ id +" AND"+this.onlyOpenData, false);
+        return this.search(request, levelStr[0] + ":" + id + " AND" + this.onlyOpenData, false);
     }
-    
+
     private String[] getDocHighestLevel(String id) {
         SearchRequest request = new SearchRequest();
         request.setQuery("id:" + id);
@@ -203,7 +202,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             throw new ResourceNotFoundException("No such document exist with id: " + id, "");
         }
         String docType = document.getFieldValue(SolrFields.TYPE).toString();
-        String[] res= {"", ""};
+        String[] res = {"", ""};
         if (docType.equals(SolrValues.FA_TYPE)) {
             res[0] = SolrFields.FA_DYNAMIC_ID;
             res[1] = SolrFields.FA_DYNAMIC;
@@ -215,11 +214,20 @@ public class EadSearchSearviceImpl extends EadSearchService {
             res[1] = SolrFields.SG_DYNAMIC;
         }
         int level = 0;
-        while (null != document.getFieldValue(res[0]+level+"_s")) {
+        while (null != document.getFieldValue(res[0] + level + "_s")) {
             level++;
         }
-        res[0] = res[0]+level+"_s";
-        res[1] = res[1]+level+"_s";
+        res[0] = res[0] + level + "_s";
+        res[1] = res[1] + level + "_s";
         return res;
+    }
+
+    @Override
+    public QueryResponse getChildren(String id, QueryPageRequest searchRequest) {
+        SearchRequest request = new SearchRequest();
+        request.setCount(searchRequest.getCount());
+        request.setStartIndex(searchRequest.getStartIndex());
+        request.setQuery(searchRequest.getQuery() + " AND parentId:" + id);
+        return this.searchOpenData(request);
     }
 }
