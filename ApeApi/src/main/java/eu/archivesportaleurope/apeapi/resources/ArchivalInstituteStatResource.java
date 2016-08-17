@@ -63,6 +63,7 @@ public class ArchivalInstituteStatResource {
         @ApiResponse(code = 400, message = "Bad request"),
         @ApiResponse(code = 401, message = "Unauthorized")
     })
+    @Consumes({ServerConstants.APE_API_V1})
     public Response getInsByOpenData(@ApiParam(value = "Page request by count and startIndex", required = true)
             @Valid PageRequest request) {
         try {

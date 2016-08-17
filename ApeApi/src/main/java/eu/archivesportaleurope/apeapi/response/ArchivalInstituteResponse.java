@@ -19,7 +19,7 @@ public class ArchivalInstituteResponse {
     private int id;
     private String country;
     private int countryId;
-    private int numberOfFindingAids;
+    private int totalDocs;
     private String repositoryCode;
 
     public ArchivalInstituteResponse(ArchivalInstitution ai) {
@@ -34,7 +34,7 @@ public class ArchivalInstituteResponse {
                 numberOfPublishedItem++;
             }
         }
-        this.setNumberOfFindingAids(numberOfPublishedItem);
+        this.setTotalDocs(numberOfPublishedItem);
         this.repositoryCode = ai.getRepositorycode();
     }
     
@@ -52,7 +52,7 @@ public class ArchivalInstituteResponse {
         this.setCountry(countrySplitted[0]);
         this.setCountryId(Integer.parseInt(countrySplitted[2]));
         this.setRepositoryCode(repoCode);
-        this.setNumberOfFindingAids((int)numberOfPublishedItem);
+        this.setTotalDocs((int)numberOfPublishedItem);
         
         
     }
@@ -89,12 +89,12 @@ public class ArchivalInstituteResponse {
         this.countryId = countryId;
     }
 
-    public int getNumberOfFindingAids() {
-        return numberOfFindingAids;
+    public int getTotalDocs() {
+        return totalDocs;
     }
 
-    public final void setNumberOfFindingAids(int numberOfFindingAids) {
-        this.numberOfFindingAids = numberOfFindingAids;
+    public final void setTotalDocs(int totalDocs) {
+        this.totalDocs = totalDocs;
     }
 
     public String getRepositoryCode() {
