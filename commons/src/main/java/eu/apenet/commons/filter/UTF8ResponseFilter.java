@@ -6,12 +6,12 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * User: Yoann Moranville
- * Date: Nov 4, 2010
+ * User: Yoann Moranville Date: Nov 4, 2010
  *
  * @author Yoann Moranville
  */
 public class UTF8ResponseFilter implements Filter {
+
     private Logger log = Logger.getLogger(getClass());
     private static final String UTF8 = "UTF-8";
 

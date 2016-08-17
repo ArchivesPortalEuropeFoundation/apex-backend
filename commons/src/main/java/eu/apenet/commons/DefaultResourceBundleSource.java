@@ -5,34 +5,35 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class DefaultResourceBundleSource implements ResourceBundleSource {
-	private ResourceBundle bundle;
 
-	public DefaultResourceBundleSource(ResourceBundle resourceBundle) {
-		this.bundle = resourceBundle;
-	}
+    private ResourceBundle bundle;
 
-	@Override
-	public String getString(String key) {
-		return getString(key, UNKNOWN + key + UNKNOWN);
+    public DefaultResourceBundleSource(ResourceBundle resourceBundle) {
+        this.bundle = resourceBundle;
+    }
 
-	}
+    @Override
+    public String getString(String key) {
+        return getString(key, UNKNOWN + key + UNKNOWN);
 
-	@Override
-	public String getString(String key, String defaultValue) {
-		String message = defaultValue;
-		if (bundle != null) {
-			try {
-				message = bundle.getString(key);
-			} catch (MissingResourceException mre) {
+    }
 
-			}
-		}
-		return message;
-	}
+    @Override
+    public String getString(String key, String defaultValue) {
+        String message = defaultValue;
+        if (bundle != null) {
+            try {
+                message = bundle.getString(key);
+            } catch (MissingResourceException mre) {
 
-	@Override
-	public Locale getLocale() {
-		return bundle.getLocale();
-	}
+            }
+        }
+        return message;
+    }
+
+    @Override
+    public Locale getLocale() {
+        return bundle.getLocale();
+    }
 
 }

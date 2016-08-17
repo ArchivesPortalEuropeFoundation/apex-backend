@@ -4,15 +4,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * User: Yoann Moranville
- * Date: 3/28/11
+ * User: Yoann Moranville Date: 3/28/11
  *
  * @author Yoann Moranville
  */
 public class APEnetUtilitiesTest {
 
     @Test
-    public void testEncodingString(){
+    public void testEncodingString() {
         String stringToTest = "abs23dw/dw";
         Assert.assertEquals("abs23dw%2Fdw", APEnetUtilities.encodeString(stringToTest));
 

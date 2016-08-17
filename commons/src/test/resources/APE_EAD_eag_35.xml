@@ -2,168 +2,168 @@
 <eag xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://schemas.archivesportaleurope.net/profiles/eag_2012.xsd"
      audience="internal">
-   <control xml:lang="eng">
-      <recordId>EAG_35.xml</recordId>
-      <otherRecordId>otherId1</otherRecordId>
-      <otherRecordId>otherId2</otherRecordId>
-      <maintenanceAgency>
-         <agencyCode>agencyCode</agencyCode>
-         <agencyName>agencyName</agencyName>
-      </maintenanceAgency>
-      <maintenanceStatus>revised</maintenanceStatus>
-      <maintenanceHistory xml:lang="eng">
-         <maintenanceEvent xml:lang="eng">
-            <agent xml:lang="eng">Kusyk Roman, zastępca dyrektora</agent>
-            <agentType>human</agentType>
-            <eventDateTime xml:lang="eng" standardDateTime="2008-07-11">11.07.2008</eventDateTime>
-            <eventType>created</eventType>
-         </maintenanceEvent>
-      </maintenanceHistory>
-      <languageDeclarations>
-         <languageDeclaration xml:lang="eng">
-            <language xml:lang="eng" languageCode="pol">pol</language>
-            <script xml:lang="eng" scriptCode="Latn">Latn</script>
-         </languageDeclaration>
-         <languageDeclaration xml:lang="eng">
-            <language xml:lang="eng" languageCode="fre">fre</language>
-            <script xml:lang="eng" scriptCode="Latn">Latn</script>
-         </languageDeclaration>
-      </languageDeclarations>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>EAG</abbreviation>
-         <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISDIAH</abbreviation>
-         <citation xml:lang="eng">International Standard for Describing Institutions with Archival Holdings</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 639-2b</abbreviation>
-         <citation xml:lang="eng">Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 3166-1</abbreviation>
-         <citation xml:lang="eng">Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 8601</abbreviation>
-         <citation xml:lang="eng">Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 15511</abbreviation>
-         <citation xml:lang="eng">International Standard Identifier for Libraries and Related Organisations</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 15924</abbreviation>
-         <citation xml:lang="eng">Codes for the representation of names of scripts</citation>
-      </conventionDeclaration>
-      <sources xml:lang="eng">
-         <source>
-            <sourceEntry xml:lang="eng">Zintegrowany System Informacji Archiwalnej (ZoSIA), Integrated Archive Information System</sourceEntry>
-         </source>
-      </sources>
-   </control>
-   <archguide>
-      <identity>
-         <repositorid countrycode="PL" repositorycode="35"/>
-         <otherRepositorId>35</otherRepositorId>
-         <autform xml:lang="eng">Archiwum Państwowe w Lublinie</autform>
-         <autform xml:lang="fre">Archives de Lublinie</autform>
-      </identity>
-      <desc>
-         <repositories>
-            <repository>
-               <repositoryName xml:lang="eng">repositoryname</repositoryName>
-               <repositoryRole>Head quarter</repositoryRole>
-               <geogarea>Europe</geogarea>
-               <location>
-                  <country xml:lang="eng">PL</country>
-                  <municipalityPostalcode xml:lang="eng">20-950 Lublin</municipalityPostalcode>
-                  <localentity xml:lang="eng">-</localentity>
-                  <street xml:lang="eng">Jezuicka 13</street>
-               </location>
-               <telephone>+48 81 532 80 71</telephone>
-               <fax>+48 81 528 61 46</fax>
-               <email href="mailto:kanc@lublin.ap.gov.pl"/>
-               <webpage href="http://www.lublin.ap.gov.pl"/>
-               <repositorhist>
-                  <descriptiveNote>
-                     <p xml:lang="eng">
-	Archiwum Państwowe w Lublinie zostało powołane na mocy dekretu Rady Regencyjnej z 31 lipca 1918 r. Rozpoczęło działalność 1 grudnia, gdy z Petersburga przyjechał do Lublina prof. Stanisław Ptaszycki, mianowany jego dyrektorem, a jednocześnie zaangażowany w nowo powstałym Uniwersytecie Lubelskim (późniejszy KUL).
-W okresie okupacji hitlerowskiej Archiwum zostało włączone w struktury niemieckie i podlegało Urzędowi Archiwalnemu (Archivamt) przy Urzędzie Okręgu Lubelskiego.
-Po zakończeniu okupacji Archiwum wznowiło działalność 27 lipca 1944 r. W latach 1952-1983 funkcjonowało pod nazwą Wojewódzkie Archiwum Państwowe w Lublinie.
-	</p>
-                  </descriptiveNote>
-               </repositorhist>
-               <repositorfound>
-                  <date xml:lang="eng" standardDate="1918-07-31">31.07.1918</date>
-                  <rule xml:lang="eng">Reskrypt Rady Regencyjnej Królestwa Polskiego o archiwach państwowych i opiece nad archiwaliami z dn. 31 lipca 1918 r. (Monitor Polski Nr 116, art. 44)</rule>
-               </repositorfound>
-               <buildinginfo>
-                  <lengthshelf>
-                     <num unit="linearmetre">10200.00</num>
-                  </lengthshelf>
-               </buildinginfo>
-               <adminhierarchy>
-                  <adminunit xml:lang="eng">Oddział I – gromadzenia i opracowania zasobu,
-Oddział II – informacji archiwalnej,
-Oddział III – nadzoru nad narastającym zasobem archiwalnym,
-Oddział IV – ewidencji i udostępniania,
-Pracownia konserwacji archiwalnej,
-Sekcja prac naukowych i edukacji archiwalnej,
-Dział finansowo-księgowy,
-Dział administracji i kadr.
+    <control xml:lang="eng">
+        <recordId>EAG_35.xml</recordId>
+        <otherRecordId>otherId1</otherRecordId>
+        <otherRecordId>otherId2</otherRecordId>
+        <maintenanceAgency>
+            <agencyCode>agencyCode</agencyCode>
+            <agencyName>agencyName</agencyName>
+        </maintenanceAgency>
+        <maintenanceStatus>revised</maintenanceStatus>
+        <maintenanceHistory xml:lang="eng">
+            <maintenanceEvent xml:lang="eng">
+                <agent xml:lang="eng">Kusyk Roman, zastępca dyrektora</agent>
+                <agentType>human</agentType>
+                <eventDateTime xml:lang="eng" standardDateTime="2008-07-11">11.07.2008</eventDateTime>
+                <eventType>created</eventType>
+            </maintenanceEvent>
+        </maintenanceHistory>
+        <languageDeclarations>
+            <languageDeclaration xml:lang="eng">
+                <language xml:lang="eng" languageCode="pol">pol</language>
+                <script xml:lang="eng" scriptCode="Latn">Latn</script>
+            </languageDeclaration>
+            <languageDeclaration xml:lang="eng">
+                <language xml:lang="eng" languageCode="fre">fre</language>
+                <script xml:lang="eng" scriptCode="Latn">Latn</script>
+            </languageDeclaration>
+        </languageDeclarations>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>EAG</abbreviation>
+            <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISDIAH</abbreviation>
+            <citation xml:lang="eng">International Standard for Describing Institutions with Archival Holdings</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 639-2b</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 3166-1</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 8601</abbreviation>
+            <citation xml:lang="eng">Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 15511</abbreviation>
+            <citation xml:lang="eng">International Standard Identifier for Libraries and Related Organisations</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 15924</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of scripts</citation>
+        </conventionDeclaration>
+        <sources xml:lang="eng">
+            <source>
+                <sourceEntry xml:lang="eng">Zintegrowany System Informacji Archiwalnej (ZoSIA), Integrated Archive Information System</sourceEntry>
+            </source>
+        </sources>
+    </control>
+    <archguide>
+        <identity>
+            <repositorid countrycode="PL" repositorycode="35"/>
+            <otherRepositorId>35</otherRepositorId>
+            <autform xml:lang="eng">Archiwum Państwowe w Lublinie</autform>
+            <autform xml:lang="fre">Archives de Lublinie</autform>
+        </identity>
+        <desc>
+            <repositories>
+                <repository>
+                    <repositoryName xml:lang="eng">repositoryname</repositoryName>
+                    <repositoryRole>Head quarter</repositoryRole>
+                    <geogarea>Europe</geogarea>
+                    <location>
+                        <country xml:lang="eng">PL</country>
+                        <municipalityPostalcode xml:lang="eng">20-950 Lublin</municipalityPostalcode>
+                        <localentity xml:lang="eng">-</localentity>
+                        <street xml:lang="eng">Jezuicka 13</street>
+                    </location>
+                    <telephone>+48 81 532 80 71</telephone>
+                    <fax>+48 81 528 61 46</fax>
+                    <email href="mailto:kanc@lublin.ap.gov.pl"/>
+                    <webpage href="http://www.lublin.ap.gov.pl"/>
+                    <repositorhist>
+                        <descriptiveNote>
+                            <p xml:lang="eng">
+                                Archiwum Państwowe w Lublinie zostało powołane na mocy dekretu Rady Regencyjnej z 31 lipca 1918 r. Rozpoczęło działalność 1 grudnia, gdy z Petersburga przyjechał do Lublina prof. Stanisław Ptaszycki, mianowany jego dyrektorem, a jednocześnie zaangażowany w nowo powstałym Uniwersytecie Lubelskim (późniejszy KUL).
+                                W okresie okupacji hitlerowskiej Archiwum zostało włączone w struktury niemieckie i podlegało Urzędowi Archiwalnemu (Archivamt) przy Urzędzie Okręgu Lubelskiego.
+                                Po zakończeniu okupacji Archiwum wznowiło działalność 27 lipca 1944 r. W latach 1952-1983 funkcjonowało pod nazwą Wojewódzkie Archiwum Państwowe w Lublinie.
+                            </p>
+                        </descriptiveNote>
+                    </repositorhist>
+                    <repositorfound>
+                        <date xml:lang="eng" standardDate="1918-07-31">31.07.1918</date>
+                        <rule xml:lang="eng">Reskrypt Rady Regencyjnej Królestwa Polskiego o archiwach państwowych i opiece nad archiwaliami z dn. 31 lipca 1918 r. (Monitor Polski Nr 116, art. 44)</rule>
+                    </repositorfound>
+                    <buildinginfo>
+                        <lengthshelf>
+                            <num unit="linearmetre">10200.00</num>
+                        </lengthshelf>
+                    </buildinginfo>
+                    <adminhierarchy>
+                        <adminunit xml:lang="eng">Oddział I – gromadzenia i opracowania zasobu,
+                            Oddział II – informacji archiwalnej,
+                            Oddział III – nadzoru nad narastającym zasobem archiwalnym,
+                            Oddział IV – ewidencji i udostępniania,
+                            Pracownia konserwacji archiwalnej,
+                            Sekcja prac naukowych i edukacji archiwalnej,
+                            Dział finansowo-księgowy,
+                            Dział administracji i kadr.
 
-Oddział zamiejscowy w Chełmie,
-Oddział zamiejscowy w Kraśniku,
-- Oddział zamiejscowy w Radzyniu Podlaskim</adminunit>
-               </adminhierarchy>
-               <holdings>
-                  <extent>
-                     <num unit="linearmetre">9090.24</num>
-                  </extent>
-               </holdings>
-               <timetable>
-                  <opening>poniedziałek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-17; wtorek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; środa - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; czwartek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; piątek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; sobota - nieczynne; niedziela - nieczynne -  (hour)</opening>
-               </timetable>
-               <access question="yes">
-                  <termsOfUse xml:lang="eng"/>
-               </access>
-               <accessibility xml:lang="eng" question="no"/>
-               <services>
-                  <searchroom>
-                     <workPlaces>
-                        <num unit="site">33</num>
-                     </workPlaces>
-                  </searchroom>
-                  <library question="yes">
-                     <monographicpub>
-                        <num unit="book">12735</num>
-                     </monographicpub>
-                     <serialpub>
-                        <num unit="title">916</num>
-                     </serialpub>
-                  </library>
-                  <techservices>
-                     <restorationlab question="yes"/>
-                     <reproductionser question="yes">
-                        <microformser question="yes"/>
-                        <photographser question="yes"/>
-                        <digitalser question="yes"/>
-                        <photocopyser question="yes"/>
-                     </reproductionser>
-                  </techservices>
-               </services>
-               <descriptiveNote>
-                  <p xml:lang="eng">EAD DTD v. Alfa 0.2</p>
-               </descriptiveNote>
-            </repository>
-         </repositories>
-      </desc>
-   </archguide>
-   <relations>
-      <resourceRelation resourceRelationType="other" href="">
-         <relationEntry/>
-      </resourceRelation>
-   </relations>
+                            Oddział zamiejscowy w Chełmie,
+                            Oddział zamiejscowy w Kraśniku,
+                            - Oddział zamiejscowy w Radzyniu Podlaskim</adminunit>
+                    </adminhierarchy>
+                    <holdings>
+                        <extent>
+                            <num unit="linearmetre">9090.24</num>
+                        </extent>
+                    </holdings>
+                    <timetable>
+                        <opening>poniedziałek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-17; wtorek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; środa - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; czwartek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; piątek - Pracownia naukowa: 9-18, Punkt Obsługi Klienta: 9-15; sobota - nieczynne; niedziela - nieczynne -  (hour)</opening>
+                    </timetable>
+                    <access question="yes">
+                        <termsOfUse xml:lang="eng"/>
+                    </access>
+                    <accessibility xml:lang="eng" question="no"/>
+                    <services>
+                        <searchroom>
+                            <workPlaces>
+                                <num unit="site">33</num>
+                            </workPlaces>
+                        </searchroom>
+                        <library question="yes">
+                            <monographicpub>
+                                <num unit="book">12735</num>
+                            </monographicpub>
+                            <serialpub>
+                                <num unit="title">916</num>
+                            </serialpub>
+                        </library>
+                        <techservices>
+                            <restorationlab question="yes"/>
+                            <reproductionser question="yes">
+                                <microformser question="yes"/>
+                                <photographser question="yes"/>
+                                <digitalser question="yes"/>
+                                <photocopyser question="yes"/>
+                            </reproductionser>
+                        </techservices>
+                    </services>
+                    <descriptiveNote>
+                        <p xml:lang="eng">EAD DTD v. Alfa 0.2</p>
+                    </descriptiveNote>
+                </repository>
+            </repositories>
+        </desc>
+    </archguide>
+    <relations>
+        <resourceRelation resourceRelationType="other" href="">
+            <relationEntry/>
+        </resourceRelation>
+    </relations>
 </eag>

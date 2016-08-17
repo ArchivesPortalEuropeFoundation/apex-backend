@@ -62,7 +62,7 @@ public abstract class AbstractSearcher {
 
     public TermsResponse getTerms(String term) throws SolrServerException {
         SolrQuery query = queryBuilder.getTermQuery(term);
-        
+
         String resultLog = "Query;terms;" + getCore() + ";'" + term + "';";
         long startTime = System.currentTimeMillis();
         try {
@@ -99,12 +99,10 @@ public abstract class AbstractSearcher {
                 false, true, true);
     }
 
-    
-
     private QueryResponse getListViewResults(SolrQueryParameters solrQueryParameters, int start, int rows,
             List<ListFacetSettings> facetSettingsList, String orderByField, String startDate, String endDate,
             boolean needSuggestions, boolean highlight, boolean update) throws SolrServerException, ParseException {
-        
+
         SolrQuery query = queryBuilder.getListViewQuery(start, facetSettingsList, orderByField, startDate, endDate, highlight);
         if (rows > 50) {
             rows = 10;

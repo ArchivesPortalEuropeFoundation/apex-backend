@@ -60,11 +60,11 @@ public class SolrQueryBuilder {
 
         return query;
     }
-    
+
     public void addFromDateFilter(SolrQuery query, String fromDateId) throws SolrServerException, ParseException {
         this.buildDateRefinement(query, fromDateId, "", true);
     }
-    
+
     public void addToDateFilter(SolrQuery query, String toDateId) throws SolrServerException, ParseException {
         this.buildDateRefinement(query, "", toDateId, true);
     }

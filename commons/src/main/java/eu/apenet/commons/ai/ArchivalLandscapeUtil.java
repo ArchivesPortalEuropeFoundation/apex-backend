@@ -9,30 +9,31 @@ import eu.apenet.commons.ResourceBundleSource;
 import eu.apenet.persistence.vo.Country;
 
 public class ArchivalLandscapeUtil {
-	private ResourceBundleSource resourceBundleSource;
 
-	public ArchivalLandscapeUtil(ResourceBundleSource resourceBundleSource) {
-		this.resourceBundleSource = resourceBundleSource;
-	}
+    private ResourceBundleSource resourceBundleSource;
 
-	protected String getLanguage() {
-		return resourceBundleSource.getLocale().getLanguage().substring(0, 2);
-	}
+    public ArchivalLandscapeUtil(ResourceBundleSource resourceBundleSource) {
+        this.resourceBundleSource = resourceBundleSource;
+    }
 
-	public Locale getLocale() {
-		return resourceBundleSource.getLocale();
-	}
+    protected String getLanguage() {
+        return resourceBundleSource.getLocale().getLanguage().substring(0, 2);
+    }
 
-	public List<CountryUnit> localizeCountries(List<Country> countries) {
-		List<CountryUnit> countriesUnits = new ArrayList<CountryUnit>();
-		for (Country co : countries) {
-			String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase().replace(" ", "_"),
-					co.getCname());
-			countriesUnits.add(new CountryUnit(co, otherCountryName));
-		}
+    public Locale getLocale() {
+        return resourceBundleSource.getLocale();
+    }
 
-		Collections.sort(countriesUnits);
-		return countriesUnits;
-	}
+    public List<CountryUnit> localizeCountries(List<Country> countries) {
+        List<CountryUnit> countriesUnits = new ArrayList<CountryUnit>();
+        for (Country co : countries) {
+            String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase().replace(" ", "_"),
+                    co.getCname());
+            countriesUnits.add(new CountryUnit(co, otherCountryName));
+        }
+
+        Collections.sort(countriesUnits);
+        return countriesUnits;
+    }
 
 }

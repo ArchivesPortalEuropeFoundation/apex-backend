@@ -2,99 +2,99 @@
 <eag xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/"
      audience="external">
-   <control xml:lang="eng">
-      <recordId>NL-HaNA</recordId>
-      <maintenanceAgency>
-         <agencyCode>NL-HaNA</agencyCode>
-         <agencyName>Nationaal Archief</agencyName>
-      </maintenanceAgency>
-      <maintenanceStatus>revised</maintenanceStatus>
-      <maintenanceHistory xml:lang="eng">
-         <maintenanceEvent xml:lang="eng">
-            <agent xml:lang="eng">automatically created agent</agent>
-            <agentType>machine</agentType>
-            <eventDateTime xml:lang="eng" standardDateTime="2011-01-12T23:59:59">2011-01-12</eventDateTime>
-            <eventType>created</eventType>
-         </maintenanceEvent>
-         <maintenanceEvent xml:lang="eng">
-            <agent xml:lang="eng"/>
-            <agentType>human</agentType>
-            <eventDateTime xml:lang="eng" standardDateTime="2011-01-23T23:59:59">2011-01-23</eventDateTime>
-            <eventType>updated</eventType>
-         </maintenanceEvent>
-      </maintenanceHistory>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>EAG</abbreviation>
-         <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISDIAH</abbreviation>
-         <citation xml:lang="eng">International Standard for Describing Institutions with Archival Holdings</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 639-2b</abbreviation>
-         <citation xml:lang="eng">Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 3166-1</abbreviation>
-         <citation xml:lang="eng">Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 8601</abbreviation>
-         <citation xml:lang="eng">Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 15511</abbreviation>
-         <citation xml:lang="eng">International Standard Identifier for Libraries and Related Organisations</citation>
-      </conventionDeclaration>
-      <conventionDeclaration xml:lang="eng">
-         <abbreviation>ISO 15924</abbreviation>
-         <citation xml:lang="eng">Codes for the representation of names of scripts</citation>
-      </conventionDeclaration>
-   </control>
-   <archguide>
-      <identity>
-         <repositorid countrycode="NL" repositorycode="NL-HaNA"/>
-         <otherRepositorId>NL-HaNA</otherRepositorId>
-         <autform xml:lang="eng">Nationaal Archief</autform>
-         <parform xml:lang="eng">National Archives of The Netherlands</parform>
-      </identity>
-      <desc>
-         <repositories>
-            <repository>
-               <repositoryName xml:lang="eng">Nationaal Archief</repositoryName>
-               <repositoryRole>Head quarter</repositoryRole>
-               <geogarea>Europe</geogarea>
-               <location>
-                  <country xml:lang="eng">The Netherlands</country>
-                  <municipalityPostalcode xml:lang="eng">2595 BE Den Haag</municipalityPostalcode>
-                  <street xml:lang="eng">Prins Willem Alexanderhof 20</street>
-               </location>
-               <telephone>0031 (0)70 331 5400</telephone>
-               <email href="info@nationaalarchief.nl">Send an e-mail</email>
-               <buildinginfo/>
-               <holdings>
-                  <extent>
-                     <num unit="linearmetre">120,000</num>
-                  </extent>
-               </holdings>
-               <access question="yes"/>
-               <accessibility xml:lang="eng" question="yes"/>
-               <services>
-                  <searchroom>
-                     <workPlaces>
-                        <num unit="site">100</num>
-                     </workPlaces>
-                  </searchroom>
-                  <library question="yes"/>
-                  <techservices>
-                     <restorationlab question="yes"/>
-                     <reproductionser question="yes"/>
-                  </techservices>
-               </services>
-            </repository>
-         </repositories>
-      </desc>
-   </archguide>
-   <relations/>
+    <control xml:lang="eng">
+        <recordId>NL-HaNA</recordId>
+        <maintenanceAgency>
+            <agencyCode>NL-HaNA</agencyCode>
+            <agencyName>Nationaal Archief</agencyName>
+        </maintenanceAgency>
+        <maintenanceStatus>revised</maintenanceStatus>
+        <maintenanceHistory xml:lang="eng">
+            <maintenanceEvent xml:lang="eng">
+                <agent xml:lang="eng">automatically created agent</agent>
+                <agentType>machine</agentType>
+                <eventDateTime xml:lang="eng" standardDateTime="2011-01-12T23:59:59">2011-01-12</eventDateTime>
+                <eventType>created</eventType>
+            </maintenanceEvent>
+            <maintenanceEvent xml:lang="eng">
+                <agent xml:lang="eng"/>
+                <agentType>human</agentType>
+                <eventDateTime xml:lang="eng" standardDateTime="2011-01-23T23:59:59">2011-01-23</eventDateTime>
+                <eventType>updated</eventType>
+            </maintenanceEvent>
+        </maintenanceHistory>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>EAG</abbreviation>
+            <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISDIAH</abbreviation>
+            <citation xml:lang="eng">International Standard for Describing Institutions with Archival Holdings</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 639-2b</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 3166-1</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 8601</abbreviation>
+            <citation xml:lang="eng">Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 15511</abbreviation>
+            <citation xml:lang="eng">International Standard Identifier for Libraries and Related Organisations</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 15924</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of scripts</citation>
+        </conventionDeclaration>
+    </control>
+    <archguide>
+        <identity>
+            <repositorid countrycode="NL" repositorycode="NL-HaNA"/>
+            <otherRepositorId>NL-HaNA</otherRepositorId>
+            <autform xml:lang="eng">Nationaal Archief</autform>
+            <parform xml:lang="eng">National Archives of The Netherlands</parform>
+        </identity>
+        <desc>
+            <repositories>
+                <repository>
+                    <repositoryName xml:lang="eng">Nationaal Archief</repositoryName>
+                    <repositoryRole>Head quarter</repositoryRole>
+                    <geogarea>Europe</geogarea>
+                    <location>
+                        <country xml:lang="eng">The Netherlands</country>
+                        <municipalityPostalcode xml:lang="eng">2595 BE Den Haag</municipalityPostalcode>
+                        <street xml:lang="eng">Prins Willem Alexanderhof 20</street>
+                    </location>
+                    <telephone>0031 (0)70 331 5400</telephone>
+                    <email href="info@nationaalarchief.nl">Send an e-mail</email>
+                    <buildinginfo/>
+                    <holdings>
+                        <extent>
+                            <num unit="linearmetre">120,000</num>
+                        </extent>
+                    </holdings>
+                    <access question="yes"/>
+                    <accessibility xml:lang="eng" question="yes"/>
+                    <services>
+                        <searchroom>
+                            <workPlaces>
+                                <num unit="site">100</num>
+                            </workPlaces>
+                        </searchroom>
+                        <library question="yes"/>
+                        <techservices>
+                            <restorationlab question="yes"/>
+                            <reproductionser question="yes"/>
+                        </techservices>
+                    </services>
+                </repository>
+            </repositories>
+        </desc>
+    </archguide>
+    <relations/>
 </eag>

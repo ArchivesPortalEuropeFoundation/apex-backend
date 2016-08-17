@@ -20,90 +20,92 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
  *
  */
 public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
-	/**
-	 * Serializable.
-	 */
-	private static final long serialVersionUID = -8406741587979046031L;
 
-	/**
-	 * Name of the function to call.
-	 */
-	private static final StructuredQName funcname = new StructuredQName("ape", "http://www.archivesportaleurope.eu/xslt/extensions",
-			"related");
+    /**
+     * Serializable.
+     */
+    private static final long serialVersionUID = -8406741587979046031L;
+
+    /**
+     * Name of the function to call.
+     */
+    private static final StructuredQName funcname = new StructuredQName("ape", "http://www.archivesportaleurope.eu/xslt/extensions",
+            "related");
 //	private static final Logger LOG = Logger.getLogger(RetrieveRelatedAIId.class);
-	private RetrieveRelatedAIIdCall retrieveRelatedAIIdCall;
+    private RetrieveRelatedAIIdCall retrieveRelatedAIIdCall;
 
-	public RetrieveRelatedAIIdExtension(final String requiredAIRepositorCode) {
-		this.retrieveRelatedAIIdCall = new RetrieveRelatedAIIdCall(requiredAIRepositorCode);
-	}
+    public RetrieveRelatedAIIdExtension(final String requiredAIRepositorCode) {
+        this.retrieveRelatedAIIdCall = new RetrieveRelatedAIIdCall(requiredAIRepositorCode);
+    }
 
-	@Override
-	public SequenceType[] getArgumentTypes() {
-		return new SequenceType[] { SequenceType.OPTIONAL_STRING };
-	}
+    @Override
+    public SequenceType[] getArgumentTypes() {
+        return new SequenceType[]{SequenceType.OPTIONAL_STRING};
+    }
 
-	@Override
-	public StructuredQName getFunctionQName() {
-		return RetrieveRelatedAIIdExtension.funcname;
-	}
+    @Override
+    public StructuredQName getFunctionQName() {
+        return RetrieveRelatedAIIdExtension.funcname;
+    }
 
-	@Override
-	public SequenceType getResultType(SequenceType[] arg0) {
-		return SequenceType.OPTIONAL_STRING;
-	}
+    @Override
+    public SequenceType getResultType(SequenceType[] arg0) {
+        return SequenceType.OPTIONAL_STRING;
+    }
 
-	@Override
-	public ExtensionFunctionCall makeCallExpression() {
-		return this.retrieveRelatedAIIdCall;
-	}
+    @Override
+    public ExtensionFunctionCall makeCallExpression() {
+        return this.retrieveRelatedAIIdCall;
+    }
 
-	@Override
-	public int getMinimumNumberOfArguments() {
-		return 1;
-	}
+    @Override
+    public int getMinimumNumberOfArguments() {
+        return 1;
+    }
 
-	public int getMaximumNumberOfArguments() {
-		return 1;
-	}
+    public int getMaximumNumberOfArguments() {
+        return 1;
+    }
 
-	class RetrieveRelatedAIIdCall extends ExtensionFunctionCall {
-		/**
-		 * Serializable.
-		 */
-		private static final long serialVersionUID = 6099497471179098886L;
+    class RetrieveRelatedAIIdCall extends ExtensionFunctionCall {
 
-		private String requiredAIRepositorCode;
+        /**
+         * Serializable.
+         */
+        private static final long serialVersionUID = 6099497471179098886L;
 
-		/**
-		 * Constructor.
-		 */
-		public RetrieveRelatedAIIdCall (final String requiredAIRepositorCode) {
-			this.requiredAIRepositorCode = requiredAIRepositorCode;
-		}
+        private String requiredAIRepositorCode;
 
-		@Override
+        /**
+         * Constructor.
+         */
+        public RetrieveRelatedAIIdCall(final String requiredAIRepositorCode) {
+            this.requiredAIRepositorCode = requiredAIRepositorCode;
+        }
+
+        @Override
         public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
-			if (sequences!= null && sequences.length == 1) {
-				String firstArgValue = sequences[0].head().getStringValue();
-				String value = "";
+            if (sequences != null && sequences.length == 1) {
+                String firstArgValue = sequences[0].head().getStringValue();
+                String value = "";
 
-				ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-				ArchivalInstitution archivalInstitution = null;
+                ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+                ArchivalInstitution archivalInstitution = null;
 
-				if (firstArgValue != null && !firstArgValue.isEmpty()) {
-					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(firstArgValue);
-				} else if(this.requiredAIRepositorCode != null && !this.requiredAIRepositorCode.isEmpty()) {
-					archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(requiredAIRepositorCode);
-				}
+                if (firstArgValue != null && !firstArgValue.isEmpty()) {
+                    archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(firstArgValue);
+                } else if (this.requiredAIRepositorCode != null && !this.requiredAIRepositorCode.isEmpty()) {
+                    archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByRepositoryCode(requiredAIRepositorCode);
+                }
 
-				if (archivalInstitution != null) {
-					value = String.valueOf(archivalInstitution.getAiId());
-				}
+                if (archivalInstitution != null) {
+                    value = String.valueOf(archivalInstitution.getAiId());
+                }
 
-				return StringValue.makeStringValue(value);
-			} else {
-				return StringValue.makeStringValue("ERROR");
-			}
-		}
-	}
+                return StringValue.makeStringValue(value);
+            } else {
+                return StringValue.makeStringValue("ERROR");
+            }
+        }
+    }
 }

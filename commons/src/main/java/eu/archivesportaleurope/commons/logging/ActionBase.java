@@ -14,78 +14,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package eu.archivesportaleurope.commons.logging;
 
 import java.io.IOException;
-
 
 /**
  * Abstract base class for implementations of Action.
  *
  * @author Curt Arnold
  */
-public abstract class ActionBase{
-  /**
-   * Is action complete.
-   */
-  private boolean complete = false;
+public abstract class ActionBase {
 
-  /**
-   * Is action interrupted.
-   */
-  private boolean interrupted = false;
+    /**
+     * Is action complete.
+     */
+    private boolean complete = false;
 
-  /**
-   * Constructor.
-   */
-  protected ActionBase() {
-  }
+    /**
+     * Is action interrupted.
+     */
+    private boolean interrupted = false;
 
-  /**
-   * Perform action.
-   *
-   * @throws IOException if IO error.
-   * @return true if successful.
-   */
-  public abstract boolean execute() throws IOException;
-
-  /**
-   * {@inheritDoc}
-   */
-  public synchronized void run() {
-    if (!interrupted) {
-      try {
-        execute();
-      } catch (IOException ex) {
-        reportException(ex);
-      }
-
-      complete = true;
-      interrupted = true;
+    /**
+     * Constructor.
+     */
+    protected ActionBase() {
     }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public synchronized void close() {
-    interrupted = true;
-  }
+    /**
+     * Perform action.
+     *
+     * @throws IOException if IO error.
+     * @return true if successful.
+     */
+    public abstract boolean execute() throws IOException;
 
-  /**
-   * Tests if the action is complete.
-   * @return true if action is complete.
-   */
-  public boolean isComplete() {
-    return complete;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized void run() {
+        if (!interrupted) {
+            try {
+                execute();
+            } catch (IOException ex) {
+                reportException(ex);
+            }
 
-  /**
-   * Capture exception.
-   *
-   * @param ex exception.
-   */
-  protected void reportException(final Exception ex) {
-  }
+            complete = true;
+            interrupted = true;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized void close() {
+        interrupted = true;
+    }
+
+    /**
+     * Tests if the action is complete.
+     *
+     * @return true if action is complete.
+     */
+    public boolean isComplete() {
+        return complete;
+    }
+
+    /**
+     * Capture exception.
+     *
+     * @param ex exception.
+     */
+    protected void reportException(final Exception ex) {
+    }
 }

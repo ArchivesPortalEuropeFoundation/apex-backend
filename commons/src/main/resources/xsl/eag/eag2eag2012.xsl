@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	EAG 2012 creation from original EAG
+        EAG 2012 creation from original EAG
 -->
 <xsl:stylesheet version="2.0" xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -69,8 +69,12 @@
         <xsl:param name="repositorycode"/>
         <xsl:param name="agencyname"/>
         <maintenanceAgency>
-            <agencyCode><xsl:value-of select="$repositorycode"/></agencyCode>
-            <agencyName><xsl:value-of select="$agencyname"/></agencyName>
+            <agencyCode>
+                <xsl:value-of select="$repositorycode"/>
+            </agencyCode>
+            <agencyName>
+                <xsl:value-of select="$agencyname"/>
+            </agencyName>
         </maintenanceAgency>
     </xsl:template>
 
@@ -90,7 +94,9 @@
                     <xsl:attribute name="xml:lang" select="$xmlLang"/>
                 </xsl:if>
                 <xsl:if test="$encoding eq 'EAG'">
-                    <abbreviation><xsl:value-of select="'EAG'"/></abbreviation>
+                    <abbreviation>
+                        <xsl:value-of select="'EAG'"/>
+                    </abbreviation>
                     <citation>
                         <xsl:if test="exists($xmlLang)">
                             <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -99,7 +105,9 @@
                     </citation>
                 </xsl:if>
                 <xsl:if test="$encoding eq 'ISDIAH'">
-                    <abbreviation><xsl:value-of select="'ISDIAH'"/></abbreviation>
+                    <abbreviation>
+                        <xsl:value-of select="'ISDIAH'"/>
+                    </abbreviation>
                     <citation>
                         <xsl:if test="exists($xmlLang)">
                             <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -108,7 +116,9 @@
                     </citation>
                 </xsl:if>
                 <xsl:if test="$encoding eq 'iso639-2b'">
-                    <abbreviation><xsl:value-of select="'ISO 639-2b'"/></abbreviation>
+                    <abbreviation>
+                        <xsl:value-of select="'ISO 639-2b'"/>
+                    </abbreviation>
                     <citation>
                         <xsl:if test="exists($xmlLang)">
                             <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -117,7 +127,9 @@
                     </citation>
                 </xsl:if>
                 <xsl:if test="$encoding eq 'iso3166-1'">
-                    <abbreviation><xsl:value-of select="'ISO 3166-1'"/></abbreviation>
+                    <abbreviation>
+                        <xsl:value-of select="'ISO 3166-1'"/>
+                    </abbreviation>
                     <citation>
                         <xsl:if test="exists($xmlLang)">
                             <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -126,7 +138,9 @@
                     </citation>
                 </xsl:if>
                 <xsl:if test="$encoding eq 'iso15924'">
-                    <abbreviation><xsl:value-of select="'ISO 15924'"/></abbreviation>
+                    <abbreviation>
+                        <xsl:value-of select="'ISO 15924'"/>
+                    </abbreviation>
                     <citation>
                         <xsl:if test="exists($xmlLang)">
                             <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -135,7 +149,9 @@
                     </citation>
                 </xsl:if>
                 <xsl:if test="$encoding eq 'iso8601'">
-                    <abbreviation><xsl:value-of select="'ISO 8601'"/></abbreviation>
+                    <abbreviation>
+                        <xsl:value-of select="'ISO 8601'"/>
+                    </abbreviation>
                     <citation>
                         <xsl:if test="exists($xmlLang)">
                             <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -144,7 +160,9 @@
                     </citation>
                 </xsl:if>
                 <xsl:if test="$encoding eq 'iso15511'">
-                    <abbreviation><xsl:value-of select="'ISO 15511'"/></abbreviation>
+                    <abbreviation>
+                        <xsl:value-of select="'ISO 15511'"/>
+                    </abbreviation>
                     <citation>
                         <xsl:if test="exists($xmlLang)">
                             <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -180,7 +198,9 @@
     </xsl:template>
 
     <xsl:template match="*:eagid">
-        <recordId><xsl:value-of select="text()"/></recordId>
+        <recordId>
+            <xsl:value-of select="text()"/>
+        </recordId>
     </xsl:template>
 
     <xsl:template match="*:mainhist">
@@ -224,10 +244,18 @@
             </eventDateTime>
             <eventType>
                 <xsl:choose>
-                    <xsl:when test="$maintype eq 'create'"><xsl:value-of select="'created'"/></xsl:when>
-                    <xsl:when test="$maintype eq 'update'"><xsl:value-of select="'updated'"/></xsl:when>
-                    <xsl:when test="$maintype eq 'delete'"><xsl:value-of select="'deleted'"/></xsl:when>
-                    <xsl:otherwise><xsl:value-of select="'created'"/></xsl:otherwise>
+                    <xsl:when test="$maintype eq 'create'">
+                        <xsl:value-of select="'created'"/>
+                    </xsl:when>
+                    <xsl:when test="$maintype eq 'update'">
+                        <xsl:value-of select="'updated'"/>
+                    </xsl:when>
+                    <xsl:when test="$maintype eq 'delete'">
+                        <xsl:value-of select="'deleted'"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="'created'"/>
+                    </xsl:otherwise>
                 </xsl:choose>
             </eventType>
         </maintenanceEvent>
@@ -279,7 +307,9 @@
             </xsl:if>
         </repositorid>
         <!--<xsl:if test="not($isRepositorycodeCorrect)">--> <!-- no if because otherRepositorId is mandatory --> <!-- @WP4: Should otherRepositorId really be mandatory in the schema? $WP4: optional in eag_2012.xsd, but mandatory for ape - Yoann: How do you want this? You want 2 schemas? EAG_2012 and APE_EAG_2012 ? -->
-        <otherRepositorId><xsl:value-of select="@repositorycode"/></otherRepositorId>
+        <otherRepositorId>
+            <xsl:value-of select="@repositorycode"/>
+        </otherRepositorId>
         <!--</xsl:if>-->
     </xsl:template>
 
@@ -356,8 +386,12 @@
         <xsl:variable name="continents" select="('Africa', 'Asia', 'Australia', 'Europe', 'North America', 'South America')" as="xs:string+"/>
         <geogarea>
             <xsl:choose>
-                <xsl:when test="ape_static:contains(text(), $continents)"><xsl:value-of select="text()"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="'Europe'"/></xsl:otherwise>
+                <xsl:when test="ape_static:contains(text(), $continents)">
+                    <xsl:value-of select="text()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="'Europe'"/>
+                </xsl:otherwise>
             </xsl:choose>
         </geogarea>
     </xsl:template>
