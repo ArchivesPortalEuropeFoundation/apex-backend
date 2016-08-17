@@ -130,7 +130,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     private QueryResponse groupByQuery(SearchRequest searchRequest, String groupByFieldName, boolean resultNeeded) {
         try {
             SolrQuery query = new SolrQuery();
-            query.setQuery(searchRequest.getQuery());
+            query.setQuery(searchRequest.getQuery() + " AND "+onlyOpenData);
             query.add("group", "true");
             query.add("group.field", groupByFieldName);
             query.add("group.ngroups", "true");
@@ -177,20 +177,29 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
     @Override
     public QueryResponse getDescendants(String id, QueryPageRequest searchRequest) {
-        String[] levelStr = this.getDocHighestLevel(id); //FID0_s or HID0_s etc
-        SearchRequest request = new SearchRequest();
-        request.setQuery(searchRequest.getQuery());
-        request.setCount(searchRequest.getCount());
-        request.setStartIndex(searchRequest.getStartIndex());
-        return this.search(request, levelStr[0] + ":" + id + " AND" + this.onlyOpenData, false);
+        try {
+            String[] levelStr = this.getDocHighestLevel(id); //FID0_s or HID0_s etc
+            SearchRequest request = new SearchRequest();
+            request.setQuery(searchRequest.getQuery());
+            request.setCount(searchRequest.getCount());
+            request.setStartIndex(searchRequest.getStartIndex());
+            return this.search(request, levelStr[0] + ":" + id + " AND" + this.onlyOpenData, false);
+        } catch (SolrServerException ex) {
+            throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
+        }
     }
 
-    private String[] getDocHighestLevel(String id) {
-        SearchRequest request = new SearchRequest();
-        request.setQuery("id:" + id);
-        request.setCount(1);
-        request.setStartIndex(0);
-        QueryResponse itemResponse = this.search(request, this.onlyOpenData, false);
+    private String[] getDocHighestLevel(String id) throws SolrServerException {
+        SolrQuery query = new SolrQuery();
+        query.setQuery("id:" + id + " AND "+onlyOpenData);
+        query.setRows(1);
+        query.setStart(0);
+        query.setParam("fl", "id, F*_s, type");
+        logger.debug("real query is " + query.toString());
+        this.searchUtil.setQuery(query);
+
+        QueryResponse itemResponse = this.searchUtil.getSearchResponse();
+        
         SolrDocumentList documentList = itemResponse.getResults();
         String foundId = "";
         SolrDocument document = documentList.get(0);
@@ -216,6 +225,9 @@ public class EadSearchSearviceImpl extends EadSearchService {
         int level = 0;
         while (null != document.getFieldValue(res[0] + level + "_s")) {
             level++;
+        }
+        if (document.getFieldValue(res[0]+ (level-1) + "_s").toString().equalsIgnoreCase(id)) {
+            level--;
         }
         res[0] = res[0] + level + "_s";
         res[1] = res[1] + level + "_s";
