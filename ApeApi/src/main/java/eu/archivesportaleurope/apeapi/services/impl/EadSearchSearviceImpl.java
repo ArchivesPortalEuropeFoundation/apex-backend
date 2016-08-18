@@ -87,7 +87,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setStartIndex(request.getStartIndex());
         searchRequest.setQuery(this.onlyOpenData + "AND ai:*" + request.getInstituteId()
                 + " AND id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
-        return this.search(searchRequest, "", false);
+        return this.search(searchRequest, null, false);
     }
 
     @Override

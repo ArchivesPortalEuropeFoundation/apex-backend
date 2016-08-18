@@ -30,29 +30,26 @@ import org.slf4j.LoggerFactory;
  * @author Mahbub
  */
 public abstract class SearchService {
-
+    
     public abstract QueryResponse search(SearchRequest request, String extraSearchParam, boolean includeFacet);
-
+    
     public abstract QueryResponse searchOpenData(SearchRequest request);
-
+    
     private final SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    
     protected QueryResponse search(SearchRequest searchRequest, String extraSearchParam,
             List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil) {
         try {
-            String extraParam = "";
-            if (extraSearchParam != null) {
-                extraParam = extraSearchParam;
-            }
+            
             SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
-
+            
             for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
                 queryBuilder.addFilters(query,
                         FacetType.getFacetByName(ServerResponseDictionary.getSolrFieldName(searchFilter.getFacetFieldName())),
                         searchFilter.getFacetFieldIds());
             }
-
+            
             for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {
                 if (dateFilter.getDateFieldName().equalsIgnoreCase("fromDate")) {
                     queryBuilder.addFromDateFilter(query, dateFilter.getDateFieldId());
@@ -60,8 +57,12 @@ public abstract class SearchService {
                     queryBuilder.addToDateFilter(query, dateFilter.getDateFieldId());
                 }
             }
-            query.setQuery(searchRequest.getQuery() +" AND "+ extraParam);
-
+            if (extraSearchParam != null && !"".equals(extraSearchParam)) {
+                query.setQuery(searchRequest.getQuery() + " AND " + extraSearchParam);
+            } else {
+                query.setQuery(searchRequest.getQuery());
+            }
+            
             if (searchRequest.getCount() <= 0) {
                 logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
                 query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
@@ -70,7 +71,7 @@ public abstract class SearchService {
             }
             logger.debug("Final search query: " + query.getFields());
             eadSearchUtil.setQuery(query);
-
+            
             return eadSearchUtil.getSearchResponse();
         } catch (SolrServerException | ParseException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));

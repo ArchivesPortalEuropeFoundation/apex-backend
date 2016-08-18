@@ -55,15 +55,15 @@ public class InstituteEadResponseSet extends ResponseSet {
         return Collections.unmodifiableList(eadResults);
     }
 
-    public final void setEadResults(List<InstituteEadResponse> eadSearchResutls) {
-        if (eadSearchResutls != null) {
-            this.eadResults = eadSearchResutls;
+    public final void setEadResults(List<InstituteEadResponse> eadResults) {
+        if (eadResults != null) {
+            this.eadResults = eadResults;
         }
     }
 
-    public final void addEadSearchResult(InstituteEadResponse eadSearchResutl) {
-        if (eadSearchResutl != null) {
-            this.eadResults.add(eadSearchResutl);
+    public final void addEadSearchResult(InstituteEadResponse eadResults) {
+        if (eadResults != null) {
+            this.eadResults.add(eadResults);
         }
     }
 
