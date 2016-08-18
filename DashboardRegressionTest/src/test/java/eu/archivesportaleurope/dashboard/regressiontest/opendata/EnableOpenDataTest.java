@@ -571,7 +571,7 @@ public class EnableOpenDataTest {
                 + "  \"count\": 0,\n"
                 + "  \"startIndex\": 0\n"
                 + "}";
-        post.setHeader("APIkey", "");
+        post.setHeader("APIkey", "myApiKeyXXXX123456789");
         post.setEntity(new StringEntity(data, ContentType.create("application/vnd.ape-v1+json", "UTF-8")));
         HttpResponse response = client.execute(post);
         Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
