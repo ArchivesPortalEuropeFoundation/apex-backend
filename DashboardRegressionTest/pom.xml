@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.archivesportaleurope.backend</groupId>
     <artifactId>DashboardRegressionTest</artifactId>
-    <version>2016-07.2-SNAPSHOT</version>
+    <version>2016-08.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Dashboard Regression Test</name>
     <properties>
