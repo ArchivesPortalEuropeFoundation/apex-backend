@@ -10,8 +10,10 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
  *
@@ -80,6 +82,21 @@ public class SolrUtils {
         } catch (SolrServerException | IOException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
+    }
+
+    public QueryResponse getAllData(Cores coreName, String query) {
+        HttpSolrServer solr = new HttpSolrServer(this.getBaseSolrUrl() + "/" + coreName.toString());
+        QueryResponse response = null;
+        try {
+            if ("".equals(query)) {
+                response = solr.query(new SolrQuery("*:*"));
+            } else {
+                response = solr.query(new SolrQuery(query));
+            }
+        } catch (SolrServerException ex) {
+            Logger.getLogger(SolrUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
     }
 
     @Override

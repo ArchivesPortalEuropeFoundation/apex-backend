@@ -36,6 +36,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.Alert;
@@ -469,6 +470,34 @@ public class EnableOpenDataTest {
             logger.log(Level.WARNING, "::: Failed due to Element not found : {0}", nEx.getMessage());
             Assert.fail("Element not found: " + nEx.getMessage());
         }
+    }
+
+    @Test
+    public void testJVgetDocsWithQuery() {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+        QueryResponse response = SolrUtils.getSolrUtil().getAllData(SolrUtils.Cores.EAD, "Zuid-Hollandschen");
+        Assert.assertEquals(15, response.getResults().getNumFound());
+    }
+
+    @Test
+    public void testJVSearchWithAiId() {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+        QueryResponse response = SolrUtils.getSolrUtil().getAllData(SolrUtils.Cores.EAD, "aiId:355");
+        Assert.assertEquals(8454, response.getResults().getNumFound());
+    }
+
+    @Test
+    public void testJVSearchWithFondId() {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+        QueryResponse response = SolrUtils.getSolrUtil().getAllData(SolrUtils.Cores.EAD, "fondId:F1");
+        Assert.assertEquals(5905, response.getResults().getNumFound());
+    }
+
+    @Test
+    public void testJVSearchWithCountryId() {
+        logger.log(Level.INFO, "::: Executing Method {0} :::", name.getMethodName());
+        QueryResponse response = SolrUtils.getSolrUtil().getAllData(SolrUtils.Cores.EAD, "countryId:15");
+        Assert.assertEquals(8454, response.getResults().getNumFound());
     }
 
     @Test
