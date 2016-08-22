@@ -69,7 +69,11 @@ public abstract class SearchService {
             } else {
                 query.setRows(searchRequest.getCount());
             }
-            logger.debug("Final search query: " + query.getFields());
+            
+            //openData - true or false should be managed by the query
+            assert(query.getQuery().contains("openData")==true);
+
+            logger.debug("Final search query: " + query.getQuery());
             eadSearchUtil.setQuery(query);
             
             return eadSearchUtil.getSearchResponse();

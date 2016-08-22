@@ -101,14 +101,8 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
     private QueryResponse groupByQueryOpenData(SearchDocRequest searchRequest, String groupByFieldName, boolean resultNeeded) {
         SearchRequest request = new SearchRequest();
-//        if (searchRequest.getLevel() > 0 && searchRequest.getParentId() != null) {
-//            request.setQuery(searchRequest.getQuery()
-//                    + " AND type:" + searchRequest.getDocType()
-//                    + " AND " + this.typeToFieldDynamicIdTranslator(searchRequest.getDocType()) + (searchRequest.getLevel() - 1) + "_s:" + searchRequest.getParentId()
-//                    + " AND openData:true");
-//        } else {
         request.setQuery(searchRequest.getQuery() + " AND type:" + searchRequest.getDocType() + " AND" + this.onlyOpenData);
-//        }
+
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
