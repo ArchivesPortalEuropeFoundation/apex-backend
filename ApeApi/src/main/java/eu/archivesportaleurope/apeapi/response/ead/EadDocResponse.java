@@ -9,11 +9,7 @@ package eu.archivesportaleurope.apeapi.response.ead;
  *
  * @author kaisar
  */
-import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.apenet.commons.solr.SolrFields;
-import org.apache.solr.client.solrj.response.FacetField.Count;
-
-import eu.apenet.commons.solr.SolrValues;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

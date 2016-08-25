@@ -10,14 +10,21 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
+import io.swagger.annotations.ApiModelProperty;
 
 public class DetailContent {
 
+    @ApiModelProperty(value = "Type of the XML")
     private XmlType xmlType;
+    @ApiModelProperty(value = "Response in XML")
     private String xml;
+    @ApiModelProperty(value = "Ead content")
     private EadContent eadContent;
+    @ApiModelProperty(value = "Current level")
     private CLevel currentLevel;
+    @ApiModelProperty(value = "AI response")
     private ArchivalInstitution archivalInstitution;
+    @ApiModelProperty(value = "Ead Response")
     private Ead ead;
 
     public DetailContent(EadContent eadContent) {

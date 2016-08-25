@@ -11,11 +11,9 @@ import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
-import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.InstituteEadResponseSet;
 import eu.archivesportaleurope.apeapi.services.AiStatService;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
-import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,7 +21,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -83,7 +80,7 @@ public class ArchivalInstituteStatResource {
     @POST
     @Path("/getDocs")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "List of documents of the given type from the given Archival institute", response = EadResponseSet.class)
+    @ApiOperation(value = "List of documents of the given type from the given Archival institute", response = InstituteEadResponseSet.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
         @ApiResponse(code = 400, message = "Bad request"),

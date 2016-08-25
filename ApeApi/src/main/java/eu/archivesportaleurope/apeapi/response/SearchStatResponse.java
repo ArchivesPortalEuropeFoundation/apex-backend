@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.util.NamedList;
 
@@ -14,8 +15,11 @@ import org.apache.solr.common.util.NamedList;
  */
 public class SearchStatResponse {
 
+    @ApiModelProperty(value = "Required time to execute query in ms")
     private int queryTime;
+    @ApiModelProperty(value = "Number of rows found")
     private int rows;
+    @ApiModelProperty(value = "Search Query")
     private String q;
 
     public SearchStatResponse(QueryResponse response) {

@@ -19,19 +19,20 @@ import org.apache.solr.common.SolrDocument;
 @XmlRootElement
 @ApiModel
 public class EadResponse extends InstituteEadResponse {
-    @ApiModelProperty(required = true, value="Identifier of the result provided by the repository")
+
+    @ApiModelProperty(value = "Identifier of the result provided by the repository")
     private String unitId;
-    
-    @ApiModelProperty(required = true, value="Description of the result")
+
+    @ApiModelProperty(value = "Description of the result")
     private String unitTitle;
-    
-    @ApiModelProperty(required = true, value="Description of the result, with the mark <b>&lt;em&gt;</b> to emphasize the search term that was used in the search request.")
+
+    @ApiModelProperty(value = "Description of the result, with the mark <b>&lt;em&gt;</b> to emphasize the search term that was used in the search request.")
     private String unitTitleWithHighlighting;
-    
-    @ApiModelProperty(required = true, value="More descriptive information about the result. ")
+
+    @ApiModelProperty(value = "More descriptive information about the result. ")
     private String scopeContent;
-    
-    @ApiModelProperty(required = true, value="More descriptive information about the result, with the mark <b>&lt;em&gt;</b> to emphasize the search term that was used in the search request.")
+
+    @ApiModelProperty(value = "More descriptive information about the result, with the mark <b>&lt;em&gt;</b> to emphasize the search term that was used in the search request.")
     private String scopeContentWithHighlighting;
 
     public EadResponse(SolrDocument solrDocument, QueryResponse response) {
@@ -40,14 +41,14 @@ public class EadResponse extends InstituteEadResponse {
         if (response.getHighlighting().get(id).get(SolrFields.TITLE) != null) {
             this.unitTitleWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.TITLE).get(0));
         }
-        
+
         this.unitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
         if (response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT) != null) {
             this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT).get(0));
         }
     }
-    
+
     /**
      * Default constructor
      */
@@ -62,7 +63,7 @@ public class EadResponse extends InstituteEadResponse {
             return "";
         }
     }
- 
+
     public String getUnitTitle() {
         return unitTitle;
     }

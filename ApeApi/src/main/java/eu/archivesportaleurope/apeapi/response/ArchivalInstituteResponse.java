@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.response;
 
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.FindingAid;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.solr.client.solrj.response.Group;
 
 /**
@@ -15,11 +16,17 @@ import org.apache.solr.client.solrj.response.Group;
  */
 public class ArchivalInstituteResponse {
 
+    @ApiModelProperty(value = "Name of the AI")
     private String name;
+    @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     private int id;
+    @ApiModelProperty(value = "Name of the country where the repository is. In English.")
     private String country;
+    @ApiModelProperty(value = "Id of the country")
     private int countryId;
+    @ApiModelProperty(required = true, value="Total number of documents found.")
     private int totalDocs;
+    @ApiModelProperty(value = "Code of the repository holding the fonds. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
     private String repositoryCode;
 
     public ArchivalInstituteResponse(ArchivalInstitution ai) {

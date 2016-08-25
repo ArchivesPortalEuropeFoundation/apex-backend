@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.response;
 
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.solr.client.solrj.response.Group;
@@ -17,7 +18,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
  */
 public class ArchivalInstitutesResponse {
 
+    @ApiModelProperty(required = true, value="Total number of AI found.")
     private long totalResults;
+    @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
     private List<ArchivalInstituteResponse> institutes;
 
     public ArchivalInstitutesResponse() {

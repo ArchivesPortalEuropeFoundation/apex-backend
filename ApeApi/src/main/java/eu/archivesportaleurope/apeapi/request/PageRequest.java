@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class PageRequest {
     @ApiModelProperty(value="Number of items to retrieve. Default is 5, maximum is 50.", example="5")
     @Max(value = 50, message = "Count must not be more than 50")
-    @Min(value = 0, message = "Count must not be more than 50")
+    @Min(value = 0, message = "Count must not be less than 0")
     int count;
     
     @ApiModelProperty(value="Offset the list of returned results by this amount. Default is zero.")

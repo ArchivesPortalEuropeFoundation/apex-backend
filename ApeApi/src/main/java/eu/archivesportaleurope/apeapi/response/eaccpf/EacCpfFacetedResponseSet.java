@@ -17,10 +17,10 @@ import org.apache.solr.client.solrj.response.QueryResponse;
  */
 public class EacCpfFacetedResponseSet extends EacCpfResponseSet {
 
-    @ApiModelProperty(required = true, value = "Array of facet fileds.")
+    @ApiModelProperty(value = "Array of facet fileds.")
     private EacFacetFields facetFields;
 
-    @ApiModelProperty(required = true, value = "Array of facet date fileds.")
+    @ApiModelProperty(value = "Array of facet date fileds.")
     private FacetDateFields facetDateFields;
 
     public EacCpfFacetedResponseSet(EacFacetFields facetFields, FacetDateFields facetDateFields) {

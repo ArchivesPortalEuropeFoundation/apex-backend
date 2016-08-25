@@ -28,49 +28,49 @@ public class EacCpfResponse {
     @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     private String id;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Record Id in the repository")
     private String recordId;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Type of the entity, (person, family or company)")
     private String entityType;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "All alternative names")
     private List<String> nameEntries;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "All names with highlighting")
     private List<String> nameEntriesWithHighlighting;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "date of existance")
     private String existDates;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Description")
     private String description;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Description with highlighting")
     private String descriptionWithHighlighting;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Other description")
     private String other;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Other description with highlighting")
     private String otherWithHighlighting;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Name of the repository holding the eacCpfs")
     private String repository;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Code of the repository holding the eacCpfs. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
     private String repositoryCode;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Name of the country where the repository is. In English.")
     private String country;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "ID of the country where the repository is.")
     private String countryId;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Number of record that has been created by current EAC")
     private String numberOfArchivalMaterialRelations;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "Number of EAC record that has been created by current EAC")
     private String numberOfNameRelations;
 
     public EacCpfResponse(SolrDocument solrDocument, QueryResponse response) {
