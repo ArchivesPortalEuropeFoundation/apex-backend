@@ -10,28 +10,41 @@ package eu.archivesportaleurope.apeapi.response.ead;
  * @author kaisar
  */
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.apenet.commons.solr.SolrFields;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 
 import eu.apenet.commons.solr.SolrValues;
+import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.Group;
+import org.apache.solr.common.SolrDocument;
 
 @XmlRootElement
 @ApiModel
 public class EadDocResponse {
-
-    public enum Type {
-        CLEVEL, FOND
-    }
+    @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     private final String id;
-    private final String name;
-    private long levelDepth;
-    private final long count;
-    @JsonProperty("isLeaf")
-    private final boolean leaf;
+    @ApiModelProperty(value = "Title of the finding aid. ")
+    private final String fondsUnitTitle;
+    @ApiModelProperty(value = "Number of search hits on the current document.")
+    private final long numberOfResults;
+    
+    @ApiModelProperty(value = "Name of the repository holding the fonds")
+    private String repository;
 
-    public EadDocResponse(Group group, Type type) {
+    @ApiModelProperty(value = "Name of the country where the repository is. In English. ")
+    private String country;
+
+    @ApiModelProperty(value = "Language of the description of the result.")
+    private String language;
+    
+    @ApiModelProperty(value = "Code of the repository holding the fonds. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
+    private String repositoryCode;
+    
+
+    public EadDocResponse(Group group) {
         //ToDo: change this
         //ex: Inventaris van het archief van de Nederlandse Ambassade in Nepal, 1965-1974:G:F124
         //00000000:Algemeen:G:C4541
@@ -39,38 +52,68 @@ public class EadDocResponse {
         int lastColonIndex = temp.lastIndexOf(":");
         this.id = temp.substring(lastColonIndex + 1);
         temp = temp.substring(0, lastColonIndex);
-        lastColonIndex = temp.lastIndexOf(":");
-        String docLeaf = temp.substring(lastColonIndex + 1);
-        this.leaf = SolrValues.TYPE_LEAF.equals(docLeaf);
-        temp = temp.substring(0, lastColonIndex);
-        if (Type.CLEVEL.equals(type)) {
-            int firstColonIndex = temp.indexOf(":");
-            this.levelDepth = Long.parseLong(temp.substring(0, firstColonIndex));
-            this.name = temp.substring(firstColonIndex + 1);
-        } else {
-            this.name = temp.substring(0);
-        }
-        this.count = group.getResult().getNumFound();
+        int firstColonIndex = temp.indexOf(":");
+        this.fondsUnitTitle = temp.substring(0, firstColonIndex);
+        this.numberOfResults = group.getResult().getNumFound();
+        //get the default document
+        SolrDocument solrDocument = group.getResult().get(0);
+        
+        this.language = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGUAGE));
+        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
+        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
+        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
+        
     }
 
     public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFondsUnitTitle() {
+        return fondsUnitTitle;
     }
 
-    public long getCount() {
-        return count;
+    public long getNumberOfResults() {
+        return numberOfResults;
+    }
+    
+    private String objectToString(Object o) {
+        if (o != null) {
+            return o.toString();
+        } else {
+            return "";
+        }
     }
 
-    public long getLevelDepth() {
-        return levelDepth;
+    public String getRepository() {
+        return repository;
     }
 
-    public boolean isLeaf() {
-        return leaf;
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getRepositoryCode() {
+        return repositoryCode;
+    }
+
+    public void setRepositoryCode(String repositoryCode) {
+        this.repositoryCode = repositoryCode;
+    }
 }

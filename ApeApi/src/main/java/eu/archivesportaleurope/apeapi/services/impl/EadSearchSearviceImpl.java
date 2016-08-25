@@ -137,7 +137,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             } else {
                 query.setRows(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
             }
-            query.setParam("fl", "country,repositoryCode");
+//            query.setParam("fl", "country,repositoryCode,ai,language");
             query.setSort("orderId", SolrQuery.ORDER.asc);
             logger.debug("real query is " + query.toString());
             this.searchUtil.setQuery(query);
@@ -156,11 +156,11 @@ public class EadSearchSearviceImpl extends EadSearchService {
             }
             switch (searchRequest.getDocType().toLowerCase()) {
                 case "fa":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC + "0_s", false);
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC + "0_s", true);
                 case "hg":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC + "0_s", false);
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC + "0_s", true);
                 case "sg":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC + "0_s", false);
+                    return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC + "0_s", true);
                 default:
                     throw new InternalErrorException("No such type available");
             }
@@ -177,7 +177,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             request.setQuery(searchRequest.getQuery());
             request.setCount(searchRequest.getCount());
             request.setStartIndex(searchRequest.getStartIndex());
-            return this.search(request, levelStr[0] + ":" + id + " AND" + this.onlyOpenData, false);
+            return this.search(request, levelStr[0] + ":" + id + " AND " + "-id:"+id + " AND" + this.onlyOpenData, false);
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
@@ -233,7 +233,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SearchRequest request = new SearchRequest();
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
-        request.setQuery(searchRequest.getQuery() + " AND parentId:" + id);
+        request.setQuery(searchRequest.getQuery() + " AND " + "-id:"+id + " AND parentId:" + id);
         return this.searchOpenData(request);
     }
 }

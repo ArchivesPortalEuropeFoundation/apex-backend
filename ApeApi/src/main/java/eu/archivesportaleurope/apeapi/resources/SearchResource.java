@@ -128,7 +128,7 @@ public class SearchResource {
     ) {
         try {
             QueryResponse response = eadSearch.getEadList(searchRequest);
-            return Response.ok().entity(new EadDocResponseSet(searchRequest, response, EadDocResponse.Type.FOND)).build();
+            return Response.ok().entity(new EadDocResponseSet(searchRequest, response)).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();
@@ -143,7 +143,7 @@ public class SearchResource {
     @Path("/ead/{id}/descendants")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Search the term in all descendants of a given id",
-            response = EadDocResponseSet.class
+            response = EadResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
@@ -172,7 +172,7 @@ public class SearchResource {
     @Path("/ead/{id}/children")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Search the term in all children of a given id",
-            response = EadDocResponseSet.class
+            response = EadResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
