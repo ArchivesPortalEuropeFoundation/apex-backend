@@ -13,7 +13,7 @@ import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.request.SortFilterRequest;
+import eu.archivesportaleurope.apeapi.request.SortRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
@@ -63,7 +63,7 @@ public abstract class SearchService {
             } else {
                 query.setQuery(searchRequest.getQuery());
             }
-            SortFilterRequest sortFilterRequest = searchRequest.getSortFilterRequest();
+            SortRequest sortFilterRequest = searchRequest.getSortFilterRequest();
             SolrQuery.ORDER order = SolrQuery.ORDER.asc;
             if (sortFilterRequest != null) {
                 if ("desc".equals(sortFilterRequest.getSortType())) {

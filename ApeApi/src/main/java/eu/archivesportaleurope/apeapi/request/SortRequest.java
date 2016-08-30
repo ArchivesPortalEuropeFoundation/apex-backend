@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author kaisar
  */
-public class SortFilterRequest {
+public class SortRequest {
 
     @ApiModelProperty(value = "Type of sorting. Allowed values can be asc or desc")
     private String sortType = "asc";
