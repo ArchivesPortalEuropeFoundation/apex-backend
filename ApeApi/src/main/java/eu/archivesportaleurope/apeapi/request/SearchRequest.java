@@ -25,7 +25,7 @@ public class SearchRequest extends QueryPageRequest {
     ArrayList<DateFilterRequest> dateFilters;
 
     @ApiModelProperty(value = "Sorting result with fields and sorting type")
-    SortRequest sortFilterRequest;
+    SortRequest sortRequest;
 
     public ArrayList<SearchFilterRequest> getFilters() {
         if (filters == null) {
@@ -49,11 +49,11 @@ public class SearchRequest extends QueryPageRequest {
         this.dateFilters = dateFilters;
     }
 
-    public SortRequest getSortFilterRequest() {
-        return sortFilterRequest;
+    public SortRequest getSortRequest() {
+        return sortRequest;
     }
 
-    public void setSortFilterRequest(SortRequest sortFilterRequest) {
-        this.sortFilterRequest = sortFilterRequest;
+    public void setSortRequest(SortRequest sortRequest) {
+        this.sortRequest = sortRequest;
     }
 }
