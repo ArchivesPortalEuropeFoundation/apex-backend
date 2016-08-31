@@ -63,7 +63,7 @@ public abstract class SearchService {
             } else {
                 query.setQuery(searchRequest.getQuery());
             }
-            SortRequest sortFilterRequest = searchRequest.getSortFilterRequest();
+            SortRequest sortFilterRequest = searchRequest.getSortRequest();
             SolrQuery.ORDER order = SolrQuery.ORDER.asc;
             if (sortFilterRequest != null) {
                 if ("desc".equals(sortFilterRequest.getSortType())) {
