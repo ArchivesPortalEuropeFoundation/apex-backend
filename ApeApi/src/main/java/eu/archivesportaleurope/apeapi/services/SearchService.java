@@ -14,10 +14,12 @@ import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.request.SortRequest;
+import eu.archivesportaleurope.apeapi.response.common.SortFields;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -70,8 +72,9 @@ public abstract class SearchService {
                     order = SolrQuery.ORDER.desc;
                 }
                 if (sortFilterRequest.getFields() != null) {
+                    Map<String, String> sortFieldMap = new SortFields().getSolrSortFieldMap();
                     for (String field : sortFilterRequest.getFields()) {
-                        query.addSort(field, order);
+                        query.addSort(sortFieldMap.get(field), order);
                     }
                 }
             }
