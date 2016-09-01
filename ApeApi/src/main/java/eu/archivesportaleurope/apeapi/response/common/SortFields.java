@@ -17,9 +17,9 @@ public class SortFields {
 
     private enum SortFieldsEnum {
         date("startdate"),
-        title("title"),
-        referenceCode("unitid"),
-        findingAidNo("unitidfond");
+        title("titlesort"),
+        referenceCode("unitidsort"),
+        findingAidNo("unitidfondsort");
         private final String solrFieldValue;
 
         private SortFieldsEnum(String solrFieldValue) {
