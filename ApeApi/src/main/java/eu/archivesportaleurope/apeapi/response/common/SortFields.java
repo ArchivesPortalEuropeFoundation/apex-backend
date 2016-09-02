@@ -32,9 +32,11 @@ public class SortFields {
     }
 
     private final Map<String, String> solrSortFieldMap = new HashMap<>();
+    private Map<String, String> solrEACSortFieldMap = new HashMap<>();
 
     public SortFields() {
         this.setSolrSortFieldMap();
+        this.setSolrEACSortFieldMap();
     }
 
     public Map<String, String> getSolrSortFieldMap() {
@@ -49,6 +51,18 @@ public class SortFields {
         for (SortFieldsEnum sortField : SortFieldsEnum.values()) {
             this.solrSortFieldMap.put(sortField.name(), sortField.getSolrFieldValue());
         }
+    }
+
+    public Map<String, String> getSolrEACSortFieldMap() {
+        return solrEACSortFieldMap;
+    }
+
+    public Set<String> getRepresentationEacFieldName() {
+        return this.solrEACSortFieldMap.keySet();
+    }
+
+    public final void setSolrEACSortFieldMap() {
+        this.solrEACSortFieldMap.put(SortFieldsEnum.date.name(), SortFieldsEnum.date.getSolrFieldValue());
     }
 
 }
