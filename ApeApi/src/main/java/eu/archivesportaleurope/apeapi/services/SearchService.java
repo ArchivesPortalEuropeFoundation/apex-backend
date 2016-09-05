@@ -45,38 +45,12 @@ public abstract class SearchService {
             List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil) {
         try {
 
-            SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
+            SolrQuery query = this.getFacatedQuery(searchRequest, facetSettingsList);
 
-            for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
-                queryBuilder.addFilters(query,
-                        FacetType.getFacetByName(ServerResponseDictionary.getSolrFieldName(searchFilter.getFacetFieldName())),
-                        searchFilter.getFacetFieldIds());
-            }
-
-            for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {
-                if (dateFilter.getDateFieldName().equalsIgnoreCase("fromDate")) {
-                    queryBuilder.addFromDateFilter(query, dateFilter.getDateFieldId());
-                } else if (dateFilter.getDateFieldName().equalsIgnoreCase("toDate")) {
-                    queryBuilder.addToDateFilter(query, dateFilter.getDateFieldId());
-                }
-            }
             if (extraSearchParam != null && !"".equals(extraSearchParam)) {
                 query.setQuery(searchRequest.getQuery() + " AND " + extraSearchParam);
             } else {
                 query.setQuery(searchRequest.getQuery());
-            }
-            SortRequest sortFilterRequest = searchRequest.getSortRequest();
-            SolrQuery.ORDER order = SolrQuery.ORDER.asc;
-            if (sortFilterRequest != null) {
-                if ("desc".equals(sortFilterRequest.getSortType())) {
-                    order = SolrQuery.ORDER.desc;
-                }
-                if (sortFilterRequest.getFields() != null) {
-                    Map<String, String> sortFieldMap = new SortFields().getSolrSortFieldMap();
-                    for (String field : sortFilterRequest.getFields()) {
-                        query.addSort(sortFieldMap.get(field), order);
-                    }
-                }
             }
 
             if (searchRequest.getCount() <= 0) {
@@ -89,12 +63,81 @@ public abstract class SearchService {
             //openData - true or false should be managed by the query
             assert (query.getQuery().contains("openData") == true);
 
-            logger.debug("Final search query: " + query.getQuery());
+            logger.debug("Final search query: " + query);
             eadSearchUtil.setQuery(query);
 
             return eadSearchUtil.getSearchResponse();
         } catch (SolrServerException | ParseException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
+    }
+
+    protected QueryResponse groupByQuery(SearchRequest searchRequest, String extraSearchParam,
+            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil searchUtil,
+            String groupByFieldName, boolean resultNeeded) {
+        try {
+//            SolrQuery query = new SolrQuery();
+            SolrQuery query = this.getFacatedQuery(searchRequest, facetSettingsList);
+
+            if (extraSearchParam != null && !"".equals(extraSearchParam)) {
+                query.setQuery(searchRequest.getQuery() + " AND " + extraSearchParam);
+            } else {
+                query.setQuery(searchRequest.getQuery());
+            }
+            query.add("group", "true");
+            query.add("group.field", groupByFieldName);
+            query.add("group.ngroups", "true");
+            if (!resultNeeded) {
+                query.add("group.limit", "0");
+            }
+            
+            if (searchRequest.getCount() > 0) {
+                query.setRows(searchRequest.getCount());
+            } else {
+                query.setRows(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
+            }
+            //openData - true or false should be managed by the query
+            assert (query.getQuery().contains("openData") == true);
+            
+            logger.debug("Final group query is: " + query);
+            searchUtil.setQuery(query);
+
+            return searchUtil.getSearchResponse();
+        } catch (SolrServerException | ParseException ex) {
+            throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    private SolrQuery getFacatedQuery(SearchRequest searchRequest,
+            List<ListFacetSettings> facetSettingsList) throws SolrServerException, ParseException {
+        SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
+
+        for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
+            queryBuilder.addFilters(query,
+                    FacetType.getFacetByName(ServerResponseDictionary.getSolrFieldName(searchFilter.getFacetFieldName())),
+                    searchFilter.getFacetFieldIds());
+        }
+
+        for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {
+            if (dateFilter.getDateFieldName().equalsIgnoreCase("fromDate")) {
+                queryBuilder.addFromDateFilter(query, dateFilter.getDateFieldId());
+            } else if (dateFilter.getDateFieldName().equalsIgnoreCase("toDate")) {
+                queryBuilder.addToDateFilter(query, dateFilter.getDateFieldId());
+            }
+        }
+
+        SortRequest sortFilterRequest = searchRequest.getSortRequest();
+        SolrQuery.ORDER order = SolrQuery.ORDER.asc;
+        if (sortFilterRequest != null) {
+            if ("desc".equals(sortFilterRequest.getSortType())) {
+                order = SolrQuery.ORDER.desc;
+            }
+            if (sortFilterRequest.getFields() != null) {
+                for (String field : sortFilterRequest.getFields()) {
+                    query.addSort(field, order);
+                }
+            }
+        }
+        return query;
     }
 }

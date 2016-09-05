@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class SortRequest {
 
-    @ApiModelProperty(value = "Type of sorting. Allowed values can be asc or desc")
+    @ApiModelProperty(value = "Type of sorting. Allowed values can be asc or desc", example = "asc")
     private String sortType = "asc";
-    @ApiModelProperty(value = "Sorting fields")
+    @ApiModelProperty(value = "Sorting fields", example = "title")
     private List<String> fields;
 
     public String getSortType() {
