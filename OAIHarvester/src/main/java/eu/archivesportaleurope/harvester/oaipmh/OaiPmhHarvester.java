@@ -148,7 +148,7 @@ public class OaiPmhHarvester {
 					}
 				}catch (HarvesterConnectionException e) {
 					String errors = "Url that have connection problems: '" + e.getRequestUrl() + "'\n\n";
-					errors+= e.getMessage() +" (Time out is 5 minutes)";
+					errors+= e.getMessage() +" (Time out is 30 minutes)";
 					LOGGER.error(errors);
 					numberOfErrors++;
 					if (numberOfErrors >= MAX_NUMBER_OF_ERRORS){
