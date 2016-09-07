@@ -20,7 +20,7 @@ import eu.archivesportaleurope.harvester.verb.ListRecordsVerb;
 public class OaiPmhHarvester {
 	public static final String LOGGER_STRING = "OAI-PMH_PROGRESS";
 	private static final Logger LOGGER = Logger.getLogger(LOGGER_STRING);
-	private static final int MAX_NUMBER_OF_ERRORS = 5;
+	private static final int MAX_NUMBER_OF_ERRORS = 15;
 	public static void harvestByListRecords(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
 			OaiPmhParser oaiPmhParser, File errorDir, OaiPmhHttpClient oaiPmhHttpClient) throws Exception {
 		try {

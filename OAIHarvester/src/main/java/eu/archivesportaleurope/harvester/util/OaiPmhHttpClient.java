@@ -36,7 +36,7 @@ import eu.archivesportaleurope.harvester.oaipmh.auth.JCIFSNTLMSchemeFactory;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
 
 public class OaiPmhHttpClient {
-	private static final int TIMEOUT = 1800000;
+	private static final int TIMEOUT = 3600000;
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHttpClient.class);
 	private CloseableHttpClient httpClient;
 	private HttpClientContext context;
