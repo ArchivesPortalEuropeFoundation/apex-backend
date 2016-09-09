@@ -13,6 +13,7 @@ import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
@@ -114,7 +115,7 @@ public class SearchResource {
     @Path("/ead/docList")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Search for EAD docList",
-            response = EadDocResponseSet.class
+            response = EadFactedDocResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
@@ -127,7 +128,7 @@ public class SearchResource {
     ) {
         try {
             QueryResponse response = eadSearch.getEadList(searchRequest);
-            return Response.ok().entity(new EadDocResponseSet(searchRequest, response)).build();
+            return Response.ok().entity(new EadFactedDocResponseSet(searchRequest, response)).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

@@ -14,12 +14,10 @@ import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.request.SortRequest;
-import eu.archivesportaleurope.apeapi.response.common.SortFields;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -90,7 +88,7 @@ public abstract class SearchService {
             if (!resultNeeded) {
                 query.add("group.limit", "0");
             }
-            
+
             if (searchRequest.getCount() > 0) {
                 query.setRows(searchRequest.getCount());
             } else {
@@ -98,7 +96,7 @@ public abstract class SearchService {
             }
             //openData - true or false should be managed by the query
             assert (query.getQuery().contains("openData") == true);
-            
+
             logger.debug("Final group query is: " + query);
             searchUtil.setQuery(query);
 
