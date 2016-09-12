@@ -11,7 +11,6 @@ import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
-import eu.archivesportaleurope.apeapi.response.ead.EadDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;

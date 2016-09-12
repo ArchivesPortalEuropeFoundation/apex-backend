@@ -81,8 +81,8 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setCount(request.getCount());
         searchRequest.setStartIndex(request.getStartIndex());
-        searchRequest.setQuery("ai:*" + request.getInstituteId() + this.solrAND +
-                "id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
+        searchRequest.setQuery("ai:*" + request.getInstituteId() + this.solrAND
+                + "id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
         return this.search(searchRequest, this.onlyOpenData, false);
     }
 
@@ -97,6 +97,8 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
     private QueryResponse groupByQueryOpenData(SearchDocRequest searchRequest, String groupByFieldName, boolean includeFacet, boolean resultNeeded) {
         SearchRequest request = new SearchRequest();
+        request.setFilters(searchRequest.getFilters());
+        request.setDateFilters(searchRequest.getDateFilters());
         request.setQuery(searchRequest.getQuery() + this.solrAND + "type:" + searchRequest.getDocType());
 
         logger.info("Group query is : " + request.getQuery());
