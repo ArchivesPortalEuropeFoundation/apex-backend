@@ -208,7 +208,7 @@ public class DataHarvester {
 			handleExceptions(harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse(),failedEarlier);
 		}catch (HarvesterConnectionException e) {
 			String errors = "Url that have connection problems: '" + e.getRequestUrl() + "'\n\n";
-			errors+= e.getMessage() +" (Time out is 30 minutes)";
+			errors+= e.getMessage() +" (Time out is 60 minutes)";
 			LOGGER.error(errors);
 			handleExceptions( harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (Exception e) {
