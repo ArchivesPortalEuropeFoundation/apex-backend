@@ -214,9 +214,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     @Override
     public void prepare() throws Exception {
         super.prepare();
-    }
-
-    public ConvertAction() {
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
@@ -393,7 +390,7 @@ public class ConvertAction extends AbstractInstitutionAction {
         }
 
 //        if (this.isBatchConversion()) {
-            config.setInheritRightsInfo(true);
+        config.setInheritRightsInfo(true);
 //        } else {
 //            config.setInheritRightsInfo(ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo()));
 //        }
