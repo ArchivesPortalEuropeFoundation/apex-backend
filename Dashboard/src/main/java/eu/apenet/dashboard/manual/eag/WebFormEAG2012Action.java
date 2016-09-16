@@ -964,6 +964,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
                 JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
                 Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
                 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                jaxbMarshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd");
                 jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
                 // Save in a temporal file.
                 File eagTempFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
