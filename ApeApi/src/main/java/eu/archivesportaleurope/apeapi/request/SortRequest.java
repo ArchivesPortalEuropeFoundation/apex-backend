@@ -16,7 +16,7 @@ public class SortRequest {
 
     @ApiModelProperty(value = "Type of sorting. Allowed values can be asc or desc", example = "asc")
     private String sortType = "asc";
-    @ApiModelProperty(value = "Sorting fields", example = "title")
+    @ApiModelProperty(value = "Sorting fields")
     private List<String> fields;
 
     public String getSortType() {
