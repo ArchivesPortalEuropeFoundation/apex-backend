@@ -232,6 +232,14 @@ public class ManageQueueAction extends AbstractAction {
         }
         return SUCCESS;
     }
+    
+    public String reindex() {
+        if (SecurityContext.get().isAdmin()) {
+            //code to reindex
+            //sample can be found in method republishAllEagFiles()
+        }
+        return SUCCESS;
+    }
 
     public String changeMaintenanceMode() {
         if (SecurityContext.get().isAdmin()) {

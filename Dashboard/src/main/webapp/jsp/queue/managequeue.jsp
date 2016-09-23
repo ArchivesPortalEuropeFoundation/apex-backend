@@ -86,6 +86,9 @@
             <s:form action="rebuildAutosuggestion" theme="simple" method="post">
                 <s:submit value="Build autosuggestion dictionaries"></s:submit>
             </s:form>
+            <s:form action="reindex" theme="simple" method="post">
+                <s:submit value="Reindex all documents"></s:submit>
+            </s:form>
         </c:if>
     </c:if>
     <c:if test="${!empty countsByArchivalInstitutions }">

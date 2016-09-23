@@ -71,7 +71,7 @@
             startStopHarvester,solrOptimize,
             eag2012GeoCoordinates, changeIdentifierInDDBB, fixALOrderInDDBB, republishAllEagFiles,showLogFiles,downloadLogFile,changeMaintenanceMode,rebuildAutosuggestion,
             xslUploadChooseCountry,xslUploadChooseInstitution,xslUploadFile,editXslFilename,deleteXsl,
-            manageQueueItemOfInstitution
+            manageQueueItemOfInstitution,reindex
         </group>
     </groups>
     <role-mappings>
