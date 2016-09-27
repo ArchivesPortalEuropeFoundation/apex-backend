@@ -13,6 +13,7 @@ import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.EagRelation;
 import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.RelationEntry;
+import eu.apenet.dpt.utils.eag2012.Relations;
 import eu.apenet.dpt.utils.eag2012.Repository;
 import eu.apenet.dpt.utils.eag2012.ResourceRelation;
 
@@ -170,6 +171,9 @@ public class FillRelationsObjectJAXB extends AbstractObjectJAXB implements Objec
             if (!found) {
                 //TODO: current situation from ticket 543
                 if (resourceRelation.getRelationEntry() != null || (resourceRelation.getHref() != null && !resourceRelation.getHref().isEmpty())) {
+                    if (this.eag.getRelations() == null){
+                        this.eag.setRelations(new Relations());
+                    }
                     this.eag.getRelations().getResourceRelation().add(resourceRelation);
                 }
             }
