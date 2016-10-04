@@ -53,7 +53,7 @@ public class EadContentServiceImpl implements EadContentService {
             Long idLong = new Long(id.substring(1));
             CLevel currentLevel = cLevelRepo.findById(idLong);
             if (currentLevel == null) {
-                throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
+                throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id: " + id);
             }
             //lazy load
             ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();

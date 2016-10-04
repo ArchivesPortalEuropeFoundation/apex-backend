@@ -133,9 +133,15 @@ public abstract class SearchService {
                 order = SolrQuery.ORDER.desc;
             }
             if (sortFilterRequest.getFields() != null) {
-                    Map<String, String> sortFieldMap = new SortFields().getSolrSortFieldMap();
+                //ToDo: For every search type, sort fileds could be different
+                //If we don't want exception because sort field was not found in specific type
+                //this should be fixed
+                Map<String, String> sortFieldMap = new SortFields().getSolrSortFieldMap();
                 for (String field : sortFilterRequest.getFields()) {
-                        query.addSort(sortFieldMap.get(field), order);
+                    String solrSortField = sortFieldMap.get(field);
+                    if (solrSortField!=null) {
+                        query.addSort(solrSortField, order);
+                    }
                 }
             }
         }
