@@ -92,4 +92,8 @@ public class DetailContent {
     public String getUnitTitle() {
         return this.currentLevel == null ? this.eadContent.getUnittitle() : this.currentLevel.getUnittitle();
     }
+    
+    public String getFondsUnitTitle() {
+        return this.eadContent.getTitleproper();
+    }
 }

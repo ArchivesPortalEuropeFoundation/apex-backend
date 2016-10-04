@@ -100,13 +100,7 @@ public class ContentResource {
         try {
             DetailContent detailContent = eadContentService.findClevelContent(id);
 
-            ContentResponseClevel contentResponse = new ContentResponseClevel();
-
-            contentResponse.setId(id);
-            contentResponse.setRepositoryId(detailContent.getAiId());
-            contentResponse.setRepository(detailContent.getAiRepoName());
-            contentResponse.setUnitId(detailContent.getUnitId());
-            contentResponse.setUnitTitle(detailContent.getUnitTitle());
+            ContentResponseClevel contentResponse = new ContentResponseClevel(detailContent, id);
 
             InputStream stream = new ByteArrayInputStream(detailContent.getXml().getBytes());
             C clevel = (C) cUnmarshaller.unmarshal(stream);
@@ -141,13 +135,7 @@ public class ContentResource {
         try {
             DetailContent detailContent = eadContentService.findEadContent(id);
 
-            ContentResponseEad contentResponse = new ContentResponseEad();
-
-            contentResponse.setId(id);
-            contentResponse.setRepositoryId(detailContent.getAiId());
-            contentResponse.setRepository(detailContent.getAiRepoName());
-            contentResponse.setUnitId(detailContent.getUnitId());
-            contentResponse.setUnitTitle(detailContent.getUnitTitle());
+            ContentResponseEad contentResponse = new ContentResponseEad(detailContent, id);
 
             InputStream stream = new ByteArrayInputStream(detailContent.getXml().getBytes());
             Ead ead = (Ead) eadUnmarshaller.unmarshal(stream);
