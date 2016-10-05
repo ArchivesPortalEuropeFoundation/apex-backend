@@ -252,7 +252,7 @@ public class ConsoleHarvester {
 
 				} catch (HarvesterConnectionException ste) {
 					String errors = "Url that have connection problems: '" + ste.getRequestUrl() + "'\n\n";
-					errors+= ste.getMessage() +" (Time out is 5 minutes)";
+					errors+= ste.getMessage() +" (Time out is 60 minutes)";
 					logger.error(errors);
 
 				}

@@ -58,7 +58,7 @@ public class VersionResource {
         @ApiResponse(code = 500, message = "Internal server error")
     })
     public Response appVersionPre() {
-        String appVersion = "{\"version\":0.0}";
+        String appVersion = "{\"version\":\""+ServerConstants.APE_API_PREVIOUS_VERSION+"\"}";
         logger.debug("My current version is " + appVersion);
         return Response.ok(appVersion).build();
     }

@@ -45,7 +45,7 @@ public class VersionResourceTest extends JerseySpringWithSecurityTest {
     public void testPreviousAppVersion() {
         logger.debug("Application previous version Version");
         Response response = super.target("version").path("previous").request().get(Response.class);
-        String appVersion = "{\"version\":0.0}";
+        String appVersion = "{\"version\":\""+ServerConstants.APE_API_PREVIOUS_VERSION+"\"}";
         Assert.assertEquals(appVersion, response.readEntity(String.class));
     }
 
