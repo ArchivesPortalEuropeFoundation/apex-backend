@@ -19,7 +19,8 @@ public class SortFields {
         date("startdate"),
         title("titlesort"),
         referenceCode("unitidsort"),
-        findingAidNo("unitidfondsort");
+        findingAidNo("unitidfondsort"),
+        orderId("orderId");
         private final String solrFieldValue;
 
         private SortFieldsEnum(String solrFieldValue) {

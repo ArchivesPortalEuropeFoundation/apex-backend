@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class SortRequest {
     @ApiModelProperty(value = "Type of sorting. Allowed values can be asc or desc", example = "asc")
     private String sortType = "asc";
     @ApiModelProperty(value = "Sorting fields")
-    private List<String> fields;
+    private List<String> fields = new ArrayList<>();
 
     public String getSortType() {
         return sortType;

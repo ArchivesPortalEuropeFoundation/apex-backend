@@ -8,9 +8,11 @@ import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
+import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.request.SortRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
@@ -213,6 +215,18 @@ public class EadSearchSearviceImpl extends EadSearchService {
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
         request.setQuery(searchRequest.getQuery() + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
+        return this.searchOpenData(request);
+    }
+    
+    @Override
+    public QueryResponse getChildren(String id, PageRequest pageRequest) {
+        SearchRequest request = new SearchRequest();
+        request.setCount(pageRequest.getCount());
+        request.setStartIndex(pageRequest.getStartIndex());
+        SortRequest sortRequest = new SortRequest();
+        sortRequest.addField(SolrFields.ORDER_ID);
+        request.setSortRequest(sortRequest);
+        request.setQuery("*" + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
         return this.searchOpenData(request);
     }
 }

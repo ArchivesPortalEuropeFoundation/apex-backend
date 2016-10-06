@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.services;
 
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
+import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -26,4 +27,6 @@ public abstract class EadSearchService extends SearchService {
     public abstract QueryResponse getDescendants(String id, QueryPageRequest searchRequest);
 
     public abstract QueryResponse getChildren(String id, QueryPageRequest searchRequest);
+    
+    public abstract QueryResponse getChildren(String id, PageRequest searchRequest);
 }
