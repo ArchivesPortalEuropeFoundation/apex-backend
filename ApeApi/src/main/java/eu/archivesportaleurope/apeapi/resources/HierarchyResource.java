@@ -9,8 +9,6 @@ import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
-import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
-import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
@@ -51,25 +49,25 @@ public class HierarchyResource {
     @Autowired
     SearchService eacCpfSearch;
 
-    //@POST
-    //@Path("/ead/{id}/ancestors")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    @ApiOperation(value = "Search the term in all descendants of a given id",
-//            response = HierarchyResponseSet.class
-//    )
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 500, message = "Internal server error"),
-//        @ApiResponse(code = 400, message = "Bad request"),
-//        @ApiResponse(code = 401, message = "Unauthorized")
-//    })
-//    @Consumes({ServerConstants.APE_API_V1})
+    @POST
+    @Path("/ead/{id}/ancestors")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Search the term in all descendants of a given id",
+            response = HierarchyResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
     public Response getAncestors(
             @PathParam("id") String id,
-            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid PageRequest pageRequest
     ) {
         try {
-            QueryResponse response = eadSearch.getDescendants(id, searchRequest);
-            return Response.ok().entity(new EadResponseSet(response)).build();
+            HierarchyResponseSet response = eadSearch.getAncestors(id, pageRequest);
+            return Response.ok().entity(response).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();
@@ -97,8 +95,8 @@ public class HierarchyResource {
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid PageRequest searchRequest
     ) {
         try {
-            QueryResponse response = eadSearch.getChildren(id, searchRequest);
-            return Response.ok().entity(new HierarchyResponseSet(response)).build();
+            HierarchyResponseSet response = eadSearch.getChildren(id, searchRequest);
+            return Response.ok().entity(response).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

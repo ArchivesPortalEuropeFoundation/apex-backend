@@ -13,10 +13,14 @@ import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.request.SortRequest;
+import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -40,6 +44,12 @@ public class EadSearchSearviceImpl extends EadSearchService {
     private final SolrSearchUtil searchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private class TypedList {
+
+        String type;
+        Map<String, Integer> keyLevel = new HashMap<>();
+    }
 
     public EadSearchSearviceImpl(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
@@ -153,18 +163,59 @@ public class EadSearchSearviceImpl extends EadSearchService {
     @Override
     public QueryResponse getDescendants(String id, QueryPageRequest searchRequest) {
         try {
-            String[] levelStr = this.getDocHighestLevel(id); //FID0_s or HID0_s etc
+            String levelStr = this.getDocHighestLevelText(id); //FID0_s or HID0_s etc
             SearchRequest request = new SearchRequest();
             request.setQuery(searchRequest.getQuery());
             request.setCount(searchRequest.getCount());
             request.setStartIndex(searchRequest.getStartIndex());
-            return this.search(request, levelStr[0] + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData, false);
+            return this.search(request, levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData, false);
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
 
-    private String[] getDocHighestLevel(String id) throws SolrServerException {
+    private String getDocHighestLevelText(String id) throws SolrServerException {
+        TypedList typedList = getParentList(id);
+        int level = typedList.keyLevel.size();
+
+        return typedList.type + "ID" + level + "_s";
+    }
+
+    @Override
+    public QueryResponse getChildren(String id, QueryPageRequest searchRequest) {
+        SearchRequest request = new SearchRequest();
+        request.setCount(searchRequest.getCount());
+        request.setStartIndex(searchRequest.getStartIndex());
+        request.setQuery(searchRequest.getQuery() + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
+        return this.searchOpenData(request);
+    }
+
+    @Override
+    public HierarchyResponseSet getChildren(String id, PageRequest pageRequest) {
+        SearchRequest request = new SearchRequest();
+        request.setCount(pageRequest.getCount());
+        request.setStartIndex(pageRequest.getStartIndex());
+        SortRequest sortRequest = new SortRequest();
+        sortRequest.addField(SolrFields.ORDER_ID);
+        request.setSortRequest(sortRequest);
+        request.setQuery("*" + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
+        
+        QueryResponse qr = this.searchOpenData(request);
+        try {
+            TypedList typedListParent = this.getParentList(id);
+            //the size of current id's parent list (which is the parent of it's children) indecate it's level
+//            TypedList typedListChildren = new TypedList();
+//            for (SolrDocument document : qr.getResults()) {
+//                typedListChildren.keyLevel.put(document.getFieldValue(SolrFields.ID).toString(), typedListParent.keyLevel.size()+1);
+//            }
+            HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedListParent.keyLevel.size()+1);
+            return hrs;
+        } catch (SolrServerException ex) {
+            throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    private TypedList getParentList(String id) throws SolrServerException {
         SolrQuery query = new SolrQuery();
         query.setQuery("id:" + id + this.solrAND + onlyOpenData);
         query.setRows(1);
@@ -186,47 +237,60 @@ public class EadSearchSearviceImpl extends EadSearchService {
             throw new ResourceNotFoundException("No such document exist with id: " + id, "");
         }
         String docType = document.getFieldValue(SolrFields.TYPE).toString();
-        String[] res = {"", ""};
+        String[] typePrefix = {"", ""};
         if (docType.equals(SolrValues.FA_TYPE)) {
-            res[0] = SolrFields.FA_DYNAMIC_ID;
-            res[1] = SolrFields.FA_DYNAMIC;
+            typePrefix[0] = SolrFields.FA_DYNAMIC_ID;
+            typePrefix[1] = SolrFields.FA_DYNAMIC;
         } else if (docType.equals(SolrValues.HG_TYPE)) {
-            res[0] = SolrFields.HG_DYNAMIC_ID;
-            res[1] = SolrFields.HG_DYNAMIC;
+            typePrefix[0] = SolrFields.HG_DYNAMIC_ID;
+            typePrefix[1] = SolrFields.HG_DYNAMIC;
         } else if (docType.equals(SolrValues.SG_TYPE)) {
-            res[0] = SolrFields.SG_DYNAMIC_ID;
-            res[1] = SolrFields.SG_DYNAMIC;
+            typePrefix[0] = SolrFields.SG_DYNAMIC_ID;
+            typePrefix[1] = SolrFields.SG_DYNAMIC;
         }
+        TypedList typedList = new TypedList();
+        typedList.type = typePrefix[1];
+
         int level = 0;
-        while (null != document.getFieldValue(res[0] + level + "_s")) {
+        while (null != document.getFieldValue(typePrefix[0] + level + "_s")) {
+            typedList.keyLevel.put(document.getFieldValue(typePrefix[0] + level + "_s").toString(), level);
             level++;
         }
-        if (document.getFieldValue(res[0] + (level - 1) + "_s").toString().equalsIgnoreCase(id)) {
+        if (document.getFieldValue(typePrefix[0] + (level - 1) + "_s").toString().equalsIgnoreCase(id)) {
+            typedList.keyLevel.remove(id);
             level--;
         }
-        res[0] = res[0] + level + "_s";
-        res[1] = res[1] + level + "_s";
-        return res;
+
+        return typedList;
     }
 
     @Override
-    public QueryResponse getChildren(String id, QueryPageRequest searchRequest) {
-        SearchRequest request = new SearchRequest();
-        request.setCount(searchRequest.getCount());
-        request.setStartIndex(searchRequest.getStartIndex());
-        request.setQuery(searchRequest.getQuery() + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
-        return this.searchOpenData(request);
-    }
-    
-    @Override
-    public QueryResponse getChildren(String id, PageRequest pageRequest) {
-        SearchRequest request = new SearchRequest();
-        request.setCount(pageRequest.getCount());
-        request.setStartIndex(pageRequest.getStartIndex());
-        SortRequest sortRequest = new SortRequest();
-        sortRequest.addField(SolrFields.ORDER_ID);
-        request.setSortRequest(sortRequest);
-        request.setQuery("*" + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
-        return this.searchOpenData(request);
+    public HierarchyResponseSet getAncestors(String id, PageRequest pageRequest) {
+        try {
+            TypedList typedList = this.getParentList(id);
+            StringBuilder requestStrBuffer = new StringBuilder("(");
+            boolean orIt = false;
+            for (Map.Entry<String, Integer> aLevel : typedList.keyLevel.entrySet()) {
+                if (orIt) {
+                    requestStrBuffer.append(" OR ");
+                }
+                requestStrBuffer.append("id:").append(aLevel.getKey());
+                orIt = true;
+            }
+
+            requestStrBuffer.append(")");
+
+            SearchRequest request = new SearchRequest();
+//            request.setCount(pageRequest.getCount());
+            request.setCount(typedList.keyLevel.size());
+//            request.setStartIndex(pageRequest.getStartIndex());
+            request.setQuery(requestStrBuffer.toString());
+            QueryResponse qr = this.searchOpenData(request);
+            HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedList.keyLevel);
+            return hrs;
+
+        } catch (SolrServerException ex) {
+            throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
+        }
     }
 }

@@ -31,19 +31,20 @@ public class HierarchyResponse extends InstituteEadResponse {
     private String scopeContent;
     
     @ApiModelProperty(value = "Index relative to its siblings")
-    private String siblingPosition;
+    private int siblingPosition;
     
     @ApiModelProperty(value = "Greatest ancestor is a level 0")
-    private String ancestorLevel;
+    private int ancestorLevel;
 
-    public HierarchyResponse(SolrDocument solrDocument, QueryResponse response) {
+    public HierarchyResponse(SolrDocument solrDocument, QueryResponse response, int parentLevel) {
         super(solrDocument, response);
         this.unitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE));
         
-        this.siblingPosition = this.objectToString(solrDocument.getFieldValue(SolrFields.ORDER_ID));
+        this.siblingPosition = Integer.parseInt(this.objectToString(solrDocument.getFieldValue(SolrFields.ORDER_ID)));
 
         this.unitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
+        this.ancestorLevel = parentLevel;
     }
 
     /**
@@ -85,19 +86,19 @@ public class HierarchyResponse extends InstituteEadResponse {
         this.unitId = unitId;
     }
 
-    public String getSiblingPosition() {
+    public int getSiblingPosition() {
         return siblingPosition;
     }
 
-    public void setSiblingPosition(String siblingPosition) {
+    public void setSiblingPosition(int siblingPosition) {
         this.siblingPosition = siblingPosition;
     }
 
-    public String getAncestorLevel() {
+    public int getAncestorLevel() {
         return ancestorLevel;
     }
 
-    public void setAncestorLevel(String ancestorLevel) {
+    public void setAncestorLevel(int ancestorLevel) {
         this.ancestorLevel = ancestorLevel;
     }
 }

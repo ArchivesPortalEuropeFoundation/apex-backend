@@ -5,17 +5,18 @@
  */
 package eu.archivesportaleurope.apeapi.response.hierarchy;
 
-import eu.archivesportaleurope.apeapi.response.ead.*;
+import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
-import eu.archivesportaleurope.apeapi.response.common.SortFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -31,12 +32,34 @@ public class HierarchyResponseSet extends ResponseSet {
 
     @ApiModelProperty(required = true, value = "Array of search result, total number of elements can be less than query limit.")
     private List<HierarchyResponse> children;
+    @XmlTransient
+    private boolean isChildrenSorted;
+
+    private class HierarchyResponseComparator implements Comparator<HierarchyResponse> {
+
+        @Override
+        public int compare(HierarchyResponse res1, HierarchyResponse res2) {
+            if (res1.getAncestorLevel() < res2.getAncestorLevel()) {
+                return -1;
+            } else if (res1.getAncestorLevel() == res2.getAncestorLevel() && res1.getSiblingPosition() < res2.getSiblingPosition()) {
+                return -1;
+            } else if (res1.getAncestorLevel() > res2.getAncestorLevel()) {
+                return 1;
+            } else if (res1.getAncestorLevel() == res2.getAncestorLevel() && res1.getSiblingPosition() > res2.getSiblingPosition()) {
+                return 1;
+            }
+
+            //equal
+            return res1.getId().compareToIgnoreCase(res2.getId());
+        }
+    }
 
     public HierarchyResponseSet() {
         children = new ArrayList<>();
+        isChildrenSorted = false;
     }
 
-    public HierarchyResponseSet(QueryResponse response) throws SolrServerException {
+    public HierarchyResponseSet(QueryResponse response, Map<String, Integer> keyLevel) throws SolrServerException {
         this();
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
@@ -46,7 +69,26 @@ public class HierarchyResponseSet extends ResponseSet {
 
         for (SolrDocument document : documentList) {
 
-            this.addEadSearchResult(new HierarchyResponse(document, response));
+            this.addResult(new HierarchyResponse(document, response, keyLevel.get(document.getFieldValue(SolrFields.ID).toString())));
+        }
+
+        this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
+        if (super.totalResults % responseHeader.getRows() > 0) {
+            super.totalPages++;
+        }
+    }
+
+    public HierarchyResponseSet(QueryResponse response, int childFixedLevel) throws SolrServerException {
+        this();
+        SearchStatResponse responseHeader = new SearchStatResponse(response);
+
+        SolrDocumentList documentList = response.getResults();
+        super.setTotalResults(documentList.getNumFound());
+        super.setStartIndex(documentList.getStart());
+
+        for (SolrDocument document : documentList) {
+
+            this.addResult(new HierarchyResponse(document, response, childFixedLevel));
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
         if (super.totalResults % responseHeader.getRows() > 0) {
@@ -55,18 +97,21 @@ public class HierarchyResponseSet extends ResponseSet {
     }
 
     public List<HierarchyResponse> getChildren() {
+        if (!this.isChildrenSorted && this.children != null) {
+            this.children.sort(new HierarchyResponseComparator());
+        }
         return Collections.unmodifiableList(children);
     }
 
-    public final void setChildren(List<HierarchyResponse> eadSearchResutls) {
-        if (eadSearchResutls != null) {
-            this.children = eadSearchResutls;
+    public final void setChildren(List<HierarchyResponse> children) {
+        if (children != null) {
+            this.isChildrenSorted = false;
+            this.children = children;
         }
     }
 
-    public final void addEadSearchResult(HierarchyResponse eadSearchResutl) {
-        if (eadSearchResutl != null) {
-            this.children.add(eadSearchResutl);
-        }
+    public final void addResult(HierarchyResponse children) {
+        this.isChildrenSorted = false;
+        this.children.add(children);
     }
 }

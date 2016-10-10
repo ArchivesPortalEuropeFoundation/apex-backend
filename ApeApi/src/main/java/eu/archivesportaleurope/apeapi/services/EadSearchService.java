@@ -9,6 +9,7 @@ import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
+import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
@@ -25,8 +26,10 @@ public abstract class EadSearchService extends SearchService {
     public abstract QueryResponse getEadList(SearchDocRequest searchRequest);
 
     public abstract QueryResponse getDescendants(String id, QueryPageRequest searchRequest);
+    
+    public abstract HierarchyResponseSet getAncestors(String id, PageRequest pageRequest);
 
     public abstract QueryResponse getChildren(String id, QueryPageRequest searchRequest);
     
-    public abstract QueryResponse getChildren(String id, PageRequest searchRequest);
+    public abstract HierarchyResponseSet getChildren(String id, PageRequest searchRequest);
 }
