@@ -228,6 +228,9 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
         SolrDocumentList documentList = itemResponse.getResults();
         String foundId = "";
+        if (documentList.isEmpty()) {
+            throw new ResourceNotFoundException("No such document exist with id: " + id, "");
+        }
         SolrDocument document = documentList.get(0);
         if (null != document && null != document.getFieldValue(SolrFields.ID)) {
             foundId = document.getFieldValue(SolrFields.ID).toString();
@@ -265,7 +268,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     }
 
     @Override
-    public HierarchyResponseSet getAncestors(String id, PageRequest pageRequest) {
+    public HierarchyResponseSet getAncestors(String id) {
         try {
             TypedList typedList = this.getParentList(id);
             StringBuilder requestStrBuffer = new StringBuilder("(");
@@ -285,9 +288,14 @@ public class EadSearchSearviceImpl extends EadSearchService {
             request.setCount(typedList.keyLevel.size());
 //            request.setStartIndex(pageRequest.getStartIndex());
             request.setQuery(requestStrBuffer.toString());
-            QueryResponse qr = this.searchOpenData(request);
-            HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedList.keyLevel);
-            return hrs;
+            
+            if (typedList.keyLevel.isEmpty()) {
+                return new HierarchyResponseSet();
+            } else {
+                QueryResponse qr = this.searchOpenData(request);
+                HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedList.keyLevel);
+                return hrs;
+            }
 
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));

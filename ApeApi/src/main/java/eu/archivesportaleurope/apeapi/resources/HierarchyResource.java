@@ -52,7 +52,7 @@ public class HierarchyResource {
     @POST
     @Path("/ead/{id}/ancestors")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Search the term in all descendants of a given id",
+    @ApiOperation(value = "Get all ancestors of a given id",
             response = HierarchyResponseSet.class
     )
     @ApiResponses(value = {
@@ -61,12 +61,9 @@ public class HierarchyResource {
         @ApiResponse(code = 401, message = "Unauthorized")
     })
     @Consumes({ServerConstants.APE_API_V1})
-    public Response getAncestors(
-            @PathParam("id") String id,
-            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid PageRequest pageRequest
-    ) {
+    public Response getAncestors(@PathParam("id") String id) {
         try {
-            HierarchyResponseSet response = eadSearch.getAncestors(id, pageRequest);
+            HierarchyResponseSet response = eadSearch.getAncestors(id);
             return Response.ok().entity(response).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
@@ -81,7 +78,7 @@ public class HierarchyResource {
     @POST
     @Path("/ead/{id}/children")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Search the term in all children of a given id",
+    @ApiOperation(value = "Get all children of a given id",
             response = HierarchyResponseSet.class
     )
     @ApiResponses(value = {

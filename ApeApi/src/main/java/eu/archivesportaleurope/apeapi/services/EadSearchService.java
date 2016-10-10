@@ -27,7 +27,7 @@ public abstract class EadSearchService extends SearchService {
 
     public abstract QueryResponse getDescendants(String id, QueryPageRequest searchRequest);
     
-    public abstract HierarchyResponseSet getAncestors(String id, PageRequest pageRequest);
+    public abstract HierarchyResponseSet getAncestors(String id);
 
     public abstract QueryResponse getChildren(String id, QueryPageRequest searchRequest);
     
