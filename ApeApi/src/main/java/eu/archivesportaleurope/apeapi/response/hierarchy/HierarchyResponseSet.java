@@ -31,7 +31,7 @@ import org.apache.solr.common.SolrDocumentList;
 public class HierarchyResponseSet extends ResponseSet {
 
     @ApiModelProperty(required = true, value = "Array of search result, total number of elements can be less than query limit.")
-    private List<HierarchyResponse> children;
+    private List<HierarchyResponse> results;
     @XmlTransient
     private boolean isChildrenSorted;
 
@@ -55,7 +55,7 @@ public class HierarchyResponseSet extends ResponseSet {
     }
 
     public HierarchyResponseSet() {
-        children = new ArrayList<>();
+        results = new ArrayList<>();
         isChildrenSorted = false;
     }
 
@@ -96,22 +96,22 @@ public class HierarchyResponseSet extends ResponseSet {
         }
     }
 
-    public List<HierarchyResponse> getChildren() {
-        if (!this.isChildrenSorted && this.children != null) {
-            this.children.sort(new HierarchyResponseComparator());
+    public List<HierarchyResponse> getResults() {
+        if (!this.isChildrenSorted && this.results != null) {
+            this.results.sort(new HierarchyResponseComparator());
         }
-        return Collections.unmodifiableList(children);
+        return Collections.unmodifiableList(results);
     }
 
-    public final void setChildren(List<HierarchyResponse> children) {
-        if (children != null) {
+    public final void setResults(List<HierarchyResponse> results) {
+        if (results != null) {
             this.isChildrenSorted = false;
-            this.children = children;
+            this.results = results;
         }
     }
 
     public final void addResult(HierarchyResponse children) {
         this.isChildrenSorted = false;
-        this.children.add(children);
+        this.results.add(children);
     }
 }
