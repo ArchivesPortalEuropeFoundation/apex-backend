@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.solr.common.SolrInputDocument;
 
@@ -30,6 +31,24 @@ public class JsonToObject {
         File file = new File(filePath);
         T object = mapper.readValue(file, type);
         return object;
+    }
+
+    private SolrJsonObject getGenericObject(String filePath) throws IOException {
+        return this.getObject(filePath, SolrJsonObject.class);
+    }
+
+    public List<SolrInputDocument> getSolrDocsFromGenericJson(String filePath) throws IOException {
+        SolrJsonObject object = this.getGenericObject(filePath);
+        List<SolrInputDocument> solrDocs = new ArrayList<>();
+        for (HashMap<String, String> map : object.getEadSearchResults()) {
+            SolrInputDocument solrDoc = new SolrInputDocument();
+            for (String key : map.keySet()) {
+                solrDoc.addField(key, map.get(key));
+            }
+            solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
+            solrDocs.add(solrDoc);
+        }
+        return solrDocs;
     }
 
     private List<SolrInputDocument> getEadSolrDocs(EadResponseSet eads) {
@@ -48,6 +67,39 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFondsUnitId());
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
+            solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
+            solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
+            solrDocs.add(solrDoc);
+        }
+        return solrDocs;
+    }
+
+    private List<SolrInputDocument> getEadSolrDocs(EadDocSetMock eads) {
+        List<SolrInputDocument> solrDocs = new ArrayList<>();
+        for (EadDocMock ead : eads.getEadSearchResults()) {
+            SolrInputDocument solrDoc = new SolrInputDocument();
+            solrDoc.addField(SolrFields.ID, ead.getId());
+            solrDoc.addField(SolrFields.TITLE, ead.getUnitTitle());
+            solrDoc.addField(SolrFields.UNITID, ead.getUnitId());
+            solrDoc.addField(SolrFields.SCOPECONTENT, ead.getScopeContent());
+            solrDoc.addField(SolrFields.LANGUAGE, ead.getLanguage());
+            solrDoc.addField(SolrFields.LANGMATERIAL, ead.getLangMaterial());
+            solrDoc.addField(SolrFields.ALTERDATE, ead.getUnitDate());
+            solrDoc.addField(SolrFields.COUNTRY, ead.getCountry());
+            solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFondsUnitTitle());
+            solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFondsUnitId());
+            solrDoc.addField(SolrFields.AI, ead.getRepository());
+            solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
+            if ("du".equals(ead.getDocTypeId()) || "fa".equals(ead.getDocTypeId())) {
+                solrDoc.addField(SolrFields.FA_DYNAMIC_NAME, ead.getDynamicName());
+                solrDoc.addField(SolrFields.FA_DYNAMIC_ID + "0_s", ead.getDynamicId());
+            } else if ("hg".equals(ead.getDocTypeId())) {
+                solrDoc.addField(SolrFields.HG_DYNAMIC_NAME, ead.getDynamicName());
+                solrDoc.addField(SolrFields.HG_DYNAMIC_ID + "0_s", ead.getDynamicId());
+            } else if ("sg".equals(ead.getDocTypeId())) {
+                solrDoc.addField(SolrFields.SG_DYNAMIC_NAME, ead.getDynamicName());
+                solrDoc.addField(SolrFields.SG_DYNAMIC_ID + "0_s", ead.getDynamicId());
+            }
             solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
             solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
             solrDocs.add(solrDoc);
@@ -82,6 +134,8 @@ public class JsonToObject {
             return this.getEadSolrDocs((EadResponseSet) object);
         } else if (object instanceof EacCpfResponseSet) {
             return this.getEacSolrDocs((EacCpfResponseSet) object);
+        } else if (object instanceof EadDocSetMock) {
+            return this.getEadSolrDocs((EadDocSetMock) object);
         } else {
             return null;
         }
