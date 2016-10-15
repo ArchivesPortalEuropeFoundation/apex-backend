@@ -4,12 +4,12 @@
     <parent>
         <artifactId>backend-project</artifactId>
         <groupId>eu.archivesportaleurope.backend</groupId>
-        <version>2016-10.1-SNAPSHOT</version>
+        <version>2016-10.1</version>
     </parent>
 
     <groupId>eu.archivesportaleurope.backend</groupId>
     <artifactId>ApeApi</artifactId>
-    <version>2016-10.1-SNAPSHOT</version>
+    <version>2016-10.1</version>
     <packaging>war</packaging>
 
     <name>ApeApi</name>
