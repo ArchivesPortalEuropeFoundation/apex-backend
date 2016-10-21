@@ -37,6 +37,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.ead3.Ead3Service;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -548,7 +549,7 @@ public class ExistingFilesChecker {
      */
     private String insertEad3File(FileUnit fileUnit, XmlType xmlType) {
         //This method insert an EAD3 file in the dashboard
-        
+
         String result = STATUS_NO_EXIST;
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         UpFile upFile = upFileDao.findById(fileUnit.getFileId());
@@ -560,6 +561,13 @@ public class ExistingFilesChecker {
         } catch (WstxParsingException e1) {
             LOG.error("File was not correct XML, cause: " + e1.getMessage());
             additionalErrors += e1.getMessage();
+        }
+        String title = "";
+        try {
+            title = ExistingFilesChecker.extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(),
+                    "ead/control/filedesc/titlestmt/titleproper", null, true, false);
+        } catch (WstxParsingException e) {
+            title = "";
         }
         String err;
         if ((err = XmlChecker.isXmlParseable(new File(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()))) != null) {
@@ -576,9 +584,9 @@ public class ExistingFilesChecker {
             LOG.info("recordId is empty in the file " + fileUnit.getFileName() + ", so we remove everything");
             try {
                 deleteFileFromDDBB(fileUnit.getFileId());
-                
+
                 removeFile(uploadedFilesPath + fileUnit.getFilePath(), fileUnit.getFileName());
-                
+
             } catch (APEnetException ex) {
                 LOG.error("We could not erase the file from the temp database");
             } catch (IOException ex) {
@@ -597,7 +605,7 @@ public class ExistingFilesChecker {
                 result = STATUS_EXISTS;
             } else {
                 try {
-                    EacCpfService.create(XmlType.EAD_3, upFile, archivalInstitutionId);
+                    new Ead3Service().create(XmlType.EAD_3, upFile, archivalInstitutionId, ead3Id, title);
                 } catch (Exception e) {
                     LOG.error("The " + XmlType.EAD_3.getName() + " which recordId is " + ead3Id + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage(), e);
                 }
@@ -608,7 +616,7 @@ public class ExistingFilesChecker {
     }
 
     private void removeFile(String dir, String fileName) throws IOException {
-        File file = new File(dir+fileName);
+        File file = new File(dir + fileName);
         if (file.exists()) {
             FileUtils.forceDelete(file);
         }
@@ -897,7 +905,8 @@ public class ExistingFilesChecker {
                 return "error";
             }
         } else // The file is an EAD or EAC-CPF
-         if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName()) || fileUnit.getEadType().equals(XmlType.EAC_CPF.getName())) {
+        {
+            if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName()) || fileUnit.getEadType().equals(XmlType.EAC_CPF.getName())) {
                 try {
                     XmlType xmlType = XmlType.getType(fileUnit.getEadType());
                     if (xmlType == XmlType.EAC_CPF) {
@@ -912,6 +921,7 @@ public class ExistingFilesChecker {
                     return "error";
                 }
             }
+        }
         return "ok";
     }
 
@@ -964,7 +974,8 @@ public class ExistingFilesChecker {
             result = overwriteAnswer(fileUnit);
         } else //Change EADID
         //Check the content of savechangesEADIDanswer OK or KO.
-         if ((savechangesIDanswer.equals("OK")) || (canceloverwriteanswer.equals("Overwrite"))) {
+        {
+            if ((savechangesIDanswer.equals("OK")) || (canceloverwriteanswer.equals("Overwrite"))) {
                 //Change into the XML the EADID
                 //There is not any FA with this new EADID.
                 //Edit the file and update the eadid for the new.
@@ -1066,6 +1077,7 @@ public class ExistingFilesChecker {
                     result = cancelAnswer(fileUnit);
                 }
             }
+        }
         return result;
     }
 
