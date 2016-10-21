@@ -73,6 +73,11 @@
             </c:choose>
 
         </s:form>
+        <c:if test="${maintenanceMode}">
+            <s:form action="reindex" theme="simple" method="post">
+                <s:submit value="Reindex all documents" cssClass="otherButton"></s:submit>
+            </s:form>
+        </c:if>
         <s:form action="forceSolrCommit" theme="simple" method="post">
             <s:submit value="Force Solr commit"></s:submit>
         </s:form>
@@ -85,9 +90,6 @@
             </s:form>
             <s:form action="rebuildAutosuggestion" theme="simple" method="post">
                 <s:submit value="Build autosuggestion dictionaries"></s:submit>
-            </s:form>
-            <s:form action="reindex" theme="simple" method="post">
-                <s:submit value="Reindex all documents"></s:submit>
             </s:form>
         </c:if>
     </c:if>

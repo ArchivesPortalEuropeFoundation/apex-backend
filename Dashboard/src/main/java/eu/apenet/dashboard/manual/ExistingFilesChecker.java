@@ -41,10 +41,12 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.dao.Ead3DAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -56,8 +58,9 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  * User: Eloy García Date: Sep 23d, 2010
  */
 /**
- * This class is in charge of checking if the files uploaded are already stored in APE and allowing the user to
- * perform several actions if it happens: remove the old files and store the new ones.
+ * This class is in charge of checking if the files uploaded are already stored
+ * in APE and allowing the user to perform several actions if it happens: remove
+ * the old files and store the new ones.
  */
 public class ExistingFilesChecker {
 
@@ -81,10 +84,11 @@ public class ExistingFilesChecker {
 
     // Getters and Setters
     // Constructor
-   
     /**
      * Constructor with parameters.
-     * @param archivalInstitutionId {@link Integer} Identifier of archivalInstitution in database.
+     *
+     * @param archivalInstitutionId {@link Integer} Identifier of
+     * archivalInstitution in database.
      */
     public ExistingFilesChecker(Integer archivalInstitutionId) {
 
@@ -98,22 +102,25 @@ public class ExistingFilesChecker {
         this.repoPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR;
         this.xslPath = this.repoPath + this.archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + this.archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR + "XSL" + APEnetUtilities.FILESEPARATOR;
     }
-    
+
     public String getAdditionalErrors() {
         return additionalErrors;
     }
 
     // This method retrieves all the files recently uploaded via FTP, HTTP or
     // OAI-PMH for a partner
-    
-    
     /**
-     * Retrieves all the files recently uploaded via FTP, HTTP
-     * or OAI-PMH for a partner.
-     * @param existingNewXmlFilesUploaded {@link List}{@code <}{@link FileUnit}{@code >} List of files xml to uploaded.
-     * @param existingNewXslFilesUploaded {@link List}{@code <}{@link FileUnit}{@code >} List of files xsl to uploaded.
+     * Retrieves all the files recently uploaded via FTP, HTTP or OAI-PMH for a
+     * partner.
+     *
+     * @param existingNewXmlFilesUploaded
+     * {@link List}{@code <}{@link FileUnit}{@code >} List of files xml to
+     * uploaded.
+     * @param existingNewXslFilesUploaded
+     * {@link List}{@code <}{@link FileUnit}{@code >} List of files xsl to
+     * uploaded.
      * @throws WstxParsingException
-     * 
+     *
      * @see eu.apenet.persistence.dao.UpFileDAO
      * @see eu.apenet.persistence.vo.UpFile
      */
@@ -131,35 +138,42 @@ public class ExistingFilesChecker {
             fileUnit.setFileType(aListXml.getFileType());
             File file = new File(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename());
             LOG.info(file.getAbsolutePath());
-            if (file.exists()){
-	            //It is necessary to check the type of the uploaded XML file in order to determine further actions to be executed
-	            try {
-	                if (isElementContent(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "eac-cpf")) { //we can upload EAC-CPF file
-	                    fileType = "eac-cpf";
-	                } else {
-	                    fileType = extractAttributeFromXML(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true, false);
-	                }
-	            } catch (WstxParsingException e) {
-	                //We get the exception just after - so nothing to do here.
-	            }
-	            if (fileType.equals("inventory")) {
-	                fileType = XmlType.EAD_FA.getName();
-	                fileUnit.setEadTypeId(XmlType.EAD_FA.getIdentifier());
-	            } else if (fileType.equals("holdings_guide")) {
-	                fileType = XmlType.EAD_HG.getName();
-	                fileUnit.setEadTypeId(XmlType.EAD_HG.getIdentifier());
-	            } else if (fileType.equals("eac-cpf")) {
-	                fileType = XmlType.EAC_CPF.getName();
-	                fileUnit.setEadTypeId(XmlType.EAC_CPF.getIdentifier());
-	            } else {
-	                //The XML is not an APEnet EAD
-	                fileType = "Undefined";
-	            }
-	
-	            fileUnit.setEadType(fileType);
-	            fileUnit.setEadid("");
-	            fileUnit.setPermId(null);
-	            existingNewXmlFilesUploaded.add(fileUnit);
+            if (file.exists()) {
+                //It is necessary to check the type of the uploaded XML file in order to determine further actions to be executed
+                try {
+                    String tmpFileFullPath = this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename();
+
+                    if (isElementContent(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "eac-cpf")) { //we can upload EAC-CPF file
+                        fileType = "eac-cpf";
+                    } else if (isElementContent(tmpFileFullPath, "eadheader")) {
+                        fileType = extractAttributeFromXML(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true, false);
+                    } else if (isElementContent(tmpFileFullPath, "control")) {
+                        fileType = "ead3";
+                    }
+                } catch (WstxParsingException e) {
+                    //We get the exception just after - so nothing to do here.
+                }
+                if (fileType.equals("inventory")) {
+                    fileType = XmlType.EAD_FA.getName();
+                    fileUnit.setEadTypeId(XmlType.EAD_FA.getIdentifier());
+                } else if (fileType.equals("holdings_guide")) {
+                    fileType = XmlType.EAD_HG.getName();
+                    fileUnit.setEadTypeId(XmlType.EAD_HG.getIdentifier());
+                } else if (fileType.equals("eac-cpf")) {
+                    fileType = XmlType.EAC_CPF.getName();
+                    fileUnit.setEadTypeId(XmlType.EAC_CPF.getIdentifier());
+                } else if (fileType.equals("ead3")) {
+                    fileType = "EAD3";
+                    fileUnit.setEadTypeId(4);
+                } else {
+                    //The XML is not an APEnet EAD
+                    fileType = "Undefined";
+                }
+
+                fileUnit.setEadType(fileType);
+                fileUnit.setEadid("");
+                fileUnit.setPermId(null);
+                existingNewXmlFilesUploaded.add(fileUnit);
             }
         }
 
@@ -179,17 +193,20 @@ public class ExistingFilesChecker {
 
     }
 
-   
     /**
-     * <p>Checks if the file to upload is an EAC-CPF file.
-     * <p>To do this, reads the file with StAX and searchs the element <code>&lt;eac-cpf&gt;</code>.
+     * <p>
+     * Checks if the file to upload is an EAC-CPF file.
+     * <p>
+     * To do this, reads the file with StAX and searchs the element
+     * <code>&lt;eac-cpf&gt;</code>.
+     *
      * @param uploadedFilesPath String The path file where is the file.
      * @param target String The type of the file, in this case "eac-cpf".
      * @return boolean If it is an eac-cpf file or not.
      * @see org.codehaus.stax2.XMLInputFactory2
      * @see org.codehaus.stax2.XMLStreamReader2
      * @see javax.xml.stream.XMLInputFactory
-     * 
+     *
      */
     public static boolean isElementContent(String uploadedFilesPath, String target) {
         // Check if the file to upload is an EAC-CPF file
@@ -232,20 +249,29 @@ public class ExistingFilesChecker {
     // This method fills fileUnit with eadid and permId if it is needed
     // If the file doesn't exist, then it will store it in the System (file
     // system and database)
-    
     /**
-     * <p>Checks if the file is already stored in the Dashboard.
-     * <p>Fills fileUnit with eadid and permId if it is needed.
-     * <p>If the file doesn't exist, then it will store in the System (file system and database).
+     * <p>
+     * Checks if the file is already stored in the Dashboard.
+     * <p>
+     * Fills fileUnit with eadid and permId if it is needed.
+     * <p>
+     * If the file doesn't exist, then it will store in the System (file system
+     * and database).
+     *
      * @param fileUnit {@link FileUnit} The file to check.
      * @param xmlType {@link XmlType} The type of the xml file.
      * @return String
      * <ul>
-     * <li>{@link ExistingFilesChecker#STATUS_ERROR} Occurs an error with the transaction in the database.
-     * <li>{@link ExistingFilesChecker#STATUS_EMPTY} The <code>&lt;eadid&gt;</code> is empty.
-     * <li>{@link ExistingFilesChecker#STATUS_EXISTS} The <code>&lt;eadid&gt;</code> already exists in the database.  
-     * <li>{@link ExistingFilesChecker#STATUS_BLOCKED} The EAD is a FA, exists, has ESE files published and Europeana is performing a Harvesting process.
-     * <li>{@link ExistingFilesChecker#STATUS_NO_EXIST} The <code>&lt;eadid&gt;</code> doesn't exist in the database.
+     * <li>{@link ExistingFilesChecker#STATUS_ERROR} Occurs an error with the
+     * transaction in the database.
+     * <li>{@link ExistingFilesChecker#STATUS_EMPTY} The
+     * <code>&lt;eadid&gt;</code> is empty.
+     * <li>{@link ExistingFilesChecker#STATUS_EXISTS} The
+     * <code>&lt;eadid&gt;</code> already exists in the database.
+     * <li>{@link ExistingFilesChecker#STATUS_BLOCKED} The EAD is a FA, exists,
+     * has ESE files published and Europeana is performing a Harvesting process.
+     * <li>{@link ExistingFilesChecker#STATUS_NO_EXIST} The
+     * <code>&lt;eadid&gt;</code> doesn't exist in the database.
      * </ul>
      * @see XmlChecker#isXmlParseable(File)
      * @see EadService#create(XmlType, UpFile, Integer)
@@ -299,6 +325,8 @@ public class ExistingFilesChecker {
             LOG.info("We try to insert an EAC-CPF file");
             result = insertEacCpfFile(fileUnit, xmlType);
 
+        } else if (xmlType == XmlType.EAD_3) {
+            result = this.insertEad3File(fileUnit, xmlType);
         } else {
             // The file has XML format
             String eadid = "";
@@ -358,7 +386,7 @@ public class ExistingFilesChecker {
                             }
                         } catch (IOException ex) {
                             LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
-                        // belonging to Windows file lock workaround (see above)
+                            // belonging to Windows file lock workaround (see above)
 //                        } catch (InterruptedException ex) {
 //                            LOG.error(ex);
                         }
@@ -401,10 +429,12 @@ public class ExistingFilesChecker {
      * @param xmlType {@link XmlType} The type of xml file.
      * @return String
      * <ul>
-     * <li>{@link ExistingFilesChecker#STATUS_EMPTY} The identifier of the eac-cpf file is empty.
+     * <li>{@link ExistingFilesChecker#STATUS_EMPTY} The identifier of the
+     * eac-cpf file is empty.
      * <li>{@link ExistingFilesChecke#STATUS_EXISTS} Exists in the system.
-     * <li>{@link ExistingFilesChecke#STATUS_NO_EXIST} No exists in the system. 
-     * <li>{@link ExistingFilesChecke#STATUS_ERROR} Occurs an error with the database.
+     * <li>{@link ExistingFilesChecke#STATUS_NO_EXIST} No exists in the system.
+     * <li>{@link ExistingFilesChecke#STATUS_ERROR} Occurs an error with the
+     * database.
      * </ul>
      * @see XmlChecker#isXmlParseable(File)
      * @see EacCpfService#create(XmlType, UpFile, Integer)
@@ -471,7 +501,7 @@ public class ExistingFilesChecker {
                     }
                 } catch (IOException ex) {
                     LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
-                        // belonging to Windows file lock workaround (see above)
+                    // belonging to Windows file lock workaround (see above)
 //                } catch (InterruptedException ex) {
 //                    LOG.error(ex);
                 }
@@ -499,11 +529,102 @@ public class ExistingFilesChecker {
         return result;
     }
 
-   /**
-    * This method is implemented by some developer and it's not used.
-    * @param xmlType {@link XmlType} The type of the file.
-    * @return String
-    */
+    /**
+     * Inserts an EAD3 file in the dashboard.
+     *
+     * @param fileUnit {@link FileUnit} The file to insert in the dashboard.
+     * @param xmlType {@link XmlType} The type of xml file.
+     * @return String
+     * <ul>
+     * <li>{@link ExistingFilesChecker#STATUS_EMPTY} The identifier of the
+     * eac-cpf file is empty.
+     * <li>{@link ExistingFilesChecke#STATUS_EXISTS} Exists in the system.
+     * <li>{@link ExistingFilesChecke#STATUS_NO_EXIST} No exists in the system.
+     * <li>{@link ExistingFilesChecke#STATUS_ERROR} Occurs an error with the
+     * database.
+     * </ul>
+     * @see XmlChecker#isXmlParseable(File)
+     * @see EacCpfService#create(XmlType, UpFile, Integer)
+     */
+    private String insertEad3File(FileUnit fileUnit, XmlType xmlType) {
+        //This method insert an EAD3 file in the dashboard
+        
+        String result = STATUS_NO_EXIST;
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        UpFile upFile = upFileDao.findById(fileUnit.getFileId());
+        String ead3Id = "";
+
+        //Check for various possible errors in file; set cpfId to "error" if something is wrong
+        try {
+            ead3Id = extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "ead/control/recordId", null, true, false);
+        } catch (WstxParsingException e1) {
+            LOG.error("File was not correct XML, cause: " + e1.getMessage());
+            additionalErrors += e1.getMessage();
+        }
+        String err;
+        if ((err = XmlChecker.isXmlParseable(new File(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()))) != null) {
+            ead3Id = "error";
+            LOG.error("File was not correct XML.");
+            additionalErrors += "File was not correct XML. Impossible to parse it. Please check if file is XML. Error: " + err;
+        }
+
+        //compare cpfId to possible result values and trigger respective action
+        if (ead3Id.equals(STATUS_EMPTY)) { //cpfId is empty
+            fileUnit.setEadType(XmlType.EAD_3.getName());
+            return STATUS_EMPTY;
+        } else if (StringUtils.isBlank(ead3Id) || ead3Id.equals(STATUS_ERROR)) {
+            LOG.info("recordId is empty in the file " + fileUnit.getFileName() + ", so we remove everything");
+            try {
+                deleteFileFromDDBB(fileUnit.getFileId());
+                
+                removeFile(uploadedFilesPath + fileUnit.getFilePath(), fileUnit.getFileName());
+                
+            } catch (APEnetException ex) {
+                LOG.error("We could not erase the file from the temp database");
+            } catch (IOException ex) {
+                LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
+            }
+
+            result = STATUS_ERROR;
+        } else {
+            Integer identifier = ead3DAO.isEad3IdUsed(ead3Id, archivalInstitutionId, Ead3.class);
+            if (identifier != null) { //The cpf_id is already stored in the table
+
+                // The cpfId already exists
+                LOG.warn("EAD3 identifier '" + ead3Id + "' is already existing with id '" + identifier + "' in the table of eac_cpf'");
+                fileUnit.setEadid(ead3Id);
+                fileUnit.setPermId(identifier.intValue());
+                result = STATUS_EXISTS;
+            } else {
+                try {
+                    EacCpfService.create(XmlType.EAD_3, upFile, archivalInstitutionId);
+                } catch (Exception e) {
+                    LOG.error("The " + XmlType.EAD_3.getName() + " which recordId is " + ead3Id + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage(), e);
+                }
+                result = STATUS_NO_EXIST;
+            }
+        }
+        return result;
+    }
+
+    private void removeFile(String dir, String fileName) throws IOException {
+        File file = new File(dir+fileName);
+        if (file.exists()) {
+            FileUtils.forceDelete(file);
+        }
+
+        File uploadDir = new File(dir);
+        if (uploadDir.listFiles().length == 0) { // There aren't any file in the directory, so it should be removed
+            FileUtils.forceDelete(uploadDir);
+        }
+    }
+
+    /**
+     * This method is implemented by some developer and it's not used.
+     *
+     * @param xmlType {@link XmlType} The type of the file.
+     * @return String
+     */
     public String instantiateCorrectDirPath(XmlType xmlType) {
         String startPath = APEnetUtilities.FILESEPARATOR + archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
         if (xmlType == XmlType.EAD_FA) {
@@ -518,6 +639,7 @@ public class ExistingFilesChecker {
 
     /**
      * This method is implemented by some developer and it's not used.
+     *
      * @param xmlType {@code XmlType} The type of the file.
      * @return {@link Ead}
      */
@@ -532,27 +654,34 @@ public class ExistingFilesChecker {
         return null;
     }
 
-   /**
-    * <p>Extracts the attribute or the element from XML.
-    * <p>To read the XML is used the library {@code StAX}.
-    * <p>If the attribute is null, doesn't extract the element from XML.
-    * <p>If "isReturningFirstInstance" is "true" extracts the data and stops to read the file.
-    * @param path String The path of the file XML.
-    * @param element String The element in the XML.
-    * @param attribute String The attribute in the XML.
-    * @param isReturningFirstInstance boolean If it's the first instance of the element in the XML.
-    * @param eacCpf boolean It's an eac-cpf file or not.
-    * @return String
-    * <ul>
-    * <li>The attribute or the element in the XML.
-    * <li>"error" An error occurs when reading the file.
-    * <li>"empty" The XML hasn't the attribute or the element.
-    * </ul>
-    * @throws WstxParsingException
-    * @see org.codehaus.stax2.XMLInputFactory2
-    * @see org.codehaus.stax2.XMLStreamReader2
-    * @see javax.xml.stream.XMLInputFactory
-    */
+    /**
+     * <p>
+     * Extracts the attribute or the element from XML.
+     * <p>
+     * To read the XML is used the library {@code StAX}.
+     * <p>
+     * If the attribute is null, doesn't extract the element from XML.
+     * <p>
+     * If "isReturningFirstInstance" is "true" extracts the data and stops to
+     * read the file.
+     *
+     * @param path String The path of the file XML.
+     * @param element String The element in the XML.
+     * @param attribute String The attribute in the XML.
+     * @param isReturningFirstInstance boolean If it's the first instance of the
+     * element in the XML.
+     * @param eacCpf boolean It's an eac-cpf file or not.
+     * @return String
+     * <ul>
+     * <li>The attribute or the element in the XML.
+     * <li>"error" An error occurs when reading the file.
+     * <li>"empty" The XML hasn't the attribute or the element.
+     * </ul>
+     * @throws WstxParsingException
+     * @see org.codehaus.stax2.XMLInputFactory2
+     * @see org.codehaus.stax2.XMLStreamReader2
+     * @see javax.xml.stream.XMLInputFactory
+     */
     public static String extractAttributeFromXML(String path, String element, String attribute, boolean isReturningFirstInstance, boolean eacCpf) throws WstxParsingException {
         final String CONVERTED_FLAG;
         final String CONVERTED_FLAG_NEW;
@@ -595,7 +724,7 @@ public class ExistingFilesChecker {
                     case XMLEvent.START_DOCUMENT:
                         break;
                     case XMLEvent.START_ELEMENT:
-                        if (pointerPath < lenghtPath && input.getLocalName().equals(pathElements[pointerPath])) {
+                        if (pointerPath < lenghtPath && input.getLocalName().equalsIgnoreCase(pathElements[pointerPath])) {
                             LOG.debug("We arrive in " + input.getLocalName());
                             isInsidePath = true;
                             wasInsidePath = true;
@@ -629,12 +758,12 @@ public class ExistingFilesChecker {
                         break;
                     case XMLEvent.CHARACTERS:
                         if (eventType) {
-                        	String target = input.getText();
-                        	if(target.equalsIgnoreCase("derived")){
-                        		derived = true;
-                        	}else if(target.equalsIgnoreCase("created")){
-                        		created = true;
-                        	}
+                            String target = input.getText();
+                            if (target.equalsIgnoreCase("derived")) {
+                                derived = true;
+                            } else if (target.equalsIgnoreCase("created")) {
+                                created = true;
+                            }
                         }
                         if (isInsideElement) {
                             importantData = input.getText();
@@ -647,7 +776,7 @@ public class ExistingFilesChecker {
                             }
                             if (((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && !eacCpf)
                                     || (((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && derived)
-                                    || (importantData.startsWith(CREATED_FLAG_DASHBOARD) && created) && eacCpf ) ) {
+                                    || (importantData.startsWith(CREATED_FLAG_DASHBOARD) && created) && eacCpf)) {
                                 return "true";
                             } else if (isReturningFirstInstance) {
                                 return importantData;
@@ -702,10 +831,15 @@ public class ExistingFilesChecker {
     }
 
     /**
-     * <p>Cancels, the answer of the user.
-     * <p>The user has decided not to overwrite the file in the dashboard
-     * <p>so it's necessary to delete the file from the directory
-     * <p>and delete its entry in <b>up_file</b>  table.
+     * <p>
+     * Cancels, the answer of the user.
+     * <p>
+     * The user has decided not to overwrite the file in the dashboard
+     * <p>
+     * so it's necessary to delete the file from the directory
+     * <p>
+     * and delete its entry in <b>up_file</b> table.
+     *
      * @param fileUnit {@link FileUnit} The file to delete in the dashboard.
      * @return String
      * <ul>
@@ -736,9 +870,12 @@ public class ExistingFilesChecker {
     }
 
     /**
-     * <p>Overwrites, the answer of the user.
-     * <p>The user has decided to overwrite the file.
-     * @param fileUnit {@link FileUnit} The file to overwrite for the user. 
+     * <p>
+     * Overwrites, the answer of the user.
+     * <p>
+     * The user has decided to overwrite the file.
+     *
+     * @param fileUnit {@link FileUnit} The file to overwrite for the user.
      * @return String
      * <ul>
      * <li>"error" Occurs an error to overwrite the file.
@@ -759,9 +896,8 @@ public class ExistingFilesChecker {
                 LOG.error(ape.getMessage(), ape);
                 return "error";
             }
-        } else {
-            // The file is an EAD or EAC-CPF
-            if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName()) || fileUnit.getEadType().equals(XmlType.EAC_CPF.getName())) {
+        } else // The file is an EAD or EAC-CPF
+         if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName()) || fileUnit.getEadType().equals(XmlType.EAC_CPF.getName())) {
                 try {
                     XmlType xmlType = XmlType.getType(fileUnit.getEadType());
                     if (xmlType == XmlType.EAC_CPF) {
@@ -776,7 +912,6 @@ public class ExistingFilesChecker {
                     return "error";
                 }
             }
-        }
         return "ok";
     }
 
@@ -784,7 +919,7 @@ public class ExistingFilesChecker {
         try {
             deleteFileFromDDBB(fileUnit.getFileId());
             File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
-            if(file.exists()) {
+            if (file.exists()) {
                 FileUtils.forceDelete(file);
                 LOG.info("The file " + fileUnit.getFileName() + " has been removed from Dashboard and its file system");
             }
@@ -796,20 +931,25 @@ public class ExistingFilesChecker {
     // This method overwrite (or not) a file in the Dashboard for a user
     // If everything is ok then it returns "ok" but if it was a problem, then it
     // returns "error"
-    
     /**
-     * <p>Overwrites, cancels or changes the identifier of a file in the Dashboard for a user.
-     * @param fileUnit {@link FileUnit} The file to overwrite for the user. 
+     * <p>
+     * Overwrites, cancels or changes the identifier of a file in the Dashboard
+     * for a user.
+     *
+     * @param fileUnit {@link FileUnit} The file to overwrite for the user.
      * @param answer String The answer of the user in the Dashboard.
-     * @param savechangesIDanswer String The answer gets the values "OK" or "KO".
+     * @param savechangesIDanswer String The answer gets the values "OK" or
+     * "KO".
      * @param canceloverwriteanswer String The answer "Overwrite" or "Cancel".
      * @param fileType String The type of the file (EAC-CPF, FA, SG, HG).
      * @param newIdentifier String The new identifier to the file.
      * @return String
      * <ul>
-     * <li>{@link ExistingFilesChecke#STATUS_ERROR} Occurs an error when overwrites the file. 
-     * <li>{@link ExistingFilesChecke#STATUS_EXISTS} The identifier exists in the system.
-     * <li>{@link ExistingFilesChecke#STATUS_NO_EXIST} The file doesn't exist. 
+     * <li>{@link ExistingFilesChecke#STATUS_ERROR} Occurs an error when
+     * overwrites the file.
+     * <li>{@link ExistingFilesChecke#STATUS_EXISTS} The identifier exists in
+     * the system.
+     * <li>{@link ExistingFilesChecke#STATUS_NO_EXIST} The file doesn't exist.
      * </ul>
      * @see EacCpfService#create(XmlType, UpFile, Integer)
      * @see EadService#create(XmlType, UpFile, Integer)
@@ -822,10 +962,9 @@ public class ExistingFilesChecker {
             result = cancelAnswer(fileUnit);
         } else if (answer.equalsIgnoreCase("overwrite")) {
             result = overwriteAnswer(fileUnit);
-        } else {
-            //Change EADID
-            //Check the content of savechangesEADIDanswer OK or KO.
-            if ((savechangesIDanswer.equals("OK")) || (canceloverwriteanswer.equals("Overwrite"))) {
+        } else //Change EADID
+        //Check the content of savechangesEADIDanswer OK or KO.
+         if ((savechangesIDanswer.equals("OK")) || (canceloverwriteanswer.equals("Overwrite"))) {
                 //Change into the XML the EADID
                 //There is not any FA with this new EADID.
                 //Edit the file and update the eadid for the new.
@@ -927,12 +1066,12 @@ public class ExistingFilesChecker {
                     result = cancelAnswer(fileUnit);
                 }
             }
-        }
         return result;
     }
-    
+
     /**
      * Deletes the file in the system.
+     *
      * @param path String The path file in the system.
      * @return
      * @throws IOException
@@ -947,10 +1086,14 @@ public class ExistingFilesChecker {
     // temporal directory and finally deletes the source file if everything is
     // ok
     // If the source folder is empty, then the folder will be removed
-   
     /**
-     * <p>Deletes the destination file, copies the source file to temporal directory and finally deletes the source file
-     * <p>if everything is right. If the source folder is empty, then the folder will be deleted.
+     * <p>
+     * Deletes the destination file, copies the source file to temporal
+     * directory and finally deletes the source file
+     * <p>
+     * if everything is right. If the source folder is empty, then the folder
+     * will be deleted.
+     *
      * @param srcFilePath String The source path of the file.
      * @param destFilePath String The destination path of the file.
      * @param fileUnitFilePath String The path file in the system.
@@ -977,11 +1120,14 @@ public class ExistingFilesChecker {
     }
 
     // This method removes the entry which has ufId as the primary key from up_files table
-   /**
-    * Removes the entry which has <i>ufId</i> as primary key from <b>up_files</b> table.
-    * @param ufId {@link Integer} The entry "ufId" in the table <b>up_files</b>.
-    * @throws APEnetException
-    */
+    /**
+     * Removes the entry which has <i>ufId</i> as primary key from
+     * <b>up_files</b> table.
+     *
+     * @param ufId {@link Integer} The entry "ufId" in the table
+     * <b>up_files</b>.
+     * @throws APEnetException
+     */
     private void deleteFileFromDDBB(Integer ufId) throws APEnetException {
         try {
             JpaUtil.beginDatabaseTransaction();
@@ -997,17 +1143,18 @@ public class ExistingFilesChecker {
         }
     }
 
-   /**
-    * Changes the old identifier for a new one using DOM. 
-    * @param fileUnit {@link FileUnit} The XML file.
-    * @param newIdentifier String The new identifier.
-    * @param eac boolean It's an EAC-CPF file or not.
-    * @return String The new identifier or error in other case.
-    * @see javax.xml.transform.Transformer;
-	* @see javax.xml.transform.TransformerFactory;
-	* @see javax.xml.transform.dom.DOMSource;
-	* @see javax.xml.transform.stream.StreamResult;
-    */
+    /**
+     * Changes the old identifier for a new one using DOM.
+     *
+     * @param fileUnit {@link FileUnit} The XML file.
+     * @param newIdentifier String The new identifier.
+     * @param eac boolean It's an EAC-CPF file or not.
+     * @return String The new identifier or error in other case.
+     * @see javax.xml.transform.Transformer;
+     * @see javax.xml.transform.TransformerFactory;
+     * @see javax.xml.transform.dom.DOMSource;
+     * @see javax.xml.transform.stream.StreamResult;
+     */
     private String changeIdentifierUsingDOM(FileUnit fileUnit, String newIdentifier, boolean eac) {
         // Recovers the current uploaded file.
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();

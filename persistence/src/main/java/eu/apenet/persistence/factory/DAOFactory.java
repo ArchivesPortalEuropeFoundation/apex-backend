@@ -124,6 +124,8 @@ public abstract class DAOFactory {
     public abstract UserRoleDAO getUserRoleDAO();
 
     public abstract EadDAO getEadDAO();
+    
+    public abstract Ead3DAO getEad3DAO();
 
     public abstract HgSgFaRelationDAO getHgSgFaRelationDAO();
 

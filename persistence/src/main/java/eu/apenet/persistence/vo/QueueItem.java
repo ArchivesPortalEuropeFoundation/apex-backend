@@ -74,6 +74,11 @@ public class QueueItem implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eac_cpf_id", foreignKey = @ForeignKey(name = "index_queue_eac_id_fkey"))
     private EacCpf eacCpf;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ead3_id", foreignKey = @ForeignKey(name = "index_queue_ead3_id_fkey"))
+    private Ead3 ead3;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uf_id", foreignKey = @ForeignKey(name = "queue_uf_id_fkey"))
     private UpFile upFile;
@@ -136,6 +141,14 @@ public class QueueItem implements java.io.Serializable {
         this.eacCpf = eacCpf;
     }
 
+    public Ead3 getEad3() {
+        return ead3;
+    }
+
+    public void setEad3(Ead3 ead3) {
+        this.ead3 = ead3;
+    }
+
     public Date getQueueDate() {
         return queueDate;
     }
@@ -183,6 +196,8 @@ public class QueueItem implements java.io.Serializable {
             return this.holdingsGuide;
         } else if (this.sourceGuide != null) {
             return this.sourceGuide;
+        } else if (this.ead3 != null) {
+            return this.ead3;
         }
         return this.eacCpf;
     }
@@ -211,8 +226,11 @@ public class QueueItem implements java.io.Serializable {
                 this.holdingsGuide = (HoldingsGuide) content;
             } else if (content instanceof SourceGuide) {
                 this.sourceGuide = (SourceGuide) content;
+            } else if (content instanceof Ead3) {
+                this.ead3 = (Ead3) content;
+            } else {
+                this.eacCpf = (EacCpf) content;
             }
-            this.eacCpf = (EacCpf) content;
         }
     }
 

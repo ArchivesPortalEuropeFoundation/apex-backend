@@ -42,6 +42,10 @@ public class Warnings implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eac_id", foreignKey = @ForeignKey(name = "warnings_eac_id_fkey"))
     private EacCpf eacCpf;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ead3_id", foreignKey = @ForeignKey(name = "warnings_ead3_id_fkey"))
+    private Ead3 ead3;
 
     public Warnings() {
     }
@@ -152,6 +156,14 @@ public class Warnings implements java.io.Serializable {
         }
     }
 
+    public Ead3 getEad3() {
+        return ead3;
+    }
+
+    public void setEad3(Ead3 ead3) {
+        this.ead3 = ead3;
+    }
+    
     public EacCpf getEacCpf() {
         return eacCpf;
     }

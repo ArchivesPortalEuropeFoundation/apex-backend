@@ -184,4 +184,9 @@ public class HibernateDAOFactory extends DAOFactory {
     public ApiKeyDAO getApiKeyDAO() {
         return (ApiKeyDAO) instantiateDAO(ApiKeyDAO.class);
     }
+
+    @Override
+    public Ead3DAO getEad3DAO() {
+        return  (Ead3DAO) instantiateDAO(Ead3JpaDAO.class);
+    }
 }
