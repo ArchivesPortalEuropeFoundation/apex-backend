@@ -50,7 +50,7 @@ public abstract class AbstractEad3Task {
     protected void logSolrAction(Ead3 ead3, String message, long solrMilliseconds, long milliseconds) {
         XmlType xmlType = XmlType.EAD_3;
         String successString = "succeed";
-        logger.info("EacCpf " + ead3.getIdentifier() + "(" + xmlType.getName() + "): " + getActionName() + " - " + message + " - " + successString + " - s:" + solrMilliseconds + "ms" + " - o:" + milliseconds + "ms");
+        logger.info("Ead3 " + ead3.getIdentifier() + "(" + xmlType.getName() + "): " + getActionName() + " - " + message + " - " + successString + " - s:" + solrMilliseconds + "ms" + " - o:" + milliseconds + "ms");
     }
 
     protected static boolean isBeingHarvested() {

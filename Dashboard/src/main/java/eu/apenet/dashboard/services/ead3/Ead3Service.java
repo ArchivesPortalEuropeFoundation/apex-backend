@@ -5,12 +5,32 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.Ead3DAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead3;
+import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
+import eu.apenet.persistence.vo.QueueAction;
+import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.UpFile;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  *
@@ -19,12 +39,948 @@ import org.apache.log4j.Logger;
 public class Ead3Service {
 
     protected static final Logger LOGGER = Logger.getLogger(Ead3Service.class);
+    private static final String CURRENT_LANGUAGE_KEY = "currentLanguage";
 
     public Ead3 create(XmlType xmlType, UpFile upFile, Integer aiId, String ead3Id, String title) throws Exception {
         SecurityContext.get().checkAuthorized(aiId);
         Ead3 ead3 = new CreateEad3Task().execute(xmlType, upFile, aiId, ead3Id, title);
         DAOFactory.instance().getUpFileDAO().delete(upFile);
         return ead3;
+    }
+
+    /**
+     * <p>
+     * Manages the actions convert, validate and publish.
+     * <p>
+     * Puts in the queue these actions.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param properties {@link Properties} A property list to process the file.
+     * @param currentLanguage String The current language in the Dashboard.
+     * @return boolean The EAC-CPF is converted, validated and published.
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+    public static boolean convertValidatePublish(Integer id, Properties properties, String currentLanguage) throws IOException {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        Ead3 ead3 = ead3DAO.findById(id, XmlType.EAD_3.getClazz());
+
+        SecurityContext.get().checkAuthorized(ead3.getAiId());
+        if (!ead3.isPublished()) {
+            properties.put(CURRENT_LANGUAGE_KEY, currentLanguage);
+            addToQueue(ead3, QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
+        }
+        return true;
+    }
+
+    /**
+     * <p>
+     * Manages the action validate.
+     * <p>
+     * Puts in the queue this action.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+    public static void validate(Integer id) throws Exception {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        Ead3 ead3 = ead3DAO.findById(id, XmlType.EAD_3.getClazz());
+        
+        SecurityContext.get().checkAuthorized(ead3.getAiId());
+        if (ValidateTask.notValidated(ead3)) {
+            addToQueue(ead3, QueueAction.VALIDATE, null);
+        }
+    }
+    /**
+     * <p>
+     * Manages the action publish.
+     * <p>
+     * Puts in the queue this action.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+//    public static void publish(Integer id) throws IOException {
+//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+//        EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
+//        SecurityContext.get().checkAuthorized(eacCpf);
+//        if (PublishTask.notValidated(eacCpf)) {
+//            addToQueue(eacCpf, QueueAction.PUBLISH, null);
+//        }
+//    }
+    /**
+     * <p>
+     * Manages the action unpublish.
+     * <p>
+     * Puts in the queue this action.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+//    public static void unpublish(Integer id) throws IOException {
+//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+//        EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
+//        SecurityContext.get().checkAuthorized(eacCpf);
+//        if (UnpublishTask.notValidated(eacCpf)) {
+//            addToQueue(eacCpf, QueueAction.UNPUBLISH, null);
+//        }
+//    }
+    /**
+     * <p>
+     * Manages the action delete.
+     * <p>
+     * Puts in the queue this action.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+    public static void delete(Integer id) throws Exception {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        Ead3 ead3 = ead3DAO.findById(id);
+        SecurityContext.get().checkAuthorized(ead3.getAiId());
+        addToQueue(ead3, QueueAction.DELETE, null);
+    }
+
+    /**
+     * Deletes from the queue an EAC-CPF and updates the state of the entry
+     * <i>queueing</i> in the database.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+    public static void deleteFromQueue(Integer id) throws IOException {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        JpaUtil.beginDatabaseTransaction();
+        Ead3 ead3 = ead3DAO.findById(id, XmlType.EAC_CPF.getClazz());
+        SecurityContext.get().checkAuthorized(ead3.getAiId());
+        if (QueuingState.ERROR.equals(ead3.getQueuing()) || QueuingState.READY.equals(ead3.getQueuing())) {
+            QueueItem queueItem = ead3.getQueueItem();
+            ead3.setQueuing(QueuingState.NO);
+            ead3DAO.updateSimple(ead3);
+            deleteFromQueueInternal(queueItem, true);
+        }
+        JpaUtil.commitDatabaseTransaction();
+    }
+
+    /**
+     * Deletes the file from the system and the database in the table
+     * <b>queue</b>.
+     *
+     * @param queueItem {@link QueueItem} The item to process.
+     * @param deleteUpFile boolean Deletes or not the file.
+     * @throws IOException
+     * @see eu.apenet.persistence.vo.UpFile
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     * @see ContentUtils#deleteFile(File, boolean)
+     */
+    private static void deleteFromQueueInternal(QueueItem queueItem, boolean deleteUpFile) throws IOException {
+        UpFile upFile = queueItem.getUpFile();
+        if (upFile != null && deleteUpFile) {
+            String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename();
+            File file = new File(filename);
+            File aiDir = file.getParentFile();
+            ContentUtils.deleteFile(file, false);
+            if (aiDir.exists() && aiDir.listFiles().length == 0) {
+                ContentUtils.deleteFile(aiDir, false);
+            }
+        }
+        DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
+        if (upFile != null && deleteUpFile) {
+            DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
+        }
+    }
+
+    /**
+     * Downloads a file from the content manager.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @return {@link File} The file downloading.
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.vo.UpFile
+     */
+    public static File download(Integer id) {
+        Ead3 ead3 = DAOFactory.instance().getEad3DAO().findById(id, XmlType.EAC_CPF.getClazz());
+        SecurityContext.get().checkAuthorized(ead3.getAiId());
+        String path = APEnetUtilities.getConfig().getRepoDirPath() + ead3.getPath();
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                return file;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Download function error, trying to open the file '" + path + "'", e);
+        }
+        return null;
+    }
+
+    /**
+     * <p>
+     * Adds an EAC-CPF file to the queue.
+     * <p>
+     * Stores in the database an EAC-CPF in the table <b>eac_cpf</b>.
+     * <p>
+     * Fills the table <b>queue</b> with the EAC-CPF's identifier and his
+     * preferences.
+     *
+     * @param eacCpf {@link EacCpf} The EAC-CPF file to ingest in the Dashboard.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Preferences to process the EAC-CPF.
+     * @throws IOException
+     * @see eu.apenet.persistence.vo.QueueItem
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     */
+    private static void addToQueue(Ead3 ead3, QueueAction queueAction, Properties preferences) throws IOException {
+        QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        ead3.setQueuing(QueuingState.READY);
+        ead3DAO.store(ead3);
+        QueueItem queueItem = fillQueueItem(ead3, queueAction, preferences);
+        indexqueueDao.store(queueItem);
+    }
+
+    /**
+     * Fills an item <i>queue</i>.
+     *
+     * @param eacCpf {@link EacCPf} The EAC-CPF file to ingest in the Dashboard.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Preferences to process the EAC-CPF.
+     * @return {@link QueueItem> An item <i>queue</i>.
+     * @throws IOException
+     */
+    private static QueueItem fillQueueItem(Ead3 ead3, QueueAction queueAction, Properties preferences) throws IOException {
+        return fillQueueItem(ead3, queueAction, preferences, 1000);
+    }
+
+    /**
+     * Fills an item <i>queue</i> with the EAC-CPF's identifier, preferences and
+     * priority.
+     *
+     * @param eacCpf {@link EacCpf} The EAC-CPF file to ingest in the Dashboard.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Preferences to process the EAC-CPF.
+     * @param basePriority {@link Integer} The priority in the queue.
+     * @return {@link QueueItem} An item <i>queue</i>.
+     * @throws IOException
+     */
+    private static QueueItem fillQueueItem(Ead3 ead3, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
+        QueueItem queueItem = ead3.getQueueItem();
+        if (queueItem == null) {
+            queueItem = new QueueItem();
+            queueItem.setEad3(ead3);
+            queueItem.setAiId(ead3.getAiId());
+        }
+        queueItem.setQueueDate(new Date());
+        queueItem.setAction(queueAction);
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
+        }
+        int priority = basePriority;
+
+        if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
+            priority += 150;
+        }
+        queueItem.setPriority(priority);
+        return queueItem;
+    }
+
+    /**
+     * Writes in a string buffer the property list.
+     *
+     * @param properties {@link Properties} The preferences to process the
+     * EAC-CPF.
+     * @return String The preferences to write.
+     * @throws IOException
+     */
+    private static String writeProperties(Properties properties) throws IOException {
+        StringWriter stringWriter = new StringWriter();
+        properties.store(stringWriter, "");
+        String result = stringWriter.toString();
+        stringWriter.flush();
+        stringWriter.close();
+        return result;
+    }
+
+    /**
+     * Overwrites an old EAC-CPF file.
+     *
+     * @param oldEad3 {@link Ead3} The old EAC-CPF file.
+     * @param upFile {@link UpFile} The file to up.
+     * @throws Exception
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+    public static void overwrite(Ead3 oldEad3, UpFile upFile) throws Exception {
+        SecurityContext.get().checkAuthorized(oldEad3.getAiId());
+        addToQueue(oldEad3, QueueAction.OVERWRITE, null, upFile);
+    }
+
+    /**
+     * <p>
+     * Adds an EAC-CPF file to the queue.
+     * <p>
+     * Stores in the database an EAD3 in the table <b>ead3</b>.
+     * <p>
+     * Fills the table <b>queue</b> with the EAC-CPF's identifier, his
+     * preferences and the upfile's identifier.
+     *
+     * @see eu.apenet.persistence.vo.QueueAction
+     * @see java.util.Properties
+     * @see eu.apenet.persistence.vo.UpFile
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     * @see eu.apenet.persistence.vo.QueueItem
+     */
+    private static void addToQueue(Ead3 ead3, QueueAction queueAction, Properties preferences, UpFile upFile)
+            throws IOException {
+        QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        ead3.setQueuing(QueuingState.READY);
+        ead3DAO.store(ead3);
+        QueueItem queueItem = fillQueueItem(ead3, queueAction, preferences);
+        queueItem.setUpFile(upFile);
+        indexqueueDao.store(queueItem);
+    }
+
+    /**
+     * Process an item from the queue.
+     *
+     * @see CreateEacCpfTask#execute(XmlType, UpFile, Integer)
+     * @see PublishTask#execute(EacCpf, Properties)
+     * @see UnpublishTask#execute(EacCpf, Properties)
+     * @see ConvertTask#execute(EacCpf, Properties)
+     * @see ValidateTask#execute(EacCpf, Properties)
+     * @see DeleteTask#execute(EacCpf, Properties)
+     * @see eu.apenet.persistence.vo.QueueAction
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see java.util.Properties
+     * @see eu.apenet.persistence.vo.UpFile
+     * @see eu.apenet.commons.types.XmlType
+     */
+    public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
+        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        QueueAction queueAction = queueItem.getAction();
+        Properties preferences = null;
+        if (queueItem.getPreferences() != null) {
+            preferences = readProperties(queueItem.getPreferences());
+        }
+
+        if (!queueAction.isUseProfileAction()) {
+            Ead3 ead3 = queueItem.getEad3();
+            XmlType xmlType = XmlType.getContentType(ead3);
+            LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead3.getIdentifier()
+                    + "(" + xmlType.getName() + ")");
+
+            if (queueAction.isOverwriteAction() || queueAction.isDeleteAction()) {
+                boolean eacDeleted = false;
+                boolean upFileDeleted = false;
+                UpFile upFile = queueItem.getUpFile();
+                try {
+
+                    queueItem.setEad3(null);
+                    queueItem.setUpFile(null);
+                    queueItemDAO.store(queueItem);
+
+                    if (queueAction.isOverwriteAction()) {
+                        Integer aiId = ead3.getAiId();
+
+//                        new UnpublishTask().execute(ead3, preferences);
+//                        new DeleteTask().execute(ead3, preferences);
+                        eacDeleted = true;
+                        new CreateEad3Task().execute(xmlType, upFile, aiId, ead3.getIdentifier(), ead3.getTitle());
+                        DAOFactory.instance().getUpFileDAO().delete(upFile);
+                        upFileDeleted = true;
+                    } else if (queueAction.isDeleteAction()) {
+
+//                        new UnpublishTask().execute(ead3, preferences);
+//                        new DeleteTask().execute(ead3, preferences);
+                        eacDeleted = true;
+                    }
+                    queueItemDAO.delete(queueItem);
+                } catch (Exception e) {
+                    if (!eacDeleted) {
+                        queueItem.setEad3(ead3);
+                        ead3.setQueuing(QueuingState.ERROR);
+                        ead3DAO.store(ead3);
+                    }
+                    if (!upFileDeleted && upFile != null) {
+                        queueItem.setUpFile(upFile);
+                    }
+                    String err = "EAC-CPF identifier: " + ead3.getIdentifier() + " - id: " + ead3.getId() + " - type: " + xmlType.getName();
+                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setPriority(0);
+                    queueItemDAO.store(queueItem);
+                    /*
+                     * throw exception when solr has problem, so the queue will stop for a while.
+                     */
+                    if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                        throw (Exception) e;
+
+                    }
+                }
+            } else {
+                try {
+                    if (queueAction.isValidateAction()) {
+                        new ValidateTask().execute(ead3, preferences);
+                    }
+//                    if (queueAction.isConvertAction()) {
+//                        new ConvertTask().execute(eac, preferences);
+//                    }
+//                    if (queueAction.isValidateAction()) {
+//                        new ValidateTask().execute(eac, preferences);
+//                    }
+//                    if (queueAction.isPublishAction()) {
+//                        new PublishTask().execute(eac, preferences);
+//                    }
+//                    if (queueAction.isRePublishAction()) {
+//                        new UnpublishTask().execute(eac, preferences);
+//                        new PublishTask().execute(eac, preferences);
+//                    }
+//
+//                    if (queueAction.isUnpublishAction()) {
+//                        new UnpublishTask().execute(eac, preferences);
+//                    }
+
+                    ead3.setQueuing(QueuingState.NO);
+                    ead3DAO.store(ead3);
+                    queueItemDAO.delete(queueItem);
+                } catch (APEnetException e) {
+                    String err = "identifier: " + ead3.getIdentifier() + " - id: " + ead3.getId() + " - type: " + xmlType.getName();
+                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setErrors(new Date() + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                    ead3.setQueuing(QueuingState.ERROR);
+                    ead3DAO.store(ead3);
+                    queueItem.setPriority(0);
+                    queueItemDAO.store(queueItem);
+                    /*
+                     * throw exception when solr has problem, so the queue will stop for a while.
+                     */
+                    if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                        throw (Exception) e;
+
+                    }
+                }
+            }
+        } else //USE_PROFILE
+        // Checks if the file should be processed as a new upload of as a
+        // file already in the system.
+        {
+//            if (queueItem.getUpFile() != null) {
+//                processUpFileWithProfile(queueItem, preferences);
+//            } else {
+//                processEad3WithProfile(queueItem, preferences);
+//            }
+        }
+        LOGGER.info("Process queue item finished");
+        return queueAction;
+    }
+
+    /**
+     * Method to process the uploaded file using the selected profile.
+     *
+     * @param queueItem {@link QueueItem} Current item to process.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws Exception
+     *
+     * @see eu.apenet.persistence.vo.QueueAction
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see java.util.Properties
+     * @see eu.apenet.persistence.vo.UpFile
+     * @see eu.apenet.commons.types.XmlType
+     * @see eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
+     * @see eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     * @see eu.apenet.persistence.vo.QueueItem
+     * @see ExistingFilesChecker#extractAttributeFromXML(String, String, String,
+     * boolean, boolean)
+     */
+//    private static void processUpFileWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
+//        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+//        IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
+//        IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
+//        XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
+//
+//        //About existing eac-cpf identifier
+//        UpFile upFile = queueItem.getUpFile();
+//        LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
+//        String upFilePath = upFile.getPath() + upFile.getFilename();
+//        String identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eac-cpf/control/recordId", null, true, false).trim();
+//        if (StringUtils.isEmpty(identifier) || "empty".equals(identifier) || "error".equals(identifier)) {
+//            if (ingestionprofileDefaultNoEadidAction.isRemove()) {
+//                LOGGER.info("File will be removed, because it does not have eadid: " + upFilePath);
+//                deleteFromQueue(queueItem, true);
+//            } else {
+//                LOGGER.info("File will be processed manually later, because it does not have eadid: " + upFilePath);
+//                deleteFromQueue(queueItem, false);
+//            }
+//        } else {
+//            boolean continueTask = true;
+//            EacCpf eacCpf;
+//            EacCpf newEacCpf = null;
+//            if ((eacCpf = doesFileExist(upFile, identifier)) != null) {
+//                if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
+//                    boolean eacCpfDeleted = false;
+//                    try {
+//                        queueItem.setEacCpf(null);
+//                        queueItem.setUpFile(null);
+//                        queueItemDAO.store(queueItem);
+//
+//                        Integer aiId = eacCpf.getAiId();
+//
+//                        new UnpublishTask().execute(eacCpf, preferences);
+//                        new DeleteTask().execute(eacCpf, preferences);
+//                        eacCpfDeleted = true;
+//                        newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
+//                        DAOFactory.instance().getUpFileDAO().delete(upFile);
+//                    } catch (Exception e) {
+//                        if (!eacCpfDeleted) {
+//                            queueItem.setEacCpf(eacCpf);
+//                            eacCpf.setQueuing(QueuingState.ERROR);
+//                            eacDAO.store(eacCpf);
+//                        }
+//                        queueItem.setUpFile(upFile);
+//                        String err = "recordId: " + eacCpf.getIdentifier() + " - id: " + eacCpf.getId() + " - type: " + xmlType.getName();
+//                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+//                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+//                        queueItem.setPriority(0);
+//                        queueItemDAO.store(queueItem);
+//                        continueTask = false;
+//                        /*
+//                         * throw exception when solr has problem, so the queue will stop for a while.
+//                         */
+//                        if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+//                            throw (Exception) e;
+//
+//                        }
+//                    }
+//                } else if (ingestionprofileDefaultExistingFileAction.isKeep()) {
+//                    LOGGER.info("File will be removed, because there is already one with the same recordid: " + upFilePath);
+//                    deleteFromQueue(queueItem, true);
+//                    continueTask = false;
+//                } else if (ingestionprofileDefaultExistingFileAction.isAsk()) {
+//                    LOGGER.info("Is needed to ask the user for the action, because there is already one with the same recordid: " + upFilePath);
+//                    deleteFromQueue(queueItem, false);
+//                    continueTask = false;
+//                }
+//            } else {
+//                newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, upFile.getAiId());
+//                queueItem.setUpFile(null);
+//                queueItemDAO.store(queueItem);
+//                DAOFactory.instance().getUpFileDAO().delete(upFile);
+//            }
+//
+//            if (continueTask) {
+//                processEacCpf(queueItem, newEacCpf, preferences);
+//            }
+//        }
+//    }
+
+    /**
+     * Method to process the file already in the system using the selected
+     * profile.
+     *
+     * @param queueItem {@link QueueItem} Current item to process.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws Exception
+     *
+     * @see eu.apenet.persistence.vo.EacCpf
+     */
+//    private static void processEacCpfWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
+//        Ead3 ead3 = queueItem.getEad3();
+//        processEacCpf(queueItem, ead3, preferences);
+//    }
+
+    /**
+     * Method to performs the actions associated to the profile over the file.
+     *
+     * @param queueItem {@link QueueItem} Current item to process.
+     * @param newEad3 {@link EacCpf} EAC-CPF to process using the profile.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws Exception
+     *
+     * @see eu.apenet.persistence.vo.QueueAction
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see java.util.Properties
+     * @see eu.apenet.commons.types.XmlType
+     * @see eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     * @see eu.apenet.persistence.vo.QueueItem
+     * @see ConvertTask#execute(EacCpf, Properties)
+     * @see ValidateTask#execute(EacCpf)
+     * @see PublishTask#execute(EacCpf)
+     */
+//    private static void processEacCpf(QueueItem queueItem, Ead3 newEad3, Properties preferences) throws Exception {
+//        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+//        IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+//        Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
+//        XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
+//
+//        newEad3.setQueuing(QueuingState.BUSY);
+//        ead3DAO.store(newEad3);
+//
+//        Properties conversionProperties = new Properties();
+//        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, "UNSPECIFIED");
+//        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, daoTypeCheck);
+//
+//        try {
+//            if (ingestionprofileDefaultUploadAction.isConvert()) {
+//                new ConvertTask().execute(newEad3, conversionProperties);
+//            } else if (ingestionprofileDefaultUploadAction.isValidate()) {
+//                new ValidateTask().execute(newEad3);
+//            } else if (ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+//                new ValidateTask().execute(newEad3);
+//                new ConvertTask().execute(newEad3, conversionProperties);
+//                new ValidateTask().execute(newEad3);
+//                new PublishTask().execute(newEad3);
+//            }
+//            newEad3.setQueuing(QueuingState.NO);
+//            ead3DAO.store(newEad3);
+//            queueItemDAO.delete(queueItem);
+//        } catch (Exception e) {
+//            newEad3.setQueuing(QueuingState.ERROR);
+//            ead3DAO.store(newEad3);
+//
+//            String err = "recordId: " + newEad3.getIdentifier() + " - id: " + newEad3.getId() + " - type: " + xmlType.getName();
+//            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+//            queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+//            queueItem.setPriority(0);
+//            queueItemDAO.store(queueItem);
+//            /*
+//             * throw exception when solr has problem, so the queue will stop for a while.
+//             */
+//            if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+//                throw (Exception) e;
+//
+//            }
+//        }
+//    }
+
+    /**
+     * Reads the properties in a {@link StringReader}.
+     *
+     * @param string String The string to load the properties.
+     * @return {@link Properties} The properties to process.
+     *
+     * @throws IOException
+     */
+    public static Properties readProperties(String string) throws IOException {
+        StringReader stringReader = new StringReader(string);
+        Properties properties = new Properties();
+        properties.load(stringReader);
+        stringReader.close();
+        return properties;
+    }
+
+    /**
+     * Adds to {@link ContentSearchOptions} the different options.
+     *
+     * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the
+     * identifiers of the EAC-CPF.
+     * @param aiId {@link Integer} The identifier of the archival institution.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.ContentSearchOptions
+     */
+//    public static void addBatchToQueue(List<Integer> ids, Integer aiId, QueueAction queueAction, Properties preferences) throws IOException {
+//        ContentSearchOptions eacCpfSearchOptions = new ContentSearchOptions();
+//        eacCpfSearchOptions.setPageSize(0);
+//        eacCpfSearchOptions.setContentClass(XmlType.EAC_CPF.getClazz());
+//        eacCpfSearchOptions.setArchivalInstitionId(aiId);
+//        if (ids != null && ids.size() > 0) {
+//            eacCpfSearchOptions.setIds(ids);
+//        }
+//        addBatchToQueue(eacCpfSearchOptions, queueAction, preferences);
+//    }
+
+    /**
+     * Adds to {@link ContentSearchOptions} the different options and update the
+     * database.
+     *
+     * @param eacCpfSearchOptions {@link ContentSearchOptions} The options of
+     * the EAC-CPF.
+     * @param queueAction {@link QueueAction} The actions in the queue.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.ContentSearchOptions
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     * @see eu.apenet.persistence.vo.QueueItem
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+//    public static void addBatchToQueue(ContentSearchOptions eacCpfSearchOptions, QueueAction queueAction, Properties preferences) throws IOException {
+//        SecurityContext.get().checkAuthorized(eacCpfSearchOptions.getArchivalInstitionId());
+//        QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+//        eacCpfSearchOptions.setPageSize(0);
+//        if (QueueAction.CONVERT.equals(queueAction)) {
+//            eacCpfSearchOptions.setConverted(false);
+//        } else if (QueueAction.VALIDATE.equals(queueAction)) {
+//            eacCpfSearchOptions.setValidated(ValidatedState.NOT_VALIDATED);
+//        } else if (QueueAction.PUBLISH.equals(queueAction)) {
+//            eacCpfSearchOptions.setValidated(ValidatedState.VALIDATED);
+//            eacCpfSearchOptions.setPublished(false);
+//        } else if (QueueAction.CONVERT_VALIDATE_PUBLISH.equals(queueAction)) {
+//            eacCpfSearchOptions.setPublished(false);
+//        } else if (QueueAction.UNPUBLISH.equals(queueAction)) {
+//            eacCpfSearchOptions.setPublished(true);
+//        } else if (QueueAction.CONVERT_TO_ESE_EDM.equals(queueAction)) {
+//            eacCpfSearchOptions.setEuropeana(EuropeanaState.NOT_CONVERTED);
+//            eacCpfSearchOptions.setValidated(ValidatedState.VALIDATED);
+//        } else if (QueueAction.DELIVER_TO_EUROPEANA.equals(queueAction)) {
+//            eacCpfSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
+//
+//        } else if (QueueAction.DELETE_FROM_EUROPEANA.equals(queueAction)) {
+//            eacCpfSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+//        } else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
+//            eacCpfSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
+//        } else if (QueueAction.CHANGE_TO_STATIC.equals(queueAction)) {
+//            eacCpfSearchOptions.setDynamic(true);
+//        } else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
+//            eacCpfSearchOptions.setDynamic(false);
+//        }
+//        eacCpfSearchOptions.setQueuing(QueuingState.NO);
+//        JpaUtil.beginDatabaseTransaction();
+//        List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(eacCpfSearchOptions);
+//        int size = 0;
+//        while ((size = eacCpfs.size()) > 0) {
+//            EacCpf eacCpf = eacCpfs.get(size - 1);
+//            if (validState(eacCpf, preferences, queueAction)) {
+//                QueueItem queueItem = fillQueueItem(eacCpf, queueAction, preferences);
+//                eacCpf.setQueuing(QueuingState.READY);
+//                eacCpfDAO.updateSimple(eacCpf);
+//                indexqueueDao.updateSimple(queueItem);
+//            }
+//            eacCpfs.remove(size - 1);
+//        }
+//        JpaUtil.commitDatabaseTransaction();
+//    }
+
+    /**
+     * Checks the state and the profile future action.
+     *
+     * @param eac {@link EacCpf} The EAC-CPF to validate.
+     * @param preferences {@link Properties} Profile preferences.
+     * @param queueAction {@link QueueAction} The action to process.
+     * @return boolean The state and the profile future action are rights or
+     * not.
+     *
+     * @see eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction
+     */
+//    private static boolean validState(EacCpf eac, Properties preferences, QueueAction queueAction) {
+//        boolean state = !queueAction.isUseProfileAction();
+//        if (!state) {
+//            String property = preferences.getProperty(QueueItem.UPLOAD_ACTION);
+//            //each condition returns true if the state and the profile future action are rights
+//            state = (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT.getId())) && !eac.isConverted())
+//                    || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.VALIDATE.getId())) && !eac.getValidated().equals(ValidatedState.VALIDATED))
+//                    || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH.getId())) && !eac.isPublished());
+//        }
+//        return state;
+//    }
+
+    /**
+     * Puts in the {@link ContentSearchOptions} the list of the EAC-CPF's
+     * identifiers to remove from the content manager.
+     *
+     * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the
+     * EAC-CPF's identifiers.
+     * @param aiId {@link Integer} The identifier of the archival institution.
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.ContentSearchOptions
+     */
+    public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId) throws IOException {
+        ContentSearchOptions eacCpfSearchOptions = new ContentSearchOptions();
+        eacCpfSearchOptions.setPageSize(0);
+        eacCpfSearchOptions.setContentClass(XmlType.EAC_CPF.getClazz());
+        eacCpfSearchOptions.setArchivalInstitionId(aiId);
+        if (ids != null && ids.size() > 0) {
+            eacCpfSearchOptions.setIds(ids);
+        }
+        deleteBatchFromQueue(eacCpfSearchOptions);
+    }
+
+    /**
+     * Deletes from the queue the EAC-CPFs.
+     *
+     * @param contentSearchOptions {@link ContentSearchOptions} The different
+     * options of the EAC-CPF.
+     *
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.ContentSearchOptions
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.vo.QueueItem
+     */
+    public static void deleteBatchFromQueue(ContentSearchOptions contentSearchOptions) throws IOException {
+        SecurityContext.get().checkAuthorized(contentSearchOptions.getArchivalInstitionId());
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        contentSearchOptions.setPageSize(0);
+        List<QueuingState> queueStates = new ArrayList<QueuingState>();
+        queueStates.add(QueuingState.READY);
+        queueStates.add(QueuingState.ERROR);
+        contentSearchOptions.setQueuing(queueStates);
+        JpaUtil.beginDatabaseTransaction();
+        List<Ead3> ead3s = ead3DAO.getEad3s(contentSearchOptions);
+        int size = 0;
+        while ((size = ead3s.size()) > 0) {
+            Ead3 ead3 = ead3s.get(size - 1);
+            QueueItem queueItem = ead3.getQueueItem();
+            ead3.setQueuing(QueuingState.NO);
+            ead3DAO.updateSimple(ead3);
+            deleteFromQueueInternal(queueItem, true);
+            ead3s.remove(size - 1);
+        }
+        JpaUtil.commitDatabaseTransaction();
+    }
+
+    /**
+     * Fills the queue with the item.
+     *
+     * @param upFile {@link UpFile} The file to upload.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Profile preferences.
+     * @return {@link QueueItem} A queue item.
+     *
+     * @throws IOException
+     */
+    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences) throws IOException {
+        return fillQueueItem(upFile, queueAction, preferences, 1000);
+    }
+
+    /**
+     * Fills the queue with the item.
+     *
+     * @param upFile {@link UpFile} The file to upload.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Profile preferences.
+     * @param basePriority int The priority in the queue.
+     * @return {@link QueueItem} An item queue.
+     *
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.vo.QueueItem
+     */
+    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
+        QueueItem queueItem = new QueueItem();
+        queueItem.setQueueDate(new Date());
+        queueItem.setAction(queueAction);
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
+        }
+
+        queueItem.setUpFile(upFile);
+
+        queueItem.setPriority(basePriority);
+        queueItem.setAiId(upFile.getAiId());
+        return queueItem;
+    }
+
+    /**
+     * Deletes the file from the queue and updates the database.
+     *
+     * @param queueItem {@link QueueItem} A queue item.
+     * @param deleteUpFile boolean If there is to delete the file.
+     *
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     */
+    private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws IOException {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        JpaUtil.beginDatabaseTransaction();
+        Ead3 ead3 = queueItem.getEad3();
+        if (ead3 != null) {
+            ead3.setQueuing(QueuingState.NO);
+            ead3DAO.updateSimple(ead3);
+        }
+        deleteFromQueueInternal(queueItem, deleteUpFile);
+        JpaUtil.commitDatabaseTransaction();
+    }
+
+    /**
+     * Checks if the EAC-CPF exists in the database.
+     *
+     * @param upFile {@link UpFile} The file to upload.
+     * @param identifier String The identifier of the file.
+     * @return {@link EacCpf} An EAC-CPF file.
+     */
+    private static Ead3 doesFileExist(UpFile upFile, String identifier) {
+        return DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier, false);
+    }
+
+    /**
+     * Creates the EAC-CPF's preview.
+     *
+     * @param xmlType {@link XmlType} The type of the file.
+     * @param id {@link Integer} The identifier of the EAC-CPF in the database.
+     *
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
+    public static void createPreviewHTML(XmlType xmlType, Integer id) {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        Ead3 ead3 = ead3DAO.findById(id, xmlType.getClazz());
+        SecurityContext.get().checkAuthorized(ead3.getAiId());
+    }
+
+    /**
+     * Fixes the wrong states in the queue.
+     */
+    public static void fixWrongQueueStates() {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        ContentSearchOptions searchOptions = new ContentSearchOptions();
+        searchOptions.setContentClass(Ead3.class);
+        searchOptions.setQueuing(QueuingState.BUSY);
+        List<Ead3> ead3s = ead3DAO.getEad3s(searchOptions);
+        for (Ead3 ead3 : ead3s) {
+            LOGGER.info("Fix wrong queuing state for: " + ead3);
+            if (ead3.getQueueItem() == null) {
+                ead3.setQueuing(QueuingState.NO);
+            } else {
+                ead3.setQueuing(QueuingState.READY);
+            }
+            ead3DAO.store(ead3);
+        }
+
     }
 
 }
