@@ -5,21 +5,18 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
-import eu.apenet.dashboard.services.eaccpf.*;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.factory.DAOFactory;
-//import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
 
 import java.io.*;
-//import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -27,21 +24,13 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.xml.sax.SAXException;
-//import javax.xml.stream.XMLInputFactory;
-//import javax.xml.stream.XMLStreamReader;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
 
-import javax.management.modelmbean.XMLParseException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-//import org.xml.sax.helpers.LocatorImpl;
 
-/**
- *
- * @author papp
- */
 class ValidateTask extends AbstractEad3Task {
 
     @Override
@@ -65,8 +54,8 @@ class ValidateTask extends AbstractEad3Task {
                     exceptions = new ArrayList<SAXParseException>();
                     exceptions
                             .add(new SAXParseException(
-                                            "The file is not UTF-8 - We will try to convert it right now to UTF-8 or make sure your file is UTF-8 before re-uploading. If not, the file will not pass the index step and will fail.",
-                                            new LocatorImpl()));
+                                    "The file is not UTF-8 - We will try to convert it right now to UTF-8 or make sure your file is UTF-8 before re-uploading. If not, the file will not pass the index step and will fail.",
+                                    new LocatorImpl()));
                     logger.warn("ERROR - not UTF-8 ? - Trying to convert it to UTF-8");
                     try {
                         simpleUtf8Conversion(
@@ -164,8 +153,8 @@ class ValidateTask extends AbstractEad3Task {
                     + APEnetUtilities.FILESEPARATOR + "before-eaccpf.xsl";
 
             InputStream in = new FileInputStream(file);
-            File outputfile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() +
-                    APEnetUtilities.FILESEPARATOR + "converted_" + file.getName());
+            File outputfile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
+                    + APEnetUtilities.FILESEPARATOR + "converted_" + file.getName());
             TransformationTool.createTransformation(in, outputfile, new File(xslFilePath),
                     null, true, true, null, true, null);
             in.close();

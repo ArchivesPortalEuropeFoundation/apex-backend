@@ -73,7 +73,10 @@ function initSubpage() {
 	$("#selectAllFiles").bind("click", function(value) {
 		if($("input[name=xmlTypeId]:checked").val() == '2'){
 			addAllEacCpfsInSession();
-		} else {
+		} 
+                else if($("input[name=xmlTypeId]:checked").val() == '4'){
+                    
+                }else {
 			addAllFAsInSession();
 		}
 		select_all();
@@ -139,7 +142,11 @@ function performContentAction(action, id, type) {
 		var actionUrl;
                 if (type == "2"){
                     actionUrl = "eacCpfActions.action";
-                } else {
+                }
+                else if(type ==="4"){
+                    actionUrl = "ead3Actions.action";
+                }
+                else {
                     actionUrl = "eadActions.action";
                 }
 		$("#ead-results-container").html("<div class='icon_waiting'></div>");
@@ -189,7 +196,8 @@ function performBatchContentAction(type) {
 	var actionUrl;
         if (type == "2"){
             actionUrl = "batchEacCpfActions.action";
-        } else {
+        }
+        else {
             actionUrl = "batchEadActions.action";
         }
         var json = {};

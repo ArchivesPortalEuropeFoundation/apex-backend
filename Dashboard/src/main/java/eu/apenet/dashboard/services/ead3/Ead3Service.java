@@ -9,17 +9,25 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
+import eu.apenet.dashboard.services.ead.ConvertTask;
+import eu.apenet.dashboard.services.ead.DeleteTask;
+
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.Ead3DAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
+
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead3;
-import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
+
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
+
 import eu.apenet.persistence.vo.UpFile;
+
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.io.File;
 import java.io.IOException;
@@ -41,11 +49,33 @@ public class Ead3Service {
     protected static final Logger LOGGER = Logger.getLogger(Ead3Service.class);
     private static final String CURRENT_LANGUAGE_KEY = "currentLanguage";
 
+    public static boolean isHarvestingStarted() {
+        return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
+    }
+
     public Ead3 create(XmlType xmlType, UpFile upFile, Integer aiId, String ead3Id, String title) throws Exception {
         SecurityContext.get().checkAuthorized(aiId);
         Ead3 ead3 = new CreateEad3Task().execute(xmlType, upFile, aiId, ead3Id, title);
         DAOFactory.instance().getUpFileDAO().delete(upFile);
         return ead3;
+    }
+
+    public static void publish(XmlType xmlType, Integer id) throws Exception {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        Ead3 ead3 = ead3DAO.findById(id, xmlType.getClass());
+        SecurityContext.get().checkAuthorized(ead3);
+        if (PublishTask.valid(ead3)) {
+            addToQueue(ead3, QueueAction.PUBLISH, null);
+        }
+    }
+
+    public static void unpublish(XmlType xmlType, Integer id) throws Exception {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        Ead3 ead3 = ead3DAO.findById(id, xmlType.getClass());
+        SecurityContext.get().checkAuthorized(ead3);
+        if (UnpublishTask.valid(ead3)) {
+            addToQueue(ead3, QueueAction.UNPUBLISH, null);
+        }
     }
 
     /**
@@ -90,12 +120,13 @@ public class Ead3Service {
     public static void validate(Integer id) throws Exception {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         Ead3 ead3 = ead3DAO.findById(id, XmlType.EAD_3.getClazz());
-        
+
         SecurityContext.get().checkAuthorized(ead3.getAiId());
         if (ValidateTask.notValidated(ead3)) {
             addToQueue(ead3, QueueAction.VALIDATE, null);
         }
     }
+
     /**
      * <p>
      * Manages the action publish.
@@ -598,7 +629,6 @@ public class Ead3Service {
 //            }
 //        }
 //    }
-
     /**
      * Method to process the file already in the system using the selected
      * profile.
@@ -614,7 +644,6 @@ public class Ead3Service {
 //        Ead3 ead3 = queueItem.getEad3();
 //        processEacCpf(queueItem, ead3, preferences);
 //    }
-
     /**
      * Method to performs the actions associated to the profile over the file.
      *
@@ -682,7 +711,6 @@ public class Ead3Service {
 //            }
 //        }
 //    }
-
     /**
      * Reads the properties in a {@link StringReader}.
      *
@@ -722,7 +750,6 @@ public class Ead3Service {
 //        }
 //        addBatchToQueue(eacCpfSearchOptions, queueAction, preferences);
 //    }
-
     /**
      * Adds to {@link ContentSearchOptions} the different options and update the
      * database.
@@ -788,7 +815,6 @@ public class Ead3Service {
 //        }
 //        JpaUtil.commitDatabaseTransaction();
 //    }
-
     /**
      * Checks the state and the profile future action.
      *
@@ -811,7 +837,6 @@ public class Ead3Service {
 //        }
 //        return state;
 //    }
-
     /**
      * Puts in the {@link ContentSearchOptions} the list of the EAC-CPF's
      * identifiers to remove from the content manager.
@@ -982,5 +1007,4 @@ public class Ead3Service {
         }
 
     }
-
 }

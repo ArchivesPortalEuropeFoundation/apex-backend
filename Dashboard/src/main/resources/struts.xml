@@ -238,16 +238,22 @@
             <!-- Do we still need the ajax result, because it seems to be used nowhere? -->
             <result name="success_ajax">/jsp/contentmanager/contentmanager-results.jsp</result>
             <result name="success-eaccpf" type="tiles">contentmanager</result>
-           <result name="empty" type="tiles">contentmanager</result>
+            <result name="ead3_success" type="tiles">contentmanager</result>
+            <result name="empty" type="tiles">contentmanager</result>
         </action>
 
         <action name="updateContentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction">
+            <result name="ead3_success">/jsp/contentmanager/contentmanager-ead3-results.jsp</result>
             <result name="success">/jsp/contentmanager/contentmanager-results.jsp</result>
             <result name="success-eaccpf">/jsp/contentmanager/contentmanager-eaccpf-results.jsp</result>
         </action>
 
 
         <action name="eadActions" class="eu.apenet.dashboard.actions.content.ead.EadActions">
+            <result name="success">/jsp/ajax/success.jsp</result>
+            <result name="error">/jsp/ajax/error.jsp</result>
+        </action>
+        <action name="ead3Actions" class="eu.apenet.dashboard.actions.content.ead3.Ead3Actions">
             <result name="success">/jsp/ajax/success.jsp</result>
             <result name="error">/jsp/ajax/error.jsp</result>
         </action>
@@ -391,105 +397,105 @@
             <result name="input">/jsp/displayEAGPreviewAL.jsp</result>
         </action>
 
-		<!-- New archival institution -->
-		<action name="ALEditor" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" >
-			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="tiles">newEditAL</result>
-		</action>
+        <!-- New archival institution -->
+        <action name="ALEditor" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" >
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">newEditAL</result>
+        </action>
 
-		<action name="ALDownload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="download">
-			<result name="download" type="stream">
- 				<param name="contentType">application/file-download</param>
-				<param name="contentCharSet">UTF-8</param>
-				<param name="inputName">inputStream</param>
-				<param name="contentLength">${fileSize}</param>
-				<param name="contentDisposition">attachment; filename=${fileName}</param>
-				<param name="bufferSize">4096</param>
-			</result>
-			<result name="error" type="tiles">ALnotFound</result>
-		</action>
+        <action name="ALDownload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="download">
+            <result name="download" type="stream">
+                <param name="contentType">application/file-download</param>
+                <param name="contentCharSet">UTF-8</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentLength">${fileSize}</param>
+                <param name="contentDisposition">attachment; filename=${fileName}</param>
+                <param name="bufferSize">4096</param>
+            </result>
+            <result name="error" type="tiles">ALnotFound</result>
+        </action>
 
-		<action name="ALUploadForm" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" >
-			<result name="success" type="tiles">newUploadAL</result>
-		</action>
+        <action name="ALUploadForm" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" >
+            <result name="success" type="tiles">newUploadAL</result>
+        </action>
 
-		<action name="ALUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="upload">
-			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="redirectAction">
-				<param name="actionName">viewAL</param>
-			</result>
-			<!-- <result name="input" type="tiles">overwriteAL</result> -->
-			<result name="input" type="redirectAction">
-				<param name="actionName">ALReport</param>
-			</result>
-			<result name="invalid" type="tiles">uploaderrorformat2</result>
-			<result name="error" type="tiles">uploaderrorformat2</result>
-			<result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
-			<result name="errorContent2" type="tiles">uploaderroralcontentnotpublished</result>
-			<result name="errorIdentifier" type="tiles">uploaderroralidentifier</result>
-			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
-			<result name="errorLang" type="tiles">uploaderrorallangnull</result>
-			<result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
-			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
-		</action>
+        <action name="ALUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="upload">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="redirectAction">
+                <param name="actionName">viewAL</param>
+            </result>
+            <!-- <result name="input" type="tiles">overwriteAL</result> -->
+            <result name="input" type="redirectAction">
+                <param name="actionName">ALReport</param>
+            </result>
+            <result name="invalid" type="tiles">uploaderrorformat2</result>
+            <result name="error" type="tiles">uploaderrorformat2</result>
+            <result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
+            <result name="errorContent2" type="tiles">uploaderroralcontentnotpublished</result>
+            <result name="errorIdentifier" type="tiles">uploaderroralidentifier</result>
+            <result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
+            <result name="errorLang" type="tiles">uploaderrorallangnull</result>
+            <result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
+            <result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
+        </action>
 
-		<action name="ALContinueUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="checkIngestionMode">
-			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="redirectAction">
-				<param name="actionName">viewAL</param>
-			</result>
-			<result name="error" type="tiles">uploaderrorformat2</result>
-			<result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
-			<result name="errorContent2" type="tiles">uploaderroralcontentnotpublished</result>
-			<result name="errorIdentifier" type="tiles">uploaderroralidentifier</result>
-			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
-			<result name="errorLang" type="tiles">uploaderrorallangnull</result>
-			<result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
-			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
-		</action>
+        <action name="ALContinueUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="checkIngestionMode">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="redirectAction">
+                <param name="actionName">viewAL</param>
+            </result>
+            <result name="error" type="tiles">uploaderrorformat2</result>
+            <result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
+            <result name="errorContent2" type="tiles">uploaderroralcontentnotpublished</result>
+            <result name="errorIdentifier" type="tiles">uploaderroralidentifier</result>
+            <result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
+            <result name="errorLang" type="tiles">uploaderrorallangnull</result>
+            <result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
+            <result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
+        </action>
 
-		<action name="ALCancelOverwrite" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="cancelOverwrite">
-			<result name="success" type="tiles">newUploadAL</result>
-		</action>
+        <action name="ALCancelOverwrite" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="cancelOverwrite">
+            <result name="success" type="tiles">newUploadAL</result>
+        </action>
 
-		<action name="ALOverwrite" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="checkReportAndIngestLogic">
-			<result name="input" type="redirectAction">
-				<param name="actionName">ALReport</param>
-			</result>
-			<result name="success" type="redirectAction">
-				<param name="actionName">viewAL</param>
-			</result>
-			<result name="invalid" type="tiles">uploaderrorformat2</result>
-		</action>
+        <action name="ALOverwrite" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="checkReportAndIngestLogic">
+            <result name="input" type="redirectAction">
+                <param name="actionName">ALReport</param>
+            </result>
+            <result name="success" type="redirectAction">
+                <param name="actionName">viewAL</param>
+            </result>
+            <result name="invalid" type="tiles">uploaderrorformat2</result>
+        </action>
 
-		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
-			<result name="SUCCESS" type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-		</action>
+        <action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
 
-		<action name="ALReport" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="reportAction">
-			<result name="input" type="tiles">ALReport</result>
-			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
-			<result name="changedNames" type="tiles">uploaderroralinvalidnames</result>
-			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
-			<result name="errorSpecialCharacters" type="tiles">uploaderroralspecialchar</result>
-		</action>
+        <action name="ALReport" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="reportAction">
+            <result name="input" type="tiles">ALReport</result>
+            <result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
+            <result name="changedNames" type="tiles">uploaderroralinvalidnames</result>
+            <result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
+            <result name="errorSpecialCharacters" type="tiles">uploaderroralspecialchar</result>
+        </action>
 
-		<action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">
-			<result name="SUCCESS" type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-		</action>
+        <action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
 
-		<action name="launchALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="launchArchivalInstitutionActions">
-			<result name="SUCCESS" type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-		</action>
+        <action name="launchALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="launchArchivalInstitutionActions">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
 
         <action name="changeAlIdentifiers" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction">
             <interceptor-ref name="changeLanguageStack"/>
@@ -504,18 +510,18 @@
         </action>
 
         <action name="ALRecheckIdentifiers" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeXMLEditor" method="changeXMLIdentifier">
-			<result name="success" type="redirectAction">
-				<param name="actionName">ALReport</param>
-			</result>
-			<result name="error" type="redirectAction">
-				<param name="actionName">ALReport</param>
-			</result>
-		</action>
+            <result name="success" type="redirectAction">
+                <param name="actionName">ALReport</param>
+            </result>
+            <result name="error" type="redirectAction">
+                <param name="actionName">ALReport</param>
+            </result>
+        </action>
 
         <!-- Temporary action to change the AL identifiers if don't begin with a letter in DDBB -->
         <action name="changeIdentifierInDDBB" class="eu.apenet.dashboard.archivallandscape.ChangeIdentifierInDDBBAction">
-           <result name="success" type="tiles">indexAdmin</result>
-		   <result name="error" type="tiles">indexAdmin</result>
+            <result name="success" type="tiles">indexAdmin</result>
+            <result name="error" type="tiles">indexAdmin</result>
         </action>
 
         <action name="GoDashboard" class="eu.apenet.dashboard.GoDashboardAction">
@@ -1179,14 +1185,14 @@
             </result>
         </action>
 
-		<!-- Action to display the list of applicable profiles. -->
+        <!-- Action to display the list of applicable profiles. -->
         <action name="displayProfile" class="eu.apenet.dashboard.manual.ingestionprofile.ApplyProfileAction" method="input">
             <result name="success" type="tiles">content.profiles</result>
             <result name="none" type="tiles">content.profiles</result>
             <result name="error" type="tiles">content.profiles.error</result>
         </action>
 
-		<!-- Action to process the selected items with the selected profile. -->
+        <!-- Action to process the selected items with the selected profile. -->
         <action name="applyProfile" class="eu.apenet.dashboard.manual.ingestionprofile.ApplyProfileAction">
             <result name="success" type="redirectAction">
                 <param name="actionName">contentmanager</param>
@@ -1196,19 +1202,19 @@
             </result>
         </action>
 
-		<!-- Temporary action for recover coordinates. -->
-		<action name="eag2012GeoCoordinates" class="eu.apenet.dashboard.manual.eag.Eag2012GeoCoordinatesAction">
-			<result name="success" type="tiles">indexAdmin</result>
-			<result name="error" type="tiles">indexAdmin</result>
-		</action>
+        <!-- Temporary action for recover coordinates. -->
+        <action name="eag2012GeoCoordinates" class="eu.apenet.dashboard.manual.eag.Eag2012GeoCoordinatesAction">
+            <result name="success" type="tiles">indexAdmin</result>
+            <result name="error" type="tiles">indexAdmin</result>
+        </action>
 
         <!-- Temporary action for fix the AL order in production DDBB. -->
         <action name="fixALOrderInDDBB" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeFixWrongDBAction">
-           <result name="success" type="tiles">indexAdmin</result>
-		   <result name="error" type="tiles">indexAdmin</result>
+            <result name="success" type="tiles">indexAdmin</result>
+            <result name="error" type="tiles">indexAdmin</result>
         </action>
 
-		<action name="downloadHarvesterErrorsXml" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadXml">
+        <action name="downloadHarvesterErrorsXml" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadXml">
             <result name="error" type="tiles">error</result>
         </action>
         <action name="downloadHarvesterErrorsText" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadText">
@@ -1226,8 +1232,8 @@
         </action>
 
         <action name="storeEacCpf" class="eu.apenet.dashboard.manual.eaccpf.actions.StoreEacCpfAction">
-        	<!-- TODO: issue 1223, for complete the reload when save first needed the edit
-        		 of an apeEAC-CPF will be implemented -->
+            <!-- TODO: issue 1223, for complete the reload when save first needed the edit
+            of an apeEAC-CPF will be implemented -->
             <result name="success" type="redirectAction">
                 <param name="actionName">editEacCpf</param>
                 <param name="fileToLoad">${fileToLoad}</param>
@@ -1239,7 +1245,7 @@
                 <param name="actionName">dashboardHome</param>
             </result>
         </action>
-		<action name="downloadLogFile" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction" method="download">
+        <action name="downloadLogFile" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction" method="download">
             <result name="error" type="tiles">error</result>
         </action>
         <action name="showLogFiles" class="eu.apenet.dashboard.actions.admin.ShowLogFilesAction">

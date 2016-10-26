@@ -8,11 +8,13 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.actions.content.eaccpf.EacCpfContentManagerResults;
 import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
+import eu.apenet.dashboard.actions.content.ead3.Ead3ContentManagerResults;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.queue.DisplayQueueItem;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.dao.Ead3DAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -31,13 +33,13 @@ public class ContentManagerAction extends AbstractInstitutionAction {
     protected static final String SUCCESS_AJAX = "success_ajax";
 
     // Constants for the selects in the "Convert options" colorBox.
-	// DAO role.
-	private static final String TYPE_3D = "3D"; // Constant for type "3D".
-	private static final String TYPE_IMAGE = "IMAGE"; // Constant for type "image".
-	private static final String TYPE_SOUND = "TEXT"; // Constant for type "sound".
-	private static final String TYPE_TEXT = "TEXT"; // Constant for type "text".
-	private static final String TYPE_UNSPECIFIED = "UNSPECIFIED"; // Constant for type "unspecified".
-	private static final String TYPE_VIDEO = "VIDEO"; // Constant for type "video".
+    // DAO role.
+    private static final String TYPE_3D = "3D"; // Constant for type "3D".
+    private static final String TYPE_IMAGE = "IMAGE"; // Constant for type "image".
+    private static final String TYPE_SOUND = "TEXT"; // Constant for type "sound".
+    private static final String TYPE_TEXT = "TEXT"; // Constant for type "text".
+    private static final String TYPE_UNSPECIFIED = "UNSPECIFIED"; // Constant for type "unspecified".
+    private static final String TYPE_VIDEO = "VIDEO"; // Constant for type "video".
 
     /**
      *
@@ -99,7 +101,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
         europeanaStatusList.put(EuropeanaState.NO_EUROPEANA_CANDIDATE.toString(), getText("content.message.europeana.nochos"));
         europeanaStatusList.put(EuropeanaState.FATAL_ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
-        
+
         queuingStatusList.put(QueuingState.NO.toString(), getText(CONTENT_MESSAGE_NO));
         queuingStatusList.put(QueuingState.READY.toString(), getText("content.message.ready"));
         queuingStatusList.put(QueuingState.BUSY.toString(), getText("content.message.queueprocessing"));
@@ -112,6 +114,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
                 getText("content.message." + XmlType.EAD_SG.getResourceName()));
         typeList.put(XmlType.EAC_CPF.getIdentifier() + "",
                 getText("content.message." + XmlType.EAC_CPF.getResourceName()));
+        typeList.put(XmlType.EAD_3.getIdentifier() + "", "EAD3");
         searchTermsFieldList.put("", getText("content.message.all"));
         searchTermsFieldList.put("eadid", getText("content.message.id"));
         searchTermsFieldList.put("title", getText("content.message.title"));
@@ -130,32 +133,33 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         this.getRightsDigitalObjects().addAll(rightsSet);
         // Rights for EAD data.
         this.getRightsEadData().addAll(rightsSet);
-        
+
     }
 
     /**
-     * Method to create the set with all the available rights statements for EAD data.
+     * Method to create the set with all the available rights statements for EAD
+     * data.
      *
      * @return Set with all the available rights statements for EAD data.
      */
     private Set<SelectItem> addRightsOptions() {
-    	Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES, getText("content.message.rights.creative.attribution.no.derivates")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
-    	rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
+        Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES, getText("content.message.rights.creative.attribution.no.derivates")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
 
-    	return rightsSet;
+        return rightsSet;
     }
 
     public Integer getPageNumber() {
@@ -212,6 +216,8 @@ public class ContentManagerAction extends AbstractInstitutionAction {
 
         if (xmlTypeId.equals(XmlType.EAC_CPF.getIdentifier() + "")) {
             return processEacCpf(contentSearchOptions);
+        } else if (xmlTypeId.equals(XmlType.EAD_3.getIdentifier() + "")) {
+            return processEad3(contentSearchOptions);
         } else {
             return processEad(contentSearchOptions);
         }
@@ -322,10 +328,10 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         EadContentManagerResults results = new EadContentManagerResults(contentSearchOptions);
         results.setEads(eadDAO.getEads(contentSearchOptions));
         results.setTotalNumberOfResults(eadDAO.countEads(contentSearchOptions));
-        Long countResults=results.totalNumberOfResults;
+        Long countResults = results.totalNumberOfResults;
         /*
         * statistics for total converted files
-        */
+         */
         if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
             ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
             convertedSearchOptions.setConverted(true);
@@ -333,7 +339,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         /*
         * statistics for total validated files
-        */
+         */
         if (contentSearchOptions.getValidated().isEmpty()
                 || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
             ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -344,7 +350,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         /*
         * statistics for total published units
-        */
+         */
         if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
             ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
             publishedSearchOptions.setPublished(true);
@@ -353,7 +359,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         if (contentSearchOptions.getContentClass().equals(FindingAid.class)) {
             /*
             * statistics for total delivered daos
-            */
+             */
             if (contentSearchOptions.getEuropeana().isEmpty()
                     || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
                 ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -362,7 +368,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             }
             /*
             * statistics for total converted daos
-            */
+             */
             if (contentSearchOptions.getEuropeana().isEmpty()
                     || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
                 ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -390,6 +396,74 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
         getServletRequest().setAttribute("errorItems", convert(DAOFactory.instance().getQueueItemDAO().getErrorItemsOfInstitution(getAiId())));
         return SUCCESS;
+    }
+
+    private String processEad3(ContentSearchOptions contentSearchOptions) {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        Ead3ContentManagerResults results = new Ead3ContentManagerResults(contentSearchOptions);
+        results.setEad3s(ead3DAO.getEad3s(contentSearchOptions));
+        results.setTotalNumberOfResults(ead3DAO.countEad3s(contentSearchOptions));
+        Long countResults = results.totalNumberOfResults;
+        /*
+        * statistics for total converted files
+         */
+        if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
+            ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            convertedSearchOptions.setConverted(true);
+            results.setTotalConvertedFiles(ead3DAO.countEad3s(convertedSearchOptions));
+        }
+        /*
+        * statistics for total validated files
+         */
+        if (contentSearchOptions.getValidated().isEmpty()
+                || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
+            ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            if (validatedSearchOptions.getValidated().isEmpty()) {
+                validatedSearchOptions.setValidated(ValidatedState.VALIDATED);
+            }
+            results.setTotalValidatedFiles(ead3DAO.countEad3s(validatedSearchOptions));
+        }
+        /*
+        * statistics for total published units
+         */
+//        if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
+//            ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+//            publishedSearchOptions.setPublished(true);
+//            results.setTotalPublishedUnits(ead3DAO.countUnits(publishedSearchOptions));
+//        }
+        /*
+            * statistics for total delivered daos
+         */
+//            if (contentSearchOptions.getEuropeana().isEmpty()
+//                    || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
+//                ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
+//                europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+//                results.setTotalChosDeliveredToEuropeana(ead3DAO.countChos(europeanaSearchOptions));
+//            }
+//            /*
+//            * statistics for total converted daos
+//            */
+//            if (contentSearchOptions.getEuropeana().isEmpty()
+//                    || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
+//                ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
+//                europeanaSearchOptions.getEuropeana().clear();
+//                europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
+//                europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
+//                results.setTotalChos(ead3DAO.countChos(europeanaSearchOptions));
+//            }
+
+        ContentSearchOptions dynamicEadSearchOptions = new ContentSearchOptions();
+        dynamicEadSearchOptions.setPublished(false);
+        dynamicEadSearchOptions.setDynamic(true);
+        getServletRequest().setAttribute("results", results);
+        getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
+        QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+        getServletRequest().setAttribute("totalItemsInQueue", queueDAO.countItems());
+        getServletRequest().setAttribute("aiItemsInQueue", queueDAO.countItems(getAiId()));
+        getServletRequest().setAttribute("positionInQueue", queueDAO.getPositionOfFirstItem(getAiId()));
+        getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
+        getServletRequest().setAttribute("errorItems", convert(DAOFactory.instance().getQueueItemDAO().getErrorItemsOfInstitution(getAiId())));
+        return "ead3_success";
     }
 
     private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
@@ -430,10 +504,10 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         EacCpfContentManagerResults results = new EacCpfContentManagerResults(contentSearchOptions);
         results.setEacCpfs(eacCpfDAO.getEacCpfs(contentSearchOptions));
         results.setTotalNumberOfResults(eacCpfDAO.countEacCpfs(contentSearchOptions));
-        Long countResults=results.totalNumberOfResults;
+        Long countResults = results.totalNumberOfResults;
         /*
         * statistics for number of converted files
-        */
+         */
         if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
             ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
             convertedSearchOptions.setConverted(true);
@@ -441,7 +515,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         /*
         * statistics for number of validated files
-        */
+         */
         if (contentSearchOptions.getValidated().isEmpty()
                 || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
             ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -452,7 +526,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         /*
         * statistics for number of published files
-        */
+         */
         if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
             ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
             publishedSearchOptions.setPublished(true);
@@ -460,7 +534,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         /*
         * statistics for number of files delivered to Europeana
-        */
+         */
         if (contentSearchOptions.getEuropeana().isEmpty()
                 || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
             ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -469,7 +543,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         /*
         * statistics for number of files converted to EDM
-        */
+         */
         if (contentSearchOptions.getEuropeana().isEmpty()
                 || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
             ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -648,60 +722,60 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         this.errorLinkHgSg = errorLinkHgSg;
     }
 
-	/**
-	 * @return the daoTypes
-	 */
-	public Set<SelectItem> getDaoTypes() {
-		return this.daoTypes;
-	}
+    /**
+     * @return the daoTypes
+     */
+    public Set<SelectItem> getDaoTypes() {
+        return this.daoTypes;
+    }
 
-	/**
-	 * @param daoTypes the daoTypes to set
-	 */
-	public void setDaoTypes(Set<SelectItem> daoTypes) {
-		this.daoTypes = daoTypes;
-	}
+    /**
+     * @param daoTypes the daoTypes to set
+     */
+    public void setDaoTypes(Set<SelectItem> daoTypes) {
+        this.daoTypes = daoTypes;
+    }
 
-	/**
-	 * @return the rightsDigitalObjects
-	 */
-	public Set<SelectItem> getRightsDigitalObjects() {
-		return this.rightsDigitalObjects;
-	}
+    /**
+     * @return the rightsDigitalObjects
+     */
+    public Set<SelectItem> getRightsDigitalObjects() {
+        return this.rightsDigitalObjects;
+    }
 
-	/**
-	 * @param rightsDigitalObjects the rightsDigitalObjects to set
-	 */
-	public void setRightsDigitalObjects(Set<SelectItem> rightsDigitalObjects) {
-		this.rightsDigitalObjects = rightsDigitalObjects;
-	}
+    /**
+     * @param rightsDigitalObjects the rightsDigitalObjects to set
+     */
+    public void setRightsDigitalObjects(Set<SelectItem> rightsDigitalObjects) {
+        this.rightsDigitalObjects = rightsDigitalObjects;
+    }
 
-	/**
-	 * @return the rightsEadData
-	 */
-	public Set<SelectItem> getRightsEadData() {
-		return this.rightsEadData;
-	}
+    /**
+     * @return the rightsEadData
+     */
+    public Set<SelectItem> getRightsEadData() {
+        return this.rightsEadData;
+    }
 
-	/**
-	 * @param rightsEadData the rightsEadData to set
-	 */
-	public void setRightsEadData(Set<SelectItem> rightsEadData) {
-		this.rightsEadData = rightsEadData;
-	}
+    /**
+     * @param rightsEadData the rightsEadData to set
+     */
+    public void setRightsEadData(Set<SelectItem> rightsEadData) {
+        this.rightsEadData = rightsEadData;
+    }
 
-	/**
-	 * @return the daoTypeCheck
-	 */
-	public boolean isDaoTypeCheck() {
-		return this.daoTypeCheck;
-	}
+    /**
+     * @return the daoTypeCheck
+     */
+    public boolean isDaoTypeCheck() {
+        return this.daoTypeCheck;
+    }
 
-	/**
-	 * @param daoTypeCheck the daoTypeCheck to set
-	 */
-	public void setDaoTypeCheck(boolean daoTypeCheck) {
-		this.daoTypeCheck = daoTypeCheck;
-	}
+    /**
+     * @param daoTypeCheck the daoTypeCheck to set
+     */
+    public void setDaoTypeCheck(boolean daoTypeCheck) {
+        this.daoTypeCheck = daoTypeCheck;
+    }
 
 }
