@@ -4,6 +4,7 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
@@ -18,7 +19,7 @@ public enum XmlType {
     EAD_HG(1, "Holdings Guide", HoldingsGuide.class, "hg", SolrValues.HG_PREFIX),
     EAC_CPF(2, "EAC-CPF", EacCpf.class, "ec", null),
     EAD_SG(3, "Source Guide", SourceGuide.class, "sg", SolrValues.SG_PREFIX),
-    EAD_3(4, "EAD3", SourceGuide.class, "ead3", SolrValues.SG_PREFIX);
+    EAD_3(4, "EAD3", Ead3.class, "ead3", "");
 
     private final String resourceName;
     private final int identifier;
