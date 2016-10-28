@@ -19,6 +19,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.AbstractService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
@@ -37,63 +38,74 @@ import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
- * <p>Class to manage the different EAC-CPF actions in the content manager of the dashboard.
- * <p>Puts the right value of the action in the entry "Queue" of the content manager.
+ * <p>
+ * Class to manage the different EAC-CPF actions in the content manager of the
+ * dashboard.
+ * <p>
+ * Puts the right value of the action in the entry "Queue" of the content
+ * manager.
  */
-public class EacCpfService {
+public class EacCpfService extends AbstractService {
 
     protected static final Logger LOGGER = Logger.getLogger(EacCpfService.class);
     private static final String CURRENT_LANGUAGE_KEY = "currentLanguage";
     // private static final long NOT_USED_TIME = 60 * 60 * 24 * 7;
 
-	/**
-	 * Updates the table <b>queue</b> and the table <b>eac_cpf</b> in the database.
-	 * @param eadSearchOptions {@link ContentSearchOptions} An object ContentSeachOptions.
-	 * @param queueAction {@link QueueAction} An object QueueAction to manage the queue.
-	 * @throws IOException
-	 * @see EacCpfDAO#countEacCpfs(ContentSearchOptions)
-	 * @see EacCpfDAO#getEacCpfs(ContentSearchOptions)
-	 * @see EacCpfDAO#updateSimple(EacCpf)
-	 * @see EacCpf#setQueuing(QueuingState)
-	 * @see EacCpf#setPublished(boolean)
-	 * @see QueueItemDAO#updateSimple(QueueItem)
-	 * @see QueueAction#isPublishAction()
-	 */
-    public static void updateEverything(ContentSearchOptions eadSearchOptions, QueueAction queueAction) throws IOException {
-		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
-		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-		long itemsLeft = eacCpfDAO.countEacCpfs(eadSearchOptions);
-		LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
-		while (itemsLeft > 0) {
-			JpaUtil.beginDatabaseTransaction();
-			List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(eadSearchOptions);
-			int size = 0;
-			while ((size = eacCpfs.size()) > 0) {
-				EacCpf eacCpf = eacCpfs.get(size - 1);
-				QueueItem queueItem = fillQueueItem(eacCpf, queueAction, null, 1);
-				eacCpf.setQueuing(QueuingState.READY);
-				if (queueAction.isPublishAction()) {
-					eacCpf.setPublished(false);
-				}
-				eacCpfDAO.updateSimple(eacCpf);
-				eacCpfs.remove(size - 1);
-				indexqueueDao.updateSimple(queueItem);
-			}
-			JpaUtil.commitDatabaseTransaction();
-			itemsLeft = eacCpfDAO.countEacCpfs(eadSearchOptions);
-			LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
-
-		}
-
-	}
-    
     /**
-     * <p>Manages the actions convert, validate and publish.
-     * <p>Puts in the queue these actions.
-     * @param id {@link Integer} The identifier of the EAC-CPF file. 
+     * Updates the table <b>queue</b> and the table <b>eac_cpf</b> in the
+     * database.
+     *
+     * @param eadSearchOptions {@link ContentSearchOptions} An object
+     * ContentSeachOptions.
+     * @param queueAction {@link QueueAction} An object QueueAction to manage
+     * the queue.
+     * @throws IOException
+     * @see EacCpfDAO#countEacCpfs(ContentSearchOptions)
+     * @see EacCpfDAO#getEacCpfs(ContentSearchOptions)
+     * @see EacCpfDAO#updateSimple(EacCpf)
+     * @see EacCpf#setQueuing(QueuingState)
+     * @see EacCpf#setPublished(boolean)
+     * @see QueueItemDAO#updateSimple(QueueItem)
+     * @see QueueAction#isPublishAction()
+     */
+    public static void updateEverything(ContentSearchOptions eadSearchOptions, QueueAction queueAction) throws IOException {
+        QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        long itemsLeft = eacCpfDAO.countEacCpfs(eadSearchOptions);
+        LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
+        while (itemsLeft > 0) {
+            JpaUtil.beginDatabaseTransaction();
+            List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(eadSearchOptions);
+            int size = 0;
+            while ((size = eacCpfs.size()) > 0) {
+                EacCpf eacCpf = eacCpfs.get(size - 1);
+                QueueItem queueItem = fillQueueItem(eacCpf, queueAction, null, 1);
+                eacCpf.setQueuing(QueuingState.READY);
+                if (queueAction.isPublishAction()) {
+                    eacCpf.setPublished(false);
+                }
+                eacCpfDAO.updateSimple(eacCpf);
+                eacCpfs.remove(size - 1);
+                indexqueueDao.updateSimple(queueItem);
+            }
+            JpaUtil.commitDatabaseTransaction();
+            itemsLeft = eacCpfDAO.countEacCpfs(eadSearchOptions);
+            LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
+
+        }
+
+    }
+
+    /**
+     * <p>
+     * Manages the actions convert, validate and publish.
+     * <p>
+     * Puts in the queue these actions.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @param properties {@link Properties} A property list to process the file.
      * @param currentLanguage String The current language in the Dashboard.
-     * @return boolean The EAC-CPF is converted, validated and published. 
+     * @return boolean The EAC-CPF is converted, validated and published.
      * @throws IOException
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
@@ -111,9 +123,12 @@ public class EacCpfService {
     }
 
     /**
-     * <p>Manages the actions convert and validate.
-     * <p>Puts in the queue these actions.
-     * @param id {@link Integer} The identifier of the EAC-CPF file. 
+     * <p>
+     * Manages the actions convert and validate.
+     * <p>
+     * Puts in the queue these actions.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @param properties {@link Properties} A property list to process the file.
      * @param currentLanguage String The current language in the Dashboard.
      * @return boolean The EAC-CPF is converted and validated.
@@ -132,9 +147,13 @@ public class EacCpfService {
     }
 
     /**
-     * <p>Manages the action convert.
-     * <p>Puts in the queue this action.
-     * @param id {@link Integer} The identifier of the EAC-CPF file. 
+     * <p>
+     * Manages the action convert.
+     * <p>
+     * Puts in the queue this action.
+     *
+     * @param xmlType
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @param properties {@link Properties} A property list to process the file.
      * @param currentLanguage String The current language in the Dashboard.
      * @return boolean The EAC-CPF is converted.
@@ -143,26 +162,32 @@ public class EacCpfService {
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-    public static void convert(Integer id, Properties properties, String currentLanguage) throws Exception {
+    @Override
+    public void convert(XmlType xmlType, Integer id, Properties properties) throws IOException {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
         if (ConvertTask.valid(eacCpf)) {
-            properties.put(CURRENT_LANGUAGE_KEY, currentLanguage);
+//            properties.put(CURRENT_LANGUAGE_KEY, currentLanguage);
             addToQueue(eacCpf, QueueAction.CONVERT, properties);
         }
     }
 
     /**
-     * <p>Manages the action validate.
-     * <p>Puts in the queue this action.
+     * <p>
+     * Manages the action validate.
+     * <p>
+     * Puts in the queue this action.
+     *
+     * @param xmlType
      * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @throws IOException
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-    public static void validate(Integer id) throws Exception {
+    @Override
+    public void validate(XmlType xmlType, Integer id) throws IOException {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
@@ -172,15 +197,20 @@ public class EacCpfService {
     }
 
     /**
-     * <p>Manages the action publish.
-     * <p>Puts in the queue this action.
+     * <p>
+     * Manages the action publish.
+     * <p>
+     * Puts in the queue this action.
+     *
+     * @param xmlType
      * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @throws IOException
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-    public static void publish(Integer id) throws IOException {
+    @Override
+    public void publish(XmlType xmlType, Integer id) throws Exception {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
@@ -190,15 +220,19 @@ public class EacCpfService {
     }
 
     /**
-     * <p>Manages the action unpublish.
-     * <p>Puts in the queue this action.
+     * <p>
+     * Manages the action unpublish.
+     * <p>
+     * Puts in the queue this action.
+     *
      * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @throws IOException
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-    public static void unpublish(Integer id) throws IOException {
+    @Override
+    public void unpublish(XmlType xmlType, Integer id) throws Exception {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
@@ -208,24 +242,28 @@ public class EacCpfService {
     }
 
     /**
-     * <p>Manages the action delete.
-     * <p>Puts in the queue this action.
+     * <p>
+     * Manages the action delete.
+     * <p>
+     * Puts in the queue this action.
+     *
      * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @throws IOException
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-    public static void delete(Integer id) throws Exception {
+    @Override
+    public void delete(XmlType xmlType, Integer id) throws Exception {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id);
         SecurityContext.get().checkAuthorized(eacCpf);
         addToQueue(eacCpf, QueueAction.DELETE, null);
     }
 
-   
     /**
      * This method is implemented by some developer to future functionality.
+     *
      * @param id {@link Integer}
      */
     public static void deleteEdm(Integer id) {
@@ -234,6 +272,7 @@ public class EacCpfService {
 
     /**
      * This method is implemented by some developer to future functionality.
+     *
      * @param id {@link Integer}
      */
     public static void deleteFromEuropeana(Integer id) {
@@ -242,20 +281,23 @@ public class EacCpfService {
 
     /**
      * This method is implemented by some developer to future functionality.
+     *
      * @param id {@link Integer}
      */
     public static void deliverToEuropeana(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-   /**
-    * Deletes from the queue an EAC-CPF and updates the state of the entry <i>queueing</i> in the database.
-    * @param id {@link Integer} The identifier of the EAC-CPF file.
-    * @throws IOException
-    * @see eu.apenet.persistence.dao.EacCpfDAO
-    * @see eu.apenet.persistence.vo.EacCpf
-    * @see SecurityContext#checkAuthorized(EacCpf)
-    */
+    /**
+     * Deletes from the queue an EAC-CPF and updates the state of the entry
+     * <i>queueing</i> in the database.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     */
     public static void deleteFromQueue(Integer id) throws IOException {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         JpaUtil.beginDatabaseTransaction();
@@ -270,15 +312,17 @@ public class EacCpfService {
         JpaUtil.commitDatabaseTransaction();
     }
 
-   /**
-    * Deletes the file from the system and the database in the table <b>queue</b>.
-    * @param queueItem  {@link QueueItem} The item to process.
-    * @param deleteUpFile boolean Deletes or not the file.
-    * @throws IOException
-    * @see eu.apenet.persistence.vo.UpFile
-    * @see eu.apenet.persistence.dao.QueueItemDAO
-    * @see ContentUtils#deleteFile(File, boolean)
-    */
+    /**
+     * Deletes the file from the system and the database in the table
+     * <b>queue</b>.
+     *
+     * @param queueItem {@link QueueItem} The item to process.
+     * @param deleteUpFile boolean Deletes or not the file.
+     * @throws IOException
+     * @see eu.apenet.persistence.vo.UpFile
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     * @see ContentUtils#deleteFile(File, boolean)
+     */
     private static void deleteFromQueueInternal(QueueItem queueItem, boolean deleteUpFile) throws IOException {
         UpFile upFile = queueItem.getUpFile();
         if (upFile != null && deleteUpFile) {
@@ -296,15 +340,17 @@ public class EacCpfService {
         }
     }
 
-   /**
-    * Downloads a file from the content manager.
-    * @param id  {@link Integer} The identifier of the EAC-CPF file. 
-    * @return {@link File} The file downloading.
-    * @see eu.apenet.persistence.vo.EacCpf
-    * @see SecurityContext#checkAuthorized(EacCpf)
-    * @see eu.apenet.persistence.vo.UpFile
-    */
-    public static File download(Integer id) {
+    /**
+     * Downloads a file from the content manager.
+     *
+     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @return {@link File} The file downloading.
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.vo.UpFile
+     */
+    @Override
+    public File download(XmlType xmlType, Integer id) {
         EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO().findById(id, XmlType.EAC_CPF.getClazz());
         SecurityContext.get().checkAuthorized(eacCpf);
         String path = APEnetUtilities.getConfig().getRepoDirPath() + eacCpf.getPath();
@@ -319,16 +365,19 @@ public class EacCpfService {
         return null;
     }
 
-    
     /**
-     * Creates a new entry in the database for the EAC-CPF and deletes the file from the table <b>upfile</b>.
-     * @param xmlType {@link XmlType} The type of the file, in this case is an EAC-CPF file.
-     * @param upFile {@link UpFile}  The object file that is stored in the database in the table <b>upfile</b>.
+     * Creates a new entry in the database for the EAC-CPF and deletes the file
+     * from the table <b>upfile</b>.
+     *
+     * @param xmlType {@link XmlType} The type of the file, in this case is an
+     * EAC-CPF file.
+     * @param upFile {@link UpFile} The object file that is stored in the
+     * database in the table <b>upfile</b>.
      * @param aiId {@link Integer} The identifier of the archival institution.
      * @return {@link EacCpf} The object EAC-CPF.
      * @throws Exception
      * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf) 
+     * @see SecurityContext#checkAuthorized(EacCpf)
      */
     public static EacCpf create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
         SecurityContext.get().checkAuthorized(aiId);
@@ -337,15 +386,18 @@ public class EacCpfService {
         return eac;
     }
 
-   /**
-    * Uses the profile action associated to the EAC-CPF file.
-    * @param upFile {@link UpFile} The object file that is stored in the database.
-    * @param preferences {@link Properties} A property list to process the file.
-    * @throws Exception
-    * @see SecurityContext#checkAuthorized(EacCpf)
-    * @see eu.apenet.persistence.vo.QueueItem
-    * @see eu.apenet.persistence.dao.QueueItemDAO
-    */
+    /**
+     * Uses the profile action associated to the EAC-CPF file.
+     *
+     * @param upFile {@link UpFile} The object file that is stored in the
+     * database.
+     * @param preferences {@link Properties} A property list to process the
+     * file.
+     * @throws Exception
+     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.vo.QueueItem
+     * @see eu.apenet.persistence.dao.QueueItemDAO
+     */
     public static void useProfileAction(UpFile upFile, Properties preferences) throws Exception {
         SecurityContext.get().checkAuthorized(upFile.getAiId());
         QueueItem queueItem = fillQueueItem(upFile, QueueAction.USE_PROFILE, preferences);
@@ -355,7 +407,8 @@ public class EacCpfService {
     /**
      * Method to use the profile action associated to the EAC-CPF file.
      *
-     * @param eacCpf {@link EacCpf} EAC-CPF file to process with the preferences.
+     * @param eacCpf {@link EacCpf} EAC-CPF file to process with the
+     * preferences.
      * @param preferences {@link Properties} Preferences to process the EAC-CPF.
      *
      * @throws Exception During the process.
@@ -373,9 +426,14 @@ public class EacCpfService {
     }
 
     /**
-      *<p>Adds an EAC-CPF file to the queue.
-     * <p>Stores in the database an EAC-CPF in the table <b>eac_cpf</b>.
-     * <p>Fills the table <b>queue</b> with the EAC-CPF's identifier and his preferences. 
+     * <p>
+     * Adds an EAC-CPF file to the queue.
+     * <p>
+     * Stores in the database an EAC-CPF in the table <b>eac_cpf</b>.
+     * <p>
+     * Fills the table <b>queue</b> with the EAC-CPF's identifier and his
+     * preferences.
+     *
      * @param eacCpf {@link EacCpf} The EAC-CPF file to ingest in the Dashboard.
      * @param queueAction {@link QueueAction} The action in the queue.
      * @param preferences {@link Properties} Preferences to process the EAC-CPF.
@@ -392,21 +450,24 @@ public class EacCpfService {
         QueueItem queueItem = fillQueueItem(eacCpf, queueAction, preferences);
         indexqueueDao.store(queueItem);
     }
-   
-   /**
-    * Fills an item <i>queue</i>. 
-    * @param eacCpf {@link EacCPf} The EAC-CPF file to ingest in the Dashboard.
-    * @param queueAction {@link QueueAction} The action in the queue.
-    * @param preferences {@link Properties} Preferences to process the EAC-CPF.
-    * @return {@link QueueItem> An item <i>queue</i>.
-    * @throws IOException
-    */
+
+    /**
+     * Fills an item <i>queue</i>.
+     *
+     * @param eacCpf {@link EacCPf} The EAC-CPF file to ingest in the Dashboard.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Preferences to process the EAC-CPF.
+     * @return {@link QueueItem> An item <i>queue</i>.
+     * @throws IOException
+     */
     private static QueueItem fillQueueItem(EacCpf eacCpf, QueueAction queueAction, Properties preferences) throws IOException {
         return fillQueueItem(eacCpf, queueAction, preferences, 1000);
     }
 
     /**
-     * Fills an item <i>queue</i> with the EAC-CPF's identifier, preferences and priority.
+     * Fills an item <i>queue</i> with the EAC-CPF's identifier, preferences and
+     * priority.
+     *
      * @param eacCpf {@link EacCpf} The EAC-CPF file to ingest in the Dashboard.
      * @param queueAction {@link QueueAction} The action in the queue.
      * @param preferences {@link Properties} Preferences to process the EAC-CPF.
@@ -416,9 +477,9 @@ public class EacCpfService {
      */
     private static QueueItem fillQueueItem(EacCpf eacCpf, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
         QueueItem queueItem = eacCpf.getQueueItem();
-        if (queueItem == null){
-        	queueItem = new QueueItem();
-        	queueItem.setEacCpf(eacCpf);
+        if (queueItem == null) {
+            queueItem = new QueueItem();
+            queueItem.setEacCpf(eacCpf);
             queueItem.setAiId(eacCpf.getAiId());
         }
         queueItem.setQueueDate(new Date());
@@ -427,18 +488,19 @@ public class EacCpfService {
             queueItem.setPreferences(writeProperties(preferences));
         }
         int priority = basePriority;
-       
 
-		if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
-			priority += 150;
-		}
+        if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
+            priority += 150;
+        }
         queueItem.setPriority(priority);
         return queueItem;
     }
 
     /**
      * Writes in a string buffer the property list.
-     * @param properties {@link Properties} The preferences to process the EAC-CPF.
+     *
+     * @param properties {@link Properties} The preferences to process the
+     * EAC-CPF.
      * @return String The preferences to write.
      * @throws IOException
      */
@@ -453,6 +515,7 @@ public class EacCpfService {
 
     /**
      * Overwrites an old EAC-CPF file.
+     *
      * @param oldEac {@link EacCpf} The old EAC-CPF file.
      * @param upFile {@link UpFile} The file to up.
      * @throws Exception
@@ -464,11 +527,16 @@ public class EacCpfService {
     }
 
     /**
-     * <p>Adds an EAC-CPF file to the queue.
-     * <p>Stores in the database an EAC-CPF in the table <b>eac_cpf</b>.
-     * <p>Fills the table <b>queue</b> with the EAC-CPF's identifier, his preferences and the upfile's identifier.
+     * <p>
+     * Adds an EAC-CPF file to the queue.
+     * <p>
+     * Stores in the database an EAC-CPF in the table <b>eac_cpf</b>.
+     * <p>
+     * Fills the table <b>queue</b> with the EAC-CPF's identifier, his
+     * preferences and the upfile's identifier.
+     *
      * @see eu.apenet.persistence.vo.QueueAction
-     * @see java.util.Properties 
+     * @see java.util.Properties
      * @see eu.apenet.persistence.vo.UpFile
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
@@ -488,6 +556,7 @@ public class EacCpfService {
 
     /**
      * Process an item from the queue.
+     *
      * @see CreateEacCpfTask#execute(XmlType, UpFile, Integer)
      * @see PublishTask#execute(EacCpf, Properties)
      * @see UnpublishTask#execute(EacCpf, Properties)
@@ -573,10 +642,9 @@ public class EacCpfService {
                     }
                     if (queueAction.isConvertAction()) {
                         new ConvertTask().execute(eac, preferences);
-                    }
-                    if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(eac, preferences);
                     }
+                    
                     if (queueAction.isPublishAction()) {
                         new PublishTask().execute(eac, preferences);
                     }
@@ -619,28 +687,27 @@ public class EacCpfService {
                     }
                 }
             }
-        } else { //USE_PROFILE
-        	// Checks if the file should be processed as a new upload of as a
-        	// file already in the system.
-        	if (queueItem.getUpFile() != null) {
-        		processUpFileWithProfile(queueItem, preferences);
-        	} else {
-        		processEacCpfWithProfile(queueItem, preferences);
-        	}
+        } else //USE_PROFILE
+        // Checks if the file should be processed as a new upload of as a
+        // file already in the system.
+        if (queueItem.getUpFile() != null) {
+            processUpFileWithProfile(queueItem, preferences);
+        } else {
+            processEacCpfWithProfile(queueItem, preferences);
         }
         LOGGER.info("Process queue item finished");
         return queueAction;
     }
 
-	/**
-	 * Method to process the uploaded file using the selected profile.
-	 *
-	 * @param queueItem {@link QueueItem} Current item to process.
-	 * @param preferences {@link Properties} Profile preferences.
-	 *
-	 * @throws Exception
-	 * 
-	 * @see eu.apenet.persistence.vo.QueueAction
+    /**
+     * Method to process the uploaded file using the selected profile.
+     *
+     * @param queueItem {@link QueueItem} Current item to process.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws Exception
+     *
+     * @see eu.apenet.persistence.vo.QueueAction
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see java.util.Properties
@@ -650,9 +717,10 @@ public class EacCpfService {
      * @see eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
      * @see eu.apenet.persistence.dao.QueueItemDAO
      * @see eu.apenet.persistence.vo.QueueItem
-     * @see ExistingFilesChecker#extractAttributeFromXML(String, String, String, boolean, boolean)
-	 */    
-	private static void processUpFileWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
+     * @see ExistingFilesChecker#extractAttributeFromXML(String, String, String,
+     * boolean, boolean)
+     */
+    private static void processUpFileWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
         QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
         EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
         IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
@@ -718,8 +786,8 @@ public class EacCpfService {
                     deleteFromQueue(queueItem, true);
                     continueTask = false;
                 } else if (ingestionprofileDefaultExistingFileAction.isAsk()) {
-                	LOGGER.info("Is needed to ask the user for the action, because there is already one with the same recordid: " + upFilePath);
-                	deleteFromQueue(queueItem, false);
+                    LOGGER.info("Is needed to ask the user for the action, because there is already one with the same recordid: " + upFilePath);
+                    deleteFromQueue(queueItem, false);
                     continueTask = false;
                 }
             } else {
@@ -730,37 +798,37 @@ public class EacCpfService {
             }
 
             if (continueTask) {
-            	processEacCpf(queueItem, newEacCpf, preferences);
+                processEacCpf(queueItem, newEacCpf, preferences);
             }
         }
-	}
+    }
 
-	/**
-	 * Method to process the file already in the system using the selected
-	 * profile.
-	 *
-	 * @param queueItem {@link QueueItem} Current item to process.
-	 * @param preferences {@link Properties} Profile preferences.
-	 *
-	 * @throws Exception
-	 * 
-	 * @see eu.apenet.persistence.vo.EacCpf
-	 */
-	private static void processEacCpfWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
-		EacCpf eacCpf = queueItem.getEacCpf();
-    	processEacCpf(queueItem, eacCpf, preferences);
-	}
+    /**
+     * Method to process the file already in the system using the selected
+     * profile.
+     *
+     * @param queueItem {@link QueueItem} Current item to process.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws Exception
+     *
+     * @see eu.apenet.persistence.vo.EacCpf
+     */
+    private static void processEacCpfWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
+        EacCpf eacCpf = queueItem.getEacCpf();
+        processEacCpf(queueItem, eacCpf, preferences);
+    }
 
-	/**
-	 * Method to performs the actions associated to the profile over the file.
-	 *
-	 * @param queueItem {@link QueueItem} Current item to process.
-	 * @param newEacCpf {@link EacCpf} EAC-CPF to process using the profile.
-	 * @param preferences {@link Properties} Profile preferences.
-	 *
-	 * @throws Exception
-	 * 
-	 * @see eu.apenet.persistence.vo.QueueAction
+    /**
+     * Method to performs the actions associated to the profile over the file.
+     *
+     * @param queueItem {@link QueueItem} Current item to process.
+     * @param newEacCpf {@link EacCpf} EAC-CPF to process using the profile.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws Exception
+     *
+     * @see eu.apenet.persistence.vo.QueueAction
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see java.util.Properties
@@ -771,8 +839,8 @@ public class EacCpfService {
      * @see ConvertTask#execute(EacCpf, Properties)
      * @see ValidateTask#execute(EacCpf)
      * @see PublishTask#execute(EacCpf)
-	 */
-	private static void processEacCpf(QueueItem queueItem, EacCpf newEacCpf, Properties preferences) throws Exception {
+     */
+    private static void processEacCpf(QueueItem queueItem, EacCpf newEacCpf, Properties preferences) throws Exception {
         QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
         EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
         IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
@@ -822,16 +890,17 @@ public class EacCpfService {
 
             }
         }
-	}
+    }
 
-	/**
-	 * Reads the properties in a {@link StringReader}.
-	 * @param string String The string to load the properties.
-	 * @return {@link Properties} The properties to process.
-	 * 
-	 * @throws IOException
-	 */
-	public static Properties readProperties(String string) throws IOException {
+    /**
+     * Reads the properties in a {@link StringReader}.
+     *
+     * @param string String The string to load the properties.
+     * @return {@link Properties} The properties to process.
+     *
+     * @throws IOException
+     */
+    public static Properties readProperties(String string) throws IOException {
         StringReader stringReader = new StringReader(string);
         Properties properties = new Properties();
         properties.load(stringReader);
@@ -839,18 +908,20 @@ public class EacCpfService {
         return properties;
     }
 
-	/**
-	 * Adds to {@link ContentSearchOptions} the different options.
-	 * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the identifiers of the EAC-CPF.
-	 * @param aiId {@link Integer} The identifier of the archival institution.
-	 * @param queueAction {@link QueueAction} The action in the queue.
-	 * @param preferences {@link Properties} Profile preferences.
-	 * 
-	 * @throws IOException
-	 * 
-	 * @see eu.apenet.persistence.dao.ContentSearchOptions
-	 */
-	public static void addBatchToQueue(List<Integer> ids, Integer aiId, QueueAction queueAction, Properties preferences) throws IOException {
+    /**
+     * Adds to {@link ContentSearchOptions} the different options.
+     *
+     * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the
+     * identifiers of the EAC-CPF.
+     * @param aiId {@link Integer} The identifier of the archival institution.
+     * @param queueAction {@link QueueAction} The action in the queue.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.ContentSearchOptions
+     */
+    public static void addBatchToQueue(List<Integer> ids, Integer aiId, QueueAction queueAction, Properties preferences) throws IOException {
         ContentSearchOptions eacCpfSearchOptions = new ContentSearchOptions();
         eacCpfSearchOptions.setPageSize(0);
         eacCpfSearchOptions.setContentClass(XmlType.EAC_CPF.getClazz());
@@ -861,22 +932,25 @@ public class EacCpfService {
         addBatchToQueue(eacCpfSearchOptions, queueAction, preferences);
     }
 
-	/**
-	 * Adds to {@link ContentSearchOptions} the different options and update the database.
-	 * @param eacCpfSearchOptions {@link ContentSearchOptions} The options of the EAC-CPF.
-	 * @param queueAction {@link QueueAction} The actions in the queue.
-	 * @param preferences {@link Properties} Profile preferences.
-	 * 
-	 * @throws IOException
-	 * 
-	 * @see eu.apenet.persistence.dao.ContentSearchOptions
+    /**
+     * Adds to {@link ContentSearchOptions} the different options and update the
+     * database.
+     *
+     * @param eacCpfSearchOptions {@link ContentSearchOptions} The options of
+     * the EAC-CPF.
+     * @param queueAction {@link QueueAction} The actions in the queue.
+     * @param preferences {@link Properties} Profile preferences.
+     *
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.ContentSearchOptions
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see eu.apenet.persistence.dao.QueueItemDAO
      * @see eu.apenet.persistence.vo.QueueItem
      * @see SecurityContext#checkAuthorized(EacCpf)
-	 */
-	public static void addBatchToQueue(ContentSearchOptions eacCpfSearchOptions, QueueAction queueAction, Properties preferences) throws IOException {
+     */
+    public static void addBatchToQueue(ContentSearchOptions eacCpfSearchOptions, QueueAction queueAction, Properties preferences) throws IOException {
         SecurityContext.get().checkAuthorized(eacCpfSearchOptions.getArchivalInstitionId());
         QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
@@ -912,47 +986,52 @@ public class EacCpfService {
         List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(eacCpfSearchOptions);
         int size = 0;
         while ((size = eacCpfs.size()) > 0) {
-        	EacCpf eacCpf = eacCpfs.get(size - 1);
-        	if(validState(eacCpf,preferences,queueAction)){
+            EacCpf eacCpf = eacCpfs.get(size - 1);
+            if (validState(eacCpf, preferences, queueAction)) {
                 QueueItem queueItem = fillQueueItem(eacCpf, queueAction, preferences);
                 eacCpf.setQueuing(QueuingState.READY);
                 eacCpfDAO.updateSimple(eacCpf);
                 indexqueueDao.updateSimple(queueItem);
-        	}
+            }
             eacCpfs.remove(size - 1);
         }
         JpaUtil.commitDatabaseTransaction();
     }
-    
-	/**
-	 * Checks the state and the profile future action.
-	 * @param eac {@link EacCpf} The EAC-CPF to validate. 
-	 * @param preferences {@link Properties} Profile preferences. 
-	 * @param queueAction {@link QueueAction} The action to process.
-	 * @return boolean The state and the profile future action are rights or not.
-	 * 
-     * @see eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction
-	 */
-	private static boolean validState(EacCpf eac,Properties preferences,QueueAction queueAction){
-		boolean state = !queueAction.isUseProfileAction();
-		if(!state){
-			String property = preferences.getProperty(QueueItem.UPLOAD_ACTION);
-			//each condition returns true if the state and the profile future action are rights
-			state = (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT.getId())) && !eac.isConverted()) ||
-				(property.equals(Integer.toString(IngestionprofileDefaultUploadAction.VALIDATE.getId())) && !eac.getValidated().equals(ValidatedState.VALIDATED)) || 
-				(property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH.getId())) && !eac.isPublished());
-		}
-		return state;
-	}
 
-	/**
-	 * Puts in the {@link ContentSearchOptions} the list of the EAC-CPF's identifiers to remove from the content manager. 
-	 * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the EAC-CPF's identifiers.
-	 * @param aiId {@link Integer} The identifier of the archival institution.
-	 * @throws IOException
-	 * 
-	 * @see eu.apenet.persistence.dao.ContentSearchOptions
-	 */
+    /**
+     * Checks the state and the profile future action.
+     *
+     * @param eac {@link EacCpf} The EAC-CPF to validate.
+     * @param preferences {@link Properties} Profile preferences.
+     * @param queueAction {@link QueueAction} The action to process.
+     * @return boolean The state and the profile future action are rights or
+     * not.
+     *
+     * @see eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction
+     */
+    private static boolean validState(EacCpf eac, Properties preferences, QueueAction queueAction) {
+        boolean state = !queueAction.isUseProfileAction();
+        if (!state) {
+            String property = preferences.getProperty(QueueItem.UPLOAD_ACTION);
+            //each condition returns true if the state and the profile future action are rights
+            state = (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT.getId())) && !eac.isConverted())
+                    || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.VALIDATE.getId())) && !eac.getValidated().equals(ValidatedState.VALIDATED))
+                    || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH.getId())) && !eac.isPublished());
+        }
+        return state;
+    }
+
+    /**
+     * Puts in the {@link ContentSearchOptions} the list of the EAC-CPF's
+     * identifiers to remove from the content manager.
+     *
+     * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the
+     * EAC-CPF's identifiers.
+     * @param aiId {@link Integer} The identifier of the archival institution.
+     * @throws IOException
+     *
+     * @see eu.apenet.persistence.dao.ContentSearchOptions
+     */
     public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId) throws IOException {
         ContentSearchOptions eacCpfSearchOptions = new ContentSearchOptions();
         eacCpfSearchOptions.setPageSize(0);
@@ -966,10 +1045,12 @@ public class EacCpfService {
 
     /**
      * Deletes from the queue the EAC-CPFs.
-     * @param eacCpfSearchOptions {@link ContentSearchOptions} The different options of the EAC-CPF.
-     * 
+     *
+     * @param eacCpfSearchOptions {@link ContentSearchOptions} The different
+     * options of the EAC-CPF.
+     *
      * @throws IOException
-     * 
+     *
      * @see eu.apenet.persistence.dao.ContentSearchOptions
      * @see SecurityContext#checkAuthorized(EacCpf)
      * @see eu.apenet.persistence.dao.EacCpfDAO
@@ -1000,11 +1081,12 @@ public class EacCpfService {
 
     /**
      * Fills the queue with the item.
+     *
      * @param upFile {@link UpFile} The file to upload.
      * @param queueAction {@link QueueAction} The action in the queue.
      * @param preferences {@link Properties} Profile preferences.
-     * @return {@link QueueItem} A queue item. 
-     * 
+     * @return {@link QueueItem} A queue item.
+     *
      * @throws IOException
      */
     private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences) throws IOException {
@@ -1013,14 +1095,15 @@ public class EacCpfService {
 
     /**
      * Fills the queue with the item.
+     *
      * @param upFile {@link UpFile} The file to upload.
      * @param queueAction {@link QueueAction} The action in the queue.
      * @param preferences {@link Properties} Profile preferences.
      * @param basePriority int The priority in the queue.
      * @return {@link QueueItem} An item queue.
-     * 
+     *
      * @throws IOException
-     * 
+     *
      * @see eu.apenet.persistence.vo.QueueItem
      */
     private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
@@ -1040,11 +1123,12 @@ public class EacCpfService {
 
     /**
      * Deletes the file from the queue and updates the database.
+     *
      * @param queueItem {@link QueueItem} A queue item.
      * @param deleteUpFile boolean If there is to delete the file.
-     * 
+     *
      * @throws IOException
-     * 
+     *
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      */
@@ -1059,50 +1143,52 @@ public class EacCpfService {
         deleteFromQueueInternal(queueItem, deleteUpFile);
         JpaUtil.commitDatabaseTransaction();
     }
-    
-   /**
-    * Checks if the EAC-CPF exists in the database.
-    * @param upFile {@link UpFile} The file to upload.
-    * @param identifier String The identifier of the file.
-    * @return {@link EacCpf} An EAC-CPF file.
-    */
+
+    /**
+     * Checks if the EAC-CPF exists in the database.
+     *
+     * @param upFile {@link UpFile} The file to upload.
+     * @param identifier String The identifier of the file.
+     * @return {@link EacCpf} An EAC-CPF file.
+     */
     private static EacCpf doesFileExist(UpFile upFile, String identifier) {
         return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier, false);
     }
 
     /**
      * Creates the EAC-CPF's preview.
+     *
      * @param xmlType {@link XmlType} The type of the file.
      * @param id {@link Integer} The identifier of the EAC-CPF in the database.
-     * 
+     *
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
     public static void createPreviewHTML(XmlType xmlType, Integer id) {
-		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-		EacCpf eacCpf = eacCpfDAO.findById(id, xmlType.getClazz());
-		SecurityContext.get().checkAuthorized(eacCpf);
-	}
-	
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        EacCpf eacCpf = eacCpfDAO.findById(id, xmlType.getClazz());
+        SecurityContext.get().checkAuthorized(eacCpf);
+    }
+
     /**
      * Fixes the wrong states in the queue.
      */
-    public static void fixWrongQueueStates(){
-		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-		ContentSearchOptions searchOptions = new ContentSearchOptions();
-		searchOptions.setContentClass(EacCpf.class);
-		searchOptions.setQueuing(QueuingState.BUSY);
-		List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(searchOptions);
-		for (EacCpf eacCpf: eacCpfs){
-			LOGGER.info("Fix wrong queuing state for: " + eacCpf);
-			if (eacCpf.getQueueItem() ==null){
-				eacCpf.setQueuing(QueuingState.NO);
-			}else {
-				eacCpf.setQueuing(QueuingState.READY);
-			}
-			eacCpfDAO.store(eacCpf);
-		}
+    public static void fixWrongQueueStates() {
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        ContentSearchOptions searchOptions = new ContentSearchOptions();
+        searchOptions.setContentClass(EacCpf.class);
+        searchOptions.setQueuing(QueuingState.BUSY);
+        List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(searchOptions);
+        for (EacCpf eacCpf : eacCpfs) {
+            LOGGER.info("Fix wrong queuing state for: " + eacCpf);
+            if (eacCpf.getQueueItem() == null) {
+                eacCpf.setQueuing(QueuingState.NO);
+            } else {
+                eacCpf.setQueuing(QueuingState.READY);
+            }
+            eacCpfDAO.store(eacCpf);
+        }
 
-	}
+    }
 }

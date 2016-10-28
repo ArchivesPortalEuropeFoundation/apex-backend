@@ -50,7 +50,7 @@ class ValidateTask extends AbstractEad3Task {
                     inputStream = new FileInputStream(file);
                     reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream, "UTF-8");
                     reader.next();
-                } catch (Exception e) {
+                } catch (FileNotFoundException | XMLStreamException e) {
                     exceptions = new ArrayList<SAXParseException>();
                     exceptions
                             .add(new SAXParseException(

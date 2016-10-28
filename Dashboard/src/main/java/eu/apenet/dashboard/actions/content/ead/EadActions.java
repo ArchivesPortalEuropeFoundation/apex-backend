@@ -30,6 +30,7 @@ public class EadActions extends AbstractEadActions {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private Integer id;
+    private final EadService eadService = new EadService();
 
     public Integer getId() {
         return id;
@@ -45,7 +46,7 @@ public class EadActions extends AbstractEadActions {
 
     public String validateEad() {
         try {
-            EadService.validate(getXmlType(), id);
+            eadService.validate(getXmlType(), id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -55,7 +56,7 @@ public class EadActions extends AbstractEadActions {
 
     public String convertEad(Properties properties) {
         try {
-            EadService.convert(getXmlType(), id, properties);
+            eadService.convert(getXmlType(), id, properties);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -65,7 +66,7 @@ public class EadActions extends AbstractEadActions {
 
     public String publishEad() {
         try {
-            EadService.publish(getXmlType(), id);
+            eadService.publish(getXmlType(), id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -75,7 +76,7 @@ public class EadActions extends AbstractEadActions {
 
     public String unpublishEad() {
         try {
-            EadService.unpublish(getXmlType(), id);
+            eadService.unpublish(getXmlType(), id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -85,7 +86,7 @@ public class EadActions extends AbstractEadActions {
 
     public String deleteEad() {
         try {
-            EadService.delete(getXmlType(), id);
+            eadService.delete(getXmlType(), id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -163,7 +164,7 @@ public class EadActions extends AbstractEadActions {
 
     public String download() {
         try {
-            File file = EadService.download(getId(), getXmlType());
+            File file = eadService.download(getXmlType(), getId());
             ContentUtils.downloadXml(this.getServletRequest(), getServletResponse(), file);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

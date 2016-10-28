@@ -8,6 +8,7 @@ package eu.apenet.dashboard.actions.content.eaccpf;
 import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import com.opensymphony.xwork2.ActionContext;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import java.io.File;
@@ -23,6 +24,7 @@ public class EacCpfActions extends AbstractEacCpfActions {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private Integer id;
+    private EacCpfService eacCpfService = new EacCpfService();
 
     public Integer getId() {
         return id;
@@ -62,8 +64,8 @@ public class EacCpfActions extends AbstractEacCpfActions {
     public String convertEacCpf(Properties properties) {
         try {
             String language = retrieveCurrentLanguage();
-
-            EacCpfService.convert(id, properties, language);
+            properties.put("currentLanguage", language);
+            eacCpfService.convert(XmlType.EAC_CPF, id, properties);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -74,7 +76,7 @@ public class EacCpfActions extends AbstractEacCpfActions {
     @Override
     public String validateEacCpf() {
         try {
-            EacCpfService.validate(id);
+            eacCpfService.validate(XmlType.EAC_CPF, id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -85,7 +87,7 @@ public class EacCpfActions extends AbstractEacCpfActions {
     @Override
     public String publishEacCpf() {
         try {
-            EacCpfService.publish(id);
+            eacCpfService.publish(XmlType.EAC_CPF, id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -96,7 +98,7 @@ public class EacCpfActions extends AbstractEacCpfActions {
     @Override
     public String unpublishEacCpf() {
         try {
-            EacCpfService.unpublish(id);
+            eacCpfService.unpublish(XmlType.EAC_CPF, id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -107,7 +109,7 @@ public class EacCpfActions extends AbstractEacCpfActions {
     @Override
     public String deleteEacCpf() {
         try {
-            EacCpfService.delete(id);
+            eacCpfService.delete(XmlType.EAC_CPF, id);
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -161,7 +163,7 @@ public class EacCpfActions extends AbstractEacCpfActions {
 
     public String download() {
         try {
-            File file = EacCpfService.download(getId());
+            File file = eacCpfService.download(XmlType.EAC_CPF, getId());
             ContentUtils.downloadXml(this.getServletRequest(), getServletResponse(), file);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
