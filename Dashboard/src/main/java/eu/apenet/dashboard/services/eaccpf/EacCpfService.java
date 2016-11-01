@@ -640,8 +640,12 @@ public class EacCpfService extends AbstractService {
                     if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(eac, preferences);
                     }
+                    
                     if (queueAction.isConvertAction()) {
                         new ConvertTask().execute(eac, preferences);
+                    }
+                    
+                    if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(eac, preferences);
                     }
                     

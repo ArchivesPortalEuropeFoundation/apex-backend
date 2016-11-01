@@ -96,27 +96,29 @@ public enum XmlType {
         if (content instanceof FindingAid) {
             return XmlType.EAD_FA;
         }
-        if (content instanceof HoldingsGuide) {
+        else if (content instanceof HoldingsGuide) {
             return XmlType.EAD_HG;
         }
-        if (content instanceof SourceGuide) {
+        else if (content instanceof SourceGuide) {
             return XmlType.EAD_SG;
         }
-        if (content instanceof EacCpf) {
+        else if (content instanceof EacCpf) {
             return XmlType.EAC_CPF;
+        } else if (content instanceof Ead3) {
+            return XmlType.EAD_3;
         }
         return null;
     }
 
-    public Class<? extends Ead> getEadClazz() {
+    public Class<? extends AbstractContent> getEadClazz() {
         if (this.identifier == 0) {
             return FindingAid.class;
-        }
-        if (this.identifier == 1) {
+        } else if (this.identifier == 1) {
             return HoldingsGuide.class;
-        }
-        if (this.identifier == 3) {
+        } else if (this.identifier == 3) {
             return SourceGuide.class;
+        } else if (this.identifier == 4) {
+            return Ead3.class;
         }
         return null;
     }

@@ -484,8 +484,12 @@ public class EadService extends AbstractService {
                     if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(ead, preferences);
                     }
+                    
                     if (queueAction.isConvertAction()) {
                         new ConvertTask().execute(ead, preferences);
+                    }
+                    
+                    if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(ead, preferences);
                     }
                     

@@ -12,6 +12,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.CLevelDAO;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
@@ -51,7 +52,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return null;
 	}
 	@Override
-	public CLevel getTopCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Integer orderId ){
+	public CLevel getTopCLevel(String repositoryCode, Class<? extends AbstractContent> clazz, String eadid, Integer orderId ){
 		String varName = "findingAid";
 		if (FindingAid.class.equals(clazz)){
 			varName = "findingAid";
@@ -74,7 +75,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return null;
 	}
 	@Override
-	public Long getTopCLevelId(String repositoryCode, Class<? extends Ead> clazz, String eadid, Integer orderId ){
+	public Long getTopCLevelId(String repositoryCode, Class<? extends AbstractContent> clazz, String eadid, Integer orderId ){
 		String varName = "findingAid";
 		if (FindingAid.class.equals(clazz)){
 			varName = "findingAid";
@@ -97,7 +98,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return null;
 	}
 	@Override
-	public CLevel getCLevelByCid(String repositoryCode, Class<? extends Ead> clazz, String eadid, String cid){
+	public CLevel getCLevelByCid(String repositoryCode, Class<? extends AbstractContent> clazz, String eadid, String cid){
 		String varName = "findingAid";
 		if (FindingAid.class.equals(clazz)){
 			varName = "findingAid";
@@ -119,7 +120,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return null;
 	}
 	@Override
-	public List<CLevel> getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, String unitid){
+	public List<CLevel> getCLevel(String repositoryCode, Class<? extends AbstractContent> clazz, String eadid, String unitid){
 		String varName = "findingAid";
 		if (FindingAid.class.equals(clazz)){
 			varName = "findingAid";
@@ -139,7 +140,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	}
 	
 	@Override
-	public CLevel getCLevel(String repositoryCode, Class<? extends Ead> clazz, String eadid, Long id){
+	public CLevel getCLevel(String repositoryCode, Class<? extends AbstractContent> clazz, String eadid, Long id){
 		String varName = "findingAid";
 		if (FindingAid.class.equals(clazz)){
 			varName = "findingAid";
@@ -162,7 +163,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return null;
 	}
 	@Override
-	public Long countCLevels(Class<? extends Ead> clazz, Integer id){
+	public Long countCLevels(Class<? extends AbstractContent> clazz, Integer id){
 		String propertyName = "faId";
 		if (clazz.equals(HoldingsGuide.class))
 			propertyName = "hgId";
@@ -174,7 +175,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return query.getSingleResult();
 	}
 	@Override
-	public List<CLevel> getCLevels(Class<? extends Ead> clazz, Integer id, int pageNumber, int pageSize){
+	public List<CLevel> getCLevels(Class<? extends AbstractContent> clazz, Integer id, int pageNumber, int pageSize){
 		String propertyName = "faId";
 		if (clazz.equals(HoldingsGuide.class))
 			propertyName = "hgId";
@@ -187,7 +188,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		query.setFirstResult(pageSize * (pageNumber - 1));
 		return query.getResultList();
 	}
-	public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends Ead> clazz, int firstResult, int maxResult) {
+	public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends AbstractContent> clazz, int firstResult, int maxResult) {
 		String propertyName = "faId";
 		if (clazz.equals(HoldingsGuide.class))
 			propertyName = "hgId";
@@ -202,7 +203,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return query.getResultList();
 	}
 
-	public CLevel getTopClevelByFileId(Integer fileId, Class<? extends Ead> clazz, int orderId) {
+	public CLevel getTopClevelByFileId(Integer fileId, Class<? extends AbstractContent> clazz, int orderId) {
 		String propertyName = "faId";
 		if (clazz.equals(HoldingsGuide.class))
 			propertyName = "hgId";
@@ -363,14 +364,14 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	}
 
 	@Override
-	public Long countPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+	public Long countPossibleLinkedCLevels(Integer id, Class<? extends AbstractContent> clazz) {
 		String jpaQuery = "SELECT count(clevel)" + buildPossibleLinkedCLevels(id, clazz);
 		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);
 		query.setParameter("id", id);
 		return query.getSingleResult();
 	}
 
-	private String buildPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+	private String buildPossibleLinkedCLevels(Integer id, Class<? extends AbstractContent> clazz) {
 		String varName = "hgId";
 		if (SourceGuide.class.equals(clazz)) {
 			varName = "sgId";
@@ -380,14 +381,14 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	}
 
 	@Override
-	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends AbstractContent> clazz) {
 		String jpaQuery = "SELECT clevel" + buildNotLinkedCLevelsFromQuery(id, clazz);
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
 		query.setParameter("id", id);
 		return query.getResultList();
 	}
 
-	private String buildNotLinkedCLevelsFromQuery(Integer id, Class<? extends Ead> clazz) {
+	private String buildNotLinkedCLevelsFromQuery(Integer id, Class<? extends AbstractContent> clazz) {
 		String varName = "hgId";
 		if (SourceGuide.class.equals(clazz)) {
 			varName = "sgId";

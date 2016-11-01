@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.EadContentDAO;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -52,7 +53,7 @@ public class EadContentHibernateDAO extends AbstractHibernateDAO<EadContent, Lon
 
     @Override
     @SuppressWarnings("unchecked")
-    public EadContent getEadContentByFileId(Integer fileId, Class<? extends Ead> clazz) {
+    public EadContent getEadContentByFileId(Integer fileId, Class<? extends AbstractContent> clazz) {
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadContent");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         List<EadContent> result;
@@ -69,7 +70,7 @@ public class EadContentHibernateDAO extends AbstractHibernateDAO<EadContent, Lon
     }
 
 	@Override
-	public List<EadContent> getEadContentsByFileId(Integer fileId, Class<? extends Ead> clazz) {
+	public List<EadContent> getEadContentsByFileId(Integer fileId, Class<? extends AbstractContent> clazz) {
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadContent");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         List<EadContent> result;

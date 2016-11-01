@@ -32,6 +32,7 @@ import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
@@ -77,7 +78,7 @@ public class DatabaseXmlEadParser {
 
 		EADCounts eadCounts = new EADCounts();
 		EadSolrPublisher solrPublisher = new EadSolrPublisher(ead);
-		Class<? extends Ead> clazz = XmlType.getContentType(ead).getEadClazz();
+		Class<? extends AbstractContent> clazz = XmlType.getContentType(ead).getEadClazz();
 		try {
 			EadPublishData publishData = new EadPublishData();
 			parse(eadContent, publishData);

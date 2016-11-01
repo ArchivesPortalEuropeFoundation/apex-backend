@@ -4,6 +4,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.HgSgFaRelationDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.Ead;
 
 public class HoldingsGuideSourceGuideResult extends EadResult {
@@ -14,7 +15,7 @@ public class HoldingsGuideSourceGuideResult extends EadResult {
 	public HoldingsGuideSourceGuideResult(Ead ead) {
 		super(ead);
 		if (this.isPublished() || this.isDynamic()){
-			Class<? extends Ead> clazz = XmlType.getContentType(ead).getEadClazz();
+			Class<? extends AbstractContent> clazz = XmlType.getContentType(ead).getEadClazz();
 			CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 			HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
 			possibleFindingAidsLinked = clevelDAO.countPossibleLinkedCLevels(ead.getId(), clazz);

@@ -6,6 +6,7 @@ import javax.persistence.TypedQuery;
 
 import eu.apenet.persistence.dao.HgSgFaRelationDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.HgSgFaRelation;
 import eu.apenet.persistence.vo.SourceGuide;
@@ -14,7 +15,7 @@ import javax.persistence.Query;
 public class HgSgFaRelationJpaDAO extends AbstractHibernateDAO<HgSgFaRelation, Long> implements HgSgFaRelationDAO {
 
     @Override
-    public List<HgSgFaRelation> getHgSgFaRelations(Integer id, Class<? extends Ead> clazz, Boolean published) {
+    public List<HgSgFaRelation> getHgSgFaRelations(Integer id, Class<? extends AbstractContent> clazz, Boolean published) {
         String varName = "hgId";
         if (SourceGuide.class.equals(clazz)) {
             varName = "sgId";
@@ -34,7 +35,7 @@ public class HgSgFaRelationJpaDAO extends AbstractHibernateDAO<HgSgFaRelation, L
     }
 
     @Override
-    public Long countHgSgFaRelations(Integer id, Class<? extends Ead> clazz, Boolean published) {
+    public Long countHgSgFaRelations(Integer id, Class<? extends AbstractContent> clazz, Boolean published) {
         String varName = "hgId";
         if (SourceGuide.class.equals(clazz)) {
             varName = "sgId";

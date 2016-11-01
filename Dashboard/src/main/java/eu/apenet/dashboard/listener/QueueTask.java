@@ -17,6 +17,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.ead3.Ead3Service;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
@@ -25,6 +26,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
@@ -72,7 +74,7 @@ public class QueueTask implements Runnable {
                 cleanUp();
                 numberOfTries++;
             } else {
-            	boolean exception = false;
+                boolean exception = false;
                 try {
                     QueueDaemon.setQueueProcessing(true);
                     processQueue(endTime);
@@ -81,7 +83,7 @@ public class QueueTask implements Runnable {
                     exception = true;
                     UserService.sendExceptionToAdmin("Queue processing is stopped and dashboard is in maintenance mode, due to database exception", e);
                 } catch (Throwable e) {
-                	exception = true;
+                    exception = true;
                     UserService.sendExceptionToAdmin("Queue processing is stopped and dashboard is in maintenance mode, due to solr search engine exception", e);
                     try {
                         JpaUtil.rollbackDatabaseTransaction();
@@ -89,22 +91,22 @@ public class QueueTask implements Runnable {
                         LOGGER.error(de.getMessage());
                     }
                 }
-                if (exception){
-                	stopped = true;
+                if (exception) {
+                    stopped = true;
                     APEnetUtilities.getDashboardConfig().setMaintenanceMode(true);
-                	cleanUp();
+                    cleanUp();
                     QueueDaemon.stop();
                 }
             }
 
-            if (!stopped &&  !scheduler.isShutdown() &&  (System.currentTimeMillis() + INTERVAL) < endTime) {
-            cleanUp();
+            if (!stopped && !scheduler.isShutdown() && (System.currentTimeMillis() + INTERVAL) < endTime) {
+                cleanUp();
                 try {
                     Thread.sleep(INTERVAL);
                 } catch (InterruptedException e) {
                 }
             } else {
-            	cleanUp();            
+                cleanUp();
                 stopped = true;
             }
 
@@ -113,9 +115,9 @@ public class QueueTask implements Runnable {
         if (!scheduler.isShutdown()) {
             scheduler.schedule(new QueueTask(scheduler, duration, delay), delay.getMilliseconds(),
                     TimeUnit.MILLISECONDS);
-        }else {
-			LOGGER.info("Queue is going to terminate");
-		}
+        } else {
+            LOGGER.info("Queue is going to terminate");
+        }
     }
 
     private static void cleanUp() {
@@ -152,6 +154,8 @@ public class QueueTask implements Runnable {
                             DAOFactory.instance().getEadDAO().updateSimple((Ead) content);
                         } else if (content instanceof EacCpf) {
                             DAOFactory.instance().getEacCpfDAO().updateSimple((EacCpf) content);
+                        } else if (content instanceof Ead3) {
+                            DAOFactory.instance().getEad3DAO().updateSimple((Ead3) content);
                         }
                         JpaUtil.commitDatabaseTransaction();
                         QueueAction queueAction;
@@ -163,24 +167,26 @@ public class QueueTask implements Runnable {
                             queueAction = EacCpfService.processQueueItem(queueItem);
                             itemsPublished = itemsPublished || queueAction.isPublishAction();
                             hasItems = true;
+                        } else if (content instanceof Ead3) {
+                            queueAction = Ead3Service.processQueueItem(queueItem);
+                            itemsPublished = itemsPublished || queueAction.isPublishAction();
+                            hasItems = true;
                         }
-                    } else {
-                        if(queueItem.getUpFileId() != null && !queueItem.getPreferences().isEmpty()){
-                            Properties preferences = EadService.readProperties(queueItem.getPreferences());
-                            if(preferences.containsKey(QueueItem.XML_TYPE)){
-                                String xmlType = preferences.getProperty(QueueItem.XML_TYPE);
-                                if(Integer.parseInt(xmlType) == XmlType.EAC_CPF.getIdentifier()){
-                                    EacCpfService.processQueueItem(queueItem);
-                                } else {
-                                    EadService.processQueueItem(queueItem);
-                                }
+                    } else if (queueItem.getUpFileId() != null && !queueItem.getPreferences().isEmpty()) {
+                        Properties preferences = EadService.readProperties(queueItem.getPreferences());
+                        if (preferences.containsKey(QueueItem.XML_TYPE)) {
+                            String xmlType = preferences.getProperty(QueueItem.XML_TYPE);
+                            if (Integer.parseInt(xmlType) == XmlType.EAC_CPF.getIdentifier()) {
+                                EacCpfService.processQueueItem(queueItem);
+                            } else {
+                                EadService.processQueueItem(queueItem);
                             }
-                        } else if (!queueItem.getPreferences().isEmpty()) {
-                            Properties preferences = EadService.readProperties(queueItem.getPreferences());
-                            boolean hasKey = preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY);
-                            if (hasKey) {
-                                OpenDataService.getInstance().processQueueItem(queueItem);
-                            }
+                        }
+                    } else if (!queueItem.getPreferences().isEmpty()) {
+                        Properties preferences = EadService.readProperties(queueItem.getPreferences());
+                        boolean hasKey = preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY);
+                        if (hasKey) {
+                            OpenDataService.getInstance().processQueueItem(queueItem);
                         }
                     }
                 }
@@ -208,10 +214,10 @@ public class QueueTask implements Runnable {
                  * throw exception when solr has problem, so the queue will stop for a while.
                  */
                 if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
-                	SolrServerException cause = (SolrServerException) e.getCause();
-                	if (cause.getCause() instanceof SocketException){
-                		throw (Exception) e;
-                	}
+                    SolrServerException cause = (SolrServerException) e.getCause();
+                    if (cause.getCause() instanceof SocketException) {
+                        throw (Exception) e;
+                    }
 
                 }
             }

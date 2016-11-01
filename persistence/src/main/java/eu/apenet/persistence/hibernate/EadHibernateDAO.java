@@ -18,6 +18,7 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -33,7 +34,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	private static final Logger LOG = Logger.getLogger(EadHibernateDAO.class);
 
 	@Override
-	public Integer isEadidIndexed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
+	public Integer isEadidIndexed(String eadid, Integer aiId, Class<? extends AbstractContent> clazz) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
 		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
@@ -265,7 +266,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 
 	@Override
-	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
+	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends AbstractContent> clazz) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
 		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
@@ -302,7 +303,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Ead getEadByEadid(Class<? extends Ead> clazz, Integer aiId, String eadid) {
+	public Ead getEadByEadid(Class<? extends AbstractContent> clazz, Integer aiId, String eadid) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
@@ -315,7 +316,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public Ead getEadByEadid(Class<? extends Ead> clazz, String repositorycode, String eadid, boolean onlyPublished) {
+	public Ead getEadByEadid(Class<? extends AbstractContent> clazz, String repositorycode, String eadid, boolean onlyPublished) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
