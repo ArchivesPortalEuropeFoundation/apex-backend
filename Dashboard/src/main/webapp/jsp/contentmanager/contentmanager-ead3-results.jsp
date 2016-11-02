@@ -50,9 +50,9 @@
                 <option value="convert_validate_publish">
                     <s:text name="content.message.doitall" />
                 </option>
-                <option value="convert">
+                <%--<option value="convert">
                     <s:text name="content.message.convert" />
-                </option>
+</option>--%>
                 <option value="validate">
                     <s:text name="content.message.validate" />
                 </option>
@@ -136,14 +136,14 @@
                                     <img class="noStyle" src="images/expand/arrow-down.gif"	 alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"                                                                                      src="images/expand/arrow-up.gif" alt="up" /></a>
                             </div>
                         </th>
-                        <th id="thConverted">
+                        <%--<th id="thConverted">
                             <s:text name="content.message.converted" />
                             <div class="arrows">
                                 <a class="order" href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                                 <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                             </div>
                             <br/> <a href="#conversionOptsDiv" class="link_right" id="conversionOpts"><s:text name="content.message.conversion.options" /></a>
-                        </th>
+</th>--%>
                         <th id="thValidated">
                             <s:text name="content.message.validated" />
                             <div class="arrows">
@@ -179,7 +179,7 @@
                             <span class="title"><c:out value="${eadResult.title}"/></span>
                         </td>
                         <td id="tdDate_${eadResult.id}">${eadResult.date}</td>
-                        <td id="tdConverted_${eadResult.id}" class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>
+                        <%--<!--<td id="tdConverted_${eadResult.id}" class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>-->--%>
                         <td id="tdValidated_${eadResult.id}" class="${eadResult.validatedCssClass}"><apenet:resource>${eadResult.validatedText}</apenet:resource></td>
                         <td id="tdPublished_${eadResult.id}" class="${eadResult.indexedCssClass}">
                             <c:choose>
@@ -217,11 +217,11 @@
                                 <c:otherwise>
 
                                     <select class="selectedAction" name="selectedAction">
-                                        <c:if test="${not eadResult.converted and not eadResult.validated}">
+                                        <%--<c:if test="${not eadResult.converted and not eadResult.validated}">
                                             <option value="action|convert">
                                                 <s:text name="content.message.convert" />
                                             </option>
-                                        </c:if>
+                                        </c:if>--%>
                                         <c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
                                             <option value="action|validate">
                                                 <s:text name="content.message.validate" />
@@ -292,7 +292,7 @@
                 </c:forEach>
                 <tr class="total">
                     <td colspan="4"><s:text name="content.statistics.title.all"/></td>
-                    <td>${results.totalConvertedFiles}</td>
+                    <%--<!--<td>${results.totalConvertedFiles}</td>-->--%>
                     <td>${results.totalValidatedFiles}</td>
                     <td>${results.totalPublishedUnits}</td>
                     <td>&nbsp;</td>
