@@ -11,7 +11,6 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
 import eu.apenet.dashboard.services.ead.ConvertTask;
-import eu.apenet.dashboard.services.ead.DeleteTask;
 
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
@@ -436,7 +435,7 @@ public class Ead3Service {
                         Integer aiId = ead3.getAiId();
 
 //                        new UnpublishTask().execute(ead3, preferences);
-//                        new DeleteTask().execute(ead3, preferences);
+                        new DeleteTask().execute(ead3, preferences);
                         eacDeleted = true;
                         new CreateEad3Task().execute(xmlType, upFile, aiId, ead3.getIdentifier(), ead3.getTitle());
                         DAOFactory.instance().getUpFileDAO().delete(upFile);
@@ -444,7 +443,7 @@ public class Ead3Service {
                     } else if (queueAction.isDeleteAction()) {
 
 //                        new UnpublishTask().execute(ead3, preferences);
-//                        new DeleteTask().execute(ead3, preferences);
+                        new DeleteTask().execute(ead3, preferences);
                         eacDeleted = true;
                     }
                     queueItemDAO.delete(queueItem);
