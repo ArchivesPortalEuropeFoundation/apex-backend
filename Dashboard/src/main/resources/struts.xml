@@ -302,6 +302,9 @@
         <action name="download" class="eu.apenet.dashboard.actions.content.ead.EadActions" method="download">
 
         </action>
+        <action name="downloadEAD3" class="eu.apenet.dashboard.actions.content.ead3.Ead3Actions" method="download">
+
+        </action>
 
         <action name="downloadEacCpf" class="eu.apenet.dashboard.actions.content.eaccpf.EacCpfActions" method="download">
 

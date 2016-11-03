@@ -14,7 +14,7 @@
             displayConvertEseBatch, startConvertEseBatch,
             generateTreeJSON, generateTreeJSONWithoutPreface,
             downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,displayUnlinkFromHg,unlinkFromHg,
-            eacCpfActions, batchEacCpfActions, downloadEacCpf, 
+            eacCpfActions, batchEacCpfActions, downloadEacCpf, downloadEAD3,
 			manageTopicMappings,displayCreateEditTopicMapping,createEditTopicMapping,deleteTopicMapping,
             GoDashboard, dashboardHome, GoDashboardByInstitutionManager,setFeedbackEmailaddress,displaySetFeedbackEmailaddress,
 

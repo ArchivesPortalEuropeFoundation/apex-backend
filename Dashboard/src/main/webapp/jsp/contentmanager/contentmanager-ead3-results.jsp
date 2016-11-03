@@ -243,7 +243,7 @@
                                                 <s:text name="content.message.preview" />
                                             </option>
                                             <c:if test="${not eadResult.dynamic}">
-                                                <option value="_self|download.action">
+                                                <option value="_self|downloadEAD3.action">
                                                     <s:text name="content.message.download" />
                                                 </option>
                                             </c:if>
@@ -253,7 +253,7 @@
                                                 <s:text name="content.message.showerror" />
                                             </option>
                                             <c:if test="${not eadResult.validated and not eadResult.dynamic}">
-                                                <option value="_self|download.action">
+                                                <option value="_self|downloadEAD3.action">
                                                     <s:text name="content.message.download" />
                                                 </option>
                                             </c:if>

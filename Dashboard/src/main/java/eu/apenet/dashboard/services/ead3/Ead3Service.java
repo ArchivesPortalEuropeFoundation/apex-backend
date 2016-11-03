@@ -247,7 +247,7 @@ public class Ead3Service {
      * @see eu.apenet.persistence.vo.UpFile
      */
     public static File download(Integer id) {
-        Ead3 ead3 = DAOFactory.instance().getEad3DAO().findById(id, XmlType.EAC_CPF.getClazz());
+        Ead3 ead3 = DAOFactory.instance().getEad3DAO().findById(id, XmlType.EAD_3.getClazz());
         SecurityContext.get().checkAuthorized(ead3.getAiId());
         String path = APEnetUtilities.getConfig().getRepoDirPath() + ead3.getPath();
         try {
