@@ -5,7 +5,6 @@
  */
 package eu.apenet.dashboard.actions.content.ead3;
 
-import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.services.ead3.Ead3Service;
 import eu.apenet.dashboard.utils.ContentUtils;
 import java.io.File;
@@ -23,6 +22,8 @@ public class Ead3Actions extends AbstractEad3Actions {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private Integer id;
+    
+    private Ead3Service ead3Service = new Ead3Service();
 
     public Integer getId() {
         return id;
@@ -35,7 +36,7 @@ public class Ead3Actions extends AbstractEad3Actions {
     @Override
     public String validateEad3() {
         try {
-            Ead3Service.validate(id);
+            ead3Service.validate(super.getXmlType(), id);
             return SUCCESS;
         } catch (Exception ex) {
             Logger.getLogger(Ead3Actions.class.getName()).log(Level.SEVERE, null, ex);
@@ -46,7 +47,7 @@ public class Ead3Actions extends AbstractEad3Actions {
     @Override
     public String publishEad3() {
         try {
-            Ead3Service.publish(XmlType.EAD_3, id);
+            ead3Service.publish(super.getXmlType(), id);
             return SUCCESS;
         } catch (Exception ex) {
             Logger.getLogger(Ead3Actions.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +58,7 @@ public class Ead3Actions extends AbstractEad3Actions {
     @Override
     public String unpublishEad3() {
         try {
-            Ead3Service.unpublish(XmlType.EAD_3, id);
+            ead3Service.unpublish(super.getXmlType(), id);
             return SUCCESS;
         } catch (Exception ex) {
             Logger.getLogger(Ead3Actions.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,7 +69,7 @@ public class Ead3Actions extends AbstractEad3Actions {
     @Override
     public String deleteEad3() {
         try {
-            Ead3Service.delete(id);
+            ead3Service.delete(super.getXmlType(), id);
             return SUCCESS;
         } catch (Exception ex) {
             Logger.getLogger(Ead3Actions.class.getName()).log(Level.SEVERE, null, ex);
@@ -114,7 +115,7 @@ public class Ead3Actions extends AbstractEad3Actions {
 
     public void download() {
         try {
-            File file = Ead3Service.download(id);
+            File file = ead3Service.download(super.getXmlType(), id);
             ContentUtils.downloadXml(this.getServletRequest(), getServletResponse(), file);
         } catch (IOException ex) {
             Logger.getLogger(Ead3Actions.class.getName()).log(Level.SEVERE, null, ex);

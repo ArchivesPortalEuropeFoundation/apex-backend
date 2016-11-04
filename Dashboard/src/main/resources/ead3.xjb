@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings 
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:annox="http://annox.dev.java.net"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
+    jaxb:extensionBindingPrefixes="xjc annox" version="2.1">
+
+    <jaxb:bindings schemaLocation="ead3.xsd" version="1.0">
+        <jaxb:schemaBindings>
+            <jaxb:package name="gov.loc.ead"/>
+        </jaxb:schemaBindings>
+        
+        <!-- remove conflict in Script type -->
+        <jaxb:bindings node="//xs:complexType[@name='languagedeclaration']">
+            <jaxb:bindings node=".//xs:element[@name='script']">
+                <jaxb:property name="ScriptType"/>
+            </jaxb:bindings>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:complexType[@name='languageset']">
+            <jaxb:bindings node=".//xs:element[@name='script']">
+                <jaxb:property name="ScriptType"/>
+            </jaxb:bindings>
+        </jaxb:bindings>
+        
+        <jaxb:bindings node="//xs:complexType[@name='e.anyname']/xs:choice/xs:any[@namespace='##other']">
+            <jaxb:property name="Any2"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+</jaxb:bindings>

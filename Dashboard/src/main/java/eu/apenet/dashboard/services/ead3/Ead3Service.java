@@ -9,8 +9,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
-import eu.apenet.dashboard.services.ead.ConvertTask;
+import eu.apenet.dashboard.services.AbstractService;
 
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
@@ -43,7 +42,7 @@ import org.apache.solr.client.solrj.SolrServerException;
  *
  * @author kaisar
  */
-public class Ead3Service {
+public class Ead3Service extends AbstractService {
 
     protected static final Logger LOGGER = Logger.getLogger(Ead3Service.class);
     private static final String CURRENT_LANGUAGE_KEY = "currentLanguage";
@@ -59,7 +58,8 @@ public class Ead3Service {
         return ead3;
     }
 
-    public static void publish(XmlType xmlType, Integer id) throws Exception {
+    @Override
+    public void publish(XmlType xmlType, Integer id) throws Exception {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         Ead3 ead3 = ead3DAO.findById(id, xmlType.getClass());
         SecurityContext.get().checkAuthorized(ead3);
@@ -68,7 +68,8 @@ public class Ead3Service {
         }
     }
 
-    public static void unpublish(XmlType xmlType, Integer id) throws Exception {
+    @Override
+    public void unpublish(XmlType xmlType, Integer id) throws Exception {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         Ead3 ead3 = ead3DAO.findById(id, xmlType.getClass());
         SecurityContext.get().checkAuthorized(ead3);
@@ -116,7 +117,8 @@ public class Ead3Service {
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-    public static void validate(Integer id) throws Exception {
+    @Override
+    public void validate(XmlType xmlType, Integer id) throws IOException {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         Ead3 ead3 = ead3DAO.findById(id, XmlType.EAD_3.getClazz());
 
@@ -124,6 +126,10 @@ public class Ead3Service {
         if (ValidateTask.notValidated(ead3)) {
             addToQueue(ead3, QueueAction.VALIDATE, null);
         }
+    }
+    
+    @Override
+    public void convert(XmlType xmlType, Integer id, Properties properties) throws IOException {
     }
 
     /**
@@ -172,13 +178,15 @@ public class Ead3Service {
      * <p>
      * Puts in the queue this action.
      *
+     * @param xmlType
      * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @throws IOException
      * @see eu.apenet.persistence.dao.EacCpfDAO
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-    public static void delete(Integer id) throws Exception {
+    @Override
+    public void delete(XmlType xmlType, Integer id) throws Exception {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         Ead3 ead3 = ead3DAO.findById(id);
         SecurityContext.get().checkAuthorized(ead3.getAiId());
@@ -240,13 +248,15 @@ public class Ead3Service {
     /**
      * Downloads a file from the content manager.
      *
+     * @param xmlType
      * @param id {@link Integer} The identifier of the EAC-CPF file.
      * @return {@link File} The file downloading.
      * @see eu.apenet.persistence.vo.EacCpf
      * @see SecurityContext#checkAuthorized(EacCpf)
      * @see eu.apenet.persistence.vo.UpFile
      */
-    public static File download(Integer id) {
+    @Override
+    public File download(XmlType xmlType, Integer id) {
         Ead3 ead3 = DAOFactory.instance().getEad3DAO().findById(id, XmlType.EAD_3.getClazz());
         SecurityContext.get().checkAuthorized(ead3.getAiId());
         String path = APEnetUtilities.getConfig().getRepoDirPath() + ead3.getPath();
@@ -393,18 +403,9 @@ public class Ead3Service {
     /**
      * Process an item from the queue.
      *
-     * @see CreateEacCpfTask#execute(XmlType, UpFile, Integer)
-     * @see PublishTask#execute(EacCpf, Properties)
-     * @see UnpublishTask#execute(EacCpf, Properties)
-     * @see ConvertTask#execute(EacCpf, Properties)
-     * @see ValidateTask#execute(EacCpf, Properties)
-     * @see DeleteTask#execute(EacCpf, Properties)
-     * @see eu.apenet.persistence.vo.QueueAction
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see java.util.Properties
-     * @see eu.apenet.persistence.vo.UpFile
-     * @see eu.apenet.commons.types.XmlType
+     * @param queueItem
+     * @return 
+     * @throws java.lang.Exception
      */
     public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
         QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
@@ -474,15 +475,9 @@ public class Ead3Service {
                     if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(ead3, preferences);
                     }
-//                    if (queueAction.isConvertAction()) {
-//                        new ConvertTask().execute(eac, preferences);
-//                    }
-//                    if (queueAction.isValidateAction()) {
-//                        new ValidateTask().execute(eac, preferences);
-//                    }
-//                    if (queueAction.isPublishAction()) {
-//                        new PublishTask().execute(eac, preferences);
-//                    }
+                    if (queueAction.isPublishAction()) {
+                        new PublishTask().execute(ead3, preferences);
+                    }
 //                    if (queueAction.isRePublishAction()) {
 //                        new UnpublishTask().execute(eac, preferences);
 //                        new PublishTask().execute(eac, preferences);
