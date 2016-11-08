@@ -18,7 +18,7 @@ public interface Ead3DAO extends GenericDAO<Ead3, Integer> {
 
     public Integer isEad3IdUsed(String identifier, Integer aiId, Class<? extends Ead3> clazz);
 
-    public Ead3 getEad3ById(Integer aiId, String cpfId);
+    public Ead3 getEad3ById(Integer aiId, String ead3Id);
 
     public List<Integer> getAllIds(Class<Ead3> aClass, int aiId);
 
