@@ -104,7 +104,7 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
 
     @Override
     public Integer isEad3IdUsed(String identifier, Integer aiId, Class<? extends Ead3> clazz) {
-        Criteria criteria = getSession().createCriteria(clazz, "ead3").setProjection(Projections.property("id"));
+        Criteria criteria = getSession().createCriteria(clazz, "ead3").setProjection(Projections.property("identifier"));
         criteria.createAlias("ead3.archivalInstitution", "archivalInstitution");
         criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
         criteria.add(Restrictions.eq("identifier", identifier));
@@ -153,7 +153,7 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
             whereClause.add(criteriaBuilder.equal(from.get("dynamic"), contentSearchOptions.getDynamic()));
         }
         if (StringUtils.isNotBlank(contentSearchOptions.getEadid())) {
-            whereClause.add(criteriaBuilder.equal(from.get("eadid"), ApeUtil.decodeSpecialCharacters(contentSearchOptions.getEadid())));
+            whereClause.add(criteriaBuilder.equal(from.get("id"), ApeUtil.decodeSpecialCharacters(contentSearchOptions.getEadid())));
         }
         if (contentSearchOptions.getValidated().size() > 0) {
             List<Predicate> validatedPredicated = new ArrayList<>();
@@ -191,10 +191,10 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
         }
         if (StringUtils.isNotBlank(contentSearchOptions.getSearchTerms())) {
             String[] searchTerms = StringUtils.split(contentSearchOptions.getSearchTerms(), " ");
-            if ("eadid".equals(contentSearchOptions.getSearchTermsField())) {
+            if ("id".equals(contentSearchOptions.getSearchTermsField())) {
                 String searchTerm = contentSearchOptions.getSearchTerms().trim();
                 searchTerm = searchTerm.replaceAll("\\*", "%");
-                whereClause.add(criteriaBuilder.like(from.<String>get("eadid"), searchTerm));
+                whereClause.add(criteriaBuilder.like(from.<String>get("identifier"), searchTerm));
             } else if ("title".equals(contentSearchOptions.getSearchTermsField())) {
                 for (String searchTerm : searchTerms) {
                     whereClause.add(criteriaBuilder.like(from.<String>get("title"), "%" + searchTerm + "%"));
@@ -204,7 +204,7 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
             } else {
                 String searchTermId = contentSearchOptions.getSearchTerms().trim();
                 searchTermId = searchTermId.replaceAll("\\*", "%");
-                Predicate identifierPredicate = criteriaBuilder.like(from.<String>get("eadid"), searchTermId);
+                Predicate identifierPredicate = criteriaBuilder.like(from.<String>get("identifier"), searchTermId);
                 List<Predicate> titleAndPredicated = new ArrayList<>();
                 for (String searchTerm : searchTerms) {
                     titleAndPredicated.add(criteriaBuilder.like(from.<String>get("title"), "%" + searchTerm + "%"));
