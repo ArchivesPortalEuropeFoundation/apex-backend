@@ -61,7 +61,7 @@ public class Ead3Service extends AbstractService {
     @Override
     public void publish(XmlType xmlType, Integer id) throws Exception {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-        Ead3 ead3 = ead3DAO.findById(id, xmlType.getClass());
+        Ead3 ead3 = ead3DAO.findById(id, xmlType.EAD_3.getClazz());
         SecurityContext.get().checkAuthorized(ead3);
         if (PublishTask.valid(ead3)) {
             addToQueue(ead3, QueueAction.PUBLISH, null);

@@ -46,7 +46,8 @@ public class PublishTask extends AbstractEad3Task {
                 fileInputStream = getFileInputStream(ead3.getPath());
                 Ead ead = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
                 
-                LOGGER.debug(ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0));
+                LOGGER.debug("Ead3 Title: "+ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
+                LOGGER.debug("Time needed: "+(System.currentTimeMillis()-startTime));
 //              
 //                if (ead.getEadContent() == null) {
 //                    message = "xml";
