@@ -94,9 +94,9 @@ class ValidateTask extends AbstractEad3Task {
                                 .append(exception.getColumnNumber()).append(": ").append(exception.getMessage())
                                 .append("</span>").append("<br />");
                     }
-                    if (ead3.isConverted()) {
+//                    if (ead3.isConverted()) {
                         ead3.setValidated(ValidatedState.FATAL_ERROR);
-                    }
+//                    }
                     boolean warningExists = false;
                     Set<Warnings> warningsFromEad3 = ead3.getWarningses();
                     if (!warningsFromEad3.isEmpty()) {
