@@ -51,5 +51,6 @@
     <core name="eads" instanceDir="eads" />
     <core name="eac-cpfs" instanceDir="eac-cpfs" />
     <core name="eags" instanceDir="eags" />
+    <core name="ead3s" instanceDir="ead3s" />
   </cores>
 </solr>
