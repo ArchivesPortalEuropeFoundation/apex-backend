@@ -45,7 +45,7 @@ public class JsonToObject {
             for (String key : map.keySet()) {
                 solrDoc.addField(key, map.get(key));
             }
-            solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
+            solrDoc.addField(SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;
@@ -68,7 +68,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
             solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
-            solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
+            solrDoc.addField(SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;
@@ -101,7 +101,7 @@ public class JsonToObject {
                 solrDoc.addField(SolrFields.SG_DYNAMIC_ID + "0_s", ead.getDynamicId());
             }
             solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
-            solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
+            solrDoc.addField(SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;
@@ -123,7 +123,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.REPOSITORY_CODE, eac.getRepositoryCode());
             solrDoc.addField(SolrFields.EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS, eac.getNumberOfArchivalMaterialRelations());
             solrDoc.addField(SolrFields.EAC_CPF_NUMBER_OF_NAME_RELATIONS, eac.getNumberOfNameRelations());
-            solrDoc.addField(SolrFields.OPEN_DATA_ENABLE, "true");
+            solrDoc.addField(SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;
