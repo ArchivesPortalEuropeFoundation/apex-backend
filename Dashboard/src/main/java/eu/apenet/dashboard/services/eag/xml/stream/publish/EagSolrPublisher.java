@@ -50,7 +50,7 @@ public class EagSolrPublisher extends AbstractSolrPublisher {
         doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountry().getId());
 
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-        doc.addField(SolrFields.OPEN_DATA_ENABLE, archivalInstitutionDao.findById(archivalInstitution.getAiId()).isOpenDataEnabled());
+        doc.addField(SolrFields.OPEN_DATA, archivalInstitutionDao.findById(archivalInstitution.getAiId()).isOpenDataEnabled());
 
         addSolrDocument(doc);
     }

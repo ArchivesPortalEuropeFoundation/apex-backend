@@ -55,7 +55,7 @@ public class EacCpfSolrPublisher extends AbstractSolrPublisher {
         doc.addField(SolrFields.EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS, eacCpfPublishData.getNumberOfInstitutionsRelations());
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 
-        doc.addField(SolrFields.OPEN_DATA_ENABLE, archivalInstitutionDao.findById(archivalInstitution.getAiId()).isOpenDataEnabled());
+        doc.addField(SolrFields.OPEN_DATA, archivalInstitutionDao.findById(archivalInstitution.getAiId()).isOpenDataEnabled());
         addSolrDocument(doc);
     }
 

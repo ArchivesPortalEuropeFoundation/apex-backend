@@ -418,7 +418,7 @@ public class EadSolrPublisher {
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(archivalinstitution.getAiId());
 
-        doc1.addField(SolrFields.OPEN_DATA_ENABLE, archivalInstitution.isOpenDataEnabled());
+        doc1.addField(SolrFields.OPEN_DATA, archivalInstitution.isOpenDataEnabled());
         docs.add(doc1);
         if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
             solrTime += EadSolrServerHolder.getInstance().add(docs);

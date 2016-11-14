@@ -188,7 +188,7 @@ public class OpenDataService {
         } else {
             queryString = SolrFields.AI + ":\"" + archivalInstitution.getAiname() + "\\:" + archivalInstitution.getAiId() + "\" ";
         }
-        queryString += "AND -" + SolrFields.OPEN_DATA_ENABLE + ":" + Boolean.toString(openDataEnable);
+        queryString += "AND -" + SolrFields.OPEN_DATA + ":" + Boolean.toString(openDataEnable);
         SolrQuery query = new SolrQuery(queryString);
         query.setRows(0);
 
