@@ -102,23 +102,23 @@
         According to http://wiki.apache.org/solr/FieldOptionsByUseCase
         fields with highlighting has termVectors, termPositions, termOffsets
         -->
-        <field name="unittitle" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-        <field name="scopecontent" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />	
+        <field name="unitTitle" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+        <field name="scopeContent" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />	
         <field name="other" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-        <field name="unitdate" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+        <field name="unitDate" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
         <!-- Fields that are used for sorting
         According to http://wiki.apache.org/solr/FieldOptionsByUseCase
         fields used for sorting, it is recommended to use omitNorms
         -->
-        <field name="unitidsort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
-        <field name="titlesort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 	
-        <field name="unitidfondsort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 
+        <field name="unitIdSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
+        <field name="unitTitleSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 	
+        <field name="unitIdFondSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 
 
-        <field name="unitid" type="unitidType" indexed="true" stored="true" required="false"/>
-        <field name="otherunitid" type="unitidType" indexed="true" stored="true" required="false" multiValued="true"/>
+        <field name="unitId" type="unitidType" indexed="true" stored="true" required="false"/>
+        <field name="otherUnitId" type="unitidType" indexed="true" stored="true" required="false" multiValued="true"/>
         <field name="fond" type="string" indexed="true" stored="true" required="false"/>
         <field name="country" type="string" indexed="true" stored="true" required="false"/>
-        <field name="ainame" type="string" indexed="true" stored="true" required="false"/>
+        <field name="aiName" type="string" indexed="true" stored="true" required="false"/>
         <field name="numberOfDecendents" type="string" indexed="true" stored="true" required="false"/>
         <field name="numberOfAncestors" type="string" indexed="true" stored="true" required="false"/>
 	    
@@ -126,17 +126,17 @@
   
         <field name="levelName" type="string" indexed="true" stored="true" required="false"/>
   
-        <field name="startdate" type="date" indexed="true" stored="true" required="false"/>
-        <field name="enddate" type="date" indexed="true" stored="true" required="false"/>
+        <field name="startDate" type="date" indexed="true" stored="true" required="false"/>
+        <field name="endDate" type="date" indexed="true" stored="true" required="false"/>
 
         <field name="dateType" type="string" indexed="true" stored="true" required="false"/>
 	  
         <field name="language" type="string" indexed="true" stored="true" required="false"/>
-        <field name="langmaterial" type="languageText" indexed="true" stored="true" required="false"/>
+        <field name="langMaterial" type="languageText" indexed="true" stored="true" required="false"/>
 	  
         <field name="recordId" type="string" indexed="true" stored="true" required="false"/>	
         <!--This is recommended as parentUnitId, but need to rethink cause it refers the root of a document-->  
-        <field name="unitidfond" type="string" indexed="true" stored="true" required="false"/>	
+        <field name="unitIdFond" type="string" indexed="true" stored="true" required="false"/>	
         <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/> 
         <field name="duplicateUnitid" type="boolean" indexed="true" stored="true" required="false"/>	  
         <field name="dao" type="boolean" indexed="true" stored="true" required="false"/>
@@ -165,16 +165,16 @@
 
     </fields>
     <uniqueKey>id</uniqueKey> 
-    <defaultSearchField>unittitle</defaultSearchField> 
+    <defaultSearchField>unitTitle</defaultSearchField> 
     <solrQueryParser defaultOperator="AND"/> 
   
    
-    <copyField source="unittitle" dest="spell"/>
-    <copyField source="scopecontent" dest="spell"/>  
+    <copyField source="unitTitle" dest="spell"/>
+    <copyField source="scopeContent" dest="spell"/>  
     <copyField source="other" dest="spell"/>  
-    <copyField source="unitdate" dest="spell"/>
+    <copyField source="unitDate" dest="spell"/>
 
-    <copyField source="unitidfond" dest="unitidfondsort"/>
-    <copyField source="unittitle" dest="titlesort"/>
-    <copyField source="unitid" dest="unitidsort"/>
+    <copyField source="unitIdFond" dest="unitIdFondSort"/>
+    <copyField source="unitTitle" dest="unitTitleSort"/>
+    <copyField source="unitId" dest="unitIdSort"/>
 </schema>
