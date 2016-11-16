@@ -110,56 +110,52 @@
         According to http://wiki.apache.org/solr/FieldOptionsByUseCase
         fields used for sorting, it is recommended to use omitNorms
         -->
-        <field name="unitIdSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
-        <field name="unitTitleSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 	
-        <field name="unitIdFondSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 
 
         <field name="unitId" type="unitidType" indexed="true" stored="true" required="false"/>
         <field name="otherUnitId" type="unitidType" indexed="true" stored="true" required="false" multiValued="true"/>
-        <field name="fond" type="string" indexed="true" stored="true" required="false"/>
-        <field name="country" type="string" indexed="true" stored="true" required="false"/>
+        <field name="titleProper" type="string" indexed="true" stored="true" required="false"/>
+        <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
+        <field name="countryName" type="string" indexed="true" stored="true" required="false"/>
+        <field name="aiId" type="int" indexed="true" stored="false" required="false"/>
         <field name="aiName" type="string" indexed="true" stored="true" required="false"/>
+        <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/>
         <field name="numberOfDecendents" type="string" indexed="true" stored="true" required="false"/>
         <field name="numberOfAncestors" type="string" indexed="true" stored="true" required="false"/>
 	    
 	  	
   
         <field name="levelName" type="string" indexed="true" stored="true" required="false"/>
-  
         <field name="startDate" type="date" indexed="true" stored="true" required="false"/>
         <field name="endDate" type="date" indexed="true" stored="true" required="false"/>
-
         <field name="dateType" type="string" indexed="true" stored="true" required="false"/>
 	  
         <field name="language" type="string" indexed="true" stored="true" required="false"/>
         <field name="langMaterial" type="languageText" indexed="true" stored="true" required="false"/>
-	  
         <field name="recordId" type="string" indexed="true" stored="true" required="false"/>	
         <!--This is recommended as parentUnitId, but need to rethink cause it refers the root of a document-->  
-        <field name="unitIdFond" type="string" indexed="true" stored="true" required="false"/>	
-        <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/> 
+        <field name="recordType" type="string" indexed="true" stored="true" required="false"/>	
+        
         <field name="duplicateUnitid" type="boolean" indexed="true" stored="true" required="false"/>	  
         <field name="dao" type="boolean" indexed="true" stored="true" required="false"/>
         <field name="numberOfDao" type="string" indexed="true" stored="true" required="false"/>
         <field name="daoLinks" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
         <field name="daoType" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
         <field name="topic" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
-
-        <field name="type" type="string" indexed="true" stored="true" required="false"/>
-	 
-	 <!--This is recommended as parentId, but need to rethink cause it refers the root of a document and parentId is already available-->  
-        <field name="fondId" type="string" indexed="true" stored="false" required="false"/>
-        <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
-        <field name="aiId" type="int" indexed="true" stored="false" required="false"/>	  
-
-        <field name="parentId" type="string" indexed="true" stored="true" required="false"/>
-        <!--<field name="leaf" type="boolean" indexed="true" stored="true" required="false"/>-->
         <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
+	 
+        <field name="parentId" type="string" indexed="true" stored="false" required="false"/>
+        <field name="parentUnitId" type="string" indexed="true" stored="true" required="false"/>
+        <!--<field name="leaf" type="boolean" indexed="true" stored="true" required="false"/>-->
+        <field name="openData" type="boolean" indexed="true" stored="true" required="false" default="false"/>
         <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" />
         <field name="openDataSpell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" required="false"/>
-        <!--<field name="depth" type="int" indexed="true" stored="true" required="false"/>-->
         <field name="orderId" type="int" indexed="true" stored="true" required="false"/>
-        <field name="openData" type="boolean" indexed="true" stored="true" required="false" default="false"/>
+        
+        <field name="unitIdSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
+        <field name="unitTitleSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 	
+        <field name="unitRecordIDSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>   
+
+        <!--<field name="depth" type="int" indexed="true" stored="true" required="false"/>-->
         <dynamicField name="*_i"  type="int"    indexed="true"  stored="true"/>
         <dynamicField name="*_s"  type="string"  indexed="true"  stored="true"/>
 
@@ -174,7 +170,7 @@
     <copyField source="other" dest="spell"/>  
     <copyField source="unitDate" dest="spell"/>
 
-    <copyField source="unitIdFond" dest="unitIdFondSort"/>
+    <copyField source="recordId" dest="unitRecordIDSort"/>
     <copyField source="unitTitle" dest="unitTitleSort"/>
     <copyField source="unitId" dest="unitIdSort"/>
 </schema>
