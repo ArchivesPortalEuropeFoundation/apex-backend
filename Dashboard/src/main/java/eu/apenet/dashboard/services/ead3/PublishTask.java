@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.apache.log4j.Logger;
 
@@ -27,10 +28,12 @@ public class PublishTask extends AbstractEad3Task {
     protected static final Logger LOGGER = Logger.getLogger(PublishTask.class);
     private final JAXBContext ead3Context;
     private final Unmarshaller ead3Unmarshaller;
+    private Ead3SolrDocBuilder ead3SolrDocBuilder;
     
     public PublishTask() throws JAXBException {
         this.ead3Context = JAXBContext.newInstance(Ead.class);
         this.ead3Unmarshaller = ead3Context.createUnmarshaller();
+        this.ead3SolrDocBuilder = new Ead3SolrDocBuilder();
     }
     public static boolean valid(Ead3 ead) {
         return ValidatedState.VALIDATED.equals(ead.getValidated()) && !ead.isPublished();
@@ -45,9 +48,14 @@ public class PublishTask extends AbstractEad3Task {
                 long solrTime = 0l;
                 fileInputStream = getFileInputStream(ead3.getPath());
                 Ead ead = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
+                this.ead3SolrDocBuilder.buildDocTree(ead);
                 
-                LOGGER.debug("Ead3 Title: "+ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
-                LOGGER.debug("Time needed: "+(System.currentTimeMillis()-startTime));
+//                Marshaller marshaller = ead3Context.createMarshaller();
+//                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//                marshaller.marshal(ead, System.out);
+                
+                LOGGER.info("Ead3 Title: "+ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
+                LOGGER.info("Time needed: "+(System.currentTimeMillis()-startTime));
 //              
 //                if (ead.getEadContent() == null) {
 //                    message = "xml";
@@ -74,7 +82,16 @@ public class PublishTask extends AbstractEad3Task {
     }
     
     private static FileInputStream getFileInputStream(String path) throws FileNotFoundException {
-        File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
+//        File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
+        File file = new File(path);
         return new FileInputStream(file);
+    }
+    
+    public static void main(String[] args) throws JAXBException, Exception {
+        PublishTask pTask = new PublishTask();
+        Ead3 ead3 = new Ead3();
+        ead3.setValidated(ValidatedState.VALIDATED);
+        ead3.setPath("/home/mahbub/work/docs/Ead3/EAD3-NL-TbRAT-115_FA_and_AFAs/NL-TbRAT-115_871_v2_normal.xml");
+        pTask.execute(ead3, null);
     }
 }
