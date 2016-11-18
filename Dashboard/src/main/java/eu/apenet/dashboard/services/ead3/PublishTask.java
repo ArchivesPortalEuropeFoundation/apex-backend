@@ -9,6 +9,8 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
+import gov.loc.ead.Did;
+import gov.loc.ead.Dsc;
 import gov.loc.ead.Ead;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +27,7 @@ import org.apache.log4j.Logger;
  * @author kaisar
  */
 public class PublishTask extends AbstractEad3Task {
+
     protected static final Logger LOGGER = Logger.getLogger(PublishTask.class);
     private final JAXBContext ead3Context;
     private final Unmarshaller ead3Unmarshaller;
@@ -35,6 +38,7 @@ public class PublishTask extends AbstractEad3Task {
         this.ead3Unmarshaller = ead3Context.createUnmarshaller();
         this.ead3SolrDocBuilder = new Ead3SolrDocBuilder();
     }
+
     public static boolean valid(Ead3 ead) {
         return ValidatedState.VALIDATED.equals(ead.getValidated()) && !ead.isPublished();
     }
@@ -80,18 +84,18 @@ public class PublishTask extends AbstractEad3Task {
     protected String getActionName() {
         return "publish";
     }
-    
+
     private static FileInputStream getFileInputStream(String path) throws FileNotFoundException {
 //        File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
         File file = new File(path);
         return new FileInputStream(file);
     }
     
-    public static void main(String[] args) throws JAXBException, Exception {
-        PublishTask pTask = new PublishTask();
-        Ead3 ead3 = new Ead3();
-        ead3.setValidated(ValidatedState.VALIDATED);
-        ead3.setPath("/home/mahbub/work/docs/Ead3/EAD3-NL-TbRAT-115_FA_and_AFAs/NL-TbRAT-115_871_v2_normal.xml");
-        pTask.execute(ead3, null);
-    }
+//    public static void main(String[] args) throws JAXBException, Exception {
+//        PublishTask pTask = new PublishTask();
+//        Ead3 ead3 = new Ead3();
+//        ead3.setValidated(ValidatedState.VALIDATED);
+//        ead3.setPath("/home/kaisar/Downloads/NL-TbRAT-115_FA_and_AFAs/NL-TbRAT-115_871_v2_normal.xml");
+//        pTask.execute(ead3, null);
+//    }
 }
