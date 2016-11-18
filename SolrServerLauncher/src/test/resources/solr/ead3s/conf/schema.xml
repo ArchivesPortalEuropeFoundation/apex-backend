@@ -119,8 +119,8 @@
         <field name="aiId" type="int" indexed="true" stored="false" required="false"/>
         <field name="aiName" type="string" indexed="true" stored="true" required="false"/>
         <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/>
-        <field name="numberOfDecendents" type="string" indexed="true" stored="true" required="false"/>
-        <field name="numberOfAncestors" type="string" indexed="true" stored="true" required="false"/>
+        <field name="numberOfDecendents" type="string" indexed="false" stored="true" required="false"/>
+        <field name="numberOfAncestors" type="string" indexed="false" stored="true" required="false"/>
 	    
 	  	
   
@@ -137,8 +137,8 @@
         
         <field name="duplicateUnitid" type="boolean" indexed="true" stored="true" required="false"/>	  
         <field name="dao" type="boolean" indexed="true" stored="true" required="false"/>
-        <field name="numberOfDao" type="string" indexed="true" stored="true" required="false"/>
-        <field name="daoLinks" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
+        <field name="numberOfDao" type="string" indexed="false" stored="true" required="false"/>
+        <field name="daoLinks" type="string" indexed="false" stored="true" multiValued="true" required="false"/>
         <field name="daoType" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
         <field name="topic" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
         <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
@@ -149,7 +149,7 @@
         <field name="openData" type="boolean" indexed="true" stored="true" required="false" default="false"/>
         <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" />
         <field name="openDataSpell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" required="false"/>
-        <field name="orderId" type="int" indexed="true" stored="true" required="false"/>
+        <field name="siblingPosition" type="int" indexed="false" stored="true" required="false"/>
         
         <field name="unitIdSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
         <field name="unitTitleSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 	
