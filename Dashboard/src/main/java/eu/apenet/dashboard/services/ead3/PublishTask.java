@@ -60,6 +60,7 @@ public class PublishTask extends AbstractEad3Task {
                 
                 LOGGER.info("Ead3 Title: "+ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
                 LOGGER.info("Time needed: "+(System.currentTimeMillis()-startTime));
+                new Ead3SolrDocBuilder().buildDocTree(ead);
 //              
 //                if (ead.getEadContent() == null) {
 //                    message = "xml";
