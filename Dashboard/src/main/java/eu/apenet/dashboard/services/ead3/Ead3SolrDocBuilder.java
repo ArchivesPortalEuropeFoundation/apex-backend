@@ -5,11 +5,12 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
-import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
+import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import gov.loc.ead.Did;
 import gov.loc.ead.Ead;
 import gov.loc.ead.Eventdatetime;
 import gov.loc.ead.Head;
+import gov.loc.ead.MMixedBasic;
 import gov.loc.ead.Langmaterial;
 import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
@@ -32,14 +33,11 @@ import org.apache.log4j.Logger;
  * @author mahbub
  */
 public class Ead3SolrDocBuilder {
-    
+
     protected static final Logger LOGGER = Logger.getLogger(Ead3SolrDocBuilder.class);
-    
+
     private JXPathContext jXPathContext;
-    private SolrDocTree solrDocTree;
-    
-    public void test() {
-    }
+    private SolrDocNode solrDocTree;
 
 //    public void parseEad(Ead ead) {
 //        JXPathContext eadContext = JXPathContext.newContext(ead);
@@ -66,10 +64,17 @@ public class Ead3SolrDocBuilder {
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
     }
-    
+
     public void buildDocTree(Ead ead3) {
+
         jXPathContext = JXPathContext.newContext(ead3);
-        
+        LOGGER.info("Titles: " + retriveTitleProper());
+        LOGGER.info("Lets see: " + getPlainText(ead3));
+//        Iterator it = jXPathContext.iterate("archdesc/*/head");
+//        while (it.hasNext()) {
+//            System.out.println(((Head)it.next()).getContent());
+//        }
+
         LOGGER.info("Titles: " + retriveTitleProper());
         LOGGER.info("sub title: " + retriveSubtitle());
         LOGGER.info("Archdesc head: " + retriveArchdescHead());
@@ -81,7 +86,7 @@ public class Ead3SolrDocBuilder {
 //        }
 
     }
-    
+
     private String retriveTitleProper() {
         StringBuilder stringBuilder = new StringBuilder();
         List<Titleproper> titlePropers = (List<Titleproper>) jXPathContext.getValue("control/filedesc/titlestmt/titleproper");
@@ -94,7 +99,48 @@ public class Ead3SolrDocBuilder {
         }
         return stringBuilder.toString();
     }
-    
+
+    private String getPlainText(Object obj) {
+        if (obj == null) {
+            return "";
+        }
+        JXPathContext context = JXPathContext.newContext(obj);
+        StringBuilder stringBuilder = new StringBuilder("");
+        Iterator it = context.iterate("*");
+        boolean added = false;
+        
+        while (it.hasNext()) {
+            Object object = it.next();
+            if (object instanceof MMixedBasic) {
+                MMixedBasic contentHolder = (MMixedBasic) object;
+
+                for (Serializable sr : contentHolder.getContent()) {
+                    String str1 = (String) sr;
+                    if (!str1.isEmpty()) {
+//                        stringBuilder.append(contentHolder.getClass().getSimpleName()).append(": ");
+                        stringBuilder.append(str1);
+                        added = true;
+                    }
+                }
+                if (added) {
+                    stringBuilder.append(" ");
+                }
+                added = false;
+            } else {
+                String str = getPlainText(object);
+                if (!str.isEmpty()) {
+                    stringBuilder.append(str);
+                }
+            }
+        }
+
+        String strRes = stringBuilder.toString().trim();
+        if (!strRes.isEmpty()) {
+            strRes += "\n";
+        }
+        return strRes;
+    }
+
     private String retriveSubtitle() {
         StringBuilder stringBuilder = new StringBuilder();
         List<Subtitle> subtitles = (List<Subtitle>) jXPathContext.getValue("control/filedesc/titlestmt/subtitle");
@@ -107,7 +153,7 @@ public class Ead3SolrDocBuilder {
         }
         return stringBuilder.toString();
     }
-    
+
     private String retriveArchdescHead() {
         StringBuilder stringBuilder = new StringBuilder();
         Head head = (Head) jXPathContext.getValue("archdesc/did/head");
@@ -117,7 +163,7 @@ public class Ead3SolrDocBuilder {
         stringBuilder.append('\t');
         return stringBuilder.toString();
     }
-    
+
     private String retriveArchdescUnitTitle() {
         StringBuilder stringBuilder = new StringBuilder();
         Unittitle unittitle = (Unittitle) jXPathContext.getValue("archdesc/did/unittitle");
@@ -127,7 +173,7 @@ public class Ead3SolrDocBuilder {
         stringBuilder.append('\t');
         return stringBuilder.toString();
     }
-    
+
     private Map<String, String> parseDid(Did did) {
         Map<String, String> didInfoMap = new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
@@ -139,7 +185,7 @@ public class Ead3SolrDocBuilder {
         for (Object obj : did.getMDid()) {
             if (obj instanceof Unittitle) {
                 stringBuilder = new StringBuilder();
-                
+
                 for (Serializable sr : ((Unittitle) obj).getContent()) {
                     stringBuilder.append(sr);
                 }
@@ -147,7 +193,7 @@ public class Ead3SolrDocBuilder {
                 didInfoMap.put("unittitle", stringBuilder.toString());
             } else if (obj instanceof Unitid) {
                 stringBuilder = new StringBuilder();
-                
+
                 for (Serializable sr : ((Unitid) obj).getContent()) {
                     stringBuilder.append(sr);
                 }
@@ -155,22 +201,22 @@ public class Ead3SolrDocBuilder {
                 didInfoMap.put("unitid", stringBuilder.toString());
             } else if (obj instanceof Unitdate) {
                 stringBuilder = new StringBuilder();
-                
+
                 for (Serializable sr : ((Unitdate) obj).getContent()) {
                     stringBuilder.append(sr);
                 }
                 stringBuilder.append('\t');
                 didInfoMap.put("unitdate", stringBuilder.toString());
-                
+
                 didInfoMap.put("unitdateCalender", ((Unitdate) obj).getCalendar());
             } else if (obj instanceof Langmaterial) {
                 didInfoMap.putAll(parseLangmateriall((Langmaterial) obj));
             }
         }
-        
+
         return didInfoMap;
     }
-    
+
     private Map<String, String> parseLangmateriall(Langmaterial langmaterial) {
         Map<String, String> langMap = new HashMap<>();
         for (Object obj : langmaterial.getLanguageOrLanguageset()) {
@@ -181,9 +227,9 @@ public class Ead3SolrDocBuilder {
                     stringBuilder.append(language.getLangcode()).append(":").append(language.getContent()).append('\t').append('\n');
                 }
                 langMap.put("languages", stringBuilder.toString());
-                
+
                 stringBuilder = new StringBuilder();
-                
+
                 for (P p : languageset.getDescriptivenote().getP()) {
                     for (Serializable sr : p.getContent()) {
                         stringBuilder.append(sr);

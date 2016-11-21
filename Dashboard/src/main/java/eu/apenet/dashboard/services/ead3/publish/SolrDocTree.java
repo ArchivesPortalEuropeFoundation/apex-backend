@@ -5,47 +5,52 @@
  */
 package eu.apenet.dashboard.services.ead3.publish;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 
 /**
  *
  * @author mahbub
  */
-public class SolrDocTree {
-    SolrDocTree sibling = null;
-    SolrDocTree child = null;
-    Map<String, Object> data = new HashMap<>();
+public class SolrDocTree implements Iterator {
 
-    public SolrDocTree getSibling() {
-        return sibling;
-    }
+    private final Stack<SolrDocNode> stack = new Stack<>();
+    private final SolrDocNode root;
 
-    public void setSibling(SolrDocTree sibling) {
-        this.sibling = sibling;
-    }
-
-    public SolrDocTree getChild() {
-        return child;
+    public SolrDocTree(SolrDocNode argRoot) {
+        root = argRoot;
+        SolrDocNode node = root;
+        while (node != null) {
+            stack.push(node);
+            node = node.getChild();
+        }
     }
 
-    public void setChild(SolrDocTree child) {
-        this.child = child;
+    public SolrDocNode getRoot() {
+        return root;
     }
 
-    public Map<String, Object> getData() {
-        return data;
+    @Override
+    public SolrDocNode next() {
+        if (stack.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        SolrDocNode node = stack.pop();
+        SolrDocNode result = node;
+        
+        if (node.getSibling() != null) {
+            node = node.getSibling();
+            while (node != null) {
+                stack.push(node);
+                node = node.getChild();
+            }
+        }
+        return result;
     }
 
-    public void setData(Map<String, Object> data) {
-        this.data = data;
-    }
-    
-    public void setDataElement(String key, Object value) {
-        this.data.put(key, value);
-    }
-    
-    public Object getDataElement(String key) {
-        return this.data.get(key);
+    @Override
+    public boolean hasNext() {
+        return !stack.isEmpty();
     }
 }

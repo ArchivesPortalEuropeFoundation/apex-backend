@@ -92,11 +92,11 @@ public class PublishTask extends AbstractEad3Task {
         return new FileInputStream(file);
     }
     
-//    public static void main(String[] args) throws JAXBException, Exception {
-//        PublishTask pTask = new PublishTask();
-//        Ead3 ead3 = new Ead3();
-//        ead3.setValidated(ValidatedState.VALIDATED);
-//        ead3.setPath("/home/kaisar/Downloads/NL-TbRAT-115_FA_and_AFAs/NL-TbRAT-115_871_v2_normal.xml");
-//        pTask.execute(ead3, null);
-//    }
+    public static void main(String[] args) throws JAXBException, Exception {
+        PublishTask pTask = new PublishTask();
+        Ead3 ead3 = new Ead3();
+        ead3.setValidated(ValidatedState.VALIDATED);
+        ead3.setPath(args[0]);
+        pTask.execute(ead3, null);
+    }
 }
