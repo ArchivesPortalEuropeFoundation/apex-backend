@@ -6,6 +6,9 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
+import gov.loc.ead.C;
+import gov.loc.ead.Chronitem;
+import gov.loc.ead.Chronlist;
 import gov.loc.ead.Did;
 import gov.loc.ead.Ead;
 import gov.loc.ead.Eventdatetime;
@@ -15,16 +18,21 @@ import gov.loc.ead.Langmaterial;
 import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
 import gov.loc.ead.P;
+import gov.loc.ead.Part;
+import gov.loc.ead.Persname;
+import gov.loc.ead.Scopecontent;
 import gov.loc.ead.Subtitle;
 import gov.loc.ead.Titleproper;
 import gov.loc.ead.Unitdate;
 import gov.loc.ead.Unitid;
 import gov.loc.ead.Unittitle;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.JAXBElement;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.log4j.Logger;
 
@@ -80,11 +88,51 @@ public class Ead3SolrDocBuilder {
         LOGGER.info("Archdesc head: " + retriveArchdescHead());
 //        LOGGER.info("Archdesc head: " + retriveArchdescUnitTitle());
         LOGGER.info("Did map" + parseDid((Did) jXPathContext.getValue("archdesc/did")));
-        Iterator it = jXPathContext.iterate("archdesc/*/head");
+//        Iterator it = jXPathContext.iterate("archdesc/*/head");
+        Iterator it = jXPathContext.iterate("archdesc/*/c");
+
+        while (it.hasNext()) {
+//            System.out.println(((C) it.next()).getLevel());
+            JXPathContext jXPathContextC = JXPathContext.newContext(((C) it.next()));
+//            LOGGER.info("Did map" + parseDid((Did) jXPathContextC.getValue("did")));
+            Iterator cit = jXPathContextC.iterate("/*");
+            while (cit.hasNext()) {
+                Object obj = cit.next();
+                if (obj instanceof Scopecontent) {
+//                    System.out.println(((Scopecontent)obj).getChronlistOrListOrTable().get(0));
+                    System.out.println(parseScopeContent((Scopecontent) obj));
+                } else {
+//                    System.out.println(obj);
+                }
+            }
+
+//            LOGGER.info("Did map" + parseScopeContent(((Scopecontent) jXPathContextC.getValue("*"))));
+        }
 //        while (it.hasNext()) {
 //            System.out.println(((Head) it.next()).getContent());
 //        }
 
+    }
+
+    private List<Map<String, String>> parseScopeContent(Scopecontent scopecontent) {
+        List<Map<String, String>> scopeMapList = new ArrayList<>();
+        for (Object obj : scopecontent.getChronlistOrListOrTable()) {
+            if (obj instanceof Chronlist) {
+                Chronlist chronlist = (Chronlist) obj;
+                for (Chronitem chi : chronlist.getChronitem()) {
+                    for (Object sr : chi.getEvent().getContent()) {
+                        if (sr instanceof JAXBElement) {
+                            JAXBElement j = (JAXBElement) sr;
+                            if (j.getDeclaredType().equals(Persname.class)) {
+                                JAXBElement<Persname> pr = (JAXBElement<Persname>) sr;
+                                scopeMapList.add(getPersName(pr.getValue()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return scopeMapList;
     }
 
     private String retriveTitleProper() {
@@ -108,7 +156,7 @@ public class Ead3SolrDocBuilder {
         StringBuilder stringBuilder = new StringBuilder("");
         Iterator it = context.iterate("*");
         boolean added = false;
-        
+
         while (it.hasNext()) {
             Object object = it.next();
             if (object instanceof MMixedBasic) {
@@ -240,5 +288,20 @@ public class Ead3SolrDocBuilder {
             }
         }
         return langMap;
+    }
+
+    private Map<String, String> getPersName(Persname persname) {
+        Map<String, String> persNameMap = new HashMap<>();
+        persNameMap.put("identifier", persname.getIdentifier());
+        persNameMap.put("relator", persname.getRelator());
+        persNameMap.put("rules", persname.getRules());
+        for (Part part : persname.getPart()) {
+            StringBuilder builder = new StringBuilder();
+            for (Serializable sr : part.getContent()) {
+                builder.append(sr);
+            }
+            persNameMap.put(part.getLocaltype(), builder.toString());
+        }
+        return persNameMap;
     }
 }
