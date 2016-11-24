@@ -7,6 +7,8 @@ package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
+import eu.apenet.dashboard.services.ead3.publish.SolrPublisher;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
 import gov.loc.ead.Did;
@@ -52,8 +54,9 @@ public class PublishTask extends AbstractEad3Task {
                 long solrTime = 0l;
                 fileInputStream = getFileInputStream(ead3.getPath());
                 Ead ead = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
-                this.ead3SolrDocBuilder.buildDocTree(ead);
-                
+                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead);
+                SolrPublisher publisher = new SolrPublisher();
+                publisher.printTree(tree);
 //                Marshaller marshaller = ead3Context.createMarshaller();
 //                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 //                marshaller.marshal(ead, System.out);

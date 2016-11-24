@@ -72,6 +72,8 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
+        
+        this.processArchdesc();
 
     }
 
@@ -91,6 +93,7 @@ public class Ead3SolrDocBuilder {
                 this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
                 this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
                 this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+                this.archdescNode.setDataElement(Ead3SolrFields.LEVEL_NAME, "archdes");
             } else if (element instanceof Dsc) {
                 this.processDsc((Dsc) element);
             }
@@ -103,8 +106,13 @@ public class Ead3SolrDocBuilder {
         }
         JXPathContext context = JXPathContext.newContext(dsc);
         Iterator it = context.iterate("*");
-        SolrDocNode firstChild = null;
-        StringBuilder otherStrBuilder = new StringBuilder((String) this.archdescNode.getDataElement(Ead3SolrFields.OTHER));
+        
+        StringBuilder otherStrBuilder;
+        if (this.archdescNode.getDataElement(Ead3SolrFields.OTHER) !=null) {
+            otherStrBuilder = new StringBuilder((String) this.archdescNode.getDataElement(Ead3SolrFields.OTHER));
+        } else {
+            otherStrBuilder = new StringBuilder();
+        }
 
         while (it.hasNext()) {
             Object element = it.next();
@@ -121,6 +129,9 @@ public class Ead3SolrDocBuilder {
                     otherStrBuilder.append(str);
                 }
             }
+        }
+        if (otherStrBuilder.length() > 0) {
+            this.archdescNode.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
     }
 
@@ -155,6 +166,8 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
+        
+        cRoot.setDataElement(Ead3SolrFields.LEVEL_NAME, "clevel");
 
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
