@@ -18,10 +18,10 @@ public final class Ead3SolrFields {
     public final static String LANG_MATERIAL = "langMaterial"; //stored - global
     public final static String RECORD_ID = "recordId"; //indexed+stored - global
     public final static String RECORD_TYPE = "recordType"; //indexed+stored - fa, sg, hg - generated
-    public final static String PARENT_UNIT_ID = "parentUnitId";//indexed+stored - global
     
     public final static String UNIT_ID = "unitId"; //indexed+stored - 
     public final static String OTHER_UNIT_ID = "otherUnitId"; //indexed+stored - array
+    public final static String PARENT_UNIT_ID = "parentUnitId";//indexed+stored - 
     
     public final static String UNIT_TITLE = "unitTitle"; //indexed+stored - 
     public final static String UNIT_DATE = "unitDate"; //indexed+stored - 
