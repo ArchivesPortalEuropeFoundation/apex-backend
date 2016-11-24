@@ -163,7 +163,7 @@ public class Ead3SolrDocBuilder {
             throw new IllegalStateException("Not initialized properly");
         }
         Language language = (Language) jXPathContext.getValue("control/languagedeclaration/language");
-        return language.getContent();
+        return language.getLangcode();
     }
 
     private String retriveSubtitle() {
