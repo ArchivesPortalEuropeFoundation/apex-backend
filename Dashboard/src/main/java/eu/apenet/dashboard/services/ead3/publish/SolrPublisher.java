@@ -5,6 +5,7 @@
  */
 package eu.apenet.dashboard.services.ead3.publish;
 
+import com.google.gson.Gson;
 import eu.apenet.commons.solr.Ead3SolrServerHolder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,6 +35,13 @@ public class SolrPublisher {
             solrDocList.add(sorlDoc);
         }
         this.ead3SolrCore.add(solrDocList);
+    }
+    
+    public void printTree(Iterator<SolrDocNode> docIterator) throws SolrServerException {
+        while (docIterator.hasNext()) {
+            SolrDocNode node = docIterator.next();
+            System.out.println(new Gson().toJson(node));
+        }
     }
     
     public void hardCommit() throws SolrServerException {
