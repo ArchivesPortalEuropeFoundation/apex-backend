@@ -282,39 +282,48 @@ public class Ead3SolrDocBuilder {
     private Map<String, String> processDid(Did did) {
         Map<String, String> didInfoMap = new HashMap<>();
 
-        for (Object obj : did.getMDid()) {
-            if (obj instanceof Unittitle) {
-                didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getPlainText(obj));
-            } else if (obj instanceof Unitid) {
-                didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getPlainText(obj));
-            } else if (obj instanceof Unitdate) {
-                didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getPlainText(obj));
+        if (did != null) {
+            for (Object obj : did.getMDid()) {
+                if (obj instanceof Unittitle) {
+                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getPlainText(obj));
+                } else if (obj instanceof Unitid) {
+                    if (didInfoMap.get(Ead3SolrFields.UNIT_ID) == null) {
+                        didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getPlainText(obj));
+                        didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, "");
+                    } else {
+                        didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, didInfoMap.get(Ead3SolrFields.OTHER_UNIT_ID) + " " + this.getPlainText(obj));
+                    }
+                } else if (obj instanceof Unitdate) {
+                    didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getPlainText(obj));
 
-                didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
-            } else if (obj instanceof Langmaterial) {
-                didInfoMap.put(Ead3SolrFields.LANG_MATERIAL, processLangmaterial((Langmaterial) obj));
-            } else {
-                String other = didInfoMap.get(Ead3SolrFields.OTHER);
-                if (other != null) {
-                    didInfoMap.put(Ead3SolrFields.OTHER, other + " " + getPlainText(obj));
+                    didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
+                } else if (obj instanceof Langmaterial) {
+                    didInfoMap.put(Ead3SolrFields.LANG_MATERIAL, processLangmaterial((Langmaterial) obj));
                 } else {
-                    didInfoMap.put(Ead3SolrFields.OTHER, getPlainText(obj));
+                    String other = didInfoMap.get(Ead3SolrFields.OTHER);
+                    if (other != null) {
+                        didInfoMap.put(Ead3SolrFields.OTHER, other + " " + getPlainText(obj));
+                    } else {
+                        didInfoMap.put(Ead3SolrFields.OTHER, getPlainText(obj));
+                    }
                 }
-            }
 
+            }
         }
         return didInfoMap;
     }
 
     private String processLangmaterial(Langmaterial langmaterial) {
         StringBuilder langcodes = new StringBuilder();
-        for (Object obj : langmaterial.getLanguageOrLanguageset()) {
-            if (obj instanceof Language) {
-                langcodes.append(((Language) obj).getLangcode()).append(" ");
-            } else if (obj instanceof Languageset) {
-                Languageset languageset = (Languageset) obj;
-                for (Language language : languageset.getLanguage()) {
-                    langcodes.append(language.getLangcode()).append(" ");
+        if (langmaterial != null) {
+            for (Object obj : langmaterial.getLanguageOrLanguageset()) {
+                if (obj instanceof Language) {
+                    langcodes.append(((Language) obj).getLangcode()).append(" ");
+                } else if (obj instanceof Languageset) {
+                    Languageset languageset = (Languageset) obj;
+                    for (Language language : languageset.getLanguage()) {
+                        langcodes.append(language.getLangcode()).append(" ");
+                    }
                 }
             }
         }
