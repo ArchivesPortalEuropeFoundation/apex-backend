@@ -86,8 +86,8 @@ public class PublishTask extends AbstractEad3Task {
     }
 
     private static FileInputStream getFileInputStream(String path) throws FileNotFoundException {
-//        File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
-        File file = new File(path);
+        File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
+//        File file = new File(path);
         return new FileInputStream(file);
     }
     
