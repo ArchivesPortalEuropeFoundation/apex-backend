@@ -69,7 +69,7 @@ public class Ead3SolrDocBuilder {
         
         this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
-        this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveLanguage());
+        this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
     }
 
@@ -158,7 +158,7 @@ public class Ead3SolrDocBuilder {
         return recordId.getContent();
     }
     
-    private String retriveLanguage() {
+    private String retriveControlLanguage() {
         if (this.ead3==null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
