@@ -7,14 +7,17 @@ package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
+import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import gov.loc.ead.Chronitem;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Did;
+import gov.loc.ead.Dsc;
 import gov.loc.ead.Ead;
 import gov.loc.ead.MMixedBasic;
 import gov.loc.ead.Langmaterial;
 import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
+import gov.loc.ead.MCBase;
 import gov.loc.ead.Part;
 import gov.loc.ead.Persname;
 import gov.loc.ead.Recordid;
@@ -50,10 +53,14 @@ public class Ead3SolrDocBuilder {
         return ead.getControl().getRecordid().getContent();
     }
 
-    public void buildDocTree(Ead ead3) {
+    public SolrDocTree buildDocTree(Ead ead3) {
         this.ead3 = ead3;
         jXPathContext = JXPathContext.newContext(this.ead3);
 
+        this.retrieveArchdescMain();
+        SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
+
+        return solrDocTree;
     }
 
     private void retrieveArchdescMain() {
@@ -65,13 +72,95 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
-        Map<String, String> didMap = this.processDid((Did) this.jXPathContext.getValue("archdesc/did"));
-        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
-        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
-        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
-        this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
-        this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
 
+    }
+
+    private void processArchdesc() {
+        if (this.ead3 == null || this.jXPathContext == null) {
+            throw new IllegalStateException("Not initialized properly");
+        }
+
+        Iterator it = this.jXPathContext.iterate("archdesc/*");
+
+        while (it.hasNext()) {
+            Object element = it.next();
+            if (element instanceof Did) {
+                Map<String, String> didMap = this.processDid((Did) element);
+                this.archdescNode.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
+                this.archdescNode.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
+                this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
+                this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
+                this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+            } else if (element instanceof Dsc) {
+                this.processDsc((Dsc) element);
+            }
+        }
+    }
+
+    private void processDsc(Dsc dsc) {
+        if (dsc == null) {
+            return;
+        }
+        JXPathContext context = JXPathContext.newContext(dsc);
+        Iterator it = context.iterate("*");
+        SolrDocNode firstChild = null;
+        StringBuilder otherStrBuilder = new StringBuilder((String) this.archdescNode.getDataElement(Ead3SolrFields.OTHER));
+
+        while (it.hasNext()) {
+            Object element = it.next();
+
+            if (element instanceof MCBase) {
+                if (this.archdescNode.getChild() == null) {
+                    this.archdescNode.setChild(processC((MCBase) element));
+                } else {
+                    this.archdescNode.getChild().setSibling(processC((MCBase) element));
+                }
+            } else {
+                String str = this.getPlainText(element);
+                if (!str.isEmpty()) {
+                    if (otherStrBuilder.length() > 0) {
+                        otherStrBuilder.append(" ");
+                    }
+                    otherStrBuilder.append(str);
+                }
+            }
+        }
+    }
+
+    private SolrDocNode processC(MCBase cElement) {
+        if (cElement == null) {
+            return null;
+        }
+        JXPathContext context = JXPathContext.newContext(cElement);
+        Iterator it = context.iterate("*");
+        SolrDocNode cRoot = new SolrDocNode();
+        StringBuilder otherStrBuilder = new StringBuilder();
+
+        while (it.hasNext()) {
+            Object element = it.next();
+
+            if (element instanceof MCBase) {
+                if (cRoot.getChild() == null) {
+                    cRoot.setChild(processC((MCBase) element));
+                } else {
+                    cRoot.getChild().setSibling(processC((MCBase) element));
+                }
+            } else {
+                String str = this.getPlainText(element);
+                if (!str.isEmpty()) {
+                    if (otherStrBuilder.length() > 0) {
+                        otherStrBuilder.append(" ");
+                    }
+                    otherStrBuilder.append(str);
+                }
+            }
+        }
+
+        if (otherStrBuilder.length() > 0) {
+            cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
+        }
+
+        return cRoot;
     }
 
     private List<Map<String, String>> processScopeContent(Scopecontent scopecontent) {
@@ -192,37 +281,16 @@ public class Ead3SolrDocBuilder {
 
     private Map<String, String> processDid(Did did) {
         Map<String, String> didInfoMap = new HashMap<>();
-        StringBuilder stringBuilder = new StringBuilder();
-        if (did.getHead() != null) {
-            for (Serializable sr : did.getHead().getContent()) {
-                stringBuilder.append(sr);
-            }
-            didInfoMap.put("head", stringBuilder.toString());
-        }
+
         for (Object obj : did.getMDid()) {
             if (obj instanceof Unittitle) {
-                stringBuilder = new StringBuilder();
-
-                for (Serializable sr : ((Unittitle) obj).getContent()) {
-                    stringBuilder.append(sr);
-                }
-                didInfoMap.put(Ead3SolrFields.UNIT_TITLE, stringBuilder.toString());
+                didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getPlainText(obj));
             } else if (obj instanceof Unitid) {
-                stringBuilder = new StringBuilder();
-
-                for (Serializable sr : ((Unitid) obj).getContent()) {
-                    stringBuilder.append(sr);
-                }
-                didInfoMap.put(Ead3SolrFields.UNIT_ID, stringBuilder.toString());
+                didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getPlainText(obj));
             } else if (obj instanceof Unitdate) {
-                stringBuilder = new StringBuilder();
+                didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getPlainText(obj));
 
-                for (Serializable sr : ((Unitdate) obj).getContent()) {
-                    stringBuilder.append(sr);
-                }
-                didInfoMap.put(Ead3SolrFields.UNIT_DATE, stringBuilder.toString());
-
-                didInfoMap.put("unitdateCalender", ((Unitdate) obj).getCalendar());
+                didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
             } else if (obj instanceof Langmaterial) {
                 didInfoMap.put(Ead3SolrFields.LANG_MATERIAL, processLangmaterial((Langmaterial) obj));
             } else {
@@ -243,8 +311,7 @@ public class Ead3SolrDocBuilder {
         for (Object obj : langmaterial.getLanguageOrLanguageset()) {
             if (obj instanceof Language) {
                 langcodes.append(((Language) obj).getLangcode()).append(" ");
-            }
-            if (obj instanceof Languageset) {
+            } else if (obj instanceof Languageset) {
                 Languageset languageset = (Languageset) obj;
                 for (Language language : languageset.getLanguage()) {
                     langcodes.append(language.getLangcode()).append(" ");
