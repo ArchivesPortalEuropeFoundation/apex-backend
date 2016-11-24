@@ -13,7 +13,7 @@ import java.util.Stack;
  *
  * @author mahbub
  */
-public class SolrDocTree implements Iterator {
+public class SolrDocTree implements Iterator<SolrDocNode> {
 
     private final Stack<SolrDocNode> stack = new Stack<>();
     private final SolrDocNode root;

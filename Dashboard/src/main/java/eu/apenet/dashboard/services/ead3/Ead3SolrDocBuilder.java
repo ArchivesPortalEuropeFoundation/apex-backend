@@ -5,8 +5,10 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import gov.loc.ead.C;
+import gov.loc.ead.C01;
 import gov.loc.ead.Chronitem;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Did;
@@ -17,9 +19,11 @@ import gov.loc.ead.MMixedBasic;
 import gov.loc.ead.Langmaterial;
 import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
+import gov.loc.ead.MCBase;
 import gov.loc.ead.P;
 import gov.loc.ead.Part;
 import gov.loc.ead.Persname;
+import gov.loc.ead.Recordid;
 import gov.loc.ead.Scopecontent;
 import gov.loc.ead.Subtitle;
 import gov.loc.ead.Titleproper;
@@ -45,76 +49,31 @@ public class Ead3SolrDocBuilder {
     protected static final Logger LOGGER = Logger.getLogger(Ead3SolrDocBuilder.class);
 
     private JXPathContext jXPathContext;
-    private SolrDocNode solrDocTree;
+    private Ead ead3;
+    private SolrDocNode archdescNode = new SolrDocNode();
 
-//    public void parseEad(Ead ead) {
-//        JXPathContext eadContext = JXPathContext.newContext(ead);
-//        Iterator descs = eadContext.iterate("archdesc/accessrestrictOrAccrualsOrAcqinfo");
-//        Did d = (Did) eadContext.getValue("archdesc/did");
-//        LOGGER.info(d.getHead().getContent().toString());
-//        for(Object o:d.getMDid()){
-//            LOGGER.info(o.toString());
-//        }
-//        while (descs.hasNext()) {
-//            Object obj =  descs.next();
-//            LOGGER.info(obj.toString());
-//            if(obj instanceof Did){
-//                Did did = (Did) obj;
-//                LOGGER.info(did.getMDid().get(0).toString());
-//            }
-//            else if(obj instanceof Dsc){
-//                Dsc dsc = (Dsc) obj;
-//                LOGGER.info(dsc.getHead().getContent().toString());
-//                LOGGER.info(dsc.getC().size());
-//            }
-//        }
-//    }
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
     }
 
     public void buildDocTree(Ead ead3) {
-
-        jXPathContext = JXPathContext.newContext(ead3);
-        LOGGER.info("Titles: " + retriveTitleProper());
-        LOGGER.info("Lets see: " + getPlainText(ead3));
-//        Iterator it = jXPathContext.iterate("archdesc/*/head");
-//        while (it.hasNext()) {
-//            System.out.println(((Head)it.next()).getContent());
-//        }
-
-        LOGGER.info("Titles: " + retriveTitleProper());
-        LOGGER.info("sub title: " + retriveSubtitle());
-        LOGGER.info("Archdesc head: " + retriveArchdescHead());
-//        LOGGER.info("Archdesc head: " + retriveArchdescUnitTitle());
-        LOGGER.info("Did map" + parseDid((Did) jXPathContext.getValue("archdesc/did")));
-//        Iterator it = jXPathContext.iterate("archdesc/*/head");
-        Iterator it = jXPathContext.iterate("archdesc/*/c");
-
-        while (it.hasNext()) {
-//            System.out.println(((C) it.next()).getLevel());
-            JXPathContext jXPathContextC = JXPathContext.newContext(((C) it.next()));
-//            LOGGER.info("Did map" + parseDid((Did) jXPathContextC.getValue("did")));
-            Iterator cit = jXPathContextC.iterate("/*");
-            while (cit.hasNext()) {
-                Object obj = cit.next();
-                if (obj instanceof Scopecontent) {
-//                    System.out.println(((Scopecontent)obj).getChronlistOrListOrTable().get(0));
-                    System.out.println(parseScopeContent((Scopecontent) obj));
-                } else {
-//                    System.out.println(obj);
-                }
-            }
-
-//            LOGGER.info("Did map" + parseScopeContent(((Scopecontent) jXPathContextC.getValue("*"))));
+        this.ead3 = ead3;
+        jXPathContext = JXPathContext.newContext(this.ead3);
+        
+    }
+    
+    private void retrieveArchdescMain () {
+        if (this.ead3==null || this.jXPathContext == null) {
+            throw new IllegalStateException("Not initialized properly");
         }
-//        while (it.hasNext()) {
-//            System.out.println(((Head) it.next()).getContent());
-//        }
-
+        
+        this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
+        this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveLanguage());
+        this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
     }
 
-    private List<Map<String, String>> parseScopeContent(Scopecontent scopecontent) {
+    private List<Map<String, String>> processScopeContent(Scopecontent scopecontent) {
         List<Map<String, String>> scopeMapList = new ArrayList<>();
         for (Object obj : scopecontent.getChronlistOrListOrTable()) {
             if (obj instanceof Chronlist) {
@@ -152,41 +111,59 @@ public class Ead3SolrDocBuilder {
         if (obj == null) {
             return "";
         }
-        JXPathContext context = JXPathContext.newContext(obj);
         StringBuilder stringBuilder = new StringBuilder("");
-        Iterator it = context.iterate("*");
-        boolean added = false;
 
-        while (it.hasNext()) {
-            Object object = it.next();
-            if (object instanceof MMixedBasic) {
-                MMixedBasic contentHolder = (MMixedBasic) object;
+        if (obj instanceof String) {
+            stringBuilder.append(obj);
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(" ");
+            }
+        } else {
+            JXPathContext context = JXPathContext.newContext(obj);
+            Iterator it = context.iterate("*");
+            boolean added = false;
 
-                for (Serializable sr : contentHolder.getContent()) {
-                    String str1 = (String) sr;
-                    if (!str1.isEmpty()) {
-//                        stringBuilder.append(contentHolder.getClass().getSimpleName()).append(": ");
-                        stringBuilder.append(str1);
-                        added = true;
+            while (it.hasNext()) {
+                Object object = it.next();
+                if (object instanceof MMixedBasic) {
+                    MMixedBasic contentHolder = (MMixedBasic) object;
+
+                    for (Serializable sr : contentHolder.getContent()) {
+                        String str1 = (String) sr;
+                        if (!str1.isEmpty()) {
+                            stringBuilder.append(str1);
+                            added = true;
+                        }
                     }
-                }
-                if (added) {
-                    stringBuilder.append(" ");
-                }
-                added = false;
-            } else {
-                String str = getPlainText(object);
-                if (!str.isEmpty()) {
-                    stringBuilder.append(str);
+                    if (added) {
+                        stringBuilder.append(" ");
+                    }
+                    added = false;
+                } else {
+                    String str = getPlainText(object);
+                    if (!str.isEmpty()) {
+                        stringBuilder.append(str);
+                    }
                 }
             }
         }
-
-        String strRes = stringBuilder.toString().trim();
-        if (!strRes.isEmpty()) {
-            strRes += "\n";
+        return stringBuilder.toString();
+    }
+    
+    private String retriveRecordId() {
+        if (this.ead3==null || this.jXPathContext == null) {
+            throw new IllegalStateException("Not initialized properly");
         }
-        return strRes;
+        Recordid recordId = (Recordid) jXPathContext.getValue("control/recordid");
+        return recordId.getContent();
+    }
+    
+    private String retriveLanguage() {
+        if (this.ead3==null || this.jXPathContext == null) {
+            throw new IllegalStateException("Not initialized properly");
+        }
+        Language language = (Language) jXPathContext.getValue("control/languagedeclaration/language");
+        return language.getContent();
     }
 
     private String retriveSubtitle() {
@@ -199,16 +176,6 @@ public class Ead3SolrDocBuilder {
             }
             stringBuilder.append('\n');
         }
-        return stringBuilder.toString();
-    }
-
-    private String retriveArchdescHead() {
-        StringBuilder stringBuilder = new StringBuilder();
-        Head head = (Head) jXPathContext.getValue("archdesc/did/head");
-        for (Serializable sr : head.getContent()) {
-            stringBuilder.append(sr);
-        }
-        stringBuilder.append('\t');
         return stringBuilder.toString();
     }
 
