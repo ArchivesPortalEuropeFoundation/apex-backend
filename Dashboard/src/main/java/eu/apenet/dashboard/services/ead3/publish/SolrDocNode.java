@@ -22,6 +22,9 @@ public class SolrDocNode {
     }
 
     public void setSibling(SolrDocNode sibling) {
+        if (this.sibling != null) {
+            sibling.setSibling(this.sibling);
+        }
         this.sibling = sibling;
     }
 
@@ -30,6 +33,9 @@ public class SolrDocNode {
     }
 
     public void setChild(SolrDocNode child) {
+        if (this.child != null) {
+            child.setSibling(this.child);
+        }
         this.child = child;
     }
 

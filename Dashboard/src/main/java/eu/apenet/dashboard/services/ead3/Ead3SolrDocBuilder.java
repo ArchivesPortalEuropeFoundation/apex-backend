@@ -108,13 +108,10 @@ public class Ead3SolrDocBuilder {
 
         while (it.hasNext()) {
             Object element = it.next();
-
             if (element instanceof MCBase) {
-                if (this.archdescNode.getChild() == null) {
-                    this.archdescNode.setChild(processC((MCBase) element));
-                } else {
-                    this.archdescNode.getChild().setSibling(processC((MCBase) element));
-                }
+                //ToDo update based on child
+                this.archdescNode.setChild(processC((MCBase) element));
+
             } else {
                 String str = this.getPlainText(element);
                 if (!str.isEmpty()) {
@@ -138,13 +135,16 @@ public class Ead3SolrDocBuilder {
 
         while (it.hasNext()) {
             Object element = it.next();
-
-            if (element instanceof MCBase) {
-                if (cRoot.getChild() == null) {
-                    cRoot.setChild(processC((MCBase) element));
-                } else {
-                    cRoot.getChild().setSibling(processC((MCBase) element));
-                }
+            if (element instanceof Did) {
+                Map<String, String> didMap = this.processDid((Did) element);
+                //ToDo
+                cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
+                cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
+                cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
+                cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+            } else if (element instanceof MCBase) {
+                //ToDo update based on child
+                cRoot.setChild(processC((MCBase) element));
             } else {
                 String str = this.getPlainText(element);
                 if (!str.isEmpty()) {
