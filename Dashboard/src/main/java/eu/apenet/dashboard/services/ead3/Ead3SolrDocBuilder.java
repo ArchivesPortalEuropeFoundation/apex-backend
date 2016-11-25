@@ -160,7 +160,10 @@ public class Ead3SolrDocBuilder {
                 cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
             } else if (element instanceof MCBase) {
                 //ToDo update based on child
-                cRoot.setChild(processC((MCBase) element));
+                SolrDocNode child = processC((MCBase) element);
+                cRoot.setChild(child);
+                int currentNumberofDao = Integer.parseInt(cRoot.getData().get(Ead3SolrFields.NUMBER_OF_DAO).toString());
+                cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao + Integer.parseInt(child.getData().get(Ead3SolrFields.NUMBER_OF_DAO).toString()));
             } else {
                 String str = this.getPlainText(element);
                 if (!str.isEmpty()) {
