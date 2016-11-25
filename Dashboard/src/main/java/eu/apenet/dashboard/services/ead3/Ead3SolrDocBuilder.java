@@ -18,6 +18,7 @@ import gov.loc.ead.Langmaterial;
 import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
 import gov.loc.ead.MCBase;
+import gov.loc.ead.MMixedBasicPlusAccess;
 import gov.loc.ead.Part;
 import gov.loc.ead.Persname;
 import gov.loc.ead.Recordid;
@@ -72,7 +73,7 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
-        
+
         this.processArchdesc();
 
     }
@@ -106,9 +107,9 @@ public class Ead3SolrDocBuilder {
         }
         JXPathContext context = JXPathContext.newContext(dsc);
         Iterator it = context.iterate("*");
-        
+
         StringBuilder otherStrBuilder;
-        if (this.archdescNode.getDataElement(Ead3SolrFields.OTHER) !=null) {
+        if (this.archdescNode.getDataElement(Ead3SolrFields.OTHER) != null) {
             otherStrBuilder = new StringBuilder((String) this.archdescNode.getDataElement(Ead3SolrFields.OTHER));
         } else {
             otherStrBuilder = new StringBuilder();
@@ -166,7 +167,7 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
-        
+
         cRoot.setDataElement(Ead3SolrFields.LEVEL_NAME, "clevel");
 
         if (otherStrBuilder.length() > 0) {
@@ -253,6 +254,24 @@ public class Ead3SolrDocBuilder {
         return stringBuilder.toString();
     }
 
+    private String getContent(Object obj) {
+        StringBuilder stringBuilder = new StringBuilder();
+        List<Serializable> contents = null;
+        if (obj instanceof MMixedBasic) {
+            MMixedBasic contentHolder = (MMixedBasic) obj;
+            contents = contentHolder.getContent();
+        } else if (obj instanceof MMixedBasicPlusAccess) {
+            MMixedBasicPlusAccess contentHolder = (MMixedBasicPlusAccess) obj;
+            contents = contentHolder.getContent();
+        }
+        for (Serializable sr : contents) {
+            if (sr instanceof String) {
+                stringBuilder.append(sr);
+            }
+        }
+        return stringBuilder.toString().trim();
+    }
+
     private String retriveRecordId() {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
@@ -298,16 +317,16 @@ public class Ead3SolrDocBuilder {
         if (did != null) {
             for (Object obj : did.getMDid()) {
                 if (obj instanceof Unittitle) {
-                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getPlainText(obj));
+                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getContent(obj));
                 } else if (obj instanceof Unitid) {
                     if (didInfoMap.get(Ead3SolrFields.UNIT_ID) == null) {
-                        didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getPlainText(obj));
+                        didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getContent(obj));
                         didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, "");
                     } else {
-                        didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, didInfoMap.get(Ead3SolrFields.OTHER_UNIT_ID) + " " + this.getPlainText(obj));
+                        didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, didInfoMap.get(Ead3SolrFields.OTHER_UNIT_ID) + " " + this.getContent(obj));
                     }
                 } else if (obj instanceof Unitdate) {
-                    didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getPlainText(obj));
+                    didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getContent(obj));
 
                     didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
                 } else if (obj instanceof Langmaterial) {
