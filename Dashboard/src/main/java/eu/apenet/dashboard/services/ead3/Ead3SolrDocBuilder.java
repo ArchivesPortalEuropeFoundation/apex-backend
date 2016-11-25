@@ -10,6 +10,8 @@ import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import gov.loc.ead.Chronitem;
 import gov.loc.ead.Chronlist;
+import gov.loc.ead.Dao;
+import gov.loc.ead.Daoset;
 import gov.loc.ead.Did;
 import gov.loc.ead.Dsc;
 import gov.loc.ead.Ead;
@@ -95,6 +97,7 @@ public class Ead3SolrDocBuilder {
                 this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
                 this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
                 this.archdescNode.setDataElement(Ead3SolrFields.LEVEL_NAME, "archdes");
+                this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
             } else if (element instanceof Dsc) {
                 this.processDsc((Dsc) element);
             }
@@ -154,6 +157,7 @@ public class Ead3SolrDocBuilder {
                 cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
                 cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
                 cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+                cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
             } else if (element instanceof MCBase) {
                 //ToDo update based on child
                 cRoot.setChild(processC((MCBase) element));
@@ -353,6 +357,16 @@ public class Ead3SolrDocBuilder {
             for (Object obj : did.getMDid()) {
                 if (obj instanceof Unittitle) {
                     didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getContent(obj));
+                } else if (obj instanceof Daoset) {
+                    int count = 0;
+                    List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
+                    for (JAXBElement jAXBElement : daos) {
+                        if (jAXBElement.getDeclaredType().equals(Dao.class)) {
+                            count++;
+                        }
+                    }
+                    didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, count + "");
+
                 } else if (obj instanceof Unitid) {
                     if (didInfoMap.get(Ead3SolrFields.UNIT_ID) == null) {
                         didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getContent(obj));
