@@ -254,6 +254,41 @@ public class Ead3SolrDocBuilder {
         return stringBuilder.toString();
     }
 
+    private String getTextWhiteSpaceSep(Object obj) {
+        if (obj == null) {
+            return "";
+        }
+        StringBuilder stringBuilder = new StringBuilder("");
+        JXPathContext context = JXPathContext.newContext(obj);
+        Iterator it = context.iterate("*");
+        boolean added = false;
+
+        while (it.hasNext()) {
+            Object object = it.next();
+            if (object instanceof MMixedBasic) {
+                MMixedBasic contentHolder = (MMixedBasic) object;
+
+                for (Serializable sr : contentHolder.getContent()) {
+                    String str1 = (String) sr;
+                    if (!str1.isEmpty()) {
+                        stringBuilder.append(str1);
+                        added = true;
+                    }
+                }
+                if (added) {
+                    stringBuilder.append(" ");
+                }
+                added = false;
+            } else {
+                String str = getTextWhiteSpaceSep(object);
+                if (!str.isEmpty()) {
+                    stringBuilder.append(str);
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
     private String getContent(Object obj) {
         StringBuilder stringBuilder = new StringBuilder();
         List<Serializable> contents = null;
