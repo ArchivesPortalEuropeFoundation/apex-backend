@@ -84,27 +84,33 @@ public class Ead3SolrDocBuilder {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
+        Did aDid = (Did) this.jXPathContext.getValue("archdesc/did", Did.class);
+        if (aDid == null) {
+            return; //ToDo: invalid c exception?
+        }
+
+        Map<String, String> didMap = this.processDid(aDid);
+        this.archdescNode.setDataElement(Ead3SolrFields.ID, this.ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
+        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
+        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
+        this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
+        this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+        this.archdescNode.setDataElement(Ead3SolrFields.LEVEL_NAME, "archdesc");
+        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO)));
 
         Iterator it = this.jXPathContext.iterate("archdesc/*");
 
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof Did) {
-                Map<String, String> didMap = this.processDid((Did) element);
-                this.archdescNode.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
-                this.archdescNode.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
-                this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
-                this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
-                this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
-                this.archdescNode.setDataElement(Ead3SolrFields.LEVEL_NAME, "archdes");
-                this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
             } else if (element instanceof Dsc) {
-                this.processDsc((Dsc) element);
+                this.processDsc((Dsc) element, this.archdescNode);
             }
         }
     }
 
-    private void processDsc(Dsc dsc) {
+    private void processDsc(Dsc dsc, SolrDocNode parent) {
         if (dsc == null) {
             return;
         }
@@ -117,13 +123,16 @@ public class Ead3SolrDocBuilder {
         } else {
             otherStrBuilder = new StringBuilder();
         }
+        
+        int currentNumberofDao = 0;
 
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof MCBase) {
                 //ToDo update based on child
-                this.archdescNode.setChild(processC((MCBase) element));
-
+                SolrDocNode child = processC((MCBase) element, this.archdescNode);
+                this.archdescNode.setChild(child);
+                currentNumberofDao += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString());
             } else {
                 String str = this.getPlainText(element);
                 if (!str.isEmpty()) {
@@ -134,36 +143,45 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
+        
+        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao);
+        
         if (otherStrBuilder.length() > 0) {
             this.archdescNode.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
     }
 
-    private SolrDocNode processC(MCBase cElement) {
+    private SolrDocNode processC(MCBase cElement, SolrDocNode parent) {
         if (cElement == null) {
             return null;
         }
-        JXPathContext context = JXPathContext.newContext(cElement);
-        Iterator it = context.iterate("*");
         SolrDocNode cRoot = new SolrDocNode();
+        JXPathContext context = JXPathContext.newContext(cElement);
+        Did cDid = (Did) context.getValue("did", Did.class);
+        if (cDid == null) {
+            return null; //ToDo: invalid c exception?
+        }
+
+        Map<String, String> didMap = this.processDid(cDid);
+        //ToDo gen currentNodeId
+        cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
+        cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
+        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
+        cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
+        cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+        int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
+        Iterator it = context.iterate("*");
+
         StringBuilder otherStrBuilder = new StringBuilder();
 
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof Did) {
-                Map<String, String> didMap = this.processDid((Did) element);
-                //ToDo
-                cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
-                cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
-                cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
-                cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
-                cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
             } else if (element instanceof MCBase) {
                 //ToDo update based on child
-                SolrDocNode child = processC((MCBase) element);
+                SolrDocNode child = processC((MCBase) element, cRoot);
                 cRoot.setChild(child);
-                int currentNumberofDao = Integer.parseInt(cRoot.getData().get(Ead3SolrFields.NUMBER_OF_DAO).toString());
-                cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao + Integer.parseInt(child.getData().get(Ead3SolrFields.NUMBER_OF_DAO).toString()));
+                currentNumberofDao += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString());
             } else {
                 String str = this.getPlainText(element);
                 if (!str.isEmpty()) {
@@ -176,6 +194,7 @@ public class Ead3SolrDocBuilder {
         }
 
         cRoot.setDataElement(Ead3SolrFields.LEVEL_NAME, "clevel");
+        cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao);
 
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
@@ -225,14 +244,14 @@ public class Ead3SolrDocBuilder {
         StringBuilder stringBuilder = new StringBuilder("");
 
         if (obj instanceof String) {
-            stringBuilder.append(obj);
+            String str = ((String) obj);
+            stringBuilder.append(str);
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(" ");
             }
         } else {
             JXPathContext context = JXPathContext.newContext(obj);
             Iterator it = context.iterate("*");
-            boolean added = false;
 
             while (it.hasNext()) {
                 Object object = it.next();
@@ -242,14 +261,12 @@ public class Ead3SolrDocBuilder {
                     for (Serializable sr : contentHolder.getContent()) {
                         String str1 = (String) sr;
                         if (!str1.isEmpty()) {
+                            if (stringBuilder.length() > 0) {
+                                stringBuilder.append(" ");
+                            }
                             stringBuilder.append(str1);
-                            added = true;
                         }
                     }
-                    if (added) {
-                        stringBuilder.append(" ");
-                    }
-                    added = false;
                 } else {
                     String str = getPlainText(object);
                     if (!str.isEmpty()) {
@@ -261,57 +278,59 @@ public class Ead3SolrDocBuilder {
         return stringBuilder.toString();
     }
 
-    private String getTextWhiteSpaceSep(Object obj) {
+    private String getContentText(Object obj, String delimiter) {
         if (obj == null) {
             return "";
         }
         StringBuilder stringBuilder = new StringBuilder("");
         JXPathContext context = JXPathContext.newContext(obj);
         Iterator it = context.iterate("*");
-        boolean added = false;
+
+        String tmpStr = "";
 
         while (it.hasNext()) {
             Object object = it.next();
             if (object instanceof MMixedBasic) {
-                MMixedBasic contentHolder = (MMixedBasic) object;
-
-                for (Serializable sr : contentHolder.getContent()) {
-                    String str1 = (String) sr;
-                    if (!str1.isEmpty()) {
-                        stringBuilder.append(str1);
-                        added = true;
-                    }
-                }
-                if (added) {
-                    stringBuilder.append(" ");
-                }
-                added = false;
+                tmpStr = this.getContent((MMixedBasic) object);
+            } else if (object instanceof MMixedBasicPlusAccess) {
+                tmpStr = this.getContent((MMixedBasicPlusAccess) obj);
             } else {
-                String str = getTextWhiteSpaceSep(object);
-                if (!str.isEmpty()) {
-                    stringBuilder.append(str);
+                tmpStr = this.getContentText(object, delimiter);
+            }
+            tmpStr = tmpStr.trim();
+
+            if (!tmpStr.isEmpty()) {
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(delimiter);
                 }
+                stringBuilder.append(tmpStr);
             }
         }
         return stringBuilder.toString();
     }
 
-    private String getContent(Object obj) {
+    private String getContent(MMixedBasic obj) {
+        return this.getContentText(obj.getContent());
+    }
+
+    private String getContent(MMixedBasicPlusAccess obj) {
+        return this.getContentText(obj.getContent());
+    }
+
+    private String getContentText(List<Serializable> contents) {
         StringBuilder stringBuilder = new StringBuilder();
-        List<Serializable> contents = null;
-        if (obj instanceof MMixedBasic) {
-            MMixedBasic contentHolder = (MMixedBasic) obj;
-            contents = contentHolder.getContent();
-        } else if (obj instanceof MMixedBasicPlusAccess) {
-            MMixedBasicPlusAccess contentHolder = (MMixedBasicPlusAccess) obj;
-            contents = contentHolder.getContent();
-        }
         for (Serializable sr : contents) {
             if (sr instanceof String) {
-                stringBuilder.append(sr);
+                String str = ((String) sr).trim();
+                if (!str.isEmpty()) {
+                    if (stringBuilder.length() > 0) {
+                        stringBuilder.append(' ');
+                    }
+                    stringBuilder.append(str);
+                }
             }
         }
-        return stringBuilder.toString().trim();
+        return stringBuilder.toString();
     }
 
     private String retriveRecordId() {
@@ -355,11 +374,13 @@ public class Ead3SolrDocBuilder {
 
     private Map<String, String> processDid(Did did) {
         Map<String, String> didInfoMap = new HashMap<>();
+        
+         didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
 
         if (did != null) {
             for (Object obj : did.getMDid()) {
                 if (obj instanceof Unittitle) {
-                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getContent(obj));
+                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getContent((MMixedBasicPlusAccess) obj));
                 } else if (obj instanceof Daoset) {
                     int count = 0;
                     List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
@@ -372,13 +393,13 @@ public class Ead3SolrDocBuilder {
 
                 } else if (obj instanceof Unitid) {
                     if (didInfoMap.get(Ead3SolrFields.UNIT_ID) == null) {
-                        didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getContent(obj));
+                        didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getContent((MMixedBasic) obj));
                         didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, "");
                     } else {
-                        didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, didInfoMap.get(Ead3SolrFields.OTHER_UNIT_ID) + " " + this.getContent(obj));
+                        didInfoMap.put(Ead3SolrFields.OTHER_UNIT_ID, didInfoMap.get(Ead3SolrFields.OTHER_UNIT_ID) + " " + this.getContent((MMixedBasic) obj));
                     }
                 } else if (obj instanceof Unitdate) {
-                    didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getContent(obj));
+                    didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getContent((MMixedBasic) obj));
 
                     didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
                 } else if (obj instanceof Langmaterial) {
