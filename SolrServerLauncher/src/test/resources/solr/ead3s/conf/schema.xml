@@ -98,6 +98,7 @@
     </types>
     <fields>
         <field name="id" type="string" indexed="true" stored="true" required="true"/>	
+        <field name="eadId" type="string" indexed="true" stored="true" required="true"/>
         <!-- Fields that are used for search and highlighted
         According to http://wiki.apache.org/solr/FieldOptionsByUseCase
         fields with highlighting has termVectors, termPositions, termOffsets
@@ -143,7 +144,7 @@
         <field name="topic" type="string" indexed="true" stored="true" multiValued="true" required="false"/>
         <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 	 
-        <field name="parentId" type="string" indexed="true" stored="false" required="false"/>
+        <field name="parentId" type="string" indexed="true" stored="true" required="false"/>
         <field name="parentUnitId" type="string" indexed="true" stored="true" required="false"/>
         <!--<field name="leaf" type="boolean" indexed="true" stored="true" required="false"/>-->
         <field name="openData" type="boolean" indexed="true" stored="true" required="false" default="false"/>
