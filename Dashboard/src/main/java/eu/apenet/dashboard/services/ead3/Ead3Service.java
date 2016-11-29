@@ -443,7 +443,7 @@ public class Ead3Service extends AbstractService {
                         upFileDeleted = true;
                     } else if (queueAction.isDeleteAction()) {
 
-//                        new UnpublishTask().execute(ead3, preferences);
+                        new UnpublishTask().execute(ead3, preferences);
                         new DeleteTask().execute(ead3, preferences);
                         eacDeleted = true;
                     }
