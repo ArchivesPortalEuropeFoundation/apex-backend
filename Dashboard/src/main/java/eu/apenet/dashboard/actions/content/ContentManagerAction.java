@@ -426,11 +426,11 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         /*
         * statistics for total published units
          */
-//        if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
-//            ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
-//            publishedSearchOptions.setPublished(true);
-//            results.setTotalPublishedUnits(ead3DAO.countUnits(publishedSearchOptions));
-//        }
+        if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
+            ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            publishedSearchOptions.setPublished(true);
+            results.setTotalPublishedUnits(ead3DAO.countUnits(publishedSearchOptions));
+        }
         /*
             * statistics for total delivered daos
          */

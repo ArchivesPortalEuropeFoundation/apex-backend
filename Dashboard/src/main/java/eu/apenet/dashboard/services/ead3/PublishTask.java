@@ -6,13 +6,12 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dashboard.services.ead3.publish.SolrPublisher;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
-import gov.loc.ead.Did;
-import gov.loc.ead.Dsc;
 import gov.loc.ead.Ead;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +33,7 @@ public class PublishTask extends AbstractEad3Task {
     private final JAXBContext ead3Context;
     private final Unmarshaller ead3Unmarshaller;
     private Ead3SolrDocBuilder ead3SolrDocBuilder;
-    
+
     public PublishTask() throws JAXBException {
         this.ead3Context = JAXBContext.newInstance(Ead.class);
         this.ead3Unmarshaller = ead3Context.createUnmarshaller();
@@ -48,21 +47,24 @@ public class PublishTask extends AbstractEad3Task {
     @Override
     protected void execute(Ead3 ead3, Properties properties) throws Exception {
         if (valid(ead3)) {
-            FileInputStream fileInputStream=null;
+            FileInputStream fileInputStream = null;
             try {
                 long startTime = System.currentTimeMillis();
                 long solrTime = 0l;
                 fileInputStream = getFileInputStream(ead3.getPath());
                 Ead ead = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
-                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead);
+                ead.setId(String.valueOf(ead3.getId()));
+                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead3);
                 SolrPublisher publisher = new SolrPublisher();
+                long numberOfDocs = publisher.publish(tree);
                 publisher.printTree(tree);
-//                Marshaller marshaller = ead3Context.createMarshaller();
-//                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//                marshaller.marshal(ead, System.out);
-                
-                LOGGER.info("Ead3 Title: "+ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
-                LOGGER.info("Time needed: "+(System.currentTimeMillis()-startTime));
+
+                ead3.setTotalNumberOfDaos(Long.parseLong(tree.getRoot().getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString()));
+                ead3.setTotalNumberOfUnits(numberOfDocs);
+                ead3.setPublished(true);
+
+                LOGGER.info("Ead3 Title: " + ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
+                LOGGER.info("Time needed: " + (System.currentTimeMillis() - startTime));
 //              
 //                if (ead.getEadContent() == null) {
 //                    message = "xml";
@@ -76,7 +78,7 @@ public class PublishTask extends AbstractEad3Task {
             } catch (FileNotFoundException | JAXBException e) {
                 throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
             } finally {
-                if (fileInputStream!=null) {
+                if (fileInputStream != null) {
                     fileInputStream.close();
                 }
             }
@@ -93,7 +95,7 @@ public class PublishTask extends AbstractEad3Task {
 //        File file = new File(path);
         return new FileInputStream(file);
     }
-    
+
     public static void main(String[] args) throws JAXBException, Exception {
         PublishTask pTask = new PublishTask();
         Ead3 ead3 = new Ead3();

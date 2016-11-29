@@ -6,8 +6,10 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
+import eu.apenet.persistence.vo.Ead3;
 import gov.loc.ead.Chronitem;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Dao;
@@ -30,13 +32,21 @@ import gov.loc.ead.Titleproper;
 import gov.loc.ead.Unitdate;
 import gov.loc.ead.Unitid;
 import gov.loc.ead.Unittitle;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.log4j.Logger;
 
@@ -50,14 +60,31 @@ public class Ead3SolrDocBuilder {
 
     private JXPathContext jXPathContext;
     private Ead ead3;
+    private Ead3 persistantEad3;
     private SolrDocNode archdescNode = new SolrDocNode();
+
+    private final JAXBContext ead3Context;
+    private final Unmarshaller ead3Unmarshaller;
 
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
     }
 
-    public SolrDocTree buildDocTree(Ead ead3) {
-        this.ead3 = ead3;
+    public Ead3SolrDocBuilder() throws JAXBException {
+        this.ead3Context = JAXBContext.newInstance(Ead.class);
+        this.ead3Unmarshaller = ead3Context.createUnmarshaller();
+    }
+
+    public SolrDocTree buildDocTree(Ead3 ead3) throws JAXBException {
+        this.persistantEad3 = ead3;
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = getFileInputStream(ead3.getPath());
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.ead3 = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
+        this.ead3.setId(String.valueOf(persistantEad3.getId()));
         jXPathContext = JXPathContext.newContext(this.ead3);
 
         this.retrieveArchdescMain();
@@ -71,7 +98,10 @@ public class Ead3SolrDocBuilder {
             throw new IllegalStateException("Not initialized properly");
         }
 
+        this.archdescNode.setDataElement(Ead3SolrFields.AI_ID, persistantEad3.getAiId());
+        this.archdescNode.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
         this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
@@ -90,7 +120,9 @@ public class Ead3SolrDocBuilder {
         }
 
         Map<String, String> didMap = this.processDid(aDid);
-        this.archdescNode.setDataElement(Ead3SolrFields.ID, this.ead3.getId());
+        if (this.archdescNode.getDataElement(Ead3SolrFields.ID) == null) {
+            this.archdescNode.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
+        }
         this.archdescNode.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
         this.archdescNode.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
         this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
@@ -123,7 +155,7 @@ public class Ead3SolrDocBuilder {
         } else {
             otherStrBuilder = new StringBuilder();
         }
-        
+
         int currentNumberofDao = 0;
 
         while (it.hasNext()) {
@@ -143,9 +175,9 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
-        
+
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao);
-        
+
         if (otherStrBuilder.length() > 0) {
             this.archdescNode.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
@@ -164,7 +196,11 @@ public class Ead3SolrDocBuilder {
 
         Map<String, String> didMap = this.processDid(cDid);
         //ToDo gen currentNodeId
+        cRoot.setDataElement(Ead3SolrFields.AI_ID, persistantEad3.getAiId());
+        cRoot.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
+        cRoot.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
         cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
+        cRoot.setDataElement(Ead3SolrFields.EAD_ID, this.archdescNode.getDataElement(Ead3SolrFields.EAD_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
         cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
@@ -230,7 +266,7 @@ public class Ead3SolrDocBuilder {
         for (Titleproper titleproper : titlePropers) {
             for (Serializable sr : titleproper.getContent()) {
                 stringBuilder.append(sr);
-                stringBuilder.append('\t');
+                stringBuilder.append(" ");
             }
             stringBuilder.append('\n');
         }
@@ -275,7 +311,7 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString().replaceAll("(\r\n|\n|\t)", "");
     }
 
     private String getContentText(Object obj, String delimiter) {
@@ -374,8 +410,8 @@ public class Ead3SolrDocBuilder {
 
     private Map<String, String> processDid(Did did) {
         Map<String, String> didInfoMap = new HashMap<>();
-        
-         didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
+
+        didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
 
         if (did != null) {
             for (Object obj : did.getMDid()) {
@@ -448,5 +484,11 @@ public class Ead3SolrDocBuilder {
             persNameMap.put(part.getLocaltype(), builder.toString());
         }
         return persNameMap;
+    }
+
+    private static FileInputStream getFileInputStream(String path) throws FileNotFoundException {
+        File file = new File(APEnetUtilities.getConfig().getRepoDirPath() + path);
+//        File file = new File(path);
+        return new FileInputStream(file);
     }
 }

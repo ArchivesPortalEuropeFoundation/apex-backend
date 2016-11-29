@@ -33,7 +33,7 @@ public class Ead3Result extends TypeResult {
         this.published = ead3.isPublished();
         this.validated = ValidatedState.VALIDATED.equals(ead3.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(ead3.getValidated());
-//        this.units = ead3.getTotalNumberOfUnits();
+        this.units = ead3.getTotalNumberOfUnits();
         this.queueReady = QueuingState.READY.equals(ead3.getQueuing());
         this.queueError = QueuingState.ERROR.equals(ead3.getQueuing());
         this.queueProcessing = QueuingState.BUSY.equals(ead3.getQueuing());

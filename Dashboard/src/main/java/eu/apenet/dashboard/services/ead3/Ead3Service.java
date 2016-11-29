@@ -71,7 +71,7 @@ public class Ead3Service extends AbstractService {
     @Override
     public void unpublish(XmlType xmlType, Integer id) throws Exception {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-        Ead3 ead3 = ead3DAO.findById(id, xmlType.getClass());
+        Ead3 ead3 = ead3DAO.findById(id, xmlType.EAD_3.getClazz());
         SecurityContext.get().checkAuthorized(ead3);
         if (UnpublishTask.valid(ead3)) {
             addToQueue(ead3, QueueAction.UNPUBLISH, null);
@@ -127,7 +127,7 @@ public class Ead3Service extends AbstractService {
             addToQueue(ead3, QueueAction.VALIDATE, null);
         }
     }
-    
+
     @Override
     public void convert(XmlType xmlType, Integer id, Properties properties) throws IOException {
     }
@@ -404,7 +404,7 @@ public class Ead3Service extends AbstractService {
      * Process an item from the queue.
      *
      * @param queueItem
-     * @return 
+     * @return
      * @throws java.lang.Exception
      */
     public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
@@ -483,9 +483,9 @@ public class Ead3Service extends AbstractService {
 //                        new PublishTask().execute(eac, preferences);
 //                    }
 //
-//                    if (queueAction.isUnpublishAction()) {
-//                        new UnpublishTask().execute(eac, preferences);
-//                    }
+                    if (queueAction.isUnpublishAction()) {
+                        new UnpublishTask().execute(ead3, preferences);
+                    }
 
                     ead3.setQueuing(QueuingState.NO);
                     ead3DAO.store(ead3);
@@ -845,7 +845,7 @@ public class Ead3Service extends AbstractService {
     public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId) throws IOException {
         ContentSearchOptions eacCpfSearchOptions = new ContentSearchOptions();
         eacCpfSearchOptions.setPageSize(0);
-        eacCpfSearchOptions.setContentClass(XmlType.EAC_CPF.getClazz());
+        eacCpfSearchOptions.setContentClass(XmlType.EAD_3.getClazz());
         eacCpfSearchOptions.setArchivalInstitionId(aiId);
         if (ids != null && ids.size() > 0) {
             eacCpfSearchOptions.setIds(ids);
