@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "ead3")
 public class Ead3 extends AbstractContent {
+
     private static final long serialVersionUID = 6760184769676870729L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +42,10 @@ public class Ead3 extends AbstractContent {
     private Integer aiId;
     private boolean published = false;
     private boolean converted = false;
+
+    private Long totalNumberOfDaos = 0l;
+    private Long totalNumberOfUnits = 0l;
+
     private ValidatedState validated = ValidatedState.NOT_VALIDATED;
     private EuropeanaState europeana = EuropeanaState.NOT_CONVERTED;
 
@@ -212,6 +217,22 @@ public class Ead3 extends AbstractContent {
     @Override
     public void setWarningses(Set<Warnings> warningses) {
         this.warningses = warningses;
+    }
+
+    public Long getTotalNumberOfDaos() {
+        return totalNumberOfDaos;
+    }
+
+    public void setTotalNumberOfDaos(Long totalNumberOfDaos) {
+        this.totalNumberOfDaos = totalNumberOfDaos;
+    }
+
+    public Long getTotalNumberOfUnits() {
+        return totalNumberOfUnits;
+    }
+
+    public void setTotalNumberOfUnits(Long totalNumberOfUnits) {
+        this.totalNumberOfUnits = totalNumberOfUnits;
     }
 
     @Override

@@ -103,6 +103,18 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
     }
 
     @Override
+    public Long countUnits(ContentSearchOptions eadSearchOptions) {
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+        Root<? extends Ead3> from = (Root<? extends Ead3>) cq.from(eadSearchOptions.getContentClass());
+        cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
+                criteriaBuilder.greaterThan(from.<Integer>get("totalNumberOfUnits"), 0)));
+        cq.select(criteriaBuilder.sum(from.<Long>get("totalNumberOfUnits")));
+
+        return getEntityManager().createQuery(cq).getSingleResult();
+    }
+
+    @Override
     public Integer isEad3IdUsed(String identifier, Integer aiId, Class<? extends Ead3> clazz) {
         Criteria criteria = getSession().createCriteria(clazz, "ead3").setProjection(Projections.property("identifier"));
         criteria.createAlias("ead3.archivalInstitution", "archivalInstitution");

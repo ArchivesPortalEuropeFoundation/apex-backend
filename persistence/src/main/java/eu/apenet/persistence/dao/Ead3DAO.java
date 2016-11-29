@@ -16,6 +16,8 @@ public interface Ead3DAO extends GenericDAO<Ead3, Integer> {
 
     public long countEad3s(ContentSearchOptions contentSearchOptions);
 
+    public Long countUnits(ContentSearchOptions contentSearchOptions);
+
     public Integer isEad3IdUsed(String identifier, Integer aiId, Class<? extends Ead3> clazz);
 
     public Ead3 getEad3ById(Integer aiId, String ead3Id);
