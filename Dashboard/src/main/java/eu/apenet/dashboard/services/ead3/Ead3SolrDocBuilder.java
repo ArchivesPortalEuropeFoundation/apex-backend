@@ -17,6 +17,7 @@ import gov.loc.ead.Daoset;
 import gov.loc.ead.Did;
 import gov.loc.ead.Dsc;
 import gov.loc.ead.Ead;
+import gov.loc.ead.Item;
 import gov.loc.ead.MMixedBasic;
 import gov.loc.ead.Langmaterial;
 import gov.loc.ead.Language;
@@ -102,6 +103,8 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
         this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
+        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
@@ -157,6 +160,7 @@ public class Ead3SolrDocBuilder {
         }
 
         int currentNumberofDao = 0;
+        int currentNumberOfDescendents = 0;
 
         while (it.hasNext()) {
             Object element = it.next();
@@ -165,6 +169,7 @@ public class Ead3SolrDocBuilder {
                 SolrDocNode child = processC((MCBase) element, this.archdescNode);
                 this.archdescNode.setChild(child);
                 currentNumberofDao += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString());
+                currentNumberOfDescendents += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS).toString()) + 1;
             } else {
                 String str = this.getPlainText(element);
                 if (!str.isEmpty()) {
@@ -177,6 +182,7 @@ public class Ead3SolrDocBuilder {
         }
 
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao);
+        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, currentNumberOfDescendents);
 
         if (otherStrBuilder.length() > 0) {
             this.archdescNode.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
@@ -205,19 +211,26 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
         cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+        cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
+
         int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
+        int currentNumberOfDescendents = 0;
         Iterator it = context.iterate("*");
 
         StringBuilder otherStrBuilder = new StringBuilder();
 
         while (it.hasNext()) {
             Object element = it.next();
+            if (element instanceof Scopecontent) {
+                cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retriveScopeContentAsText(element));
+            }
             if (element instanceof Did) {
             } else if (element instanceof MCBase) {
                 //ToDo update based on child
                 SolrDocNode child = processC((MCBase) element, cRoot);
                 cRoot.setChild(child);
                 currentNumberofDao += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString());
+                currentNumberOfDescendents += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS).toString()) + 1;
             } else {
                 String str = this.getPlainText(element);
                 if (!str.isEmpty()) {
@@ -231,6 +244,7 @@ public class Ead3SolrDocBuilder {
 
         cRoot.setDataElement(Ead3SolrFields.LEVEL_NAME, "clevel");
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao);
+        cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, currentNumberOfDescendents);
 
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
@@ -258,6 +272,11 @@ public class Ead3SolrDocBuilder {
             }
         }
         return scopeMapList;
+    }
+
+    private String retriveScopeContentAsText(Object scopecontent) {
+        return getContentText(scopecontent, " ");
+
     }
 
     private String retriveTitleProper() {
@@ -328,6 +347,8 @@ public class Ead3SolrDocBuilder {
             Object object = it.next();
             if (object instanceof MMixedBasic) {
                 tmpStr = this.getContent((MMixedBasic) object);
+            } else if (object instanceof Item) {
+                tmpStr = this.getPlainText(object);
             } else if (object instanceof MMixedBasicPlusAccess) {
                 tmpStr = this.getContent((MMixedBasicPlusAccess) obj);
             } else {
@@ -373,16 +394,24 @@ public class Ead3SolrDocBuilder {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
-        Recordid recordId = (Recordid) jXPathContext.getValue("control/recordid");
-        return recordId.getContent();
+        try {
+            Recordid recordId = (Recordid) jXPathContext.getValue("control/recordid");
+            return recordId.getContent();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     private String retriveControlLanguage() {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
-        Language language = (Language) jXPathContext.getValue("control/languagedeclaration/language");
-        return language.getLangcode();
+        try {
+            Language language = (Language) jXPathContext.getValue("control/languagedeclaration/language");
+            return language.getLangcode();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     private String retriveSubtitle() {
