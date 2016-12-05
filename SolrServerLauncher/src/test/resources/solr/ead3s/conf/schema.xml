@@ -120,7 +120,7 @@
         <field name="aiId" type="int" indexed="true" stored="false" required="false"/>
         <field name="aiName" type="string" indexed="true" stored="true" required="false"/>
         <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/>
-        <field name="numberOfDecendents" type="string" indexed="false" stored="true" required="false"/>
+        <field name="numberOfDescendents" type="string" indexed="false" stored="true" required="false"/>
         <field name="numberOfAncestors" type="string" indexed="false" stored="true" required="false"/>
 	    
 	  	
