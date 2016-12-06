@@ -8,6 +8,8 @@ package eu.apenet.dashboard.services.opendata;
 import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.solr.AbstractSolrServerHolder;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
+import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.apenet.commons.solr.Ead3SolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.commons.solr.SolrFields;
@@ -44,7 +46,7 @@ public class OpenDataService {
     protected static final Logger LOGGER = Logger.getLogger(EacCpfService.class);
     public static final String TOTAL_SOLAR_DOC_KEY = "totalSolarDoc";
     public static final String ENABLE_OPEN_DATA_KEY = "enableOpenData";
-    
+
     private final List<SolrInputDocument> docList = new ArrayList<SolrInputDocument>();
 
     private OpenDataService() {
@@ -63,21 +65,21 @@ public class OpenDataService {
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aid);
         SecurityContext.get().checkAuthorized(aid);
-        
-        QueueItem oldQueue = null; 
-        
+
+        QueueItem oldQueue = null;
+
         if (archivalInstitution.getOpenDataQueueId() != null) {
             oldQueue = DAOFactory.instance().getQueueItemDAO().findById(archivalInstitution.getOpenDataQueueId());
         }
-        
-        if (oldQueue==null) {
+
+        if (oldQueue == null) {
             archivalInstitution.setTotalSolrDocsForOpenData(Long.parseLong(preferences.getProperty(TOTAL_SOLAR_DOC_KEY, "0")));
             archivalInstitution.setUnprocessedSolrDocs(Long.parseLong(preferences.getProperty(TOTAL_SOLAR_DOC_KEY, "0")));
 
             archivalInstitution.setOpenDataEnabled(Boolean.parseBoolean(preferences.getProperty(ENABLE_OPEN_DATA_KEY, "false")));
 
             QueueItem queueItem = addToQueue(archivalInstitution, QueueAction.ENABLE_OPEN_DATA, preferences);
-            
+
             archivalInstitution.setOpenDataQueueId(queueItem.getId());
 
             archivalInstitutionDao.store(archivalInstitution);
@@ -100,9 +102,10 @@ public class OpenDataService {
         Properties preferences = EadService.readProperties(queueItem.getPreferences());
         boolean openData = Boolean.valueOf(preferences.getProperty(OpenDataService.ENABLE_OPEN_DATA_KEY));
         long updateEadTime = updateOpenDataByAi(EadSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
-        LOGGER.info("Total time needed for enable opendata for Eads: "+updateEadTime+"ms");
+        LOGGER.info("Total time needed for enable opendata for Eads: " + updateEadTime + "ms");
         updateOpenDataByAi(EacCpfSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
         updateOpenDataByAi(EagSolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
+        updateOpenDataByAi(Ead3SolrServerHolder.getInstance(), queueItem.getArchivalInstitution(), openData);
         queueItemDAO.delete(queueItem);
         return queueAction;
     }
@@ -119,7 +122,7 @@ public class OpenDataService {
                 query.setRows(52711);
 
                 int totalNumberOfDocs = (int) solrHolder.executeQuery(query).getResults().getNumFound();
-                
+
                 while (totalNumberOfDocs > 0) {
                     QueryResponse response = solrHolder.executeQuery(query);
                     long foundDocsCount = response.getResults().size();
@@ -185,6 +188,8 @@ public class OpenDataService {
         if (solrHolder instanceof EagSolrServerHolder) {
             queryString = SolrFields.ID + ":\"" + archivalInstitution.getAiId() + "\" ";
 
+        } else if (solrHolder instanceof Ead3SolrServerHolder) {
+            queryString = Ead3SolrFields.AI_ID + ":\"" + archivalInstitution.getAiId() + "\" ";
         } else {
             queryString = SolrFields.AI + ":\"" + archivalInstitution.getAiname() + "\\:" + archivalInstitution.getAiId() + "\" ";
         }

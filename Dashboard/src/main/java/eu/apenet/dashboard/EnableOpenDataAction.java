@@ -8,6 +8,7 @@ package eu.apenet.dashboard;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.solr.EacCpfSolrServerHolder;
+import eu.apenet.commons.solr.Ead3SolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.dashboard.security.SecurityContext;
@@ -81,9 +82,10 @@ public class EnableOpenDataAction extends AbstractInstitutionAction {
             long eadTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EadSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
             long eacTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EacCpfSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
             long eagTotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(EagSolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
+            long ead3TotalDoc = OpenDataService.getInstance().getTotalSolrDocsForOpenData(Ead3SolrServerHolder.getInstance(), archivalInstitution, getEnableOpenData());
             Properties preferences = new Properties();
             preferences.setProperty(OpenDataService.ENABLE_OPEN_DATA_KEY, getEnableOpenData().toString());
-            preferences.setProperty(OpenDataService.TOTAL_SOLAR_DOC_KEY, (eadTotalDoc + eacTotalDoc + eagTotalDoc) + "");
+            preferences.setProperty(OpenDataService.TOTAL_SOLAR_DOC_KEY, (eadTotalDoc + eacTotalDoc + eagTotalDoc + ead3TotalDoc) + "");
 
             log.info("Open Data enable : " + getEnableOpenData().toString()
                     + " Action is started by : " + performer + " For the country : "

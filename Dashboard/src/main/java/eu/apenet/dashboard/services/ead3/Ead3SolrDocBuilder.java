@@ -63,6 +63,7 @@ public class Ead3SolrDocBuilder {
     private Ead ead3;
     private Ead3 persistantEad3;
     private SolrDocNode archdescNode = new SolrDocNode();
+    private boolean openDataEnable = false;
 
     private final JAXBContext ead3Context;
     private final Unmarshaller ead3Unmarshaller;
@@ -78,6 +79,7 @@ public class Ead3SolrDocBuilder {
 
     public SolrDocTree buildDocTree(Ead3 ead3) throws JAXBException {
         this.persistantEad3 = ead3;
+        this.openDataEnable = ead3.getArchivalInstitution().isOpenDataEnabled();
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = getFileInputStream(ead3.getPath());
@@ -108,6 +110,7 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper());
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retrieveRecordId());
+        this.archdescNode.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
 
         this.processArchdesc();
 
@@ -242,6 +245,7 @@ public class Ead3SolrDocBuilder {
             }
         }
 
+        cRoot.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
         cRoot.setDataElement(Ead3SolrFields.LEVEL_NAME, "clevel");
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, currentNumberofDao);
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, currentNumberOfDescendents);
