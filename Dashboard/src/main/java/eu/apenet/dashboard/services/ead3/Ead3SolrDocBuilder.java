@@ -105,9 +105,9 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, 0);
-        this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retriveTitleProper());
-        this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retriveControlLanguage());
-        this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retriveRecordId());
+        this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper());
+        this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
+        this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retrieveRecordId());
 
         this.processArchdesc();
 
@@ -222,7 +222,7 @@ public class Ead3SolrDocBuilder {
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof Scopecontent) {
-                cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retriveScopeContentAsText(element));
+                cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retrieveScopeContentAsText(element));
             }
             if (element instanceof Did) {
             } else if (element instanceof MCBase) {
@@ -274,12 +274,12 @@ public class Ead3SolrDocBuilder {
         return scopeMapList;
     }
 
-    private String retriveScopeContentAsText(Object scopecontent) {
+    private String retrieveScopeContentAsText(Object scopecontent) {
         return getContentText(scopecontent, " ");
 
     }
 
-    private String retriveTitleProper() {
+    private String retrieveTitleProper() {
         StringBuilder stringBuilder = new StringBuilder();
         List<Titleproper> titlePropers = (List<Titleproper>) jXPathContext.getValue("control/filedesc/titlestmt/titleproper");
         for (Titleproper titleproper : titlePropers) {
@@ -390,7 +390,7 @@ public class Ead3SolrDocBuilder {
         return stringBuilder.toString();
     }
 
-    private String retriveRecordId() {
+    private String retrieveRecordId() {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
@@ -402,7 +402,7 @@ public class Ead3SolrDocBuilder {
         }
     }
 
-    private String retriveControlLanguage() {
+    private String retrieveControlLanguage() {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
@@ -414,7 +414,7 @@ public class Ead3SolrDocBuilder {
         }
     }
 
-    private String retriveSubtitle() {
+    private String retrieveSubtitle() {
         StringBuilder stringBuilder = new StringBuilder();
         List<Subtitle> subtitles = (List<Subtitle>) jXPathContext.getValue("control/filedesc/titlestmt/subtitle");
         for (Subtitle subtitle : subtitles) {
@@ -427,7 +427,7 @@ public class Ead3SolrDocBuilder {
         return stringBuilder.toString();
     }
 
-    private String retriveArchdescUnitTitle() {
+    private String retrieveArchdescUnitTitle() {
         StringBuilder stringBuilder = new StringBuilder();
         Unittitle unittitle = (Unittitle) jXPathContext.getValue("archdesc/did/unittitle");
         for (Serializable sr : unittitle.getContent()) {
