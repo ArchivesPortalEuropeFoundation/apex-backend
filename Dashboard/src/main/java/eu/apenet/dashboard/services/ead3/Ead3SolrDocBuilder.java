@@ -221,6 +221,7 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
         cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+        cRoot.setDataElement(Ead3SolrFields.DAO_LINKS, didMap.get(Ead3SolrFields.DAO_LINKS));
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
 
         int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO).toString());
@@ -445,6 +446,7 @@ public class Ead3SolrDocBuilder {
                             }
                         }
                     }
+                    LOGGER.info(daoFieldValues + "From builder");
                     didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
                     didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, count + "");
 
