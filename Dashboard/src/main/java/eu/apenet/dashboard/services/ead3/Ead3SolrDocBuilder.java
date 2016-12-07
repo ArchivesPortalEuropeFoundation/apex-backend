@@ -10,13 +10,15 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.persistence.vo.Ead3;
-import gov.loc.ead.Chronitem;
 import gov.loc.ead.Chronlist;
+import gov.loc.ead.Corpname;
 import gov.loc.ead.Dao;
 import gov.loc.ead.Daoset;
 import gov.loc.ead.Did;
 import gov.loc.ead.Dsc;
 import gov.loc.ead.Ead;
+import gov.loc.ead.Event;
+import gov.loc.ead.Famname;
 import gov.loc.ead.Item;
 import gov.loc.ead.MMixedBasic;
 import gov.loc.ead.Langmaterial;
@@ -24,6 +26,7 @@ import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
 import gov.loc.ead.MCBase;
 import gov.loc.ead.MMixedBasicPlusAccess;
+import gov.loc.ead.Origination;
 import gov.loc.ead.Part;
 import gov.loc.ead.Persname;
 import gov.loc.ead.Recordid;
@@ -125,17 +128,21 @@ public class Ead3SolrDocBuilder {
             return; //ToDo: invalid c exception?
         }
 
-        Map<String, String> didMap = this.processDid(aDid);
+        Map<String, Object> didMap = this.processDid(aDid);
         if (this.archdescNode.getDataElement(Ead3SolrFields.ID) == null) {
             this.archdescNode.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
         }
-        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
-        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
-        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
-        this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
-        this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
+
+        for (Map.Entry entry : didMap.entrySet()) {
+            this.archdescNode.setDataElement(entry.getKey().toString(), entry.getValue());
+        }
+//        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
+//        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
+//        this.archdescNode.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
+//        this.archdescNode.setDataElement(Ead3SolrFields.LANG_MATERIAL, didMap.get(Ead3SolrFields.LANG_MATERIAL));
+//        this.archdescNode.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
         this.archdescNode.setDataElement(Ead3SolrFields.LEVEL_NAME, "archdesc");
-        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO)));
+//        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO)));
 
         Iterator it = this.jXPathContext.iterate("archdesc/*");
 
@@ -203,7 +210,7 @@ public class Ead3SolrDocBuilder {
             return null; //ToDo: invalid c exception?
         }
 
-        Map<String, String> didMap = this.processDid(cDid);
+        Map<String, Object> didMap = this.processDid(cDid);
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, persistantEad3.getAiId());
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
@@ -216,7 +223,7 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
 
-        int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO));
+        int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO).toString());
         int currentNumberOfDescendents = 0;
         Iterator it = context.iterate("*");
 
@@ -225,6 +232,11 @@ public class Ead3SolrDocBuilder {
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof Scopecontent) {
+                Scopecontent scopecontent = (Scopecontent) element;
+                Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+                for (Map.Entry entry : eventMap.entrySet()) {
+                    cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                }
                 cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retrieveScopeContentAsText(element));
             }
             if (element instanceof Did) {
@@ -255,27 +267,6 @@ public class Ead3SolrDocBuilder {
         }
 
         return cRoot;
-    }
-
-    private List<Map<String, String>> processScopeContent(Scopecontent scopecontent) {
-        List<Map<String, String>> scopeMapList = new ArrayList<>();
-        for (Object obj : scopecontent.getChronlistOrListOrTable()) {
-            if (obj instanceof Chronlist) {
-                Chronlist chronlist = (Chronlist) obj;
-                for (Chronitem chi : chronlist.getChronitem()) {
-                    for (Object sr : chi.getEvent().getContent()) {
-                        if (sr instanceof JAXBElement) {
-                            JAXBElement j = (JAXBElement) sr;
-                            if (j.getDeclaredType().equals(Persname.class)) {
-                                JAXBElement<Persname> pr = (JAXBElement<Persname>) sr;
-                                scopeMapList.add(getPersName(pr.getValue()));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return scopeMapList;
     }
 
     private String retrieveScopeContentAsText(Object scopecontent) {
@@ -431,18 +422,8 @@ public class Ead3SolrDocBuilder {
         return stringBuilder.toString();
     }
 
-    private String retrieveArchdescUnitTitle() {
-        StringBuilder stringBuilder = new StringBuilder();
-        Unittitle unittitle = (Unittitle) jXPathContext.getValue("archdesc/did/unittitle");
-        for (Serializable sr : unittitle.getContent()) {
-            stringBuilder.append(sr);
-        }
-        stringBuilder.append('\t');
-        return stringBuilder.toString();
-    }
-
-    private Map<String, String> processDid(Did did) {
-        Map<String, String> didInfoMap = new HashMap<>();
+    private Map<String, Object> processDid(Did did) {
+        Map<String, Object> didInfoMap = new HashMap<>();
 
         didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
 
@@ -453,11 +434,18 @@ public class Ead3SolrDocBuilder {
                 } else if (obj instanceof Daoset) {
                     int count = 0;
                     List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
+                    List<String> daoFieldValues = new ArrayList<>();
                     for (JAXBElement jAXBElement : daos) {
                         if (jAXBElement.getDeclaredType().equals(Dao.class)) {
+
                             count++;
+                            if (count <= 10) {
+                                Dao dao = (Dao) jAXBElement.getValue();
+                                daoFieldValues.add(dao.getHref());
+                            }
                         }
                     }
+                    didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
                     didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, count + "");
 
                 } else if (obj instanceof Unitid) {
@@ -470,13 +458,18 @@ public class Ead3SolrDocBuilder {
                 } else if (obj instanceof Unitdate) {
                     didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getContent((MMixedBasic) obj));
 
-                    didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
+//                    didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
                 } else if (obj instanceof Langmaterial) {
                     didInfoMap.put(Ead3SolrFields.LANG_MATERIAL, processLangmaterial((Langmaterial) obj));
+                } else if (obj instanceof Origination) {
+                    Map<String, String> originationMap = buildOriginationMap((Origination) obj);
+                    for (Map.Entry entry : originationMap.entrySet()) {
+                        didInfoMap.put(entry.getKey().toString() + "_s", entry.getValue().toString());
+                    }
                 } else {
-                    String other = didInfoMap.get(Ead3SolrFields.OTHER);
+                    Object other = didInfoMap.get(Ead3SolrFields.OTHER);
                     if (other != null) {
-                        didInfoMap.put(Ead3SolrFields.OTHER, other + " " + getPlainText(obj));
+                        didInfoMap.put(Ead3SolrFields.OTHER, other.toString() + " " + getPlainText(obj));
                     } else {
                         didInfoMap.put(Ead3SolrFields.OTHER, getPlainText(obj));
                     }
@@ -504,19 +497,47 @@ public class Ead3SolrDocBuilder {
         return langcodes.toString().trim();
     }
 
-    private Map<String, String> getPersName(Persname persname) {
-        Map<String, String> persNameMap = new HashMap<>();
-        persNameMap.put("identifier", persname.getIdentifier());
-        persNameMap.put("relator", persname.getRelator());
-        persNameMap.put("rules", persname.getRules());
-        for (Part part : persname.getPart()) {
-            StringBuilder builder = new StringBuilder();
-            for (Serializable sr : part.getContent()) {
-                builder.append(sr);
+    private Map<String, String> buildEvent(Event event) {
+        Map<String, String> eventMap = new HashMap<>();
+        List<Serializable> events = event.getContent();
+
+        for (Serializable eacEvent : events) {
+            if (eacEvent instanceof JAXBElement) {
+                JAXBElement eacElement = (JAXBElement) eacEvent;
+                if (eacElement.getDeclaredType().equals(Persname.class)) {
+                    buildPersnameOrFamOrCorpMap(((Persname) eacElement.getValue()).getPart(), "persname", eventMap);
+                } else if (eacElement.getDeclaredType().equals(Corpname.class)) {
+                    buildPersnameOrFamOrCorpMap(((Corpname) eacElement.getValue()).getPart(), "corpname", eventMap);
+                } else if (eacElement.getDeclaredType().equals(Famname.class)) {
+                    buildPersnameOrFamOrCorpMap(((Famname) eacElement.getValue()).getPart(), "famname", eventMap);
+                }
             }
-            persNameMap.put(part.getLocaltype(), builder.toString());
         }
-        return persNameMap;
+        return eventMap;
+    }
+
+    private Map<String, String> buildOriginationMap(Origination origination) {
+        Map<String, String> eventMap = new HashMap<>();
+        for (Object obj : origination.getCorpnameOrFamnameOrName()) {
+            if (obj instanceof Persname) {
+                buildPersnameOrFamOrCorpMap(((Persname) obj).getPart(), "persname", eventMap);
+            } else if (obj instanceof Corpname) {
+                buildPersnameOrFamOrCorpMap(((Corpname) obj).getPart(), "corpname", eventMap);
+            } else if (obj instanceof Famname) {
+                buildPersnameOrFamOrCorpMap(((Famname) obj).getPart(), "famname", eventMap);
+            }
+        }
+        return eventMap;
+    }
+
+    private void buildPersnameOrFamOrCorpMap(List<Part> parts, String type, Map<String, String> map) {
+        for (Part part : parts) {
+            if (map.get(type + "_" + part.getLocaltype()) == null) {
+                map.put(type + "_" + part.getLocaltype(), getContent(part));
+            } else {
+                map.put(type + "_" + part.getLocaltype(), map.get(type + "_" + part.getLocaltype()) + ":" + getContent(part));
+            }
+        }
     }
 
     private static FileInputStream getFileInputStream(String path) throws FileNotFoundException {
