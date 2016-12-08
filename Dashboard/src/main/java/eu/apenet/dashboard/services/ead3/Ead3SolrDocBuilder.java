@@ -42,9 +42,11 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
@@ -106,6 +108,9 @@ public class Ead3SolrDocBuilder {
 
         this.archdescNode.setDataElement(Ead3SolrFields.AI_ID, persistantEad3.getAiId());
         this.archdescNode.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_ID, persistantEad3.getArchivalInstitution().getCountry().getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_NAME, persistantEad3.getArchivalInstitution().getCountry().getCname());
+        this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, persistantEad3.getArchivalInstitution().getRepositorycode());
         this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
@@ -212,17 +217,28 @@ public class Ead3SolrDocBuilder {
 
         Map<String, Object> didMap = this.processDid(cDid);
         //ToDo gen currentNodeId
-        cRoot.setDataElement(Ead3SolrFields.AI_ID, persistantEad3.getAiId());
-        cRoot.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
+        cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
+        cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
+        cRoot.setDataElement(Ead3SolrFields.COUNTRY_ID, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY_ID));
+        cRoot.setDataElement(Ead3SolrFields.COUNTRY_NAME, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY_NAME));
+        cRoot.setDataElement(Ead3SolrFields.REPOSITORY_CODE, this.archdescNode.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
         cRoot.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
+
+        //global fields
+        cRoot.setDataElement(Ead3SolrFields.LANGUAGE, this.archdescNode.getDataElement(Ead3SolrFields.LANGUAGE));
+        cRoot.setDataElement(Ead3SolrFields.LANG_MATERIAL, this.archdescNode.getDataElement(Ead3SolrFields.LANG_MATERIAL));
+        cRoot.setDataElement(Ead3SolrFields.RECORD_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID));
+
         cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
         cRoot.setDataElement(Ead3SolrFields.EAD_ID, this.archdescNode.getDataElement(Ead3SolrFields.EAD_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
-        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, didMap.get(Ead3SolrFields.UNIT_ID));
+        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
         cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
         cRoot.setDataElement(Ead3SolrFields.DAO_LINKS, didMap.get(Ead3SolrFields.DAO_LINKS));
+        cRoot.setDataElement(Ead3SolrFields.DAO_TYPE, didMap.get(Ead3SolrFields.DAO_TYPE));
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
+        cRoot.setDataElement(Ead3SolrFields.PARENT_UNIT_ID, parent.getDataElement(Ead3SolrFields.PARENT_UNIT_ID));
 
         int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO).toString());
         int currentNumberOfDescendents = 0;
@@ -239,8 +255,7 @@ public class Ead3SolrDocBuilder {
                     cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
                 }
                 cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retrieveScopeContentAsText(element));
-            }
-            if (element instanceof Did) {
+            } else if (element instanceof Did) {
             } else if (element instanceof MCBase) {
                 //ToDo update based on child
                 SolrDocNode child = processC((MCBase) element, cRoot);
@@ -294,7 +309,7 @@ public class Ead3SolrDocBuilder {
         }
         StringBuilder stringBuilder = new StringBuilder("");
 
-        if (obj instanceof String) {
+        if (!(obj instanceof JAXBElement) && (obj instanceof String)) {
             String str = ((String) obj);
             stringBuilder.append(str);
             if (stringBuilder.length() > 0) {
@@ -436,18 +451,22 @@ public class Ead3SolrDocBuilder {
                     int count = 0;
                     List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
                     List<String> daoFieldValues = new ArrayList<>();
+                    Set<String> daoTypeValues = new HashSet<>();
                     for (JAXBElement jAXBElement : daos) {
                         if (jAXBElement.getDeclaredType().equals(Dao.class)) {
 
                             count++;
                             if (count <= 10) {
                                 Dao dao = (Dao) jAXBElement.getValue();
-                                daoFieldValues.add(dao.getHref());
+                                if (!dao.getLocaltype().equals("fullsize")) {
+                                    daoFieldValues.add(dao.getHref());
+                                    daoTypeValues.add(dao.getDaotype());
+                                }
                             }
                         }
                     }
-                    LOGGER.info(daoFieldValues + "From builder");
                     didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
+                    didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
                     didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, count + "");
 
                 } else if (obj instanceof Unitid) {
