@@ -228,6 +228,7 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.LANGUAGE, this.archdescNode.getDataElement(Ead3SolrFields.LANGUAGE));
         cRoot.setDataElement(Ead3SolrFields.LANG_MATERIAL, this.archdescNode.getDataElement(Ead3SolrFields.LANG_MATERIAL));
         cRoot.setDataElement(Ead3SolrFields.RECORD_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID));
+        cRoot.setDataElement(Ead3SolrFields.TITLE_PROPER, this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER));
 
         cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
         cRoot.setDataElement(Ead3SolrFields.EAD_ID, this.archdescNode.getDataElement(Ead3SolrFields.EAD_ID));
@@ -300,7 +301,7 @@ public class Ead3SolrDocBuilder {
             }
             stringBuilder.append('\n');
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 
     private String getPlainText(Object obj) {
@@ -341,7 +342,7 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
-        return stringBuilder.toString().replaceAll("(\r\n|\n|\t)", "");
+        return stringBuilder.toString().trim();
     }
 
     private String getContentText(Object obj, String delimiter) {
@@ -374,7 +375,7 @@ public class Ead3SolrDocBuilder {
                 stringBuilder.append(tmpStr);
             }
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 
     private String getContent(MMixedBasic obj) {
@@ -556,7 +557,7 @@ public class Ead3SolrDocBuilder {
             if (map.get(type + "_" + part.getLocaltype()) == null) {
                 map.put(type + "_" + part.getLocaltype(), getContent(part));
             } else {
-                map.put(type + "_" + part.getLocaltype(), map.get(type + "_" + part.getLocaltype()) + ":" + getContent(part));
+                map.put(type + "_" + part.getLocaltype(), map.get(type + "_" + part.getLocaltype()) + " " + getContent(part));
             }
         }
     }

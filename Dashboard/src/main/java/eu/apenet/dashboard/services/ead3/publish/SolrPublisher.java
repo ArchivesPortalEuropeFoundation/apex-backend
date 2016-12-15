@@ -28,12 +28,12 @@ public class SolrPublisher {
         while (docIterator.hasNext()) {
             SolrDocNode node = docIterator.next();
             Map<String, Object> nodeMap = node.getData();
-            SolrInputDocument sorlDoc = new SolrInputDocument();
+            SolrInputDocument solrDoc = new SolrInputDocument();
 
             for (Entry<String, Object> entry : nodeMap.entrySet()) {
-                sorlDoc.addField(entry.getKey(), entry.getValue());
+                solrDoc.addField(entry.getKey(), entry.getValue());
             }
-            solrDocList.add(sorlDoc);
+            solrDocList.add(solrDoc);
         }
         this.ead3SolrCore.add(solrDocList);
         return solrDocList.size();
