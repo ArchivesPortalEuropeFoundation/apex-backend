@@ -6,6 +6,7 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.DateUtil;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
@@ -55,6 +56,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -235,12 +237,15 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.EAD_ID, this.archdescNode.getDataElement(Ead3SolrFields.EAD_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
         cRoot.setDataElement(Ead3SolrFields.UNIT_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
+//        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
         cRoot.setDataElement(Ead3SolrFields.START_DATE, didMap.get(Ead3SolrFields.START_DATE));
         cRoot.setDataElement(Ead3SolrFields.END_DATE, didMap.get(Ead3SolrFields.END_DATE));
+        cRoot.setDataElement(Ead3SolrFields.DATE_TYPE, didMap.get(Ead3SolrFields.DATE_TYPE));
         cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
         cRoot.setDataElement(Ead3SolrFields.DAO_LINKS, didMap.get(Ead3SolrFields.DAO_LINKS));
         cRoot.setDataElement(Ead3SolrFields.DAO_TYPE, didMap.get(Ead3SolrFields.DAO_TYPE));
+        cRoot.setDataElement(Ead3SolrFields.DAO, didMap.get(Ead3SolrFields.DAO));
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
         cRoot.setDataElement(Ead3SolrFields.PARENT_UNIT_ID, parent.getDataElement(Ead3SolrFields.PARENT_UNIT_ID));
 
@@ -448,6 +453,7 @@ public class Ead3SolrDocBuilder {
         didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
 
         if (did != null) {
+            didInfoMap.put(Ead3SolrFields.DAO, false);
             for (Object obj : did.getMDid()) {
                 if (obj instanceof Unittitle) {
                     didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getContent((MMixedBasicPlusAccess) obj));
@@ -472,6 +478,11 @@ public class Ead3SolrDocBuilder {
                     didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
                     didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
                     didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, count + "");
+                    if (count > 0) {
+                        didInfoMap.put(Ead3SolrFields.DAO, true);
+                    } else {
+                        didInfoMap.put(Ead3SolrFields.DAO, false);
+                    }
 
                 } else if (obj instanceof Unitid) {
                     if (didInfoMap.get(Ead3SolrFields.UNIT_ID) == null) {
@@ -488,7 +499,13 @@ public class Ead3SolrDocBuilder {
                     List<String> dates = DateUtil.getDates(didInfoMap.get(Ead3SolrFields.UNIT_DATE).toString(), dateNormal);
                     didInfoMap.put(Ead3SolrFields.START_DATE, dates.get(0));
                     didInfoMap.put(Ead3SolrFields.END_DATE, dates.get(1));
-//                    didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
+                    if (StringUtils.isBlank(didInfoMap.get(Ead3SolrFields.UNIT_DATE).toString())) {
+                        didInfoMap.put(Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
+                    } else if (StringUtils.isBlank(dates.get(0))) {
+                        didInfoMap.put(Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
+                    } else {
+                        didInfoMap.put(Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
+                    }
                 } else if (obj instanceof Langmaterial) {
                     didInfoMap.put(Ead3SolrFields.LANG_MATERIAL, processLangmaterial((Langmaterial) obj));
                 } else if (obj instanceof Origination) {
