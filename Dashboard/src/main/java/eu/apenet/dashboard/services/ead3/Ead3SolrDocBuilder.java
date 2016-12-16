@@ -7,6 +7,7 @@ package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.ead3.publish.DateUtil;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.persistence.vo.Ead3;
@@ -235,6 +236,8 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
         cRoot.setDataElement(Ead3SolrFields.UNIT_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
+        cRoot.setDataElement(Ead3SolrFields.START_DATE, didMap.get(Ead3SolrFields.START_DATE));
+        cRoot.setDataElement(Ead3SolrFields.END_DATE, didMap.get(Ead3SolrFields.END_DATE));
         cRoot.setDataElement(Ead3SolrFields.OTHER, didMap.get(Ead3SolrFields.OTHER));
         cRoot.setDataElement(Ead3SolrFields.DAO_LINKS, didMap.get(Ead3SolrFields.DAO_LINKS));
         cRoot.setDataElement(Ead3SolrFields.DAO_TYPE, didMap.get(Ead3SolrFields.DAO_TYPE));
@@ -479,7 +482,12 @@ public class Ead3SolrDocBuilder {
                     }
                 } else if (obj instanceof Unitdate) {
                     didInfoMap.put(Ead3SolrFields.UNIT_DATE, this.getContent((MMixedBasic) obj));
+                    Unitdate unitdate = (Unitdate) obj;
+                    String dateNormal = unitdate.getNormal();
 
+                    List<String> dates = DateUtil.getDates(didInfoMap.get(Ead3SolrFields.UNIT_DATE).toString(), dateNormal);
+                    didInfoMap.put(Ead3SolrFields.START_DATE, dates.get(0));
+                    didInfoMap.put(Ead3SolrFields.END_DATE, dates.get(1));
 //                    didInfoMap.put("unitdateCalenderType", ((Unitdate) obj).getCalendar());
                 } else if (obj instanceof Langmaterial) {
                     didInfoMap.put(Ead3SolrFields.LANG_MATERIAL, processLangmaterial((Langmaterial) obj));
