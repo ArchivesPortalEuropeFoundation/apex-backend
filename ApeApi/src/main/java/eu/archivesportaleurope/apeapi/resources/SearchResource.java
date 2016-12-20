@@ -15,6 +15,7 @@ import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead3.Ead3ResponseSet;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;
@@ -53,6 +54,8 @@ public class SearchResource {
     EadSearchService eadSearch;
     @Autowired
     SearchService eacCpfSearch;
+    @Autowired
+    SearchService ead3Search;
 
     @POST
     @Path("/ead")
@@ -73,6 +76,35 @@ public class SearchResource {
             QueryResponse queryResponse = eadSearch.searchOpenData(searchRequest);
             EadFactedResponseSet eadResponseSet = new EadFactedResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+
+    @POST
+    @Path("/ead3")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Search for EAD3",
+            response = Ead3ResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
+    public Response searchEad3(
+            @ApiParam(value = "Search EAD3 units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
+    ) {
+        try {
+            QueryResponse queryResponse = ead3Search.searchOpenData(searchRequest);
+            Ead3ResponseSet responseSet = new Ead3ResponseSet(queryResponse);
+            return Response.ok().entity(responseSet).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();
