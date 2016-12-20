@@ -60,6 +60,32 @@ public class SolrQueryBuilder {
 
         return query;
     }
+    
+    public SolrQuery getEad3ListViewQuery(int start, List<ListFacetSettings> facetSettingsList, String orderByField, String startDate, String endDate,
+            boolean highlight) throws SolrServerException, ParseException {
+        boolean withStartdateAndEnddate = false;
+        SolrQuery query = new SolrQuery();
+        query.setHighlight(highlight);
+        if (facetSettingsList != null) {
+            withStartdateAndEnddate = this.addFacets(query, facetSettingsList);
+
+            if (withStartdateAndEnddate) {
+                buildEad3DateRefinement(query, startDate, endDate, true);
+            }
+            query.setParam("facet.method", "enum");
+        }
+        query.setStart(start);
+
+        // query.setFacetLimit(ListFacetSettings.DEFAULT_FACET_VALUE_LIMIT);
+        if (orderByField != null && orderByField.length() > 0 && !"relevancy".equals(orderByField)) {
+            query.addSort(orderByField, SolrQuery.ORDER.asc);
+            if (withStartdateAndEnddate && orderByField.equals("startDate")) {
+                query.addSort("enddate", SolrQuery.ORDER.asc);
+            }
+        }
+
+        return query;
+    }
 
     public void addFromDateFilter(SolrQuery query, String fromDateId) throws SolrServerException, ParseException {
         this.buildDateRefinement(query, fromDateId, "", true);
@@ -169,6 +195,83 @@ public class SolrQueryBuilder {
             query.setParam("facet.date", "startdate");
         } else if (facetEndDate) {
             query.setParam("facet.date", "enddate");
+        }
+        if (facetStartDate || facetEndDate) {
+            query.setParam("facet.date.include", "lower");
+        }
+
+    }
+
+    private void buildEad3DateRefinement(SolrQuery query, String startDate, String endDate, boolean searchResults)
+            throws SolrServerException, ParseException {
+        boolean facetStartDate = true;
+        boolean facetEndDate = true;
+        if (StringUtils.isNotBlank(startDate)) {
+            String[] splittedStartDate = startDate.split("_");
+            String startDateString = splittedStartDate[0];
+            String gapString = splittedStartDate[1];
+            DateGap dateGap = DateGap.getGapById(gapString);
+            if (dateGap != null) {
+                Date beginDate = SOLR_DATE_FORMAT.parse(startDateString);
+                Calendar endDateCalendar = Calendar.getInstance();
+                endDateCalendar.setTime(beginDate);
+                endDateCalendar.add(dateGap.getType(), dateGap.getSolrTimespan());
+                String finalStartDateString = startDateString + "T00:00:00Z";
+                String finalEndDateString = finalStartDateString + "+" + dateGap.previous().getName();
+                query.addFilterQuery(Ead3SolrFields.START_DATE + ":[" + finalStartDateString + " TO " + finalEndDateString + "]");
+                if (searchResults && dateGap.next() != null) {
+                    query.setParam("f." + Ead3SolrFields.START_DATE + ".facet.date.start", finalStartDateString);
+                    query.setParam("f." + Ead3SolrFields.START_DATE + ".facet.date.end", finalEndDateString);
+                    query.set("f." + Ead3SolrFields.START_DATE + ".facet.date.gap", "+" + dateGap.getName());
+                } else {
+                    facetStartDate = false;
+                }
+            } else {
+                facetStartDate = false;
+            }
+        } else if (searchResults) {
+            query.setParam("f." + Ead3SolrFields.START_DATE + ".facet.date.start", "0000-01-01T00:00:00Z");
+            query.setParam("f." + Ead3SolrFields.START_DATE + ".facet.date.end", "NOW");
+            query.set("f." + Ead3SolrFields.START_DATE + ".facet.date.gap", "+200YEARS");
+        } else {
+            facetStartDate = false;
+        }
+        if (StringUtils.isNotBlank(endDate)) {
+            String[] splittedStartDate = endDate.split("_");
+            String startDateString = splittedStartDate[0];
+            String gapString = splittedStartDate[1];
+            DateGap dateGap = DateGap.getGapById(gapString);
+            if (dateGap != null) {
+                Date beginDate = SOLR_DATE_FORMAT.parse(startDateString);
+                Calendar endDateCalendar = Calendar.getInstance();
+                endDateCalendar.setTime(beginDate);
+                endDateCalendar.add(dateGap.getType(), dateGap.getSolrTimespan());
+                String finalStartDateString = startDateString + "T00:00:00Z";
+                String finalEndDateString = finalStartDateString + "+" + dateGap.previous().getName();
+                query.addFilterQuery(Ead3SolrFields.END_DATE + ":[" + finalStartDateString + " TO " + finalEndDateString + "]");
+                if (searchResults && dateGap.next() != null) {
+                    query.setParam("f." + Ead3SolrFields.END_DATE + ".facet.date.start", finalStartDateString);
+                    query.setParam("f." + Ead3SolrFields.END_DATE + ".facet.date.end", finalEndDateString);
+                    query.set("f." + Ead3SolrFields.END_DATE + ".facet.date.gap", "+" + dateGap.getName());
+                } else {
+                    facetEndDate = false;
+                }
+            } else {
+                facetEndDate = false;
+            }
+        } else if (searchResults) {
+            query.setParam("f." + Ead3SolrFields.END_DATE + ".facet.date.start", "0000-01-01T00:00:00Z");
+            query.setParam("f." + Ead3SolrFields.END_DATE + ".facet.date.end", "NOW");
+            query.set("f." + Ead3SolrFields.END_DATE + ".facet.date.gap", "+200YEARS");
+        } else {
+            facetEndDate = false;
+        }
+        if (facetStartDate && facetEndDate) {
+            query.setParam("facet.date", Ead3SolrFields.START_DATE, Ead3SolrFields.END_DATE);
+        } else if (facetStartDate) {
+            query.setParam("facet.date", Ead3SolrFields.START_DATE);
+        } else if (facetEndDate) {
+            query.setParam("facet.date", Ead3SolrFields.END_DATE);
         }
         if (facetStartDate || facetEndDate) {
             query.setParam("facet.date.include", "lower");

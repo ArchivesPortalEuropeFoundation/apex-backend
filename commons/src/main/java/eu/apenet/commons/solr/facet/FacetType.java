@@ -1,11 +1,19 @@
 package eu.apenet.commons.solr.facet;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import java.util.ArrayList;
 import java.util.List;
 
 import eu.apenet.commons.solr.SolrFields;
 
 public enum FacetType {
+    EAD3_COUNTRY(Ead3SolrFields.COUNTRY_NAME, Ead3SolrFields.COUNTRY_ID, true, true, "country."),
+    EAD3_AI(Ead3SolrFields.AI_NAME, Ead3SolrFields.AI_ID, true),
+    TITLE_PROPER(Ead3SolrFields.TITLE_PROPER, Ead3SolrFields.EAD_ID, true),
+    EAD3_START_DATE(Ead3SolrFields.START_DATE, true),
+    EAD3_TYPE(Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.text."),
+    EAD3_LEVEL(Ead3SolrFields.LEVEL_NAME, false, true, "advancedsearch.facet.value.level."),
+    EAD3_END_DATE(Ead3SolrFields.END_DATE, true),
     COUNTRY(SolrFields.COUNTRY, SolrFields.COUNTRY_ID, true, true, "country."),
     AI(SolrFields.AI, SolrFields.AI_ID, true),
     FOND(SolrFields.TITLE_OF_FOND, SolrFields.FOND_ID, true),
@@ -118,6 +126,14 @@ public enum FacetType {
         return result;
     }
 
+    public static List<ListFacetSettings> getEad3DateListFacetSettings() {
+        List<ListFacetSettings> result = new ArrayList<>();
+
+        result.add(new ListFacetSettings(FacetType.EAD3_START_DATE));
+        result.add(new ListFacetSettings(FacetType.EAD3_END_DATE));
+        return result;
+    }
+
     public static List<ListFacetSettings> getDefaultEadListFacetSettings() {
         List<ListFacetSettings> result = new ArrayList<ListFacetSettings>();
         result.add(new ListFacetSettings(FacetType.COUNTRY));
@@ -131,6 +147,17 @@ public enum FacetType {
         result.add(new ListFacetSettings(FacetType.START_DATE));
         result.add(new ListFacetSettings(FacetType.END_DATE));
         return result;
+    }
+
+    public static List<ListFacetSettings> getDefaultEad3ListFacetSettings() {
+        List<ListFacetSettings> results = new ArrayList<>();
+        results.add(new ListFacetSettings(FacetType.EAD3_COUNTRY));
+        results.add(new ListFacetSettings(FacetType.EAD3_AI));
+        results.add(new ListFacetSettings(FacetType.EAD3_LEVEL));
+        results.add(new ListFacetSettings(FacetType.EAD3_TYPE));
+//        results.add(new ListFacetSettings(FacetType.EAD3_START_DATE));
+//        results.add(new ListFacetSettings(FacetType.EAD3_END_DATE));
+        return results;
     }
 
     public static List<ListFacetSettings> getDefaultEagListFacetSettings() {
