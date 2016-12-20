@@ -10,7 +10,7 @@
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
           http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-1.0.xsd"
-        >
+>
     
     <import resource="classpath:META-INF/component-scan-context.xml" />
     <import resource="classpath:META-INF/mongo-context.xml"/>
@@ -32,10 +32,16 @@
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>
     </bean>-->
     <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr-ead"/>
+    <solr:embedded-solr-server id="ead3SolrServer" solrHome="src/test/resources/solr-ead3"/>
     <solr:embedded-solr-server id="eacSolrServer" solrHome="src/test/resources/solr-eac"/>
     
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearviceImpl">
         <constructor-arg index="0" ref="eadSolrServer"/>
+        <constructor-arg index="1" value="resource.properties"/>
+    </bean>
+    
+    <bean id="ead3Search" class="eu.archivesportaleurope.apeapi.services.impl.Ead3SearchServiceImpl">
+        <constructor-arg index="0" ref="ead3SolrServer"/>
         <constructor-arg index="1" value="resource.properties"/>
     </bean>
     
