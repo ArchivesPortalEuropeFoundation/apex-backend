@@ -48,12 +48,6 @@ public class InstituteEad3Response {
     @ApiModelProperty(value = "True if the unit has one or more digital object")
     private String numberOfDigitalObject = "0";
 
-    @ApiModelProperty(value = "Type of the description of the result: \"Descriptive Unit\", \"Finding Aid\", \"Holdings Guide\" or \"Source Guide\"")
-    private String docType;
-
-    @ApiModelProperty(value = "Id of the doc type")
-    private String docTypeId;
-
     @ApiModelProperty(value = "Type of result: \"archdesc\" for highest level description or \"clevel\" for subordinate components")
     private String level;
 
@@ -169,22 +163,6 @@ public class InstituteEad3Response {
 
     public void setNumberOfDigitalObject(String numberOfDigitalObject) {
         this.numberOfDigitalObject = numberOfDigitalObject;
-    }
-
-    public String getDocType() {
-        return docType;
-    }
-
-    public void setDocType(String docType) {
-        this.docType = docType;
-    }
-
-    public String getDocTypeId() {
-        return docTypeId;
-    }
-
-    public void setDocTypeId(String docTypeId) {
-        this.docTypeId = docTypeId;
     }
 
     public String getLevel() {
