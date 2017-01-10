@@ -197,6 +197,9 @@ function performBatchContentAction(type) {
         if (type == "2"){
             actionUrl = "batchEacCpfActions.action";
         }
+        else if(type == "4"){
+            actionUrl = "batchEad3Actions.action";
+        }
         else {
             actionUrl = "batchEadActions.action";
         }

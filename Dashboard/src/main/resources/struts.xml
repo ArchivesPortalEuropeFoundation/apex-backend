@@ -261,6 +261,10 @@
             <result name="success">/jsp/ajax/success.jsp</result>
             <result name="error">/jsp/ajax/error.jsp</result>
         </action>
+        <action name="batchEad3Actions" class="eu.apenet.dashboard.actions.content.ead3.BatchEad3Actions">
+            <result name="success">/jsp/ajax/success.jsp</result>
+            <result name="error">/jsp/ajax/error.jsp</result>
+        </action>
         <action name="showEadReport" class="eu.apenet.dashboard.manual.GenerateEadValidationReportAction">
             <result name="success">/jsp/eadreport.jsp</result>
         </action>

@@ -8,7 +8,7 @@
             view, edit,contentmanager,updateContentmanager,
             validatechangeainame, changeainame, downloadeag, upload, enableOpenData, doEnableOpenData, checkfilesuploaded,
             httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
-            ead3Actions, eadActions, batchEadActions, removeEseForFA, displayProfile, applyProfile, showEadReport,
+            ead3Actions, eadActions, batchEadActions, batchEad3Actions, removeEseForFA, displayProfile, applyProfile, showEadReport,
             displayEdmConvert, processEdmConvert, showEdmReport, showwarnings, download, link, removeLink, preview, downloadEdm,
             batchAction, previewEdm, htmlPreview,
             displayConvertEseBatch, startConvertEseBatch,

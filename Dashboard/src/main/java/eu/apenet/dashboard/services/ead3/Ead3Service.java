@@ -14,17 +14,25 @@ import eu.apenet.dashboard.services.AbstractService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.Ead3DAO;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EacCpf;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
+import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.SourceGuide;
 
 import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.ValidatedState;
 
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.io.File;
@@ -734,16 +742,19 @@ public class Ead3Service extends AbstractService {
      *
      * @see eu.apenet.persistence.dao.ContentSearchOptions
      */
-//    public static void addBatchToQueue(List<Integer> ids, Integer aiId, QueueAction queueAction, Properties preferences) throws IOException {
-//        ContentSearchOptions eacCpfSearchOptions = new ContentSearchOptions();
-//        eacCpfSearchOptions.setPageSize(0);
-//        eacCpfSearchOptions.setContentClass(XmlType.EAC_CPF.getClazz());
-//        eacCpfSearchOptions.setArchivalInstitionId(aiId);
-//        if (ids != null && ids.size() > 0) {
-//            eacCpfSearchOptions.setIds(ids);
-//        }
-//        addBatchToQueue(eacCpfSearchOptions, queueAction, preferences);
-//    }
+    public static void addBatchToQueue(List<Integer> ids, Integer aiId, XmlType xmlType, QueueAction queueAction,
+            Properties preferences) throws IOException {
+        ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
+        eadSearchOptions.setPageSize(0);
+        eadSearchOptions.setContentClass(xmlType.getClazz());
+        eadSearchOptions.setArchivalInstitionId(aiId);
+        if (ids != null && ids.size() > 0) {
+            eadSearchOptions.setIds(ids);
+        }
+        addBatchToQueue(eadSearchOptions, queueAction, preferences);
+
+    }
+
     /**
      * Adds to {@link ContentSearchOptions} the different options and update the
      * database.
@@ -762,53 +773,66 @@ public class Ead3Service extends AbstractService {
      * @see eu.apenet.persistence.vo.QueueItem
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
-//    public static void addBatchToQueue(ContentSearchOptions eacCpfSearchOptions, QueueAction queueAction, Properties preferences) throws IOException {
-//        SecurityContext.get().checkAuthorized(eacCpfSearchOptions.getArchivalInstitionId());
-//        QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
-//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-//        eacCpfSearchOptions.setPageSize(0);
-//        if (QueueAction.CONVERT.equals(queueAction)) {
-//            eacCpfSearchOptions.setConverted(false);
-//        } else if (QueueAction.VALIDATE.equals(queueAction)) {
-//            eacCpfSearchOptions.setValidated(ValidatedState.NOT_VALIDATED);
-//        } else if (QueueAction.PUBLISH.equals(queueAction)) {
-//            eacCpfSearchOptions.setValidated(ValidatedState.VALIDATED);
-//            eacCpfSearchOptions.setPublished(false);
-//        } else if (QueueAction.CONVERT_VALIDATE_PUBLISH.equals(queueAction)) {
-//            eacCpfSearchOptions.setPublished(false);
-//        } else if (QueueAction.UNPUBLISH.equals(queueAction)) {
-//            eacCpfSearchOptions.setPublished(true);
-//        } else if (QueueAction.CONVERT_TO_ESE_EDM.equals(queueAction)) {
-//            eacCpfSearchOptions.setEuropeana(EuropeanaState.NOT_CONVERTED);
-//            eacCpfSearchOptions.setValidated(ValidatedState.VALIDATED);
-//        } else if (QueueAction.DELIVER_TO_EUROPEANA.equals(queueAction)) {
-//            eacCpfSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
-//
-//        } else if (QueueAction.DELETE_FROM_EUROPEANA.equals(queueAction)) {
-//            eacCpfSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
-//        } else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
-//            eacCpfSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
-//        } else if (QueueAction.CHANGE_TO_STATIC.equals(queueAction)) {
-//            eacCpfSearchOptions.setDynamic(true);
-//        } else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
-//            eacCpfSearchOptions.setDynamic(false);
-//        }
-//        eacCpfSearchOptions.setQueuing(QueuingState.NO);
-//        JpaUtil.beginDatabaseTransaction();
-//        List<EacCpf> eacCpfs = eacCpfDAO.getEacCpfs(eacCpfSearchOptions);
-//        int size = 0;
-//        while ((size = eacCpfs.size()) > 0) {
-//            EacCpf eacCpf = eacCpfs.get(size - 1);
-//            if (validState(eacCpf, preferences, queueAction)) {
-//                QueueItem queueItem = fillQueueItem(eacCpf, queueAction, preferences);
-//                eacCpf.setQueuing(QueuingState.READY);
-//                eacCpfDAO.updateSimple(eacCpf);
-//                indexqueueDao.updateSimple(queueItem);
-//            }
-//            eacCpfs.remove(size - 1);
-//        }
-//        JpaUtil.commitDatabaseTransaction();
-//    }
+    public static void addBatchToQueue(ContentSearchOptions eadSearchOptions, QueueAction queueAction,
+            Properties preferences) throws IOException {
+        SecurityContext.get().checkAuthorized(eadSearchOptions.getArchivalInstitionId());
+        QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        eadSearchOptions.setPageSize(0);
+        if (QueueAction.CONVERT.equals(queueAction)) {
+            eadSearchOptions.setConverted(false);
+        } else if (QueueAction.VALIDATE.equals(queueAction)) {
+            eadSearchOptions.setValidated(ValidatedState.NOT_VALIDATED);
+        } else if (QueueAction.PUBLISH.equals(queueAction)) {
+            eadSearchOptions.setValidated(ValidatedState.VALIDATED);
+            eadSearchOptions.setPublished(false);
+        } else if (QueueAction.CONVERT_VALIDATE_PUBLISH.equals(queueAction)) {
+            eadSearchOptions.setPublished(false);
+        } else if (QueueAction.UNPUBLISH.equals(queueAction)) {
+            eadSearchOptions.setPublished(true);
+        } else if (QueueAction.CONVERT_TO_ESE_EDM.equals(queueAction)) {
+            eadSearchOptions.setEuropeana(EuropeanaState.NOT_CONVERTED);
+            eadSearchOptions.setValidated(ValidatedState.VALIDATED);
+        } else if (QueueAction.DELIVER_TO_EUROPEANA.equals(queueAction)) {
+            eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
+
+        } else if (QueueAction.DELETE_FROM_EUROPEANA.equals(queueAction)) {
+            eadSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+        } else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
+            eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
+        } else if (QueueAction.CHANGE_TO_STATIC.equals(queueAction)) {
+            eadSearchOptions.setDynamic(true);
+        } else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
+            eadSearchOptions.setDynamic(false);
+        }
+        eadSearchOptions.setQueuing(QueuingState.NO);
+        JpaUtil.beginDatabaseTransaction();
+        List<Ead3> eads = ead3DAO.getEad3s(eadSearchOptions);
+        int size = 0;
+        while ((size = eads.size()) > 0) {
+            Ead3 ead = eads.get(size - 1);
+            if (validState(ead, preferences, queueAction)) {
+                QueueItem queueItem;
+                if (QueueAction.CONVERT_TO_ESE_EDM.equals(queueAction)) {
+                    Properties properties = preferences;
+                    String oaiIdentifier = ead.getArchivalInstitution().getRepositorycode()
+                            + APEnetUtilities.FILESEPARATOR + "fa"
+                            + APEnetUtilities.FILESEPARATOR + ead.getIdentifier();
+                    properties.put("edm_identifier", oaiIdentifier);
+                    properties.put("repository_code", ead.getArchivalInstitution().getRepositorycode());
+                    queueItem = fillQueueItem(ead, queueAction, properties);
+                } else {
+                    queueItem = fillQueueItem(ead, queueAction, preferences);
+                }
+                ead.setQueuing(QueuingState.READY);
+                ead3DAO.updateSimple(ead);
+                indexqueueDao.updateSimple(queueItem);
+            }
+            eads.remove(size - 1);
+        }
+        JpaUtil.commitDatabaseTransaction();
+    }
+
     /**
      * Checks the state and the profile future action.
      *
@@ -820,17 +844,29 @@ public class Ead3Service extends AbstractService {
      *
      * @see eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction
      */
-//    private static boolean validState(EacCpf eac, Properties preferences, QueueAction queueAction) {
-//        boolean state = !queueAction.isUseProfileAction();
-//        if (!state) {
+    private static boolean validState(Ead3 ead, Properties preferences, QueueAction queueAction) {
+        boolean state = !queueAction.isUseProfileAction();
+        if (!state) {
 //            String property = preferences.getProperty(QueueItem.UPLOAD_ACTION);
-//            //each condition returns true if the state and the profile future action are rights
-//            state = (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT.getId())) && !eac.isConverted())
-//                    || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.VALIDATE.getId())) && !eac.getValidated().equals(ValidatedState.VALIDATED))
-//                    || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH.getId())) && !eac.isPublished());
-//        }
-//        return state;
-//    }
+//            if (ead.getEadClass().equals(FindingAid.class)) { //FINDING AID
+//                //each condition returns true if the state and the profile future action are rights
+//                state = (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT.getId())) && !ead.isConverted())
+//                        || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.VALIDATE.getId())) && !ead.getValidated().equals(ValidatedState.VALIDATED))
+//                        || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH.getId())) && !ead.isPublished())
+//                        || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH_EUROPEANA.getId()))
+//                        && ((!((FindingAid) ead).getEuropeana().equals(EuropeanaState.DELIVERED) || ((FindingAid) ead).getEuropeana().equals(EuropeanaState.NO_EUROPEANA_CANDIDATE))
+//                        || !ead.isPublished()));
+//            } else if (ead.getEadClass().equals(HoldingsGuide.class) || ead.getEadClass().equals(SourceGuide.class)) {
+//                //HOLDINGS GUIDE or SOURCE GUIDE
+//                //each condition returns true if the state and the profile future action are rights
+//                state = (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT.getId())) && !ead.isConverted())
+//                        || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.VALIDATE.getId())) && !ead.getValidated().equals(ValidatedState.VALIDATED))
+//                        || (property.equals(Integer.toString(IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH.getId())) && !ead.isPublished());
+//            }
+        }
+        return true;
+    }
+
     /**
      * Puts in the {@link ContentSearchOptions} the list of the EAC-CPF's
      * identifiers to remove from the content manager.
@@ -899,8 +935,8 @@ public class Ead3Service extends AbstractService {
      *
      * @throws IOException
      */
-    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences) throws IOException {
-        return fillQueueItem(upFile, queueAction, preferences, 1000);
+    private static QueueItem fillQueueItem(Ead ead, QueueAction queueAction, Properties preferences) throws IOException {
+        return fillQueueItem(ead, queueAction, preferences, 1000);
     }
 
     /**
@@ -916,6 +952,43 @@ public class Ead3Service extends AbstractService {
      *
      * @see eu.apenet.persistence.vo.QueueItem
      */
+    private static QueueItem fillQueueItem(Ead ead, QueueAction queueAction, Properties preferences, int basePriority)
+            throws IOException {
+        QueueItem queueItem = ead.getQueueItem();
+        int priority = basePriority;
+        if (queueItem == null) {
+            queueItem = new QueueItem();
+            if (ead instanceof FindingAid) {
+                queueItem.setFindingAid((FindingAid) ead);
+            } else if (ead instanceof HoldingsGuide) {
+                queueItem.setHoldingsGuide((HoldingsGuide) ead);
+                priority += 100;
+            } else if (ead instanceof SourceGuide) {
+                queueItem.setSourceGuide((SourceGuide) ead);
+                priority += 50;
+            }
+            queueItem.setAiId(ead.getAiId());
+        } else if (ead instanceof HoldingsGuide) {
+            priority += 100;
+        } else if (ead instanceof SourceGuide) {
+            priority += 50;
+        }
+        queueItem.setQueueDate(new Date());
+        queueItem.setAction(queueAction);
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
+        }
+        if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
+            priority += 150;
+        }
+        queueItem.setPriority(priority);
+        return queueItem;
+    }
+
+    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences) throws IOException {
+        return fillQueueItem(upFile, queueAction, preferences, 1000);
+    }
+
     private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
         QueueItem queueItem = new QueueItem();
         queueItem.setQueueDate(new Date());

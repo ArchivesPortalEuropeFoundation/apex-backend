@@ -9,7 +9,7 @@ public enum QueueAction {
     DELIVER_TO_EUROPEANA("content.message.deliver.europeana"), DELETE_FROM_EUROPEANA("content.message.delete.europeana"),
     UNPUBLISH_ALL("content.message.unpublish.all"), OVERWRITE("content.message.overwrite"),
     CHANGE_TO_DYNAMIC("content.message.dynamic.change"), CHANGE_TO_STATIC("content.message.static.change"),
-    USE_PROFILE("content.message.useprofile"), ENABLE_OPEN_DATA("content.message.enableOpenData");
+    USE_PROFILE("content.message.useprofile"), ENABLE_OPEN_DATA("content.message.enableOpenData"), VALIDATE_PUBLISH("content.message.validatepublish");
 
     private String resourceName;
 

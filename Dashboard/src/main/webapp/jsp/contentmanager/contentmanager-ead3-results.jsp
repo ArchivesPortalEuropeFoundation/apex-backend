@@ -59,7 +59,9 @@
                 <option value="publish">
                     <s:text name="content.message.publish" />
                 </option>
-
+                <option value="unpublish">
+                    <s:text name="content.message.unpublish" />
+                </option>
                 <option value="deleteFromQueue">
                     <s:text name="content.message.delete.queue" />
                 </option>
