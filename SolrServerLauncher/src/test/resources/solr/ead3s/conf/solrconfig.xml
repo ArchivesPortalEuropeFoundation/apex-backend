@@ -137,7 +137,7 @@
                 id,unitTitle,scopeContent,unitDate,titleProper,unitId,countryName,aiName,dao,daoLinks,levelName,titleProper,otherUnitId,daoType,numberOfDao,siblingPosition,recordId,repositoryCode,duplicateUnitid,numberOfDescendents,numberOfAncestors,language,langMaterial
             </str>
             <str name="q.alt">*:*</str>
-            <str name="hl.fl">unitTitle scopeContent other alterdate</str>
+            <str name="hl.fl">unitTitle scopeContent other unitDate</str>
             <str name="hl.fragmenter">regex</str>
             <str name="spellcheck.onlyMorePopular">true</str>
             <str name="spellcheck.extendedResults">false</str>
