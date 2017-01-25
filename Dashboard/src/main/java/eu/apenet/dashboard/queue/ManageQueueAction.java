@@ -17,6 +17,7 @@ import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.ead3.Ead3Service;
 import eu.apenet.dashboard.services.eag.xml.stream.XmlEagParser;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
@@ -25,6 +26,7 @@ import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
@@ -287,14 +289,8 @@ public class ManageQueueAction extends AbstractAction {
     }
 
     private static void deleteQueueItem(QueueItem queueItem) throws Exception {
-        Properties preferences = EadService.readProperties(queueItem.getPreferences());
-        if (preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY)) {
-            if (queueItem.getAiId() != null ) {
-                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(queueItem.getAiId());
-                archivalInstitution.setUnprocessedSolrDocs(0);
-                DAOFactory.instance().getArchivalInstitutionDAO().store(archivalInstitution);
-            }
-            DAOFactory.instance().getQueueItemDAO().delete(queueItem);
+        if (queueItem.getAbstractContent() instanceof Ead3) {
+            Ead3Service.deleteFromQueue(queueItem);
         } else {
             EadService.deleteFromQueue(queueItem);
         }

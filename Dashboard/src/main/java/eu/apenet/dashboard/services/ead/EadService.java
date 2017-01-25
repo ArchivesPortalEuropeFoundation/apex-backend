@@ -23,6 +23,7 @@ import eu.apenet.dashboard.manual.ingestionprofile.IngestionprofilesAction;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.AbstractService;
 import eu.apenet.dashboard.services.ead.xml.stream.XmlEadParser;
+import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
@@ -34,6 +35,7 @@ import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
@@ -360,7 +362,18 @@ public class EadService extends AbstractService {
 
     public static void deleteFromQueue(QueueItem queueItem) throws Exception {
         SecurityContext.get().checkAuthorizedToManageQueue();
-        deleteFromQueue(queueItem, true);
+        Properties preferences = EadService.readProperties(queueItem.getPreferences());
+        //delete open-data operation
+        if (preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY)) {
+            if (queueItem.getAiId() != null ) {
+                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(queueItem.getAiId());
+                archivalInstitution.setUnprocessedSolrDocs(0);
+                DAOFactory.instance().getArchivalInstitutionDAO().store(archivalInstitution);
+            }
+            DAOFactory.instance().getQueueItemDAO().delete(queueItem);
+        } else { //other
+            deleteFromQueue(queueItem, true);
+        }
     }
 
     private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws Exception {

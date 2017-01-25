@@ -10,6 +10,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.AbstractService;
+import eu.apenet.dashboard.services.opendata.OpenDataService;
 
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
@@ -18,7 +19,7 @@ import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.EacCpf;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.EuropeanaState;
@@ -92,14 +93,14 @@ public class Ead3Service extends AbstractService {
      * <p>
      * Puts in the queue these actions.
      *
-     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param id {@link Integer} The identifier of the EAD3 file.
      * @param properties {@link Properties} A property list to process the file.
      * @param currentLanguage String The current language in the Dashboard.
-     * @return boolean The EAC-CPF is converted, validated and published.
+     * @return boolean The EAD3 is converted, validated and published.
      * @throws IOException
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
     public static boolean convertValidatePublish(Integer id, Properties properties, String currentLanguage) throws IOException {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
@@ -119,11 +120,11 @@ public class Ead3Service extends AbstractService {
      * <p>
      * Puts in the queue this action.
      *
-     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param id {@link Integer} The identifier of the EAD3 file.
      * @throws IOException
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
     @Override
     public void validate(XmlType xmlType, Integer id) throws IOException {
@@ -146,15 +147,15 @@ public class Ead3Service extends AbstractService {
      * <p>
      * Puts in the queue this action.
      *
-     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param id {@link Integer} The identifier of the EAD3 file.
      * @throws IOException
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
 //    public static void publish(Integer id) throws IOException {
 //        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-//        EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
+//        Ead3 eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
 //        SecurityContext.get().checkAuthorized(eacCpf);
 //        if (PublishTask.notValidated(eacCpf)) {
 //            addToQueue(eacCpf, QueueAction.PUBLISH, null);
@@ -166,15 +167,15 @@ public class Ead3Service extends AbstractService {
      * <p>
      * Puts in the queue this action.
      *
-     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param id {@link Integer} The identifier of the EAD3 file.
      * @throws IOException
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
 //    public static void unpublish(Integer id) throws IOException {
 //        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-//        EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
+//        Ead3 eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
 //        SecurityContext.get().checkAuthorized(eacCpf);
 //        if (UnpublishTask.notValidated(eacCpf)) {
 //            addToQueue(eacCpf, QueueAction.UNPUBLISH, null);
@@ -187,11 +188,11 @@ public class Ead3Service extends AbstractService {
      * Puts in the queue this action.
      *
      * @param xmlType
-     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param id {@link Integer} The identifier of the EAD3 file.
      * @throws IOException
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
     @Override
     public void delete(XmlType xmlType, Integer id) throws Exception {
@@ -202,19 +203,19 @@ public class Ead3Service extends AbstractService {
     }
 
     /**
-     * Deletes from the queue an EAC-CPF and updates the state of the entry
+     * Deletes from the queue an EAD3 and updates the state of the entry
      * <i>queueing</i> in the database.
      *
-     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param id {@link Integer} The identifier of the EAD3 file.
      * @throws IOException
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
     public static void deleteFromQueue(Integer id) throws IOException {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         JpaUtil.beginDatabaseTransaction();
-        Ead3 ead3 = ead3DAO.findById(id, XmlType.EAC_CPF.getClazz());
+        Ead3 ead3 = ead3DAO.findById(id, XmlType.EAD_3.getClazz());
         SecurityContext.get().checkAuthorized(ead3.getAiId());
         if (QueuingState.ERROR.equals(ead3.getQueuing()) || QueuingState.READY.equals(ead3.getQueuing())) {
             QueueItem queueItem = ead3.getQueueItem();
@@ -222,6 +223,44 @@ public class Ead3Service extends AbstractService {
             ead3DAO.updateSimple(ead3);
             deleteFromQueueInternal(queueItem, true);
         }
+        JpaUtil.commitDatabaseTransaction();
+    }
+    
+    /**
+     * Deletes from the queue an EAD3 and updates the state of the entry
+     * <i>queueing</i> in the database.
+     *
+     * @param queueItem
+     * @throws IOException
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
+     */
+    public static void deleteFromQueue(QueueItem queueItem) throws Exception {
+        SecurityContext.get().checkAuthorizedToManageQueue();
+        Properties preferences = Ead3Service.readProperties(queueItem.getPreferences());
+        //delete open-data operation
+        if (preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY)) {
+            if (queueItem.getAiId() != null ) {
+                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(queueItem.getAiId());
+                archivalInstitution.setUnprocessedSolrDocs(0);
+                DAOFactory.instance().getArchivalInstitutionDAO().store(archivalInstitution);
+            }
+            DAOFactory.instance().getQueueItemDAO().delete(queueItem);
+        } else { //other
+            deleteFromQueue(queueItem, true);
+        }
+    }
+
+    private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws IOException {
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        JpaUtil.beginDatabaseTransaction();
+        Ead3 ead3 = queueItem.getEad3();
+        if (ead3 != null) {
+            ead3.setQueuing(QueuingState.NO);
+            ead3DAO.updateSimple(ead3);
+        }
+        deleteFromQueueInternal(queueItem, deleteUpFile);
         JpaUtil.commitDatabaseTransaction();
     }
 
@@ -257,10 +296,10 @@ public class Ead3Service extends AbstractService {
      * Downloads a file from the content manager.
      *
      * @param xmlType
-     * @param id {@link Integer} The identifier of the EAC-CPF file.
+     * @param id {@link Integer} The identifier of the EAD3 file.
      * @return {@link File} The file downloading.
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      * @see eu.apenet.persistence.vo.UpFile
      */
     @Override
@@ -281,20 +320,20 @@ public class Ead3Service extends AbstractService {
 
     /**
      * <p>
-     * Adds an EAC-CPF file to the queue.
+     * Adds an EAD3 file to the queue.
      * <p>
-     * Stores in the database an EAC-CPF in the table <b>eac_cpf</b>.
+     * Stores in the database an EAD3 in the table <b>eac_cpf</b>.
      * <p>
-     * Fills the table <b>queue</b> with the EAC-CPF's identifier and his
+     * Fills the table <b>queue</b> with the EAD3's identifier and his
      * preferences.
      *
-     * @param eacCpf {@link EacCpf} The EAC-CPF file to ingest in the Dashboard.
+     * @param eacCpf {@link Ead3} The EAD3 file to ingest in the Dashboard.
      * @param queueAction {@link QueueAction} The action in the queue.
-     * @param preferences {@link Properties} Preferences to process the EAC-CPF.
+     * @param preferences {@link Properties} Preferences to process the EAD3.
      * @throws IOException
      * @see eu.apenet.persistence.vo.QueueItem
      * @see eu.apenet.persistence.dao.QueueItemDAO
-     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.dao.Ead3DAO
      */
     private static void addToQueue(Ead3 ead3, QueueAction queueAction, Properties preferences) throws IOException {
         QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
@@ -308,9 +347,9 @@ public class Ead3Service extends AbstractService {
     /**
      * Fills an item <i>queue</i>.
      *
-     * @param eacCpf {@link EacCPf} The EAC-CPF file to ingest in the Dashboard.
+     * @param eacCpf {@link EacCPf} The EAD3 file to ingest in the Dashboard.
      * @param queueAction {@link QueueAction} The action in the queue.
-     * @param preferences {@link Properties} Preferences to process the EAC-CPF.
+     * @param preferences {@link Properties} Preferences to process the EAD3.
      * @return {@link QueueItem> An item <i>queue</i>.
      * @throws IOException
      */
@@ -319,12 +358,12 @@ public class Ead3Service extends AbstractService {
     }
 
     /**
-     * Fills an item <i>queue</i> with the EAC-CPF's identifier, preferences and
+     * Fills an item <i>queue</i> with the EAD3's identifier, preferences and
      * priority.
      *
-     * @param eacCpf {@link EacCpf} The EAC-CPF file to ingest in the Dashboard.
+     * @param eacCpf {@link Ead3} The EAD3 file to ingest in the Dashboard.
      * @param queueAction {@link QueueAction} The action in the queue.
-     * @param preferences {@link Properties} Preferences to process the EAC-CPF.
+     * @param preferences {@link Properties} Preferences to process the EAD3.
      * @param basePriority {@link Integer} The priority in the queue.
      * @return {@link QueueItem} An item <i>queue</i>.
      * @throws IOException
@@ -354,7 +393,7 @@ public class Ead3Service extends AbstractService {
      * Writes in a string buffer the property list.
      *
      * @param properties {@link Properties} The preferences to process the
-     * EAC-CPF.
+     * EAD3.
      * @return String The preferences to write.
      * @throws IOException
      */
@@ -368,12 +407,12 @@ public class Ead3Service extends AbstractService {
     }
 
     /**
-     * Overwrites an old EAC-CPF file.
+     * Overwrites an old EAD3 file.
      *
-     * @param oldEad3 {@link Ead3} The old EAC-CPF file.
+     * @param oldEad3 {@link Ead3} The old EAD3 file.
      * @param upFile {@link UpFile} The file to up.
      * @throws Exception
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
     public static void overwrite(Ead3 oldEad3, UpFile upFile) throws Exception {
         SecurityContext.get().checkAuthorized(oldEad3.getAiId());
@@ -382,18 +421,18 @@ public class Ead3Service extends AbstractService {
 
     /**
      * <p>
-     * Adds an EAC-CPF file to the queue.
+     * Adds an EAD3 file to the queue.
      * <p>
      * Stores in the database an EAD3 in the table <b>ead3</b>.
      * <p>
-     * Fills the table <b>queue</b> with the EAC-CPF's identifier, his
+     * Fills the table <b>queue</b> with the EAD3's identifier, his
      * preferences and the upfile's identifier.
      *
      * @see eu.apenet.persistence.vo.QueueAction
      * @see java.util.Properties
      * @see eu.apenet.persistence.vo.UpFile
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
      * @see eu.apenet.persistence.dao.QueueItemDAO
      * @see eu.apenet.persistence.vo.QueueItem
      */
@@ -465,7 +504,7 @@ public class Ead3Service extends AbstractService {
                     if (!upFileDeleted && upFile != null) {
                         queueItem.setUpFile(upFile);
                     }
-                    String err = "EAC-CPF identifier: " + ead3.getIdentifier() + " - id: " + ead3.getId() + " - type: " + xmlType.getName();
+                    String err = "EAD3 identifier: " + ead3.getIdentifier() + " - id: " + ead3.getId() + " - type: " + xmlType.getName();
                     LOGGER.error(APEnetUtilities.generateThrowableLog(e));
                     queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                     queueItem.setPriority(0);
@@ -572,13 +611,13 @@ public class Ead3Service extends AbstractService {
 //            }
 //        } else {
 //            boolean continueTask = true;
-//            EacCpf eacCpf;
-//            EacCpf newEacCpf = null;
+//            Ead3 eacCpf;
+//            Ead3 newEad3 = null;
 //            if ((eacCpf = doesFileExist(upFile, identifier)) != null) {
 //                if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
 //                    boolean eacCpfDeleted = false;
 //                    try {
-//                        queueItem.setEacCpf(null);
+//                        queueItem.setEad3(null);
 //                        queueItem.setUpFile(null);
 //                        queueItemDAO.store(queueItem);
 //
@@ -587,11 +626,11 @@ public class Ead3Service extends AbstractService {
 //                        new UnpublishTask().execute(eacCpf, preferences);
 //                        new DeleteTask().execute(eacCpf, preferences);
 //                        eacCpfDeleted = true;
-//                        newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
+//                        newEad3 = new CreateEad3Task().execute(xmlType, upFile, aiId);
 //                        DAOFactory.instance().getUpFileDAO().delete(upFile);
 //                    } catch (Exception e) {
 //                        if (!eacCpfDeleted) {
-//                            queueItem.setEacCpf(eacCpf);
+//                            queueItem.setEad3(eacCpf);
 //                            eacCpf.setQueuing(QueuingState.ERROR);
 //                            eacDAO.store(eacCpf);
 //                        }
@@ -620,14 +659,14 @@ public class Ead3Service extends AbstractService {
 //                    continueTask = false;
 //                }
 //            } else {
-//                newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, upFile.getAiId());
+//                newEad3 = new CreateEad3Task().execute(xmlType, upFile, upFile.getAiId());
 //                queueItem.setUpFile(null);
 //                queueItemDAO.store(queueItem);
 //                DAOFactory.instance().getUpFileDAO().delete(upFile);
 //            }
 //
 //            if (continueTask) {
-//                processEacCpf(queueItem, newEacCpf, preferences);
+//                processEad3(queueItem, newEad3, preferences);
 //            }
 //        }
 //    }
@@ -640,34 +679,34 @@ public class Ead3Service extends AbstractService {
      *
      * @throws Exception
      *
-     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.vo.Ead3
      */
-//    private static void processEacCpfWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
+//    private static void processEad3WithProfile(QueueItem queueItem, Properties preferences) throws Exception {
 //        Ead3 ead3 = queueItem.getEad3();
-//        processEacCpf(queueItem, ead3, preferences);
+//        processEad3(queueItem, ead3, preferences);
 //    }
     /**
      * Method to performs the actions associated to the profile over the file.
      *
      * @param queueItem {@link QueueItem} Current item to process.
-     * @param newEad3 {@link EacCpf} EAC-CPF to process using the profile.
+     * @param newEad3 {@link Ead3} EAD3 to process using the profile.
      * @param preferences {@link Properties} Profile preferences.
      *
      * @throws Exception
      *
      * @see eu.apenet.persistence.vo.QueueAction
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
      * @see java.util.Properties
      * @see eu.apenet.commons.types.XmlType
      * @see eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction
      * @see eu.apenet.persistence.dao.QueueItemDAO
      * @see eu.apenet.persistence.vo.QueueItem
-     * @see ConvertTask#execute(EacCpf, Properties)
-     * @see ValidateTask#execute(EacCpf)
-     * @see PublishTask#execute(EacCpf)
+     * @see ConvertTask#execute(Ead3, Properties)
+     * @see ValidateTask#execute(Ead3)
+     * @see PublishTask#execute(Ead3)
      */
-//    private static void processEacCpf(QueueItem queueItem, Ead3 newEad3, Properties preferences) throws Exception {
+//    private static void processEad3(QueueItem queueItem, Ead3 newEad3, Properties preferences) throws Exception {
 //        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
 //        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
 //        IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
@@ -733,7 +772,7 @@ public class Ead3Service extends AbstractService {
      * Adds to {@link ContentSearchOptions} the different options.
      *
      * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the
-     * identifiers of the EAC-CPF.
+     * identifiers of the EAD3.
      * @param aiId {@link Integer} The identifier of the archival institution.
      * @param queueAction {@link QueueAction} The action in the queue.
      * @param preferences {@link Properties} Profile preferences.
@@ -760,18 +799,18 @@ public class Ead3Service extends AbstractService {
      * database.
      *
      * @param eacCpfSearchOptions {@link ContentSearchOptions} The options of
-     * the EAC-CPF.
+     * the EAD3.
      * @param queueAction {@link QueueAction} The actions in the queue.
      * @param preferences {@link Properties} Profile preferences.
      *
      * @throws IOException
      *
      * @see eu.apenet.persistence.dao.ContentSearchOptions
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
      * @see eu.apenet.persistence.dao.QueueItemDAO
      * @see eu.apenet.persistence.vo.QueueItem
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
     public static void addBatchToQueue(ContentSearchOptions eadSearchOptions, QueueAction queueAction,
             Properties preferences) throws IOException {
@@ -836,7 +875,7 @@ public class Ead3Service extends AbstractService {
     /**
      * Checks the state and the profile future action.
      *
-     * @param eac {@link EacCpf} The EAC-CPF to validate.
+     * @param eac {@link Ead3} The EAD3 to validate.
      * @param preferences {@link Properties} Profile preferences.
      * @param queueAction {@link QueueAction} The action to process.
      * @return boolean The state and the profile future action are rights or
@@ -868,11 +907,11 @@ public class Ead3Service extends AbstractService {
     }
 
     /**
-     * Puts in the {@link ContentSearchOptions} the list of the EAC-CPF's
+     * Puts in the {@link ContentSearchOptions} the list of the EAD3's
      * identifiers to remove from the content manager.
      *
      * @param ids {@link List}{@code <}{@link Integer}{@code >} List of the
-     * EAC-CPF's identifiers.
+     * EAD3's identifiers.
      * @param aiId {@link Integer} The identifier of the archival institution.
      * @throws IOException
      *
@@ -890,17 +929,17 @@ public class Ead3Service extends AbstractService {
     }
 
     /**
-     * Deletes from the queue the EAC-CPFs.
+     * Deletes from the queue the EAD3s.
      *
      * @param contentSearchOptions {@link ContentSearchOptions} The different
-     * options of the EAC-CPF.
+     * options of the EAD3.
      *
      * @throws IOException
      *
      * @see eu.apenet.persistence.dao.ContentSearchOptions
-     * @see SecurityContext#checkAuthorized(EacCpf)
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
+     * @see SecurityContext#checkAuthorized(Ead3)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
      * @see eu.apenet.persistence.vo.QueueItem
      */
     public static void deleteBatchFromQueue(ContentSearchOptions contentSearchOptions) throws IOException {
@@ -1005,48 +1044,25 @@ public class Ead3Service extends AbstractService {
     }
 
     /**
-     * Deletes the file from the queue and updates the database.
-     *
-     * @param queueItem {@link QueueItem} A queue item.
-     * @param deleteUpFile boolean If there is to delete the file.
-     *
-     * @throws IOException
-     *
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     */
-    private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws IOException {
-        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-        JpaUtil.beginDatabaseTransaction();
-        Ead3 ead3 = queueItem.getEad3();
-        if (ead3 != null) {
-            ead3.setQueuing(QueuingState.NO);
-            ead3DAO.updateSimple(ead3);
-        }
-        deleteFromQueueInternal(queueItem, deleteUpFile);
-        JpaUtil.commitDatabaseTransaction();
-    }
-
-    /**
-     * Checks if the EAC-CPF exists in the database.
+     * Checks if the EAD3 exists in the database.
      *
      * @param upFile {@link UpFile} The file to upload.
      * @param identifier String The identifier of the file.
-     * @return {@link EacCpf} An EAC-CPF file.
+     * @return {@link Ead3} An EAD3 file.
      */
     private static Ead3 doesFileExist(UpFile upFile, String identifier) {
         return DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(upFile.getArchivalInstitution().getRepositorycode(), identifier, false);
     }
 
     /**
-     * Creates the EAC-CPF's preview.
+     * Creates the EAD3's preview.
      *
      * @param xmlType {@link XmlType} The type of the file.
-     * @param id {@link Integer} The identifier of the EAC-CPF in the database.
+     * @param id {@link Integer} The identifier of the EAD3 in the database.
      *
-     * @see eu.apenet.persistence.dao.EacCpfDAO
-     * @see eu.apenet.persistence.vo.EacCpf
-     * @see SecurityContext#checkAuthorized(EacCpf)
+     * @see eu.apenet.persistence.dao.Ead3DAO
+     * @see eu.apenet.persistence.vo.Ead3
+     * @see SecurityContext#checkAuthorized(Ead3)
      */
     public static void createPreviewHTML(XmlType xmlType, Integer id) {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
