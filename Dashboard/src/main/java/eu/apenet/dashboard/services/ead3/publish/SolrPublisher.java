@@ -27,11 +27,6 @@ public class SolrPublisher {
         List<SolrInputDocument> solrDocList = new ArrayList<>();
         while (docIterator.hasNext()) {
             SolrDocNode node = docIterator.next();
-//            if (!first) {
-//                System.out.println(",");
-//            }
-//            System.out.println(new Gson().toJson(node));
-//            first=false;
             Map<String, Object> nodeMap = node.getData();
             SolrInputDocument solrDoc = new SolrInputDocument();
 
@@ -49,7 +44,6 @@ public class SolrPublisher {
             SolrDocNode node = docIterator.next();
             System.out.println(new Gson().toJson(node));
         }
-        System.out.println("]}");
     }
 
     public void hardCommit() throws SolrServerException {
