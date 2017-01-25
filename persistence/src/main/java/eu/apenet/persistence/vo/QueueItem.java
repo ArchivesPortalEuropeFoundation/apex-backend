@@ -182,7 +182,7 @@ public class QueueItem implements java.io.Serializable {
     }
 
     public String getPreferences() {
-        return preferences;
+        return this.preferences==null?"":this.preferences;
     }
 
     public void setPreferences(String preferences) {
