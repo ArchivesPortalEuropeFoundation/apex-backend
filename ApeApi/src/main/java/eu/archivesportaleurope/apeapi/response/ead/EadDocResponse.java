@@ -20,13 +20,14 @@ import org.apache.solr.common.SolrDocument;
 @XmlRootElement
 @ApiModel
 public class EadDocResponse {
+
     @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     private final String id;
     @ApiModelProperty(value = "Title of the finding aid. ")
     private final String fondsUnitTitle;
     @ApiModelProperty(value = "Number of search hits on the current document.")
     private final long numberOfResults;
-    
+
     @ApiModelProperty(value = "Name of the repository holding the fonds")
     private String repository;
 
@@ -35,10 +36,18 @@ public class EadDocResponse {
 
     @ApiModelProperty(value = "Language of the description of the result.")
     private String language;
-    
+
     @ApiModelProperty(value = "Code of the repository holding the fonds. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
     private String repositoryCode;
-    
+
+    @ApiModelProperty(value = "Fonds unit ID")
+    private String fondsUnitId;
+
+    @ApiModelProperty(value = "Unit date")
+    private String unitDate;
+
+    @ApiModelProperty(value = "Anstract of the content")
+    private String scopeContent;
 
     public EadDocResponse(Group group) {
         //ToDo: change this
@@ -53,12 +62,15 @@ public class EadDocResponse {
         this.numberOfResults = group.getResult().getNumFound();
         //get the default document
         SolrDocument solrDocument = group.getResult().get(0);
-        
+
         this.language = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGUAGE));
         this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
-        
+        this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
+        this.unitDate = this.objectToString(solrDocument.getFieldValue(SolrFields.ALTERDATE));
+        this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
+
     }
 
     public String getId() {
@@ -72,7 +84,7 @@ public class EadDocResponse {
     public long getNumberOfResults() {
         return numberOfResults;
     }
-    
+
     private String objectToString(Object o) {
         if (o != null) {
             return o.toString();
@@ -112,4 +124,29 @@ public class EadDocResponse {
     public void setRepositoryCode(String repositoryCode) {
         this.repositoryCode = repositoryCode;
     }
+
+    public String getFondsUnitId() {
+        return fondsUnitId;
+    }
+
+    public void setFondsUnitId(String fondsUnitId) {
+        this.fondsUnitId = fondsUnitId;
+    }
+
+    public String getUnitDate() {
+        return unitDate;
+    }
+
+    public void setUnitDate(String unitDate) {
+        this.unitDate = unitDate;
+    }
+
+    public String getScopeContent() {
+        return scopeContent;
+    }
+
+    public void setScopeContent(String scopeContent) {
+        this.scopeContent = scopeContent;
+    }
+
 }

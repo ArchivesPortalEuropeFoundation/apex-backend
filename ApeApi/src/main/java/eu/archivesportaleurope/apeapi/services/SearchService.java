@@ -84,6 +84,7 @@ public abstract class SearchService {
             } else {
                 query.setQuery(searchRequest.getQuery());
             }
+            query.addSort("id", SolrQuery.ORDER.desc);
             query.add("group", "true");
             query.add("group.field", groupByFieldName);
             query.add("group.ngroups", "true");
@@ -139,7 +140,7 @@ public abstract class SearchService {
                 Map<String, String> sortFieldMap = new SortFields().getSolrSortFieldMap();
                 for (String field : sortFilterRequest.getFields()) {
                     String solrSortField = sortFieldMap.get(field);
-                    if (solrSortField!=null) {
+                    if (solrSortField != null) {
                         query.addSort(solrSortField, order);
                     }
                 }
