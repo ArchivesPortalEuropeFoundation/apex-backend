@@ -7,6 +7,7 @@
 
     <!-- <indexConfig> section could go here, but we want the defaults -->
     <indexConfig>
+        <lockType>single</lockType>
         <ramBufferSizeMB>100</ramBufferSizeMB>
         <mergeFactor>20</mergeFactor>
     </indexConfig>
@@ -25,6 +26,7 @@
 
     </updateHandler>
 
+    <dataDir>target/tmp-solr/ead3s/data</dataDir>
 
     <query>
 
