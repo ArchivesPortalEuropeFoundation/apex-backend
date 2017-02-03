@@ -46,7 +46,7 @@ public class EadDocResponse {
     @ApiModelProperty(value = "Unit date")
     private String unitDate;
 
-    @ApiModelProperty(value = "Anstract of the content")
+    @ApiModelProperty(value = "Abstract of the content / Scope Content")
     private String scopeContent;
 
     public EadDocResponse(Group group) {
