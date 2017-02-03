@@ -43,7 +43,7 @@ public class Ead3FacetDateFields {
         for (ListFacetSettings facetSettings : defaultDateListFacetSettings) {
             try {
                 Object field = FieldUtils.readField(this,
-                        ServerResponseDictionary.getResponseFiledName(facetSettings.getFacetType().getName()), true);
+                        ServerResponseDictionary.getEadResponseFieldName(facetSettings.getFacetType().getName()), true);
                 Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
                 setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
             } catch (Exception ex) {

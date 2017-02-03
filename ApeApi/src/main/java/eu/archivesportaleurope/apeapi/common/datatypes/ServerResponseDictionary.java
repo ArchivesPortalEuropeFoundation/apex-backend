@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.common.datatypes;
 
 import com.google.common.collect.ImmutableMap;
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.TreeBidiMap;
@@ -19,7 +20,7 @@ public final class ServerResponseDictionary {
     /**
      *
      */
-    private static final BidiMap RESPONSE_DIC = new TreeBidiMap(ImmutableMap.builder()
+    private static final BidiMap EAD_RESPONSE_DIC = new TreeBidiMap(ImmutableMap.builder()
             .put("subject", SolrFields.TOPIC_FACET)
             .put("repository", SolrFields.AI)
             .put("docType", SolrFields.TYPE)
@@ -32,17 +33,41 @@ public final class ServerResponseDictionary {
             .put("toDate", SolrFields.END_DATE)
             .build()
     );
+    
+    private static final BidiMap EAD3_RESPONSE_DIC = new TreeBidiMap(ImmutableMap.builder()
+            .put("repository", Ead3SolrFields.AI)
+            .put("hasDigitalObject", Ead3SolrFields.DAO)
+            .put("digitalObjectType", Ead3SolrFields.DAO_TYPE)
+            .put("unitDateType", Ead3SolrFields.DATE_TYPE)
+            .put("fromDate", SolrFields.START_DATE)
+            .put("toDate", SolrFields.END_DATE)
+            .build()
+    );
 
-    public static String getSolrFieldName(String responseFieldName) {
-        if (RESPONSE_DIC.containsKey(responseFieldName)) {
-            return (String) RESPONSE_DIC.get(responseFieldName);
+    public static String getEadSolrFieldName(String responseFieldName) {
+        if (EAD_RESPONSE_DIC.containsKey(responseFieldName)) {
+            return (String) EAD_RESPONSE_DIC.get(responseFieldName);
         }
         return responseFieldName;
     }
 
-    public static String getResponseFiledName(String sorlFieldName) {
-        if (RESPONSE_DIC.containsValue(sorlFieldName)) {
-            return (String) RESPONSE_DIC.getKey(sorlFieldName);
+    public static String getEadResponseFieldName(String sorlFieldName) {
+        if (EAD_RESPONSE_DIC.containsValue(sorlFieldName)) {
+            return (String) EAD_RESPONSE_DIC.getKey(sorlFieldName);
+        }
+        return sorlFieldName;
+    }
+    
+    public static String getEad3SolrFieldName(String responseFieldName) {
+        if (EAD3_RESPONSE_DIC.containsKey(responseFieldName)) {
+            return (String) EAD3_RESPONSE_DIC.get(responseFieldName);
+        }
+        return responseFieldName;
+    }
+
+    public static String getEad3ResponseFieldName(String sorlFieldName) {
+        if (EAD3_RESPONSE_DIC.containsValue(sorlFieldName)) {
+            return (String) EAD3_RESPONSE_DIC.getKey(sorlFieldName);
         }
         return sorlFieldName;
     }

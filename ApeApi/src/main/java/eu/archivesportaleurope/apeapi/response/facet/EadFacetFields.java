@@ -59,7 +59,7 @@ public class EadFacetFields {
         for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
             try {
                 if (!facetSettings.getFacetType().isDate()) {
-                    String name = ServerResponseDictionary.getResponseFiledName(facetSettings.getFacetType().getName());
+                    String name = ServerResponseDictionary.getEadResponseFieldName(facetSettings.getFacetType().getName());
                     Object field = FieldUtils.readField(this, name, true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));

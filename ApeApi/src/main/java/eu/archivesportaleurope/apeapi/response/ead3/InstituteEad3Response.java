@@ -63,12 +63,12 @@ public class InstituteEad3Response {
         this.langMaterial = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.LANG_MATERIAL));
         this.unitDate = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_DATE));
 
-        this.country = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY_NAME));
+        this.country = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY));
 
         this.titleProper = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.TITLE_PROPER));
         this.recordId = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.RECORD_ID));
 
-        this.repository = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.AI_NAME));
+        this.repository = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.AI));
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.REPOSITORY_CODE));
         this.indexDate = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.TIMESTAMP));
         this.numberOfDigitalObject = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO));

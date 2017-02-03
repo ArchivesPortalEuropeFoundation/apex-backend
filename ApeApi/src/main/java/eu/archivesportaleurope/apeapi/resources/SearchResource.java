@@ -15,6 +15,7 @@ import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead3.Ead3FacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead3.Ead3ResponseSet;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
@@ -103,7 +104,7 @@ public class SearchResource {
     ) {
         try {
             QueryResponse queryResponse = ead3Search.searchOpenData(searchRequest);
-            Ead3ResponseSet responseSet = new Ead3ResponseSet(queryResponse);
+            Ead3FacetedResponseSet responseSet = new Ead3FacetedResponseSet(queryResponse);
             return Response.ok().entity(responseSet).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);

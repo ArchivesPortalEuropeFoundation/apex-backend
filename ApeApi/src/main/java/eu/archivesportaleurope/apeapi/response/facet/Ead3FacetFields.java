@@ -27,11 +27,11 @@ public class Ead3FacetFields {
 //    private List<NameCountPair> subject;
     private final List<NameCountPair> repository;
     private final List<NameCountPair> docType;
-    private final List<NameCountPair> level;
+    private final List<NameCountPair> levelName;
     private final List<NameCountPair> hasDigitalObject;
     private final List<NameCountPair> digitalObjectType;
     private final List<NameCountPair> unitDateType;
-
+//aiName
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public Ead3FacetFields() {
@@ -39,7 +39,7 @@ public class Ead3FacetFields {
 //        this.subject = new ArrayList<>();
         this.repository = new ArrayList<>();
         this.docType = new ArrayList<>();
-        this.level = new ArrayList<>();
+        this.levelName = new ArrayList<>();
         this.hasDigitalObject = new ArrayList<>();
         this.digitalObjectType = new ArrayList<>();
         this.unitDateType = new ArrayList<>();
@@ -52,7 +52,7 @@ public class Ead3FacetFields {
         for (ListFacetSettings facetSettings : defaultEad3ListFacetSettings) {
             try {
                 if (!facetSettings.getFacetType().isDate()) {
-                    String name = ServerResponseDictionary.getResponseFiledName(facetSettings.getFacetType().getName());
+                    String name = ServerResponseDictionary.getEadResponseFieldName(facetSettings.getFacetType().getName());
                     Object field = FieldUtils.readField(this, name, true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
@@ -79,8 +79,8 @@ public class Ead3FacetFields {
         return docType;
     }
 
-    public List<NameCountPair> getLevel() {
-        return level;
+    public List<NameCountPair> getLevelName() {
+        return levelName;
     }
 
     public List<NameCountPair> getHasDigitalObject() {
@@ -103,7 +103,7 @@ public class Ead3FacetFields {
         for (int i = 0; i < counts.size(); i++) {
             NameCountPair pair = new NameCountPair();
             FacetField.Count countObj = counts.get(i);
-            String[] arr = countObj.getName().split(":");
+            String[] arr = countObj.getName().split("|");
             pair.setName(arr[0]);
             pair.setId(arr[arr.length - 1]);
             pair.setFrequency(countObj.getCount());

@@ -55,7 +55,7 @@ public class EacFacetFields {
             try {
                 if (!facetSettings.getFacetType().isDate()) {
                     Object field = FieldUtils.readField(this, 
-                            ServerResponseDictionary.getResponseFiledName(facetSettings.getFacetType().getName()), true);
+                            ServerResponseDictionary.getEadResponseFieldName(facetSettings.getFacetType().getName()), true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
                 }

@@ -30,10 +30,14 @@ public final class Ead3SolrFields {
     public final static String SCOPE_CONTENT = "scopeContent"; //indexed+stored - 
     public final static String OTHER = "other";  //indexed+stored - other fields valaues, excluding unitTitle, scopeContent, titleProper, etc already stored data fields
 
-    public final static String COUNTRY_ID = "countryId"; //indexed+stored - 
-    public final static String COUNTRY_NAME = "countryName"; //indexed+stored - 
-    public final static String AI_ID = "aiId"; //indexed+stored - db value
-    public final static String AI_NAME = "aiName"; //indexed+stored - db value
+    public final static String COUNTRY_ID = "countryId"; //indexed - 
+    public final static String COUNTRY_NAME = "countryName"; //stored - 
+    public final static String AI_ID = "aiId"; //indexed - db value
+    public final static String AI_NAME = "aiName"; //stored - db value
+    
+    public final static String COUNTRY = "country"; //indexed+stored - countryName:countryId
+    public final static String AI = "ai"; //indexed+stored - db value - aiName:aiId
+    
     public final static String REPOSITORY_CODE = "repositoryCode"; //indexed+stored - db value
     public final static String NUMBER_OF_DESCENDENTS = "numberOfDescendents"; //stored - 
     public final static String NUMBER_OF_ANCESTORS = "numberOfAncestors"; //stored - 

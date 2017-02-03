@@ -84,7 +84,10 @@ public abstract class SearchService {
             } else {
                 query.setQuery(searchRequest.getQuery());
             }
-            query.addSort("id", SolrQuery.ORDER.desc);
+            
+            //Quick fix, base on the fact that item with Id pattern Fxx/Hxx/Gxx will come first in decending order
+            //than item id with Cxx which are clevel items.
+            query.addSort("id", SolrQuery.ORDER.desc); 
             query.add("group", "true");
             query.add("group.field", groupByFieldName);
             query.add("group.ngroups", "true");
@@ -115,7 +118,7 @@ public abstract class SearchService {
 
         for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
             queryBuilder.addFilters(query,
-                    FacetType.getFacetByName(ServerResponseDictionary.getSolrFieldName(searchFilter.getFacetFieldName())),
+                    FacetType.getFacetByName(ServerResponseDictionary.getEadSolrFieldName(searchFilter.getFacetFieldName())),
                     searchFilter.getFacetFieldIds());
         }
 
