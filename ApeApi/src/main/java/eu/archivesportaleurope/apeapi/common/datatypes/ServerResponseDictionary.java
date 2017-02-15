@@ -39,8 +39,8 @@ public final class ServerResponseDictionary {
             .put("hasDigitalObject", Ead3SolrFields.DAO)
             .put("digitalObjectType", Ead3SolrFields.DAO_TYPE)
             .put("unitDateType", Ead3SolrFields.DATE_TYPE)
-            .put("fromDate", SolrFields.START_DATE)
-            .put("toDate", SolrFields.END_DATE)
+            .put("fromDate", Ead3SolrFields.START_DATE)
+            .put("toDate", Ead3SolrFields.END_DATE)
             .build()
     );
 
