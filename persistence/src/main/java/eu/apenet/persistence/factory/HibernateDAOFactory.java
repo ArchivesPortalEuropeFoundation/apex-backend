@@ -187,6 +187,11 @@ public class HibernateDAOFactory extends DAOFactory {
 
     @Override
     public Ead3DAO getEad3DAO() {
-        return  (Ead3DAO) instantiateDAO(Ead3JpaDAO.class);
+        return (Ead3DAO) instantiateDAO(Ead3JpaDAO.class);
+    }
+
+    @Override
+    public ReindexDocDAO getReindexDocDAO() {
+        return (ReindexDocDAO) instantiateDAO(ReindexDocJpaDAO.class);
     }
 }

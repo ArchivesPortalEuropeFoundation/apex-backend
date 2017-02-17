@@ -9,6 +9,7 @@ import eu.apenet.persistence.dao.ReindexDocDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.ReindexDoc;
 import java.util.List;
+import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
 /**
@@ -21,27 +22,51 @@ public class ReindexDocJpaDAO extends AbstractHibernateDAO<ReindexDoc, Integer> 
 
     @Override
     public Long countDocs() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypedQuery<Long> query = getEntityManager().createQuery(
+                "SELECT count(reindexDoc) FROM ReindexDoc reindexDoc",
+                Long.class);
+        query.setMaxResults(1);
+        return query.getResultList().get(0);
     }
 
     @Override
     public ReindexDoc getFirstDoc() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypedQuery<ReindexDoc> query = getEntityManager().createQuery(
+                "SELECT reindexDoc FROM ReindexDoc reindexDoc ORDER BY  id asc",
+                ReindexDoc.class);
+        query.setMaxResults(1);
+        List<ReindexDoc> results = query.getResultList();
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return null;
     }
 
     @Override
     public Long countDocs(int aiId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypedQuery<Long> query = getEntityManager().createQuery(
+                "SELECT count(reindexDoc) FROM ReindexDoc reindexDoc WHERE aiId = :aiId",
+                Long.class);
+        query.setParameter("aiId", aiId);
+        query.setMaxResults(1);
+        return query.getResultList().get(0);
     }
 
     @Override
     public List<Object[]> countByArchivalInstitutions() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypedQuery<Object[]> query = getEntityManager().createQuery(
+                "SELECT archivalInstitution, count(reindexDoc) FROM ReindexDoc reindexDoc JOIN reindexDoc.archivalInstitution archivalInstitution GROUP BY archivalInstitution",
+                Object[].class);
+        return query.getResultList();
     }
 
     @Override
     public List<ReindexDoc> getItemsOfInstitution(Integer aiId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypedQuery<ReindexDoc> query = getEntityManager().createQuery(
+                "SELECT queueItem FROM ReindexDoc reindexDoc WHERE aiId = :aiId ORDER BY id asc",
+                ReindexDoc.class);
+        query.setParameter("aiId", aiId);
+        return query.getResultList();
     }
 
 }
