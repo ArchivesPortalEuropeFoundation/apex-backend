@@ -47,8 +47,8 @@
                 <option value="displayProfile">
                     <s:text name="content.message.applyProfile" />
                 </option>
-                <option value="convert_validate_publish">
-                    <s:text name="content.message.doitall" />
+                <option value="validate_publish">
+                    <s:text name="content.message.validatepublish" />
                 </option>
                 <%--<option value="convert">
                     <s:text name="content.message.convert" />

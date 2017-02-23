@@ -525,6 +525,10 @@ public class Ead3Service extends AbstractService {
                     if (queueAction.isPublishAction()) {
                         new PublishTask().execute(ead3, preferences);
                     }
+                    if(queueAction.isValidatePublishAction()){
+                        new ValidateTask().execute(ead3, preferences);
+                        new PublishTask().execute(ead3, preferences);
+                    }
 //                    if (queueAction.isRePublishAction()) {
 //                        new UnpublishTask().execute(eac, preferences);
 //                        new PublishTask().execute(eac, preferences);
@@ -825,7 +829,7 @@ public class Ead3Service extends AbstractService {
         } else if (QueueAction.PUBLISH.equals(queueAction)) {
             eadSearchOptions.setValidated(ValidatedState.VALIDATED);
             eadSearchOptions.setPublished(false);
-        } else if (QueueAction.CONVERT_VALIDATE_PUBLISH.equals(queueAction)) {
+        } else if (QueueAction.VALIDATE_PUBLISH.equals(queueAction)) {
             eadSearchOptions.setPublished(false);
         } else if (QueueAction.UNPUBLISH.equals(queueAction)) {
             eadSearchOptions.setPublished(true);
@@ -1041,6 +1045,11 @@ public class Ead3Service extends AbstractService {
         queueItem.setPriority(basePriority);
         queueItem.setAiId(upFile.getAiId());
         return queueItem;
+    }
+    
+    public static void useProfileActionForHarvester(UpFile upFile, Properties preferences) throws Exception {
+        QueueItem queueItem = fillQueueItem(upFile, QueueAction.USE_PROFILE, preferences);
+        DAOFactory.instance().getQueueItemDAO().insertSimple(queueItem);
     }
 
     /**
