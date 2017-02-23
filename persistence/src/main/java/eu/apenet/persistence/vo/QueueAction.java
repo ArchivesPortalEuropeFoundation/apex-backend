@@ -69,6 +69,10 @@ public enum QueueAction {
         return CHANGE_TO_STATIC.equals(this);
     }
 
+    public boolean isValidatePublishAction() {
+        return VALIDATE_PUBLISH.equals(this);
+    }
+
     public boolean isUseProfileAction() {
         return USE_PROFILE.equals(this);
     }

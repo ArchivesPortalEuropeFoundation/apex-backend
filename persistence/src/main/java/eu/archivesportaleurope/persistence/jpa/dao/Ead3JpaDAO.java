@@ -116,7 +116,7 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
 
     @Override
     public Integer isEad3IdUsed(String identifier, Integer aiId, Class<? extends Ead3> clazz) {
-        Criteria criteria = getSession().createCriteria(clazz, "ead3").setProjection(Projections.property("identifier"));
+        Criteria criteria = getSession().createCriteria(clazz, "ead3").setProjection(Projections.property("id"));
         criteria.createAlias("ead3.archivalInstitution", "archivalInstitution");
         criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
         criteria.add(Restrictions.eq("identifier", identifier));
