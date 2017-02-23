@@ -599,7 +599,7 @@ public class ExistingFilesChecker {
             if (identifier != null) { //The cpf_id is already stored in the table
 
                 // The cpfId already exists
-                LOG.warn("EAD3 identifier '" + ead3Id + "' is already existing with id '" + identifier + "' in the table of eac_cpf'");
+                LOG.warn("EAD3 identifier '" + ead3Id + "' is already existing with id '" + identifier + "' in the table of Ead3'");
                 fileUnit.setEadid(ead3Id);
                 fileUnit.setPermId(identifier.intValue());
                 result = STATUS_EXISTS;
@@ -906,12 +906,15 @@ public class ExistingFilesChecker {
             }
         } else // The file is an EAD or EAC-CPF
         {
-            if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName()) || fileUnit.getEadType().equals(XmlType.EAC_CPF.getName())) {
+            if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName()) || fileUnit.getEadType().equals(XmlType.EAC_CPF.getName()) || fileUnit.getEadType().equals(XmlType.EAD_3.getName())) {
                 try {
                     XmlType xmlType = XmlType.getType(fileUnit.getEadType());
                     if (xmlType == XmlType.EAC_CPF) {
                         EacCpf eacToOverwrite = DAOFactory.instance().getEacCpfDAO().getEacCpfById(archivalInstitutionId, fileUnit.getEadid());
                         EacCpfService.overwrite(eacToOverwrite, upFileDao.findById(fileUnit.getFileId()));
+                    } else if (xmlType == XmlType.EAD_3) {
+                        Ead3 ead3ToOverwrite = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(archivalInstitutionId, fileUnit.getEadid());
+                        Ead3Service.overwrite(ead3ToOverwrite, upFileDao.findById(fileUnit.getFileId()));
                     } else {
                         Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getEadClazz(), archivalInstitutionId, fileUnit.getEadid());
                         EadService.overwrite(eadToOverwrite, upFileDao.findById(fileUnit.getFileId()));
