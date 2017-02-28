@@ -17,7 +17,6 @@ import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,13 +121,14 @@ public class EadSearchSearviceImpl extends EadSearchService {
     private String typeToFieldDynamicIdTranslator(String type) {
         switch (type) {
             case "fa":
-                return SolrFields.FA_DYNAMIC_ID;
+                return SolrFields.FA_DYNAMIC;
             case "hg":
-                return SolrFields.HG_DYNAMIC_ID;
+                return SolrFields.HG_DYNAMIC;
             case "sg":
-                return SolrFields.SG_DYNAMIC_ID;
+                return SolrFields.SG_DYNAMIC;
+            default:
+                throw new InternalErrorException("No such type available");
         }
-        return "";
     }
 
     private QueryResponse groupByQuery(SearchRequest searchRequest, String groupByFieldName, boolean includeFacet, boolean resultNeeded) {
@@ -145,16 +145,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             if (searchRequest.getCount() <= 0) {
                 searchRequest.setCount(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
             }
-            switch (searchRequest.getDocType().toLowerCase()) {
-                case "fa":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.FA_DYNAMIC + "0_s", true, true);
-                case "hg":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.HG_DYNAMIC + "0_s", true, true);
-                case "sg":
-                    return this.groupByQueryOpenData(searchRequest, SolrFields.SG_DYNAMIC + "0_s", true, true);
-                default:
-                    throw new InternalErrorException("No such type available");
-            }
+            return this.groupByQueryOpenData(searchRequest, this.typeToFieldDynamicIdTranslator(searchRequest.getDocType().toLowerCase()) + "0_s", true, true);
         } else {
             throw new InternalErrorException("Invalid Search request");
         }
@@ -199,7 +190,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         sortRequest.addField(SolrFields.ORDER_ID);
         request.setSortRequest(sortRequest);
         request.setQuery("*" + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
-        
+
         QueryResponse qr = this.searchOpenData(request);
         try {
             TypedList typedListParent = this.getParentList(id);
@@ -208,7 +199,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
 //            for (SolrDocument document : qr.getResults()) {
 //                typedListChildren.keyLevel.put(document.getFieldValue(SolrFields.ID).toString(), typedListParent.keyLevel.size()+1);
 //            }
-            HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedListParent.keyLevel.size()+1);
+            HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedListParent.keyLevel.size() + 1);
             return hrs;
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
@@ -288,7 +279,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             request.setCount(typedList.keyLevel.size());
 //            request.setStartIndex(pageRequest.getStartIndex());
             request.setQuery(requestStrBuffer.toString());
-            
+
             if (typedList.keyLevel.isEmpty()) {
                 return new HierarchyResponseSet();
             } else {
