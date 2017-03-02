@@ -7,8 +7,8 @@ import java.util.List;
 import eu.apenet.commons.solr.SolrFields;
 
 public enum FacetType {
-    EAD3_COUNTRY(Ead3SolrFields.COUNTRY, Ead3SolrFields.COUNTRY, true, true, "country."),
-    EAD3_AI(Ead3SolrFields.AI, Ead3SolrFields.AI, true),
+//    EAD3_COUNTRY(Ead3SolrFields.COUNTRY, Ead3SolrFields.COUNTRY, true, true, "country."),
+//    EAD3_AI(Ead3SolrFields.AI, Ead3SolrFields.AI, true),
 //    TITLE_PROPER(Ead3SolrFields.TITLE_PROPER, Ead3SolrFields.EAD_ID, true),
     EAD3_TYPE(Ead3SolrFields.DAO_TYPE, Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.text."),
     EAD3_LEVEL(Ead3SolrFields.LEVEL_NAME, Ead3SolrFields.LEVEL_NAME, false, true, "advancedsearch.facet.value.level."),
@@ -151,8 +151,8 @@ public enum FacetType {
 
     public static List<ListFacetSettings> getDefaultEad3ListFacetSettings() {
         List<ListFacetSettings> results = new ArrayList<>();
-        results.add(new ListFacetSettings(FacetType.EAD3_COUNTRY));
-        results.add(new ListFacetSettings(FacetType.EAD3_AI));
+        results.add(new ListFacetSettings(FacetType.COUNTRY));
+        results.add(new ListFacetSettings(FacetType.AI));
         results.add(new ListFacetSettings(FacetType.EAD3_LEVEL));
         results.add(new ListFacetSettings(FacetType.EAD3_TYPE));
         results.add(new ListFacetSettings(FacetType.EAD3_START_DATE));
