@@ -779,7 +779,8 @@
 				if ((type == "EAC-CPF" && neweadid.toUpperCase().match(pattern))
 						|| type == "Finding Aid"
 						|| type == "Holdings Guide"
-						|| type == "Source Guide") {
+						|| type == "Source Guide"
+                                                || type == "EAD3") {
 					$.getJSON("${pageContext.request.contextPath}/generateEadidResponseJSON.action", 
 						{ eadid: oldeadid, 
 					      neweadid: neweadid, 

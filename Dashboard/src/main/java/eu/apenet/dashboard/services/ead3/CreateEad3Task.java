@@ -44,6 +44,7 @@ public class CreateEad3Task extends AbstractEad3Task {
                 File destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() + startPath);
                 if (destFile.exists()) {
                     startPath = getPath(xmlType, archivalInstitution) + System.currentTimeMillis() + "_" + upFile.getFilename();
+                    destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() + startPath);
                 }
                 ead3.setPath(startPath);
                 ead3.setUploadMethod(upFile.getUploadMethod());
