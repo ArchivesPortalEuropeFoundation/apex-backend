@@ -64,9 +64,10 @@ public class ArchivalInstituteStatResource {
     public Response getInsByOpenData(@ApiParam(value = "Page request by count and startIndex", required = true)
             @Valid PageRequest request) {
         try {
-            QueryResponse resp = eadSearch.searchInstituteInGroup((request.getStartIndex() < 0) ? 0 : request.getStartIndex(), request.getCount());
-            logger.info("Number fo group command " + resp.getGroupResponse());
-            return Response.ok().entity(new ArchivalInstitutesResponse(resp)).build();
+
+//            QueryResponse resp = eadSearch.searchInstituteInGroup((request.getStartIndex() < 0) ? 0 : request.getStartIndex(), request.getCount());
+//            logger.info("Number fo group command " + resp.getGroupResponse());
+            return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled((request.getStartIndex() < 0) ? 0 : request.getStartIndex(), request.getCount())).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

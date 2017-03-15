@@ -92,7 +92,7 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
         Assert.assertEquals(2, ais.getInstitutes().size());
-        Assert.assertEquals(2, ais.getTotalResults());
+        Assert.assertEquals(3, ais.getTotalResults());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class B1_ArchivalInstituteStatResourceTest extends JerseySpringWithSecuri
         };
         ArchivalInstitutesResponse ais = gson.fromJson(jsonResponse, token.getType());
         Assert.assertEquals(2, ais.getInstitutes().size());
-        Assert.assertEquals(2, ais.getTotalResults());
+        Assert.assertEquals(3, ais.getTotalResults());
     }
 
     @Test(expected = ProcessingException.class)
