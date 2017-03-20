@@ -80,7 +80,7 @@ public class SolrQueryBuilder {
         if (orderByField != null && orderByField.length() > 0 && !"relevancy".equals(orderByField)) {
             query.addSort(orderByField, SolrQuery.ORDER.asc);
             if (withStartdateAndEnddate && orderByField.equals("startDate")) {
-                query.addSort("enddate", SolrQuery.ORDER.asc);
+                query.addSort("endDate", SolrQuery.ORDER.asc);
             }
         }
 
@@ -230,6 +230,7 @@ public class SolrQueryBuilder {
                 facetStartDate = false;
             }
         } else if (searchResults) {
+            //why everything is lower case
             query.setParam("f." + Ead3SolrFields.START_DATE + ".facet.date.start", "0000-01-01T00:00:00Z");
             query.setParam("f." + Ead3SolrFields.START_DATE + ".facet.date.end", "NOW");
             query.set("f." + Ead3SolrFields.START_DATE + ".facet.date.gap", "+200YEARS");
