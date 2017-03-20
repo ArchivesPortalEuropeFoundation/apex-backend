@@ -14,7 +14,9 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -28,11 +30,14 @@ import org.slf4j.LoggerFactory;
 public class EacCpfSearchServiceImpl extends SearchService {
 
     private String solrUrl;
+    private final String onlyOpenData = "openData:true";
     private final SolrSearchUtil eacSearchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Map<String, String> extraParam;
 
     public EacCpfSearchServiceImpl(String solrUrl, String solrCore, String propFileName) {
+        this.extraParam = new HashMap<>();
         this.solrUrl = solrUrl;
         logger.debug("Solr server got created!");
         this.eacSearchUtil = new SolrSearchUtil(solrUrl, solrCore);
@@ -40,6 +45,7 @@ public class EacCpfSearchServiceImpl extends SearchService {
     }
 
     public EacCpfSearchServiceImpl(SolrServer solrServer, String propFileName) {
+        this.extraParam = new HashMap<>();
         this.solrUrl = "";
         logger.debug("Solr server got created!");
         this.eacSearchUtil = new SolrSearchUtil(solrServer);
@@ -55,7 +61,7 @@ public class EacCpfSearchServiceImpl extends SearchService {
     }
 
     @Override
-    public QueryResponse search(SearchRequest searchRequest, String extraSearchParam, boolean includeFacet) {
+    public QueryResponse search(SearchRequest searchRequest, Map<String, String>  extraSearchParam, boolean includeFacet) {
 
         try {
             List<ListFacetSettings> facetSettingsList = null;
@@ -71,6 +77,8 @@ public class EacCpfSearchServiceImpl extends SearchService {
 
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
-        return this.search(request, "openData:true", true);
+        extraParam.clear();
+        extraParam.put("q", this.onlyOpenData);
+        return this.search(request, extraParam, true);
     }
 }

@@ -12,7 +12,9 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.Ead3SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
@@ -32,6 +34,7 @@ public class Ead3SearchServiceImpl extends Ead3SearchService {
     private final PropertiesUtil propertiesUtil;
     private final SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Map<String, String> extraParam = new HashMap<>();
 
     public Ead3SearchServiceImpl(String solrUrl, String solrCore, String propFileName) {
         this.solrUrl = solrUrl;
@@ -57,7 +60,7 @@ public class Ead3SearchServiceImpl extends Ead3SearchService {
     }
 
     @Override
-    public QueryResponse search(SearchRequest request, String extraSearchParam, boolean includeFacet) {
+    public QueryResponse search(SearchRequest request, Map<String, String> extraSearchParam, boolean includeFacet) {
         List<ListFacetSettings> facetSettingsList = null;
         if (includeFacet) {
             facetSettingsList = FacetType.getDefaultEad3ListFacetSettings();
@@ -67,7 +70,9 @@ public class Ead3SearchServiceImpl extends Ead3SearchService {
 
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
-        return this.search(request, this.onlyOpenData, true);
+        extraParam.clear();
+        extraParam.put("q", this.onlyOpenData);
+        return this.search(request, extraParam, true);
     }
 
 }

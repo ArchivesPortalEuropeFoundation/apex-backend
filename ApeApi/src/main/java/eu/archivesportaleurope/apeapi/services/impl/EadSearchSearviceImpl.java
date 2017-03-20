@@ -43,6 +43,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     private final SolrSearchUtil searchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Map<String, String> extraParam;
 
     private class TypedList {
 
@@ -51,6 +52,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     }
 
     public EadSearchSearviceImpl(String solrUrl, String solrCore, String propFileName) {
+        this.extraParam = new HashMap<>();
         this.solrUrl = solrUrl;
         this.solrCore = solrCore;
         logger.debug("Solr server got created!");
@@ -59,6 +61,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     }
 
     public EadSearchSearviceImpl(SolrServer solrServer, String propFileName) {
+        this.extraParam = new HashMap<>();
         this.solrUrl = this.solrCore = "";
         logger.debug("Solr server got created!");
         this.searchUtil = new SolrSearchUtil(solrServer);
@@ -74,7 +77,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     }
 
     @Override
-    public QueryResponse search(SearchRequest searchRequest, String extraSearchParam, boolean includeFacet) {
+    public QueryResponse search(SearchRequest searchRequest, Map<String, String> extraSearchParam, boolean includeFacet) {
         List<ListFacetSettings> facetSettingsList = null;
         if (includeFacet) {
             facetSettingsList = FacetType.getDefaultEadListFacetSettings();
@@ -84,7 +87,9 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
-        return this.search(request, this.onlyOpenData, true);
+        extraParam.clear();
+        extraParam.put("q", this.onlyOpenData);
+        return this.search(request, extraParam, true);
     }
 
     @Override
@@ -94,7 +99,10 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setStartIndex(request.getStartIndex());
         searchRequest.setQuery("ai:*" + request.getInstituteId() + this.solrAND
                 + "id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
-        return this.search(searchRequest, this.onlyOpenData, false);
+        
+        extraParam.clear();
+        extraParam.put("q", this.onlyOpenData);
+        return this.search(searchRequest, this.extraParam, false);
     }
 
     @Override
@@ -103,10 +111,18 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setCount(count);
         searchRequest.setStartIndex(startIndex);
         searchRequest.setQuery("(id:" + SolrValues.FA_PREFIX + "* OR id:" + SolrValues.HG_PREFIX + "* OR id:" + SolrValues.SG_PREFIX + "*)");
-        return this.groupByQuery(searchRequest, SolrFields.AI, false, true);
+        
+        extraParam.clear();
+        extraParam.put("q", this.onlyOpenData);
+            
+        extraParam.put("group", "true");
+        extraParam.put("group.field", SolrFields.AI);
+        extraParam.put("group.ngroups", "true");
+        
+        return this.search(searchRequest, extraParam, false);
     }
 
-    private QueryResponse groupByQueryOpenData(SearchDocRequest searchRequest, String groupByFieldName, boolean includeFacet, boolean resultNeeded) {
+    private QueryResponse searchDocListByInstitute(SearchDocRequest searchRequest, String groupByFieldName, boolean includeFacet, boolean resultNeeded) {
         SearchRequest request = new SearchRequest();
         request.setFilters(searchRequest.getFilters());
         request.setDateFilters(searchRequest.getDateFilters());
@@ -115,7 +131,22 @@ public class EadSearchSearviceImpl extends EadSearchService {
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
-        return this.groupByQuery(request, groupByFieldName, includeFacet, resultNeeded);
+        
+        extraParam.clear();
+        extraParam.put("q", this.onlyOpenData);
+        
+        extraParam.put("qf", "fond^100 title scopecontent^0.5 alterdate^0.5 other^0.1");
+        extraParam.put("bq", "id:(F*)^100");
+        extraParam.put("group.sort", "id "+SolrQuery.ORDER.desc); 
+            
+        extraParam.put("group", "true");
+        extraParam.put("group.field", groupByFieldName);
+        extraParam.put("group.ngroups", "true");
+        if (!resultNeeded) {
+            extraParam.put("group.limit", "0");
+        }
+        
+        return this.search(request, extraParam, includeFacet);
     }
 
     private String typeToFieldDynamicIdTranslator(String type) {
@@ -131,21 +162,10 @@ public class EadSearchSearviceImpl extends EadSearchService {
         }
     }
 
-    private QueryResponse groupByQuery(SearchRequest searchRequest, String groupByFieldName, boolean includeFacet, boolean resultNeeded) {
-        List<ListFacetSettings> facetSettingsList = null;
-        if (includeFacet) {
-            facetSettingsList = FacetType.getDefaultEadListFacetSettings();
-        }
-        return super.groupByQuery(searchRequest, this.onlyOpenData, facetSettingsList, propertiesUtil, searchUtil, groupByFieldName, resultNeeded);
-    }
-
     @Override
     public QueryResponse getEadList(SearchDocRequest searchRequest) throws InternalErrorException {
         if (null != searchRequest.getDocType()) {
-            if (searchRequest.getCount() <= 0) {
-                searchRequest.setCount(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
-            }
-            return this.groupByQueryOpenData(searchRequest, this.typeToFieldDynamicIdTranslator(searchRequest.getDocType().toLowerCase()) + "0_s", true, true);
+            return this.searchDocListByInstitute(searchRequest, this.typeToFieldDynamicIdTranslator(searchRequest.getDocType().toLowerCase()) + "0_s", true, true);
         } else {
             throw new InternalErrorException("Invalid Search request");
         }
@@ -159,7 +179,11 @@ public class EadSearchSearviceImpl extends EadSearchService {
             request.setQuery(searchRequest.getQuery());
             request.setCount(searchRequest.getCount());
             request.setStartIndex(searchRequest.getStartIndex());
-            return this.search(request, levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData, false);
+            
+            extraParam.clear();
+            extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
+            
+            return this.search(request, extraParam, false);
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
@@ -194,11 +218,6 @@ public class EadSearchSearviceImpl extends EadSearchService {
         QueryResponse qr = this.searchOpenData(request);
         try {
             TypedList typedListParent = this.getParentList(id);
-            //the size of current id's parent list (which is the parent of it's children) indecate it's level
-//            TypedList typedListChildren = new TypedList();
-//            for (SolrDocument document : qr.getResults()) {
-//                typedListChildren.keyLevel.put(document.getFieldValue(SolrFields.ID).toString(), typedListParent.keyLevel.size()+1);
-//            }
             HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedListParent.keyLevel.size() + 1);
             return hrs;
         } catch (SolrServerException ex) {

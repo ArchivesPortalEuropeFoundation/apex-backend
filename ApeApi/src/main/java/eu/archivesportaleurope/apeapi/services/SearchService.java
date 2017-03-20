@@ -33,25 +33,20 @@ import org.slf4j.LoggerFactory;
  * @author Mahbub
  */
 public abstract class SearchService {
+    private final String solrAND = " AND ";
 
-    public abstract QueryResponse search(SearchRequest request, String extraSearchParam, boolean includeFacet);
+    public abstract QueryResponse search(SearchRequest request, Map<String, String> extraSearchParam, boolean includeFacet);
 
     public abstract QueryResponse searchOpenData(SearchRequest request);
 
     private final SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected QueryResponse search(SearchRequest searchRequest, String extraSearchParam,
+    protected QueryResponse search(SearchRequest searchRequest, Map<String, String> extraSearchParam,
             List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil) {
         try {
 
             SolrQuery query = this.getFacatedQuery(searchRequest, facetSettingsList);
-
-            if (extraSearchParam != null && !"".equals(extraSearchParam)) {
-                query.setQuery(searchRequest.getQuery() + " AND " + extraSearchParam);
-            } else {
-                query.setQuery(searchRequest.getQuery());
-            }
 
             if (searchRequest.getCount() <= 0) {
                 logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
@@ -59,6 +54,19 @@ public abstract class SearchService {
             } else {
                 query.setRows(searchRequest.getCount());
             }
+            
+            String queryStr = searchRequest.getQuery();
+            
+            if (extraSearchParam != null && !extraSearchParam.isEmpty()) {
+                for (Map.Entry<String, String> entry : extraSearchParam.entrySet()) {
+                    if (entry.getKey().equalsIgnoreCase("q") && !entry.getValue().isEmpty()) {
+                        queryStr += solrAND + entry.getValue();
+                    }
+                    query.add(entry.getKey(), entry.getValue());
+                }
+            }
+            
+            query.setQuery(queryStr);
 
             //openData - true or false should be managed by the query
             assert (query.getQuery().contains("openData") == true);
@@ -69,46 +77,6 @@ public abstract class SearchService {
             return eadSearchUtil.getSearchResponse();
         } catch (SolrServerException | ParseException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
-        }
-    }
-
-    protected QueryResponse groupByQuery(SearchRequest searchRequest, String extraSearchParam,
-            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil searchUtil,
-            String groupByFieldName, boolean resultNeeded) {
-        try {
-//            SolrQuery query = new SolrQuery();
-            SolrQuery query = this.getFacatedQuery(searchRequest, facetSettingsList);
-
-            if (extraSearchParam != null && !"".equals(extraSearchParam)) {
-                query.setQuery(searchRequest.getQuery() + " AND " + extraSearchParam);
-            } else {
-                query.setQuery(searchRequest.getQuery());
-            }
-            
-            //Quick fix, base on the fact that item with Id pattern Fxx/Hxx/Gxx will come first in decending order
-            //than item id with Cxx which are clevel items.
-            query.addSort("id", SolrQuery.ORDER.desc); 
-            query.add("group", "true");
-            query.add("group.field", groupByFieldName);
-            query.add("group.ngroups", "true");
-            if (!resultNeeded) {
-                query.add("group.limit", "0");
-            }
-
-            if (searchRequest.getCount() > 0) {
-                query.setRows(searchRequest.getCount());
-            } else {
-                query.setRows(Integer.valueOf(propertiesUtil.getValueFromKey("search.request.default.count")));
-            }
-            //openData - true or false should be managed by the query
-            assert (query.getQuery().contains("openData") == true);
-
-            logger.debug("Final group query is: " + query);
-            searchUtil.setQuery(query);
-
-            return searchUtil.getSearchResponse();
-        } catch (SolrServerException | ParseException ex) {
-            throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
 
