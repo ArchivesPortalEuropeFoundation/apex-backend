@@ -123,6 +123,9 @@
 	  	
   
         <field name="level" type="string" indexed="true" stored="true" required="false"/>
+        <field name="numberOfDescendents" type="int" indexed="false" stored="true" required="false"/>
+        <field name="numberOfAncestors" type="int" indexed="false" stored="true" required="false"/>
+        <field name="numberOfDao" type="int" indexed="false" stored="true" required="false"/>
   
         <field name="startdate" type="date" indexed="true" stored="true" required="false"/>
         <field name="enddate" type="date" indexed="true" stored="true" required="false"/>
@@ -168,6 +171,7 @@
     <copyField source="scopecontent" dest="spell"/>  
     <copyField source="other" dest="spell"/>  
     <copyField source="alterdate" dest="spell"/>
+    <copyField source="unitidfond" dest="spell"/>
 
     <copyField source="unitidfond" dest="unitidfondsort"/>
     <copyField source="title" dest="titlesort"/>
