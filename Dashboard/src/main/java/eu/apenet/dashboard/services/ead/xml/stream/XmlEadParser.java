@@ -64,6 +64,7 @@ public class XmlEadParser extends AbstractParser {
 
     private static long parse(Ead ead, EadSolrPublisher solrPublisher) throws Exception {
         int cOrderId = 0;
+        EADCounts eadCounts = new EADCounts();
         EadContent eadContent = new EadContent();
         FileInputStream fileInputStream = null;
         List<LevelInfo> upperLevels = new ArrayList<LevelInfo>();
@@ -111,19 +112,20 @@ public class XmlEadParser extends AbstractParser {
         StringWriter stringWriter = new StringWriter();
         XMLStreamWriterHolder xmlWriterHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance().createXMLStreamWriter(stringWriter));
         QName lastElement = null;
-        EADCounts eadCounts = new EADCounts();
+//        EADCounts eadCounts = new EADCounts();
         boolean noCLevelFound = true;
         Long ecId = null;
         Set<String> unitids = new HashSet<String>();
         LinkedList<QName> archdescXpathPosition = new LinkedList<QName>();
         LinkedList<QName> fullXpathPosition = new LinkedList<QName>();
         boolean inArchdesc = false;
-		EadArchDescCLevelXpathReader archDescParser = new EadArchDescCLevelXpathReader();
-		EadGlobalXpathReader fullEadParser = new EadGlobalXpathReader();
-		fullEadParser.init();
-		archDescParser.init();
+        EadArchDescCLevelXpathReader archDescParser = new EadArchDescCLevelXpathReader();
+        EadGlobalXpathReader fullEadParser = new EadGlobalXpathReader();
+        fullEadParser.init();
+        archDescParser.init();
         try {
             JpaUtil.beginDatabaseTransaction();
+            EadPublishData publishData = new EadPublishData();
             for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
                 if (event == XMLStreamConstants.START_ELEMENT) {
                     QName elementName = xmlReader.getName();
@@ -136,7 +138,7 @@ public class XmlEadParser extends AbstractParser {
                             xmlWriterHolder.close();
                             eadContent.setTitleproper(ead.getTitle());
                             eadContent.setXml(stringWriter.toString());
-                            EadPublishData publishData = new EadPublishData();
+//                            EadPublishData publishData = new EadPublishData();
                             archDescParser.fillData(publishData, eadContent);
                             fullEadParser.fillData(publishData, eadContent);
                             JpaUtil.getEntityManager().persist(eadContent);
@@ -147,12 +149,16 @@ public class XmlEadParser extends AbstractParser {
                                 publishData.setUpperLevelUnittitles(upperLevels);
                                 publishData.setFullHierarchy(fullHierarchy);
                                 publishData.setArchdesc(true);
+                                eadCounts.addClevel(0);
+                                publishData.setNumberOfDescendents((int) eadCounts.getNumberOfUnits() - 1);
                                 eadCounts.addNumberOfDAOs(solrPublisher.publishArchdesc(publishData));
+
                             }
                             ecId = eadContent.getEcId();
                             eadContent = null;
                         }
-                        eadCounts.addEadCounts(XmlCLevelParser.parse(xmlReader, ecId, null, cOrderId++, ead, solrPublisher, upperLevels, fullHierarchy, unitids));
+                        XmlCLevelParser.parse(eadCounts, xmlReader, ecId, null, cOrderId++, ead, solrPublisher, upperLevels, fullHierarchy, unitids);
+                        publishData.setNumberOfDescendents((int) eadCounts.getNumberOfUnits() - 1);
                     } else {
                         if (ARCHDESC.equals(lastElement)) {
                             inArchdesc = true;
@@ -191,7 +197,7 @@ public class XmlEadParser extends AbstractParser {
                 xmlWriterHolder.close();
                 eadContent.setTitleproper(ead.getTitle());
                 eadContent.setXml(stringWriter.toString());
-                EadPublishData publishData = new EadPublishData();
+//                EadPublishData publishData = new EadPublishData();
                 archDescParser.fillData(publishData, eadContent);
                 fullEadParser.fillData(publishData, eadContent);
                 JpaUtil.getEntityManager().persist(eadContent);
@@ -205,6 +211,12 @@ public class XmlEadParser extends AbstractParser {
                 }
                 ecId = eadContent.getEcId();
                 eadContent = null;
+            }
+            if (!noCLevelFound) {
+                if (null != publishData.getId()) {
+                    publishData.setNumberOfDescendents((int) eadCounts.getNumberOfUnits() - 1);
+                    solrPublisher.publishArchdesc(publishData);
+                }
             }
 
             if (solrPublisher != null) {

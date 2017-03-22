@@ -8,9 +8,9 @@ public class EADCounts {
 
     public void addClevel(long numberOfDAOs) {
         numberOfDAOsBelow += numberOfDAOs;
-        if (numberOfDAOs > 0) {
-            numberOfUnitsWithDaosBelow++;
-        }
+//        if (numberOfDAOs > 0) {
+//            numberOfUnitsWithDaosBelow++;
+//        }
         numberOfUnits++;
 
     }
@@ -33,8 +33,31 @@ public class EADCounts {
         numberOfDAOsBelow += numberOfDAOs;
     }
 
+    public void addNumberOfDAOsBelow(long numberOfDAOsBelow) {
+        this.numberOfDAOsBelow += numberOfDAOsBelow;
+    }
+
+    public void addNumberOfUnitsWithDaosBelow(long numberOfUnitsWithDaosBelow) {
+        this.numberOfUnitsWithDaosBelow += numberOfUnitsWithDaosBelow;
+    }
+
     public long getNumberOfUnits() {
         return numberOfUnits;
+    }
+
+    public void setNumberOfDAOsBelow(long numberOfDAOsBelow) {
+        if (numberOfDAOsBelow > 0) {
+            this.numberOfUnitsWithDaosBelow++;
+        }
+        this.numberOfDAOsBelow = numberOfDAOsBelow;
+    }
+
+    public void setNumberOfUnitsWithDaosBelow(long numberOfUnitsWithDaosBelow) {
+        this.numberOfUnitsWithDaosBelow = numberOfUnitsWithDaosBelow;
+    }
+
+    public void setNumberOfUnits(long numberOfUnits) {
+        this.numberOfUnits = numberOfUnits;
     }
 
     @Override

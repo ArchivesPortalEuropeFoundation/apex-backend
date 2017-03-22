@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.services.ead.xml.stream.publish;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
@@ -351,12 +352,10 @@ public class EadSolrPublisher {
         add(doc1, SolrFields.ALTERDATE, alterdate);
         if (StringUtils.isBlank(alterdate)) {
             add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
+        } else if (StringUtils.isBlank(sdate)) {
+            add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
         } else {
-            if (StringUtils.isBlank(sdate)) {
-                add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
-            } else {
-                add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
-            }
+            add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
         }
         add(doc1, SolrFields.COUNTRY, archivalinstitution.getCountry().getCname().replace(" ", "_") + COLON
                 + SolrValues.TYPE_GROUP + COLON + archivalinstitution.getCountry().getId());
@@ -371,6 +370,14 @@ public class EadSolrPublisher {
         add(doc1, SolrFields.UNITID_OF_FOND, unitidfond);
         boolean dao = publishData.getNumberOfDaos() > 0;
         doc1.addField(SolrFields.DAO, dao);
+        LOG.debug(this.eadidstring + Ead3SolrFields.NUMBER_OF_DAO + ": " + publishData.getNumberOfDaos());
+        doc1.addField(Ead3SolrFields.NUMBER_OF_DAO, publishData.getNumberOfDaos());
+        doc1.addField(Ead3SolrFields.NUMBER_OF_DESCENDENTS, publishData.getNumberOfDescendents());
+        int numberOfAncestors = publishData.getUpperLevelUnittitles().size();
+        if (publishData.isArchdesc()) {
+            numberOfAncestors--;
+        }
+        doc1.addField(Ead3SolrFields.NUMBER_OF_ANCESTORS, numberOfAncestors);
         if (dao && publishData.getRoledao().size() == 0) {
             doc1.addField(SolrFields.ROLEDAO, SolrValues.ROLE_DAO_UNSPECIFIED);
         } else if (dao) {
@@ -452,12 +459,10 @@ public class EadSolrPublisher {
                     ((FindingAid) ead).setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);
                 }
             }
-        } else {
-            if (ead instanceof FindingAid) {
-                FindingAid findingAid = (FindingAid) ead;
-                if (EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana())) {
-                    ((FindingAid) ead).setEuropeana(EuropeanaState.NOT_CONVERTED);
-                }
+        } else if (ead instanceof FindingAid) {
+            FindingAid findingAid = (FindingAid) ead;
+            if (EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana())) {
+                ((FindingAid) ead).setEuropeana(EuropeanaState.NOT_CONVERTED);
             }
         }
         if (eadCounts != null) {
