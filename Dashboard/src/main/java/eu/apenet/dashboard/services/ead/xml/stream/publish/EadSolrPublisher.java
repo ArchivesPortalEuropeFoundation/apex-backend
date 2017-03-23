@@ -371,7 +371,7 @@ public class EadSolrPublisher {
         boolean dao = publishData.getNumberOfDaos() > 0;
         doc1.addField(SolrFields.DAO, dao);
         LOG.debug(this.eadidstring + Ead3SolrFields.NUMBER_OF_DAO + ": " + publishData.getNumberOfDaos());
-        doc1.addField(Ead3SolrFields.NUMBER_OF_DAO, publishData.getNumberOfDaos());
+        doc1.addField(Ead3SolrFields.NUMBER_OF_DAO, publishData.getNumberOfDaosBelow());
         doc1.addField(Ead3SolrFields.NUMBER_OF_DESCENDENTS, publishData.getNumberOfDescendents());
         int numberOfAncestors = publishData.getUpperLevelUnittitles().size();
         if (publishData.isArchdesc()) {

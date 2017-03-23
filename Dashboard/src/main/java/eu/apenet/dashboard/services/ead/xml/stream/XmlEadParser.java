@@ -215,6 +215,7 @@ public class XmlEadParser extends AbstractParser {
             if (!noCLevelFound) {
                 if (null != publishData.getId()) {
                     publishData.setNumberOfDescendents((int) eadCounts.getNumberOfUnits() - 1);
+                    publishData.setNumberOfDaosBelow((int) eadCounts.getNumberOfDAOsBelow());
                     solrPublisher.publishArchdesc(publishData);
                 }
             }

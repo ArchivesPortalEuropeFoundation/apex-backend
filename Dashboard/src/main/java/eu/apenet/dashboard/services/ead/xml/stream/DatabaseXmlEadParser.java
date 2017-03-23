@@ -41,10 +41,10 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
 
 public class DatabaseXmlEadParser {
-
+    
     public static final QName ARCHDESC = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "archdesc");
     private static final Logger LOG = Logger.getLogger(DatabaseXmlEadParser.class);
-
+    
     public static long publish(Ead ead) throws Exception {
         EadDatabaseSaver eadDatabaseSaver = new EadDatabaseSaver();
         CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
@@ -75,7 +75,7 @@ public class DatabaseXmlEadParser {
             fullHierarchy.put(SolrFields.AI_DYNAMIC_ID + depth + SolrFields.DYNAMIC_STRING_SUFFIX, id);
             depth++;
         }
-
+        
         EADCounts eadCounts = new EADCounts();
         EadSolrPublisher solrPublisher = new EadSolrPublisher(ead);
         Class<? extends AbstractContent> clazz = XmlType.getContentType(ead).getEadClazz();
@@ -99,12 +99,13 @@ public class DatabaseXmlEadParser {
             }
             eadCounts.addClevel(0);
             publishData.setNumberOfDescendents((int) eadCounts.getNumberOfUnits() - 1);
+            publishData.setNumberOfDaosBelow((int) eadCounts.getNumberOfDAOsBelow());
             solrPublisher.publishArchdesc(publishData);
             JpaUtil.beginDatabaseTransaction();
             eadDatabaseSaver.updateAll();
             solrPublisher.commitAll(eadCounts);
             JpaUtil.commitDatabaseTransaction();
-
+            
         } catch (Exception de) {
             if ((initialFilePath != null) && (initialFilePath.contains(APEnetUtilities.FILESEPARATOR))) {
                 LOG.error("Unable to publish ead file to solr: " + de.getMessage(), de);
@@ -116,7 +117,7 @@ public class DatabaseXmlEadParser {
         }
         return solrPublisher.getSolrTime();
     }
-
+    
     private static void parse(EadContent eadContent, EadPublishData publishData) throws Exception {
         InputStream inputstream = IOUtils.toInputStream(eadContent.getXml());
         XMLStreamReader xmlReader = getXMLReader(inputstream);
@@ -157,19 +158,19 @@ public class DatabaseXmlEadParser {
         archDescParser.fillData(publishData, eadContent);
         fullEadParser.fillData(publishData, eadContent);
     }
-
+    
     private static XMLStreamReader getXMLReader(InputStream inputStream) throws XMLStreamException, IOException {
-
+        
         XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
         return (XMLStreamReader) inputFactory.createXMLStreamReader(inputStream, ApeXMLConstants.UTF_8);
     }
-
+    
     private static void add(LinkedList<QName> path, QName qName) {
         // if (!CLEVEL.equals(qName)) {
         path.add(qName);
         // }
     }
-
+    
     private static void removeLast(LinkedList<QName> path, QName qName) {
         // if (!CLEVEL.equals(qName)) {
         if (!path.isEmpty()) {

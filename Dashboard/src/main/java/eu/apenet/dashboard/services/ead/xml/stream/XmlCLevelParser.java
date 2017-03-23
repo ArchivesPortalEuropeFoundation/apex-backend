@@ -185,6 +185,7 @@ public class XmlCLevelParser extends AbstractParser {
         parentEadCounts.addEadCounts(currentEADCounts);
         if (publishData.getId() != null) {
             publishData.setNumberOfDescendents((int) currentEADCounts.getNumberOfUnits() - 1);
+            publishData.setNumberOfDaosBelow((int) currentEADCounts.getNumberOfDAOsBelow());
             solrPublisher.publishCLevel(publishData);
         }
     }

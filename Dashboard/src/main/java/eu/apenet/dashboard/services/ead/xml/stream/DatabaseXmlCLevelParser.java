@@ -33,9 +33,9 @@ import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
 
 public class DatabaseXmlCLevelParser {
-
+    
     private static final int NUMBER_OF_CLEVEL_ONCE = 1;
-
+    
     public static EADCounts publish(EADCounts parentEADCounts, CLevel clevel, Long eadContentId,
             Ead ead, EadSolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids, EadDatabaseSaver eadDatabaseSaver)
             throws Exception {
@@ -59,7 +59,7 @@ public class DatabaseXmlCLevelParser {
                 unitids.add(clevel.getUnitid());
             }
         }
-
+        
         if (publishData.getParentId() == null) {
             publishData.setOrderId(clevel.getOrderId() + 1);
         } else {
@@ -83,11 +83,12 @@ public class DatabaseXmlCLevelParser {
         }
         parentEADCounts.addEadCounts(currentEadCounts);
         publishData.setNumberOfDescendents((int) currentEadCounts.getNumberOfUnits() - 1);
+        publishData.setNumberOfDaosBelow((int) currentEadCounts.getNumberOfDAOsBelow());
         solrPublisher.publishCLevel(publishData);
         return currentEadCounts;
-
+        
     }
-
+    
     private static void parse(CLevel clevel, EadPublishData publishData) throws Exception {
         InputStream inputstream = IOUtils.toInputStream(clevel.getXml());
         XMLStreamReader xmlReader = getXMLReader(inputstream);
@@ -116,19 +117,19 @@ public class DatabaseXmlCLevelParser {
         inputstream.close();
         clevelParser.fillData(publishData, clevel);
     }
-
+    
     private static XMLStreamReader getXMLReader(InputStream inputStream) throws XMLStreamException, IOException {
-
+        
         XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
         return (XMLStreamReader) inputFactory.createXMLStreamReader(inputStream, ApeXMLConstants.UTF_8);
     }
-
+    
     private static void add(LinkedList<QName> path, QName qName) {
         // if (!CLEVEL.equals(qName)) {
         path.add(qName);
         // }
     }
-
+    
     private static void removeLast(LinkedList<QName> path, QName qName) {
         // if (!CLEVEL.equals(qName)) {
         if (!path.isEmpty()) {
