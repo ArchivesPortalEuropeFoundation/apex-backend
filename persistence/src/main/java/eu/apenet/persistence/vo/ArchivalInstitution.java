@@ -38,14 +38,14 @@ public class ArchivalInstitution implements java.io.Serializable {
     private int aiId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_ai_id", foreignKey = @ForeignKey(name="archival_institution_parent_ai_id_fkey"))
+    @JoinColumn(name = "parent_ai_id", foreignKey = @ForeignKey(name = "archival_institution_parent_ai_id_fkey"))
     private ArchivalInstitution parent;
 
     @Column(name = "parent_ai_id", insertable = false, updatable = false)
     private Integer parentAiId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name="archival_institution_p_id_fkey"), insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "archival_institution_p_id_fkey"), insertable = false, updatable = false)
     private User partner;
 
     @Column(name = "user_id")
@@ -55,7 +55,7 @@ public class ArchivalInstitution implements java.io.Serializable {
     private Integer countryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", foreignKey = @ForeignKey(name="archival_institution_cou_id_fkey"), insertable = false, updatable = false)
+    @JoinColumn(name = "country_id", foreignKey = @ForeignKey(name = "archival_institution_cou_id_fkey"), insertable = false, updatable = false)
     private Country country;
 
     private String ainame;
@@ -81,7 +81,7 @@ public class ArchivalInstitution implements java.io.Serializable {
 
     @Column(name = "contain_searchable_items")
     private boolean containSearchableItems;
-    
+
     @Column(name = "content_lastmodified_date")
     private Date contentLastModifiedDate;
 
@@ -100,13 +100,16 @@ public class ArchivalInstitution implements java.io.Serializable {
 
     @OneToMany(mappedBy = "archivalInstitution")
     private Set<FindingAid> findingAids = new HashSet<FindingAid>(0);
-    
+
     @OneToMany(mappedBy = "archivalInstitution")
     private Set<HoldingsGuide> holdingsGuides = new HashSet<HoldingsGuide>(0);
-    
+
     @OneToMany(mappedBy = "archivalInstitution")
     private Set<SourceGuide> sourceGuides = new HashSet<SourceGuide>(0);
-    
+
+    @OneToMany(mappedBy = "archivalInstitution")
+    private Set<Ead3> ead3 = new HashSet<>(0);
+
     @OneToMany(mappedBy = "archivalInstitution", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ingestionprofile> ingestionprofile = new HashSet<Ingestionprofile>();
 
@@ -210,7 +213,7 @@ public class ArchivalInstitution implements java.io.Serializable {
     public void setGroup(boolean group) {
         this.group = group;
     }
-    
+
     public Set<HoldingsGuide> getHoldingsGuides() {
         return this.holdingsGuides;
     }
@@ -243,6 +246,14 @@ public class ArchivalInstitution implements java.io.Serializable {
         this.findingAids = findingAids;
     }
 
+    public Set<Ead3> getEad3() {
+        return ead3;
+    }
+
+    public void setEad3(Set<Ead3> ead3) {
+        this.ead3 = ead3;
+    }
+
     public List<ArchivalInstitution> getChildArchivalInstitutions() {
         return childArchivalInstitutions;
     }
@@ -258,7 +269,6 @@ public class ArchivalInstitution implements java.io.Serializable {
     public void setIngestionprofile(Set<Ingestionprofile> ingestionprofile) {
         this.ingestionprofile = ingestionprofile;
     }
-    
 
     @Override
     public String toString() {

@@ -64,7 +64,20 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
 
     @Override
     public Ead3 getEad3ByIdentifier(String repositorycode, String identifier, boolean onlyPublished) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Criteria criteria = getSession().createCriteria(Ead3.class, "ead3");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria = criteria.createAlias("ead3.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
+        criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+        if (onlyPublished) {
+            criteria.add(Restrictions.eq("published", true));
+        }
+        criteria.setMaxResults(1);
+        List<Ead3> list = criteria.list();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override
