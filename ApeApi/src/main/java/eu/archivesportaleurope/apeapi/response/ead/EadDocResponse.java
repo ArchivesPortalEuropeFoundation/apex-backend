@@ -49,6 +49,12 @@ public class EadDocResponse {
     @ApiModelProperty(value = "Abstract of the content / Scope Content")
     private String scopeContent;
 
+    @ApiModelProperty(value = "Number of DAO below")
+    private int numberOfDaos = 0;
+
+    @ApiModelProperty(value = "Number of Descendents")
+    private int numberOfDescendents = 0;
+
     public EadDocResponse(Group group) {
         //ToDo: change this
         //ex: Inventaris van het archief van de Nederlandse Ambassade in Nepal, 1965-1974:G:F124
@@ -71,6 +77,14 @@ public class EadDocResponse {
         this.unitDate = this.objectToString(solrDocument.getFieldValue(SolrFields.ALTERDATE));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
 
+        Object dao = solrDocument.getFieldValue(SolrFields.NO_OF_DAO);
+        if (dao != null) {
+            this.numberOfDaos = Integer.parseInt(this.objectToString(dao));
+        }
+        Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
+        if (des != null) {
+            this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
+        }
     }
 
     public String getId() {
@@ -149,4 +163,19 @@ public class EadDocResponse {
         this.scopeContent = scopeContent;
     }
 
+    public int getNumberOfDaos() {
+        return numberOfDaos;
+    }
+
+    public void setNumberOfDaos(int numberOfDaos) {
+        this.numberOfDaos = numberOfDaos;
+    }
+
+    public int getNumberOfDescendents() {
+        return numberOfDescendents;
+    }
+
+    public void setNumberOfDescendents(int numberOfDescendents) {
+        this.numberOfDescendents = numberOfDescendents;
+    }
 }
