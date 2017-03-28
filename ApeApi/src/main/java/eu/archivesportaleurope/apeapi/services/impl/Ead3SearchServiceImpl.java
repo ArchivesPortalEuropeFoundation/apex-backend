@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.services.impl;
 import eu.apenet.commons.solr.SolrQueryBuilder;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import eu.archivesportaleurope.apeapi.common.datatypes.Ead3ResponseDictionary;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.Ead3SearchService;
@@ -65,7 +66,7 @@ public class Ead3SearchServiceImpl extends Ead3SearchService {
         if (includeFacet) {
             facetSettingsList = FacetType.getDefaultEad3ListFacetSettings();
         }
-        return this.search(request, extraSearchParam, facetSettingsList, this.propertiesUtil, this.searchUtil);
+        return this.search(request, extraSearchParam, facetSettingsList, this.propertiesUtil, this.searchUtil, new Ead3ResponseDictionary());
     }
 
     @Override

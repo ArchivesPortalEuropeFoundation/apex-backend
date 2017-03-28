@@ -8,7 +8,8 @@ package eu.archivesportaleurope.apeapi.services;
 import eu.apenet.commons.solr.SolrQueryBuilder;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
 import eu.archivesportaleurope.apeapi.request.SearchFilterRequest;
@@ -43,10 +44,11 @@ public abstract class SearchService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected QueryResponse search(SearchRequest searchRequest, Map<String, String> extraSearchParam,
-            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil) {
+            List<ListFacetSettings> facetSettingsList, PropertiesUtil propertiesUtil, SolrSearchUtil eadSearchUtil,
+            SolrApiResponseDictionary dictionary) {
         try {
 
-            SolrQuery query = this.getFacatedQuery(searchRequest, facetSettingsList);
+            SolrQuery query = this.getFacatedQuery(searchRequest, facetSettingsList, dictionary);
 
             if (searchRequest.getCount() <= 0) {
                 logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
@@ -81,21 +83,18 @@ public abstract class SearchService {
     }
 
     private SolrQuery getFacatedQuery(SearchRequest searchRequest,
-            List<ListFacetSettings> facetSettingsList) throws SolrServerException, ParseException {
-        SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, null, true);
+            List<ListFacetSettings> facetSettingsList, SolrApiResponseDictionary dictionary) throws SolrServerException, ParseException {
+        SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, true);
 
         for (SearchFilterRequest searchFilter : searchRequest.getFilters()) {
             queryBuilder.addFilters(query,
-                    FacetType.getFacetByName(ServerResponseDictionary.getEadSolrFieldName(searchFilter.getFacetFieldName())),
+                    FacetType.getFacetByName(dictionary.getSolrFieldName(searchFilter.getFacetFieldName())),
                     searchFilter.getFacetFieldIds());
         }
 
         for (DateFilterRequest dateFilter : searchRequest.getDateFilters()) {
-            if (dateFilter.getDateFieldName().equalsIgnoreCase("fromDate")) {
-                queryBuilder.addFromDateFilter(query, dateFilter.getDateFieldId());
-            } else if (dateFilter.getDateFieldName().equalsIgnoreCase("toDate")) {
-                queryBuilder.addToDateFilter(query, dateFilter.getDateFieldId());
-            }
+            queryBuilder.addDateFilter(query, FacetType.getFacetByName(dictionary.getSolrFieldName(dateFilter.getDateFieldName())),
+                    dateFilter.getDateFieldId());
         }
 
         SortRequest sortFilterRequest = searchRequest.getSortRequest();

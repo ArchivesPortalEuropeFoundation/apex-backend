@@ -7,7 +7,9 @@ package eu.archivesportaleurope.apeapi.response.facet;
 
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.Ead3ResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,8 @@ public class Ead3FacetFields {
     private final List<NameCountPair> unitDateType;
 //aiName
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    private final transient SolrApiResponseDictionary dictionary = new Ead3ResponseDictionary();
+    
     public Ead3FacetFields() {
         this.country = new ArrayList<>();
 //        this.subject = new ArrayList<>();
@@ -52,7 +55,7 @@ public class Ead3FacetFields {
         for (ListFacetSettings facetSettings : defaultEad3ListFacetSettings) {
             try {
                 if (!facetSettings.getFacetType().isDate()) {
-                    String name = ServerResponseDictionary.getEad3ResponseFieldName(facetSettings.getFacetType().getName());
+                    String name = dictionary.getResponseFieldName(facetSettings.getFacetType().getName());
                     Object field = FieldUtils.readField(this, name, true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));

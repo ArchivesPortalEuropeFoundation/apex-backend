@@ -9,7 +9,8 @@ import eu.apenet.commons.solr.DateGap;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.FacetValue;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.Ead3ResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -26,14 +27,15 @@ import org.slf4j.LoggerFactory;
  */
 public class Ead3FacetDateFields {
 
-    private final List<NameCountPair> ead3FromDate;
-    private final List<NameCountPair> ead3ToDate;
+    private final List<NameCountPair> fromDate;
+    private final List<NameCountPair> toDate;
 
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    private final transient SolrApiResponseDictionary dictionary = new Ead3ResponseDictionary();
+    
     public Ead3FacetDateFields() {
-        this.ead3FromDate = new ArrayList<>();
-        this.ead3ToDate = new ArrayList<>();
+        this.fromDate = new ArrayList<>();
+        this.toDate = new ArrayList<>();
     }
 
     public Ead3FacetDateFields(QueryResponse queryResponse) {
@@ -43,7 +45,7 @@ public class Ead3FacetDateFields {
         for (ListFacetSettings facetSettings : defaultDateListFacetSettings) {
             try {
                 Object field = FieldUtils.readField(this,
-                        ServerResponseDictionary.getEadResponseFieldName(facetSettings.getFacetType().getName()), true);
+                        dictionary.getResponseFieldName(facetSettings.getFacetType().getName()), true);
                 Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
                 setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
             } catch (Exception ex) {
@@ -52,12 +54,12 @@ public class Ead3FacetDateFields {
         }
     }
 
-    public List<NameCountPair> getEad3FromDate() {
-        return ead3FromDate;
+    public List<NameCountPair> getFromDate() {
+        return fromDate;
     }
 
-    public List<NameCountPair> getEad3ToDate() {
-        return ead3ToDate;
+    public List<NameCountPair> getToDate() {
+        return toDate;
     }
 
     public void setDate(List<NameCountPair> field, FacetField values) throws ParseException {

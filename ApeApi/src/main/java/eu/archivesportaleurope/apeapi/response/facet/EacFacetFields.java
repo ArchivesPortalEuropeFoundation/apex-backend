@@ -8,7 +8,8 @@ package eu.archivesportaleurope.apeapi.response.facet;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,9 +35,10 @@ public class EacFacetFields {
     private List<NameCountPair> entityType;
     private List<NameCountPair> place;
     private List<NameCountPair> language;
-    private List<NameCountPair> dateType;
+    private List<NameCountPair> unitDateType;
     
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final transient SolrApiResponseDictionary dictionary = new EadResponseDictionary();
 
     public EacFacetFields() {
         this.country = new ArrayList<>();
@@ -44,18 +46,18 @@ public class EacFacetFields {
         this.entityType = new ArrayList<>();
         this.place = new ArrayList<>();
         this.language = new ArrayList<>();
-        this.dateType = new ArrayList<>();
+        this.unitDateType = new ArrayList<>();
     }
 
     public EacFacetFields(QueryResponse queryResponse) {
         this();
         Class<?> thisClass = this.getClass();
-        List<ListFacetSettings> defaultEadListFacetSettings = FacetType.getDefaultEacCPfListFacetSettings();
-        for (ListFacetSettings facetSettings : defaultEadListFacetSettings) {
+        List<ListFacetSettings> defaultEacListFacetSettings = FacetType.getDefaultEacCPfListFacetSettings();
+        for (ListFacetSettings facetSettings : defaultEacListFacetSettings) {
             try {
                 if (!facetSettings.getFacetType().isDate()) {
                     Object field = FieldUtils.readField(this, 
-                            ServerResponseDictionary.getEadResponseFieldName(facetSettings.getFacetType().getName()), true);
+                            dictionary.getResponseFieldName(facetSettings.getFacetType().getName()), true);
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
                 }
@@ -105,12 +107,12 @@ public class EacFacetFields {
         this.language = language;
     }
 
-    public List<NameCountPair> getDateType() {
-        return dateType;
+    public List<NameCountPair> getUnitDateType() {
+        return unitDateType;
     }
 
-    public void setDateType(List<NameCountPair> dateType) {
-        this.dateType = dateType;
+    public void setUnitDateType(List<NameCountPair> unitDateType) {
+        this.unitDateType = unitDateType;
     }
 
     public void setField(List<NameCountPair> field, FacetField values) {

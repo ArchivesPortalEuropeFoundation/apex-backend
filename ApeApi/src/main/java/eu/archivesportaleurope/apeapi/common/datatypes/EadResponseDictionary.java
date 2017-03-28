@@ -15,7 +15,7 @@ import org.apache.commons.collections.bidimap.TreeBidiMap;
  *
  * @author mahbub
  */
-public final class ServerResponseDictionary {
+public final class EadResponseDictionary implements SolrApiResponseDictionary {
 
     /**
      *
@@ -33,41 +33,19 @@ public final class ServerResponseDictionary {
             .put("toDate", SolrFields.END_DATE)
             .build()
     );
-    
-    private static final BidiMap EAD3_RESPONSE_DIC = new TreeBidiMap(ImmutableMap.builder()
-            .put("repository", Ead3SolrFields.AI)
-            .put("hasDigitalObject", Ead3SolrFields.DAO)
-            .put("digitalObjectType", Ead3SolrFields.DAO_TYPE)
-            .put("unitDateType", Ead3SolrFields.DATE_TYPE)
-            .put("fromDate", Ead3SolrFields.START_DATE)
-            .put("toDate", Ead3SolrFields.END_DATE)
-            .build()
-    );
 
-    public static String getEadSolrFieldName(String responseFieldName) {
+    @Override
+    public String getSolrFieldName(String responseFieldName) {
         if (EAD_RESPONSE_DIC.containsKey(responseFieldName)) {
             return (String) EAD_RESPONSE_DIC.get(responseFieldName);
         }
         return responseFieldName;
     }
 
-    public static String getEadResponseFieldName(String sorlFieldName) {
+    @Override
+    public String getResponseFieldName(String sorlFieldName) {
         if (EAD_RESPONSE_DIC.containsValue(sorlFieldName)) {
             return (String) EAD_RESPONSE_DIC.getKey(sorlFieldName);
-        }
-        return sorlFieldName;
-    }
-    
-    public static String getEad3SolrFieldName(String responseFieldName) {
-        if (EAD3_RESPONSE_DIC.containsKey(responseFieldName)) {
-            return (String) EAD3_RESPONSE_DIC.get(responseFieldName);
-        }
-        return responseFieldName;
-    }
-
-    public static String getEad3ResponseFieldName(String sorlFieldName) {
-        if (EAD3_RESPONSE_DIC.containsValue(sorlFieldName)) {
-            return (String) EAD3_RESPONSE_DIC.getKey(sorlFieldName);
         }
         return sorlFieldName;
     }

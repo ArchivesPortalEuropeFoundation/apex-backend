@@ -10,7 +10,8 @@ import eu.apenet.commons.solr.DateGap;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.FacetValue;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import eu.archivesportaleurope.apeapi.common.datatypes.ServerResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
+import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -35,7 +36,8 @@ public class FacetDateFields {
     private final List<NameCountPair> toDate;
 
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    private final transient SolrApiResponseDictionary dictionary = new EadResponseDictionary();
+    
     public FacetDateFields() {
         this.fromDate = new ArrayList<>();
         this.toDate = new ArrayList<>();
@@ -48,7 +50,7 @@ public class FacetDateFields {
         for (ListFacetSettings facetSettings : defaultDateListFacetSettings) {
             try {
                 Object field = FieldUtils.readField(this, 
-                        ServerResponseDictionary.getEadResponseFieldName(facetSettings.getFacetType().getName()), true);
+                        dictionary.getResponseFieldName(facetSettings.getFacetType().getName()), true);
                 Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
                 setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
             } catch (Exception ex) {

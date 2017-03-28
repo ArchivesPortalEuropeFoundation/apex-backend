@@ -12,8 +12,8 @@ public enum FacetType {
 //    TITLE_PROPER(Ead3SolrFields.TITLE_PROPER, Ead3SolrFields.EAD_ID, true),
     EAD3_TYPE(Ead3SolrFields.DAO_TYPE, Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.text."),
     EAD3_LEVEL(Ead3SolrFields.LEVEL_NAME, Ead3SolrFields.LEVEL_NAME, false, true, "advancedsearch.facet.value.level."),
-    EAD3_START_DATE(Ead3SolrFields.START_DATE, true),
-    EAD3_END_DATE(Ead3SolrFields.END_DATE, true),
+    EAD3_START_DATE(Ead3SolrFields.START_DATE, true, true),
+    EAD3_END_DATE(Ead3SolrFields.END_DATE, true, false),
     COUNTRY(SolrFields.COUNTRY, SolrFields.COUNTRY_ID, true, true, "country."),
     AI(SolrFields.AI, SolrFields.AI_ID, true),
     FOND(SolrFields.TITLE_OF_FOND, SolrFields.FOND_ID, true),
@@ -23,12 +23,12 @@ public enum FacetType {
     DAO(SolrFields.DAO, false, true, "advancedsearch.facet.value.dao."),
     ROLEDAO(SolrFields.ROLEDAO, false, true, "advancedsearch.facet.value.roledao.", true),
     DATE_TYPE(SolrFields.DATE_TYPE, false, true, "advancedsearch.facet.value.datetype."),
-    START_DATE(SolrFields.START_DATE, true),
-    END_DATE(SolrFields.END_DATE, true),
-    EAC_CPF_PLACES(SolrFields.EAC_CPF_FACET_PLACES, false),
-    EAC_CPF_OCCUPATION(SolrFields.EAC_CPF_FACET_OCCUPATION, false),
-    EAC_CPF_FUNCTION(SolrFields.EAC_CPF_FACET_FUNCTION, false),
-    EAC_CPF_MANDATE(SolrFields.EAC_CPF_FACET_MANDATE, false),
+    START_DATE(SolrFields.START_DATE, true, true),
+    END_DATE(SolrFields.END_DATE, true, false),
+    EAC_CPF_PLACES(SolrFields.EAC_CPF_FACET_PLACES, false, false),
+    EAC_CPF_OCCUPATION(SolrFields.EAC_CPF_FACET_OCCUPATION, false, false),
+    EAC_CPF_FUNCTION(SolrFields.EAC_CPF_FACET_FUNCTION, false, false),
+    EAC_CPF_MANDATE(SolrFields.EAC_CPF_FACET_MANDATE, false, false),
     EAC_CPF_ENTITY_TYPE(SolrFields.EAC_CPF_FACET_ENTITY_TYPE, false, true, "advancedsearch.facet.value.eaccpf.entitytype."),
     LANGUAGE(SolrFields.LANGUAGE, false, true, "language."),
     EAG_AI_GROUPS(SolrFields.EAG_AI_GROUPS_FACET, SolrFields.EAG_AI_GROUP_ID, true),
@@ -40,15 +40,17 @@ public enum FacetType {
     private final boolean valueIsKey;
     private final String prefix;
     private final boolean date;
+    private final boolean startDate;
     private boolean needToBeLowercase = false;
 
-    private FacetType(String name, boolean isDateType) {
+    private FacetType(String name, boolean isDateType, boolean isStartDate) {
         this.name = name;
         this.refinementField = name;
         this.hasId = false;
         this.valueIsKey = false;
         this.prefix = null;
         this.date = isDateType;
+        this.startDate = isStartDate;
         if (date) {
             this.multiSelect = false;
         } else {
@@ -63,6 +65,7 @@ public enum FacetType {
         this.valueIsKey = valueIsKey;
         this.prefix = prefix;
         this.date = false;
+        this.startDate = false;
         this.multiSelect = true;
     }
 
@@ -198,6 +201,10 @@ public enum FacetType {
 
     public boolean isDate() {
         return date;
+    }
+    
+    public boolean isStartDate() {
+        return this.date & this.startDate;
     }
 
     public boolean isNeedToBeLowercase() {

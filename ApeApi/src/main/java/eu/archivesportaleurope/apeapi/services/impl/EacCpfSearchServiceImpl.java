@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.services.impl;
 
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
+import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
@@ -68,7 +69,7 @@ public class EacCpfSearchServiceImpl extends SearchService {
             if (includeFacet) {
                 facetSettingsList = FacetType.getDefaultEacCPfListFacetSettings();
             }
-            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eacSearchUtil);
+            return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, eacSearchUtil, new EadResponseDictionary());
 
         } catch (InternalErrorException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));

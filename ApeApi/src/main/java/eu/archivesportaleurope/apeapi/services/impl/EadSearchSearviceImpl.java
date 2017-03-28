@@ -5,6 +5,7 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.apenet.commons.types.XmlType;
+import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
@@ -82,7 +83,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         if (includeFacet) {
             facetSettingsList = FacetType.getDefaultEadListFacetSettings();
         }
-        return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, searchUtil);
+        return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, searchUtil, new EadResponseDictionary());
     }
 
     @Override
