@@ -34,7 +34,11 @@ public final class SolrFields {
     public final static String DATE_TYPE = "dateType";
     public final static String PARENT_ID = "parentId";
     public final static String OPEN_DATA = "openData";
-    
+
+    public final static String NO_OF_DAO = "numberOfDao";
+    public final static String NO_OF_DESCENDENTS = "numberOfDescendents";
+    public final static String NO_OF_ANCESTORS = "numberOfAncestors";
+
     public final static String ORDER_ID = "orderId";
     public final static String DEPTH = "depth";
     public final static String LEAF = "leaf";
