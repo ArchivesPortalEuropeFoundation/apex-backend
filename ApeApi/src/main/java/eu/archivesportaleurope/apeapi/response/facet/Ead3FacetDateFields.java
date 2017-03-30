@@ -11,6 +11,7 @@ import eu.apenet.commons.solr.facet.FacetValue;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.archivesportaleurope.apeapi.common.datatypes.Ead3ResponseDictionary;
 import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Ead3FacetDateFields {
                         dictionary.getResponseFieldName(facetSettings.getFacetType().getName()), true);
                 Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
                 setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
-            } catch (Exception ex) {
+            } catch (IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
                 logger.debug("Reflecion exception: ", ex);
             }
         }
