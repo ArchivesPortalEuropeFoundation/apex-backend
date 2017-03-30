@@ -178,6 +178,8 @@ public class QueueTask implements Runnable {
                             String xmlType = preferences.getProperty(QueueItem.XML_TYPE);
                             if (Integer.parseInt(xmlType) == XmlType.EAC_CPF.getIdentifier()) {
                                 EacCpfService.processQueueItem(queueItem);
+                            } else if (Integer.parseInt(xmlType) == XmlType.EAD_3.getIdentifier()) {
+                                Ead3Service.processQueueItem(queueItem);
                             } else {
                                 EadService.processQueueItem(queueItem);
                             }

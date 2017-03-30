@@ -5,9 +5,13 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
+import com.ctc.wstx.exc.WstxParsingException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
+import eu.apenet.dashboard.manual.ExistingFilesChecker;
+import static eu.apenet.dashboard.manual.ExistingFilesChecker.extractAttributeFromXML;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.AbstractService;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
@@ -25,6 +29,8 @@ import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
+import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 
 import eu.apenet.persistence.vo.QueueAction;
@@ -44,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -225,7 +232,7 @@ public class Ead3Service extends AbstractService {
         }
         JpaUtil.commitDatabaseTransaction();
     }
-    
+
     /**
      * Deletes from the queue an EAD3 and updates the state of the entry
      * <i>queueing</i> in the database.
@@ -241,7 +248,7 @@ public class Ead3Service extends AbstractService {
         Properties preferences = Ead3Service.readProperties(queueItem.getPreferences());
         //delete open-data operation
         if (preferences.containsKey(OpenDataService.ENABLE_OPEN_DATA_KEY)) {
-            if (queueItem.getAiId() != null ) {
+            if (queueItem.getAiId() != null) {
                 ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(queueItem.getAiId());
                 archivalInstitution.setUnprocessedSolrDocs(0);
                 DAOFactory.instance().getArchivalInstitutionDAO().store(archivalInstitution);
@@ -392,8 +399,7 @@ public class Ead3Service extends AbstractService {
     /**
      * Writes in a string buffer the property list.
      *
-     * @param properties {@link Properties} The preferences to process the
-     * EAD3.
+     * @param properties {@link Properties} The preferences to process the EAD3.
      * @return String The preferences to write.
      * @throws IOException
      */
@@ -425,8 +431,8 @@ public class Ead3Service extends AbstractService {
      * <p>
      * Stores in the database an EAD3 in the table <b>ead3</b>.
      * <p>
-     * Fills the table <b>queue</b> with the EAD3's identifier, his
-     * preferences and the upfile's identifier.
+     * Fills the table <b>queue</b> with the EAD3's identifier, his preferences
+     * and the upfile's identifier.
      *
      * @see eu.apenet.persistence.vo.QueueAction
      * @see java.util.Properties
@@ -525,7 +531,7 @@ public class Ead3Service extends AbstractService {
                     if (queueAction.isPublishAction()) {
                         new PublishTask().execute(ead3, preferences);
                     }
-                    if(queueAction.isValidatePublishAction()){
+                    if (queueAction.isValidatePublishAction()) {
                         new ValidateTask().execute(ead3, preferences);
                         new PublishTask().execute(ead3, preferences);
                     }
@@ -562,12 +568,13 @@ public class Ead3Service extends AbstractService {
         // Checks if the file should be processed as a new upload of as a
         // file already in the system.
         {
-//            if (queueItem.getUpFile() != null) {
-//                processUpFileWithProfile(queueItem, preferences);
-//            } else {
-//                processEad3WithProfile(queueItem, preferences);
-//            }
+            if (queueItem.getUpFile() != null) {
+                processUpFileWithProfile(queueItem, preferences);
+            } else {
+                processEad3(queueItem, queueItem.getEad3(), preferences);
+            }
         }
+
         LOGGER.info("Process queue item finished");
         return queueAction;
     }
@@ -593,87 +600,98 @@ public class Ead3Service extends AbstractService {
      * @see ExistingFilesChecker#extractAttributeFromXML(String, String, String,
      * boolean, boolean)
      */
-//    private static void processUpFileWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
-//        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
-//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-//        IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
-//        IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
-//        XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
-//
-//        //About existing eac-cpf identifier
-//        UpFile upFile = queueItem.getUpFile();
-//        LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
-//        String upFilePath = upFile.getPath() + upFile.getFilename();
-//        String identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eac-cpf/control/recordId", null, true, false).trim();
-//        if (StringUtils.isEmpty(identifier) || "empty".equals(identifier) || "error".equals(identifier)) {
-//            if (ingestionprofileDefaultNoEadidAction.isRemove()) {
-//                LOGGER.info("File will be removed, because it does not have eadid: " + upFilePath);
-//                deleteFromQueue(queueItem, true);
-//            } else {
-//                LOGGER.info("File will be processed manually later, because it does not have eadid: " + upFilePath);
-//                deleteFromQueue(queueItem, false);
-//            }
-//        } else {
-//            boolean continueTask = true;
-//            Ead3 eacCpf;
-//            Ead3 newEad3 = null;
-//            if ((eacCpf = doesFileExist(upFile, identifier)) != null) {
-//                if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
-//                    boolean eacCpfDeleted = false;
-//                    try {
-//                        queueItem.setEad3(null);
-//                        queueItem.setUpFile(null);
-//                        queueItemDAO.store(queueItem);
-//
-//                        Integer aiId = eacCpf.getAiId();
-//
-//                        new UnpublishTask().execute(eacCpf, preferences);
-//                        new DeleteTask().execute(eacCpf, preferences);
-//                        eacCpfDeleted = true;
-//                        newEad3 = new CreateEad3Task().execute(xmlType, upFile, aiId);
-//                        DAOFactory.instance().getUpFileDAO().delete(upFile);
-//                    } catch (Exception e) {
-//                        if (!eacCpfDeleted) {
-//                            queueItem.setEad3(eacCpf);
-//                            eacCpf.setQueuing(QueuingState.ERROR);
-//                            eacDAO.store(eacCpf);
-//                        }
-//                        queueItem.setUpFile(upFile);
-//                        String err = "recordId: " + eacCpf.getIdentifier() + " - id: " + eacCpf.getId() + " - type: " + xmlType.getName();
-//                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
-//                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
-//                        queueItem.setPriority(0);
-//                        queueItemDAO.store(queueItem);
-//                        continueTask = false;
-//                        /*
-//                         * throw exception when solr has problem, so the queue will stop for a while.
-//                         */
-//                        if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
-//                            throw (Exception) e;
-//
-//                        }
-//                    }
-//                } else if (ingestionprofileDefaultExistingFileAction.isKeep()) {
-//                    LOGGER.info("File will be removed, because there is already one with the same recordid: " + upFilePath);
-//                    deleteFromQueue(queueItem, true);
-//                    continueTask = false;
-//                } else if (ingestionprofileDefaultExistingFileAction.isAsk()) {
-//                    LOGGER.info("Is needed to ask the user for the action, because there is already one with the same recordid: " + upFilePath);
-//                    deleteFromQueue(queueItem, false);
-//                    continueTask = false;
-//                }
-//            } else {
-//                newEad3 = new CreateEad3Task().execute(xmlType, upFile, upFile.getAiId());
-//                queueItem.setUpFile(null);
-//                queueItemDAO.store(queueItem);
-//                DAOFactory.instance().getUpFileDAO().delete(upFile);
-//            }
-//
-//            if (continueTask) {
-//                processEad3(queueItem, newEad3, preferences);
-//            }
-//        }
-//    }
+    private static void processUpFileWithProfile(QueueItem queueItem, Properties preferences) throws Exception {
+        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
+        IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
+        XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
+
+        //About EADID
+        UpFile upFile = queueItem.getUpFile();
+        LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
+        String upFilePath = upFile.getPath() + upFile.getFilename();
+        String eadid = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "ead/control/recordId", null, true, false).trim();
+        String title = "";
+        try {
+            title = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath,
+                    "ead/control/filedesc/titlestmt/titleproper", null, true, false);
+        } catch (WstxParsingException e) {
+            title = "";
+        }
+        if (StringUtils.isEmpty(eadid) || "empty".equals(eadid) || "error".equals(eadid)) {
+            if (ingestionprofileDefaultNoEadidAction.isRemove()) {
+                LOGGER.info("File will be removed, because it does not have eadid: " + upFilePath);
+                deleteFromQueue(queueItem, true);
+            } else {
+                LOGGER.info("File will be processed manually later, because it does not have eadid: " + upFilePath);
+                deleteFromQueue(queueItem, false);
+            }
+        } else {
+            boolean continueTask = true;
+            Ead3 ead3;
+            Ead3 newEad3 = null;
+            if ((ead3 = doesFileExist(upFile, eadid)) != null) {
+                if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
+                    boolean ead3Deleted = false;
+                    try {
+                        queueItem.setEad(null);
+                        queueItem.setUpFile(null);
+                        queueItemDAO.store(queueItem);
+
+                        Integer aiId = ead3.getAiId();
+//                        new DeleteFromEuropeanaTask().execute(ead, preferences);
+//                        new DeleteEseEdmTask().execute(ead, preferences);
+                        new UnpublishTask().execute(ead3, preferences);
+                        new DeleteTask().execute(ead3, preferences);
+                        ead3Deleted = true;
+                        newEad3 = new CreateEad3Task().execute(xmlType, upFile, aiId, eadid, title);
+                        DAOFactory.instance().getUpFileDAO().delete(upFile);
+                    } catch (Exception e) {
+                        if (!ead3Deleted) {
+                            queueItem.setEad3(ead3);
+                            ead3.setQueuing(QueuingState.ERROR);
+                            ead3DAO.store(ead3);
+                        }
+                        if (upFile != null) {
+                            queueItem.setUpFile(upFile);
+                        }
+                        String err = "eadid: " + ead3.getIdentifier() + " - id: " + ead3.getId() + " - type: " + xmlType.getName();
+                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setPriority(0);
+                        queueItemDAO.store(queueItem);
+                        continueTask = false;
+                        /*
+                         * throw exception when solr has problem, so the queue will stop for a while.
+                         */
+                        if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                            throw (Exception) e;
+
+                        }
+                    }
+                } else if (ingestionprofileDefaultExistingFileAction.isKeep()) {
+                    LOGGER.info("File will be removed, because there is already one with the same eadid: " + upFilePath);
+                    deleteFromQueue(queueItem, true);
+                    continueTask = false;
+                } else if (ingestionprofileDefaultExistingFileAction.isAsk()) {
+                    LOGGER.info("Is needed to ask the user for the action, because there is already one with the same eadid: " + upFilePath);
+                    deleteFromQueue(queueItem, false);
+                    continueTask = false;
+                }
+            } else {
+                newEad3 = new CreateEad3Task().execute(xmlType, upFile, upFile.getAiId(), eadid, title);
+                queueItem.setUpFile(null);
+                queueItemDAO.store(queueItem);
+                DAOFactory.instance().getUpFileDAO().delete(upFile);
+            }
+
+            if (continueTask) {
+                processEad3(queueItem, newEad3, preferences);
+            }
+        }
+    }
+
     /**
      * Method to process the file already in the system using the selected
      * profile.
@@ -710,52 +728,54 @@ public class Ead3Service extends AbstractService {
      * @see ValidateTask#execute(Ead3)
      * @see PublishTask#execute(Ead3)
      */
-//    private static void processEad3(QueueItem queueItem, Ead3 newEad3, Properties preferences) throws Exception {
-//        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
-//        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-//        IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
-//        Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
-//        XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
-//
-//        newEad3.setQueuing(QueuingState.BUSY);
-//        ead3DAO.store(newEad3);
-//
-//        Properties conversionProperties = new Properties();
-//        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, "UNSPECIFIED");
-//        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, daoTypeCheck);
-//
-//        try {
+    private static void processEad3(QueueItem queueItem, Ead3 newEad3, Properties preferences) throws Exception {
+        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+        IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+        Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
+        XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
+
+        newEad3.setQueuing(QueuingState.BUSY);
+        ead3DAO.store(newEad3);
+
+        Properties conversionProperties = new Properties();
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_DEFAULT, "UNSPECIFIED");
+        conversionProperties.put(AjaxConversionOptionsConstants.SCRIPT_USE_EXISTING, daoTypeCheck);
+
+        try {
 //            if (ingestionprofileDefaultUploadAction.isConvert()) {
+////                new ConvertTask().execute(newEad3, conversionProperties);
+//            } else 
+            if (ingestionprofileDefaultUploadAction.isValidate()) {
+                new ValidateTask().execute(newEad3);
+            } else if (ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                new ValidateTask().execute(newEad3);
 //                new ConvertTask().execute(newEad3, conversionProperties);
-//            } else if (ingestionprofileDefaultUploadAction.isValidate()) {
-//                new ValidateTask().execute(newEad3);
-//            } else if (ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-//                new ValidateTask().execute(newEad3);
-//                new ConvertTask().execute(newEad3, conversionProperties);
-//                new ValidateTask().execute(newEad3);
-//                new PublishTask().execute(newEad3);
-//            }
-//            newEad3.setQueuing(QueuingState.NO);
-//            ead3DAO.store(newEad3);
-//            queueItemDAO.delete(queueItem);
-//        } catch (Exception e) {
-//            newEad3.setQueuing(QueuingState.ERROR);
-//            ead3DAO.store(newEad3);
-//
-//            String err = "recordId: " + newEad3.getIdentifier() + " - id: " + newEad3.getId() + " - type: " + xmlType.getName();
-//            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
-//            queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
-//            queueItem.setPriority(0);
-//            queueItemDAO.store(queueItem);
-//            /*
-//             * throw exception when solr has problem, so the queue will stop for a while.
-//             */
-//            if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
-//                throw (Exception) e;
-//
-//            }
-//        }
-//    }
+                new ValidateTask().execute(newEad3);
+                new PublishTask().execute(newEad3);
+            }
+            newEad3.setQueuing(QueuingState.NO);
+            ead3DAO.store(newEad3);
+            queueItemDAO.delete(queueItem);
+        } catch (Exception e) {
+            newEad3.setQueuing(QueuingState.ERROR);
+            ead3DAO.store(newEad3);
+
+            String err = "recordId: " + newEad3.getIdentifier() + " - id: " + newEad3.getId() + " - type: " + xmlType.getName();
+            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+            queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+            queueItem.setPriority(0);
+            queueItemDAO.store(queueItem);
+            /*
+             * throw exception when solr has problem, so the queue will stop for a while.
+             */
+            if (e instanceof APEnetException && e.getCause() instanceof SolrServerException) {
+                throw (Exception) e;
+
+            }
+        }
+    }
+
     /**
      * Reads the properties in a {@link StringReader}.
      *
@@ -1046,10 +1066,24 @@ public class Ead3Service extends AbstractService {
         queueItem.setAiId(upFile.getAiId());
         return queueItem;
     }
-    
+
     public static void useProfileActionForHarvester(UpFile upFile, Properties preferences) throws Exception {
         QueueItem queueItem = fillQueueItem(upFile, QueueAction.USE_PROFILE, preferences);
         DAOFactory.instance().getQueueItemDAO().insertSimple(queueItem);
+    }
+
+    public static void useProfileAction(UpFile upFile, Properties preferences) throws Exception {
+        SecurityContext.get().checkAuthorized(upFile.getAiId());
+        QueueItem queueItem = fillQueueItem(upFile, QueueAction.USE_PROFILE, preferences);
+        DAOFactory.instance().getQueueItemDAO().store(queueItem);
+    }
+
+    public static void useProfileAction(Ead3 ead3, Properties preferences) throws Exception {
+        SecurityContext.get().checkAuthorized(ead3.getAiId());
+        QueueItem queueItem = fillQueueItem(ead3, QueueAction.USE_PROFILE, preferences);
+        ead3.setQueuing(QueuingState.READY);
+        DAOFactory.instance().getEad3DAO().store(ead3);
+        DAOFactory.instance().getQueueItemDAO().store(queueItem);
     }
 
     /**

@@ -27,12 +27,14 @@ import org.xml.sax.SAXException;
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscapeUtils;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.ead3.Ead3Service;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.dpt.utils.util.XsltChecker;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -197,7 +199,7 @@ public abstract class ManualUploader {
         this.filesUploaded = new ArrayList<String>();
         if (uploadType.equals("EAD")) {
 
-    		// Uncomment this line if xsl and xslt files are permitted again
+            // Uncomment this line if xsl and xslt files are permitted again
             //if (contentType.equals("zip") || contentType.equals("xml") || contentType.equals("xsl") || contentType.equals("xslt")){
             if (contentType.equals("zip") || contentType.equals("xml")) {
                 fileName = APEnetUtilities.convertToFilename(fileName);
@@ -307,7 +309,7 @@ public abstract class ManualUploader {
         } else if (uploadType.equals("AL")) { //Upload Archival Landscape
             try {
                 if ((contentType.equals("xml"))) {
-                	ArchivalLandscapeUtils a = new ArchivalLandscapeUtils();
+                    ArchivalLandscapeUtils a = new ArchivalLandscapeUtils();
                     path = a.getmyPath(a.getmyCountry());
                     //Create a temporary file
                     fullFileName = path + a.getmyCountry() + "AL.xml"; //fileName
@@ -355,7 +357,7 @@ public abstract class ManualUploader {
             try {
                 if (contentType.equals("xml")) {
 
-					//The format is allowed
+                    //The format is allowed
                     //The file is copied to /mnt/tmp/tmp/ai_id/
                     fullFileName = path + fileName;
                     File source = new File(fullFileName);
@@ -372,11 +374,11 @@ public abstract class ManualUploader {
                         List<String> autformValueList = eag.lookingForwardAllElementContent("/eag/archguide/identity/autform");
                         //Check if there are "<autform>" values with special characters
                         boolean specialCharacters = checkSpecialCharacter(autformValueList);
-                        if (specialCharacters){
-                        	this.filesNotUploaded.add(fileName);
+                        if (specialCharacters) {
+                            this.filesNotUploaded.add(fileName);
                             return "error_eaginstitutionnamespecialcharacter";
                         }
-                        
+
                         boolean exists = false;
                         for (int i = 0; !exists && i < autformValueList.size(); i++) {
                             if (institutionName.equalsIgnoreCase(autformValueList.get(i))) {
@@ -394,7 +396,7 @@ public abstract class ManualUploader {
                         boolean changed = false;
                         if (recordIdValue != null && recordIdValue.endsWith(MAGIC_KEY)) {
                             //replace value with a consecutive unique value
-                        	ArchivalLandscapeUtils archivalLandscape = new ArchivalLandscapeUtils();
+                            ArchivalLandscapeUtils archivalLandscape = new ArchivalLandscapeUtils();
                             int zeroes = 11 - archivalInstitutionId.toString().length();
                             String newRecordIdValue = archivalLandscape.getmyCountry() + "-";
                             for (int x = 0; x < zeroes; x++) {
@@ -453,7 +455,7 @@ public abstract class ManualUploader {
                             Transformer transformer = tf.newTransformer();
                             transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFileName)));
                         }
-    					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
+                        //The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
                         //and it is necessary to update archival_institution table
                         result = eag.saveEAGviaHTTP(fullFileName);
 
@@ -546,24 +548,25 @@ public abstract class ManualUploader {
         }
         return result;
     }
-    
-    /**
-	 * Check special characters in the institution's name and alternative's name
-	 * @param archivalInstitutions
-	 * @return true if there are specials characters and false in other case
-	 */
-    private boolean checkSpecialCharacter(List<String> autformValueList) {
-		// TODO Auto-generated method stub
-    	 for (int i = 0; i < autformValueList.size(); i++) {
-             if (autformValueList.get(i).contains("<") || autformValueList.get(i).contains(">") || autformValueList.get(i).contains("%")
-            		 || autformValueList.get(i).contains(":") || autformValueList.get(i).contains("\\")) {
-                return true;
-             }
-         }
-		return false;
-	}
 
-	//Jara: Overwrite a file of Archival Landscape. The existing file is renamed to name_old.
+    /**
+     * Check special characters in the institution's name and alternative's name
+     *
+     * @param archivalInstitutions
+     * @return true if there are specials characters and false in other case
+     */
+    private boolean checkSpecialCharacter(List<String> autformValueList) {
+        // TODO Auto-generated method stub
+        for (int i = 0; i < autformValueList.size(); i++) {
+            if (autformValueList.get(i).contains("<") || autformValueList.get(i).contains(">") || autformValueList.get(i).contains("%")
+                    || autformValueList.get(i).contains(":") || autformValueList.get(i).contains("\\")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Jara: Overwrite a file of Archival Landscape. The existing file is renamed to name_old.
     public String overWriteFile(File file, String fileName, String pathFile, boolean execute) {
 
         String result;
@@ -579,7 +582,7 @@ public abstract class ManualUploader {
             //Change the database without commit
             String resultStore = a.storeArchives(sfile, execute);
 
-			//this.setFasDeleted(a.getFasDeleted());
+            //this.setFasDeleted(a.getFasDeleted());
             //this.setHgsDeleted(a.getHgsDeleted());
             //Change the repository renaming the files and not deleted the current one
             if (!resultStore.equals("error")) {
@@ -679,7 +682,7 @@ public abstract class ManualUploader {
                     }
                 } else {
                     try {
-						// Moving the file
+                        // Moving the file
                         // Insert file uploaded into up_file table
                         JpaUtil.beginDatabaseTransaction();
 
@@ -763,15 +766,15 @@ public abstract class ManualUploader {
         properties.setProperty(QueueItem.INHERIT_UNITTITLE_CHECK, ingestionprofile.getEuropeanaInheritUnittitleCheck()+"");
         properties.setProperty(QueueItem.INHERIT_UNITTITLE, ingestionprofile.getEuropeanaInheritUnittitle()+"");
         properties.setProperty(QueueItem.SOURCE_OF_IDENTIFIERS, ingestionprofile.getSourceOfIdentifiers()+"");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS, ingestionprofile.getRightsOfDigitalObjects() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT, ingestionprofile.getRightsOfDigitalObjectsText() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION, ingestionprofile.getRightsOfDigitalDescription() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER, ingestionprofile.getRightsOfDigitalHolder() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA, ingestionprofile.getRightsOfEADData() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT, ingestionprofile.getRightsOfEADDataText() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION, ingestionprofile.getRightsOfEADDescription() + "");
-		properties.setProperty(QueueItem.RIGHTS_OF_EAD_HOLDER, ingestionprofile.getRightsOfEADHolder() + "");
-        if(ingestionprofile.getXslUpload() != null) {
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS, ingestionprofile.getRightsOfDigitalObjects() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_OBJECTS_TEXT, ingestionprofile.getRightsOfDigitalObjectsText() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_DESCRIPTION, ingestionprofile.getRightsOfDigitalDescription() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_DIGITAL_HOLDER, ingestionprofile.getRightsOfDigitalHolder() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA, ingestionprofile.getRightsOfEADData() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_DATA_TEXT, ingestionprofile.getRightsOfEADDataText() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_DESCRIPTION, ingestionprofile.getRightsOfEADDescription() + "");
+        properties.setProperty(QueueItem.RIGHTS_OF_EAD_HOLDER, ingestionprofile.getRightsOfEADHolder() + "");
+        if (ingestionprofile.getXslUpload() != null) {
             properties.setProperty(QueueItem.XSL_FILE, ingestionprofile.getXslUpload().getName());
         }
         return properties;
@@ -780,8 +783,10 @@ public abstract class ManualUploader {
     private void processWithProfile(UpFile upFile, Ingestionprofile profile) {
         Properties properties = retrieveProperties(profile);
         try {
-            if(profile.getFileType() == 2){
+            if (profile.getFileType() == 2) {
                 EacCpfService.useProfileAction(upFile, properties);
+            } else if (profile.getFileType() == XmlType.EAD_3.getIdentifier()) {
+                Ead3Service.useProfileAction(upFile, properties);
             } else {
                 EadService.useProfileAction(upFile, properties);
             }
