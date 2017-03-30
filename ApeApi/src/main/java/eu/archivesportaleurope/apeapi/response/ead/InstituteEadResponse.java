@@ -18,6 +18,7 @@ import org.apache.solr.common.SolrDocument;
  * @author mahbub
  */
 public class InstituteEadResponse {
+
     @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     protected String id;
 
@@ -48,6 +49,12 @@ public class InstituteEadResponse {
     @ApiModelProperty(value = "True if the unit has one or more digital object")
     private boolean hasDigitalObject = false;
 
+    @ApiModelProperty(value = "Number of DAO below")
+    private int numberOfDaos = 0;
+
+    @ApiModelProperty(value = "Number of Descendents")
+    private int numberOfDescendents = 0;
+
     @ApiModelProperty(value = "Type of the description of the result: \"Descriptive Unit\", \"Finding Aid\", \"Holdings Guide\" or \"Source Guide\"")
     private String docType;
 
@@ -76,7 +83,6 @@ public class InstituteEadResponse {
             this.docTypeId = xmlType.getResourceName();
             this.level = "archdesc";
         }
-        
 
         this.language = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGUAGE));
         this.langMaterial = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGMATERIAL));
@@ -92,6 +98,14 @@ public class InstituteEadResponse {
         this.indexDate = this.objectToString(solrDocument.getFieldValue(SolrFields.TIMESTAMP));
         if (solrDocument.getFieldValue(SolrFields.DAO) != null) {
             this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(SolrFields.DAO);
+        }
+        Object dao = solrDocument.getFieldValue(SolrFields.NO_OF_DAO);
+        if (dao != null) {
+            this.numberOfDaos = Integer.parseInt(this.objectToString(dao));
+        }
+        Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
+        if (des != null) {
+            this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
         }
     }
 
@@ -221,4 +235,21 @@ public class InstituteEadResponse {
     public void setIndexDate(String indexDate) {
         this.indexDate = indexDate;
     }
+
+    public int getNumberOfDaos() {
+        return numberOfDaos;
+    }
+
+    public void setNumberOfDaos(int numberOfDaos) {
+        this.numberOfDaos = numberOfDaos;
+    }
+
+    public int getNumberOfDescendents() {
+        return numberOfDescendents;
+    }
+
+    public void setNumberOfDescendents(int numberOfDescendents) {
+        this.numberOfDescendents = numberOfDescendents;
+    }
+
 }

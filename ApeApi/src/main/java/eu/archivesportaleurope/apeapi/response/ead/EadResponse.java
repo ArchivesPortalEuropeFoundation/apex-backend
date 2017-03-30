@@ -35,12 +35,6 @@ public class EadResponse extends InstituteEadResponse {
     @ApiModelProperty(value = "More descriptive information about the result, with the mark <b>&lt;em&gt;</b> to emphasize the search term that was used in the search request.")
     private String scopeContentWithHighlighting;
 
-    @ApiModelProperty(value = "Number of DAO below")
-    private int numberOfDaos = 0;
-
-    @ApiModelProperty(value = "Number of Descendents")
-    private int numberOfDescendents = 0;
-
     @ApiModelProperty(value = "Number of Ancestors")
     private int numberOfAncestors = 0;
 
@@ -55,14 +49,6 @@ public class EadResponse extends InstituteEadResponse {
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
         if (response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT) != null) {
             this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT).get(0));
-        }
-        Object dao = solrDocument.getFieldValue(SolrFields.NO_OF_DAO);
-        if (dao != null) {
-            this.numberOfDaos = Integer.parseInt(this.objectToString(dao));
-        }
-        Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
-        if (des != null) {
-            this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
         }
         Object anc = solrDocument.getFieldValue(SolrFields.NO_OF_ANCESTORS);
         if (anc != null) {
@@ -123,22 +109,6 @@ public class EadResponse extends InstituteEadResponse {
 
     public void setUnitId(String unitId) {
         this.unitId = unitId;
-    }
-
-    public int getNumberOfDaos() {
-        return numberOfDaos;
-    }
-
-    public void setNumberOfDaos(int numberOfDaos) {
-        this.numberOfDaos = numberOfDaos;
-    }
-
-    public int getNumberOfDescendents() {
-        return numberOfDescendents;
-    }
-
-    public void setNumberOfDescendents(int numberOfDescendents) {
-        this.numberOfDescendents = numberOfDescendents;
     }
 
     public int getNumberOfAncestors() {
