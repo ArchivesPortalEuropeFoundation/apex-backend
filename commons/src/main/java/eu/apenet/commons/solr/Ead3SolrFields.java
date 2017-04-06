@@ -34,10 +34,10 @@ public final class Ead3SolrFields {
     public final static String COUNTRY_NAME = "countryName"; //stored - 
     public final static String AI_ID = "aiId"; //indexed - db value
     public final static String AI_NAME = "aiName"; //stored - db value
-    
+
     public final static String COUNTRY = "country"; //indexed+stored - countryName:countryId
     public final static String AI = "ai"; //indexed+stored - db value - aiName:aiId
-    
+
     public final static String REPOSITORY_CODE = "repositoryCode"; //indexed+stored - db value
     public final static String NUMBER_OF_DESCENDENTS = "numberOfDescendents"; //stored - 
     public final static String NUMBER_OF_ANCESTORS = "numberOfAncestors"; //stored - 
@@ -49,6 +49,7 @@ public final class Ead3SolrFields {
 
     public final static String DAO = "dao";//indexed+stored - true, false
     public final static String NUMBER_OF_DAO = "numberOfDao";//stored
+    public final static String NUMBER_OF_DAO_BELOW = "numberOfDaoBelow";//stored
     public final static String DAO_LINKS = "daoLinks"; //stored - array of objects, object = link and clevel's Id
     public final static String DAO_TYPE = "daoType";//indexed+stored
     public final static String TIMESTAMP = "timestamp";//indexed+stored
