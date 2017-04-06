@@ -9,6 +9,7 @@ package eu.archivesportaleurope.apeapi.response.ead;
  *
  * @author kaisar
  */
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
@@ -49,8 +50,11 @@ public class EadDocResponse {
     @ApiModelProperty(value = "Abstract of the content / Scope Content")
     private String scopeContent;
 
-    @ApiModelProperty(value = "Number of DAO below")
+    @ApiModelProperty(value = "Number of DAO")
     private int numberOfDaos = 0;
+
+    @ApiModelProperty(value = "Number of DAO below")
+    private int numberOfDaosBelow = 0;
 
     @ApiModelProperty(value = "Number of Descendents")
     private int numberOfDescendents = 0;
@@ -81,6 +85,12 @@ public class EadDocResponse {
         if (dao != null) {
             this.numberOfDaos = Integer.parseInt(this.objectToString(dao));
         }
+
+        Object daoBelow = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO_BELOW);
+        if (daoBelow != null) {
+            this.numberOfDaosBelow = Integer.parseInt(this.objectToString(daoBelow));
+        }
+
         Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
         if (des != null) {
             this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
@@ -169,6 +179,14 @@ public class EadDocResponse {
 
     public void setNumberOfDaos(int numberOfDaos) {
         this.numberOfDaos = numberOfDaos;
+    }
+
+    public int getNumberOfDaosBelow() {
+        return numberOfDaosBelow;
+    }
+
+    public void setNumberOfDaosBelow(int numberOfDaosBelow) {
+        this.numberOfDaosBelow = numberOfDaosBelow;
     }
 
     public int getNumberOfDescendents() {

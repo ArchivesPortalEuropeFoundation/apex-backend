@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.apeapi.response;
 
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.FindingAid;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.solr.client.solrj.response.Group;
@@ -40,6 +41,10 @@ public class ArchivalInstituteResponse {
             if (fa.isPublished()) {
                 numberOfPublishedItem++;
             }
+        }
+        for(Ead3 ead3:ai.getEad3()){
+            if(ead3.isPublished())
+                numberOfPublishedItem++;
         }
         this.setTotalDocs(numberOfPublishedItem);
         this.repositoryCode = ai.getRepositorycode();
