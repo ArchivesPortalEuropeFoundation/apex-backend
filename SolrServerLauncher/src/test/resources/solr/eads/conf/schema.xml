@@ -126,6 +126,7 @@
         <field name="numberOfDescendents" type="int" indexed="false" stored="true" required="false"/>
         <field name="numberOfAncestors" type="int" indexed="false" stored="true" required="false"/>
         <field name="numberOfDao" type="int" indexed="false" stored="true" required="false"/>
+        <field name="numberOfDaoBelow" type="int" indexed="false" stored="true" required="false"/>
   
         <field name="startdate" type="date" indexed="true" stored="true" required="false"/>
         <field name="enddate" type="date" indexed="true" stored="true" required="false"/>
