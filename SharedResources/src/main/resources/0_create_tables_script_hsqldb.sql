@@ -481,6 +481,36 @@ CREATE SEQUENCE eac_cpf_id_seq
 
 
 
+-- Table: ead3
+
+-- DROP TABLE ead3;
+
+CREATE TABLE ead3
+(
+  id serial NOT NULL,
+  ai_id integer,
+  converted boolean NOT NULL,
+  europeana integer,
+  identifier character varying(255) NOT NULL,
+  path character varying(255),
+  publish_date date,
+  published boolean NOT NULL,
+  queuing integer,
+  title character varying(255),
+  upload_date timestamp without time zone,
+  validated integer,
+  um_id integer,
+  totalnumberofdaos bigint,
+  totalnumberofunits bigint,
+--   CONSTRAINT ead3_pkey PRIMARY KEY (id),
+--   CONSTRAINT ead3_ai_id_fkey FOREIGN KEY (ai_id)
+--       REFERENCES archival_institution (id) MATCH SIMPLE
+--       ON UPDATE NO ACTION ON DELETE NO ACTION,
+--   CONSTRAINT ead3_um_id_fkey FOREIGN KEY (um_id)
+--       REFERENCES upload_method (id) MATCH SIMPLE
+--       ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
 --
 -- TOC entry 204 (class 1259 OID 37592)
 -- Name: ead_content; Type: TABLE; Schema: public; Owner: sa
