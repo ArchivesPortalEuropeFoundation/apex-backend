@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
@@ -49,8 +50,11 @@ public class InstituteEadResponse {
     @ApiModelProperty(value = "True if the unit has one or more digital object")
     private boolean hasDigitalObject = false;
 
+    @ApiModelProperty(value = "Number of DAO")
+    private int numberOfDigitalObjects = 0;
+
     @ApiModelProperty(value = "Number of DAO below")
-    private int numberOfDaos = 0;
+    private int numberOfDigitalObjectsInDescendents = 0;
 
     @ApiModelProperty(value = "Number of Descendents")
     private int numberOfDescendents = 0;
@@ -101,8 +105,14 @@ public class InstituteEadResponse {
         }
         Object dao = solrDocument.getFieldValue(SolrFields.NO_OF_DAO);
         if (dao != null) {
-            this.numberOfDaos = Integer.parseInt(this.objectToString(dao));
+            this.numberOfDigitalObjects = Integer.parseInt(this.objectToString(dao));
         }
+
+        Object daoBelow = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO_BELOW);
+        if (daoBelow != null) {
+            this.numberOfDigitalObjectsInDescendents = Integer.parseInt(this.objectToString(daoBelow));
+        }
+
         Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
         if (des != null) {
             this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
@@ -236,12 +246,20 @@ public class InstituteEadResponse {
         this.indexDate = indexDate;
     }
 
-    public int getNumberOfDaos() {
-        return numberOfDaos;
+    public int getNumberOfDigitalObjects() {
+        return numberOfDigitalObjects;
     }
 
-    public void setNumberOfDaos(int numberOfDaos) {
-        this.numberOfDaos = numberOfDaos;
+    public void setNumberOfDigitalObjects(int numberOfDigitalObjects) {
+        this.numberOfDigitalObjects = numberOfDigitalObjects;
+    }
+
+    public int getNumberOfDigitalObjectsInDescendents() {
+        return numberOfDigitalObjectsInDescendents;
+    }
+
+    public void setNumberOfDigitalObjectsInDescendents(int numberOfDigitalObjectsInDescendents) {
+        this.numberOfDigitalObjectsInDescendents = numberOfDigitalObjectsInDescendents;
     }
 
     public int getNumberOfDescendents() {

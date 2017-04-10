@@ -51,10 +51,10 @@ public class EadDocResponse {
     private String scopeContent;
 
     @ApiModelProperty(value = "Number of DAO")
-    private int numberOfDaos = 0;
+    private int numberOfDigitalObjects = 0;
 
     @ApiModelProperty(value = "Number of DAO below")
-    private int numberOfDaosBelow = 0;
+    private int numberOfDigitalObjectsInDescendents = 0;
 
     @ApiModelProperty(value = "Number of Descendents")
     private int numberOfDescendents = 0;
@@ -83,12 +83,12 @@ public class EadDocResponse {
 
         Object dao = solrDocument.getFieldValue(SolrFields.NO_OF_DAO);
         if (dao != null) {
-            this.numberOfDaos = Integer.parseInt(this.objectToString(dao));
+            this.numberOfDigitalObjects = Integer.parseInt(this.objectToString(dao));
         }
 
         Object daoBelow = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO_BELOW);
         if (daoBelow != null) {
-            this.numberOfDaosBelow = Integer.parseInt(this.objectToString(daoBelow));
+            this.numberOfDigitalObjectsInDescendents = Integer.parseInt(this.objectToString(daoBelow));
         }
 
         Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
@@ -173,20 +173,20 @@ public class EadDocResponse {
         this.scopeContent = scopeContent;
     }
 
-    public int getNumberOfDaos() {
-        return numberOfDaos;
+    public int getNumberOfDigitalObjects() {
+        return numberOfDigitalObjects;
     }
 
-    public void setNumberOfDaos(int numberOfDaos) {
-        this.numberOfDaos = numberOfDaos;
+    public void setNumberOfDigitalObjects(int numberOfDigitalObjects) {
+        this.numberOfDigitalObjects = numberOfDigitalObjects;
     }
 
-    public int getNumberOfDaosBelow() {
-        return numberOfDaosBelow;
+    public int getNumberOfDigitalObjectsInDescendents() {
+        return numberOfDigitalObjectsInDescendents;
     }
 
-    public void setNumberOfDaosBelow(int numberOfDaosBelow) {
-        this.numberOfDaosBelow = numberOfDaosBelow;
+    public void setNumberOfDigitalObjectsInDescendents(int numberOfDigitalObjectsInDescendents) {
+        this.numberOfDigitalObjectsInDescendents = numberOfDigitalObjectsInDescendents;
     }
 
     public int getNumberOfDescendents() {
