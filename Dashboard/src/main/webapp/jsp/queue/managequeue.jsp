@@ -6,6 +6,7 @@
 <%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags"%>
 <dashboard:securityContext var="securityContext" />
 <div id="manageQueue">
+    <s:fielderror fieldName="reindex_" />
     <table class="defaultlayout">
         <tr>
             <th><s:text name="admin.queuemanagement.currenttime" /></th>

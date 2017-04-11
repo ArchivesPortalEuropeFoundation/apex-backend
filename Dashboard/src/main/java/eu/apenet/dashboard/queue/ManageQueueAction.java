@@ -236,7 +236,16 @@ public class ManageQueueAction extends AbstractAction {
     }
     
     public String reindex() {
+        LOGGER.info("Function is not ready yet - before admin");
         if (SecurityContext.get().isAdmin()) {
+            //private final static Cache<String, Long> CACHE = CacheManager.getInstance().<String, Long>initCache("SimpleSearchCache");
+            //show pop up 
+            LOGGER.info("Function is not ready yet");
+            addFieldError("reindex_","Function is not ready yet");
+            return ERROR;
+            
+            
+            
             //code to reindex
             //sample can be found in method republishAllEagFiles()
         }

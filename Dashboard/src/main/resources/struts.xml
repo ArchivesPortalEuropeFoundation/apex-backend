@@ -969,6 +969,7 @@
 
         <action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction">
             <result name="success" type="tiles">manageQueue</result>
+            <result name="error" type="tiles">manageQueue</result>
         </action>
 
         <action name="startStopQueue" class="eu.apenet.dashboard.queue.ManageQueueAction" method="startStopQueue">
@@ -1026,6 +1027,7 @@
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
             </result>
+            <result name="error" type="tiles">manageQueue</result>
         </action>
 
         <action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction">
