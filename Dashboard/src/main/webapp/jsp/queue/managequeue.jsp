@@ -4,6 +4,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib prefix="dashboard" uri="http://dashboard.archivesportaleurope.eu/tags"%>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#reindex_all").click(function () {
+            var doIt = confirm(("<s:property value="getText('content.message.reindex.comfirm')" />"));
+            return doIt;
+        });
+    });
+</script>
 <dashboard:securityContext var="securityContext" />
 <div id="manageQueue">
     <s:fielderror fieldName="reindex_" />
@@ -76,7 +85,7 @@
         </s:form>
         <c:if test="${maintenanceMode}">
             <s:form action="reindex" theme="simple" method="post">
-                <s:submit value="Reindex all documents" cssClass="otherButton"></s:submit>
+                <s:submit id="reindex_all" key="label.reindex" cssClass="otherButton"></s:submit>
             </s:form>
         </c:if>
         <s:form action="forceSolrCommit" theme="simple" method="post">

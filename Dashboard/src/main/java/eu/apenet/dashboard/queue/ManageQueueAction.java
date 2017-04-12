@@ -22,10 +22,13 @@ import eu.apenet.dashboard.services.eag.xml.stream.XmlEagParser;
 import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
@@ -234,20 +237,19 @@ public class ManageQueueAction extends AbstractAction {
         }
         return SUCCESS;
     }
-    
+
     public String reindex() {
         LOGGER.info("Function is not ready yet - before admin");
         if (SecurityContext.get().isAdmin()) {
-            //private final static Cache<String, Long> CACHE = CacheManager.getInstance().<String, Long>initCache("SimpleSearchCache");
-            //show pop up 
+            EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+            ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+            contentSearchOptions.setPublished(Boolean.TRUE);
+            List<Ead> publishedEads = eadDAO.getEads(contentSearchOptions);
+            LOGGER.info("published eads : " + publishedEads.size());
+
             LOGGER.info("Function is not ready yet");
-            addFieldError("reindex_","Function is not ready yet");
-            return ERROR;
-            
-            
-            
-            //code to reindex
-            //sample can be found in method republishAllEagFiles()
+//            addFieldError("reindex_", "Function is not ready yet");
+//            return ERROR;
         }
         return SUCCESS;
     }
