@@ -25,4 +25,6 @@ public interface Ead3DAO extends GenericDAO<Ead3, Integer> {
     public List<Integer> getAllIds(Class<Ead3> aClass, int aiId);
 
     public boolean existEad3s(ContentSearchOptions contentSearchOptions);
+    
+    public Long getTotalCountOfUnits();
 }

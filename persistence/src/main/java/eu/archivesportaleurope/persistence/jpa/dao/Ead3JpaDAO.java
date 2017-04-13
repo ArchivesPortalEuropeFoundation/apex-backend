@@ -241,4 +241,24 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
         return criteriaBuilder.and(whereClause.toArray(new Predicate[0]));
     }
 
+    @Override
+    public Long getTotalCountOfUnits() {
+        Criteria criteria = null;
+        List<Long> result = null;
+        Long value = 0L;
+        criteria = getSession().createCriteria(getPersistentClass(), "ead3");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        result = criteria.setProjection(Projections.sum("totalNumberOfUnits")).list();
+        if (result.size() > 0) {
+            int i = 0;
+            while (result.size() > i) {
+                if (result.get(i) != null) {
+                    value += result.get(i);
+                }
+                i++;
+            }
+        }
+        return value;
+    }
+
 }
