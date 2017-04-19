@@ -13,6 +13,8 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.solr.SolrUtil;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.commons.utils.Cache;
+import eu.apenet.commons.utils.CacheManager;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
@@ -28,13 +30,13 @@ import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
-import java.io.IOException;
 
 public class ManageQueueAction extends AbstractAction {
 
@@ -43,6 +45,12 @@ public class ManageQueueAction extends AbstractAction {
     private Integer queueItemId;
     private Integer aiId;
     private String selectedAction;
+
+    private static final String INSTITUTIONS = "numberOfInstitutions";
+    private static final String EAD_UNITS = "numberOfEadDescriptiveUnits";
+    private static final String EAC_CPF_UNITS = "numberOfEacCpfs";
+    private static final String EAD3_UNITS = "numberOfEad3s";
+    private final static Cache<String, Long> CACHE = CacheManager.getInstance().initCache("SimpleSearchCache");
     /**
      *
      */
@@ -98,7 +106,39 @@ public class ManageQueueAction extends AbstractAction {
         if (endDateTime != null) {
             getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
         }
+        this.buildCache();
         return SUCCESS;
+    }
+
+    private void buildCache() {
+        Long institutions = CACHE.get(INSTITUTIONS);
+        Long eadUnits = CACHE.get(EAD_UNITS);
+        Long eacCpfUnits = CACHE.get(EAC_CPF_UNITS);
+        Long ead3Units = CACHE.get(EAD3_UNITS);
+
+        if (null == institutions) {
+            institutions = DAOFactory.instance().getArchivalInstitutionDAO().countArchivalInstitutionsWithEag();
+            CACHE.put(INSTITUTIONS, institutions);
+        }
+        if (null == eadUnits) {
+            eadUnits = DAOFactory.instance().getEadDAO().getTotalCountOfUnits();
+            CACHE.put(EAD_UNITS, eadUnits);
+        }
+        if (null == eacCpfUnits) {
+            ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+            contentSearchOptions.setContentClass(EacCpf.class);
+            contentSearchOptions.setPublished(true);
+            eacCpfUnits = DAOFactory.instance().getEacCpfDAO().countEacCpfs(contentSearchOptions);
+            CACHE.put(EAC_CPF_UNITS, eacCpfUnits);
+        }
+        if (null == ead3Units) {
+            ead3Units = DAOFactory.instance().getEad3DAO().getTotalCountOfUnits();
+            CACHE.put(EAD3_UNITS, ead3Units);
+        }
+        getServletRequest().setAttribute(INSTITUTIONS, institutions);
+        getServletRequest().setAttribute(EAD_UNITS, eadUnits);
+        getServletRequest().setAttribute(EAC_CPF_UNITS, eacCpfUnits);
+        getServletRequest().setAttribute(EAD3_UNITS, ead3Units);
     }
 
     private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {

@@ -8,7 +8,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#reindex_all").click(function () {
-            var doIt = confirm(("<s:property value="getText('content.message.reindex.comfirm')" />"));
+            console.log(Number("${numberOfEadDescriptiveUnits}"));
+            msg = "<s:property value="getText('content.message.numberofeadunit')"/> : " + "${numberOfEadDescriptiveUnits}"
+                    + " and <s:property value="getText('content.message.numberofead3unit')"/> : " + "${numberOfEad3s}";
+            var doIt = confirm((msg + ". <s:property value="getText('content.message.reindex.comfirm')" />"));
             return doIt;
         });
     });
