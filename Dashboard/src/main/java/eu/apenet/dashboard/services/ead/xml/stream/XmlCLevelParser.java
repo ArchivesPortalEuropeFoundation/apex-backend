@@ -100,7 +100,7 @@ public class XmlCLevelParser extends AbstractParser {
                                 publishData.setOrderId(clevel.getOrderId());
                             }
                             currentEADCounts.addClevel(publishData.getNumberOfDaos());
-                            currentEADCounts.setNumberOfDAOsBelow(publishData.getNumberOfDaos());
+                            currentEADCounts.setNumberOfTotalDAOs(publishData.getNumberOfDaos());
 
                             unittitles.add(new LevelInfo(clevel.getId(), clevel.getOrderId(), clevel.getUnittitle()));
                         }
@@ -185,7 +185,7 @@ public class XmlCLevelParser extends AbstractParser {
         parentEadCounts.addEadCounts(currentEADCounts);
         if (publishData.getId() != null) {
             publishData.setNumberOfDescendents((int) currentEADCounts.getNumberOfUnits() - 1);
-            publishData.setNumberOfDaosBelow((int) currentEADCounts.getNumberOfDAOsBelow());
+            publishData.setNumberOfTotalDaos((int) currentEADCounts.getNumberOfTotalDAOs());
             solrPublisher.publishCLevel(publishData);
         }
     }

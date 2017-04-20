@@ -83,7 +83,7 @@ public class DatabaseXmlCLevelParser {
         }
         parentEADCounts.addEadCounts(currentEadCounts);
         publishData.setNumberOfDescendents((int) currentEadCounts.getNumberOfUnits() - 1);
-        publishData.setNumberOfDaosBelow((int) currentEadCounts.getNumberOfDAOsBelow());
+        publishData.setNumberOfTotalDaos((int) currentEadCounts.getNumberOfTotalDAOs());
         solrPublisher.publishCLevel(publishData);
         return currentEadCounts;
         

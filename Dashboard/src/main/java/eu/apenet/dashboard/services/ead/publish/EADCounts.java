@@ -2,12 +2,12 @@ package eu.apenet.dashboard.services.ead.publish;
 
 public class EADCounts {
 
-    private long numberOfDAOsBelow = 0l;
+    private long numberOfTotalDAOs = 0l;
     private long numberOfUnitsWithDaosBelow = 0l;
     private long numberOfUnits = 0l;
 
     public void addClevel(long numberOfDAOs) {
-        numberOfDAOsBelow += numberOfDAOs;
+        numberOfTotalDAOs += numberOfDAOs;
 //        if (numberOfDAOs > 0) {
 //            numberOfUnitsWithDaosBelow++;
 //        }
@@ -16,13 +16,13 @@ public class EADCounts {
     }
 
     public void addEadCounts(EADCounts counts) {
-        numberOfDAOsBelow += counts.getNumberOfDAOsBelow();
+        numberOfTotalDAOs += counts.getNumberOfTotalDAOs();
         numberOfUnitsWithDaosBelow += counts.getNumberOfUnitsWithDaosBelow();
         numberOfUnits += counts.getNumberOfUnits();
     }
 
-    public long getNumberOfDAOsBelow() {
-        return numberOfDAOsBelow;
+    public long getNumberOfTotalDAOs() {
+        return numberOfTotalDAOs;
     }
 
     public long getNumberOfUnitsWithDaosBelow() {
@@ -30,11 +30,11 @@ public class EADCounts {
     }
 
     public void addNumberOfDAOs(long numberOfDAOs) {
-        numberOfDAOsBelow += numberOfDAOs;
+        numberOfTotalDAOs += numberOfDAOs;
     }
 
     public void addNumberOfDAOsBelow(long numberOfDAOsBelow) {
-        this.numberOfDAOsBelow += numberOfDAOsBelow;
+        this.numberOfTotalDAOs += numberOfDAOsBelow;
     }
 
     public void addNumberOfUnitsWithDaosBelow(long numberOfUnitsWithDaosBelow) {
@@ -45,11 +45,11 @@ public class EADCounts {
         return numberOfUnits;
     }
 
-    public void setNumberOfDAOsBelow(long numberOfDAOsBelow) {
-        if (numberOfDAOsBelow > 0) {
+    public void setNumberOfTotalDAOs(long numberOfTotalDAOs) {
+        if (numberOfTotalDAOs > 0) {
             this.numberOfUnitsWithDaosBelow++;
         }
-        this.numberOfDAOsBelow = numberOfDAOsBelow;
+        this.numberOfTotalDAOs = numberOfTotalDAOs;
     }
 
     public void setNumberOfUnitsWithDaosBelow(long numberOfUnitsWithDaosBelow) {
@@ -62,7 +62,7 @@ public class EADCounts {
 
     @Override
     public String toString() {
-        return "EADCounts [numberOfDAOsBelow=" + numberOfDAOsBelow + ", numberOfUnitsWithDaosBelow="
+        return "EADCounts [numberOfDAOsBelow=" + numberOfTotalDAOs + ", numberOfUnitsWithDaosBelow="
                 + numberOfUnitsWithDaosBelow + ", numberOfUnits=" + numberOfUnits + "]";
     }
 

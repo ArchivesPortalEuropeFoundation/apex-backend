@@ -372,7 +372,7 @@ public class EadSolrPublisher {
         doc1.addField(SolrFields.DAO, dao);
         LOG.debug(this.eadidstring + Ead3SolrFields.NUMBER_OF_DAO + ": " + publishData.getNumberOfDaos());
         doc1.addField(Ead3SolrFields.NUMBER_OF_DAO, publishData.getNumberOfDaos());
-        doc1.addField(Ead3SolrFields.NUMBER_OF_DAO_BELOW, publishData.getNumberOfDaosBelow() - publishData.getNumberOfDaos());
+        doc1.addField(Ead3SolrFields.NUMBER_OF_DAO_BELOW, publishData.getNumberOfTotalDaos() - publishData.getNumberOfDaos());
         doc1.addField(Ead3SolrFields.NUMBER_OF_DESCENDENTS, publishData.getNumberOfDescendents());
         int numberOfAncestors = publishData.getUpperLevelUnittitles().size();
         if (publishData.isArchdesc()) {
@@ -451,9 +451,9 @@ public class EadSolrPublisher {
         }
         removeWarnings();
         if (eadCounts != null) {
-            ead.setTotalNumberOfDaos(eadCounts.getNumberOfDAOsBelow());
+            ead.setTotalNumberOfDaos(eadCounts.getNumberOfTotalDAOs());
         }
-        if (eadCounts.getNumberOfDAOsBelow() == 0) {
+        if (eadCounts.getNumberOfTotalDAOs() == 0) {
             if (ead instanceof FindingAid) {
                 FindingAid findingAid = (FindingAid) ead;
                 if (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana())) {

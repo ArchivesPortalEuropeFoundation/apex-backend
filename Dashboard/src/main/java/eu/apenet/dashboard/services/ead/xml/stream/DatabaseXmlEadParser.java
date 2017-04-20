@@ -99,7 +99,7 @@ public class DatabaseXmlEadParser {
             }
             eadCounts.addClevel(0);
             publishData.setNumberOfDescendents((int) eadCounts.getNumberOfUnits() - 1);
-            publishData.setNumberOfDaosBelow((int) eadCounts.getNumberOfDAOsBelow());
+            publishData.setNumberOfTotalDaos((int) eadCounts.getNumberOfTotalDAOs());
             solrPublisher.publishArchdesc(publishData);
             JpaUtil.beginDatabaseTransaction();
             eadDatabaseSaver.updateAll();

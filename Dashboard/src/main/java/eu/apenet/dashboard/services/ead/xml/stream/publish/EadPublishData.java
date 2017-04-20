@@ -18,6 +18,7 @@ public class EadPublishData extends PublishData {
     private String langmaterial;
     private int numberOfDaos = 0;
     private int numberOfDaosBelow = 0;
+    private int numberOfTotalDaos = 0;
     private int numberOfDescendents = 0;
     private Set<String> roledao = new HashSet<String>();
     private String globalLanguage;
@@ -85,6 +86,14 @@ public class EadPublishData extends PublishData {
 
     public void setNumberOfDaos(int numberOfDaos) {
         this.numberOfDaos = numberOfDaos;
+    }
+
+    public int getNumberOfTotalDaos() {
+        return numberOfTotalDaos;
+    }
+
+    public void setNumberOfTotalDaos(int numberOfTotalDaos) {
+        this.numberOfTotalDaos = numberOfTotalDaos;
     }
 
     public int getNumberOfDaosBelow() {
