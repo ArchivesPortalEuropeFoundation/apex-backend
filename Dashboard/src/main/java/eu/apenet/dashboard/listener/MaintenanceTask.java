@@ -35,6 +35,7 @@ public class MaintenanceTask extends Thread {
 		LOGGER.info("Start maintenance mode");
 		try {
 			ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+                        contentSearchOptions.setContentClass(FindingAid.class);
 			contentSearchOptions.setPageSize(MAX_AMOUNT);
 			List<QueuingState> queuingStates = new ArrayList<QueuingState>();
 			queuingStates.add(QueuingState.NO);

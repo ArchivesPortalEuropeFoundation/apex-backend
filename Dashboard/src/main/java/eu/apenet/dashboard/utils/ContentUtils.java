@@ -34,6 +34,7 @@ import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SentMailRegister;
@@ -395,6 +396,7 @@ public class ContentUtils {
 				if (!updated && numberOfPublishedEads <= 1) {
 					EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
 					ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+                                        contentSearchOptions.setContentClass(EacCpf.class);
 					contentSearchOptions.setArchivalInstitionId(ai.getAiId());
 					if(eacDAO.existEacCpfs(contentSearchOptions)){
 						LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");

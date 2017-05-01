@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.queue;
 
+import eu.apenet.commons.exceptions.ProcessBusyException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import eu.apenet.commons.utils.CacheManager;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
+import eu.apenet.dashboard.reindex.ReIndexAllDocumentsManager;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.services.ead3.Ead3Service;
 import eu.apenet.dashboard.services.eag.xml.stream.XmlEagParser;
@@ -37,6 +39,7 @@ import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
+import java.util.logging.Level;
 
 public class ManageQueueAction extends AbstractAction {
 
@@ -277,19 +280,42 @@ public class ManageQueueAction extends AbstractAction {
         }
         return SUCCESS;
     }
+    
+    public String reindexTest() {
+        LOGGER.info("Reindex test");
+        if (SecurityContext.get().isAdmin()) {
+//            LOGGER.info("Function is not ready yet");
+//            addFieldError("reindex_","Function is not ready yet");
+//            return ERROR;
+            ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
+            try {
+                riManager.redindex(true);
+                
+                
+                //code to reindex
+                //sample can be found in method republishAllEagFiles()
+            } catch (ProcessBusyException ex) {
+                LOGGER.info("Function "+ex.getMessage());
+            }
+        }
+        return SUCCESS;
+    }
 
     public String reindex() {
-        LOGGER.info("Function is not ready yet - before admin");
         if (SecurityContext.get().isAdmin()) {
-            EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-            ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
-            contentSearchOptions.setPublished(Boolean.TRUE);
-            List<Ead> publishedEads = eadDAO.getEads(contentSearchOptions);
-            LOGGER.info("published eads : " + publishedEads.size());
-
-            LOGGER.info("Function is not ready yet");
-//            addFieldError("reindex_", "Function is not ready yet");
+//            LOGGER.info("Function is not ready yet");
+//            addFieldError("reindex_","Function is not ready yet");
 //            return ERROR;
+            ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
+            try {
+                riManager.redindex(false);
+                
+                
+                //code to reindex
+                //sample can be found in method republishAllEagFiles()
+            } catch (ProcessBusyException ex) {
+                LOGGER.info("Function "+ex.getMessage());
+            }
         }
         return SUCCESS;
     }

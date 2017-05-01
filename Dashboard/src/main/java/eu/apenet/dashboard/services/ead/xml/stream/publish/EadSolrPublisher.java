@@ -370,7 +370,9 @@ public class EadSolrPublisher {
         add(doc1, SolrFields.UNITID_OF_FOND, unitidfond);
         boolean dao = publishData.getNumberOfDaos() > 0;
         doc1.addField(SolrFields.DAO, dao);
-        LOG.debug(this.eadidstring + Ead3SolrFields.NUMBER_OF_DAO + ": " + publishData.getNumberOfDaos());
+        if (dao) {
+            LOG.debug(this.eadidstring + Ead3SolrFields.NUMBER_OF_DAO + ": " + publishData.getNumberOfDaos());
+        }
         doc1.addField(Ead3SolrFields.NUMBER_OF_DAO, publishData.getNumberOfDaos());
         doc1.addField(Ead3SolrFields.NUMBER_OF_DAO_BELOW, publishData.getNumberOfTotalDaos() - publishData.getNumberOfDaos());
         doc1.addField(Ead3SolrFields.NUMBER_OF_DESCENDENTS, publishData.getNumberOfDescendents());

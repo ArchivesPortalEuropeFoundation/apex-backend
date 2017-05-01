@@ -22,6 +22,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -31,7 +32,7 @@ import org.hibernate.criterion.Restrictions;
  * @author mahbub
  */
 public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements Ead3DAO {
-
+    private static final Logger LOGGER = Logger.getLogger(Ead3JpaDAO.class);
     @Override
     public Ead3 getFirstPublishedEad3ByIdentifier(String identifier, boolean isPublished) {
         Criteria criteria = getSession().createCriteria(Ead3.class, "ead3");
@@ -84,6 +85,9 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
     public List<Ead3> getEad3s(ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Ead3> cq = criteriaBuilder.createQuery(Ead3.class);
+        if (contentSearchOptions.getContentClass()==null) {
+            contentSearchOptions.setContentClass(Ead3.class);
+        }
         Root<? extends Ead3> from = (Root<? extends Ead3>) cq.from(contentSearchOptions.getContentClass());
         cq.where(buildWhere(from, cq, contentSearchOptions));
         cq.select(from);
@@ -101,12 +105,16 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
                 query.setFirstResult(contentSearchOptions.getPageSize() * (contentSearchOptions.getPageNumber() - 1));
             }
         }
+        LOGGER.debug("Ead3 query with criteria: "+query.unwrap(org.hibernate.Query.class).getQueryString());
         return query.getResultList();
     }
 
     @Override
     public long countEad3s(ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        if (contentSearchOptions.getContentClass()==null) {
+            contentSearchOptions.setContentClass(Ead3.class);
+        }
         CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
         Root<? extends Ead3> from = (Root<? extends Ead3>) cq.from(contentSearchOptions.getContentClass());
         cq.where(buildWhere(from, cq, contentSearchOptions));
@@ -116,11 +124,14 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
     }
 
     @Override
-    public Long countUnits(ContentSearchOptions eadSearchOptions) {
+    public Long countUnits(ContentSearchOptions contentSearchOptions) {
+        if (contentSearchOptions.getContentClass()==null) {
+            contentSearchOptions.setContentClass(Ead3.class);
+        }
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
-        Root<? extends Ead3> from = (Root<? extends Ead3>) cq.from(eadSearchOptions.getContentClass());
-        cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
+        Root<? extends Ead3> from = (Root<? extends Ead3>) cq.from(contentSearchOptions.getContentClass());
+        cq.where(criteriaBuilder.and(buildWhere(from, cq, contentSearchOptions),
                 criteriaBuilder.greaterThan(from.<Integer>get("totalNumberOfUnits"), 0)));
         cq.select(criteriaBuilder.sum(from.<Long>get("totalNumberOfUnits")));
 
@@ -202,15 +213,8 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
             List<Predicate> orPredicated = new ArrayList<>();
             if (contentSearchOptions.getPublishedToAll()) {
                 orPredicated.add(criteriaBuilder.equal(from.get("published"), true));
-                if (FindingAid.class.equals(contentSearchOptions.getContentClass())) {
-                    orPredicated.add(criteriaBuilder.equal(from.get("europeana"), EuropeanaState.CONVERTED));
-                    orPredicated.add(criteriaBuilder.equal(from.get("europeana"), EuropeanaState.DELIVERED));
-                }
             } else {
                 orPredicated.add(criteriaBuilder.equal(from.get("published"), false));
-                if (FindingAid.class.equals(contentSearchOptions.getContentClass())) {
-                    orPredicated.add(criteriaBuilder.equal(from.get("europeana"), EuropeanaState.NOT_CONVERTED));
-                }
             }
             whereClause.add(criteriaBuilder.or(orPredicated.toArray(new Predicate[0])));
         }

@@ -25,7 +25,7 @@ public class ContentSearchOptions implements Serializable{
 	private String searchTermsField;
 	private String orderByField = "id";
 	private boolean orderByAscending = true;
-	private Class<? extends AbstractContent> contentClass = FindingAid.class;
+	private Class<? extends AbstractContent> contentClass = null;// FindingAid.class;
 	private Integer archivalInstitionId = null;
 	private Boolean published = null;
 	private Boolean converted = null;

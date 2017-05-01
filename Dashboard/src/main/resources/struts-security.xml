@@ -3,23 +3,23 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 <struts>
 
-	<package name="struts-security" abstract="true" extends="struts-default">
-		<result-types>
-			<result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" />
-		</result-types>
+    <package name="struts-security" abstract="true" extends="struts-default">
+        <result-types>
+            <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" />
+        </result-types>
 		
-		<interceptors>
+        <interceptors>
 		
-			<!-- changeLanguageInterceptor is an Interceptor defined to store the current action invoked -->
-			<interceptor name="changeLanguageInterceptor" class="eu.apenet.dashboard.language.ChangeLanguageInterceptor" />
+            <!-- changeLanguageInterceptor is an Interceptor defined to store the current action invoked -->
+            <interceptor name="changeLanguageInterceptor" class="eu.apenet.dashboard.language.ChangeLanguageInterceptor" />
 		
-			<!-- The roles interceptor ensures users have the proper role and authorization
-			     to access a particular page according to the rules defined in the
-			 "roleActions" parameter. -->
-			<interceptor name="securityInterceptor" class="eu.apenet.dashboard.security.SecurityInterceptor" />
+            <!-- The roles interceptor ensures users have the proper role and authorization
+                to access a particular page according to the rules defined in the
+            "roleActions" parameter. -->
+            <interceptor name="securityInterceptor" class="eu.apenet.dashboard.security.SecurityInterceptor" />
 			
-			<interceptor-stack name="defaultApeStack">
-				<interceptor-ref name="securityInterceptor"/>
+            <interceptor-stack name="defaultApeStack">
+                <interceptor-ref name="securityInterceptor"/>
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
@@ -31,12 +31,12 @@
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload">
-                	<param name="maximumSize">209715200</param>
+                    <param name="maximumSize">209715200</param>
                 </interceptor-ref>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="staticParams"/>
                 <interceptor-ref name="params">
-                  <param name="excludeParams">dojo\..*</param>
+                    <param name="excludeParams">dojo\..*</param>
                 </interceptor-ref>
                 <interceptor-ref name="prepare"/>                
                 <interceptor-ref name="conversionError"/>
@@ -46,45 +46,45 @@
                 <interceptor-ref name="workflow">
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>
-			</interceptor-stack>
+            </interceptor-stack>
 
-			<!-- changeLanguageStack is a stack that takes into account the passing of parameters using the default stack and the changeLanguageInterceptor -->
-			<interceptor-stack name="changeLanguageStack">
-	        	<interceptor-ref name="changeLanguageInterceptor"/>
-	           	<interceptor-ref name="defaultApeStack"/>
-	        </interceptor-stack>
+            <!-- changeLanguageStack is a stack that takes into account the passing of parameters using the default stack and the changeLanguageInterceptor -->
+            <interceptor-stack name="changeLanguageStack">
+                <interceptor-ref name="changeLanguageInterceptor"/>
+                <interceptor-ref name="defaultApeStack"/>
+            </interceptor-stack>
 	        
-	        <!-- Stack of interceptors for Internationalization -->
-			<interceptor-stack name="internacionalizationStack">
-     			<interceptor-ref name="i18n"/>
-	           	<interceptor-ref name="defaultApeStack"/>
-     		</interceptor-stack>
+            <!-- Stack of interceptors for Internationalization -->
+            <interceptor-stack name="internacionalizationStack">
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="defaultApeStack"/>
+            </interceptor-stack>
      		
-		</interceptors>
+        </interceptors>
 
 
-		<default-interceptor-ref name="defaultApeStack" />    
+        <default-interceptor-ref name="defaultApeStack" />    
 		
-		<global-results>
-			<result type="tiles" name="authentication_required">login</result>
-			<result type="tiles" name="authorization_required">error-403</result>
-			<result type="tiles" name="institution_required">institution_selection_required</result>
-			<result type="tiles" name="start_page">startpage</result>
-			<result type="tiles" name="custom_error">exception</result>
-		</global-results>
+        <global-results>
+            <result type="tiles" name="authentication_required">login</result>
+            <result type="tiles" name="authorization_required">error-403</result>
+            <result type="tiles" name="institution_required">institution_selection_required</result>
+            <result type="tiles" name="start_page">startpage</result>
+            <result type="tiles" name="custom_error">exception</result>
+        </global-results>
 		
-		<!-- 
-		<global-exception-mappings>
-			<exception-mapping exception="java.lang.Exception" result="custom_error"></exception-mapping>
-			<exception-mapping exception="java.lang.NullPointerException" result="custom_error"></exception-mapping>
-		</global-exception-mappings>
-		 -->
+        <!-- 
+       <global-exception-mappings>
+               <exception-mapping exception="java.lang.Exception" result="custom_error"></exception-mapping>
+               <exception-mapping exception="java.lang.NullPointerException" result="custom_error"></exception-mapping>
+       </global-exception-mappings>
+        -->
 		
-		<!-- 
-		<action name="custom_error">
-      		<result type="tiles">error</result>
-     	</action>
-     	 -->
+        <!-- 
+               <action name="custom_error">
+               <result type="tiles">error</result>
+       </action>
+        -->
 	
-	</package>
+    </package>
 </struts>

@@ -211,6 +211,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         ContentSearchOptions contentSearchOptions = initFromExistingContentSearchOptions();
         if (contentSearchOptions == null) {
             contentSearchOptions = createNewContentSearchOptions();
+            contentSearchOptions.setContentClass(FindingAid.class);
             getServletRequest().getSession().setAttribute(EAD_SEARCH_OPTIONS, contentSearchOptions);
         }
 
@@ -288,6 +289,8 @@ public class ContentManagerAction extends AbstractInstitutionAction {
 
     private ContentSearchOptions createNewContentSearchOptions() {
         ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+        contentSearchOptions.setContentClass(FindingAid.class);
+        
         contentSearchOptions.setPageNumber(pageNumber);
         contentSearchOptions.setPageSize(resultPerPage);
         contentSearchOptions.setOrderByAscending(orderByAscending);
@@ -453,6 +456,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
 //            }
 
         ContentSearchOptions dynamicEadSearchOptions = new ContentSearchOptions();
+        dynamicEadSearchOptions.setContentClass(FindingAid.class);
         dynamicEadSearchOptions.setPublished(false);
         dynamicEadSearchOptions.setDynamic(true);
         getServletRequest().setAttribute("results", results);

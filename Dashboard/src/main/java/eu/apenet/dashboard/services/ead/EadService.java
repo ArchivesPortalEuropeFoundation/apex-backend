@@ -325,6 +325,7 @@ public class EadService extends AbstractService {
     public static void fixWrongQueueStates() {
         EadDAO eadDAO = DAOFactory.instance().getEadDAO();
         ContentSearchOptions searchOptions = new ContentSearchOptions();
+        searchOptions.setContentClass(FindingAid.class);
         searchOptions.setQueuing(QueuingState.BUSY);
         List<Ead> eads = eadDAO.getEads(searchOptions);
         for (Ead ead : eads) {

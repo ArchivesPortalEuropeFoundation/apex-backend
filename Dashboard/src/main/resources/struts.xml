@@ -1029,6 +1029,13 @@
             </result>
             <result name="error" type="tiles">manageQueue</result>
         </action>
+        
+        <action name="reindexTest" class="eu.apenet.dashboard.queue.ManageQueueAction" method="reindexTest">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageQueue</param>
+            </result>
+            <result name="error" type="tiles">manageQueue</result>
+        </action>
 
         <action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction">
             <result name="success" type="tiles">sessionManagement</result>

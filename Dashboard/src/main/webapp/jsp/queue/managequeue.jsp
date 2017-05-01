@@ -87,8 +87,11 @@
 
         </s:form>
         <c:if test="${maintenanceMode}">
+            <s:form action="reindexTest" theme="simple" method="post">
+                <s:submit id="reindex_test" key="label.reindexTest"></s:submit>
+            </s:form>
             <s:form action="reindex" theme="simple" method="post">
-                <s:submit id="reindex_all" key="label.reindex" cssClass="otherButton"></s:submit>
+                <s:submit id="reindex_all" key="label.reindex"></s:submit>
             </s:form>
         </c:if>
         <s:form action="forceSolrCommit" theme="simple" method="post">
