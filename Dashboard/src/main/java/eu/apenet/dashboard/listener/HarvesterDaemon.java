@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.listener;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executors;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * User: Yoann Moranville
@@ -33,7 +35,9 @@ public class HarvesterDaemon {
     public static synchronized void start(boolean processOnceADay) {
     	HarvesterDaemon.processOnceADay = processOnceADay;
         if (scheduler == null && !harvesterProcessing) {
-            scheduler = Executors.newScheduledThreadPool(1);
+            ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                                       .setNameFormat("hervester-thread-%d").build();
+            scheduler = Executors.newScheduledThreadPool(1, namedThreadFactory);
             LOGGER.info("Harvester daemon started");
             LOGGER.info("-----------------------------");
             if(HarvesterDaemon.processOnceADay) {

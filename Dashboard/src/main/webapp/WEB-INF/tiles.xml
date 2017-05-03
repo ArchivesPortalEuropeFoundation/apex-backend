@@ -1099,7 +1099,7 @@
             <add-attribute type="string" value="/css/jquery/theme.tablesorter.css"/>
         </put-list-attribute>
     </definition>
-    <definition name="sessionManagement" extends="DefaultLayout" >
+    <definition name="sessionManagement" extends="AdminLayout" >
         <put-attribute name="title" value="dashboard.sessionmanagement.title" />
         <put-attribute name="body" value="/jsp/security/sessionmanagement.jsp" />
         <put-list-attribute name="jsfilesInternal">
@@ -1108,7 +1108,7 @@
 
         </put-list-attribute>
     </definition>
-    <definition name="userManagement" extends="DefaultLayout" >
+    <definition name="userManagement" extends="AdminLayout" >
         <put-attribute name="title" value="usermanagement.title" />
         <put-attribute name="body" value="/jsp/security/usermanagement.jsp" />
         <put-list-attribute name="jsfilesInternal">

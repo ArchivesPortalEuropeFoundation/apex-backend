@@ -1,9 +1,11 @@
 package eu.apenet.dashboard.listener;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -22,7 +24,9 @@ public class MaintenanceDaemon {
 
     public static synchronized void start() {
         if (scheduler == null) {
-            scheduler = Executors.newScheduledThreadPool(1);
+            ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                                       .setNameFormat("maintenance-thread-%d").build();
+            scheduler = Executors.newScheduledThreadPool(1, namedThreadFactory);
             LOGGER.info("Maintenance daemon started");
             LOGGER.info("-----------------------------");
             int delaySeconds = calculateSeconds();

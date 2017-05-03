@@ -1,8 +1,10 @@
 package eu.apenet.commons.utils;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -15,7 +17,9 @@ public class CacheManager {
     private static final long DEFAULT_EXPIRE = 3600;
 
     private CacheManager() {
-        Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(this.removeExpired(), DEFAULT_EXPIRE / 2, DEFAULT_EXPIRE, TimeUnit.SECONDS);
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                                       .setNameFormat("cachemanager-thread-%d").build();
+        Executors.newScheduledThreadPool(1, namedThreadFactory).scheduleWithFixedDelay(this.removeExpired(), DEFAULT_EXPIRE / 2, DEFAULT_EXPIRE, TimeUnit.SECONDS);
     }
 
     public static CacheManager getInstance() {

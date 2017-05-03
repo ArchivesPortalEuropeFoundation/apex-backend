@@ -1,7 +1,9 @@
 package eu.apenet.dashboard.listener;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -15,7 +17,9 @@ public class QueueDaemon {
     public static synchronized void start() {
         clean();
         if (scheduler == null && !queueProcessing) {
-            scheduler = Executors.newScheduledThreadPool(1);
+            ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                                       .setNameFormat("queue-thread-%d").build();
+            scheduler = Executors.newScheduledThreadPool(1, namedThreadFactory);
             addTask(new Duration(0, 0, 0), new Duration(0, 10, 0), new Duration(
                     0, 2, 0));
             LOGGER.info("Queue daemon started");

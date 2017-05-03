@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -61,8 +60,7 @@ public class ReIndexAllDocumentsManager {
 //        LOGGER.info("published eads: " + totalEADs+" -- "+publishedEads.size());
         Thread threadedReindexer = new Thread(new Reindexer(testRun));
         threadedReindexer.start();
-
-        reIndexInProgress = false;
+        LOGGER.info("Reindexing thread "+threadedReindexer.getName()+" started");
         return 0;
     }
 
@@ -75,12 +73,14 @@ public class ReIndexAllDocumentsManager {
 
         @Override
         public void run() {
+            
             QueueItemDAO queueDao = DAOFactory.instance().getQueueItemDAO();
             EadDAO eadDAO = DAOFactory.instance().getEadDAO();
             this.addEads(queueDao, eadDAO);
             
             Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
             this.addEads(queueDao, ead3DAO);
+            reIndexInProgress = false;
         }
         
         private void addEads(QueueItemDAO queueDao, GenericDAO eadDAO) {
