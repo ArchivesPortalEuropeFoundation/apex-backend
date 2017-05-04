@@ -27,19 +27,19 @@ import eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
-import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
-import java.util.logging.Level;
 
 public class ManageQueueAction extends AbstractAction {
 
@@ -109,35 +109,29 @@ public class ManageQueueAction extends AbstractAction {
         if (endDateTime != null) {
             getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
         }
-        this.buildCache();
+        this.countTotalNumberOfElementsToBeReindexed();
         return SUCCESS;
     }
 
-    private void buildCache() {
-        Long institutions = CACHE.get(INSTITUTIONS);
-        Long eadUnits = CACHE.get(EAD_UNITS);
-        Long eacCpfUnits = CACHE.get(EAC_CPF_UNITS);
-        Long ead3Units = CACHE.get(EAD3_UNITS);
+    private void countTotalNumberOfElementsToBeReindexed() {
+        ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+        contentSearchOptions.setPublished(true);
 
-        if (null == institutions) {
-            institutions = DAOFactory.instance().getArchivalInstitutionDAO().countArchivalInstitutionsWithEag();
-            CACHE.put(INSTITUTIONS, institutions);
-        }
-        if (null == eadUnits) {
-            eadUnits = DAOFactory.instance().getEadDAO().getTotalCountOfUnits();
-            CACHE.put(EAD_UNITS, eadUnits);
-        }
-        if (null == eacCpfUnits) {
-            ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
-            contentSearchOptions.setContentClass(EacCpf.class);
-            contentSearchOptions.setPublished(true);
-            eacCpfUnits = DAOFactory.instance().getEacCpfDAO().countEacCpfs(contentSearchOptions);
-            CACHE.put(EAC_CPF_UNITS, eacCpfUnits);
-        }
-        if (null == ead3Units) {
-            ead3Units = DAOFactory.instance().getEad3DAO().getTotalCountOfUnits();
-            CACHE.put(EAD3_UNITS, ead3Units);
-        }
+        long institutions = DAOFactory.instance().getArchivalInstitutionDAO().countArchivalInstitutionsWithEag();
+
+        contentSearchOptions.setContentClass(FindingAid.class);
+        long eadUnits = DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+        contentSearchOptions.setContentClass(HoldingsGuide.class);
+        eadUnits += DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+        contentSearchOptions.setContentClass(SourceGuide.class);
+        eadUnits += DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+
+        contentSearchOptions.setContentClass(EacCpf.class);
+        long eacCpfUnits = DAOFactory.instance().getEacCpfDAO().countEacCpfs(contentSearchOptions);
+
+        contentSearchOptions.setContentClass(Ead3.class);
+        long ead3Units = DAOFactory.instance().getEad3DAO().countEad3s(contentSearchOptions);
+
         getServletRequest().setAttribute(INSTITUTIONS, institutions);
         getServletRequest().setAttribute(EAD_UNITS, eadUnits);
         getServletRequest().setAttribute(EAC_CPF_UNITS, eacCpfUnits);
@@ -280,7 +274,7 @@ public class ManageQueueAction extends AbstractAction {
         }
         return SUCCESS;
     }
-    
+
     public String reindexTest() {
         LOGGER.info("Reindex test");
         if (SecurityContext.get().isAdmin()) {
@@ -290,12 +284,11 @@ public class ManageQueueAction extends AbstractAction {
             ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
             try {
                 riManager.redindex(true);
-                
-                
+
                 //code to reindex
                 //sample can be found in method republishAllEagFiles()
             } catch (ProcessBusyException ex) {
-                LOGGER.info("Function "+ex.getMessage());
+                LOGGER.info("Function " + ex.getMessage());
             }
         }
         return SUCCESS;
@@ -309,12 +302,11 @@ public class ManageQueueAction extends AbstractAction {
             ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
             try {
                 riManager.redindex(false);
-                
-                
+
                 //code to reindex
                 //sample can be found in method republishAllEagFiles()
             } catch (ProcessBusyException ex) {
-                LOGGER.info("Function "+ex.getMessage());
+                LOGGER.info("Function " + ex.getMessage());
             }
         }
         return SUCCESS;
