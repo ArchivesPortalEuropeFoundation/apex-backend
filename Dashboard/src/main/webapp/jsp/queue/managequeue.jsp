@@ -8,9 +8,17 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#reindex_all").click(function () {
+            type = $("#selected_type option:selected").text();
             console.log(Number("${numberOfEadDescriptiveUnits}"));
-            msg = "<s:property value="getText('content.message.numberofeadunit')"/> : " + "${numberOfEadDescriptiveUnits}"
-                    + " and <s:property value="getText('content.message.numberofead3unit')"/> : " + "${numberOfEad3s}";
+            if (type === "EAD") {
+                msg = "<s:property value="getText('content.message.numberofeadunit')"/> : " + "${numberOfEadDescriptiveUnits}";
+
+            }
+            if (type === "EAD3") {
+                msg = "<s:property value="getText('content.message.numberofead3unit')"/> : " + "${numberOfEad3s}";
+
+            }
+
             var doIt = confirm((msg + ". <s:property value="getText('content.message.reindex.comfirm')" />"));
             return doIt;
         });
@@ -91,6 +99,7 @@
                 <s:submit id="reindex_test" key="label.reindexTest"></s:submit>
             </s:form>
             <s:form action="reindex" theme="simple" method="post">
+                <s:select name="type" id="selected_type" list="#@java.util.LinkedHashMap@{'ead':'EAD','ead3':'EAD3'}" />
                 <s:submit id="reindex_all" key="label.reindex"></s:submit>
             </s:form>
         </c:if>

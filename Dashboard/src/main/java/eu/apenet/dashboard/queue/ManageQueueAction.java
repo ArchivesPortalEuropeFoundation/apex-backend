@@ -48,6 +48,7 @@ public class ManageQueueAction extends AbstractAction {
     private Integer queueItemId;
     private Integer aiId;
     private String selectedAction;
+    private String type;
 
     private static final String INSTITUTIONS = "numberOfInstitutions";
     private static final String EAD_UNITS = "numberOfEadDescriptiveUnits";
@@ -81,6 +82,14 @@ public class ManageQueueAction extends AbstractAction {
 
     public void setSelectedAction(String selectedAction) {
         this.selectedAction = selectedAction;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -278,15 +287,10 @@ public class ManageQueueAction extends AbstractAction {
     public String reindexTest() {
         LOGGER.info("Reindex test");
         if (SecurityContext.get().isAdmin()) {
-//            LOGGER.info("Function is not ready yet");
-//            addFieldError("reindex_","Function is not ready yet");
-//            return ERROR;
             ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
             try {
-                riManager.redindex(true);
+                riManager.redindex(true, "Ead");
 
-                //code to reindex
-                //sample can be found in method republishAllEagFiles()
             } catch (ProcessBusyException ex) {
                 LOGGER.info("Function " + ex.getMessage());
             }
@@ -296,15 +300,11 @@ public class ManageQueueAction extends AbstractAction {
 
     public String reindex() {
         if (SecurityContext.get().isAdmin()) {
-//            LOGGER.info("Function is not ready yet");
-//            addFieldError("reindex_","Function is not ready yet");
-//            return ERROR;
+            LOGGER.info("selected type : " + type);
             ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
             try {
-                riManager.redindex(false);
+                riManager.redindex(false, type);
 
-                //code to reindex
-                //sample can be found in method republishAllEagFiles()
             } catch (ProcessBusyException ex) {
                 LOGGER.info("Function " + ex.getMessage());
             }

@@ -6,7 +6,6 @@
 package eu.apenet.dashboard.reindex;
 
 import eu.apenet.commons.exceptions.ProcessBusyException;
-import eu.apenet.dashboard.queue.ManageQueueAction;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.Ead3DAO;
@@ -15,7 +14,6 @@ import eu.apenet.persistence.dao.GenericDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -51,38 +49,44 @@ public class ReIndexAllDocumentsManager {
     private static final Logger LOGGER = Logger.getLogger(ReIndexAllDocumentsManager.class);
     private boolean reIndexInProgress = false;
 
-    public int redindex(boolean testRun) throws ProcessBusyException {
+    public int redindex(boolean testRun, String type) throws ProcessBusyException {
         if (reIndexInProgress) {
             throw new ProcessBusyException("ReIndex process still on going");
         }
         reIndexInProgress = true;
 
 //        LOGGER.info("published eads: " + totalEADs+" -- "+publishedEads.size());
-        Thread threadedReindexer = new Thread(new Reindexer(testRun));
+        Thread threadedReindexer = new Thread(new Reindexer(testRun, type));
         threadedReindexer.start();
-        LOGGER.info("Reindexing thread "+threadedReindexer.getName()+" started");
+        LOGGER.info("Reindexing thread " + threadedReindexer.getName() + " started");
         return 0;
     }
 
     private class Reindexer implements Runnable {
+
         boolean testRun = false;
-        
-        public Reindexer (boolean testRun) {
+        String type = "";
+
+        public Reindexer(boolean testRun, String type) {
             this.testRun = testRun;
+            this.type = type;
         }
 
         @Override
         public void run() {
-            
+
             QueueItemDAO queueDao = DAOFactory.instance().getQueueItemDAO();
-            EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-            this.addEads(queueDao, eadDAO);
-            
-            Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-            this.addEads(queueDao, ead3DAO);
+            if (this.type.equals("ead")) {
+                EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+                this.addEads(queueDao, eadDAO);
+            }
+            if (this.type.equals("ead3")) {
+                Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+                this.addEads(queueDao, ead3DAO);
+            }
             reIndexInProgress = false;
         }
-        
+
         private void addEads(QueueItemDAO queueDao, GenericDAO eadDAO) {
             ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
             contentSearchOptions.setPublished(Boolean.TRUE);
@@ -95,31 +99,31 @@ public class ReIndexAllDocumentsManager {
             List publishedContents = null;
             if (eadDAO instanceof EadDAO) {
                 contentSearchOptions.setContentClass(FindingAid.class);
-                publishedContents = ((EadDAO)eadDAO).getEads(contentSearchOptions);
-                
+                publishedContents = ((EadDAO) eadDAO).getEads(contentSearchOptions);
+
                 contentSearchOptions.setContentClass(HoldingsGuide.class);
-                publishedContents.addAll(((EadDAO)eadDAO).getEads(contentSearchOptions));
-                
+                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
+
                 contentSearchOptions.setContentClass(SourceGuide.class);
-                publishedContents.addAll(((EadDAO)eadDAO).getEads(contentSearchOptions));
-                
+                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
+
             } else if (eadDAO instanceof Ead3DAO) {
-                publishedContents = ((Ead3DAO)eadDAO).getEad3s(contentSearchOptions);
+                publishedContents = ((Ead3DAO) eadDAO).getEad3s(contentSearchOptions);
             }
-            
-            if (publishedContents==null) {
-                LOGGER.error("No reindexable content found for: "+eadDAO.getClass().getName());
+
+            if (publishedContents == null) {
+                LOGGER.error("No reindexable content found for: " + eadDAO.getClass().getName());
                 return;
             }
-            LOGGER.info("Total "+eadDAO.getClass().getName()+": "+publishedContents.size());
+            LOGGER.info("Total " + eadDAO.getClass().getName() + ": " + publishedContents.size());
             int i = 0;
 //            for (Object obj : publishedContents) {
-            for (int j = 0; j<publishedContents.size(); j++) {
+            for (int j = 0; j < publishedContents.size(); j++) {
                 Object obj = publishedContents.get(i);
                 AbstractContent ead = (AbstractContent) obj;
                 try {
                     i++;
-                    LOGGER.info(ead.getClass().getCanonicalName()+" Id: " + ead.getIdentifier()+" added for reindex");
+                    LOGGER.info(ead.getClass().getCanonicalName() + " Id: " + ead.getIdentifier() + " added for reindex");
                     QueueItem queueItem = this.genQueueItem(ead, QueueAction.REPUBLISH, new Properties(), 500);
                     ead.setQueuing(QueuingState.READY);
                     eadDAO.updateSimple(ead);
@@ -131,11 +135,11 @@ public class ReIndexAllDocumentsManager {
                         JpaUtil.beginDatabaseTransaction();
                     }
                 } catch (IOException ex) {
-                    LOGGER.error("Queue exception: "+ex.getMessage());
+                    LOGGER.error("Queue exception: " + ex.getMessage());
                 } catch (InterruptedException ex) {
                 }
             }
-            LOGGER.info("Total ead reindexed: "+i);
+            LOGGER.info("Total ead reindexed: " + i);
             JpaUtil.commitDatabaseTransaction();
         }
 
@@ -153,7 +157,7 @@ public class ReIndexAllDocumentsManager {
                 } else if (ead instanceof SourceGuide) {
                     queueItem.setSourceGuide((SourceGuide) ead);
                     priority += 50;
-                } else if (ead instanceof Ead3 ) {
+                } else if (ead instanceof Ead3) {
                     queueItem.setEad3((Ead3) ead);
                 }
                 queueItem.setAiId(ead.getAiId());
