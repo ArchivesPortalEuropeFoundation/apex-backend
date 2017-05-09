@@ -1,5 +1,5 @@
 --
--- Name: ead3; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: ead3; Type: TABLE; Schema: public; Owner: apenet_dashboard; Tablespace: 
 --
 
 CREATE TABLE ead3 (
@@ -21,10 +21,10 @@ CREATE TABLE ead3 (
 );
 
 
-ALTER TABLE public.ead3 OWNER TO postgres;
+ALTER TABLE public.ead3 OWNER TO apenet_dashboard;
 
 --
--- Name: ead3_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: ead3_id_seq; Type: SEQUENCE; Schema: public; Owner: apenet_dashboard
 --
 
 CREATE SEQUENCE ead3_id_seq
@@ -35,10 +35,10 @@ CREATE SEQUENCE ead3_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.ead3_id_seq OWNER TO postgres;
+ALTER TABLE public.ead3_id_seq OWNER TO apenet_dashboard;
 
 --
--- Name: ead3_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: ead3_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apenet_dashboard
 --
 
 ALTER SEQUENCE ead3_id_seq OWNED BY ead3.id;
@@ -53,7 +53,7 @@ ALTER TABLE queue
 
 
 --
--- Name: reindex_doc; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: reindex_doc; Type: TABLE; Schema: public; Owner: apenet_dashboard; Tablespace: 
 --
 
 CREATE TABLE reindex_doc (
@@ -68,10 +68,10 @@ CREATE TABLE reindex_doc (
 );
 
 
-ALTER TABLE public.reindex_doc OWNER TO postgres;
+ALTER TABLE public.reindex_doc OWNER TO apenet_dashboard;
 
 --
--- Name: reindex_doc_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: reindex_doc_id_seq; Type: SEQUENCE; Schema: public; Owner: apenet_dashboard
 --
 
 CREATE SEQUENCE reindex_doc_id_seq
@@ -82,10 +82,10 @@ CREATE SEQUENCE reindex_doc_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.reindex_doc_id_seq OWNER TO postgres;
+ALTER TABLE public.reindex_doc_id_seq OWNER TO apenet_dashboard;
 
 --
--- Name: reindex_doc_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: reindex_doc_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apenet_dashboard
 --
 
 ALTER SEQUENCE reindex_doc_id_seq OWNED BY reindex_doc.id;
@@ -100,14 +100,20 @@ ALTER TABLE warnings
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: id; Type: DEFAULT; Schema: public; Owner: apenet_dashboard
+--
+
+ALTER TABLE ONLY ead3 ALTER COLUMN id SET DEFAULT nextval('ead3_id_seq'::regclass);
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: apenet_dashboard
 --
 
 ALTER TABLE ONLY reindex_doc ALTER COLUMN id SET DEFAULT nextval('reindex_doc_id_seq'::regclass);
 
 
 --
--- Name: ead3_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: ead3_pkey; Type: CONSTRAINT; Schema: public; Owner: apenet_dashboard; Tablespace: 
 --
 
 ALTER TABLE ONLY ead3
@@ -115,7 +121,7 @@ ALTER TABLE ONLY ead3
 
 
 --
--- Name: reindex_doc_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: reindex_doc_pkey; Type: CONSTRAINT; Schema: public; Owner: apenet_dashboard; Tablespace: 
 --
 
 ALTER TABLE ONLY reindex_doc
@@ -123,7 +129,7 @@ ALTER TABLE ONLY reindex_doc
 
 
 --
--- Name: ead3_ai_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ead3_ai_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: apenet_dashboard
 --
 
 ALTER TABLE ONLY ead3
@@ -131,7 +137,7 @@ ALTER TABLE ONLY ead3
 
 
 --
--- Name: ead3_um_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ead3_um_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: apenet_dashboard
 --
 
 ALTER TABLE ONLY ead3
