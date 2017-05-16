@@ -8,18 +8,35 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#reindex_all").click(function () {
-            type = $("#selected_type option:selected").text();
-            console.log(Number("${numberOfEadDescriptiveUnits}"));
-            if (type === "EAD") {
-                msg = "<s:property value="getText('content.message.numberofeadunit')"/> : " + "${numberOfEadDescriptiveUnits}";
+            msg = "<s:property value="getText('content.message.reindex.comfirm')" />" + "\n";
 
+            var chkBoxs = $("input[name='checkedSelection']:checkbox");
+            checked = false;
+
+            chkBoxs.each(function (index) {
+                if ($(this).attr("checked")) {
+                    checked = true;
+                    if ($(this).val() === "EAD3") {
+                        msg += " <s:property value="getText('content.message.ead3')"/> : " + "${numberOfEad3s}" + ". ";
+
+                    } else if ($(this).val() === "Finding Aid") {
+                        msg += " <s:property value="getText('content.message.fa')"/> : " + "${numberOfFindingAids}" + ". ";
+                    } else if ($(this).val() === "Holdings Guide") {
+                        msg += " <s:property value="getText('content.message.hg')"/> : " + "${numberOfHoldingsGuide}" + ". ";
+                    } else if ($(this).val() === "Source Guide") {
+                        msg += " <s:property value="getText('content.message.sg')"/> : " + "${numberOfSourceGuide}" + ". ";
+
+                    } else {
+                    }
+                }
+            });
+
+            var doIt = false;
+            if (checked) {
+                doIt = confirm((msg));
+            } else {
+                alert("Select at least one type");
             }
-            if (type === "EAD3") {
-                msg = "<s:property value="getText('content.message.numberofead3unit')"/> : " + "${numberOfEad3s}";
-
-            }
-
-            var doIt = confirm((msg + ". <s:property value="getText('content.message.reindex.comfirm')" />"));
             return doIt;
         });
     });
@@ -95,13 +112,17 @@
 
         </s:form>
         <c:if test="${maintenanceMode}">
+
             <s:form action="reindexTest" theme="simple" method="post">
                 <s:submit id="reindex_test" key="label.reindexTest"></s:submit>
             </s:form>
-            <s:form action="reindex" theme="simple" method="post">
-                <s:select name="type" id="selected_type" list="#@java.util.LinkedHashMap@{'ead':'EAD','ead3':'EAD3'}" />
-                <s:submit id="reindex_all" key="label.reindex"></s:submit>
-            </s:form>
+            <div style="margin: 2px; margin-left: 0px;display: inline-block; padding: 5px; border-style: double; border-color: #99CCFF;">
+                <s:form action="reindex" theme="simple" method="post">
+                    <s:label key="content.message.itemToBeReindexed" for="checkBoxList"/><br>
+                    <h4><s:checkboxlist id="checkBoxList" label="Which item(s) do you want to reindex" list="selections" name="checkedSelection"/></h4>
+                    <s:submit cssStyle="margin-top:3px;" id="reindex_all" key="label.reindex"></s:submit>
+                </s:form>
+            </div>
         </c:if>
         <s:form action="forceSolrCommit" theme="simple" method="post">
             <s:submit value="Force Solr commit"></s:submit>

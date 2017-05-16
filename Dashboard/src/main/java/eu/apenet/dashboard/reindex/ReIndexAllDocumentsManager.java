@@ -6,6 +6,7 @@
 package eu.apenet.dashboard.reindex;
 
 import eu.apenet.commons.exceptions.ProcessBusyException;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.Ead3DAO;
@@ -49,14 +50,14 @@ public class ReIndexAllDocumentsManager {
     private static final Logger LOGGER = Logger.getLogger(ReIndexAllDocumentsManager.class);
     private boolean reIndexInProgress = false;
 
-    public int redindex(boolean testRun, String type) throws ProcessBusyException {
+    public int redindex(boolean testRun, List<XmlType> types) throws ProcessBusyException {
         if (reIndexInProgress) {
             throw new ProcessBusyException("ReIndex process still on going");
         }
         reIndexInProgress = true;
 
 //        LOGGER.info("published eads: " + totalEADs+" -- "+publishedEads.size());
-        Thread threadedReindexer = new Thread(new Reindexer(testRun, type));
+        Thread threadedReindexer = new Thread(new Reindexer(testRun, types));
         threadedReindexer.start();
         LOGGER.info("Reindexing thread " + threadedReindexer.getName() + " started");
         return 0;
@@ -65,31 +66,35 @@ public class ReIndexAllDocumentsManager {
     private class Reindexer implements Runnable {
 
         boolean testRun = false;
-        String type = "";
+        List<XmlType> types;
 
-        public Reindexer(boolean testRun, String type) {
+        public Reindexer(boolean testRun, List<XmlType> types) {
             this.testRun = testRun;
-            this.type = type;
+            this.types = types;
         }
 
         @Override
         public void run() {
 
             QueueItemDAO queueDao = DAOFactory.instance().getQueueItemDAO();
-            if (this.type.equals("ead")) {
-                EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-                this.addEads(queueDao, eadDAO);
-            }
-            if (this.type.equals("ead3")) {
-                Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-                this.addEads(queueDao, ead3DAO);
+            ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
+            contentSearchOptions.setPublished(Boolean.TRUE);
+            for (XmlType xmlType : types) {
+                if (xmlType.equals(XmlType.EAD_3)) {
+                    contentSearchOptions.setContentClass(xmlType.getClazz());
+                    Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+                    this.addEads(queueDao, ead3DAO, contentSearchOptions);
+                } else if (xmlType.equals(XmlType.EAC_CPF)) {
+                } else {
+                    contentSearchOptions.setContentClass(xmlType.getClazz());
+                    EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+                    this.addEads(queueDao, eadDAO, contentSearchOptions);
+                }
             }
             reIndexInProgress = false;
         }
 
-        private void addEads(QueueItemDAO queueDao, GenericDAO eadDAO) {
-            ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
-            contentSearchOptions.setPublished(Boolean.TRUE);
+        private void addEads(QueueItemDAO queueDao, GenericDAO eadDAO, ContentSearchOptions contentSearchOptions) {
             int dataSize = -1;
             if (this.testRun) {
                 dataSize = 1;
@@ -98,14 +103,14 @@ public class ReIndexAllDocumentsManager {
             JpaUtil.beginDatabaseTransaction();
             List publishedContents = null;
             if (eadDAO instanceof EadDAO) {
-                contentSearchOptions.setContentClass(FindingAid.class);
+//                contentSearchOptions.setContentClass(FindingAid.class);
                 publishedContents = ((EadDAO) eadDAO).getEads(contentSearchOptions);
-
-                contentSearchOptions.setContentClass(HoldingsGuide.class);
-                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
-
-                contentSearchOptions.setContentClass(SourceGuide.class);
-                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
+//
+//                contentSearchOptions.setContentClass(HoldingsGuide.class);
+//                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
+//
+//                contentSearchOptions.setContentClass(SourceGuide.class);
+//                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
 
             } else if (eadDAO instanceof Ead3DAO) {
                 publishedContents = ((Ead3DAO) eadDAO).getEad3s(contentSearchOptions);

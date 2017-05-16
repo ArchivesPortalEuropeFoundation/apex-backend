@@ -13,9 +13,8 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.solr.SolrUtil;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.commons.utils.Cache;
-import eu.apenet.commons.utils.CacheManager;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
@@ -48,13 +47,16 @@ public class ManageQueueAction extends AbstractAction {
     private Integer queueItemId;
     private Integer aiId;
     private String selectedAction;
-    private String type;
+
+    private List<String> selections;
+    private List<String> checkedSelection;
 
     private static final String INSTITUTIONS = "numberOfInstitutions";
-    private static final String EAD_UNITS = "numberOfEadDescriptiveUnits";
+    private static final String EAD_FA = "numberOfFindingAids";
+    private static final String EAD_HG = "numberOfHoldingsGuide";
+    private static final String EAD_SG = "numberOfSourceGuide";
     private static final String EAC_CPF_UNITS = "numberOfEacCpfs";
     private static final String EAD3_UNITS = "numberOfEad3s";
-    private final static Cache<String, Long> CACHE = CacheManager.getInstance().initCache("SimpleSearchCache");
     /**
      *
      */
@@ -84,12 +86,12 @@ public class ManageQueueAction extends AbstractAction {
         this.selectedAction = selectedAction;
     }
 
-    public String getType() {
-        return type;
+    public List<String> getCheckedSelection() {
+        return checkedSelection;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCheckedSelection(List<String> checkedSelection) {
+        this.checkedSelection = checkedSelection;
     }
 
     @Override
@@ -118,8 +120,20 @@ public class ManageQueueAction extends AbstractAction {
         if (endDateTime != null) {
             getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
         }
+        this.buildSelectionForReindex();
         this.countTotalNumberOfElementsToBeReindexed();
         return SUCCESS;
+    }
+
+    private void buildSelectionForReindex() {
+        this.selections = new ArrayList<>();
+
+        this.selections.add(XmlType.EAD_3.getName());
+        this.selections.add(XmlType.EAD_FA.getName());
+        this.selections.add(XmlType.EAD_HG.getName());
+        this.selections.add(XmlType.EAD_SG.getName());
+
+        getServletRequest().setAttribute("selections", this.selections);
     }
 
     private void countTotalNumberOfElementsToBeReindexed() {
@@ -129,11 +143,12 @@ public class ManageQueueAction extends AbstractAction {
         long institutions = DAOFactory.instance().getArchivalInstitutionDAO().countArchivalInstitutionsWithEag();
 
         contentSearchOptions.setContentClass(FindingAid.class);
-        long eadUnits = DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+        long FAUnits = DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
         contentSearchOptions.setContentClass(HoldingsGuide.class);
-        eadUnits += DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+        long HGUnits = DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
         contentSearchOptions.setContentClass(SourceGuide.class);
-        eadUnits += DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+        long SGUnits = DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+        LOGGER.info(FAUnits + ":" + HGUnits + ":" + SGUnits);
 
         contentSearchOptions.setContentClass(EacCpf.class);
         long eacCpfUnits = DAOFactory.instance().getEacCpfDAO().countEacCpfs(contentSearchOptions);
@@ -142,7 +157,9 @@ public class ManageQueueAction extends AbstractAction {
         long ead3Units = DAOFactory.instance().getEad3DAO().countEad3s(contentSearchOptions);
 
         getServletRequest().setAttribute(INSTITUTIONS, institutions);
-        getServletRequest().setAttribute(EAD_UNITS, eadUnits);
+        getServletRequest().setAttribute(EAD_FA, FAUnits);
+        getServletRequest().setAttribute(EAD_HG, HGUnits);
+        getServletRequest().setAttribute(EAD_SG, SGUnits);
         getServletRequest().setAttribute(EAC_CPF_UNITS, eacCpfUnits);
         getServletRequest().setAttribute(EAD3_UNITS, ead3Units);
     }
@@ -289,7 +306,10 @@ public class ManageQueueAction extends AbstractAction {
         if (SecurityContext.get().isAdmin()) {
             ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
             try {
-                riManager.redindex(true, "Ead");
+                List<XmlType> types = new ArrayList<>();
+                types.add(XmlType.EAD_3);
+                types.add(XmlType.EAD_FA);
+                riManager.redindex(true, types);
 
             } catch (ProcessBusyException ex) {
                 LOGGER.info("Function " + ex.getMessage());
@@ -300,10 +320,13 @@ public class ManageQueueAction extends AbstractAction {
 
     public String reindex() {
         if (SecurityContext.get().isAdmin()) {
-            LOGGER.info("selected type : " + type);
+            List<XmlType> types = new ArrayList<>();
+            for (String selectedType : checkedSelection) {
+                types.add(XmlType.getType(selectedType));
+            }
             ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
             try {
-                riManager.redindex(false, type);
+                riManager.redindex(false, types);
 
             } catch (ProcessBusyException ex) {
                 LOGGER.info("Function " + ex.getMessage());
