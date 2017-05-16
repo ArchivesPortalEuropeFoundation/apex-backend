@@ -49,23 +49,36 @@ public class ReIndexAllDocumentsManager {
 
     private static final Logger LOGGER = Logger.getLogger(ReIndexAllDocumentsManager.class);
     private boolean reIndexInProgress = false;
+    private Reindexer reindexer;
 
     public int redindex(boolean testRun, List<XmlType> types) throws ProcessBusyException {
-        if (reIndexInProgress) {
+        if (this.reIndexInProgress) {
             throw new ProcessBusyException("ReIndex process still on going");
         }
-        reIndexInProgress = true;
+        this.reIndexInProgress = true;
 
 //        LOGGER.info("published eads: " + totalEADs+" -- "+publishedEads.size());
-        Thread threadedReindexer = new Thread(new Reindexer(testRun, types));
+        this.reindexer = new Reindexer(testRun, types);
+        Thread threadedReindexer = new Thread(this.reindexer);
+
         threadedReindexer.start();
         LOGGER.info("Reindexing thread " + threadedReindexer.getName() + " started");
         return 0;
     }
+    
+    public void stopReindex() {
+        if (this.reIndexInProgress && this.reindexer != null) {
+            LOGGER.info("Stoping reindex process");
+            this.reindexer.setStopSignal(true);
+        } else {
+            LOGGER.info("Reindexer was not running");
+        }
+    }
 
     private class Reindexer implements Runnable {
 
-        boolean testRun = false;
+        private boolean testRun = false;
+        private boolean stopSignal = false;
         List<XmlType> types;
 
         public Reindexer(boolean testRun, List<XmlType> types) {
@@ -92,6 +105,10 @@ public class ReIndexAllDocumentsManager {
                 }
             }
             reIndexInProgress = false;
+        }
+
+        public void setStopSignal(boolean stopSignal) {
+            this.stopSignal = stopSignal;
         }
 
         private void addEads(QueueItemDAO queueDao, GenericDAO eadDAO, ContentSearchOptions contentSearchOptions) {
@@ -123,7 +140,7 @@ public class ReIndexAllDocumentsManager {
             LOGGER.info("Total " + eadDAO.getClass().getName() + ": " + publishedContents.size());
             int i = 0;
 //            for (Object obj : publishedContents) {
-            for (int j = 0; j < publishedContents.size(); j++) {
+            for (int j = 0; j < publishedContents.size() && !stopSignal; j++) {
                 Object obj = publishedContents.get(i);
                 AbstractContent ead = (AbstractContent) obj;
                 try {

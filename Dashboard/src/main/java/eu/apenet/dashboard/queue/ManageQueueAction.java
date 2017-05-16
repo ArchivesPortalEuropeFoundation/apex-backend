@@ -309,6 +309,15 @@ public class ManageQueueAction extends AbstractAction {
         return SUCCESS;
     }
 
+    public String stopReindex() {
+        LOGGER.info("Stop Reindex");
+        if (SecurityContext.get().isAdmin()) {
+            ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
+            riManager.stopReindex();
+        }
+        return SUCCESS;
+    }
+    
     public String reindexTest() {
         LOGGER.info("Reindex test");
         if (SecurityContext.get().isAdmin()) {

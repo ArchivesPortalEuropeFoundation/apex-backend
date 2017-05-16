@@ -1023,6 +1023,13 @@
             </result>
         </action>
         
+        <action name="stopReindex" class="eu.apenet.dashboard.queue.ManageQueueAction" method="stopReindex">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageQueue</param>
+            </result>
+            <result name="error" type="tiles">manageQueue</result>
+        </action>
+        
         <action name="reindex" class="eu.apenet.dashboard.queue.ManageQueueAction" method="reindex">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>

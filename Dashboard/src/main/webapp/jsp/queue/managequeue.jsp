@@ -40,6 +40,17 @@
             return doIt;
         });
     });
+    
+    $(document).ready(function () {
+        $("#stop_reindex").click(function () {
+            msg = "<s:property value="getText('content.message.stop_reindex.comfirm')" />";
+
+            
+            doIt = confirm((msg));
+            
+            return doIt;
+        });
+    });
 </script>
 <dashboard:securityContext var="securityContext" />
 <div id="manageQueue">
@@ -123,6 +134,9 @@
                     <s:submit cssStyle="margin-top:3px;" id="reindex_all" key="label.reindex"></s:submit>
                 </s:form>
             </div>
+            <s:form action="stopReindex" theme="simple" method="post">
+                <s:submit id="stop_reindex" key="label.stopReindex"></s:submit>
+            </s:form>
         </c:if>
         <s:form action="forceSolrCommit" theme="simple" method="post">
             <s:submit value="Force Solr commit"></s:submit>
