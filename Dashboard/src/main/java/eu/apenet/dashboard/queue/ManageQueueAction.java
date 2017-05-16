@@ -86,6 +86,14 @@ public class ManageQueueAction extends AbstractAction {
         this.selectedAction = selectedAction;
     }
 
+    public List<String> getSelections() {
+        return selections;
+    }
+
+    public void setSelections(List<String> selections) {
+        this.selections = selections;
+    }
+
     public List<String> getCheckedSelection() {
         return checkedSelection;
     }
