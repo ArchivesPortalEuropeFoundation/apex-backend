@@ -40,14 +40,14 @@
             return doIt;
         });
     });
-    
+
     $(document).ready(function () {
         $("#stop_reindex").click(function () {
             msg = "<s:property value="getText('content.message.stop_reindex.comfirm')" />";
 
-            
+
             doIt = confirm((msg));
-            
+
             return doIt;
         });
     });
@@ -123,17 +123,18 @@
 
         </s:form>
         <c:if test="${maintenanceMode}">
-
-            <s:form action="reindexTest" theme="simple" method="post">
-                <s:submit id="reindex_test" key="label.reindexTest"></s:submit>
-            </s:form>
-            <div style="margin: 2px; margin-left: 0px;display: inline-block; padding: 5px; border-style: double; border-color: #99CCFF;">
-                <s:form action="reindex" theme="simple" method="post">
-                    <s:label key="content.message.itemToBeReindexed" for="checkBoxList"/><br>
-                    <h4><s:checkboxlist id="checkBoxList" label="Which item(s) do you want to reindex" list="selections" name="checkedSelection"/></h4>
-                    <s:submit cssStyle="margin-top:3px;" id="reindex_all" key="label.reindex"></s:submit>
+            <c:if test="${!reIndexOnProgress}">
+                <s:form action="reindexTest" theme="simple" method="post">
+                    <s:submit id="reindex_test" key="label.reindexTest"/>
                 </s:form>
-            </div>
+                <div style="margin: 2px; margin-left: 0px;display: inline-block; padding: 5px; border-style: double; border-color: #99CCFF;">
+                    <s:form action="reindex" theme="simple" method="post">
+                        <s:label key="content.message.itemToBeReindexed" for="checkBoxList"/><br>
+                        <h4><s:checkboxlist id="checkBoxList" label="Which item(s) do you want to reindex" list="selections" name="checkedSelection"/></h4>
+                        <s:submit cssStyle="margin-top:3px;" id="reindex_all" key="label.reindex"></s:submit>
+                    </s:form>
+                </div>
+            </c:if>
             <s:form action="stopReindex" theme="simple" method="post">
                 <s:submit id="stop_reindex" key="label.stopReindex"></s:submit>
             </s:form>

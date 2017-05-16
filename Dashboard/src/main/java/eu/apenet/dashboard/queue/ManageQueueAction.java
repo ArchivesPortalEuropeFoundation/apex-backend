@@ -142,6 +142,8 @@ public class ManageQueueAction extends AbstractAction {
         this.selections.add(XmlType.EAD_SG.getName());
 
         getServletRequest().setAttribute("selections", this.selections);
+
+        getServletRequest().setAttribute("reIndexOnProgress", ReIndexAllDocumentsManager.getInstance().isReIndexInProgress());
     }
 
     private void countTotalNumberOfElementsToBeReindexed() {

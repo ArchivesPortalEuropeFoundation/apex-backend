@@ -65,7 +65,15 @@ public class ReIndexAllDocumentsManager {
         LOGGER.info("Reindexing thread " + threadedReindexer.getName() + " started");
         return 0;
     }
-    
+
+    public boolean isReIndexInProgress() {
+        return reIndexInProgress;
+    }
+
+    public void setReIndexInProgress(boolean reIndexInProgress) {
+        this.reIndexInProgress = reIndexInProgress;
+    }
+
     public void stopReindex() {
         if (this.reIndexInProgress && this.reindexer != null) {
             LOGGER.info("Stoping reindex process");
