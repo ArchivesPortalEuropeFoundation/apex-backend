@@ -9,6 +9,7 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
+import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -94,7 +95,14 @@ public class InstituteEadResponse {
 
         this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
 
-        this.fondsUnitTitle = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE_OF_FOND)), 0);
+        this.fondsUnitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE_OF_FOND));
+        int lastIndexOfColon = this.fondsUnitTitle.lastIndexOf(":");
+        
+        if (lastIndexOfColon<0) {
+            throw new InternalErrorException("Illformated fondsUnitTitle", "fond don't have fonds id seperated by colon");
+        }
+        this.fondsUnitTitle = this.fondsUnitTitle.substring(0, lastIndexOfColon);
+        
         this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
 
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);

@@ -19,6 +19,8 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,6 +35,8 @@ public class EadResponseSet extends ResponseSet {
 
     @ApiModelProperty(value = "Available fields for sort option")
     private Set<String> sortFields;
+    
+    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public EadResponseSet() {
         this.sortFields = new SortFields().getRepresentationFieldName();
@@ -49,8 +53,12 @@ public class EadResponseSet extends ResponseSet {
         super.setStartIndex(documentList.getStart());
 
         for (SolrDocument document : documentList) {
-
-            this.addEadSearchResult(new EadResponse(document, response));
+            try {
+                EadResponse eadResponse = new EadResponse(document, response);
+                this.addEadSearchResult(eadResponse);
+            } catch (Exception ex) {
+                logger.error("Ead response format error: "+ex.getMessage());
+            }
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
         if (super.totalResults % responseHeader.getRows() > 0) {

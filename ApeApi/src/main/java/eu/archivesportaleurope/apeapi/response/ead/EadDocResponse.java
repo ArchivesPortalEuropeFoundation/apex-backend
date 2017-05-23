@@ -62,13 +62,12 @@ public class EadDocResponse {
     public EadDocResponse(Group group) {
         //ToDo: change this
         //ex: Inventaris van het archief van de Nederlandse Ambassade in Nepal, 1965-1974:G:F124
-        //00000000:Algemeen:G:C4541
         String temp = group.getGroupValue();
         int lastColonIndex = temp.lastIndexOf(":");
         this.id = temp.substring(lastColonIndex + 1);
         temp = temp.substring(0, lastColonIndex);
-        int firstColonIndex = temp.indexOf(":");
-        this.fondsUnitTitle = temp.substring(0, firstColonIndex);
+        lastColonIndex = temp.lastIndexOf(":");
+        this.fondsUnitTitle = temp.substring(0, lastColonIndex);
         this.numberOfResults = group.getResult().getNumFound();
         //get the default document
         SolrDocument solrDocument = group.getResult().get(0);
