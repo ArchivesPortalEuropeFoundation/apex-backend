@@ -135,9 +135,11 @@
                     </s:form>
                 </div>
             </c:if>
-            <s:form action="stopReindex" theme="simple" method="post">
-                <s:submit id="stop_reindex" key="label.stopReindex"></s:submit>
-            </s:form>
+            <c:if test="${reIndexOnProgress}">
+                <s:form action="stopReindex" theme="simple" method="post">
+                    <s:submit id="stop_reindex" key="label.stopReindex"></s:submit>
+                </s:form>
+            </c:if>
         </c:if>
         <s:form action="forceSolrCommit" theme="simple" method="post">
             <s:submit value="Force Solr commit"></s:submit>
