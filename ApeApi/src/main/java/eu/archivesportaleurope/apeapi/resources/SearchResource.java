@@ -90,14 +90,15 @@ public class SearchResource {
     @POST
     @Path("/ead3")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Search for EAD3",
-            response = Ead3ResponseSet.class
-    )
-    @ApiResponses(value = {
-        @ApiResponse(code = 500, message = "Internal server error"),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 401, message = "Unauthorized")
-    })
+//    Hide Ead3
+//    @ApiOperation(value = "Search for EAD3",
+//            response = Ead3ResponseSet.class
+//    )
+//    @ApiResponses(value = {
+//        @ApiResponse(code = 500, message = "Internal server error"),
+//        @ApiResponse(code = 400, message = "Bad request"),
+//        @ApiResponse(code = 401, message = "Unauthorized")
+//    })
     @Consumes({ServerConstants.APE_API_V1})
     public Response searchEad3(
             @ApiParam(value = "Search EAD3 units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
