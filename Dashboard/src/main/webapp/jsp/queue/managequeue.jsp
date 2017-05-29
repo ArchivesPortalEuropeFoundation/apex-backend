@@ -86,6 +86,12 @@
                 <td>${europeanaHarvestingEndTime}</td>
             </tr>
         </c:if>
+        <c:if test="${reIndexOnProgress}">
+            <tr>
+                <th><s:text name="admin.queuemanagement.reindexing.inprogress" /></th>
+                <td>${reIndexOnProgress}</td>
+            </tr>
+        </c:if>
     </table>
     <c:if test="${securityContext.admin}">
         <s:form action="startStopQueue" method="post">
