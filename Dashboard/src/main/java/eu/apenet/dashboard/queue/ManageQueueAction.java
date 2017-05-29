@@ -136,7 +136,8 @@ public class ManageQueueAction extends AbstractAction {
     private void buildSelectionForReindex() {
         this.selections = new ArrayList<>();
 
-        this.selections.add(XmlType.EAD_3.getName());
+//        hide Ead3
+//        this.selections.add(XmlType.EAD_3.getName());
         this.selections.add(XmlType.EAD_FA.getName());
         this.selections.add(XmlType.EAD_HG.getName());
         this.selections.add(XmlType.EAD_SG.getName());
@@ -319,14 +320,14 @@ public class ManageQueueAction extends AbstractAction {
         }
         return SUCCESS;
     }
-    
+
     public String reindexTest() {
         LOGGER.info("Reindex test");
         if (SecurityContext.get().isAdmin()) {
             ReIndexAllDocumentsManager riManager = ReIndexAllDocumentsManager.getInstance();
             try {
                 List<XmlType> types = new ArrayList<>();
-                types.add(XmlType.EAD_3);
+//                types.add(XmlType.EAD_3);
                 types.add(XmlType.EAD_FA);
                 riManager.redindex(true, types);
 

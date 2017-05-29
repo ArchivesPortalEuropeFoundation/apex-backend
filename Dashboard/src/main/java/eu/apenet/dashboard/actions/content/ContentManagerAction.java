@@ -114,7 +114,8 @@ public class ContentManagerAction extends AbstractInstitutionAction {
                 getText("content.message." + XmlType.EAD_SG.getResourceName()));
         typeList.put(XmlType.EAC_CPF.getIdentifier() + "",
                 getText("content.message." + XmlType.EAC_CPF.getResourceName()));
-        typeList.put(XmlType.EAD_3.getIdentifier() + "", "EAD3");
+//        Hide Ead3
+//        typeList.put(XmlType.EAD_3.getIdentifier() + "", "EAD3");
         searchTermsFieldList.put("", getText("content.message.all"));
         searchTermsFieldList.put("eadid", getText("content.message.id"));
         searchTermsFieldList.put("title", getText("content.message.title"));
