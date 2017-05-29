@@ -10,7 +10,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 
 public class SolrMaintenanceTask implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(SolrMaintenanceTask.class);
-    private static final int WAIT_FOR_START = 10*60;
+    private static final int WAIT_FOR_START = 30*60;
 	private final ScheduledExecutorService scheduler;
 
 	public SolrMaintenanceTask(ScheduledExecutorService scheduler) {
