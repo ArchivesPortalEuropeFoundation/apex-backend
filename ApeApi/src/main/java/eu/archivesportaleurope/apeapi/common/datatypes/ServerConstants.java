@@ -11,8 +11,8 @@ package eu.archivesportaleurope.apeapi.common.datatypes;
  */
 public final class ServerConstants {
     public static final String HEADER_API_KEY = "APIkey";
-    public static final String APE_API_V1 = "application/vnd.ape-v2+json";
-    public static final String APE_API_PREVIOUS_VERSION = "application/vnd.ape-v1+json";
+    public static final String APE_API_V1 = "application/vnd.ape-v4+json";
+    public static final String APE_API_PREVIOUS_VERSION = "application/vnd.ape-v3+json";
     public static final String WEB_APP_EXCEPTION = "WebApplicationException occurred: ";
     public static final String UNKNOWN_EXCEPTION = "Exception occurred: ";
     public static final String REPOSITORY_DIR_PATH = "REPOSITORY_DIR_PATH";
