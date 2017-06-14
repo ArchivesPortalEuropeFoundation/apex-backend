@@ -509,12 +509,13 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         licenseSet.add(new SelectItem(CREATIVECOMMONS, getText("ead2ese.content.license.creativecommons")));
         licenseSet.add(new SelectItem(CREATIVECOMMONS_CC0, getText("ead2ese.content.license.creativecommons.cc0")));
         licenseSet.add(new SelectItem(CREATIVECOMMONS_CPDM, getText("ead2ese.content.license.creativecommons.publicdomain")));
-        licenseSet.add(new SelectItem(IngestionprofilesAction.OUT_OF_COPYRIGHT, this.getText("ead2ese.content.license.out.of.copyright")));
         europeanaLicenseSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
-        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-f/", getText("ead2ese.content.license.europeana.access.free")));
-        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/orphan-work-eu/", this.getText("ead2ese.content.license.europeana.access.orphan")));
-        europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-p/", getText("ead2ese.content.license.europeana.access.paid")));
-        this.europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/unknown/", this.getText("content.message.rights.unknown")));
+        europeanaLicenseSet.add(new SelectItem("http://rightsstatements.org/vocab/InC/1.0/", getText("ead2ese.content.license.europeana.incopyright")));
+        europeanaLicenseSet.add(new SelectItem("http://rightsstatements.org/vocab/InC-EDU/1.0/", getText("ead2ese.content.license.europeana.incopyright.eduuse")));
+        europeanaLicenseSet.add(new SelectItem("http://rightsstatements.org/vocab/InC-OW-EU/1.0/", getText("ead2ese.content.license.europeana.incopyright.euorphan")));
+        europeanaLicenseSet.add(new SelectItem("http://rightsstatements.org/vocab/NoC-NC/1.0/", getText("ead2ese.content.license.europeana.nocopyright.noncommercial")));
+        europeanaLicenseSet.add(new SelectItem("http://rightsstatements.org/vocab/NoC-OKLR/1.0/", getText("ead2ese.content.license.europeana.nocopyright.otherlegal")));
+        europeanaLicenseSet.add(new SelectItem("http://rightsstatements.org/vocab/CNE/1.0/", getText("ead2ese.content.license.europeana.copyrightnotevaluated")));
 
         if (DAOFactory.instance().getXslUploadDAO().hasXslUpload(getAiId())) {
             List<XslUpload> xslUploads = DAOFactory.instance().getXslUploadDAO().getXslUploads(getAiId());

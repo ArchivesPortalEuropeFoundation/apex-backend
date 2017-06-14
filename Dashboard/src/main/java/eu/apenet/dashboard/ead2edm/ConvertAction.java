@@ -41,7 +41,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     private static final String CREATIVECOMMONS_CC0 = "cc0";
     private static final String CREATIVECOMMONS = "creativecommons";
     private static final String EUROPEANA = "europeana";
-    private static final String OUT_OF_COPYRIGHT = "outofcopyright";
     // DAO role.
     private static final String TYPE_3D = "3D"; // Constant for type "3D".
     private static final String TYPE_IMAGE = "IMAGE"; // Constant for type "image".
@@ -63,11 +62,12 @@ public class ConvertAction extends AbstractInstitutionAction {
     private static final String OPTION_ARCHDESC_UNITTITLE = "archdescUnittitle";
     private static final String OPTION_TITLESTMT_TITLEPROPER = "titlestmtTitleproper";
     // Europeana licences.
-    private static final String EUROPEANA_FREE = "http://www.europeana.eu/rights/rr-f/"; // Constant for link to europeana free license.
-    private static final String EUROPEANA_NON_COMMERCIAL = "http://www.europeana.eu/rights/out-of-copyright-non-commercial/"; // Constant for link to europeana non-commercial license.
-    private static final String EUROPEANA_ORPHAN = "http://www.europeana.eu/rights/orphan-work-eu/"; // Constant for link to europeana orphan license.
-    private static final String EUROPEANA_PAID = "http://www.europeana.eu/rights/rr-p/"; // Constant for link to europeana paid license.
-    private static final String EUROPEANA_UNKNOWN = "http://www.europeana.eu/rights/unknown/"; // Constant for link to europeana unknown license.
+    private static final String EUROPEANA_INCOPY = "http://rightsstatements.org/vocab/InC/1.0/";
+    private static final String EUROPEANA_INCOPY_EDUUSE = "http://rightsstatements.org/vocab/InC-EDU/1.0/";
+    private static final String EUROPEANA_INCOPY_EUORPHAN = "http://rightsstatements.org/vocab/InC-OW-EU/1.0/";
+    private static final String EUROPEANA_NOCOPY_NONCOMMERCIAL = "http://rightsstatements.org/vocab/NoC-NC/1.0/";
+    private static final String EUROPEANA_NOCOPY_OTHERLEGAL = "http://rightsstatements.org/vocab/NoC-OKLR/1.0/";
+    private static final String EUROPEANA_COPYRIGHT_NOT_EVALUATED = "http://rightsstatements.org/vocab/CNE/1.0/";
 
     protected final Logger log = Logger.getLogger(getClass());
     /**
@@ -171,25 +171,6 @@ public class ConvertAction extends AbstractInstitutionAction {
             }
         }
 
-//        if (!this.isBatchConversion()) {
-//            if (ConvertAction.OPTION_NO.equals(this.getInheritRightsInfo())) {
-//                if (this.noLicenceOnClevel) {
-//                    addFieldError("inheritRightsInfo", getText("errors.required")
-//                            + ". " + getText("errors.clevel.without.licence"));
-//                } else if (!this.isLicenseCheck()) {
-//                    addFieldError("inheritRightsInfo", getText("errors.required")
-//                            + ". " + getText("errors.provide.licence"));
-//                }
-//            } else if (ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo())) {
-//                if (this.noLicenceOnParents) {
-//                    addFieldError("inheritRightsInfo", getText("errors.required")
-//                            + ". " + getText("errors.fa.without.licence"));
-//                } else if (!this.isLicenseCheck()) {
-//                    addFieldError("inheritRightsInfo", getText("errors.required")
-//                            + ". " + getText("errors.provide.licence"));
-//                }
-//            }
-//        }
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             if (StringUtils.isBlank(this.getEuropeanaLicense())) {
                 addFieldError("europeanaLicense", getText("errors.required"));
@@ -239,21 +220,19 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
         this.inheritLanguageSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.language.select")));
-//        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
-//        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
-//        this.inheritRightsInfoSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.license.select")));
         this.licenseSet.add(new SelectItem(ConvertAction.EUROPEANA, this.getText("ead2ese.content.license.europeana")));
-        this.licenseSet.add(new SelectItem(ConvertAction.OUT_OF_COPYRIGHT, this.getText("ead2ese.content.license.out.of.copyright")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS, this.getText("ead2ese.content.license.creativecommons")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS_CC0, this.getText("ead2ese.content.license.creativecommons.cc0")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS_CPDM, this.getText("ead2ese.content.license.creativecommons.publicdomain")));
         this.license = EUROPEANA;
         this.europeanaLicenseSet.add(new SelectItem("", this.getText("ead2ese.content.selectone")));
-        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_FREE, this.getText("ead2ese.content.license.europeana.access.free")));
-        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_ORPHAN, this.getText("ead2ese.content.license.europeana.access.orphan")));
-        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_PAID, this.getText("ead2ese.content.license.europeana.access.paid")));
-        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_UNKNOWN, this.getText("content.message.rights.unknown")));
-    }
+        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_INCOPY, this.getText("ead2ese.content.license.europeana.incopyright")));
+        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_INCOPY_EDUUSE, this.getText("ead2ese.content.license.europeana.incopyright.eduuse")));
+        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_INCOPY_EUORPHAN, this.getText("ead2ese.content.license.europeana.incopyright.euorphan")));
+        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_NOCOPY_NONCOMMERCIAL, this.getText("ead2ese.content.license.europeana.nocopyright.noncommercial")));
+        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_NOCOPY_OTHERLEGAL, this.getText("ead2ese.content.license.europeana.nocopyright.otherlegal")));
+        this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_COPYRIGHT_NOT_EVALUATED, this.getText("ead2ese.content.license.europeana.copyrightnotevaluated")));
+        }
 
     @Override
     public String input() throws IOException, SAXException, ParserConfigurationException {
@@ -279,33 +258,7 @@ public class ConvertAction extends AbstractInstitutionAction {
             this.setHasArchdescUnittitle(StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle()));
             this.setHasTitlestmtTitleproper(StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper()));
             if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescLicenceType())) {
-//          COMMENTED OUT UNTIL THE RESPECTIVE ISSUE INVOLVING THE CC LICENCE RECOGNITION WILL BE STARTED
-//                
-//                license = ead2EdmInformation.getArchdescLicenceType();
-//                if (license == ConvertAction.EUROPEANA) {
-//                    if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-f/")) {
-//                        europeanaLicense = ConvertAction.EUROPEANA_FREE;
-//                    } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("orphan-work-eu/")) {
-//                        europeanaLicense = ConvertAction.EUROPEANA_ORPHAN;
-//                    } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-p/")) {
-//                        europeanaLicense = ConvertAction.EUROPEANA_PAID;
-//                    } else {
-//                        europeanaLicense = ConvertAction.EUROPEANA_UNKNOWN;
-//                    }
-//                } else if (license == ConvertAction.CREATIVECOMMONS) {
-//                    //TODO: fill with correct parameters if possible
-//                }
                 licenseCheck = true;
-//          SAME AS ABOVE
-//                
-//                StringBuilder sBuilder = new StringBuilder();
-//                for (String text : ead2EdmInformation.getArchdescLicenceText()) {
-//                    if (sBuilder.length() != 0) {
-//                        sBuilder.append(" / ");
-//                    }
-//                    sBuilder.append(text);
-//                }
-//                licenseAdditionalInformation = sBuilder.toString();
             }
             this.setBatchConversion(false);
         } else {
@@ -389,16 +342,10 @@ public class ConvertAction extends AbstractInstitutionAction {
             config.setDataProvider(this.getTextDataProvider());
         }
 
-//        if (this.isBatchConversion()) {
         config.setInheritRightsInfo(true);
-//        } else {
-//            config.setInheritRightsInfo(ConvertAction.OPTION_YES.equals(this.getInheritRightsInfo()));
-//        }
         config.setUseExistingRightsInfo(this.isLicenseCheck());
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             config.setRights(this.getEuropeanaLicense());
-        } else if (ConvertAction.OUT_OF_COPYRIGHT.equals(this.getLicense())) {
-            config.setRights(ConvertAction.EUROPEANA_NON_COMMERCIAL);
         } else if (ConvertAction.CREATIVECOMMONS_CC0.equals(license)) {
             config.setRights("http://creativecommons.org/publicdomain/zero/1.0/");
         } else if (ConvertAction.CREATIVECOMMONS_CPDM.equals(license)) {
@@ -597,13 +544,6 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.inheritLanguageSet = inheritLanguageSet;
     }
 
-//    public Set<SelectItem> getInheritRightsInfoSet() {
-//        return inheritRightsInfoSet;
-//    }
-//
-//    public void setInheritRightsInfoSet(Set<SelectItem> inheritRightsInfoSet) {
-//        this.inheritRightsInfoSet = inheritRightsInfoSet;
-//    }
     public Set<SelectItem> getProviderSet() {
         return providerSet;
     }

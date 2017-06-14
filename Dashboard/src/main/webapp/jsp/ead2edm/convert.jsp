@@ -286,19 +286,6 @@
             </td>
         </tr>
 
-<%--        <s:if test="batchConversion==false">
-            <tr id="trInheritRightsInfo">
-                <td class="inputLabel">
-                    <s:label key="ead2ese.label.inherit.license" for="inheritRightsInfo" /><span class="required">*</span>:
-                </td>
-                <td>
-                    <s:iterator value="inheritRightsInfoSet">
-                        <s:radio name="inheritRightsInfo" id="inheritRightsInfo" list="top" listKey="value" listValue="content"></s:radio><br/>
-                    </s:iterator>
-                    <s:fielderror fieldName="inheritRightsInfo"/>
-                </td>
-            </tr>
-        </s:if>--%>
         <tr>
             <td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
             <td>
@@ -320,7 +307,7 @@
                 (<s:label key="ead2ese.content.license.moreinfo"/> <s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
                 </td>
             </tr>
-        <s:if test="license=='cc0' || license=='cpdm' || license=='europeana' || license=='outofcopyright'">
+        <s:if test="license=='cc0' || license=='cpdm' || license=='europeana'">
             <c:set var="creativeCommonsInvisible" value="style=\"display: none;\""></c:set>
         </s:if>
         <s:else>
