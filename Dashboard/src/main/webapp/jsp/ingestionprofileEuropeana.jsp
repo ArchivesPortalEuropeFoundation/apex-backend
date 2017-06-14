@@ -45,10 +45,6 @@
             $('#hiddenEuropeanaLicense').show();
         });
 
-        $('#licenseoutofcopyright').click(function() {
-            $('#hiddenCreativeCommonsLicense').hide();
-            $('#hiddenEuropeanaLicense').hide();
-        });
     });
 
     function changeInheritFileParentCheckState() {
@@ -217,10 +213,10 @@
                 (<s:label key="ead2ese.content.license.moreinfo"/> <s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
                 </td>
             </tr>
-        <s:if test="license=='cc0' || license=='cpdm' || license=='europeana' || license=='outofcopyright'">
+        <s:if test="license=='cc0' || license=='cpdm' || license=='europeana'">
             <c:set var="creativeCommonsInvisible" value="style=\"display: none;\""></c:set>
         </s:if>
-        <s:if test="license=='creativecommons' || license=='cc0' || license=='cpdm' || license=='outofcopyright'">
+        <s:if test="license=='creativecommons' || license=='cc0' || license=='cpdm'">
             <c:set var="europeanaInvisible" value="style=\"display: none;\""></c:set>
         </s:if>
         <tr id="hiddenEuropeanaLicense"  ${europeanaInvisible}>
