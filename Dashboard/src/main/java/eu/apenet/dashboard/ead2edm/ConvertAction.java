@@ -171,6 +171,9 @@ public class ConvertAction extends AbstractInstitutionAction {
             }
         }
 
+        if (this.getLicense() == null) {
+            addFieldError("license", getText("errors.required"));
+        }
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             if (StringUtils.isBlank(this.getEuropeanaLicense())) {
                 addFieldError("europeanaLicense", getText("errors.required"));
@@ -224,7 +227,7 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS, this.getText("ead2ese.content.license.creativecommons")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS_CC0, this.getText("ead2ese.content.license.creativecommons.cc0")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS_CPDM, this.getText("ead2ese.content.license.creativecommons.publicdomain")));
-        this.license = EUROPEANA;
+        //this.license = EUROPEANA;
         this.europeanaLicenseSet.add(new SelectItem("", this.getText("ead2ese.content.selectone")));
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_INCOPY, this.getText("ead2ese.content.license.europeana.incopyright")));
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_INCOPY_EDUUSE, this.getText("ead2ese.content.license.europeana.incopyright.eduuse")));
