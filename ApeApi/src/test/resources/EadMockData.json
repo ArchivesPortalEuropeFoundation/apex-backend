@@ -142,5 +142,48 @@
             "unitTitleWithHighlighting": "Regeringsarchieven Geünieerde Provinciën X",
             "scopeContent": "Het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State bevat voornamelijk ingekomen stukken en minuten van uitgaande stukken, bewaard onder secretaris Langen en Daniël de Burchgrave, secretaris van Zijne Excellentie.",
             "scopeContentWithHighlighting": "Het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State bevat voornamelijk ingekomen stukken en minuten van uitgaande stukken, bewaard onder secretaris Langen en Daniël de Burchgrave, secretaris van Zijne Excellentie."
-        }]
+        },
+        {
+            "id": "C13716",
+            "fondsUnitTitle": "Inventaris van het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State nevens hem, 1586-1588:xyz",
+            "fondsUnitId": "1.01.01.10",
+            "repository": "testArch:361",
+            "country": "NEW_COUNTRY:G:8",
+            "language": "",
+            "langMaterial": "",
+            "unitDate": "1586-1588",
+            "repositoryCode": "NC-00000000365",
+            "hasDigitalObject": false,
+            "docType": "Finding Aid",
+            "docTypeId": "fa",
+            "level": "clevel",
+            "indexDate": "Fri Jan 29 10:17:41 UTC 2016",
+            "unitId": "1.01.01.10 - 1",
+            "unitTitle": "Regeringsarchieven Geünieerde Provinciën X",
+            "unitTitleWithHighlighting": "Regeringsarchieven Geünieerde Provinciën X",
+            "scopeContent": "Het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State bevat voornamelijk ingekomen stukken en minuten van uitgaande stukken, bewaard onder secretaris Langen en Daniël de Burchgrave, secretaris van Zijne Excellentie.",
+            "scopeContentWithHighlighting": "Het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State bevat voornamelijk ingekomen stukken en minuten van uitgaande stukken, bewaard onder secretaris Langen en Daniël de Burchgrave, secretaris van Zijne Excellentie."
+        },
+        {
+            "id": "C13717",
+            "fondsUnitTitle": "Inventaris van het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State nevens hem, 1586-1588:xyz",
+            "fondsUnitId": "1.01.01.10",
+            "repository": "testArch:361",
+            "country": "NEW_COUNTRY:G:8",
+            "language": "",
+            "langMaterial": "",
+            "unitDate": "1586-1588",
+            "repositoryCode": "NC-00000000365",
+            "hasDigitalObject": false,
+            "docType": "Finding Aid",
+            "docTypeId": "fa",
+            "level": "clevel",
+            "indexDate": "Fri Jan 29 10:17:41 UTC 2016",
+            "unitId": "1.01.01.10 - 11",
+            "unitTitle": "Regeringsarchieven Geünieerde Provinciën X",
+            "unitTitleWithHighlighting": "Regeringsarchieven Geünieerde Provinciën X",
+            "scopeContent": "Het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State bevat voornamelijk ingekomen stukken en minuten van uitgaande stukken, bewaard onder secretaris Langen en Daniël de Burchgrave, secretaris van Zijne Excellentie.",
+            "scopeContentWithHighlighting": "Het archief van de Gouverneur-Generaal Graaf van Leycester en de Raad van State bevat voornamelijk ingekomen stukken en minuten van uitgaande stukken, bewaard onder secretaris Langen en Daniël de Burchgrave, secretaris van Zijne Excellentie."
+        }
+    ]
 }
