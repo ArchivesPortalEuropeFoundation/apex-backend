@@ -24,5 +24,5 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
 
     public boolean existEacCpfs(ContentSearchOptions contentSearchOptions);
     
-    public Integer isEacCpfIdIndexed(String eadid, Integer aiId, Class<? extends EacCpf> clazz);
+    public Integer isEacCpfIdIndexed(String eadid, Class<? extends EacCpf> clazz);
 }

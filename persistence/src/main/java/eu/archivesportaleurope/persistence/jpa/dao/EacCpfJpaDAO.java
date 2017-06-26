@@ -262,10 +262,9 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     }
 
     @Override
-    public Integer isEacCpfIdIndexed(String identifier, Integer aiId, Class<? extends EacCpf> clazz) {
+    public Integer isEacCpfIdIndexed(String identifier, Class<? extends EacCpf> clazz) {
         Criteria criteria = getSession().createCriteria(clazz, "eac").setProjection(Projections.property("id"));
         criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
-        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
         criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
         criteria.add(Restrictions.eq("published", true));
         criteria.setMaxResults(1);
