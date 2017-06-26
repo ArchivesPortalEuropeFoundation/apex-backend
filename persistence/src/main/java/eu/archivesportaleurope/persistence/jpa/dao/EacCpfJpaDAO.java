@@ -34,7 +34,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
         if (isPublished) {
-        	criteria.add(Restrictions.eq("published", true));
+            criteria.add(Restrictions.eq("published", true));
         }
         criteria.setMaxResults(1);
         List<EacCpf> list = criteria.list();
@@ -66,8 +66,8 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         criteria = criteria.createAlias("eacCpf.archivalInstitution", "archivalInstitution");
         criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
         criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
-        if (onlyPublished){
-    		criteria.add(Restrictions.eq("published", true));        	
+        if (onlyPublished) {
+            criteria.add(Restrictions.eq("published", true));
         }
         criteria.setMaxResults(1);
         List<EacCpf> list = criteria.list();
@@ -76,7 +76,6 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         }
         return null;
     }
-
 
     @Override
     public List<EacCpf> getEacCpfs(ContentSearchOptions contentSearchOptions) {
@@ -108,6 +107,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         }
         return query.getResultList();
     }
+
     @SuppressWarnings("unchecked")
     @Override
     public long countEacCpfs(ContentSearchOptions contentSearchOptions) {
@@ -119,19 +119,20 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
 
         return getEntityManager().createQuery(cq).getSingleResult();
     }
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean existEacCpfs(ContentSearchOptions contentSearchOptions) {
-		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<EacCpf> cq = criteriaBuilder.createQuery(EacCpf.class);
-        Root<EacCpf> from = cq.from(EacCpf.class);
-		cq.where(buildWhere(from, cq, contentSearchOptions));
-		cq.select(from);
 
-		TypedQuery<EacCpf> query = getEntityManager().createQuery(cq);
-		query.setMaxResults(1);
-		return query.getResultList().size() > 0;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean existEacCpfs(ContentSearchOptions contentSearchOptions) {
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<EacCpf> cq = criteriaBuilder.createQuery(EacCpf.class);
+        Root<EacCpf> from = cq.from(EacCpf.class);
+        cq.where(buildWhere(from, cq, contentSearchOptions));
+        cq.select(from);
+
+        TypedQuery<EacCpf> query = getEntityManager().createQuery(cq);
+        query.setMaxResults(1);
+        return query.getResultList().size() > 0;
+    }
 
     private Predicate buildWhere(Root<? extends EacCpf> from, CriteriaQuery<?> cq, ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
@@ -193,22 +194,22 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
 
             String[] searchTerms = StringUtils.split(contentSearchOptions.getSearchTerms(), " ");
             if ("identifier".equals(contentSearchOptions.getSearchTermsField())) {
-				String searchTerm = contentSearchOptions.getSearchTerms().trim();
-				searchTerm = searchTerm.replaceAll("\\*", "%");
-				whereClause.add(criteriaBuilder.like(from.<String> get("identifier"), searchTerm));
+                String searchTerm = contentSearchOptions.getSearchTerms().trim();
+                searchTerm = searchTerm.replaceAll("\\*", "%");
+                whereClause.add(criteriaBuilder.like(from.<String>get("identifier"), searchTerm));
             } else if ("title".equals(contentSearchOptions.getSearchTermsField())) {
                 for (String searchTerm : searchTerms) {
                     whereClause.add(criteriaBuilder.like(from.<String>get("title"), "%" + searchTerm + "%"));
                 }
             } else {
-				String searchTermId = contentSearchOptions.getSearchTerms().trim();
-				searchTermId = searchTermId.replaceAll("\\*", "%");
-				Predicate identifierPredicate =  criteriaBuilder.like(from.<String> get("identifier"), searchTermId);				
-				List<Predicate> titleAndPredicated = new ArrayList<Predicate>();
-				for (String searchTerm : searchTerms) {
-					titleAndPredicated.add(criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%"));
-				}
-				whereClause.add(criteriaBuilder.or(criteriaBuilder.and(titleAndPredicated.toArray(new Predicate[0])), identifierPredicate));
+                String searchTermId = contentSearchOptions.getSearchTerms().trim();
+                searchTermId = searchTermId.replaceAll("\\*", "%");
+                Predicate identifierPredicate = criteriaBuilder.like(from.<String>get("identifier"), searchTermId);
+                List<Predicate> titleAndPredicated = new ArrayList<Predicate>();
+                for (String searchTerm : searchTerms) {
+                    titleAndPredicated.add(criteriaBuilder.like(from.<String>get("title"), "%" + searchTerm + "%"));
+                }
+                whereClause.add(criteriaBuilder.or(criteriaBuilder.and(titleAndPredicated.toArray(new Predicate[0])), identifierPredicate));
             }
         }
 
@@ -219,7 +220,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     public Integer isEacCpfIdUsed(String identifier, Integer aiId, Class<? extends EacCpf> clazz) {
         Criteria criteria = getSession().createCriteria(clazz, "eac").setProjection(Projections.property("id"));
         criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
-       	criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
         criteria.add(Restrictions.eq("identifier", identifier));
         List<Integer> result = criteria.list();
         if (result.size() > 0) {
@@ -253,11 +254,26 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         return criteria.list();
     }
 
-	private Criteria getEacCpfCriteriaByArchivalInstitution(int aiId) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "eac");
+    private Criteria getEacCpfCriteriaByArchivalInstitution(int aiId) {
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "eac");
         criteria = criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
         criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
         return criteria;
-	}
+    }
+
+    @Override
+    public Integer isEacCpfIdIndexed(String identifier, Integer aiId, Class<? extends EacCpf> clazz) {
+        Criteria criteria = getSession().createCriteria(clazz, "eac").setProjection(Projections.property("id"));
+        criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+        criteria.add(Restrictions.eq("published", true));
+        criteria.setMaxResults(1);
+        List<Integer> result = criteria.list();
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
 
 }
