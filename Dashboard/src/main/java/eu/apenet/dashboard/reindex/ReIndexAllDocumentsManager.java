@@ -100,19 +100,27 @@ public class ReIndexAllDocumentsManager {
             QueueItemDAO queueDao = DAOFactory.instance().getQueueItemDAO();
             ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
             contentSearchOptions.setPublished(Boolean.TRUE);
-            for (XmlType xmlType : types) {
-                if (xmlType.equals(XmlType.EAD_3)) {
-                    contentSearchOptions.setContentClass(xmlType.getClazz());
-                    Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-                    this.addEads(queueDao, ead3DAO, contentSearchOptions);
-                } else if (xmlType.equals(XmlType.EAC_CPF)) {
-                } else {
-                    contentSearchOptions.setContentClass(xmlType.getClazz());
-                    EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-                    this.addEads(queueDao, eadDAO, contentSearchOptions);
+            
+            try {
+                for (int i=0; i<types.size() && !this.stopSignal; i++) {
+                    XmlType xmlType = types.get(i);
+                    LOGGER.info("Going to add doc type: "+xmlType.getName()+" for re-index");
+                    if (xmlType.getIdentifier() == XmlType.EAD_3.getIdentifier()) {
+                        contentSearchOptions.setContentClass(xmlType.getClazz());
+                        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+                        this.addEads(queueDao, ead3DAO, contentSearchOptions);
+                    } else if (xmlType.getIdentifier() == XmlType.EAC_CPF.getIdentifier()) {
+                    } else {
+                        contentSearchOptions.setContentClass(xmlType.getClazz());
+                        EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+                        this.addEads(queueDao, eadDAO, contentSearchOptions);
+                    }
                 }
+                reIndexInProgress = false;
+            } catch (Exception ex) {
+                reIndexInProgress = false;
+                LOGGER.debug("Unknown exception! "+ex.getMessage());
             }
-            reIndexInProgress = false;
         }
 
         public void setStopSignal(boolean stopSignal) {
@@ -153,7 +161,7 @@ public class ReIndexAllDocumentsManager {
                 AbstractContent ead = (AbstractContent) obj;
                 try {
                     i++;
-                    LOGGER.info(ead.getClass().getCanonicalName() + " Id: " + ead.getIdentifier() + " added for reindex");
+                    LOGGER.debug(ead.getClass().getCanonicalName() + " Id: " + ead.getIdentifier() + " added for reindex");
                     QueueItem queueItem = this.genQueueItem(ead, QueueAction.REPUBLISH, new Properties(), 500);
                     ead.setQueuing(QueuingState.READY);
                     eadDAO.updateSimple(ead);

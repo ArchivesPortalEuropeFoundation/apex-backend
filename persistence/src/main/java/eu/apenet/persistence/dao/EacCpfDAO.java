@@ -1,10 +1,10 @@
 package eu.apenet.persistence.dao;
+
 import eu.apenet.persistence.vo.EacCpf;
 
 import java.util.List;
 
 public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
-
 
     public EacCpf getFirstPublishedEacCpfByIdentifier(String identifier, boolean isPublished);
 
@@ -21,6 +21,8 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
     public EacCpf getEacCpfById(Integer aiId, String cpfId);
 
     public List<Integer> getAllIds(Class<EacCpf> aClass, int aiId);
+
+    public boolean existEacCpfs(ContentSearchOptions contentSearchOptions);
     
-	public boolean existEacCpfs(ContentSearchOptions contentSearchOptions);
+    public Integer isEacCpfIdIndexed(String eadid, Class<? extends EacCpf> clazz);
 }
