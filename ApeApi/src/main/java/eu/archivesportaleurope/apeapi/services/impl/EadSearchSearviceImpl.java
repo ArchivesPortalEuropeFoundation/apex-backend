@@ -8,6 +8,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
+import eu.archivesportaleurope.apeapi.request.SearchPageRequestWithUnitId;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
@@ -21,6 +22,7 @@ import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -100,7 +102,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setStartIndex(request.getStartIndex());
         searchRequest.setQuery("ai:*" + request.getInstituteId() + this.solrAND
                 + "id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
-        
+
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
         return this.search(searchRequest, this.extraParam, false);
@@ -112,14 +114,14 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setCount(count);
         searchRequest.setStartIndex(startIndex);
         searchRequest.setQuery("(id:" + SolrValues.FA_PREFIX + "* OR id:" + SolrValues.HG_PREFIX + "* OR id:" + SolrValues.SG_PREFIX + "*)");
-        
+
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
-            
+
         extraParam.put("group", "true");
         extraParam.put("group.field", SolrFields.AI);
         extraParam.put("group.ngroups", "true");
-        
+
         return this.search(searchRequest, extraParam, false);
     }
 
@@ -132,21 +134,21 @@ public class EadSearchSearviceImpl extends EadSearchService {
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
-        
+
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
-        
+
         extraParam.put("qf", "fond^100 title scopecontent^0.5 alterdate^0.5 other^0.1");
         extraParam.put("bq", "id:(F*)^100");
-        extraParam.put("group.sort", "id "+SolrQuery.ORDER.desc); 
-            
+        extraParam.put("group.sort", "id " + SolrQuery.ORDER.desc);
+
         extraParam.put("group", "true");
         extraParam.put("group.field", groupByFieldName);
         extraParam.put("group.ngroups", "true");
         if (!resultNeeded) {
             extraParam.put("group.limit", "0");
         }
-        
+
         return this.search(request, extraParam, includeFacet);
     }
 
@@ -180,14 +182,46 @@ public class EadSearchSearviceImpl extends EadSearchService {
             request.setQuery(searchRequest.getQuery());
             request.setCount(searchRequest.getCount());
             request.setStartIndex(searchRequest.getStartIndex());
-            
+
             extraParam.clear();
             extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
-            
+
             return this.search(request, extraParam, false);
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
+    }
+
+    @Override
+    public QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest) {
+        StringBuilder query = new StringBuilder();
+        query.append(SolrFields.UNITID_OF_FOND).append(":")
+                .append(filteredSortedPageRequest.getFondsUnitId())
+                .append(this.solrAND);
+        if (StringUtils.isBlank(filteredSortedPageRequest.getUnitId())) {
+            String queryToFindOnlyTopLevelItem = "(id:F* OR id:H* OR id:S*)";
+            query.append(queryToFindOnlyTopLevelItem);
+        } else {
+            query.append(SolrFields.UNITID).append(":").append("*")
+                    .append(filteredSortedPageRequest.getUnitId().trim());
+        }
+        SearchRequest request = new SearchRequest();
+        request.setCount(filteredSortedPageRequest.getCount());
+        request.setStartIndex(filteredSortedPageRequest.getStartIndex());
+        request.setQuery(query.toString());
+        if (null != filteredSortedPageRequest.getFilters()) {
+            request.setFilters(filteredSortedPageRequest.getFilters());
+        }
+        if (null != filteredSortedPageRequest.getDateFilters()) {
+            request.setDateFilters(filteredSortedPageRequest.getDateFilters());
+        }
+        if (null != filteredSortedPageRequest.getSortRequest()) {
+            request.setSortRequest(filteredSortedPageRequest.getSortRequest());
+        }
+
+        extraParam.clear();
+        extraParam.put("q", this.onlyOpenData);
+        return this.search(request, extraParam, true);
     }
 
     private String getDocHighestLevelText(String id) throws SolrServerException {

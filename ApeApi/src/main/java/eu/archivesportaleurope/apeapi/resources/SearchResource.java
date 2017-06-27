@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.resources;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.exceptions.AppException;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
+import eu.archivesportaleurope.apeapi.request.SearchPageRequestWithUnitId;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
@@ -220,6 +221,34 @@ public class SearchResource {
         try {
             QueryResponse response = eadSearch.getChildren(id, searchRequest);
             return Response.ok().entity(new EadResponseSet(response)).build();
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+
+    @POST
+    @Path("/searchEadFondsUnitId")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Search Eads with FondsUnitId",
+            response = EadResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
+    public Response searchEadFondsUnitId(
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchPageRequestWithUnitId filteredSortedPageRequest
+    ) {
+        try {
+            QueryResponse response = eadSearch.getEadsByFondsUnitId(filteredSortedPageRequest);
+            return Response.ok().entity(new EadFactedResponseSet(response)).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

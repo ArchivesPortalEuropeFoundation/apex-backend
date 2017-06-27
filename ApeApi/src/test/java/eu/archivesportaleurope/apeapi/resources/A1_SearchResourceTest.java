@@ -10,7 +10,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
+import eu.archivesportaleurope.apeapi.request.SearchPageRequestWithUnitId;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
@@ -23,6 +25,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -66,6 +69,58 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
     @After
     public void tearDownTest() {
     }
+
+//    @Test
+//    public void testSearchWithFondsUnitId() {
+//        logger.debug("Test search with fonds unit id");
+//        SearchPageRequestWithUnitId request = new SearchPageRequestWithUnitId();
+//        request.setFondsUnitId("1.01.01.10");
+//        request.setCount(50);
+//        request.setStartIndex(0);
+//        Response response = super.target("search").path("searchEadFondsUnitId")
+//                .request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+//        response.bufferEntity();
+//        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+//        String jsonResponse = response.readEntity(String.class);
+//        logger.debug("Response Json: " + jsonResponse);
+//
+//        TypeToken<EadFactedResponseSet> token = new TypeToken<EadFactedResponseSet>() {
+//        };
+//
+//        EadFactedResponseSet factedResponseSet = gson.fromJson(jsonResponse, token.getType());
+//        Assert.assertEquals(1, factedResponseSet.getTotalResults());
+//        Assert.assertEquals("F13716", factedResponseSet.getEadSearchResults().get(0).getId());
+//        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFondsUnitId());
+//        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getUnitId());
+//    }
+//
+//    @Test
+//    public void testSearchWithFondsUnitIdAndUnitId() {
+//        logger.debug("Test search with fonds unit id in combination with unit id");
+//        SearchPageRequestWithUnitId request = new SearchPageRequestWithUnitId();
+//        request.setFondsUnitId("1.01.01.10");
+//        request.setUnitId("1");
+//        request.setCount(2);
+//        request.setStartIndex(0);
+//        Response response = super.target("search").path("searchEadFondsUnitId")
+//                .request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+//        response.bufferEntity();
+//        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+//        String jsonResponse = response.readEntity(String.class);
+//        logger.debug("Response Json: " + jsonResponse);
+//
+//        TypeToken<EadFactedResponseSet> token = new TypeToken<EadFactedResponseSet>() {
+//        };
+//
+//        EadFactedResponseSet factedResponseSet = gson.fromJson(jsonResponse, token.getType());
+//        Assert.assertEquals(2, factedResponseSet.getTotalResults());
+//        Assert.assertEquals("C13716", factedResponseSet.getEadSearchResults().get(0).getId());
+//        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFondsUnitId());
+//        Assert.assertEquals("1.01.01.10 - 1", factedResponseSet.getEadSearchResults().get(0).getUnitId());
+//        Assert.assertEquals("C13717", factedResponseSet.getEadSearchResults().get(1).getId());
+//        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(1).getFondsUnitId());
+//        Assert.assertEquals("1.01.01.10 - 11", factedResponseSet.getEadSearchResults().get(1).getUnitId());
+//    }
 
     @Test
     public void testSearch_ead_TotalResultCount() throws FileNotFoundException, SolrServerException, URISyntaxException {

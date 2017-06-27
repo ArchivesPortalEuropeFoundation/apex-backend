@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.services;
 
+import eu.archivesportaleurope.apeapi.request.SearchPageRequestWithUnitId;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
@@ -26,10 +27,12 @@ public abstract class EadSearchService extends SearchService {
     public abstract QueryResponse getEadList(SearchDocRequest searchRequest);
 
     public abstract QueryResponse getDescendants(String id, QueryPageRequest searchRequest);
-    
+
+    public abstract QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest);
+
     public abstract HierarchyResponseSet getAncestors(String id);
 
     public abstract QueryResponse getChildren(String id, QueryPageRequest searchRequest);
-    
+
     public abstract HierarchyResponseSet getChildren(String id, PageRequest searchRequest);
 }
