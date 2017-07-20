@@ -1,5 +1,6 @@
 package eu.archivesportaleurope.apeapi.services.impl;
 
+import com.google.common.collect.ImmutableSet;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.facet.FacetType;
@@ -15,13 +16,16 @@ import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.request.SortRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadHierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -193,6 +197,72 @@ public class EadSearchSearviceImpl extends EadSearchService {
     }
 
     @Override
+    public EadHierarchyResponseSet getDescendantsWithAncestors(String id, QueryPageRequest searchRequest) {
+        try {
+            String levelStr = this.getDocHighestLevelText(id); //FID0_s or HID0_s etc
+            SearchRequest request = new SearchRequest();
+            request.setQuery(searchRequest.getQuery());
+            request.setCount(searchRequest.getCount());
+            request.setStartIndex(searchRequest.getStartIndex());
+
+            extraParam.clear();
+            extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
+            extraParam.put("fl", "*");
+
+            QueryResponse decendentResponse = this.search(request, extraParam, false);
+
+            SolrDocumentList decendentDocumentList = decendentResponse.getResults();
+            if (decendentDocumentList.isEmpty()) {
+                //No decendents!
+                return new EadHierarchyResponseSet();
+            }
+            //keep the decendant to Ancestors list, so that we don't have to extract this info again
+            Map<String, Map<String, Integer>> descendantAncesMap = new HashMap<>();
+            Set<String> allAncestors = new HashSet<>();
+            //for every decendent get their ancestors
+            for (SolrDocument descenDocument : decendentDocumentList) {
+
+                if (null != descenDocument && null != descenDocument.getFieldValue(SolrFields.ID)) {
+                    String foundId = descenDocument.getFieldValue(SolrFields.ID).toString();
+                    TypedList ancList = this.extractParentList(descenDocument, foundId);
+                    descendantAncesMap.put(foundId, ancList.keyLevel);
+                    ancList.keyLevel.entrySet().stream().forEach((ancId) -> {
+                        allAncestors.add(ancId.getKey());
+                    });
+                }
+            }
+            
+            StringBuilder requestStrBuffer = new StringBuilder("(");
+            boolean orIt = false;
+            for (String ancId : allAncestors) {
+                if (orIt) {
+                    requestStrBuffer.append(" OR ");
+                }
+                requestStrBuffer.append("id:").append(ancId);
+                orIt = true;
+            }
+
+            requestStrBuffer.append(")");
+
+            SearchRequest ancRequest = new SearchRequest();
+            ancRequest.setCount(allAncestors.size());
+            ancRequest.setQuery(requestStrBuffer.toString());
+
+            QueryResponse allAncestorData = this.searchOpenData(request);
+            SolrDocumentList ancDocs = allAncestorData.getResults();
+            Map<String, SolrDocument> ancIdDocMap = new HashMap<>();
+            for (SolrDocument ancDoc : ancDocs) {
+                String ancId = ancDoc.getFieldValue(SolrFields.ID).toString();
+                ancIdDocMap.put(ancId, ancDoc);
+            }
+            EadHierarchyResponseSet response = new EadHierarchyResponseSet(decendentResponse, descendantAncesMap, ancIdDocMap);
+            return response;
+        } catch (SolrServerException ex) {
+            throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
+        }
+    }
+
+    @Override
     public QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest) {
         StringBuilder query = new StringBuilder();
         query.append(SolrFields.UNITID_OF_FOND).append(":")
@@ -252,7 +322,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
         QueryResponse qr = this.searchOpenData(request);
         try {
-            TypedList typedListParent = this.getParentList(id);
+            TypedList typedListParent = this.getParentList(id); //ToDo: change this, now we know numberOfAncestors
             HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedListParent.keyLevel.size() + 1);
             return hrs;
         } catch (SolrServerException ex) {
@@ -272,11 +342,12 @@ public class EadSearchSearviceImpl extends EadSearchService {
         QueryResponse itemResponse = this.searchUtil.getSearchResponse();
 
         SolrDocumentList documentList = itemResponse.getResults();
-        String foundId = "";
         if (documentList.isEmpty()) {
             throw new ResourceNotFoundException("No such document exist with id: " + id, "");
         }
         SolrDocument document = documentList.get(0);
+
+        String foundId = "";
         if (null != document && null != document.getFieldValue(SolrFields.ID)) {
             foundId = document.getFieldValue(SolrFields.ID).toString();
         }
@@ -284,6 +355,12 @@ public class EadSearchSearviceImpl extends EadSearchService {
         if (!foundId.equalsIgnoreCase(id)) {
             throw new ResourceNotFoundException("No such document exist with id: " + id, "");
         }
+
+        return this.extractParentList(document, id);
+    }
+
+    private TypedList extractParentList(SolrDocument document, String selfId) {
+
         String docType = document.getFieldValue(SolrFields.TYPE).toString();
         String[] typePrefix = {"", ""};
         if (docType.equals(SolrValues.FA_TYPE)) {
@@ -304,8 +381,8 @@ public class EadSearchSearviceImpl extends EadSearchService {
             typedList.keyLevel.put(document.getFieldValue(typePrefix[0] + level + "_s").toString(), level);
             level++;
         }
-        if (document.getFieldValue(typePrefix[0] + (level - 1) + "_s").toString().equalsIgnoreCase(id)) {
-            typedList.keyLevel.remove(id);
+        if (document.getFieldValue(typePrefix[0] + (level - 1) + "_s").toString().equalsIgnoreCase(selfId)) {
+            typedList.keyLevel.remove(selfId);
             level--;
         }
 
@@ -316,6 +393,11 @@ public class EadSearchSearviceImpl extends EadSearchService {
     public HierarchyResponseSet getAncestors(String id) {
         try {
             TypedList typedList = this.getParentList(id);
+
+            if (typedList.keyLevel.isEmpty()) {
+                return new HierarchyResponseSet();
+            }
+
             StringBuilder requestStrBuffer = new StringBuilder("(");
             boolean orIt = false;
             for (Map.Entry<String, Integer> aLevel : typedList.keyLevel.entrySet()) {
@@ -334,13 +416,9 @@ public class EadSearchSearviceImpl extends EadSearchService {
 //            request.setStartIndex(pageRequest.getStartIndex());
             request.setQuery(requestStrBuffer.toString());
 
-            if (typedList.keyLevel.isEmpty()) {
-                return new HierarchyResponseSet();
-            } else {
-                QueryResponse qr = this.searchOpenData(request);
-                HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedList.keyLevel);
-                return hrs;
-            }
+            QueryResponse qr = this.searchOpenData(request);
+            HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedList.keyLevel);
+            return hrs;
 
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));

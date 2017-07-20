@@ -15,6 +15,7 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfFacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadHierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead3.Ead3FacetedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead3.Ead3ResponseSet;
@@ -192,6 +193,35 @@ public class SearchResource {
         try {
             QueryResponse response = eadSearch.getDescendants(id, searchRequest);
             return Response.ok().entity(new EadResponseSet(response)).build();
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+    
+    @POST
+    @Path("/ead/{id}/descendantWithAncestors")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Search all descendants (with the ancestors list) of a given ead id",
+            response = EadResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
+    public Response getDescendantsWithAncestors(
+            @PathParam("id") String id,
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
+    ) {
+        try {
+            EadHierarchyResponseSet response = eadSearch.getDescendantsWithAncestors(id, searchRequest);
+            return Response.ok().entity(response).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();

@@ -35,7 +35,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +107,11 @@ public class ContentResource {
             InputStream stream = new ByteArrayInputStream(detailContent.getXml().getBytes());
             C clevel = (C) cUnmarshaller.unmarshal(stream);
             contentResponse.setContent(clevel);
+            
+//            Marshaller marshaller = clevelContext.createMarshaller();
+//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//            marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
+//            marshaller.marshal(clevel, System.out);
             return Response.ok().entity(contentResponse).build();
 
         } catch (WebApplicationException e) {
