@@ -248,7 +248,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             ancRequest.setCount(allAncestors.size());
             ancRequest.setQuery(requestStrBuffer.toString());
 
-            QueryResponse allAncestorData = this.searchOpenData(request);
+            QueryResponse allAncestorData = this.searchOpenData(ancRequest);
             SolrDocumentList ancDocs = allAncestorData.getResults();
             Map<String, SolrDocument> ancIdDocMap = new HashMap<>();
             for (SolrDocument ancDoc : ancDocs) {
