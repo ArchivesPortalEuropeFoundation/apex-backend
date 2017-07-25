@@ -34,13 +34,14 @@ public class EacCpfContentServiceImpl implements EacCpfContentService {
             
             eacCpf = eacCpfRepo.findById(idInt);
             
-            //lazy load
-            ArchivalInstitution ai = eacCpf.getArchivalInstitution();
-            ai.getAiname();
-
             if (eacCpf == null) {
                 throw new ResourceNotFoundException("Couldn't find any item with the given id", "EadContent Item not found, id" + id);
             }
+            
+            //lazy load
+            ArchivalInstitution ai = eacCpf.getArchivalInstitution();
+            ai.getAiname();
+            
             return eacCpf;
         }
         throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
