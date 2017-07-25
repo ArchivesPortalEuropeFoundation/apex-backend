@@ -61,7 +61,7 @@ public class EadHierarchyResponseSet extends ResponseSet {
                         descendantAncesMap.get(document.getFieldValue(SolrFields.ID).toString()), ancIdDocMap);
                 this.addEadSearchResult(eadResponse);
             } catch (Exception ex) {
-                logger.error("Ead response format error: "+ex.getMessage());
+                logger.error("Ead response format error: "+document.values(), ex);
             }
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));

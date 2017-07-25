@@ -57,7 +57,7 @@ public class EadResponseSet extends ResponseSet {
                 EadResponse eadResponse = new EadResponse(document, response);
                 this.addEadSearchResult(eadResponse);
             } catch (Exception ex) {
-                logger.error("Ead response format error: "+ex.getMessage());
+                logger.error("Ead response format error"+document.values(), ex);
             }
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
