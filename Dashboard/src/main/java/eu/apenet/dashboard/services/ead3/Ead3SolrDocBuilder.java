@@ -6,6 +6,7 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.DateUtil;
@@ -108,15 +109,15 @@ public class Ead3SolrDocBuilder {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
-        
+
         this.archdescNode.setDataElement(Ead3SolrFields.AI_ID, persistantEad3.getAiId());
         this.archdescNode.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
-        this.archdescNode.setDataElement(Ead3SolrFields.AI, persistantEad3.getArchivalInstitution().getAiname()+"|"+persistantEad3.getAiId());
-        
+        this.archdescNode.setDataElement(Ead3SolrFields.AI, persistantEad3.getArchivalInstitution().getAiname() + "|" + persistantEad3.getAiId());
+
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_ID, persistantEad3.getArchivalInstitution().getCountry().getId());
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_NAME, persistantEad3.getArchivalInstitution().getCountry().getCname());
-        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, persistantEad3.getArchivalInstitution().getCountry().getCname()+"|"+persistantEad3.getArchivalInstitution().getCountry().getId());
-        
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, persistantEad3.getArchivalInstitution().getCountry().getCname() + "|" + persistantEad3.getArchivalInstitution().getCountry().getId());
+
         this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, persistantEad3.getArchivalInstitution().getRepositorycode());
         this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
@@ -227,11 +228,11 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
         cRoot.setDataElement(Ead3SolrFields.AI, this.archdescNode.getDataElement(Ead3SolrFields.AI));
-        
+
         cRoot.setDataElement(Ead3SolrFields.COUNTRY_ID, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY_ID));
         cRoot.setDataElement(Ead3SolrFields.COUNTRY_NAME, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY_NAME));
         cRoot.setDataElement(Ead3SolrFields.COUNTRY, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY));
-        
+
         cRoot.setDataElement(Ead3SolrFields.REPOSITORY_CODE, this.archdescNode.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
         cRoot.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
 
@@ -267,6 +268,7 @@ public class Ead3SolrDocBuilder {
             Object element = it.next();
             if (element instanceof Scopecontent) {
                 Scopecontent scopecontent = (Scopecontent) element;
+                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
                 Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
                 for (Map.Entry entry : eventMap.entrySet()) {
                     cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
@@ -571,6 +573,24 @@ public class Ead3SolrDocBuilder {
         return eventMap;
     }
 
+    private List<Map<String, Object>> buildEacData(SolrDocNode cRoot, Event event) {
+        List<Map<String, Object>> listOfEacs = new ArrayList<>();
+        List<Serializable> events = event.getContent();
+        for (Serializable eacEvent : events) {
+            if (eacEvent instanceof JAXBElement) {
+                JAXBElement eacElement = (JAXBElement) eacEvent;
+                if (eacElement.getDeclaredType().equals(Persname.class)) {
+                    listOfEacs.add(fillEacPartsInMap(cRoot, ((Persname) eacElement.getValue()).getPart()));
+                } else if (eacElement.getDeclaredType().equals(Corpname.class)) {
+                    listOfEacs.add(fillEacPartsInMap(cRoot, ((Corpname) eacElement.getValue()).getPart()));
+                } else if (eacElement.getDeclaredType().equals(Famname.class)) {
+                    listOfEacs.add(fillEacPartsInMap(cRoot, ((Famname) eacElement.getValue()).getPart()));
+                }
+            }
+        }
+        return listOfEacs;
+    }
+
     private Map<String, String> buildOriginationMap(Origination origination) {
         Map<String, String> eventMap = new HashMap<>();
         for (Object obj : origination.getCorpnameOrFamnameOrName()) {
@@ -583,6 +603,28 @@ public class Ead3SolrDocBuilder {
             }
         }
         return eventMap;
+    }
+
+    private Map<String, Object> fillEacPartsInMap(SolrDocNode cRoot, List<Part> parts) {
+        Map<String, Object> eacMap = new HashMap<>();
+
+        eacMap.put(SolrFields.ID, UUID.randomUUID().toString());
+        eacMap.put(SolrFields.COUNTRY, cRoot.getDataElement(Ead3SolrFields.COUNTRY));
+        eacMap.put(SolrFields.AI, cRoot.getDataElement(Ead3SolrFields.AI));
+        eacMap.put(SolrFields.REPOSITORY_CODE, cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
+        eacMap.put(Ead3SolrFields.RECORD_ID, cRoot.getDataElement(Ead3SolrFields.RECORD_ID));
+
+        for (Part part : parts) {
+            if (part.getLocaltype().equals("firstname") || part.getLocaltype().equals("lastname")) {
+                eacMap.put("names", getContent(part));
+            } else if (part.getLocaltype().equals("residence")) {
+                eacMap.put("places", getContent(part));
+            } else if (part.getLocaltype().equals("role")) {
+                eacMap.put("occupations", getContent(part));
+            }
+        }
+
+        return eacMap;
     }
 
     private void buildPersnameOrFamOrCorpMap(List<Part> parts, String type, Map<String, String> map) {
