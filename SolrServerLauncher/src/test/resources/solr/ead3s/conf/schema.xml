@@ -115,8 +115,10 @@
         <field name="unitId" type="unitidType" indexed="true" stored="true" required="false"/>
         <field name="otherUnitId" type="unitidType" indexed="true" stored="true" required="false" multiValued="true"/>
         <field name="titleProper" type="string" indexed="true" stored="true" required="false"/>
+        <field name="country" type="string" indexed="true" stored="true" required="false"/>
         <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
         <field name="countryName" type="string" indexed="true" stored="true" required="false"/>
+        <field name="ai" type="string" indexed="true" stored="true" required="false"/>
         <field name="aiId" type="int" indexed="true" stored="false" required="false"/>
         <field name="aiName" type="string" indexed="true" stored="true" required="false"/>
         <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/>
