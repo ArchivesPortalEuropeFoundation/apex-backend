@@ -7,11 +7,13 @@ package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
+import eu.archivesportaleurope.apeapi.response.common.SortFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -25,15 +27,21 @@ import org.apache.solr.common.SolrDocumentList;
 @XmlRootElement
 @ApiModel
 public class InstituteEadResponseSet extends ResponseSet {
-    @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
+
+    @ApiModelProperty(required = true, value = "Array of search result, total number of elements can be less than query limit.")
     private List<InstituteEadResponse> eadResults;
+
+    @ApiModelProperty(value = "Available fields for sort option")
+    private Set<String> sortFields;
 
     public InstituteEadResponseSet() {
         eadResults = new ArrayList<>();
+        this.sortFields = new SortFields().getRepresentationFieldName();
     }
 
     public InstituteEadResponseSet(QueryResponse response) throws SolrServerException {
         eadResults = new ArrayList<>();
+        this.sortFields = new SortFields().getRepresentationFieldName();
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
         SolrDocumentList documentList = response.getResults();
@@ -41,16 +49,15 @@ public class InstituteEadResponseSet extends ResponseSet {
         super.setStartIndex(documentList.getStart());
 
         for (SolrDocument document : documentList) {
-            
+
             this.addEadSearchResult(new InstituteEadResponse(document, response));
         }
-        this.setTotalPages((int)(super.totalResults / responseHeader.getRows()));
+        this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
         if (super.totalResults % responseHeader.getRows() > 0) {
             super.totalPages++;
         }
     }
 
-    
     public List<InstituteEadResponse> getEadResults() {
         return Collections.unmodifiableList(eadResults);
     }
@@ -67,5 +74,12 @@ public class InstituteEadResponseSet extends ResponseSet {
         }
     }
 
-    
+    public Set<String> getSortFields() {
+        return sortFields;
+    }
+
+    public void setSortFields(Set<String> sortFields) {
+        this.sortFields = sortFields;
+    }
+
 }

@@ -7,7 +7,6 @@ package eu.archivesportaleurope.apeapi.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,14 +18,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @ApiModel
 public class InstituteDocRequest extends PageRequest {
 
-    @ApiModelProperty(value="Institute's ID")
-    @NotNull(message="Institute's ID can not be null")
+    @ApiModelProperty(value = "Institute's ID")
+    @NotNull(message = "Institute's ID can not be null")
     String instituteId;
-    
-    @ApiModelProperty(value="Document type")
-    @NotNull(message="Document type can not be null")
+
+    @ApiModelProperty(value = "Document type")
+    @NotNull(message = "Document type can not be null")
     String docType;
-    
+
+    @ApiModelProperty(value = "Sorting result with fields and sorting type")
+    SortRequest sortRequest;
+
     public String getInstituteId() {
         return instituteId;
     }
@@ -42,4 +44,13 @@ public class InstituteDocRequest extends PageRequest {
     public void setDocType(String docType) {
         this.docType = docType;
     }
+
+    public SortRequest getSortRequest() {
+        return sortRequest;
+    }
+
+    public void setSortRequest(SortRequest sortRequest) {
+        this.sortRequest = sortRequest;
+    }
+
 }
