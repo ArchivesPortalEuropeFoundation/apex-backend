@@ -8,9 +8,14 @@
     <name>Backend Project</name>
     <description>Maven Project for building the Dashboard/OAI-PMH server and common libraries</description>
     <scm>
+        <connection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-backend.git</connection>
+        <developerConnection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-backend.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <!--<scm>
         <connection>scm:svn:https://build.archivesportaleurope.net/svn/apex/branches/backend-project-2.5</connection>
         <developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/branches/backend-project-2.5</developerConnection>
-    </scm>
+    </scm>-->
     <properties>
         <additionalparam>-Xdoclint:none</additionalparam>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +30,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.0-beta-8</version>
+                <version>2.5.3</version>
                 <configuration>
                     <remoteTagging>true</remoteTagging>
                     <!-- See http://jira.codehaus.org/browse/SCM-406 -->
