@@ -23,9 +23,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.logging.Level;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -113,13 +111,10 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
         };
 
         EadFactedResponseSet factedResponseSet = gson.fromJson(jsonResponse, token.getType());
-        Assert.assertEquals(2, factedResponseSet.getTotalResults());
+        Assert.assertEquals(1, factedResponseSet.getTotalResults());
         Assert.assertEquals("C13716", factedResponseSet.getEadSearchResults().get(0).getId());
         Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFondsUnitId());
         Assert.assertEquals("1.01.01.10 - 1", factedResponseSet.getEadSearchResults().get(0).getUnitId());
-        Assert.assertEquals("C13717", factedResponseSet.getEadSearchResults().get(1).getId());
-        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(1).getFondsUnitId());
-        Assert.assertEquals("1.01.01.10 - 11", factedResponseSet.getEadSearchResults().get(1).getUnitId());
     }
 
     @Test

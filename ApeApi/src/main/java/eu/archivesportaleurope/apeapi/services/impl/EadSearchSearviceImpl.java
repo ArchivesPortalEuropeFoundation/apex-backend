@@ -1,6 +1,5 @@
 package eu.archivesportaleurope.apeapi.services.impl;
 
-import com.google.common.collect.ImmutableSet;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.facet.FacetType;
@@ -42,22 +41,23 @@ import org.slf4j.LoggerFactory;
  * @author Mahbub
  */
 public class EadSearchSearviceImpl extends EadSearchService {
-    
+
     private String solrUrl;
     private final String solrCore;
     private final String onlyOpenData = "openData:true";
     private final String solrAND = " AND ";
+    private final String solrOR = " OR ";
     private final SolrSearchUtil searchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Map<String, String> extraParam;
-    
+
     private class TypedList {
-        
+
         String type;
         Map<String, Integer> keyLevel = new HashMap<>();
     }
-    
+
     public EadSearchSearviceImpl(String solrUrl, String solrCore, String propFileName) {
         this.extraParam = new HashMap<>();
         this.solrUrl = solrUrl;
@@ -66,7 +66,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         this.searchUtil = new SolrSearchUtil(solrUrl, solrCore);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
-    
+
     public EadSearchSearviceImpl(SolrServer solrServer, String propFileName) {
         this.extraParam = new HashMap<>();
         this.solrUrl = this.solrCore = "";
@@ -74,15 +74,15 @@ public class EadSearchSearviceImpl extends EadSearchService {
         this.searchUtil = new SolrSearchUtil(solrServer);
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
-    
+
     public String getSolrUrl() {
         return solrUrl;
     }
-    
+
     public void setSolrUrl(String solrUrl) {
         this.solrUrl = solrUrl;
     }
-    
+
     @Override
     public QueryResponse search(SearchRequest searchRequest, Map<String, String> extraSearchParam, boolean includeFacet) {
         List<ListFacetSettings> facetSettingsList = null;
@@ -91,14 +91,14 @@ public class EadSearchSearviceImpl extends EadSearchService {
         }
         return this.search(searchRequest, extraSearchParam, facetSettingsList, propertiesUtil, searchUtil, new EadResponseDictionary());
     }
-    
+
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
         return this.search(request, extraParam, true);
     }
-    
+
     @Override
     public QueryResponse searchDocPerInstitute(InstituteDocRequest request) {
         SearchRequest searchRequest = new SearchRequest();
@@ -107,56 +107,56 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setSortRequest(request.getSortRequest());
         searchRequest.setQuery("ai:*" + request.getInstituteId() + this.solrAND
                 + "id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
-        
+
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
         return this.search(searchRequest, this.extraParam, false);
     }
-    
+
     @Override
     public QueryResponse searchInstituteInGroup(int startIndex, int count) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setCount(count);
         searchRequest.setStartIndex(startIndex);
         searchRequest.setQuery("(id:" + SolrValues.FA_PREFIX + "* OR id:" + SolrValues.HG_PREFIX + "* OR id:" + SolrValues.SG_PREFIX + "*)");
-        
+
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
-        
+
         extraParam.put("group", "true");
         extraParam.put("group.field", SolrFields.AI);
         extraParam.put("group.ngroups", "true");
-        
+
         return this.search(searchRequest, extraParam, false);
     }
-    
+
     private QueryResponse searchDocListByInstitute(SearchDocRequest searchRequest, String groupByFieldName, boolean includeFacet, boolean resultNeeded) {
         SearchRequest request = new SearchRequest();
         request.setFilters(searchRequest.getFilters());
         request.setDateFilters(searchRequest.getDateFilters());
         request.setQuery(searchRequest.getQuery() + this.solrAND + "type:" + searchRequest.getDocType());
-        
+
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
-        
+
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
-        
+
         extraParam.put("qf", "fond^100 title scopecontent^0.5 alterdate^0.5 other^0.1");
         extraParam.put("bq", "id:(F*)^100");
         extraParam.put("group.sort", "id " + SolrQuery.ORDER.desc);
-        
+
         extraParam.put("group", "true");
         extraParam.put("group.field", groupByFieldName);
         extraParam.put("group.ngroups", "true");
         if (!resultNeeded) {
             extraParam.put("group.limit", "0");
         }
-        
+
         return this.search(request, extraParam, includeFacet);
     }
-    
+
     private String typeToFieldDynamicIdTranslator(String type) {
         switch (type) {
             case "fa":
@@ -169,7 +169,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
                 throw new InternalErrorException("No such type available");
         }
     }
-    
+
     @Override
     public QueryResponse getEadList(SearchDocRequest searchRequest) throws InternalErrorException {
         if (null != searchRequest.getDocType()) {
@@ -178,7 +178,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             throw new InternalErrorException("Invalid Search request");
         }
     }
-    
+
     @Override
     public QueryResponse getDescendants(String id, QueryPageRequest searchRequest) {
         try {
@@ -187,16 +187,16 @@ public class EadSearchSearviceImpl extends EadSearchService {
             request.setQuery(searchRequest.getQuery());
             request.setCount(searchRequest.getCount());
             request.setStartIndex(searchRequest.getStartIndex());
-            
+
             extraParam.clear();
             extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
-            
-            return this.search(request, extraParam, false);
+
+            return this.search(request, extraParam, true);
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-    
+
     @Override
     public EadHierarchyResponseSet getDescendantsWithAncestors(String id, QueryPageRequest searchRequest) {
         try {
@@ -205,13 +205,13 @@ public class EadSearchSearviceImpl extends EadSearchService {
             request.setQuery(searchRequest.getQuery());
             request.setCount(searchRequest.getCount());
             request.setStartIndex(searchRequest.getStartIndex());
-            
+
             extraParam.clear();
             extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
             extraParam.put("fl", "*");
-            
+
             QueryResponse decendentResponse = this.search(request, extraParam, false);
-            
+
             SolrDocumentList decendentDocumentList = decendentResponse.getResults();
             if (decendentDocumentList.isEmpty()) {
                 //No decendents!
@@ -222,7 +222,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             Set<String> allAncestors = new HashSet<>();
             //for every decendent get their ancestors
             for (SolrDocument descenDocument : decendentDocumentList) {
-                
+
                 if (null != descenDocument && null != descenDocument.getFieldValue(SolrFields.ID)) {
                     String foundId = descenDocument.getFieldValue(SolrFields.ID).toString();
                     TypedList ancList = this.extractParentList(descenDocument, foundId);
@@ -232,7 +232,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
                     });
                 }
             }
-            
+
             StringBuilder requestStrBuffer = new StringBuilder("(");
             boolean orIt = false;
             for (String ancId : allAncestors) {
@@ -242,13 +242,13 @@ public class EadSearchSearviceImpl extends EadSearchService {
                 requestStrBuffer.append("id:").append(ancId);
                 orIt = true;
             }
-            
+
             requestStrBuffer.append(")");
-            
+
             SearchRequest ancRequest = new SearchRequest();
             ancRequest.setCount(allAncestors.size());
             ancRequest.setQuery(requestStrBuffer.toString());
-            
+
             QueryResponse allAncestorData = this.searchOpenData(ancRequest);
             SolrDocumentList ancDocs = allAncestorData.getResults();
             Map<String, SolrDocument> ancIdDocMap = new HashMap<>();
@@ -262,7 +262,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-    
+
     @Override
     public QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest) {
         StringBuilder query = new StringBuilder();
@@ -273,8 +273,17 @@ public class EadSearchSearviceImpl extends EadSearchService {
             String queryToFindOnlyTopLevelItem = "(id:F* OR id:H* OR id:S*)";
             query.append(queryToFindOnlyTopLevelItem);
         } else {
-            query.append(SolrFields.UNITID).append(":").append("*")
-                    .append(filteredSortedPageRequest.getUnitId().trim());
+            query.append("(")
+                    .append(SolrFields.UNITID).append(":")
+                    .append(filteredSortedPageRequest.getFondsUnitId())
+                    .append("\\ -\\ ")
+                    .append(filteredSortedPageRequest.getUnitId())
+                    .append(this.solrOR)
+                    .append(SolrFields.UNITID).append(":")
+                    .append(filteredSortedPageRequest.getFondsUnitId())
+                    .append("-")
+                    .append(filteredSortedPageRequest.getUnitId())
+                    .append(")");
         }
         SearchRequest request = new SearchRequest();
         request.setCount(filteredSortedPageRequest.getCount());
@@ -289,19 +298,19 @@ public class EadSearchSearviceImpl extends EadSearchService {
         if (null != filteredSortedPageRequest.getSortRequest()) {
             request.setSortRequest(filteredSortedPageRequest.getSortRequest());
         }
-        
+
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
         return this.search(request, extraParam, true);
     }
-    
+
     private String getDocHighestLevelText(String id) throws SolrServerException {
         TypedList typedList = getParentList(id);
         int level = typedList.keyLevel.size();
-        
+
         return typedList.type + "ID" + level + "_s";
     }
-    
+
     @Override
     public QueryResponse getChildren(String id, QueryPageRequest searchRequest) {
         SearchRequest request = new SearchRequest();
@@ -310,7 +319,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         request.setQuery(searchRequest.getQuery() + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
         return this.searchOpenData(request);
     }
-    
+
     @Override
     public HierarchyResponseSet getChildren(String id, PageRequest pageRequest) {
         SearchRequest request = new SearchRequest();
@@ -320,7 +329,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         sortRequest.addField(SolrFields.ORDER_ID);
         request.setSortRequest(sortRequest);
         request.setQuery("*" + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
-        
+
         QueryResponse qr = this.searchOpenData(request);
         try {
             TypedList typedListParent = this.getParentList(id); //ToDo: change this, now we know numberOfAncestors
@@ -330,7 +339,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-    
+
     private TypedList getParentList(String id) throws SolrServerException {
         SolrQuery query = new SolrQuery();
         query.setQuery("id:" + id + this.solrAND + onlyOpenData);
@@ -339,29 +348,29 @@ public class EadSearchSearviceImpl extends EadSearchService {
         query.setParam("fl", "id, F*_s, type");
         logger.debug("real query is " + query.toString());
         this.searchUtil.setQuery(query);
-        
+
         QueryResponse itemResponse = this.searchUtil.getSearchResponse();
-        
+
         SolrDocumentList documentList = itemResponse.getResults();
         if (documentList.isEmpty()) {
             throw new ResourceNotFoundException("No such document exist with id: " + id, "");
         }
         SolrDocument document = documentList.get(0);
-        
+
         String foundId = "";
         if (null != document && null != document.getFieldValue(SolrFields.ID)) {
             foundId = document.getFieldValue(SolrFields.ID).toString();
         }
-        
+
         if (!foundId.equalsIgnoreCase(id)) {
             throw new ResourceNotFoundException("No such document exist with id: " + id, "");
         }
-        
+
         return this.extractParentList(document, id);
     }
-    
+
     private TypedList extractParentList(SolrDocument document, String selfId) {
-        
+
         String docType = document.getFieldValue(SolrFields.TYPE).toString();
         String[] typePrefix = {"", ""};
         if (docType.equals(SolrValues.FA_TYPE)) {
@@ -376,7 +385,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         }
         TypedList typedList = new TypedList();
         typedList.type = typePrefix[1];
-        
+
         int level = 0;
         while (null != document.getFieldValue(typePrefix[0] + level + "_s")) {
             typedList.keyLevel.put(document.getFieldValue(typePrefix[0] + level + "_s").toString(), level);
@@ -386,19 +395,19 @@ public class EadSearchSearviceImpl extends EadSearchService {
             typedList.keyLevel.remove(selfId);
             level--;
         }
-        
+
         return typedList;
     }
-    
+
     @Override
     public HierarchyResponseSet getAncestors(String id) {
         try {
             TypedList typedList = this.getParentList(id);
-            
+
             if (typedList.keyLevel.isEmpty()) {
                 return new HierarchyResponseSet();
             }
-            
+
             StringBuilder requestStrBuffer = new StringBuilder("(");
             boolean orIt = false;
             for (Map.Entry<String, Integer> aLevel : typedList.keyLevel.entrySet()) {
@@ -408,19 +417,19 @@ public class EadSearchSearviceImpl extends EadSearchService {
                 requestStrBuffer.append("id:").append(aLevel.getKey());
                 orIt = true;
             }
-            
+
             requestStrBuffer.append(")");
-            
+
             SearchRequest request = new SearchRequest();
 //            request.setCount(pageRequest.getCount());
             request.setCount(typedList.keyLevel.size());
 //            request.setStartIndex(pageRequest.getStartIndex());
             request.setQuery(requestStrBuffer.toString());
-            
+
             QueryResponse qr = this.searchOpenData(request);
             HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedList.keyLevel);
             return hrs;
-            
+
         } catch (SolrServerException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
