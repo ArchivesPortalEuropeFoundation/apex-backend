@@ -118,6 +118,31 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
     }
 
     @Test
+    public void testSearchWithFondsUnitIdAndUnitId2() {
+        logger.debug("Test 2 search with fonds unit id in combination with unit id ");
+        SearchPageRequestWithUnitId request = new SearchPageRequestWithUnitId();
+        request.setFondsUnitId("1.01.01.10");
+        request.setUnitId("11");
+        request.setCount(2);
+        request.setStartIndex(0);
+        Response response = super.target("search").path("searchEadFondsUnitId")
+                .request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        String jsonResponse = response.readEntity(String.class);
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadFactedResponseSet> token = new TypeToken<EadFactedResponseSet>() {
+        };
+
+        EadFactedResponseSet factedResponseSet = gson.fromJson(jsonResponse, token.getType());
+        Assert.assertEquals(1, factedResponseSet.getTotalResults());
+        Assert.assertEquals("C13717", factedResponseSet.getEadSearchResults().get(0).getId());
+        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFondsUnitId());
+        Assert.assertEquals("1.01.01.10 - 11", factedResponseSet.getEadSearchResults().get(0).getUnitId());
+    }
+
+    @Test
     public void testSearch_ead_TotalResultCount() throws FileNotFoundException, SolrServerException, URISyntaxException {
         logger.debug("Test Search TotalResultCount");
         SearchRequest request = new SearchRequest();
