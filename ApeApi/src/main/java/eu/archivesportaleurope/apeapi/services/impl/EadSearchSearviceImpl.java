@@ -275,14 +275,18 @@ public class EadSearchSearviceImpl extends EadSearchService {
         } else {
             query.append("(")
                     .append(SolrFields.UNITID).append(":")
+                    .append("\"")
                     .append(filteredSortedPageRequest.getFondsUnitId())
-                    .append("\\ -\\ ")
+                    .append(" - ")
                     .append(filteredSortedPageRequest.getUnitId())
+                    .append("\"")
                     .append(this.solrOR)
                     .append(SolrFields.UNITID).append(":")
+                    .append("\"")
                     .append(filteredSortedPageRequest.getFondsUnitId())
                     .append("-")
                     .append(filteredSortedPageRequest.getUnitId())
+                    .append("\"")
                     .append(")");
         }
         SearchRequest request = new SearchRequest();
