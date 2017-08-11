@@ -72,10 +72,10 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
     public void testSearchWithFondsUnitId() {
         logger.debug("Test search with fonds unit id");
         SearchPageRequestWithUnitId request = new SearchPageRequestWithUnitId();
-        request.setFondsUnitId("1.01.01.10");
+        request.setFindingAidNo("1.01.01.10");
         request.setCount(50);
         request.setStartIndex(0);
-        Response response = super.target("search").path("searchEadFondsUnitId")
+        Response response = super.target("search").path("searchEadFindingAidNo")
                 .request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -88,7 +88,7 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
         EadFactedResponseSet factedResponseSet = gson.fromJson(jsonResponse, token.getType());
         Assert.assertEquals(1, factedResponseSet.getTotalResults());
         Assert.assertEquals("F13716", factedResponseSet.getEadSearchResults().get(0).getId());
-        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFondsUnitId());
+        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFindingAidNo());
         Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getUnitId());
     }
 
@@ -96,11 +96,11 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
     public void testSearchWithFondsUnitIdAndUnitId() {
         logger.debug("Test search with fonds unit id in combination with unit id");
         SearchPageRequestWithUnitId request = new SearchPageRequestWithUnitId();
-        request.setFondsUnitId("1.01.01.10");
+        request.setFindingAidNo("1.01.01.10");
         request.setUnitId("1");
         request.setCount(2);
         request.setStartIndex(0);
-        Response response = super.target("search").path("searchEadFondsUnitId")
+        Response response = super.target("search").path("searchEadFindingAidNo")
                 .request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -113,7 +113,7 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
         EadFactedResponseSet factedResponseSet = gson.fromJson(jsonResponse, token.getType());
         Assert.assertEquals(1, factedResponseSet.getTotalResults());
         Assert.assertEquals("C13716", factedResponseSet.getEadSearchResults().get(0).getId());
-        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFondsUnitId());
+        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFindingAidNo());
         Assert.assertEquals("1.01.01.10 - 1", factedResponseSet.getEadSearchResults().get(0).getUnitId());
     }
 
@@ -121,11 +121,11 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
     public void testSearchWithFondsUnitIdAndUnitId2() {
         logger.debug("Test 2 search with fonds unit id in combination with unit id ");
         SearchPageRequestWithUnitId request = new SearchPageRequestWithUnitId();
-        request.setFondsUnitId("1.01.01.10");
+        request.setFindingAidNo("1.01.01.10");
         request.setUnitId("11");
         request.setCount(2);
         request.setStartIndex(0);
-        Response response = super.target("search").path("searchEadFondsUnitId")
+        Response response = super.target("search").path("searchEadFindingAidNo")
                 .request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
         response.bufferEntity();
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -138,7 +138,7 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
         EadFactedResponseSet factedResponseSet = gson.fromJson(jsonResponse, token.getType());
         Assert.assertEquals(1, factedResponseSet.getTotalResults());
         Assert.assertEquals("C13717", factedResponseSet.getEadSearchResults().get(0).getId());
-        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFondsUnitId());
+        Assert.assertEquals("1.01.01.10", factedResponseSet.getEadSearchResults().get(0).getFindingAidNo());
         Assert.assertEquals("1.01.01.10 - 11", factedResponseSet.getEadSearchResults().get(0).getUnitId());
     }
 

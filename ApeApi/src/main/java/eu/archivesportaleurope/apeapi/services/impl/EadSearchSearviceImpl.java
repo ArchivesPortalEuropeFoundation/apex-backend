@@ -267,7 +267,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     public QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest) {
         StringBuilder query = new StringBuilder();
         query.append(SolrFields.UNITID_OF_FOND).append(":")
-                .append(filteredSortedPageRequest.getFondsUnitId())
+                .append(filteredSortedPageRequest.getFindingAidNo())
                 .append(this.solrAND);
         if (StringUtils.isBlank(filteredSortedPageRequest.getUnitId())) {
             String queryToFindOnlyTopLevelItem = "(id:F* OR id:H* OR id:S*)";
@@ -276,14 +276,14 @@ public class EadSearchSearviceImpl extends EadSearchService {
             query.append("(")
                     .append(SolrFields.UNITID).append(":")
                     .append("\"")
-                    .append(filteredSortedPageRequest.getFondsUnitId())
+                    .append(filteredSortedPageRequest.getFindingAidNo())
                     .append(" - ")
                     .append(filteredSortedPageRequest.getUnitId())
                     .append("\"")
                     .append(this.solrOR)
                     .append(SolrFields.UNITID).append(":")
                     .append("\"")
-                    .append(filteredSortedPageRequest.getFondsUnitId())
+                    .append(filteredSortedPageRequest.getFindingAidNo())
                     .append("-")
                     .append(filteredSortedPageRequest.getUnitId())
                     .append("\"")

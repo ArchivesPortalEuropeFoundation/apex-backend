@@ -64,7 +64,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.ALTERDATE, ead.getUnitDate());
             solrDoc.addField(SolrFields.COUNTRY, ead.getCountry());
             solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFondsUnitTitle());
-            solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFondsUnitId());
+            solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFindingAidNo());
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
             solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
@@ -87,7 +87,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.ALTERDATE, ead.getUnitDate());
             solrDoc.addField(SolrFields.COUNTRY, ead.getCountry());
             solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFondsUnitTitle());
-            solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFondsUnitId());
+            solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFindingAidNo());
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
             if ("du".equals(ead.getDocTypeId()) || "fa".equals(ead.getDocTypeId())) {

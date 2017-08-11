@@ -28,7 +28,7 @@ public class InstituteEadResponse {
     private String fondsUnitTitle;
 
     @ApiModelProperty(value = "Identifier of the fonds provided by the repository.")
-    private String fondsUnitId;
+    private String findingAidNo;
 
     @ApiModelProperty(value = "Name of the repository holding the fonds")
     private String repository;
@@ -103,7 +103,7 @@ public class InstituteEadResponse {
         }
         this.fondsUnitTitle = this.fondsUnitTitle.substring(0, lastIndexOfColon);
         
-        this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
+        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
 
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
@@ -206,12 +206,12 @@ public class InstituteEadResponse {
         this.fondsUnitTitle = fondsUnitTitle;
     }
 
-    public String getFondsUnitId() {
-        return fondsUnitId;
+    public String getFindingAidNo() {
+        return findingAidNo;
     }
 
-    public void setFondsUnitId(String fondsUnitId) {
-        this.fondsUnitId = fondsUnitId;
+    public void setFindingAidNo(String findingAidNo) {
+        this.findingAidNo = findingAidNo;
     }
 
     public String getRepository() {

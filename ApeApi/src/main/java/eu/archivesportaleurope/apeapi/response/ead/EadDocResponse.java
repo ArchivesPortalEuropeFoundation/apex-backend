@@ -42,7 +42,7 @@ public class EadDocResponse {
     private String repositoryCode;
 
     @ApiModelProperty(value = "Fonds unit ID")
-    private String fondsUnitId;
+    private String findingAidNo;
 
     @ApiModelProperty(value = "Unit date")
     private String unitDate;
@@ -76,7 +76,7 @@ public class EadDocResponse {
         this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
-        this.fondsUnitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
+        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
         this.unitDate = this.objectToString(solrDocument.getFieldValue(SolrFields.ALTERDATE));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
 
@@ -148,12 +148,12 @@ public class EadDocResponse {
         this.repositoryCode = repositoryCode;
     }
 
-    public String getFondsUnitId() {
-        return fondsUnitId;
+    public String getFindingAidNo() {
+        return findingAidNo;
     }
 
-    public void setFondsUnitId(String fondsUnitId) {
-        this.fondsUnitId = fondsUnitId;
+    public void setFindingAidNo(String findingAidNo) {
+        this.findingAidNo = findingAidNo;
     }
 
     public String getUnitDate() {

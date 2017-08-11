@@ -19,9 +19,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @ApiModel
 public class SearchPageRequestWithUnitId extends PageRequest {
 
-    @ApiModelProperty(value = "Fonds Unit Id")
-    @NotNull(message = "Fonds Unit Id can not be null")
-    String fondsUnitId;
+    @ApiModelProperty(value = "Finding Aid No")
+    @NotNull(message = "Finding Aid No can not be null")
+    String findingAidNo;
 
     @ApiModelProperty(value = "Unit Id of the level")
     String unitId;
@@ -35,12 +35,12 @@ public class SearchPageRequestWithUnitId extends PageRequest {
     @ApiModelProperty(value = "Sorting result with fields and sorting type")
     SortRequest sortRequest;
 
-    public String getFondsUnitId() {
-        return fondsUnitId;
+    public String getFindingAidNo() {
+        return findingAidNo;
     }
 
-    public void setFondsUnitId(String fondsUnitId) {
-        this.fondsUnitId = fondsUnitId;
+    public void setFindingAidNo(String findingAidNo) {
+        this.findingAidNo = findingAidNo;
     }
 
     public String getUnitId() {

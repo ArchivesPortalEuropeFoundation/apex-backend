@@ -93,14 +93,14 @@ public class SearchResource {
     @Path("/ead3")
     @PreAuthorize("hasRole('ROLE_USER')")
 //    Hide Ead3
-//    @ApiOperation(value = "Search for EAD3",
-//            response = Ead3ResponseSet.class
-//    )
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 500, message = "Internal server error"),
-//        @ApiResponse(code = 400, message = "Bad request"),
-//        @ApiResponse(code = 401, message = "Unauthorized")
-//    })
+    @ApiOperation(value = "Search for EAD3",
+            response = Ead3ResponseSet.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
     @Consumes({ServerConstants.APE_API_V1})
     public Response searchEad3(
             @ApiParam(value = "Search EAD3 units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
@@ -192,7 +192,7 @@ public class SearchResource {
     ) {
         try {
             QueryResponse response = eadSearch.getDescendants(id, searchRequest);
-            return Response.ok().entity(new EadResponseSet(response)).build();
+            return Response.ok().entity(new EadFactedResponseSet(response)).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();
@@ -202,7 +202,7 @@ public class SearchResource {
             return errMsg.getResponse();
         }
     }
-    
+
     @POST
     @Path("/ead/{id}/descendantWithAncestors")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -262,10 +262,10 @@ public class SearchResource {
     }
 
     @POST
-    @Path("/searchEadFondsUnitId")
+    @Path("/searchEadFindingAidNo")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Search Eads with FondsUnitId",
-            response = EadResponseSet.class
+    @ApiOperation(value = "Search Eads with FindingAidNo/FondsUnitId",
+            response = EadFactedResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
