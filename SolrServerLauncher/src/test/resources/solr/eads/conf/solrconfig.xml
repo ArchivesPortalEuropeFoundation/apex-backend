@@ -134,7 +134,7 @@
 				title^2.5 unitidfond^1.5 scopecontent^1.3 other^0.5 alterdate^0.4
 			</str>
 			<str name="fl">
-				id,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
+				id,parentId,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
 			</str>
 			<str name="q.alt">*:*</str>
 			<str name="hl.fl">title scopecontent other alterdate</str>
