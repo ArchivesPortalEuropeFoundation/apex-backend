@@ -23,6 +23,9 @@ public class EadResponse extends InstituteEadResponse {
     @ApiModelProperty(value = "Identifier of the result provided by the repository")
     private String unitId;
 
+    @ApiModelProperty(value = "Parent Internal APE identifier of the result")
+    private String parentId;
+
     @ApiModelProperty(value = "Description of the result")
     private String unitTitle;
 
@@ -46,6 +49,7 @@ public class EadResponse extends InstituteEadResponse {
         }
 
         this.unitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID));
+        this.parentId = this.objectToString(solrDocument.getFieldValue(SolrFields.PARENT_ID));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
         if (response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT) != null) {
             this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT).get(0));
@@ -117,6 +121,14 @@ public class EadResponse extends InstituteEadResponse {
 
     public void setNumberOfAncestors(int numberOfAncestors) {
         this.numberOfAncestors = numberOfAncestors;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
 }

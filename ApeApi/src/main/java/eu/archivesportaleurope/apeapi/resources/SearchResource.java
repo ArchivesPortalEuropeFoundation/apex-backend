@@ -93,14 +93,14 @@ public class SearchResource {
     @Path("/ead3")
     @PreAuthorize("hasRole('ROLE_USER')")
 //    Hide Ead3
-    @ApiOperation(value = "Search for EAD3",
-            response = Ead3ResponseSet.class
-    )
-    @ApiResponses(value = {
-        @ApiResponse(code = 500, message = "Internal server error"),
-        @ApiResponse(code = 400, message = "Bad request"),
-        @ApiResponse(code = 401, message = "Unauthorized")
-    })
+//    @ApiOperation(value = "Search for EAD3",
+//            response = Ead3ResponseSet.class
+//    )
+//    @ApiResponses(value = {
+//        @ApiResponse(code = 500, message = "Internal server error"),
+//        @ApiResponse(code = 400, message = "Bad request"),
+//        @ApiResponse(code = 401, message = "Unauthorized")
+//    })
     @Consumes({ServerConstants.APE_API_V1})
     public Response searchEad3(
             @ApiParam(value = "Search EAD3 units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
@@ -178,7 +178,7 @@ public class SearchResource {
     @Path("/ead/{id}/descendants")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Search the term in all descendants of a given id",
-            response = EadResponseSet.class
+            response = EadFactedResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
@@ -188,7 +188,7 @@ public class SearchResource {
     @Consumes({ServerConstants.APE_API_V1})
     public Response getDescendants(
             @PathParam("id") String id,
-            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
         try {
             QueryResponse response = eadSearch.getDescendants(id, searchRequest);
@@ -207,7 +207,7 @@ public class SearchResource {
     @Path("/ead/{id}/descendantWithAncestors")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Search all descendants (with the ancestors list) of a given ead id",
-            response = EadResponseSet.class
+            response = EadHierarchyResponseSet.class
     )
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
