@@ -26,7 +26,7 @@ public class ContentResponse {
     private String unitTitle;
 
     @ApiModelProperty(value = "Title of the finding aid. ")
-    private String fondsUnitTitle;
+    private String findingAidTitle;
 
     @ApiModelProperty(required = true, value = "Internal APE identifier of the repository.")
     private int repositoryId;
@@ -43,13 +43,13 @@ public class ContentResponse {
         this.setRepository(detailContent.getAiRepoName());
         this.setUnitId(detailContent.getUnitId());
         this.setUnitTitle(detailContent.getUnitTitle());
-        this.setFondsUnitTitle(detailContent.getFondsUnitTitle());
+        this.setFindingAidTitle(detailContent.getFindingAidTitle());
     }
 
     public String getId() {
         return id;
     }
-    
+
     public final void setId(String id) {
         this.id = id;
     }
@@ -70,12 +70,12 @@ public class ContentResponse {
         this.unitTitle = unitTitle;
     }
 
-    public String getFondsUnitTitle() {
-        return fondsUnitTitle;
+    public String getFindingAidTitle() {
+        return findingAidTitle;
     }
 
-    public final void setFondsUnitTitle(String fondsUnitTitle) {
-        this.fondsUnitTitle = fondsUnitTitle;
+    public final void setFindingAidTitle(String findingAidTitle) {
+        this.findingAidTitle = findingAidTitle;
     }
 
     public int getRepositoryId() {

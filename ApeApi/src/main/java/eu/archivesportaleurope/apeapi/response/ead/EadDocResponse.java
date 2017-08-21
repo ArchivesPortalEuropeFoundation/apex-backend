@@ -25,7 +25,7 @@ public class EadDocResponse {
     @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
     private final String id;
     @ApiModelProperty(value = "Title of the finding aid. ")
-    private final String fondsUnitTitle;
+    private final String findingAidTitle;
     @ApiModelProperty(value = "Number of search hits on the current document.")
     private final long numberOfResults;
 
@@ -67,7 +67,7 @@ public class EadDocResponse {
         this.id = temp.substring(lastColonIndex + 1);
         temp = temp.substring(0, lastColonIndex);
         lastColonIndex = temp.lastIndexOf(":");
-        this.fondsUnitTitle = temp.substring(0, lastColonIndex);
+        this.findingAidTitle = temp.substring(0, lastColonIndex);
         this.numberOfResults = group.getResult().getNumFound();
         //get the default document
         SolrDocument solrDocument = group.getResult().get(0);
@@ -100,8 +100,8 @@ public class EadDocResponse {
         return id;
     }
 
-    public String getFondsUnitTitle() {
-        return fondsUnitTitle;
+    public String getFindingAidTitle() {
+        return findingAidTitle;
     }
 
     public long getNumberOfResults() {

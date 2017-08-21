@@ -25,7 +25,7 @@ public class InstituteEadResponse {
     protected String id;
 
     @ApiModelProperty(value = "Title of the finding aid. ")
-    private String fondsUnitTitle;
+    private String findingAidTitle;
 
     @ApiModelProperty(value = "Identifier of the fonds provided by the repository.")
     private String findingAidNo;
@@ -95,13 +95,13 @@ public class InstituteEadResponse {
 
         this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
 
-        this.fondsUnitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE_OF_FOND));
-        int lastIndexOfColon = this.fondsUnitTitle.lastIndexOf(":");
+        this.findingAidTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE_OF_FOND));
+        int lastIndexOfColon = this.findingAidTitle.lastIndexOf(":");
         
         if (lastIndexOfColon<0) {
-            throw new InternalErrorException("Illformated fondsUnitTitle", "fond don't have fonds id seperated by colon");
+            throw new InternalErrorException("Illformated findingAidTitle", "fond don't have fonds id seperated by colon");
         }
-        this.fondsUnitTitle = this.fondsUnitTitle.substring(0, lastIndexOfColon);
+        this.findingAidTitle = this.findingAidTitle.substring(0, lastIndexOfColon);
         
         this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
 
@@ -198,12 +198,12 @@ public class InstituteEadResponse {
         this.langMaterial = langMaterial;
     }
 
-    public String getFondsUnitTitle() {
-        return fondsUnitTitle;
+    public String getFindingAidTitle() {
+        return findingAidTitle;
     }
 
-    public void setFondsUnitTitle(String fondsUnitTitle) {
-        this.fondsUnitTitle = fondsUnitTitle;
+    public void setFindingAidTitle(String findingAidTitle) {
+        this.findingAidTitle = findingAidTitle;
     }
 
     public String getFindingAidNo() {

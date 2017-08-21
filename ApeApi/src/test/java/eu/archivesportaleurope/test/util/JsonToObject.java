@@ -63,7 +63,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.LANGMATERIAL, ead.getLangMaterial());
             solrDoc.addField(SolrFields.ALTERDATE, ead.getUnitDate());
             solrDoc.addField(SolrFields.COUNTRY, ead.getCountry());
-            solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFondsUnitTitle());
+            solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFindingAidTitle());
             solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFindingAidNo());
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
@@ -86,7 +86,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.LANGMATERIAL, ead.getLangMaterial());
             solrDoc.addField(SolrFields.ALTERDATE, ead.getUnitDate());
             solrDoc.addField(SolrFields.COUNTRY, ead.getCountry());
-            solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFondsUnitTitle());
+            solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFindingAidTitle());
             solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFindingAidNo());
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
