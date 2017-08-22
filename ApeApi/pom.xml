@@ -708,7 +708,7 @@
                             <basePath>/services</basePath>
                             <info>
                                 <title>Archives Portal Europe</title>
-                                <version>4.0.0</version>
+                                <version>5.0.0</version>
                                 <description>This is a list of usable API services available from Archives Portal Europe. Here you can test these services, but to do so you need API key.
                                     Please register at &lt;a href="https://www.archivesportaleurope.net/get-api-key"&gt;APE server&lt;/a&gt; to get your API key.
                                 </description>
