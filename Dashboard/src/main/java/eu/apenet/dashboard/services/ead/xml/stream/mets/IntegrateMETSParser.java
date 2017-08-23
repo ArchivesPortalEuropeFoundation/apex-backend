@@ -142,19 +142,19 @@ public class IntegrateMETSParser extends AbstractParser {
                 
                 if ("EDU-USE".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/InC-EDU/1.0/";
-                    description = "Free access – no re-use";
+                    description = "In Copyright - Educational Use Permitted";
                 } else if ("EU-ORPHAN".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/InC-OW-EU/1.0/";
-                    description = "Paid access – no re-use";
+                    description = "In Copyright - EU Orphan Work";
                 } else if ("NC-NON-COMMERCIAL".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/NoC-NC/1.0/";
-                    description = "Paid access – no re-use";
+                    description = "No Copyright - Non-Commercial Use Only ";
                 } else if ("NC-OTHER-LEGAL-RESTR".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/NoC-OKLR/1.0/";
-                    description = "Orphan work";
+                    description = "No Copyright - Other Known Legal Restrictions";
                 } else if ("NOT-EVALUATED".equals(metsInfo.getRightsOtherCategory())) {
-                    href = "http://rightsstatements.org/vocab/CNE/1.0/​";
-                    description = "Copyright has not been evaluated";
+                    href = "http://rightsstatements.org/vocab/CNE/1.0/";
+                    description = "Copyright Not Evaluated";
                 }
             }
 
