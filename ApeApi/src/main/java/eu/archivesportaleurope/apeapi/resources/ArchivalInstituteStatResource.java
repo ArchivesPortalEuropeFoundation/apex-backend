@@ -54,7 +54,7 @@ public class ArchivalInstituteStatResource {
     @POST
     @Path("/getInstitutes")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "List of Archival institute", response = ArchivalInstitutesResponse.class)
+    @ApiOperation(value = "List of Archival institutes", response = ArchivalInstitutesResponse.class)
     @ApiResponses(value = {
         @ApiResponse(code = 500, message = "Internal server error"),
         @ApiResponse(code = 400, message = "Bad request"),
@@ -64,9 +64,6 @@ public class ArchivalInstituteStatResource {
     public Response getInsByOpenData(@ApiParam(value = "Page request by count and startIndex", required = true)
             @Valid PageRequest request) {
         try {
-
-//            QueryResponse resp = eadSearch.searchInstituteInGroup((request.getStartIndex() < 0) ? 0 : request.getStartIndex(), request.getCount());
-//            logger.info("Number fo group command " + resp.getGroupResponse());
             return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled((request.getStartIndex() < 0) ? 0 : request.getStartIndex(), request.getCount())).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
