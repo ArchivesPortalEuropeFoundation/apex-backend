@@ -204,7 +204,7 @@ public class SearchResource {
     }
 
     @POST
-    @Path("/ead/{id}/descendantWithAncestors")
+    @Path("/ead/{id}/descendantsWithAncestors")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "Search all descendants (with the ancestors list) of a given ead id",
             response = EadHierarchyResponseSet.class
