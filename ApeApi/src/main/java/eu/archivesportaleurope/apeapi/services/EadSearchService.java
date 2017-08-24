@@ -30,7 +30,7 @@ public abstract class EadSearchService extends SearchService {
 
     public abstract QueryResponse getDescendants(String id, SearchRequest searchRequest);
 
-    public abstract EadHierarchyResponseSet getDescendantsWithAncestors(String id, QueryPageRequest searchRequest);
+    public abstract EadHierarchyResponseSet getDescendantsWithAncestors(String id, SearchRequest searchRequest);
 
     public abstract QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest);
 

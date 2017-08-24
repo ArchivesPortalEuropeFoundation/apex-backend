@@ -217,7 +217,7 @@ public class SearchResource {
     @Consumes({ServerConstants.APE_API_V1})
     public Response getDescendantsWithAncestors(
             @PathParam("id") String id,
-            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
+            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
         try {
             EadHierarchyResponseSet response = eadSearch.getDescendantsWithAncestors(id, searchRequest);

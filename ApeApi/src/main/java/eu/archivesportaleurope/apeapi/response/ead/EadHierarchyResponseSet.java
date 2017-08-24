@@ -9,6 +9,8 @@ import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
 import eu.archivesportaleurope.apeapi.response.common.SortFields;
+import eu.archivesportaleurope.apeapi.response.facet.EadFacetFields;
+import eu.archivesportaleurope.apeapi.response.facet.FacetDateFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -36,17 +38,27 @@ public class EadHierarchyResponseSet extends ResponseSet {
 
     @ApiModelProperty(value = "Available fields for sort option")
     private Set<String> sortFields;
-    
+
+    @ApiModelProperty(required = true, value = "Array of facet fileds.")
+    private EadFacetFields facetFields;
+
+    @ApiModelProperty(required = true, value = "Array of facet date fileds.")
+    private FacetDateFields facetDateFields;
+
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public EadHierarchyResponseSet() {
         this.sortFields = new SortFields().getRepresentationFieldName();
         eadSearchResults = new ArrayList<>();
+        this.facetFields = new EadFacetFields();
+        this.facetDateFields = new FacetDateFields();
     }
 
     public EadHierarchyResponseSet(QueryResponse decendentResponse, Map<String, Map<String, Integer>> descendantAncesMap, Map<String, SolrDocument> ancIdDocMap) {
         this.sortFields = new SortFields().getRepresentationFieldName();
         eadSearchResults = new ArrayList<>();
+        this.setFacetFields(new EadFacetFields(decendentResponse));
+        this.setFacetDateFields(new FacetDateFields(decendentResponse));
         SearchStatResponse responseHeader = new SearchStatResponse(decendentResponse);
 
         SolrDocumentList documentList = decendentResponse.getResults();
@@ -59,7 +71,7 @@ public class EadHierarchyResponseSet extends ResponseSet {
                         descendantAncesMap.get(document.getFieldValue(SolrFields.ID).toString()), ancIdDocMap);
                 this.addEadSearchResult(eadResponse);
             } catch (Exception ex) {
-                logger.error("Ead response format error: "+document.values(), ex);
+                logger.error("Ead response format error: " + document.values(), ex);
             }
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
@@ -90,6 +102,22 @@ public class EadHierarchyResponseSet extends ResponseSet {
 
     public void setSortFields(Set<String> sortFields) {
         this.sortFields = sortFields;
+    }
+
+    public EadFacetFields getFacetFields() {
+        return facetFields;
+    }
+
+    public final void setFacetFields(EadFacetFields facetFields) {
+        this.facetFields = facetFields;
+    }
+
+    public FacetDateFields getFacetDateFields() {
+        return facetDateFields;
+    }
+
+    public final void setFacetDateFields(FacetDateFields facetDateFields) {
+        this.facetDateFields = facetDateFields;
     }
 
 }
