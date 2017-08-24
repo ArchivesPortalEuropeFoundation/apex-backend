@@ -38,7 +38,7 @@ public abstract class AbstractParser  {
 				String prefix = xmlReader.getNamespacePrefix(i);
 				String namespaceURI = xmlReader.getNamespaceURI(i);
 				
-				if (prefix.isEmpty()){
+				if ( null != prefix && prefix.isEmpty()){
 					xmlWriter.writeDefaultNamespace(namespaceURI);
 				}else {
 					xmlWriter.writeNamespace(prefix, namespaceURI);
