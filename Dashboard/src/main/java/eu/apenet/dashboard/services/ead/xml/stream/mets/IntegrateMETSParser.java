@@ -148,7 +148,7 @@ public class IntegrateMETSParser extends AbstractParser {
                 } else if ("INC-EDU".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/InC-EDU/1.0/";
                     description = "In Copyright - Educational Use Permitted";
-                } else if ("INC-EU-OW".equals(metsInfo.getRightsOtherCategory())) {
+                } else if ("INC-OW-EU".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/InC-OW-EU/1.0/";
                     description = "In Copyright - EU Orphan Work";
                 } else if ("CC0".equals(metsInfo.getRightsOtherCategory())) {
