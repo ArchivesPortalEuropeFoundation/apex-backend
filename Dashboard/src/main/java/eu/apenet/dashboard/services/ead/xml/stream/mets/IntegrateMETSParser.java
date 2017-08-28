@@ -142,22 +142,25 @@ public class IntegrateMETSParser extends AbstractParser {
                     description = "Creative Commons Attribution";
                 }
             } else {
-                if ("EDU-USE".equals(metsInfo.getRightsOtherCategory())) {
+                if ("INC".equals(metsInfo.getRightsOtherCategory())) {
+                    href = "http://rightsstatements.org/vocab/InC/1.0/";
+                    description = "In Copyright";
+                } else if ("INC-EDU".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/InC-EDU/1.0/";
                     description = "In Copyright - Educational Use Permitted";
-                } else if ("EU-ORPHAN".equals(metsInfo.getRightsOtherCategory())) {
+                } else if ("INC-EU-OW".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/InC-OW-EU/1.0/";
                     description = "In Copyright - EU Orphan Work";
                 } else if ("CC0".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://creativecommons.org/publicdomain/zero/1.0/";
                     description = "Creative Commons CC0 Public Domain Dedication";
-                } else if ("NC-NON-COMMERCIAL".equals(metsInfo.getRightsOtherCategory())) {
+                } else if ("NOC-NC".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/NoC-NC/1.0/";
                     description = "No Copyright - Non-Commercial Use Only ";
-                } else if ("NC-OTHER-LEGAL-RESTR".equals(metsInfo.getRightsOtherCategory())) {
+                } else if ("NOC-OKLR".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/NoC-OKLR/1.0/";
                     description = "No Copyright - Other Known Legal Restrictions";
-                } else if ("NOT-EVALUATED".equals(metsInfo.getRightsOtherCategory())) {
+                } else if ("CNE".equals(metsInfo.getRightsOtherCategory())) {
                     href = "http://rightsstatements.org/vocab/CNE/1.0/";
                     description = "Copyright Not Evaluated";
                 }
