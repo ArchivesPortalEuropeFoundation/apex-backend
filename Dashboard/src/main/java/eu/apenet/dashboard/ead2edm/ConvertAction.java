@@ -178,6 +178,11 @@ public class ConvertAction extends AbstractInstitutionAction {
             if (StringUtils.isBlank(this.getEuropeanaLicense())) {
                 addFieldError("europeanaLicense", getText("errors.required"));
             }
+            if (ConvertAction.EUROPEANA_NOCOPY_OTHERLEGAL.equals(this.getEuropeanaLicense())) {
+                if (StringUtils.isBlank(this.getLicenseAdditionalInformation())) {
+                    addFieldError("licenseAdditionalInformationCheck", getText("ead2edm.errors.europeana.otherLegalRestrictions.provideAdditionalInfo"));
+                }
+            }
         }
         if (StringUtils.isBlank(this.getDaoType())) {
             addFieldError("daoType", getText("errors.required"));
@@ -235,7 +240,7 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_NOCOPY_NONCOMMERCIAL, this.getText("ead2ese.content.license.europeana.nocopyright.noncommercial")));
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_NOCOPY_OTHERLEGAL, this.getText("ead2ese.content.license.europeana.nocopyright.otherlegal")));
         this.europeanaLicenseSet.add(new SelectItem(ConvertAction.EUROPEANA_COPYRIGHT_NOT_EVALUATED, this.getText("ead2ese.content.license.europeana.copyrightnotevaluated")));
-        }
+    }
 
     @Override
     public String input() throws IOException, SAXException, ParserConfigurationException {

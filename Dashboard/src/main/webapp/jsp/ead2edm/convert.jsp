@@ -328,6 +328,7 @@
         <tr>
             <td class="inputLabel"><s:label key="ead2ese.label.license.additional" for="licenseAdditionalInformation" />:</td>
             <td><s:textarea id="licenseAdditionalInformation" name="licenseAdditionalInformation"/>
+                <s:fielderror fieldName="licenseAdditionalInformationCheck"/>
             </td>
         </tr>
         <s:if test="conversionType=='minimal'">
