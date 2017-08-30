@@ -20,7 +20,7 @@ public class ContentResponse {
     private String id;
 
     @ApiModelProperty(required = true, value = "Original identifier of the information provided by the repository.")
-    private String unitId;
+    private String findingAidNo;
 
     @ApiModelProperty(required = true, value = "Title of the information provided by the repository.")
     private String unitTitle;
@@ -41,7 +41,7 @@ public class ContentResponse {
         this.setId(Id);
         this.setRepositoryId(detailContent.getAiId());
         this.setRepository(detailContent.getAiRepoName());
-        this.setUnitId(detailContent.getUnitId());
+        this.setFindingAidNo(detailContent.getUnitId());
         this.setUnitTitle(detailContent.getUnitTitle());
         this.setFindingAidTitle(detailContent.getFindingAidTitle());
     }
@@ -54,12 +54,12 @@ public class ContentResponse {
         this.id = id;
     }
 
-    public String getUnitId() {
-        return unitId;
+    public String getFindingAidNo() {
+        return findingAidNo;
     }
 
-    public final void setUnitId(String unitId) {
-        this.unitId = unitId;
+    public final void setFindingAidNo(String findingAidNo) {
+        this.findingAidNo = findingAidNo;
     }
 
     public String getUnitTitle() {
