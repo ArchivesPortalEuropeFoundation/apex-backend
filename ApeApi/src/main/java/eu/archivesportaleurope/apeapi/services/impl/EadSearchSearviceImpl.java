@@ -345,7 +345,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         query.setQuery("id:" + id + this.solrAND + onlyOpenData);
         query.setRows(1);
         query.setStart(0);
-        query.setParam("fl", "id, F*_s, type");
+        query.setParam("fl", "id, F*_s, H*_s, S*_s, type");
         logger.debug("real query is " + query.toString());
         this.searchUtil.setQuery(query);
 
