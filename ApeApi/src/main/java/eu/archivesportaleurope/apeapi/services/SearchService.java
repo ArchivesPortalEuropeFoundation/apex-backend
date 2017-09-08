@@ -67,7 +67,7 @@ public abstract class SearchService {
                     query.add(entry.getKey(), entry.getValue());
                 }
             }
-            
+            query.add("q.op", "AND");
             query.setQuery(queryStr);
 
             //openData - true or false should be managed by the query
