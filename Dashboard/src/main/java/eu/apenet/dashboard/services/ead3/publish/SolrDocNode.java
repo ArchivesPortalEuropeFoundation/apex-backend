@@ -18,8 +18,9 @@ public class SolrDocNode {
 
     private SolrDocNode sibling = null;
     private SolrDocNode child = null;
+    //This object is for Solr which can handle primitive data types and collections of primitives
     private Map<String, Object> data = new HashMap<>();
-    private List<Map<String, Object>> eacData = new ArrayList<>();
+//    private List<Map<String, Object>> eacData = new ArrayList<>();
 
     public SolrDocNode getSibling() {
         return sibling;
@@ -59,11 +60,11 @@ public class SolrDocNode {
         return this.data.get(key);
     }
 
-    public List<Map<String, Object>> getEacData() {
-        return eacData;
-    }
-
-    public void setEacData(List<Map<String, Object>> eacData) {
-        this.eacData = eacData;
-    }
+//    public List<Map<String, Object>> getEacData() {
+//        return eacData;
+//    }
+//
+//    public void setEacData(List<Map<String, Object>> eacData) {
+//        this.eacData = eacData;
+//    }
 }

@@ -12,6 +12,11 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.DateUtil;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
+import eu.apenet.dpt.utils.eaccpf.Control;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.eaccpf.RecordId;
+import eu.apenet.dpt.utils.eaccpf.Source;
+import eu.apenet.dpt.utils.eaccpf.Sources;
 import eu.apenet.persistence.vo.Ead3;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
@@ -86,17 +91,10 @@ public class Ead3SolrDocBuilder {
         this.ead3Unmarshaller = ead3Context.createUnmarshaller();
     }
 
-    public SolrDocTree buildDocTree(Ead3 ead3) throws JAXBException {
+    public SolrDocTree buildDocTree(Ead ead, Ead3 ead3) throws JAXBException {
         this.persistantEad3 = ead3;
         this.openDataEnable = ead3.getArchivalInstitution().isOpenDataEnabled();
-        FileInputStream fileInputStream = null;
-        try {
-            fileInputStream = getFileInputStream(ead3.getPath());
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.ead3 = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
-        this.ead3.setId(String.valueOf(persistantEad3.getId()));
+        this.ead3 = ead;
         jXPathContext = JXPathContext.newContext(this.ead3);
 
         this.retrieveArchdescMain();
@@ -268,7 +266,7 @@ public class Ead3SolrDocBuilder {
             Object element = it.next();
             if (element instanceof Scopecontent) {
                 Scopecontent scopecontent = (Scopecontent) element;
-                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
+//                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
                 Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
                 for (Map.Entry entry : eventMap.entrySet()) {
                     cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
@@ -580,11 +578,11 @@ public class Ead3SolrDocBuilder {
             if (eacEvent instanceof JAXBElement) {
                 JAXBElement eacElement = (JAXBElement) eacEvent;
                 if (eacElement.getDeclaredType().equals(Persname.class)) {
-                    listOfEacs.add(fillEacPartsInMap(cRoot, ((Persname) eacElement.getValue()).getPart()));
+                    listOfEacs.add(generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart()));
                 } else if (eacElement.getDeclaredType().equals(Corpname.class)) {
-                    listOfEacs.add(fillEacPartsInMap(cRoot, ((Corpname) eacElement.getValue()).getPart()));
+                    listOfEacs.add(generateEacCpfDataMap(cRoot, ((Corpname) eacElement.getValue()).getPart()));
                 } else if (eacElement.getDeclaredType().equals(Famname.class)) {
-                    listOfEacs.add(fillEacPartsInMap(cRoot, ((Famname) eacElement.getValue()).getPart()));
+                    listOfEacs.add(generateEacCpfDataMap(cRoot, ((Famname) eacElement.getValue()).getPart()));
                 }
             }
         }
@@ -605,16 +603,28 @@ public class Ead3SolrDocBuilder {
         return eventMap;
     }
 
-    private Map<String, Object> fillEacPartsInMap(SolrDocNode cRoot, List<Part> parts) {
+    private Map<String, Object> generateEacCpfDataMap(SolrDocNode cRoot, List<Part> parts) {
         Map<String, Object> eacMap = new HashMap<>();
-
-        eacMap.put(SolrFields.ID, UUID.randomUUID().toString());
-        eacMap.put(SolrFields.COUNTRY, cRoot.getDataElement(Ead3SolrFields.COUNTRY));
-        eacMap.put(SolrFields.AI, cRoot.getDataElement(Ead3SolrFields.AI));
+        EacCpf eacCpf = new EacCpf();
+        
+        Control control = new Control();
+        RecordId recordId = new RecordId();
+        recordId.setValue(cRoot.getDataElement(Ead3SolrFields.RECORD_ID).toString());
+        control.setRecordId(recordId);
+        Sources sources = new Sources();
+//        sources.getSource().add(new Source())
+//        control.setSources();
+//        eacCpf.setControl(control);
+//        Cpf
+//        eacMap.put(SolrFields.ID, UUID.randomUUID().toString());
+//        
+//        eacCpf.
+//        eacMap.put(SolrFields.COUNTRY, cRoot.getDataElement(Ead3SolrFields.COUNTRY));
+//        eacMap.put(SolrFields.AI, cRoot.getDataElement(Ead3SolrFields.AI));
         eacMap.put(SolrFields.REPOSITORY_CODE, cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
         eacMap.put(Ead3SolrFields.RECORD_ID, cRoot.getDataElement(Ead3SolrFields.RECORD_ID));
 
-        for (Part part : parts) {
+        parts.stream().forEach((part) -> {
             if (part.getLocaltype().equals("firstname") || part.getLocaltype().equals("lastname")) {
                 eacMap.put("names", getContent(part));
             } else if (part.getLocaltype().equals("residence")) {
@@ -622,19 +632,19 @@ public class Ead3SolrDocBuilder {
             } else if (part.getLocaltype().equals("role")) {
                 eacMap.put("occupations", getContent(part));
             }
-        }
+        });
 
         return eacMap;
     }
 
     private void buildPersnameOrFamOrCorpMap(List<Part> parts, String type, Map<String, String> map) {
-        for (Part part : parts) {
+        parts.stream().forEach((part) -> {
             if (map.get(type + "_" + part.getLocaltype()) == null) {
                 map.put(type + "_" + part.getLocaltype(), getContent(part));
             } else {
                 map.put(type + "_" + part.getLocaltype(), map.get(type + "_" + part.getLocaltype()) + " " + getContent(part));
             }
-        }
+        });
     }
 
     private static FileInputStream getFileInputStream(String path) throws FileNotFoundException {

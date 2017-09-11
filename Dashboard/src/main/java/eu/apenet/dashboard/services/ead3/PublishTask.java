@@ -54,7 +54,7 @@ public class PublishTask extends AbstractEad3Task {
                 fileInputStream = getFileInputStream(ead3.getPath());
                 Ead ead = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
                 ead.setId(String.valueOf(ead3.getId()));
-                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead3);
+                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead, ead3);
                 SolrPublisher publisher = new SolrPublisher();
                 long numberOfDocs = publisher.publish(tree);
                 publisher.printTree(tree);
