@@ -39,6 +39,7 @@ import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
+import java.io.IOException;
 
 public class ManageQueueAction extends AbstractAction {
 
@@ -305,7 +306,7 @@ public class ManageQueueAction extends AbstractAction {
         return SUCCESS;
     }
 
-    public String rebuildAutosuggestion() throws SolrServerException {
+    public String rebuildAutosuggestion() throws SolrServerException, IOException {
         if (SecurityContext.get().isAdmin()) {
             SolrUtil.rebuildAutosuggestion();
         }
