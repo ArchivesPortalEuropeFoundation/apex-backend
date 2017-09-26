@@ -50,19 +50,19 @@
         <appender-ref ref="securityFile" /> 
     </logger>
     <logger name="eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher">
-        <level value="debug" />
+        <level value="info" />
         <appender-ref ref="publish" /> 
     </logger>
     <logger name="eu.apenet.dashboard.services.eaccpf.xml.stream.publish.EacCpfSolrPublisher">
-        <level value="debug" />
+        <level value="info" /> <!--info / debug-->
         <appender-ref ref="publish" /> 
     </logger>	
     <logger name="eu.apenet.dashboard.services.eag.xml.stream.publish.EagSolrPublisher">
-        <level value="debug" />
+        <level value="info" />
         <appender-ref ref="publish" /> 
     </logger>	
     <logger name="eu.apenet.dashboard.services.AbstractSolrPublisher">
-        <level value="debug" />
+        <level value="info" />
         <appender-ref ref="publish" /> 
     </logger>	
     <logger name="eu">
