@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
-	<luceneMatchVersion>LUCENE_43</luceneMatchVersion>
+	<luceneMatchVersion>6.6.1</luceneMatchVersion>
 	<jmx />
 
 	<schemaFactory class="ClassicIndexSchemaFactory" />
@@ -136,6 +136,9 @@
 			<str name="fl">
 				id,name,address,repositoryCode,repositoryTypeFacet,country
 			</str>
+                        <str name="df">name</str>
+                        
+                        <str name="q.op">AND</str>
 			<str name="q.alt">*:*</str>
 			<str name="hl.fl">name otherNames repositories address description other countries aiGroups</str>
 			<str name="hl.fragmenter">regex</str>
@@ -196,8 +199,8 @@
 
 	<requestHandler name="/update" class="solr.UpdateRequestHandler" />
 
-	<requestHandler name="/admin/"
-		class="org.apache.solr.handler.admin.AdminHandlers" />
+<!--	<requestHandler name="/admin/"
+		class="org.apache.solr.handler.admin.AdminHandlers" />-->
 
 	<!-- ping/healthcheck -->
 	<requestHandler name="/admin/ping" class="solr.PingRequestHandler">
