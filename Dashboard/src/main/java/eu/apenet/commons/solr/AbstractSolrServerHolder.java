@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 
 import eu.apenet.dashboard.utils.PropertiesKeys;
@@ -21,7 +21,7 @@ public abstract class AbstractSolrServerHolder {
     private final static Integer HTTP_LONG_TIMEOUT = PropertiesUtil.getInt(PropertiesKeys.APE_SOLR_HTTP_LONG_TIMEOUT);
 
     public abstract String getSolrUrl();
-    private HttpSolrClient solrServer = null;
+    private HttpSolrServer solrServer = null;
 
     public boolean isAvailable() {
         initSolrServer();
@@ -45,7 +45,7 @@ public abstract class AbstractSolrServerHolder {
         }
     }
     
-    public QueryResponse executeQuery (SolrQuery query) throws SolrServerException, IOException {
+    public QueryResponse executeQuery (SolrQuery query) throws SolrServerException {
         if (isAvailable()) {
             return solrServer.query(query); 
         } else {
@@ -103,12 +103,11 @@ public abstract class AbstractSolrServerHolder {
         }
     }
 
-    private HttpSolrClient initSolrServer() {
+    private HttpSolrServer initSolrServer() {
         try {
             if (solrServer == null) {
                 LOGGER.debug("Create new solr client: " + getSolrUrl());
-//                solrServer = new HttpSolrClient(getSolrUrl());
-                solrServer = new HttpSolrClient.Builder(getSolrUrl()).build();
+                solrServer = new HttpSolrServer(getSolrUrl());
                 solrServer.setConnectionTimeout(HTTP_TIMEOUT);
                 solrServer.setSoTimeout(HTTP_TIMEOUT);
             }
@@ -118,7 +117,7 @@ public abstract class AbstractSolrServerHolder {
         return solrServer;
     }
 
-    public long rebuildSpellchecker() throws SolrServerException, IOException {
+    public long rebuildSpellchecker() throws SolrServerException {
         if (isAvailable()) {
             long startTime = System.currentTimeMillis();
             SolrQuery query = new SolrQuery();
