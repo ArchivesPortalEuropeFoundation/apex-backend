@@ -5,12 +5,15 @@
  */
 package eu.archivesportaleurope.apeapi.utils;
 
+import java.io.IOException;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.TermsResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -18,15 +21,17 @@ import org.apache.solr.client.solrj.response.TermsResponse;
  */
 public class SolrSearchUtil {
 
-    private SolrServer solrServer;
+    private SolrClient solrServer;
     private SolrQuery solrQuery;
     private QueryResponse queryResponse;
-
+    private String coreName = null;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     public SolrSearchUtil(String url) {
-        this.solrServer = new HttpSolrServer(url);
+        this.solrServer = new HttpSolrClient(url);
     }
 
-    public SolrSearchUtil(SolrServer solrServer) {
+    public SolrSearchUtil(SolrClient solrServer) {
         this.solrServer = solrServer;
     }
     
@@ -38,14 +43,14 @@ public class SolrSearchUtil {
         this.solrQuery = solrQuery;
     }
 
-    public QueryResponse getSearchResponse() throws SolrServerException {
+    public QueryResponse getSearchResponse() throws SolrServerException, IOException {
         this.solrQuery.setHighlight(true);
         this.solrQuery.setRequestHandler("list");
-        this.queryResponse = this.solrServer.query(this.solrQuery);
+        this.queryResponse = this.solrServer.query(this.coreName, this.solrQuery);
         return this.queryResponse;
     }
 
-    public TermsResponse getTermsResponse(String q) throws SolrServerException {
+    public TermsResponse getTermsResponse(String q) throws SolrServerException, IOException {
         SolrQuery query = new SolrQuery(q);
         query.setRequestHandler("list");
         query.set("spellcheck", "true");
@@ -56,9 +61,17 @@ public class SolrSearchUtil {
         return this.queryResponse.getTermsResponse();
     }
 
-    public QueryResponse getSuggestion() throws SolrServerException {
+    public QueryResponse getSuggestion() throws SolrServerException, IOException {
         solrQuery.setRequestHandler("list");
         solrQuery.set("spellcheck", "true");
         return solrServer.query(solrQuery);
+    }
+
+    public String getCoreName() {
+        return coreName;
+    }
+
+    public void setCoreName(String coreName) {
+        this.coreName = coreName;
     }
 }

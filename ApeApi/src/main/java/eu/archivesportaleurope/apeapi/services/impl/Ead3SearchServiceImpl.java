@@ -13,10 +13,13 @@ import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.Ead3SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +48,18 @@ public class Ead3SearchServiceImpl extends Ead3SearchService {
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
-    public Ead3SearchServiceImpl(SolrServer solrServer, String propFileName) {
+    public Ead3SearchServiceImpl(SolrClient solrServer, String propFileName) {
         this.solrUrl = this.solrCore = "";
         logger.debug("Solr server got created!");
         this.searchUtil = new SolrSearchUtil(solrServer);
+        //ToDo: quick fix for solrj5 EmbeddedSolrServer, which is failing to use default core
+        if (solrServer instanceof EmbeddedSolrServer) {
+            EmbeddedSolrServer embeddedSolrServer = (EmbeddedSolrServer) solrServer;
+            Collection<String> coreNames = embeddedSolrServer.getCoreContainer().getAllCoreNames();
+            if (!coreNames.isEmpty()) {
+                this.searchUtil.setCoreName(coreNames.iterator().next());
+            }
+        }
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 

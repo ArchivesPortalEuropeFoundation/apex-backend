@@ -20,6 +20,8 @@ import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,9 +29,10 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -67,11 +70,19 @@ public class EadSearchSearviceImpl extends EadSearchService {
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
-    public EadSearchSearviceImpl(SolrServer solrServer, String propFileName) {
+    public EadSearchSearviceImpl(SolrClient solrServer, String propFileName) {
         this.extraParam = new HashMap<>();
         this.solrUrl = this.solrCore = "";
         logger.debug("Solr server got created!");
         this.searchUtil = new SolrSearchUtil(solrServer);
+        //ToDo: quick fix for solrj5 EmbeddedSolrServer, which is failing to use default core
+        if (solrServer instanceof EmbeddedSolrServer) {
+            EmbeddedSolrServer embeddedSolrServer = (EmbeddedSolrServer) solrServer;
+            Collection<String> coreNames = embeddedSolrServer.getCoreContainer().getAllCoreNames();
+            if (!coreNames.isEmpty()) {
+                this.searchUtil.setCoreName(coreNames.iterator().next());
+            }
+        }
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
@@ -192,7 +203,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
 
             return this.search(searchRequest, extraParam, true);
-        } catch (SolrServerException ex) {
+        } catch (SolrServerException | IOException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
@@ -254,7 +265,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             }
             EadHierarchyResponseSet response = new EadHierarchyResponseSet(decendentResponse, descendantAncesMap, ancIdDocMap);
             return response;
-        } catch (SolrServerException ex) {
+        } catch (SolrServerException | IOException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
@@ -304,7 +315,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         return this.search(request, extraParam, true);
     }
 
-    private String getDocHighestLevelText(String id) throws SolrServerException {
+    private String getDocHighestLevelText(String id) throws SolrServerException, IOException {
         TypedList typedList = getParentList(id);
         int level = typedList.keyLevel.size();
 
@@ -335,12 +346,12 @@ public class EadSearchSearviceImpl extends EadSearchService {
             TypedList typedListParent = this.getParentList(id); //ToDo: change this, now we know numberOfAncestors
             HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedListParent.keyLevel.size() + 1);
             return hrs;
-        } catch (SolrServerException ex) {
+        } catch (SolrServerException | IOException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
 
-    private TypedList getParentList(String id) throws SolrServerException {
+    private TypedList getParentList(String id) throws SolrServerException, IOException {
         SolrQuery query = new SolrQuery();
         query.setQuery("id:" + id + this.solrAND + onlyOpenData);
         query.setRows(1);
@@ -430,7 +441,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             HierarchyResponseSet hrs = new HierarchyResponseSet(qr, typedList.keyLevel);
             return hrs;
 
-        } catch (SolrServerException ex) {
+        } catch (SolrServerException | IOException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }

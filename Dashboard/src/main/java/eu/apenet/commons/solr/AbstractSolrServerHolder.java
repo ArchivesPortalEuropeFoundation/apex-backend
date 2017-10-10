@@ -107,8 +107,8 @@ public abstract class AbstractSolrServerHolder {
         try {
             if (solrServer == null) {
                 LOGGER.debug("Create new solr client: " + getSolrUrl());
-//                solrServer = new HttpSolrClient(getSolrUrl());
-                solrServer = new HttpSolrClient.Builder(getSolrUrl()).build();
+                solrServer = new HttpSolrClient(getSolrUrl());
+//                solrServer = new HttpSolrClient.Builder(getSolrUrl()).build();
                 solrServer.setConnectionTimeout(HTTP_TIMEOUT);
                 solrServer.setSoTimeout(HTTP_TIMEOUT);
             }

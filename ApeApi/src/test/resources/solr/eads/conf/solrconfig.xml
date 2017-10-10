@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
-    <luceneMatchVersion>LUCENE_43</luceneMatchVersion>
+    <luceneMatchVersion>5.5.0</luceneMatchVersion>
     <jmx />
 
     <schemaFactory class="ClassicIndexSchemaFactory" />
 
     <!-- <indexConfig> section could go here, but we want the defaults -->
     <indexConfig>
-        <lockType>single</lockType>
         <ramBufferSizeMB>100</ramBufferSizeMB>
-        <mergeFactor>20</mergeFactor>
+        <!--<mergePolicyFactory>20</mergePolicyFactory>-->
+        <lockType>single</lockType>
     </indexConfig>
     <!-- the default high-performance update handler -->
     <updateHandler class="solr.DirectUpdateHandler2">
@@ -25,7 +25,7 @@
 
 
     </updateHandler>
-    <dataDir>target/tmp-solr/data</dataDir>
+
 
     <query>
 
@@ -95,7 +95,11 @@
 
         </httpCaching>
     </requestDispatcher>
-
+    <requestHandler name="/select" class="solr.SearchHandler">
+        <lst name="defaults">
+            <str name="df">title</str>
+        </lst>
+    </requestHandler>
 
     <requestHandler name="standard" class="solr.StandardRequestHandler"
                         default="true">
@@ -122,6 +126,7 @@
                         class="org.apache.solr.handler.component.SearchHandler">
         <lst name="defaults">
             <str name="echoParams">explicit</str>
+            <str name="df">title</str>
         </lst>
 
     </requestHandler>
@@ -135,8 +140,11 @@
                 title^2.5 unitidfond^1.5 scopecontent^1.3 other^0.5 alterdate^0.4
             </str>
             <str name="fl">
-                id,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
+                id,parentId,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
             </str>
+            <str name="df">title</str>
+                        
+            <str name="q.op">AND</str>
             <str name="q.alt">*:*</str>
             <str name="hl.fl">title scopecontent other alterdate</str>
             <str name="hl.fragmenter">regex</str>
@@ -162,6 +170,7 @@
             <str name="qf">
                 title scopecontent other alterdate
             </str>
+            <str name="df">title</str>
             <str name="fl">
                 id,title,orderId
             </str>
@@ -223,10 +232,21 @@
         </arr>
     </requestHandler>
         
+    <requestHandler name="/openDtataTerms"
+                        class="org.apache.solr.handler.component.SearchHandler">
+        <lst name="defaults">
+            <bool name="terms">true</bool>
+            <str name="terms.fl">openDataSpell</str>
+        </lst>
+        <arr name="components">
+            <str>termsComponent</str>
+        </arr>
+    </requestHandler>
+
     <requestHandler name="/update" class="solr.UpdateRequestHandler" />
 
-    <requestHandler name="/admin/"
-                        class="org.apache.solr.handler.admin.AdminHandlers" />
+    <!--	<requestHandler name="/admin/"
+    class="org.apache.solr.handler.admin.AdminHandlers" />-->
 
     <!-- ping/healthcheck -->
     <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
