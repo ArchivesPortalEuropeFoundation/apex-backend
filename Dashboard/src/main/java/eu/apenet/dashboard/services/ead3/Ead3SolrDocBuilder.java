@@ -9,22 +9,16 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.manual.eaccpf.CreateEacCpf;
-import eu.apenet.dashboard.manual.eaccpf.actions.StoreEacCpfAction;
 import eu.apenet.dashboard.services.ead3.publish.DateUtil;
 import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapKeys;
+import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
-import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
 import eu.apenet.dpt.utils.eaccpf.Sources;
-import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
-import eu.apenet.persistence.dao.EacCpfDAO;
-import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead3;
-import eu.apenet.persistence.vo.ValidatedState;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
 import gov.loc.ead.Dao;
@@ -55,10 +49,8 @@ import gov.loc.ead.Unittitle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -69,9 +61,7 @@ import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -601,26 +591,24 @@ public class Ead3SolrDocBuilder {
     private List<Map<String, Object>> buildEacData(SolrDocNode cRoot, Event event) {
         List<Map<String, Object>> listOfEacs = new ArrayList<>();
         List<Serializable> events = event.getContent();
-        int countPerson = 0;
-        int countCorpName = 0;
-        int countFamName = 0;
+        int count = 0;
         for (Serializable eacEvent : events) {
             if (eacEvent instanceof JAXBElement) {
                 JAXBElement eacElement = (JAXBElement) eacEvent;
                 if (eacElement.getDeclaredType().equals(Persname.class)) {
-                    countPerson++;
-                    Map<String, Object> personMap = generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), countPerson);
-                    personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, "person");
+                    count++;
+                    Map<String, Object> personMap = generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), count);
+                    personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
                     listOfEacs.add(personMap);
                 } else if (eacElement.getDeclaredType().equals(Corpname.class)) {
-                    countCorpName++;
-                    Map<String, Object> corpMap = generateEacCpfDataMap(cRoot, ((Corpname) eacElement.getValue()).getPart(), countCorpName);
-                    corpMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, "corporateBody");
+                    count++;
+                    Map<String, Object> corpMap = generateEacCpfDataMap(cRoot, ((Corpname) eacElement.getValue()).getPart(), count);
+                    corpMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_CORPORATE_BODY);
                     listOfEacs.add(corpMap);
                 } else if (eacElement.getDeclaredType().equals(Famname.class)) {
-                    countFamName++;
-                    Map<String, Object> famMap = generateEacCpfDataMap(cRoot, ((Famname) eacElement.getValue()).getPart(), countFamName);
-                    famMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, "family");
+                    count++;
+                    Map<String, Object> famMap = generateEacCpfDataMap(cRoot, ((Famname) eacElement.getValue()).getPart(), count);
+                    famMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_FAMILY);
                     listOfEacs.add(famMap);
                 }
             }
@@ -634,9 +622,9 @@ public class Ead3SolrDocBuilder {
             if (obj instanceof Persname) {
                 buildPersnameOrFamOrCorpMap(((Persname) obj).getPart(), "persname", eventMap);
             } else if (obj instanceof Corpname) {
-//                buildPersnameOrFamOrCorpMap(((Corpname) obj).getPart(), "corpname", eventMap);
+                buildPersnameOrFamOrCorpMap(((Corpname) obj).getPart(), "corpname", eventMap);
             } else if (obj instanceof Famname) {
-//                buildPersnameOrFamOrCorpMap(((Famname) obj).getPart(), "famname", eventMap);
+                buildPersnameOrFamOrCorpMap(((Famname) obj).getPart(), "famname", eventMap);
             }
         }
         return eventMap;
@@ -672,47 +660,47 @@ public class Ead3SolrDocBuilder {
         String deathDate = "";
         for (Part part : parts) {
 
-            if (part.getLocaltype().equals("firstname")) {
+            if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME)) {
                 partNameCount++;
                 firstName = getContent(part);
                 eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, firstName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, "firstname");
-            } else if (part.getLocaltype().equals("lastname")) {
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME);
+            } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME)) {
                 partNameCount++;
                 lastName = getContent(part);
                 eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, lastName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, "lastname");
-            } else if (part.getLocaltype().equals("gender") || part.getLocaltype().equals("role")) {
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME);
+            } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_GENDER) || part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_ROLE)) {
                 partGenealogyDescriptionCount++;
                 eacMap.put(Ead3ToEacFieldMapKeys.GENEALOGY_DESCRIPTION_ + partGenealogyDescriptionCount, getContent(part));
                 //need to add language form default arcdes lang
-            } else if (part.getLocaltype().equals("deathdate")) {
+            } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE)) {
                 deathDate = getContent(part);
                 if (StringUtils.isEmpty(deathDate)) {
-                    deathDate = "unknown";
+                    deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
                 }
                 partDateCount++;
                 eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, deathDate);
 
-            } else if (part.getLocaltype().equals("birthdate")) {
+            } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE)) {
                 birthDate = getContent(part);
                 if (StringUtils.isEmpty(birthDate)) {
-                    birthDate = "unknown";
+                    birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
                 }
                 eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, birthDate);
             }
         }
 
         if (StringUtils.isEmpty(deathDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", "unknown");
+            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN);
         }
         if (StringUtils.isEmpty(birthDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_1", "unknown");
+            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_1", Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN);
         }
 
         partNameCount++;
         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, firstName + " " + lastName);
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, "persname");
+        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME);
 
         //test build map for ead3 to eac
         eacMap.put(Ead3ToEacFieldMapKeys.TEXT_LOCAL_ID_ + "1", cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count);
