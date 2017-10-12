@@ -71,7 +71,6 @@ import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import eu.apenet.dpt.utils.eaccpf.Term;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
 import eu.apenet.dpt.utils.eaccpf.UseDates;
-import eu.apenet.dpt.utils.util.FileUtil;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -79,10 +78,6 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -110,8 +105,8 @@ public class CreateEacCpf extends EacCpfAction {
     //global StringBuilder for date format
     StringBuilder standardDate = new StringBuilder();
 
-    public CreateEacCpf(HttpServletRequest request, int aiId, int eacCpfId) {
-        this.parameters = request.getParameterMap();
+    public CreateEacCpf(Map eacMap, int aiId, int eacCpfId) {
+        this.parameters = eacMap;
         this.aiId = aiId;
         this.eacCpfId = eacCpfId;
         newEac = getDatabaseEacCpf();
@@ -121,6 +116,10 @@ public class CreateEacCpf extends EacCpfAction {
 
         eacCpf.setControl(control);
         eacCpf.setCpfDescription(cpfDescription);
+    }
+
+    public CreateEacCpf(HttpServletRequest request, int aiId, int eacCpfId) {
+        this(request.getParameterMap(), aiId, eacCpfId);
     }
 
     public EacCpf getJaxbEacCpf() {
