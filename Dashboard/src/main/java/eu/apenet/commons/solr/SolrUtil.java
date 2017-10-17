@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.dashboard.queue.ManageQueueAction;
+import java.io.IOException;
 
 public final class SolrUtil {
 
@@ -35,7 +36,7 @@ public final class SolrUtil {
         LOGGER.info("=== Optimize solr cores finished ===");
     }
 
-    public static void rebuildAutosuggestion() throws SolrServerException {
+    public static void rebuildAutosuggestion() throws SolrServerException , IOException{
         LOGGER.info("=== Rebuild spellchecker dictionaries ===");
         LOGGER.info("EAG rebuild spellchecker dictionary started...");
         EagSolrServerHolder.getInstance().rebuildSpellchecker();

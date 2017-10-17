@@ -1,10 +1,7 @@
 package eu.apenet.commons.solr;
 
-import eu.apenet.commons.solr.facet.FacetType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -13,16 +10,16 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.TermsResponse;
 
-import eu.apenet.commons.solr.SolrField;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.apenet.commons.utils.APEnetUtilities;
+import java.io.IOException;
+import org.apache.solr.client.solrj.SolrClient;
 
 public abstract class AbstractSearcher {
 
@@ -38,29 +35,30 @@ public abstract class AbstractSearcher {
     protected static Integer TIME_ALLOWED_TREE;
     protected static Integer HTTP_TIMEOUT;
     private SolrQueryBuilder queryBuilder = new SolrQueryBuilder();
-    private HttpSolrServer solrServer;
+    private HttpSolrClient solrClient;
 
     protected abstract String getCore();
 
-    protected final HttpSolrServer getSolrServer() {
-        if (solrServer == null) {
+    protected final SolrClient getSolrClient() {
+        if (solrClient == null) {
             try {
-                solrServer = new HttpSolrServer(getSolrSearchUrl(), null);
-                solrServer.setConnectionTimeout(HTTP_TIMEOUT);
-                solrServer.setSoTimeout(HTTP_TIMEOUT);
+//                solrClient = new HttpSolrClient.Builder(getSolrSearchUrl()).build();
+                solrClient = new HttpSolrClient(getSolrSearchUrl());
+                solrClient.setConnectionTimeout(HTTP_TIMEOUT);
+                solrClient.setSoTimeout(HTTP_TIMEOUT);
                 LOGGER.info("Successfully instantiate the solr client: " + getSolrSearchUrl());
             } catch (Exception e) {
                 LOGGER.error("Unable to instantiate the solr client: " + e.getMessage());
             }
         }
-        return solrServer;
+        return solrClient;
     }
 
     protected final String getSolrSearchUrl() {
         return APEnetUtilities.getApePortalConfig().getBaseSolrSearchUrl() + "/" + getCore();
     }
 
-    public TermsResponse getTerms(String term) throws SolrServerException {
+    public TermsResponse getTerms(String term) throws SolrServerException, IOException {
         SolrQuery query = queryBuilder.getTermQuery(term);
 
         String resultLog = "Query;terms;" + getCore() + ";'" + term + "';";
@@ -81,27 +79,27 @@ public abstract class AbstractSearcher {
 
     }
 
-    public long getNumberOfResults(SolrQueryParameters solrQueryParameters) throws SolrServerException, ParseException {
+    public long getNumberOfResults(SolrQueryParameters solrQueryParameters) throws SolrServerException, ParseException, IOException {
         QueryResponse queryResponse = getListViewResults(solrQueryParameters, 0, 0, null, null, null, null, false,
                 false, false);
         return queryResponse.getResults().getNumFound();
     }
 
     public QueryResponse performNewSearchForListView(SolrQueryParameters solrQueryParameters, int rows,
-            List<ListFacetSettings> facetSettings) throws SolrServerException, ParseException {
+            List<ListFacetSettings> facetSettings) throws SolrServerException, ParseException, IOException {
         return getListViewResults(solrQueryParameters, 0, rows, facetSettings, null, null, null, true, true, false);
     }
 
     public QueryResponse updateListView(SolrQueryParameters solrQueryParameters, int start, int rows,
             List<ListFacetSettings> facetSettings, String orderByField, String startDate, String endDate)
-            throws SolrServerException, ParseException {
+            throws SolrServerException, ParseException, IOException {
         return getListViewResults(solrQueryParameters, start, rows, facetSettings, orderByField, startDate, endDate,
                 false, true, true);
     }
 
     private QueryResponse getListViewResults(SolrQueryParameters solrQueryParameters, int start, int rows,
             List<ListFacetSettings> facetSettingsList, String orderByField, String startDate, String endDate,
-            boolean needSuggestions, boolean highlight, boolean update) throws SolrServerException, ParseException {
+            boolean needSuggestions, boolean highlight, boolean update) throws SolrServerException, ParseException, IOException {
 
         SolrQuery query = queryBuilder.getListViewQuery(start, facetSettingsList, startDate, endDate, highlight);
         
@@ -121,7 +119,7 @@ public abstract class AbstractSearcher {
     }
 
     protected QueryResponse executeQuery(SolrQuery query, SolrQueryParameters solrQueryParameters, String queryType,
-            boolean needSuggestions, boolean update) throws SolrServerException {
+            boolean needSuggestions, boolean update) throws SolrServerException, IOException {
         query.setQuery(SearchUtil.escapeSolrCharacters(solrQueryParameters.getTerm()));
 
         if (solrQueryParameters.getAndParameters() != null) {
@@ -258,7 +256,7 @@ public abstract class AbstractSearcher {
         return matcher.matches();
     }
 
-    private QueryResponse query(SolrQuery query) throws SolrServerException {
-        return getSolrServer().query(query, METHOD.POST);
+    private QueryResponse query(SolrQuery query) throws SolrServerException, IOException {
+        return getSolrClient().query(query, METHOD.POST);
     }
 }

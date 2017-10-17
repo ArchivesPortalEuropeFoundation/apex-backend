@@ -18,6 +18,7 @@ import eu.archivesportaleurope.apeapi.request.SortRequest;
 import eu.archivesportaleurope.apeapi.response.common.SortFields;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public abstract class SearchService {
             SolrQuery query = this.getFacatedQuery(searchRequest, facetSettingsList, dictionary);
 
             if (searchRequest.getCount() <= 0) {
-                logger.info(":::Default Count vale from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
+                logger.info(":::Default Count value from prop is : " + propertiesUtil.getValueFromKey("search.request.default.count"));
                 query.setRows(Integer.parseInt(propertiesUtil.getValueFromKey("search.request.default.count")));
             } else {
                 query.setRows(searchRequest.getCount());
@@ -77,7 +78,7 @@ public abstract class SearchService {
             eadSearchUtil.setQuery(query);
 
             return eadSearchUtil.getSearchResponse();
-        } catch (SolrServerException | ParseException ex) {
+        } catch (SolrServerException | ParseException | IOException ex) {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
