@@ -64,8 +64,9 @@ public abstract class SearchService {
                 for (Map.Entry<String, String> entry : extraSearchParam.entrySet()) {
                     if (entry.getKey().equalsIgnoreCase("q") && !entry.getValue().isEmpty()) {
                         queryStr += solrAND + entry.getValue();
+                    } else {
+                        query.add(entry.getKey(), entry.getValue());
                     }
-                    query.add(entry.getKey(), entry.getValue());
                 }
             }
             query.setQuery(queryStr);
@@ -81,7 +82,7 @@ public abstract class SearchService {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-
+    
     private SolrQuery getFacatedQuery(SearchRequest searchRequest,
             List<ListFacetSettings> facetSettingsList, SolrApiResponseDictionary dictionary) throws SolrServerException, ParseException {
         SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, true);

@@ -194,31 +194,27 @@ public class EadSearchSearviceImpl extends EadSearchService {
     public QueryResponse getDescendants(String id, SearchRequest searchRequest) {
         try {
             String levelStr = this.getDocHighestLevelText(id); //FID0_s or HID0_s etc
-//            SearchRequest request = new SearchRequest();
-//            request.setQuery(searchRequest.getQuery());
-//            request.setCount(searchRequest.getCount());
-//            request.setStartIndex(searchRequest.getStartIndex());
 
             extraParam.clear();
-            extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
+            extraParam.put("q", levelStr + ":" + id + this.solrAND + "(-id:" + id +")"+ this.solrAND + this.onlyOpenData);
 
             return this.search(searchRequest, extraParam, true);
         } catch (SolrServerException | IOException ex) {
             throw new InternalErrorException("Solrserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-
+    
     @Override
     public EadHierarchyResponseSet getDescendantsWithAncestors(String id, SearchRequest searchRequest) {
         try {
             String levelStr = this.getDocHighestLevelText(id); //FID0_s or HID0_s etc
 
             extraParam.clear();
-            extraParam.put("q", levelStr + ":" + id + this.solrAND + "-id:" + id + this.solrAND + this.onlyOpenData);
+            extraParam.put("q", levelStr + ":" + id + this.solrAND + "(-id:" + id +")"+ this.solrAND + this.onlyOpenData);
             extraParam.put("fl", "*");
 
             QueryResponse decendentResponse = this.search(searchRequest, extraParam, true);
-
+            
             SolrDocumentList decendentDocumentList = decendentResponse.getResults();
             if (decendentDocumentList.isEmpty()) {
                 //No decendents!
