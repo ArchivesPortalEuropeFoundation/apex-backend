@@ -1,307 +1,287 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
     <luceneMatchVersion>5.5.0</luceneMatchVersion>
-    <jmx />
+	<jmx />
 
-    <schemaFactory class="ClassicIndexSchemaFactory" />
+	<schemaFactory class="ClassicIndexSchemaFactory" />
 
-    <!-- <indexConfig> section could go here, but we want the defaults -->
-    <indexConfig>
-        <ramBufferSizeMB>100</ramBufferSizeMB>
+	<!-- <indexConfig> section could go here, but we want the defaults -->
+	<indexConfig>
+		<ramBufferSizeMB>100</ramBufferSizeMB>
         <!--<mergePolicyFactory>20</mergePolicyFactory>-->
-        <lockType>single</lockType>
-    </indexConfig>
-    <!-- the default high-performance update handler -->
-    <updateHandler class="solr.DirectUpdateHandler2">
-        <autoSoftCommit>
-            <maxDocs>1000</maxDocs>
-            <maxTime>1000</maxTime>
-        </autoSoftCommit>
-        <autoCommit>
-            <maxDocs>1000</maxDocs>
-            <maxTime>10000</maxTime>
-            <openSearcher>false</openSearcher>
-        </autoCommit>
+            <lockType>single</lockType>
+	</indexConfig>
+	<!-- the default high-performance update handler -->
+	<updateHandler class="solr.DirectUpdateHandler2">
+		<autoSoftCommit>
+			<maxDocs>1000</maxDocs>
+			<maxTime>1000</maxTime>
+		</autoSoftCommit>
+		<autoCommit>
+			<maxDocs>1000</maxDocs>
+			<maxTime>10000</maxTime>
+			<openSearcher>false</openSearcher>
+		</autoCommit>
 
 
-    </updateHandler>
+	</updateHandler>
 
 
-    <query>
+	<query>
 
-        <maxBooleanClauses>1024</maxBooleanClauses>
+		<maxBooleanClauses>256</maxBooleanClauses>
 
-        <filterCache class="solr.LRUCache" size="512" initialSize="512"
-                             autowarmCount="256" />
+		<filterCache class="solr.FastLRUCache" size="512" initialSize="512"
+			autowarmCount="256" />
 
-        <queryResultCache class="solr.LRUCache" size="512"
-                                  initialSize="512" autowarmCount="256" />
+		<queryResultCache class="solr.FastLRUCache" size="512"
+			initialSize="512" autowarmCount="256" />
 
-        <documentCache class="solr.LRUCache" size="512"
-                               initialSize="512" autowarmCount="0" />
+		<documentCache class="solr.FastLRUCache" size="512"
+			initialSize="512" autowarmCount="0" />
 
-        <enableLazyFieldLoading>true</enableLazyFieldLoading>
-
-
-        <queryResultWindowSize>50</queryResultWindowSize>
+		<enableLazyFieldLoading>true</enableLazyFieldLoading>
 
 
-        <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+		<queryResultWindowSize>50</queryResultWindowSize>
+
+
+		<queryResultMaxDocsCached>200</queryResultMaxDocsCached>
 
 
 
 
-        <listener event="newSearcher" class="solr.QuerySenderListener">
-            <arr name="queries">
-                <lst>
-                    <str name="q">solr</str>
-                    <str name="start">0</str>
-                    <str name="rows">10</str>
-                </lst>
-                <lst>
-                    <str name="q">rocks</str>
-                    <str name="start">0</str>
-                    <str name="rows">10</str>
-                </lst>
-                <lst>
-                    <str name="q">static newSearcher warming query from solrconfig.xml
-                    </str>
-                </lst>
-            </arr>
-        </listener>
+		<listener event="newSearcher" class="solr.QuerySenderListener">
+			<arr name="queries">
+			</arr>
+		</listener>
 
 
-        <listener event="firstSearcher" class="solr.QuerySenderListener">
-            <arr name="queries">
-            </arr>
-        </listener>
+		<listener event="firstSearcher" class="solr.QuerySenderListener">
+			<arr name="queries">
+			</arr>
+		</listener>
 
 
-        <useColdSearcher>false</useColdSearcher>
+		<useColdSearcher>false</useColdSearcher>
 
 
-        <maxWarmingSearchers>4</maxWarmingSearchers>
+		<maxWarmingSearchers>4</maxWarmingSearchers>
 
-    </query>
-
-
-    <requestDispatcher handleSelect="true">
-
-        <requestParsers enableRemoteStreaming="false"
-                                multipartUploadLimitInKB="2048" formdataUploadLimitInKB="2048" />
+	</query>
 
 
-        <httpCaching never304="true">
+	<requestDispatcher handleSelect="true">
 
-        </httpCaching>
-    </requestDispatcher>
-    <requestHandler name="/select" class="solr.SearchHandler">
-        <lst name="defaults">
-            <str name="df">title</str>
-        </lst>
-    </requestHandler>
+		<requestParsers enableRemoteStreaming="false"
+			multipartUploadLimitInKB="2048" formdataUploadLimitInKB="2048" />
 
-    <requestHandler name="standard" class="solr.StandardRequestHandler"
-                        default="true">
-        <lst name="defaults">
-            <str name="echoParams">explicit</str>
-        </lst>
-    </requestHandler>
 
-    <requestHandler name="spellchecker" class="solr.SpellCheckerRequestHandler"
-                        startup="lazy">
-        <!-- default values for query parameters -->
-        <lst name="defaults">
-            <int name="suggestionCount">1</int>
-            <float name="accuracy">0.5</float>
-        </lst>
+		<httpCaching never304="true">
 
-        <str name="spellcheckerIndexDir">spell</str>
+		</httpCaching>
+	</requestDispatcher>
 
-        <str name="termSourceField">word</str>
 
-    </requestHandler>
+	<requestHandler name="standard" class="solr.StandardRequestHandler"
+		default="true">
+		<lst name="defaults">
+			<str name="echoParams">explicit</str>
+		</lst>
+	</requestHandler>
 
-    <requestHandler name="/search"
-                        class="org.apache.solr.handler.component.SearchHandler">
-        <lst name="defaults">
-            <str name="echoParams">explicit</str>
-            <str name="df">title</str>
-        </lst>
+	<requestHandler name="spellchecker" class="solr.SpellCheckerRequestHandler"
+		startup="lazy">
+		<!-- default values for query parameters -->
+		<lst name="defaults">
+			<int name="suggestionCount">1</int>
+			<float name="accuracy">0.5</float>
+		</lst>
 
-    </requestHandler>
+		<str name="spellcheckerIndexDir">spell</str>
 
-    <requestHandler name="list" class="solr.SearchHandler">
-        <lst name="defaults">
-            <str name="defType">edismax</str>
-            <str name="echoParams">explicit</str>
-            <float name="tie">0.01</float>
-            <str name="qf">
-                title^2.5 unitidfond^1.5 scopecontent^1.3 other^0.5 alterdate^0.4
-            </str>
-            <str name="fl">
-                id,parentId,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
-            </str>
-            <str name="df">title</str>
+		<str name="termSourceField">word</str>
+
+	</requestHandler>
+
+	<requestHandler name="/search"
+		class="org.apache.solr.handler.component.SearchHandler">
+		<lst name="defaults">
+			<str name="echoParams">explicit</str>
+		</lst>
+
+	</requestHandler>
+
+	<requestHandler name="list" class="solr.SearchHandler">
+		<lst name="defaults">
+			<str name="defType">edismax</str>
+			<str name="echoParams">explicit</str>
+			<float name="tie">0.01</float>
+			<str name="qf">
+				title^2.5 scopecontent^1.3 other^0.5 alterdate^0.4
+			</str>
+			<str name="fl">
+				id,parentId,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
+			</str>
+                        <str name="df">title</str>
                         
-            <str name="q.op">AND</str>
-            <str name="q.alt">*:*</str>
-            <str name="hl.fl">title scopecontent other alterdate</str>
-            <str name="hl.fragmenter">regex</str>
-            <str name="spellcheck.onlyMorePopular">true</str>
-            <str name="spellcheck.extendedResults">false</str>
-            <str name="spellcheck.count">20</str>
-            <str name="spellcheck.maxCollations">5</str>
-            <str name="spellcheck.maxCollationTries">100</str>
-            <str name="spellcheck.collate">true</str>
-            <str name="spellcheck.collateExtendedResults">true</str>
-            <str name="spellcheck.accuracy">0.5</str>
-        </lst>
-        <arr name="last-components">
-            <str>spellcheck</str>
-        </arr>
-    </requestHandler>
+                        <str name="q.op">AND</str>
+			<str name="q.alt">*:*</str>
+			<str name="hl.fl">title scopecontent other alterdate</str>
+			<str name="hl.fragmenter">regex</str>
+			<str name="spellcheck.onlyMorePopular">true</str>
+			<str name="spellcheck.extendedResults">false</str>
+			<str name="spellcheck.count">20</str>
+			<str name="spellcheck.maxCollations">5</str>
+			<str name="spellcheck.maxCollationTries">100</str>
+			<str name="spellcheck.collate">true</str>
+			<str name="spellcheck.collateExtendedResults">true</str>
+			<str name="spellcheck.accuracy">0.5</str>
+		</lst>
+		<arr name="last-components">
+			<str>spellcheck</str>
+		</arr>
+	</requestHandler>
 
-    <requestHandler name="context" class="solr.SearchHandler">
-        <lst name="defaults">
-            <str name="defType">edismax</str>
-            <str name="echoParams">explicit</str>
-            <float name="tie">0.01</float>
-            <str name="qf">
-                title scopecontent other alterdate
-            </str>
-            <str name="df">title</str>
-            <str name="fl">
-                id,title,orderId
-            </str>
-            <str name="q.alt">*:*</str>
-            <str name="hl.fl">title</str>
-            <str name="hl.fragsize">0</str>
-            <str name="hl.fragmenter">regex</str>
-            <str name="spellcheck.onlyMorePopular">true</str>
-            <str name="spellcheck.extendedResults">false</str>
-            <str name="spellcheck.count">20</str>
-            <str name="spellcheck.maxCollations">5</str>
-            <str name="spellcheck.maxCollationTries">100</str>
-            <str name="spellcheck.collate">true</str>
-            <str name="spellcheck.collateExtendedResults">true</str>
-            <str name="spellcheck.accuracy">0.5</str>
-        </lst>
-        <arr name="last-components">
-            <str>spellcheck</str>
-        </arr>
-    </requestHandler>
-
-
-    <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
-
-        <str name="queryAnalyzerFieldType">textSpell</str>
-
-        <lst name="spellchecker">
-            <str name="name">default</str>
-            <str name="field">spell</str>
-            <str name="spellcheckIndexDir">./spellchecker</str>
-        </lst>
-
-    </searchComponent>
-    <searchComponent name="tvComponent"
-                         class="org.apache.solr.handler.component.TermVectorComponent" />
-
-    <requestHandler name="tvrh"
-                        class="org.apache.solr.handler.component.SearchHandler">
-        <lst name="defaults">
-            <bool name="tv">true</bool>
-        </lst>
-        <arr name="last-components">
-            <str>tvComponent</str>
-        </arr>
-    </requestHandler>
+	<requestHandler name="context" class="solr.SearchHandler">
+		<lst name="defaults">
+			<str name="defType">edismax</str>
+			<str name="echoParams">explicit</str>
+			<float name="tie">0.01</float>
+			<str name="qf">
+				title scopecontent other alterdate
+			</str>
+			<str name="fl">
+				id,title,orderId
+			</str>
+			<str name="q.alt">*:*</str>
+			<str name="hl.fl">title</str>
+			<str name="hl.fragsize">0</str>
+			<str name="hl.fragmenter">regex</str>
+			<str name="spellcheck.onlyMorePopular">true</str>
+			<str name="spellcheck.extendedResults">false</str>
+			<str name="spellcheck.count">20</str>
+			<str name="spellcheck.maxCollations">5</str>
+			<str name="spellcheck.maxCollationTries">100</str>
+			<str name="spellcheck.collate">true</str>
+			<str name="spellcheck.collateExtendedResults">true</str>
+			<str name="spellcheck.accuracy">0.5</str>
+		</lst>
+		<arr name="last-components">
+			<str>spellcheck</str>
+		</arr>
+	</requestHandler>
 
 
-    <searchComponent name="termsComponent"
-                         class="org.apache.solr.handler.component.TermsComponent" />
+	<searchComponent name="spellcheck" class="solr.SpellCheckComponent">
 
-    <requestHandler name="/terms"
-                        class="org.apache.solr.handler.component.SearchHandler">
-        <lst name="defaults">
-            <bool name="terms">true</bool>
-            <str name="terms.fl">spell</str>
-        </lst>
-        <arr name="components">
-            <str>termsComponent</str>
-        </arr>
-    </requestHandler>
+		<str name="queryAnalyzerFieldType">textSpell</str>
+
+		<lst name="spellchecker">
+			<str name="name">default</str>
+			<str name="field">spell</str>
+			<str name="spellcheckIndexDir">./spellchecker</str>
+		</lst>
+
+	</searchComponent>
+	<searchComponent name="tvComponent"
+		class="org.apache.solr.handler.component.TermVectorComponent" />
+
+	<requestHandler name="tvrh"
+		class="org.apache.solr.handler.component.SearchHandler">
+		<lst name="defaults">
+			<bool name="tv">true</bool>
+		</lst>
+		<arr name="last-components">
+			<str>tvComponent</str>
+		</arr>
+	</requestHandler>
+
+
+	<searchComponent name="termsComponent"
+		class="org.apache.solr.handler.component.TermsComponent" />
+
+	<requestHandler name="/terms"
+		class="org.apache.solr.handler.component.SearchHandler">
+		<lst name="defaults">
+			<bool name="terms">true</bool>
+			<str name="terms.fl">spell</str>
+		</lst>
+		<arr name="components">
+			<str>termsComponent</str>
+		</arr>
+	</requestHandler>
         
-    <requestHandler name="/openDtataTerms"
-                        class="org.apache.solr.handler.component.SearchHandler">
-        <lst name="defaults">
-            <bool name="terms">true</bool>
-            <str name="terms.fl">openDataSpell</str>
-        </lst>
-        <arr name="components">
-            <str>termsComponent</str>
-        </arr>
-    </requestHandler>
+        <requestHandler name="/openDtataTerms"
+		class="org.apache.solr.handler.component.SearchHandler">
+		<lst name="defaults">
+			<bool name="terms">true</bool>
+			<str name="terms.fl">openDataSpell</str>
+		</lst>
+		<arr name="components">
+			<str>termsComponent</str>
+		</arr>
+	</requestHandler>
 
-    <requestHandler name="/update" class="solr.UpdateRequestHandler" />
+	<requestHandler name="/update" class="solr.UpdateRequestHandler" />
 
-    <!--	<requestHandler name="/admin/"
-    class="org.apache.solr.handler.admin.AdminHandlers" />-->
+<!--	<requestHandler name="/admin/"
+		class="org.apache.solr.handler.admin.AdminHandlers" />-->
 
-    <!-- ping/healthcheck -->
-    <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
-        <lst name="invariants">
-            <str name="q">solrpingquery</str>
-        </lst>
-        <lst name="defaults">
-            <str name="echoParams">all</str>
-        </lst>
-    </requestHandler>
+	<!-- ping/healthcheck -->
+	<requestHandler name="/admin/ping" class="solr.PingRequestHandler">
+		<lst name="invariants">
+			<str name="q">solrpingquery</str>
+		</lst>
+		<lst name="defaults">
+			<str name="echoParams">all</str>
+		</lst>
+	</requestHandler>
 
-    <!-- Echo the request contents back to the client -->
-    <requestHandler name="/debug/dump" class="solr.DumpRequestHandler">
-        <lst name="defaults">
-            <str name="echoParams">explicit</str> <!-- for all params (including the default etc) use: 'all' -->
-            <str name="echoHandler">true</str>
-        </lst>
-    </requestHandler>
-    <requestHandler name="/analysis/field" class="solr.FieldAnalysisRequestHandler" />
+	<!-- Echo the request contents back to the client -->
+	<requestHandler name="/debug/dump" class="solr.DumpRequestHandler">
+		<lst name="defaults">
+			<str name="echoParams">explicit</str> <!-- for all params (including the default etc) use: 'all' -->
+			<str name="echoHandler">true</str>
+		</lst>
+	</requestHandler>
+  	<requestHandler name="/analysis/field" class="solr.FieldAnalysisRequestHandler" />
 
-    <searchComponent class="solr.HighlightComponent" name="highlight">
-        <highlighting>
-            <!-- Configure the standard fragmenter -->
-            <!-- This could most likely be commented out in the "default" case -->
-            <fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter"
-                                    default="true">
-                <lst name="defaults">
-                    <int name="hl.fragsize">100</int>
-                </lst>
-            </fragmenter>
+	<searchComponent class="solr.HighlightComponent" name="highlight">
+		<highlighting>
+			<!-- Configure the standard fragmenter -->
+			<!-- This could most likely be commented out in the "default" case -->
+			<fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter"
+				default="true">
+				<lst name="defaults">
+					<int name="hl.fragsize">100</int>
+				</lst>
+			</fragmenter>
 
-            <!-- A regular-expression-based fragmenter (f.i., for sentence extraction) -->
-            <fragmenter name="regex"
-                                    class="org.apache.solr.highlight.RegexFragmenter">
-                <lst name="defaults">
-                    <int name="hl.fragsize">70</int>
-                    <float name="hl.regex.slop">0.5</float>
-                    <str name="hl.regex.pattern">[-\w ,/\n\"']{20,200}</str>
-                </lst>
-            </fragmenter>
+			<!-- A regular-expression-based fragmenter (f.i., for sentence extraction) -->
+			<fragmenter name="regex"
+				class="org.apache.solr.highlight.RegexFragmenter">
+				<lst name="defaults">
+					<int name="hl.fragsize">70</int>
+					<float name="hl.regex.slop">0.5</float>
+					<str name="hl.regex.pattern">[-\w ,/\n\"']{20,200}</str>
+				</lst>
+			</fragmenter>
 
-            <!-- Configure the standard formatter -->
-            <formatter name="html" class="org.apache.solr.highlight.HtmlFormatter"
-                                   default="true">
-                <lst name="defaults">
-                    <str name="hl.simple.pre"><![CDATA[<em>]]></str>
-                    <str name="hl.simple.post"><![CDATA[</em>]]></str>
-                </lst>
-            </formatter>
-        </highlighting>
-    </searchComponent>
+			<!-- Configure the standard formatter -->
+			<formatter name="html" class="org.apache.solr.highlight.HtmlFormatter"
+				default="true">
+				<lst name="defaults">
+					<str name="hl.simple.pre"><![CDATA[<em>]]></str>
+					<str name="hl.simple.post"><![CDATA[</em>]]></str>
+				</lst>
+			</formatter>
+		</highlighting>
+	</searchComponent>
 
-    <admin>
-        <defaultQuery>*:*</defaultQuery>
-    </admin>
+	<admin>
+		<defaultQuery>*:*</defaultQuery>
+	</admin>
 
 </config>
 
