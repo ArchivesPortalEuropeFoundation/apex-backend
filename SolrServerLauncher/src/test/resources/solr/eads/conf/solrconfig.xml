@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
-	<luceneMatchVersion>6.6.1</luceneMatchVersion>
+	<luceneMatchVersion>5.5</luceneMatchVersion>
 	<jmx />
 
 	<schemaFactory class="ClassicIndexSchemaFactory" />
@@ -28,15 +28,15 @@
 
 	<query>
 
-		<maxBooleanClauses>1024</maxBooleanClauses>
+		<maxBooleanClauses>256</maxBooleanClauses>
 
-		<filterCache class="solr.LRUCache" size="512" initialSize="512"
+		<filterCache class="solr.FastLRUCache" size="512" initialSize="512"
 			autowarmCount="256" />
 
-		<queryResultCache class="solr.LRUCache" size="512"
+		<queryResultCache class="solr.FastLRUCache" size="512"
 			initialSize="512" autowarmCount="256" />
 
-		<documentCache class="solr.LRUCache" size="512"
+		<documentCache class="solr.FastLRUCache" size="512"
 			initialSize="512" autowarmCount="0" />
 
 		<enableLazyFieldLoading>true</enableLazyFieldLoading>
@@ -52,20 +52,6 @@
 
 		<listener event="newSearcher" class="solr.QuerySenderListener">
 			<arr name="queries">
-				<lst>
-					<str name="q">solr</str>
-					<str name="start">0</str>
-					<str name="rows">10</str>
-				</lst>
-				<lst>
-					<str name="q">rocks</str>
-					<str name="start">0</str>
-					<str name="rows">10</str>
-				</lst>
-				<lst>
-					<str name="q">static newSearcher warming query from solrconfig.xml
-					</str>
-				</lst>
 			</arr>
 		</listener>
 
@@ -131,7 +117,7 @@
 			<str name="echoParams">explicit</str>
 			<float name="tie">0.01</float>
 			<str name="qf">
-				title^2.5 unitidfond^1.5 scopecontent^1.3 other^0.5 alterdate^0.4
+				title^2.5 scopecontent^1.3 other^0.5 alterdate^0.4
 			</str>
 			<str name="fl">
 				id,parentId,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
