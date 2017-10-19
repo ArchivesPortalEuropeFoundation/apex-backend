@@ -14,6 +14,7 @@ import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapKeys;
 import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
+import eu.apenet.dashboard.services.ead3.publish.StoreEacFromEad3;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
@@ -58,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -599,6 +601,12 @@ public class Ead3SolrDocBuilder {
                     count++;
                     Map<String, Object> personMap = generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), count);
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
+
+                    try {
+                        new StoreEacFromEad3(personMap, persistantEad3.getArchivalInstitution().getCountry().getIsoname(), persistantEad3.getAiId()).storeEacCpf();
+                    } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     listOfEacs.add(personMap);
                 } else if (eacElement.getDeclaredType().equals(Corpname.class)) {
                     count++;
@@ -648,8 +656,8 @@ public class Ead3SolrDocBuilder {
 //        eacCpf.
 //        eacMap.put(SolrFields.COUNTRY, cRoot.getDataElement(Ead3SolrFields.COUNTRY));
 //        eacMap.put(SolrFields.AI, cRoot.getDataElement(Ead3SolrFields.AI));
-        eacMap.put(SolrFields.REPOSITORY_CODE, cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
-        eacMap.put(Ead3SolrFields.RECORD_ID, cRoot.getDataElement(Ead3SolrFields.RECORD_ID));
+        eacMap.put(SolrFields.REPOSITORY_CODE, returnAsArray(cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE).toString()));
+        eacMap.put(Ead3SolrFields.RECORD_ID, returnAsArray(cRoot.getDataElement(Ead3SolrFields.RECORD_ID).toString()));
 
         int partNameCount = 0;
         int partGenealogyDescriptionCount = 0;
@@ -663,49 +671,63 @@ public class Ead3SolrDocBuilder {
             if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME)) {
                 partNameCount++;
                 firstName = getContent(part);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, firstName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME);
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName));
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME));
             } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME)) {
                 partNameCount++;
                 lastName = getContent(part);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, lastName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME);
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(lastName));
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_SUR_NAME));
             } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_GENDER) || part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_ROLE)) {
                 partGenealogyDescriptionCount++;
-                eacMap.put(Ead3ToEacFieldMapKeys.GENEALOGY_DESCRIPTION_ + partGenealogyDescriptionCount, getContent(part));
+                eacMap.put(Ead3ToEacFieldMapKeys.GENEALOGY_DESCRIPTION_ + partGenealogyDescriptionCount, returnAsArray(getContent(part)));
                 //need to add language form default arcdes lang
+                eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE, returnAsArray("dut"));
+                eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_SCRIPT, returnAsArray("Latn"));
+                eacMap.put("controlLanguage", returnAsArray("dut"));
+                eacMap.put("controlScript", returnAsArray("Latn"));
             } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE)) {
                 deathDate = getContent(part);
                 if (StringUtils.isEmpty(deathDate)) {
                     deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
                 }
                 partDateCount++;
-                eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, deathDate);
+                eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
 
             } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE)) {
                 birthDate = getContent(part);
                 if (StringUtils.isEmpty(birthDate)) {
                     birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
                 }
-                eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, birthDate);
+                eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
             }
         }
 
         if (StringUtils.isEmpty(deathDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN);
+            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
         }
         if (StringUtils.isEmpty(birthDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_1", Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN);
+            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
         }
 
         partNameCount++;
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, firstName + " " + lastName);
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME);
+        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName + " " + lastName));
+        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
 
         //test build map for ead3 to eac
-        eacMap.put(Ead3ToEacFieldMapKeys.TEXT_LOCAL_ID_ + "1", cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count);
+        eacMap.put(Ead3ToEacFieldMapKeys.TEXT_LOCAL_ID_ + "1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
 
+        //for test
+        eacMap.put("dateExistenceTable_rows", returnAsArray("1"));
+        eacMap.put("dateExistenceTable_date_1_radio_1", returnAsArray("unknown"));
+        eacMap.put("dateExistenceTable_date_2_radio_1", returnAsArray("unknown"));
+
+        eacMap.put("identityPersonName_1_rows", returnAsArray("0"));
         return eacMap;
+    }
+
+    private String[] returnAsArray(String... input) {
+        return input;
     }
 
     private void buildPersnameOrFamOrCorpMap(List<Part> parts, String type, Map<String, String> map) {
