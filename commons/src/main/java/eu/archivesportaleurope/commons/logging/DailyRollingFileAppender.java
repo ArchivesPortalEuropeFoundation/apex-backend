@@ -151,7 +151,7 @@ public class DailyRollingFileAppender extends FileAppender {
     /**
      * There is 7 backup file by default.
      */
-    protected int maxBackupIndex = 7;
+    protected int maxBackupIndex = 31;
     /**
      * The next time we estimate a rollover should occur.
      */
