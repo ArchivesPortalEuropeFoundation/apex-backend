@@ -50,6 +50,7 @@ public class ReIndexAllDocumentsManager {
     private static final Logger LOGGER = Logger.getLogger(ReIndexAllDocumentsManager.class);
     private boolean reIndexInProgress = false;
     private Reindexer reindexer;
+    private static long alreadyAdded;
 
     public int redindex(boolean testRun, List<XmlType> types) throws ProcessBusyException {
         if (this.reIndexInProgress) {
@@ -72,6 +73,18 @@ public class ReIndexAllDocumentsManager {
 
     public void setReIndexInProgress(boolean reIndexInProgress) {
         this.reIndexInProgress = reIndexInProgress;
+    }
+
+    public long getAlreadyAdded() {
+        return alreadyAdded;
+    }
+
+    public void setAlreadyAdded(long alreadyAdded) {
+        ReIndexAllDocumentsManager.alreadyAdded = alreadyAdded;
+    }
+
+    public void incAlreadyAdded() {
+        ReIndexAllDocumentsManager.alreadyAdded = getAlreadyAdded() + 10;
     }
 
     public void stopReindex() {
@@ -100,11 +113,11 @@ public class ReIndexAllDocumentsManager {
             QueueItemDAO queueDao = DAOFactory.instance().getQueueItemDAO();
             ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
             contentSearchOptions.setPublished(Boolean.TRUE);
-            
+
             try {
-                for (int i=0; i<types.size() && !this.stopSignal; i++) {
+                for (int i = 0; i < types.size() && !this.stopSignal; i++) {
                     XmlType xmlType = types.get(i);
-                    LOGGER.info("Going to add doc type: "+xmlType.getName()+" for re-index");
+                    LOGGER.info("Going to add doc type: " + xmlType.getName() + " for re-index");
                     if (xmlType.getIdentifier() == XmlType.EAD_3.getIdentifier()) {
                         contentSearchOptions.setContentClass(xmlType.getClazz());
                         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
@@ -117,9 +130,10 @@ public class ReIndexAllDocumentsManager {
                     }
                 }
                 reIndexInProgress = false;
+                alreadyAdded = 0;
             } catch (Exception ex) {
                 reIndexInProgress = false;
-                LOGGER.debug("Unknown exception! "+ex.getMessage());
+                LOGGER.debug("Unknown exception! " + ex.getMessage());
             }
         }
 
@@ -171,6 +185,8 @@ public class ReIndexAllDocumentsManager {
                         LOGGER.info("Sleep 5 sec");
                         Thread.sleep(5000);
                         JpaUtil.beginDatabaseTransaction();
+                        incAlreadyAdded();
+                        LOGGER.info("number of processed " + getAlreadyAdded());
                     }
                 } catch (IOException ex) {
                     LOGGER.error("Queue exception: " + ex.getMessage());

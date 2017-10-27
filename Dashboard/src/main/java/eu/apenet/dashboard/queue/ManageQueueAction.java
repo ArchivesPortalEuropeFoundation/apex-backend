@@ -58,6 +58,8 @@ public class ManageQueueAction extends AbstractAction {
     private static final String EAD_SG = "numberOfSourceGuide";
     private static final String EAC_CPF_UNITS = "numberOfEacCpfs";
     private static final String EAD3_UNITS = "numberOfEad3s";
+    private static final String REINDEX_ON_PROGRESS = "reIndexOnProgress";
+    private static final String REINDEX_ON_PROGRESS_ADDITIONAL = "reIndexOnProgressAdditional";
     /**
      *
      */
@@ -145,7 +147,7 @@ public class ManageQueueAction extends AbstractAction {
 
         getServletRequest().setAttribute("selections", this.selections);
 
-        getServletRequest().setAttribute("reIndexOnProgress", ReIndexAllDocumentsManager.getInstance().isReIndexInProgress());
+        getServletRequest().setAttribute(REINDEX_ON_PROGRESS, ReIndexAllDocumentsManager.getInstance().isReIndexInProgress());
     }
 
     private void countTotalNumberOfElementsToBeReindexed() {
@@ -174,6 +176,9 @@ public class ManageQueueAction extends AbstractAction {
         getServletRequest().setAttribute(EAD_SG, SGUnits);
         getServletRequest().setAttribute(EAC_CPF_UNITS, eacCpfUnits);
         getServletRequest().setAttribute(EAD3_UNITS, ead3Units);
+        long total = FAUnits + HGUnits + SGUnits + eacCpfUnits + ead3Units;
+        long remaining = FAUnits + HGUnits + SGUnits + eacCpfUnits + ead3Units - ReIndexAllDocumentsManager.getInstance().getAlreadyAdded();
+        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + remaining + " / " + total + " )");
     }
 
     private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
