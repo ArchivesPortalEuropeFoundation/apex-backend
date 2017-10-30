@@ -89,7 +89,7 @@
         <c:if test="${reIndexOnProgress}">
             <tr>
                 <th><s:text name="admin.queuemanagement.reindexing.inprogress" /></th>
-                <td>${reIndexOnProgress} ${reIndexOnProgressAdditional}</td>
+                <td>${reIndexOnProgressAdditional}</td>
             </tr>
         </c:if>
     </table>

@@ -182,11 +182,10 @@ public class ReIndexAllDocumentsManager {
                     queueDao.updateSimple(queueItem);
                     if (i % 10 == 0) {
                         JpaUtil.commitDatabaseTransaction();
-                        LOGGER.info("Sleep 5 sec");
                         Thread.sleep(5000);
                         JpaUtil.beginDatabaseTransaction();
                         incAlreadyAdded();
-                        LOGGER.info("number of processed " + getAlreadyAdded());
+                        LOGGER.info("Number of documents added in the queue for re-indexing :  " + getAlreadyAdded());
                     }
                 } catch (IOException ex) {
                     LOGGER.error("Queue exception: " + ex.getMessage());

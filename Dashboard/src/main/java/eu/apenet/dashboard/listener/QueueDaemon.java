@@ -18,10 +18,10 @@ public class QueueDaemon {
         clean();
         if (scheduler == null && !queueProcessing) {
             ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
-                                       .setNameFormat("queue-thread-%d").build();
+                    .setNameFormat("queue-thread-%d").build();
             scheduler = Executors.newScheduledThreadPool(1, namedThreadFactory);
             addTask(new Duration(0, 0, 0), new Duration(0, 10, 0), new Duration(
-                    0, 2, 0));
+                    0, 0, 30));
             LOGGER.info("Queue daemon started");
         } else if (queueProcessing) {
             LOGGER.info(
@@ -30,7 +30,7 @@ public class QueueDaemon {
     }
 
     public static void addTask(Duration startDelay, Duration maxDuration,
-                               Duration delay) {
+            Duration delay) {
         if (scheduler != null) {
             LOGGER.info("Add queue task");
             QueueTask queueTask = new QueueTask(scheduler, maxDuration, delay);
