@@ -9,6 +9,7 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.exception.ItemNotFoundException;
 import eu.apenet.dashboard.services.ead3.publish.DateUtil;
 import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapKeys;
 import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
@@ -34,6 +35,7 @@ import gov.loc.ead.MMixedBasic;
 import gov.loc.ead.Langmaterial;
 import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
+import gov.loc.ead.Localtypedeclaration;
 import gov.loc.ead.MCBase;
 import gov.loc.ead.MMixedBasicPlusAccess;
 import gov.loc.ead.Maintenanceagency;
@@ -99,7 +101,13 @@ public class Ead3SolrDocBuilder {
         this.openDataEnable = ead3.getArchivalInstitution().isOpenDataEnabled();
         this.ead3 = ead;
         jXPathContext = JXPathContext.newContext(this.ead3);
-
+        try {
+            Localtypedeclaration localTypeDeclaration = this.retrieveLocaltypedeclaration();
+            //ToDo: Process Localtypedeclaration
+        } catch (ItemNotFoundException ex) {
+            LOGGER.debug(ex.getMessage());
+        }
+        
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
 
@@ -446,6 +454,19 @@ public class Ead3SolrDocBuilder {
         } catch (Exception e) {
 
         }
+    }
+
+    private Localtypedeclaration retrieveLocaltypedeclaration() throws ItemNotFoundException {
+        if (this.ead3 == null || this.jXPathContext == null) {
+            throw new IllegalStateException("Not initialized properly");
+        }
+        try {
+            Localtypedeclaration localtypedeclaration = (Localtypedeclaration) jXPathContext.getValue("control/localtypedeclaration");
+            return localtypedeclaration;
+        } catch (Exception ex) {
+            throw new ItemNotFoundException("control/localtypedeclaration Not found");
+        }
+
     }
 
     private String retrieveControlLanguage() {
