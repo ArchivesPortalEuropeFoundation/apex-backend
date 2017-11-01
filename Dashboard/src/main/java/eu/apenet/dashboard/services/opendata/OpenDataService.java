@@ -12,6 +12,7 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.Ead3SolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
+import eu.apenet.commons.solr.SolrDocUtils;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
@@ -49,7 +50,7 @@ public class OpenDataService {
     public static final String ENABLE_OPEN_DATA_KEY = "enableOpenData";
 
     private final List<SolrInputDocument> docList = new ArrayList<SolrInputDocument>();
-    DocumentObjectBinder binder = new DocumentObjectBinder(); 
+//    DocumentObjectBinder binder = new DocumentObjectBinder(); 
 
     private OpenDataService() {
     }
@@ -132,7 +133,7 @@ public class OpenDataService {
                     for (SolrDocument doc : response.getResults()) {
                         addUnStoredFields(solrHolder, doc, archivalInstitution);
 
-                        SolrInputDocument inputDocument = binder.toSolrInputDocument(doc);//ClientUtils.toSolrInputDocument(doc);
+                        SolrInputDocument inputDocument = SolrDocUtils.toSolrInputDocument(doc);
                         if (inputDocument.getField("openData") == null) {
                             inputDocument.addField("openData", openDataEnable);
 //                            inputDocument.addField("openData", openDataEnable, 1);
