@@ -131,8 +131,10 @@ public class ManageQueueAction extends AbstractAction {
         if (endDateTime != null) {
             getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
         }
-        this.buildSelectionForReindex();
-        this.countTotalNumberOfElementsToBeReindexed();
+        if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()) {
+            this.buildSelectionForReindex();
+            this.countTotalNumberOfElementsToBeReindexed();
+        }
         return SUCCESS;
     }
 
@@ -176,9 +178,9 @@ public class ManageQueueAction extends AbstractAction {
         getServletRequest().setAttribute(EAD_SG, SGUnits);
         getServletRequest().setAttribute(EAC_CPF_UNITS, eacCpfUnits);
         getServletRequest().setAttribute(EAD3_UNITS, ead3Units);
-        long total = FAUnits + HGUnits + SGUnits + eacCpfUnits + ead3Units;
-        long remaining = FAUnits + HGUnits + SGUnits + eacCpfUnits + ead3Units - ReIndexAllDocumentsManager.getInstance().getAlreadyAdded();
-        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + remaining + " / " + total + " )");
+        long total = ReIndexAllDocumentsManager.getInstance().getTotalToBeReindexed();
+        long alreadyAdded = ReIndexAllDocumentsManager.getInstance().getAlreadyAdded();
+        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + alreadyAdded + " / " + total + " )");
     }
 
     private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
