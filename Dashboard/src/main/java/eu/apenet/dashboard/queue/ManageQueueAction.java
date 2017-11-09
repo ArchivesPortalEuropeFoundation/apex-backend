@@ -180,7 +180,8 @@ public class ManageQueueAction extends AbstractAction {
         getServletRequest().setAttribute(EAD3_UNITS, ead3Units);
         long total = ReIndexAllDocumentsManager.getInstance().getTotalToBeReindexed();
         long alreadyAdded = ReIndexAllDocumentsManager.getInstance().getAlreadyAdded();
-        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + alreadyAdded + " / " + total + " )");
+        double percent = alreadyAdded*100.0/total;
+        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + alreadyAdded + " / " + total + " ) - "+String.format("%.2f", percent)+"%");
     }
 
     private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
