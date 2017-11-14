@@ -5,6 +5,7 @@
  */
 package eu.apenet.dashboard.types.ead3;
 
+import eu.apenet.dashboard.exception.ItemNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,20 +14,29 @@ import java.util.Set;
  *
  * @author kaisar
  */
-public class BuildFinalMapWithAlias {
+public class LocalTypeMap {
 
     private final Map<String, String> alaisMap;
     private final Map<String, String> immutableMap = ImmutableLocalTypeMap.getInstance().getUnmodifiableMap();
 
-    public BuildFinalMapWithAlias() {
-
-        alaisMap = new HashMap<>();
-        alaisMap.putAll(immutableMap);
-
+    public LocalTypeMap() {
+        alaisMap = new HashMap<>(immutableMap);
     }
 
-    public Map<String, String> getAlaisMap() {
-        return alaisMap;
+    public String getApeType(String localType) throws ItemNotFoundException {
+        if (alaisMap.containsKey(localType)) {
+            return alaisMap.get(localType);
+        }
+        throw new ItemNotFoundException("Unknown localtype: " + localType);
+    }
+
+    public void addToMap(String apeType, String localType) {
+        if (null == apeType || apeType.isEmpty() || null == localType || localType.isEmpty()) {
+            return;
+        }
+        if (immutableMap.containsKey(apeType)) {
+            alaisMap.put(localType, apeType);
+        }
     }
 
     public void addToMap(Map.Entry<String, Set<String>> entry) {
