@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class BuildFinalMapWithAlias {
 
-    private Map<String, String> alaisMap;
+    private final Map<String, String> alaisMap;
     private final Map<String, String> immutableMap = ImmutableLocalTypeMap.getInstance().getUnmodifiableMap();
 
     public BuildFinalMapWithAlias() {
@@ -29,25 +29,21 @@ public class BuildFinalMapWithAlias {
         return alaisMap;
     }
 
-    public void setAlaisMap(Map<String, String> alaisMap) {
-        this.alaisMap = alaisMap;
-    }
-
     public void addToMap(Map.Entry<String, Set<String>> entry) {
         if (null != entry) {
             if (immutableMap.containsKey(entry.getKey())) {
-                for (String s : entry.getValue()) {
+                entry.getValue().forEach((s) -> {
                     alaisMap.put(s, entry.getKey());
-                }
+                });
             }
         }
     }
 
     public void addAllToMap(Map<String, Set<String>> partMap) {
         if (null != partMap) {
-            for (Map.Entry<String, Set<String>> entry : partMap.entrySet()) {
+            partMap.entrySet().forEach((entry) -> {
                 this.addToMap(entry);
-            }
+            });
         }
     }
 }
