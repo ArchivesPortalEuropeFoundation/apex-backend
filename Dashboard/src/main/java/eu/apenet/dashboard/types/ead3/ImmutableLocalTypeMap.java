@@ -15,8 +15,12 @@ import java.util.Map;
  */
 public class ImmutableLocalTypeMap {
 
+    private static class ImmutableLocalTypeMapHolder {
+
+        private final static ImmutableLocalTypeMap INSTANCE = new ImmutableLocalTypeMap();
+    }
+
     private final Map<String, String> typeMap = new HashMap<>();
-    private static final ImmutableLocalTypeMap IMMUTABLE_TYPE_MAP = getInstance();
 
     private ImmutableLocalTypeMap() {
         for (ApeType field : ApeType.values()) {
@@ -25,11 +29,7 @@ public class ImmutableLocalTypeMap {
     }
 
     public static ImmutableLocalTypeMap getInstance() {
-        if (IMMUTABLE_TYPE_MAP == null) {
-            return new ImmutableLocalTypeMap();
-        } else {
-            return IMMUTABLE_TYPE_MAP;
-        }
+        return ImmutableLocalTypeMapHolder.INSTANCE;
     }
 
     public Map<String, String> getUnmodifiableMap() {
