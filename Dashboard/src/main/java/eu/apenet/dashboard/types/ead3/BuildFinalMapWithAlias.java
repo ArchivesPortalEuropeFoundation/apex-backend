@@ -5,10 +5,9 @@
  */
 package eu.apenet.dashboard.types.ead3;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -34,7 +33,7 @@ public class BuildFinalMapWithAlias {
         this.alaisMap = alaisMap;
     }
 
-    public void addToMap(Map.Entry<String, List<String>> entry) {
+    public void addToMap(Map.Entry<String, Set<String>> entry) {
         if (null != entry) {
             if (immutableMap.containsKey(entry.getKey())) {
                 for (String s : entry.getValue()) {
@@ -44,9 +43,9 @@ public class BuildFinalMapWithAlias {
         }
     }
 
-    public void addAllToMap(Map<String, List<String>> partMap) {
+    public void addAllToMap(Map<String, Set<String>> partMap) {
         if (null != partMap) {
-            for (Map.Entry<String, List<String>> entry : partMap.entrySet()) {
+            for (Map.Entry<String, Set<String>> entry : partMap.entrySet()) {
                 this.addToMap(entry);
             }
         }

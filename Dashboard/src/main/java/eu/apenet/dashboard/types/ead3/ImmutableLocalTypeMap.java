@@ -16,7 +16,7 @@ import java.util.Map;
 public class ImmutableLocalTypeMap {
 
     private final Map<String, String> typeMap = new HashMap<>();
-    private static final ImmutableLocalTypeMap IMMUTABLE_TYPE_MAP = null;
+    private static final ImmutableLocalTypeMap IMMUTABLE_TYPE_MAP = getInstance();
 
     private ImmutableLocalTypeMap() {
         for (ApeType field : ApeType.values()) {
