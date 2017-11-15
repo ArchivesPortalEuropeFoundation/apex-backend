@@ -39,6 +39,12 @@ public class LocalTypeMap {
         }
     }
 
+    public void addToMap(String apeType, String... localTypes) {
+        for (String s : localTypes) {
+            addToMap(s, apeType);
+        }
+    }
+
     public void addToMap(Map.Entry<String, Set<String>> entry) {
         if (null != entry) {
             if (immutableMap.containsKey(entry.getKey())) {
