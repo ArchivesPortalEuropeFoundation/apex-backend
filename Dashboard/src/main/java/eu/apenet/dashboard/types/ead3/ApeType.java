@@ -15,19 +15,24 @@ public enum ApeType {
     REMARK("remark"),
     RESIDENCE("residence"),
     INFIX("infix"),
+    INFIXTITLE("infixtitle"),
     LASTNAME("lastname"),
     AGE("age"),
     ALIAS("alias"),
     BAPTISMDATE("baptismdate"),
     BAPTISMPLACE("baptismplace"),
     BITHDATE("birthdate"),
+    BIRTHNAME("birthname"),
     BIRTHPLACE("birthplace"),
     BURIALDATE("burialdate"),
     BURIALPLACE("burialplace"),
+    BUSINESS_RESIDENCE("business-residence"),
     DEATHDATE("deathdate"),
     DEATHPLACE("deathplace"),
     DIVOCEDATE("divorcedate"),
+    FAMNAME("famname"),
     FIRSTNAME("firstname"),
+    LEGALFORM("legalform"),
     GENDER("gender"),
     INITIALS("initials"),
     LITERAL("literal"),
@@ -36,9 +41,14 @@ public enum ApeType {
     MARRIAGEPLACE("marriageplace"),
     OCCUPATION("occupation"),
     PATRONYM("patronym"),
+    PERSNAME("persname"),
+    POSTTITLE("posttitle"),
+    PRETITLE("pretitle"),
+    PRIVATE_RESIDENCE("private-residence"),
     ROLE("role"),
+    SUFFIX("suffix"),
     TITLE("title");
-    private String value;
+    private final String value;
 
     private ApeType(String value) {
         this.value = value;
