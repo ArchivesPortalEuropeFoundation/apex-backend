@@ -176,13 +176,13 @@ public abstract class AbstractSearcher {
             query.set("spellcheck", "on");
         }
         Integer timeAllowed = -1;
-        if (solrQueryParameters.isTimeAllowed()) {
-            timeAllowed = TIME_ALLOWED_TREE;
-            if (QUERY_TYPE_LIST.equals(queryType)) {
-                timeAllowed = TIME_ALLOWED;
-            }
-            query.setTimeAllowed(timeAllowed);
-        }
+//        if (solrQueryParameters.isTimeAllowed()) {
+//            timeAllowed = TIME_ALLOWED_TREE;
+//            if (QUERY_TYPE_LIST.equals(queryType)) {
+//                timeAllowed = TIME_ALLOWED;
+//            }
+//            query.setTimeAllowed(timeAllowed);
+//        }
         String resultLog = "Query;";
         if (query.getRows() == 0) {
             if (QUERY_TYPE_LIST.equals(queryType)) {
