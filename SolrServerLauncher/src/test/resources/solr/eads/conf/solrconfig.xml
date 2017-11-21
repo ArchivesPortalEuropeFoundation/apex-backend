@@ -31,21 +31,21 @@
         <maxBooleanClauses>256</maxBooleanClauses>
 
         <filterCache class="solr.FastLRUCache" size="512" initialSize="512"
-                             autowarmCount="256" />
+                     autowarmCount="80%" cleanupThread="true"/>
 
         <queryResultCache class="solr.FastLRUCache" size="512"
-                                  initialSize="512" autowarmCount="256" />
+                          initialSize="512" autowarmCount="80%" cleanupThread="true"/>
 
         <documentCache class="solr.FastLRUCache" size="512"
-                               initialSize="512" autowarmCount="0" />
+                       initialSize="512" autowarmCount="80%" cleanupThread="true"/>
 
         <enableLazyFieldLoading>true</enableLazyFieldLoading>
 
 
-        <queryResultWindowSize>50</queryResultWindowSize>
+        <queryResultWindowSize>20</queryResultWindowSize>
 
 
-        <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+        <queryResultMaxDocsCached>30</queryResultMaxDocsCached>
 
 
 
@@ -73,7 +73,7 @@
     <requestDispatcher handleSelect="true">
 
         <requestParsers enableRemoteStreaming="false"
-                                multipartUploadLimitInKB="2048" formdataUploadLimitInKB="2048" />
+                        multipartUploadLimitInKB="2048" formdataUploadLimitInKB="2048" />
 
 
         <httpCaching never304="true">
@@ -83,14 +83,14 @@
 
 
     <requestHandler name="standard" class="solr.StandardRequestHandler"
-                        default="true">
+                    default="true">
         <lst name="defaults">
             <str name="echoParams">explicit</str>
         </lst>
     </requestHandler>
 
     <requestHandler name="spellchecker" class="solr.SpellCheckerRequestHandler"
-                        startup="lazy">
+                    startup="lazy">
         <!-- default values for query parameters -->
         <lst name="defaults">
             <int name="suggestionCount">1</int>
@@ -104,7 +104,7 @@
     </requestHandler>
 
     <requestHandler name="/search"
-                        class="org.apache.solr.handler.component.SearchHandler">
+                    class="org.apache.solr.handler.component.SearchHandler">
         <lst name="defaults">
             <str name="echoParams">explicit</str>
         </lst>
@@ -184,10 +184,10 @@
 
     </searchComponent>
     <searchComponent name="tvComponent"
-                         class="org.apache.solr.handler.component.TermVectorComponent" />
+                     class="org.apache.solr.handler.component.TermVectorComponent" />
 
     <requestHandler name="tvrh"
-                        class="org.apache.solr.handler.component.SearchHandler">
+                    class="org.apache.solr.handler.component.SearchHandler">
         <lst name="defaults">
             <bool name="tv">true</bool>
         </lst>
@@ -198,10 +198,10 @@
 
 
     <searchComponent name="termsComponent"
-                         class="org.apache.solr.handler.component.TermsComponent" />
+                     class="org.apache.solr.handler.component.TermsComponent" />
 
     <requestHandler name="/terms"
-                        class="org.apache.solr.handler.component.SearchHandler">
+                    class="org.apache.solr.handler.component.SearchHandler">
         <lst name="defaults">
             <bool name="terms">true</bool>
             <str name="terms.fl">spell</str>
@@ -212,7 +212,7 @@
     </requestHandler>
         
     <requestHandler name="/openDtataTerms"
-                        class="org.apache.solr.handler.component.SearchHandler">
+                    class="org.apache.solr.handler.component.SearchHandler">
         <lst name="defaults">
             <bool name="terms">true</bool>
             <str name="terms.fl">openDataSpell</str>
@@ -251,7 +251,7 @@
             <!-- Configure the standard fragmenter -->
             <!-- This could most likely be commented out in the "default" case -->
             <fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter"
-                                    default="true">
+                        default="true">
                 <lst name="defaults">
                     <int name="hl.fragsize">100</int>
                 </lst>
@@ -259,7 +259,7 @@
 
             <!-- A regular-expression-based fragmenter (f.i., for sentence extraction) -->
             <fragmenter name="regex"
-                                    class="org.apache.solr.highlight.RegexFragmenter">
+                        class="org.apache.solr.highlight.RegexFragmenter">
                 <lst name="defaults">
                     <int name="hl.fragsize">70</int>
                     <float name="hl.regex.slop">0.5</float>
@@ -269,7 +269,7 @@
 
             <!-- Configure the standard formatter -->
             <formatter name="html" class="org.apache.solr.highlight.HtmlFormatter"
-                                   default="true">
+                       default="true">
                 <lst name="defaults">
                     <str name="hl.simple.pre"><![CDATA[<em>]]></str>
                     <str name="hl.simple.post"><![CDATA[</em>]]></str>
