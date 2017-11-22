@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="https://www2.archivists.org/" elementFormDefault="qualified" targetNamespace="https://www2.archivists.org/">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="https://www.archivesportaleurope.net/" elementFormDefault="qualified" targetNamespace="https://www.archivesportaleurope.net/">
     <xs:element name="localTypes">
         <xs:complexType>
             <xs:sequence>

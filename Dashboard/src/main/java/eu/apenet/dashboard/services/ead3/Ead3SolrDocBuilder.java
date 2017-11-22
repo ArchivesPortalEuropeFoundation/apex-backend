@@ -101,13 +101,20 @@ public class Ead3SolrDocBuilder {
         this.openDataEnable = ead3.getArchivalInstitution().isOpenDataEnabled();
         this.ead3 = ead;
         jXPathContext = JXPathContext.newContext(this.ead3);
+        Localtypedeclaration localTypeDeclaration = null;
         try {
-            Localtypedeclaration localTypeDeclaration = this.retrieveLocaltypedeclaration();
+            localTypeDeclaration = this.retrieveLocaltypedeclaration();
             //ToDo: Process Localtypedeclaration
         } catch (ItemNotFoundException ex) {
             LOGGER.debug(ex.getMessage());
         }
-        
+        if (null != localTypeDeclaration && null != localTypeDeclaration.getCitation() 
+                && null != localTypeDeclaration.getCitation().getHref() ) {
+            String typeLink = localTypeDeclaration.getCitation().getHref();
+            LOGGER.debug("Localtype link:"+typeLink);
+        } else {
+            LOGGER.debug("No localtype declaration was found");
+        }
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
 
@@ -461,10 +468,13 @@ public class Ead3SolrDocBuilder {
             throw new IllegalStateException("Not initialized properly");
         }
         try {
-            Localtypedeclaration localtypedeclaration = (Localtypedeclaration) jXPathContext.getValue("control/localtypedeclaration");
-            return localtypedeclaration;
+            ArrayList<Localtypedeclaration> localtypedeclarations = (ArrayList<Localtypedeclaration>) jXPathContext.getValue("control/localtypedeclaration");
+            if (null == localtypedeclarations || localtypedeclarations.isEmpty()) {
+                throw new ItemNotFoundException("control/localtypedeclaration is empty");
+            }
+            return localtypedeclarations.get(0);
         } catch (Exception ex) {
-            throw new ItemNotFoundException("control/localtypedeclaration Not found");
+            throw new ItemNotFoundException("control/localtypedeclaration Not found", ex);
         }
 
     }
