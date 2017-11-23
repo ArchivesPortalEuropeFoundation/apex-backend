@@ -13,6 +13,7 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.apeapi.exceptions.ResourceNotFoundException;
 import eu.archivesportaleurope.apeapi.response.common.DetailContent;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
@@ -78,19 +79,19 @@ public class EadContentServiceImpl implements EadContentService {
                     ead = findingAidRepo.findById(idLong);
                 } else if (xmlType.getClazz().equals(HoldingsGuide.class)) {
                     ead = holdingsGuideRepo.findById(idLong);
-                } else {
+                } else if (xmlType.getClazz().equals(SourceGuide.class)){
                     ead = sourceGuideRepo.findById(idLong);
+                } else {
+                    throw new ResourceNotFoundException("Provided item is not fully supported or downloadable", "Id should start with F/H/S: " + id);
                 }
                 if (ead == null) {
                     throw new ResourceNotFoundException("Couldn't find any item with the given id", "EadContent Item not found, id" + id);
                 }
                 return ead;
 
-            } else {
-                //consider it as AI and fill AI details from DisplayPreviewContoller
             }
         }
-        throw new ResourceNotFoundException("Couldn't find any item with the given id", "Clevel Item not found, id" + id);
+        throw new ResourceNotFoundException("Provided id is either malformed or not an Ead item", "Bad ead id, id" + id);
     }
     
     @Transactional
