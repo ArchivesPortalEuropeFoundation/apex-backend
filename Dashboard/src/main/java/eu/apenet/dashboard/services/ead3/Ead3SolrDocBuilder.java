@@ -16,6 +16,8 @@ import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dashboard.services.ead3.publish.StoreEacFromEad3;
+import eu.apenet.dashboard.types.ead3.LocalTypeMap;
+import eu.apenet.dashboard.utils.FileDownloader;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
@@ -52,7 +54,9 @@ import gov.loc.ead.Unittitle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +70,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import net.archivesportaleurope.apetypes.LocalTypes;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -80,41 +85,47 @@ public class Ead3SolrDocBuilder {
 
     private JXPathContext jXPathContext;
     private Ead ead3;
-    private Ead3 persistantEad3;
+    private Ead3 ead3Entity;
+    private LocalTypeMap localTypeMap = new LocalTypeMap();
     private SolrDocNode archdescNode = new SolrDocNode();
     private boolean openDataEnable = false;
 
-    private final JAXBContext ead3Context;
-    private final Unmarshaller ead3Unmarshaller;
+//    private final JAXBContext ead3Context;
+    private final JAXBContext localTypeContext;
+    private final Unmarshaller localTypeUnmarshaller;
 
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
     }
 
     public Ead3SolrDocBuilder() throws JAXBException {
-        this.ead3Context = JAXBContext.newInstance(Ead.class);
-        this.ead3Unmarshaller = ead3Context.createUnmarshaller();
+//        this.ead3Context = JAXBContext.newInstance(Ead.class);
+        this.localTypeContext = JAXBContext.newInstance(LocalTypes.class);
+        this.localTypeUnmarshaller = localTypeContext.createUnmarshaller();
     }
 
-    public SolrDocTree buildDocTree(Ead ead, Ead3 ead3) throws JAXBException {
-        this.persistantEad3 = ead3;
-        this.openDataEnable = ead3.getArchivalInstitution().isOpenDataEnabled();
-        this.ead3 = ead;
+    public SolrDocTree buildDocTree(Ead ead3, Ead3 ead3Entity) throws JAXBException {
+        this.ead3Entity = ead3Entity;
+        this.openDataEnable = ead3Entity.getArchivalInstitution().isOpenDataEnabled();
+        this.ead3 = ead3;
         jXPathContext = JXPathContext.newContext(this.ead3);
-        Localtypedeclaration localTypeDeclaration = null;
         try {
-            localTypeDeclaration = this.retrieveLocaltypedeclaration();
-            //ToDo: Process Localtypedeclaration
-        } catch (ItemNotFoundException ex) {
+            Localtypedeclaration localTypeDeclaration = this.retrieveLocaltypedeclaration();
+
+            if (null != localTypeDeclaration && null != localTypeDeclaration.getCitation()
+                    && null != localTypeDeclaration.getCitation().getHref()) {
+                String localTypeFileLink = localTypeDeclaration.getCitation().getHref();
+                LOGGER.debug("Localtype link:" + localTypeFileLink);
+                Path tempFilePath = FileDownloader.downloadFile(localTypeFileLink, APEnetUtilities.getDashboardConfig().getTempAndUpDirPath());
+                LocalTypes localTypes = (LocalTypes) this.localTypeUnmarshaller.unmarshal(tempFilePath.toFile());
+                this.localTypeMap.add(localTypes);
+            } else {
+                LOGGER.debug("No localtype declaration was found");
+            }
+        } catch (ItemNotFoundException | IOException ex) {
             LOGGER.debug(ex.getMessage());
         }
-        if (null != localTypeDeclaration && null != localTypeDeclaration.getCitation() 
-                && null != localTypeDeclaration.getCitation().getHref() ) {
-            String typeLink = localTypeDeclaration.getCitation().getHref();
-            LOGGER.debug("Localtype link:"+typeLink);
-        } else {
-            LOGGER.debug("No localtype declaration was found");
-        }
+
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
 
@@ -126,15 +137,15 @@ public class Ead3SolrDocBuilder {
             throw new IllegalStateException("Not initialized properly");
         }
 
-        this.archdescNode.setDataElement(Ead3SolrFields.AI_ID, persistantEad3.getAiId());
-        this.archdescNode.setDataElement(Ead3SolrFields.AI_NAME, persistantEad3.getArchivalInstitution().getAiname());
-        this.archdescNode.setDataElement(Ead3SolrFields.AI, persistantEad3.getArchivalInstitution().getAiname() + "|" + persistantEad3.getAiId());
+        this.archdescNode.setDataElement(Ead3SolrFields.AI_ID, ead3Entity.getAiId());
+        this.archdescNode.setDataElement(Ead3SolrFields.AI_NAME, ead3Entity.getArchivalInstitution().getAiname());
+        this.archdescNode.setDataElement(Ead3SolrFields.AI, ead3Entity.getArchivalInstitution().getAiname() + "|" + ead3Entity.getAiId());
 
-        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_ID, persistantEad3.getArchivalInstitution().getCountry().getId());
-        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_NAME, persistantEad3.getArchivalInstitution().getCountry().getCname());
-        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, persistantEad3.getArchivalInstitution().getCountry().getCname() + "|" + persistantEad3.getArchivalInstitution().getCountry().getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_ID, ead3Entity.getArchivalInstitution().getCountry().getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_NAME, ead3Entity.getArchivalInstitution().getCountry().getCname());
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, ead3Entity.getArchivalInstitution().getCountry().getCname() + "|" + ead3Entity.getArchivalInstitution().getCountry().getId());
 
-        this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, persistantEad3.getArchivalInstitution().getRepositorycode());
+        this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, ead3Entity.getArchivalInstitution().getRepositorycode());
         this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
@@ -634,7 +645,7 @@ public class Ead3SolrDocBuilder {
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
 
                     try {
-                        new StoreEacFromEad3(personMap, persistantEad3.getArchivalInstitution().getCountry().getIsoname(), persistantEad3.getAiId()).storeEacCpf();
+                        new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId()).storeEacCpf();
                     } catch (Exception ex) {
                         java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
                     }
