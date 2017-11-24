@@ -6,10 +6,10 @@
        xmlns:solr="http://www.springframework.org/schema/data/solr"
        xmlns:task="http://www.springframework.org/schema/task"
 
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
-          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-          http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-1.0.xsd"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+          http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-2.0.xsd"
 >
     
     <import resource="classpath:META-INF/component-scan-context.xml" />
@@ -31,9 +31,9 @@
     <!--    <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>
     </bean>-->
-    <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr-ead"/>
-    <solr:embedded-solr-server id="ead3SolrServer" solrHome="src/test/resources/solr-ead3"/>
-    <solr:embedded-solr-server id="eacSolrServer" solrHome="src/test/resources/solr-eac"/>
+    <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr/eads"/>
+    <solr:embedded-solr-server id="ead3SolrServer" solrHome="src/test/resources/solr/ead3s"/>
+    <solr:embedded-solr-server id="eacSolrServer" solrHome="src/test/resources/solr/eac-cpfs"/>
     
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearviceImpl">
         <constructor-arg index="0" ref="eadSolrServer"/>

@@ -23,7 +23,7 @@ public class SearchPageRequestWithUnitId extends PageRequest {
     @NotNull(message = "Finding Aid No can not be null")
     String findingAidNo;
 
-    @ApiModelProperty(value = "Unit Id of the level")
+    @ApiModelProperty(value = "Unit Id of the level", example = " ")
     String unitId;
 
     @ApiModelProperty(value = "List of search filters using facet filed")

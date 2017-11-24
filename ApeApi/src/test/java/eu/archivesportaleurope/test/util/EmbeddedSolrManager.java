@@ -7,7 +7,7 @@ package eu.archivesportaleurope.test.util;
 
 import java.io.IOException;
 import java.util.Collection;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
@@ -30,7 +30,7 @@ public class EmbeddedSolrManager {
 
         coreContainer = new CoreContainer(solrHome);
         coreContainer.load();
-        SolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
+        SolrClient solr = new EmbeddedSolrServer(coreContainer, coreName);
 
         solr.deleteByQuery("*:*");
         solr.commit();
@@ -38,10 +38,10 @@ public class EmbeddedSolrManager {
         JsonToObject jsonToObject = new JsonToObject();
         Collection<SolrInputDocument> docs;
         docs = jsonToObject.getSolrDocs(jsonToObject.getObject(resource + dataFile, type));
-        LOGGER.info(":::::::::: docs number " + docs.size());
+        LOGGER.info("core: "+coreName+" :::::::::: docs number " + docs.size());
         solr.add(docs);
         solr.commit(true, true, false);
-        solr.shutdown();
+        solr.close();
     }
 
     public static void setupData(String dataFile, String coreName) throws SolrServerException, IOException {
@@ -51,7 +51,7 @@ public class EmbeddedSolrManager {
 
         coreContainer = new CoreContainer(solrHome);
         coreContainer.load();
-        SolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
+        SolrClient solr = new EmbeddedSolrServer(coreContainer, coreName);
 
         solr.deleteByQuery("*:*");
         solr.commit();
@@ -59,10 +59,10 @@ public class EmbeddedSolrManager {
         JsonToObject jsonToObject = new JsonToObject();
         Collection<SolrInputDocument> docs;
         docs = jsonToObject.getSolrDocsFromGenericJson(resource + dataFile);
-        LOGGER.info(":::::::::: docs number " + docs.size());
+        LOGGER.info("core: "+coreName+" :::::::::: docs number " + docs.size());
         solr.add(docs);
         solr.commit(true, true, false);
-        solr.shutdown();
+        solr.close();
     }
 
 }

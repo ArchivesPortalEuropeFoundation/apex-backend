@@ -18,11 +18,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @ApiModel
 public class InstituteDocRequest extends PageRequest {
 
-    @ApiModelProperty(value = "Institute's ID")
+    @ApiModelProperty(value = "Institute's ID", example = " ")
     @NotNull(message = "Institute's ID can not be null")
     String instituteId;
 
-    @ApiModelProperty(value = "Document type")
+    @ApiModelProperty(value = "Document type", example = "fa")
     @NotNull(message = "Document type can not be null")
     String docType;
 
