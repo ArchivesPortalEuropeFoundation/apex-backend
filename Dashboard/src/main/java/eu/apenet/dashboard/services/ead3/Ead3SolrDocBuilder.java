@@ -17,7 +17,6 @@ import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dashboard.services.ead3.publish.StoreEacFromEad3;
 import eu.apenet.dpt.utils.eaccpf.Control;
-import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
 import eu.apenet.dpt.utils.eaccpf.Sources;
 import eu.apenet.persistence.vo.Ead3;
@@ -108,10 +107,10 @@ public class Ead3SolrDocBuilder {
         } catch (ItemNotFoundException ex) {
             LOGGER.debug(ex.getMessage());
         }
-        if (null != localTypeDeclaration && null != localTypeDeclaration.getCitation() 
-                && null != localTypeDeclaration.getCitation().getHref() ) {
+        if (null != localTypeDeclaration && null != localTypeDeclaration.getCitation()
+                && null != localTypeDeclaration.getCitation().getHref()) {
             String typeLink = localTypeDeclaration.getCitation().getHref();
-            LOGGER.debug("Localtype link:"+typeLink);
+            LOGGER.debug("Localtype link:" + typeLink);
         } else {
             LOGGER.debug("No localtype declaration was found");
         }
@@ -702,13 +701,13 @@ public class Ead3SolrDocBuilder {
             if (part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME)) {
                 partNameCount++;
                 firstName = getContent(part);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, firstName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME);
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName));
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME));
             } else if (part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME)) {
                 partNameCount++;
                 lastName = getContent(part);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, lastName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME);
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(lastName));
+                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_SUR_NAME));
             } else if (part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_GENDER) || part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_ROLE)) {
                 partGenealogyDescriptionCount++;
                 eacMap.put(Ead3ToEacFieldMapKeys.GENEALOGY_DESCRIPTION_ + partGenealogyDescriptionCount, returnAsArray(getContent(part)));
