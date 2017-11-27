@@ -4,7 +4,7 @@
     <parent>
         <groupId>eu.archivesportaleurope.backend</groupId>
         <artifactId>backend-project</artifactId>
-        <version>2017-10.1-SNAPSHOT</version>
+        <version>2017-11.3-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>Dashboard</artifactId>
@@ -239,6 +239,10 @@
                     <artifactId>commons-codec</artifactId>
                     <groupId>commons-codec</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>httpcore</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -252,6 +256,10 @@
                 <exclusion>
                     <artifactId>stax-api</artifactId>
                     <groupId>javax.xml.stream</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>stax2-api</artifactId>
+                    <groupId>org.codehaus.woodstox</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -297,6 +305,10 @@
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jcl-over-slf4j</artifactId>
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>

@@ -42,7 +42,7 @@ public class A3_SearchResourceEacTest extends JerseySpringWithSecurityTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            EmbeddedSolrManager.setupData("/EacMockData.json", "eac-cpfs", EacCpfResponseSet.class);
+            EmbeddedSolrManager.setupData("/EacMockData.json", "eac-cpfs", EacCpfResponseSet.class); //eac-cpfs
         } catch (IOException | SolrServerException | InterruptedException ex) {
             java.util.logging.Logger.getLogger(A3_SearchResourceEacTest.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -30,6 +30,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -46,6 +47,8 @@ public class StoreEacFromEad3 {
     private int fileToLoad;
     private int aiId;
     private List<String> warnings_ead = new ArrayList<String>();
+
+    Logger LOG = Logger.getLogger(StoreEacFromEad3.class);
 
     public StoreEacFromEad3(Map parameters, String countryCode, int aiId) {
         this.parameters = parameters;
@@ -78,16 +81,18 @@ public class StoreEacFromEad3 {
             jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EacCpfNamespaceMapper());
 
             // Save in temporal file
+            LOG.info("Temp dir " + new File(APEnetUtilities.getConfig().getRepoDirPath() + basePath));
             FileUtils.forceMkdir(new File(APEnetUtilities.getConfig().getRepoDirPath() + basePath));
+            LOG.info("Temp dir " + new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
             File eacCpfTempFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
             jaxbMarshaller.marshal(eac, eacCpfTempFile);
 
             // It is necessary to validate the file against apeEAC-CPF schema.
-//            LOG.debug("Beginning EAC-CPF validation");
+            LOG.debug("Beginning EAC-CPF validation");
             EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 
             if (validateFile(eacCpfTempFile)) {
-//                LOG.info("EAC-CPF file is valid");
+                LOG.info("EAC-CPF file is valid");
 
                 // Move temp file to final file.
                 File eacCpfFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
@@ -130,7 +135,7 @@ public class StoreEacFromEad3 {
                 this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
                 this.setFileToLoad(storedEacEntry.getId());
             } else {
-//                LOG.warn("The file " + filename + " is not valid");
+                LOG.info("The file " + filename + " is not valid");
                 for (int i = 0; i < warnings_ead.size(); i++) {
                     String warning = warnings_ead.get(i).replace("<br/>", "");
 //                    LOG.debug(warning);

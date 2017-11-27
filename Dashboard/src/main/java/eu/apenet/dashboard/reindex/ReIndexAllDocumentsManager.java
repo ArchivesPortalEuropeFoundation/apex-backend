@@ -50,14 +50,14 @@ public class ReIndexAllDocumentsManager {
     private static final Logger LOGGER = Logger.getLogger(ReIndexAllDocumentsManager.class);
     private boolean reIndexInProgress = false;
     private Reindexer reindexer;
+    private static long alreadyAdded;
+    private static long totalToBeReindexed;
 
     public int redindex(boolean testRun, List<XmlType> types) throws ProcessBusyException {
         if (this.reIndexInProgress) {
             throw new ProcessBusyException("ReIndex process still on going");
         }
         this.reIndexInProgress = true;
-
-//        LOGGER.info("published eads: " + totalEADs+" -- "+publishedEads.size());
         this.reindexer = new Reindexer(testRun, types);
         Thread threadedReindexer = new Thread(this.reindexer);
 
@@ -72,6 +72,26 @@ public class ReIndexAllDocumentsManager {
 
     public void setReIndexInProgress(boolean reIndexInProgress) {
         this.reIndexInProgress = reIndexInProgress;
+    }
+
+    public long getAlreadyAdded() {
+        return alreadyAdded;
+    }
+
+    public void setAlreadyAdded(long alreadyAdded) {
+        ReIndexAllDocumentsManager.alreadyAdded = alreadyAdded;
+    }
+
+    public void incAlreadyAdded() {
+        ReIndexAllDocumentsManager.alreadyAdded = getAlreadyAdded() + 10;
+    }
+
+    public long getTotalToBeReindexed() {
+        return totalToBeReindexed;
+    }
+
+    public static void setTotalToBeReindexed(long totalToBeReindexed) {
+        ReIndexAllDocumentsManager.totalToBeReindexed = totalToBeReindexed;
     }
 
     public void stopReindex() {
@@ -100,26 +120,43 @@ public class ReIndexAllDocumentsManager {
             QueueItemDAO queueDao = DAOFactory.instance().getQueueItemDAO();
             ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
             contentSearchOptions.setPublished(Boolean.TRUE);
-            
+
             try {
-                for (int i=0; i<types.size() && !this.stopSignal; i++) {
-                    XmlType xmlType = types.get(i);
-                    LOGGER.info("Going to add doc type: "+xmlType.getName()+" for re-index");
-                    if (xmlType.getIdentifier() == XmlType.EAD_3.getIdentifier()) {
+                totalToBeReindexed = 0;
+                Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+                EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+
+                if (!this.testRun) {
+                    for (int i = 0; i < types.size() && !this.stopSignal; i++) {
+                        XmlType xmlType = types.get(i);
                         contentSearchOptions.setContentClass(xmlType.getClazz());
-                        Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+                        if (xmlType.getIdentifier() == XmlType.EAD_3.getIdentifier()) {
+                            totalToBeReindexed += ead3DAO.countEad3s(contentSearchOptions);
+                        } else if (xmlType.getIdentifier() == XmlType.EAC_CPF.getIdentifier()) {
+                            totalToBeReindexed += DAOFactory.instance().getEacCpfDAO().countEacCpfs(contentSearchOptions);
+                        } else {
+                            totalToBeReindexed += DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+                        }
+                    }
+                } else {
+                    totalToBeReindexed = types.size();
+                }
+                for (int i = 0; i < types.size() && !this.stopSignal; i++) {
+                    XmlType xmlType = types.get(i);
+                    contentSearchOptions.setContentClass(xmlType.getClazz());
+                    LOGGER.info("Going to add doc type: " + xmlType.getName() + " for re-index");
+                    if (xmlType.getIdentifier() == XmlType.EAD_3.getIdentifier()) {
                         this.addEads(queueDao, ead3DAO, contentSearchOptions);
                     } else if (xmlType.getIdentifier() == XmlType.EAC_CPF.getIdentifier()) {
                     } else {
-                        contentSearchOptions.setContentClass(xmlType.getClazz());
-                        EadDAO eadDAO = DAOFactory.instance().getEadDAO();
                         this.addEads(queueDao, eadDAO, contentSearchOptions);
                     }
                 }
                 reIndexInProgress = false;
+                alreadyAdded = 0;
             } catch (Exception ex) {
                 reIndexInProgress = false;
-                LOGGER.debug("Unknown exception! "+ex.getMessage());
+                LOGGER.debug("Unknown exception! " + ex.getMessage());
             }
         }
 
@@ -136,15 +173,7 @@ public class ReIndexAllDocumentsManager {
             JpaUtil.beginDatabaseTransaction();
             List publishedContents = null;
             if (eadDAO instanceof EadDAO) {
-//                contentSearchOptions.setContentClass(FindingAid.class);
                 publishedContents = ((EadDAO) eadDAO).getEads(contentSearchOptions);
-//
-//                contentSearchOptions.setContentClass(HoldingsGuide.class);
-//                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
-//
-//                contentSearchOptions.setContentClass(SourceGuide.class);
-//                publishedContents.addAll(((EadDAO) eadDAO).getEads(contentSearchOptions));
-
             } else if (eadDAO instanceof Ead3DAO) {
                 publishedContents = ((Ead3DAO) eadDAO).getEad3s(contentSearchOptions);
             }
@@ -155,7 +184,7 @@ public class ReIndexAllDocumentsManager {
             }
             LOGGER.info("Total " + eadDAO.getClass().getName() + ": " + publishedContents.size());
             int i = 0;
-//            for (Object obj : publishedContents) {
+
             for (int j = 0; j < publishedContents.size() && !stopSignal; j++) {
                 Object obj = publishedContents.get(i);
                 AbstractContent ead = (AbstractContent) obj;
@@ -168,9 +197,10 @@ public class ReIndexAllDocumentsManager {
                     queueDao.updateSimple(queueItem);
                     if (i % 10 == 0) {
                         JpaUtil.commitDatabaseTransaction();
-                        LOGGER.info("Sleep 5 sec");
                         Thread.sleep(5000);
                         JpaUtil.beginDatabaseTransaction();
+                        incAlreadyAdded();
+                        LOGGER.info("Number of documents added in the queue for re-indexing :  " + getAlreadyAdded());
                     }
                 } catch (IOException ex) {
                     LOGGER.error("Queue exception: " + ex.getMessage());

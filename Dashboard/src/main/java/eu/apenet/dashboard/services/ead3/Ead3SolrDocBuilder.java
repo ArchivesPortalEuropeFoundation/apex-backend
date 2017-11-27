@@ -16,10 +16,10 @@ import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dashboard.services.ead3.publish.StoreEacFromEad3;
+import eu.apenet.dashboard.types.ead3.ApeType;
 import eu.apenet.dashboard.types.ead3.LocalTypeMap;
 import eu.apenet.dashboard.utils.FileDownloader;
 import eu.apenet.dpt.utils.eaccpf.Control;
-import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
 import eu.apenet.dpt.utils.eaccpf.Sources;
 import eu.apenet.persistence.vo.Ead3;
@@ -125,13 +125,12 @@ public class Ead3SolrDocBuilder {
         } catch (ItemNotFoundException | IOException ex) {
             LOGGER.debug(ex.getMessage());
         }
-
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
 
         return solrDocTree;
     }
-
+    
     private void retrieveArchdescMain() {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
@@ -298,7 +297,7 @@ public class Ead3SolrDocBuilder {
                 Scopecontent scopecontent = (Scopecontent) element;
 //                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
                 Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
-                buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+                this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
                 for (Map.Entry entry : eventMap.entrySet()) {
                     cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
                 }
@@ -632,7 +631,7 @@ public class Ead3SolrDocBuilder {
         return eventMap;
     }
 
-    private List<Map<String, Object>> buildEacData(SolrDocNode cRoot, Event event) {
+    private List<Map<String, Object>> buildAndStoreEacData(SolrDocNode cRoot, Event event) {
         List<Map<String, Object>> listOfEacs = new ArrayList<>();
         List<Serializable> events = event.getContent();
         int count = 0;
@@ -641,7 +640,7 @@ public class Ead3SolrDocBuilder {
                 JAXBElement eacElement = (JAXBElement) eacEvent;
                 if (eacElement.getDeclaredType().equals(Persname.class)) {
                     count++;
-                    Map<String, Object> personMap = generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), count);
+                    Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), count);
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
 
                     try {
@@ -709,39 +708,54 @@ public class Ead3SolrDocBuilder {
         String birthDate = "";
         String deathDate = "";
         for (Part part : parts) {
-
-            if (part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME)) {
-                partNameCount++;
-                firstName = getContent(part);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, firstName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME);
-            } else if (part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME)) {
-                partNameCount++;
-                lastName = getContent(part);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, lastName);
-                eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_LAST_NAME);
-            } else if (part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_GENDER) || part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_ROLE)) {
-                partGenealogyDescriptionCount++;
-                eacMap.put(Ead3ToEacFieldMapKeys.GENEALOGY_DESCRIPTION_ + partGenealogyDescriptionCount, returnAsArray(getContent(part)));
-                //need to add language form default arcdes lang
-                eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE, returnAsArray("dut"));
-                eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_SCRIPT, returnAsArray("Latn"));
-                eacMap.put("controlLanguage", returnAsArray("dut"));
-                eacMap.put("controlScript", returnAsArray("Latn"));
-            } else if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE)) {
-                deathDate = getContent(part);
-                if (StringUtils.isEmpty(deathDate)) {
-                    deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+            //ToDo:
+            try {
+                ApeType apeType = ApeType.get(this.localTypeMap.getApeType(part.getLocaltype().toLowerCase()));
+                if (apeType == null) {
+                    LOGGER.debug("Unsupported ApeType: "+part.getLocaltype());
+                    continue;
                 }
-                partDateCount++;
-                eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
-
-            } else if (part.getLocaltype().equalsIgnoreCase(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE)) {
-                birthDate = getContent(part);
-                if (StringUtils.isEmpty(birthDate)) {
-                    birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+                switch (apeType) {
+                    case FIRSTNAME:
+                        partNameCount++;
+                        firstName = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName));
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME));
+                        break;
+                    case LASTNAME:
+                        partNameCount++;
+                        lastName = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(lastName));
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_SUR_NAME));
+                        break;
+                    case GENDER:
+                    case ROLE:
+                        partGenealogyDescriptionCount++;
+                        eacMap.put(Ead3ToEacFieldMapKeys.GENEALOGY_DESCRIPTION_ + partGenealogyDescriptionCount, returnAsArray(getContent(part)));
+                        //need to add language form default arcdes lang
+                        eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE, returnAsArray("dut"));
+                        eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_SCRIPT, returnAsArray("Latn"));
+                        eacMap.put("controlLanguage", returnAsArray("dut"));
+                        eacMap.put("controlScript", returnAsArray("Latn"));
+                        break;
+                    case DEATHDATE:
+                        deathDate = getContent(part);
+                        if (StringUtils.isEmpty(deathDate)) {
+                            deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+                        }   partDateCount++;
+                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
+                        break;
+                    case BITHDATE:
+                        birthDate = getContent(part);
+                        if (StringUtils.isEmpty(birthDate)) {
+                            birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+                        }   eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
+                        break;
+                    default:
+                        break;
                 }
-                eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
+            } catch (ItemNotFoundException ex) {
+                LOGGER.debug(ex.getMessage());
             }
         }
 

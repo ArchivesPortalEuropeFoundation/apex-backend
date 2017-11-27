@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<localTypes id="apetypes" xmlns="https://www.archivesportaleurope.net/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.archivesportaleurope.net/ ./apeTypes.xsd">
+<localTypes id="apetypes" xmlns="https://www.archivesportaleurope.net/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.archivesportaleurope.net/ https://raw.githubusercontent.com/ArchivesPortalEuropeFoundation/ape-backend/ead3ToEac/Dashboard/src/main/resources/apeTypes.xsd">
     <localType id="age">
         <description>age of a person</description>
         <aliases>

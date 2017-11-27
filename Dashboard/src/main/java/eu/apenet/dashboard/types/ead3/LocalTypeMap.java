@@ -9,6 +9,8 @@ import eu.apenet.dashboard.exception.ItemNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import net.archivesportaleurope.apetypes.LocalTypes;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,8 +19,9 @@ import java.util.Set;
 public class LocalTypeMap {
 
     private final Map<String, String> alaisMap;
-    private final Map<String, String> immutableMap = ImmutableLocalTypeMap.getInstance().getUnmodifiableMap();
-
+    private final Map<String, String> immutableMap = DefaultLocalTypeMap.getInstance().getUnmodifiableMap();
+    protected static final Logger LOGGER = Logger.getLogger(LocalTypeMap.class);
+    
     public LocalTypeMap() {
         alaisMap = new HashMap<>(immutableMap);
     }
@@ -30,22 +33,24 @@ public class LocalTypeMap {
         throw new ItemNotFoundException("Unknown localtype: " + localType);
     }
 
-    public void addToMap(String apeType, String localType) {
+    public void add(String apeType, String localType) {
         if (null == apeType || apeType.isEmpty() || null == localType || localType.isEmpty()) {
             return;
         }
         if (immutableMap.containsKey(apeType)) {
             alaisMap.put(localType, apeType);
+        } else {
+            LOGGER.debug("Unknown apeType got ignored: "+apeType);
         }
     }
 
-    public void addToMap(String apeType, String... localTypes) {
+    public void add(String apeType, String... localTypes) {
         for (String s : localTypes) {
-            addToMap(s, apeType);
+            LocalTypeMap.this.add(s, apeType);
         }
     }
 
-    public void addToMap(Map.Entry<String, Set<String>> entry) {
+    public void add(Map.Entry<String, Set<String>> entry) {
         if (null != entry) {
             if (immutableMap.containsKey(entry.getKey())) {
                 entry.getValue().forEach((s) -> {
@@ -58,8 +63,17 @@ public class LocalTypeMap {
     public void addAllToMap(Map<String, Set<String>> partMap) {
         if (null != partMap) {
             partMap.entrySet().forEach((entry) -> {
-                this.addToMap(entry);
+                this.add(entry);
             });
         }
+    }
+    
+    public void add(LocalTypes localTypes) {
+        localTypes.getLocalType().forEach((localType) -> {
+            String localTypeId = localType.getId();
+            localType.getAliases().getAlias().forEach((alais) -> {
+                this.add(localTypeId, alais.getValue());
+            });
+        });
     }
 }

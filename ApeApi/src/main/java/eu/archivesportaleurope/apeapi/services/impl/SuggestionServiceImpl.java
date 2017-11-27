@@ -9,12 +9,13 @@ import eu.archivesportaleurope.apeapi.response.common.AutocompletionResponseSet;
 import eu.archivesportaleurope.apeapi.response.common.SuggestionResponseSet;
 import eu.archivesportaleurope.apeapi.services.SuggestionService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.io.IOException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.TermsResponse;
 
@@ -41,14 +42,14 @@ public class SuggestionServiceImpl implements SuggestionService {
         this.suggestionSearchUtil = new SolrSearchUtil(this.solrUrl, this.solrCore);
     }
     
-    public SuggestionServiceImpl(SolrServer solrServer) {
+    public SuggestionServiceImpl(SolrClient solrServer) {
         this.solrUrl = "";
         this.solrCore = "";
         this.suggestionSearchUtil = new SolrSearchUtil(solrServer);
     }
 
     @Override
-    public AutocompletionResponseSet autoComplete(String term) throws SolrServerException {
+    public AutocompletionResponseSet autoComplete(String term) throws SolrServerException, IOException {
         TermsResponse termResponse = suggestionSearchUtil.getTermsResponse(term);
         AutocompletionResponseSet responseSet = new AutocompletionResponseSet();
         responseSet.add(termResponse, "archives");
@@ -56,7 +57,7 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     @Override
-    public SuggestionResponseSet suggest(String term) throws SolrServerException {
+    public SuggestionResponseSet suggest(String term) throws SolrServerException, IOException {
         SolrQuery query = new SolrQuery(term);
         this.suggestionSearchUtil.setQuery(query);
         return new SuggestionResponseSet(this.suggestionSearchUtil.getSuggestion());

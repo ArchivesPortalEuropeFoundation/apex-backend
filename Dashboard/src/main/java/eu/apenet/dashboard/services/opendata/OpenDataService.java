@@ -12,6 +12,7 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.Ead3SolrServerHolder;
 import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.EagSolrServerHolder;
+import eu.apenet.commons.solr.SolrDocUtils;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
@@ -32,6 +33,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.beans.DocumentObjectBinder;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
@@ -48,6 +50,7 @@ public class OpenDataService {
     public static final String ENABLE_OPEN_DATA_KEY = "enableOpenData";
 
     private final List<SolrInputDocument> docList = new ArrayList<SolrInputDocument>();
+//    DocumentObjectBinder binder = new DocumentObjectBinder(); 
 
     private OpenDataService() {
     }
@@ -130,14 +133,15 @@ public class OpenDataService {
                     for (SolrDocument doc : response.getResults()) {
                         addUnStoredFields(solrHolder, doc, archivalInstitution);
 
-                        SolrInputDocument inputDocument = ClientUtils.toSolrInputDocument(doc);
+                        SolrInputDocument inputDocument = SolrDocUtils.toSolrInputDocument(doc);
                         if (inputDocument.getField("openData") == null) {
-                            inputDocument.addField("openData", openDataEnable, 1);
+                            inputDocument.addField("openData", openDataEnable);
+//                            inputDocument.addField("openData", openDataEnable, 1);
                         } else {
                             inputDocument.getField("openData").setValue(openDataEnable, 1);
                         }
                         if (inputDocument.getField("spell") == null) {
-                            inputDocument.addField("spell", "", 1);
+                            inputDocument.addField("spell", "");
                         } else {
                             inputDocument.getField("spell").setValue("", 1);
                         }
@@ -200,7 +204,7 @@ public class OpenDataService {
         return query;
     }
 
-    public long getTotalSolrDocsForOpenData(AbstractSolrServerHolder solrHolder, ArchivalInstitution archivalInstitution, boolean openDataEnable) throws SolrServerException {
+    public long getTotalSolrDocsForOpenData(AbstractSolrServerHolder solrHolder, ArchivalInstitution archivalInstitution, boolean openDataEnable) throws SolrServerException, IOException {
         if (solrHolder.isAvailable()) {
             SolrQuery query = genOpenDataByAiSearchQuery(solrHolder, archivalInstitution, openDataEnable);
             return solrHolder.executeQuery(query).getResults().getNumFound();

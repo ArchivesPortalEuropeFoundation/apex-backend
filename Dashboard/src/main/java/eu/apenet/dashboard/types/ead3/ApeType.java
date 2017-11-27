@@ -5,6 +5,9 @@
  */
 package eu.apenet.dashboard.types.ead3;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author kaisar
@@ -49,6 +52,18 @@ public enum ApeType {
     SUFFIX("suffix"),
     TITLE("title");
     private final String value;
+    
+    private static final Map<String, ApeType> lookup = new HashMap<>();
+    
+    static {
+        for (ApeType type : ApeType.values()) {
+            lookup.put(type.getValue(), type);
+        }
+    }
+
+    public static ApeType get(String value) {
+        return lookup.get(value);
+    }
 
     private ApeType(String value) {
         this.value = value;

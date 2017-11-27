@@ -18,7 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @ApiModel
 public class SearchDocRequest extends QueryPageRequest {
-    @ApiModelProperty(value = "Document type")
+
+    @ApiModelProperty(value = "Document type", example = "fa")
     @NotNull(message = "Document type can not be null")
     String docType;
 

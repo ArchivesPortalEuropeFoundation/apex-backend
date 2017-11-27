@@ -9,17 +9,17 @@ import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
-import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
-import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.utils.PropertiesUtil;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import eu.archivesportaleurope.apeapi.utils.SolrSearchUtil;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +45,19 @@ public class EacCpfSearchServiceImpl extends SearchService {
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 
-    public EacCpfSearchServiceImpl(SolrServer solrServer, String propFileName) {
+    public EacCpfSearchServiceImpl(SolrClient solrServer, String propFileName) {
         this.extraParam = new HashMap<>();
         this.solrUrl = "";
-        logger.debug("Solr server got created!");
         this.eacSearchUtil = new SolrSearchUtil(solrServer);
+        //ToDo: quick fix for solrj5 EmbeddedSolrServer, which is failing to use default core
+        if (solrServer instanceof EmbeddedSolrServer) {
+            EmbeddedSolrServer embeddedSolrServer = (EmbeddedSolrServer) solrServer;
+            Collection<String> coreNames = embeddedSolrServer.getCoreContainer().getAllCoreNames();
+            if (!coreNames.isEmpty()) {
+                this.eacSearchUtil.setCoreName(coreNames.iterator().next());
+            }
+        }
+        
         this.propertiesUtil = new PropertiesUtil(propFileName);
     }
 

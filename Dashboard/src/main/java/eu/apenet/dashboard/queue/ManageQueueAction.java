@@ -39,6 +39,7 @@ import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
+import java.io.IOException;
 
 public class ManageQueueAction extends AbstractAction {
 
@@ -57,6 +58,8 @@ public class ManageQueueAction extends AbstractAction {
     private static final String EAD_SG = "numberOfSourceGuide";
     private static final String EAC_CPF_UNITS = "numberOfEacCpfs";
     private static final String EAD3_UNITS = "numberOfEad3s";
+    private static final String REINDEX_ON_PROGRESS = "reIndexOnProgress";
+    private static final String REINDEX_ON_PROGRESS_ADDITIONAL = "reIndexOnProgressAdditional";
     /**
      *
      */
@@ -128,8 +131,10 @@ public class ManageQueueAction extends AbstractAction {
         if (endDateTime != null) {
             getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
         }
-        this.buildSelectionForReindex();
-        this.countTotalNumberOfElementsToBeReindexed();
+        if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()) {
+            this.buildSelectionForReindex();
+            this.countTotalNumberOfElementsToBeReindexed();
+        }
         return SUCCESS;
     }
 
@@ -144,7 +149,7 @@ public class ManageQueueAction extends AbstractAction {
 
         getServletRequest().setAttribute("selections", this.selections);
 
-        getServletRequest().setAttribute("reIndexOnProgress", ReIndexAllDocumentsManager.getInstance().isReIndexInProgress());
+        getServletRequest().setAttribute(REINDEX_ON_PROGRESS, ReIndexAllDocumentsManager.getInstance().isReIndexInProgress());
     }
 
     private void countTotalNumberOfElementsToBeReindexed() {
@@ -173,6 +178,10 @@ public class ManageQueueAction extends AbstractAction {
         getServletRequest().setAttribute(EAD_SG, SGUnits);
         getServletRequest().setAttribute(EAC_CPF_UNITS, eacCpfUnits);
         getServletRequest().setAttribute(EAD3_UNITS, ead3Units);
+        long total = ReIndexAllDocumentsManager.getInstance().getTotalToBeReindexed();
+        long alreadyAdded = ReIndexAllDocumentsManager.getInstance().getAlreadyAdded();
+        double percent = alreadyAdded*100.0/total;
+        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + alreadyAdded + " / " + total + " ) - "+String.format("%.2f", percent)+"%");
     }
 
     private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
@@ -305,7 +314,7 @@ public class ManageQueueAction extends AbstractAction {
         return SUCCESS;
     }
 
-    public String rebuildAutosuggestion() throws SolrServerException {
+    public String rebuildAutosuggestion() throws SolrServerException, IOException {
         if (SecurityContext.get().isAdmin()) {
             SolrUtil.rebuildAutosuggestion();
         }

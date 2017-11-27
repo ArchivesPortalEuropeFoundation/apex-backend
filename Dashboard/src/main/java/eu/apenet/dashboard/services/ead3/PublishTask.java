@@ -10,6 +10,7 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dashboard.services.ead3.publish.SolrPublisher;
+import eu.apenet.dashboard.services.ead3.publish.StoreEacFromEad3;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
 import gov.loc.ead.Ead;
@@ -45,25 +46,25 @@ public class PublishTask extends AbstractEad3Task {
     }
 
     @Override
-    protected void execute(Ead3 ead3, Properties properties) throws Exception {
-        if (valid(ead3)) {
+    protected void execute(Ead3 ead3Entity, Properties properties) throws Exception {
+        if (valid(ead3Entity)) {
             FileInputStream fileInputStream = null;
             try {
                 long startTime = System.currentTimeMillis();
                 long solrTime = 0l;
-                fileInputStream = getFileInputStream(ead3.getPath());
-                Ead ead = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
-                ead.setId(String.valueOf(ead3.getId()));
-                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead, ead3);
+                fileInputStream = getFileInputStream(ead3Entity.getPath());
+                Ead ead3 = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
+                ead3.setId(String.valueOf(ead3Entity.getId()));
+                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead3, ead3Entity);
                 SolrPublisher publisher = new SolrPublisher();
                 long numberOfDocs = publisher.publish(tree);
                 publisher.printTree(tree);
+                
+                ead3Entity.setTotalNumberOfDaos(Long.parseLong(tree.getRoot().getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString()));
+                ead3Entity.setTotalNumberOfUnits(numberOfDocs);
+                ead3Entity.setPublished(true);
 
-                ead3.setTotalNumberOfDaos(Long.parseLong(tree.getRoot().getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString()));
-                ead3.setTotalNumberOfUnits(numberOfDocs);
-                ead3.setPublished(true);
-
-                LOGGER.info("Ead3 Title: " + ead.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
+                LOGGER.info("Ead3 Title: " + ead3.getControl().getFiledesc().getTitlestmt().getTitleproper().get(0).getContent().get(0));
                 LOGGER.info("Time needed: " + (System.currentTimeMillis() - startTime));
 //              
 //                if (ead.getEadContent() == null) {
