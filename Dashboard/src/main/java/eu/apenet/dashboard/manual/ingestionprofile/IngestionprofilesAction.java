@@ -304,7 +304,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         } else if (IngestionprofilesAction.CREATIVECOMMONS_CPDM.equals(this.license)) {
             profile.setEuropeanaLicenseDetails("http://creativecommons.org/publicdomain/mark/1.0/");
         } else {
-            profile.setEuropeanaLicenseDetails("http://www.europeana.eu/rights/out-of-copyright-non-commercial/");
+            profile.setEuropeanaLicenseDetails("http://rightsstatements.org/vocab/NoC-NC/1.0/");
         }
         profile.setEuropeanaAddRights(licenseAdditionalInformation);
         profile.setEuropeanaInheritElementsCheck(Boolean.parseBoolean(inheritFileParentCheck));
@@ -357,25 +357,31 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             // Creative Commons Attribution, ShareAlike .
             option_default_rights_text = getText("content.message.rights.creative.attribution.sharealike");
         } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC.equalsIgnoreCase(option_default_rights)) {
-            //  Creative Commons CC0 Public Domain Dedication .
+            // Creative Commons CC0 Public Domain Dedication .
             option_default_rights_text = getText("content.message.rights.creative.public.domain");
-        } else if (AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
-            // Free access – no re-use.
-            option_default_rights_text = getText("ead2ese.content.license.europeana.access.free");
-        } else if (AjaxConversionOptionsConstants.ORPHAN_WORKS.equalsIgnoreCase(option_default_rights)) {
-            // Orphan works.
-            option_default_rights_text = getText("ead2ese.content.license.europeana.access.orphan");
-        } else if (AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
-            // Out of copyright - no commercial re-use.
-            option_default_rights_text = getText("ead2ese.content.license.out.of.copyright");
-        } else if (AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
-            // Paid access – no re-use.
-            option_default_rights_text = getText("ead2ese.content.license.europeana.access.paid");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
+            // Europeana In Copyright
+            option_default_rights_text = getText("ead2ese.content.license.europeana.incopyright");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EU_ORPHAN_WORK.equalsIgnoreCase(option_default_rights)) {
+            // Europeana In Copyright, EU Orphan Works
+            option_default_rights_text = getText("ead2ese.content.license.europeana.incopyright.euorphan");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EDUCATIONAL_USE_ONLY.equalsIgnoreCase(option_default_rights)) {
+            // Europeana In Copyright, educational use only
+            option_default_rights_text = getText("ead2ese.content.license.europeana.incopyright.eduuse");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY.equalsIgnoreCase(option_default_rights)) {
+            // Europeana No Copyright, non-commercial use only
+            option_default_rights_text = getText("ead2ese.content.license.europeana.nocopyright.noncommercial");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY.equalsIgnoreCase(option_default_rights)) {
+            // Europeana No Copyright, other known legal restrictions
+            option_default_rights_text = getText("ead2ese.content.license.europeana.nocopyright.otherlegal");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_COPYRIGHT_NOT_EVALUATED.equalsIgnoreCase(option_default_rights)) {
+            // Europeana, copyright not evaluated
+            option_default_rights_text = getText("ead2ese.content.license.europeana.copyrightnotevaluated");
         } else if (AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK.equalsIgnoreCase(option_default_rights)) {
             // Public Domain Mark.
             option_default_rights_text = getText("content.message.rights.public.domain");
         } else {
-            // Unknown.
+            // unknown license
             option_default_rights_text = getText("content.message.rights.unknown");
         }
 
@@ -536,7 +542,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
@@ -544,10 +549,12 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT, getText("ead2ese.content.license.europeana.incopyright")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EDUCATIONAL_USE_ONLY, getText("ead2ese.content.license.europeana.incopyright.eduuse")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EU_ORPHAN_WORK, getText("ead2ese.content.license.europeana.incopyright.euorphan")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY, getText("ead2ese.content.license.europeana.nocopyright.noncommercial")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_OTHER_KNOWN_LEGAL_RESTRICTIONS, getText("ead2ese.content.license.europeana.nocopyright.otherlegal")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_COPYRIGHT_NOT_EVALUATED, getText("ead2ese.content.license.europeana.copyrightnotevaluated")));
 
         return rightsSet;
     }

@@ -43,12 +43,13 @@ public final class AjaxConversionOptionsConstants {
     public static final String CREATIVECOMMONS_ATTRIBUTION_NC_SHARE= "http://creativecommons.org/licenses/by-nc-sa/4.0/"; // "ccancsa";
     public static final String CREATIVECOMMONS_ATTRIBUTION_SHARE = "http://creativecommons.org/licenses/by-sa/4.0/"; // "ccasa";
     public static final String CREATIVECOMMONS_CC0_PUBLIC = "http://creativecommons.org/publicdomain/zero/1.0/"; // "cc0pdd";
-    public static final String FREE_ACCESS_NO_REUSE = "http://www.europeana.eu/rights/rr-f/"; // "freeaccess";
-    public static final String ORPHAN_WORKS = "http://www.europeana.eu/rights/orphan-work-eu/"; // "orphanworks";
-    public static final String OUT_OF_COPYRIGHT = "http://www.europeana.eu/rights/out-of-copyright-non-commercial/"; // "outofcopyright";
-    public static final String PAID_ACCESS_NO_REUSE = "http://www.europeana.eu/rights/rr-p/"; // "paidaccess";
     public static final String PUBLIC_DOMAIN_MARK = "http://creativecommons.org/publicdomain/mark/1.0/"; // "pdm";
-    public static final String UNKNOWN = "http://www.europeana.eu/rights/unknown/"; // "unknown";
+    public static final String EUROPEANA_IN_COPYRIGHT = "http://rightsstatements.org/vocab/InC/1.0/";
+    public static final String EUROPEANA_IN_COPYRIGHT_EU_ORPHAN_WORK = "http://rightsstatements.org/vocab/InC-OW-EU/1.0/";
+    public static final String EUROPEANA_IN_COPYRIGHT_EDUCATIONAL_USE_ONLY = "http://rightsstatements.org/vocab/InC-EDU/1.0/";
+    public static final String EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY = "http://rightsstatements.org/vocab/NoC-NC/1.0/";
+    public static final String EUROPEANA_NO_COPYRIGHT_OTHER_KNOWN_LEGAL_RESTRICTIONS = "http://rightsstatements.org/vocab/NoC-OKLR/1.0/";
+    public static final String EUROPEANA_COPYRIGHT_NOT_EVALUATED = "http://rightsstatements.org/vocab/CNE/1.0/";
 
 	/**
 	 * Private constructor to prevent instances of this constants class.

@@ -147,7 +147,6 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT, getText("ead2ese.content.license.out.of.copyright")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION, getText("content.message.rights.creative.attribution")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE, getText("content.message.rights.creative.attribution.sharealike")));
@@ -155,10 +154,12 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.free")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE, getText("ead2ese.content.license.europeana.access.paid")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.ORPHAN_WORKS, getText("ead2ese.content.license.europeana.access.orphan")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.UNKNOWN, getText("content.message.rights.unknown")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT, getText("ead2ese.content.license.europeana.incopyright")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EDUCATIONAL_USE_ONLY, getText("ead2ese.content.license.europeana.incopyright.eduuse")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EU_ORPHAN_WORK, getText("ead2ese.content.license.europeana.incopyright.euorphan")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY, getText("ead2ese.content.license.europeana.nocopyright.noncommercial")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_OTHER_KNOWN_LEGAL_RESTRICTIONS, getText("ead2ese.content.license.europeana.nocopyright.otherlegal")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_COPYRIGHT_NOT_EVALUATED, getText("ead2ese.content.license.europeana.copyrightnotevaluated")));
 
         return rightsSet;
     }
@@ -291,7 +292,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
     private ContentSearchOptions createNewContentSearchOptions() {
         ContentSearchOptions contentSearchOptions = new ContentSearchOptions();
         contentSearchOptions.setContentClass(FindingAid.class);
-        
+
         contentSearchOptions.setPageNumber(pageNumber);
         contentSearchOptions.setPageSize(resultPerPage);
         contentSearchOptions.setOrderByAscending(orderByAscending);
@@ -334,7 +335,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         results.setTotalNumberOfResults(eadDAO.countEads(contentSearchOptions));
         Long countResults = results.totalNumberOfResults;
         /*
-        * statistics for total converted files
+         * statistics for total converted files
          */
         if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
             ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -342,7 +343,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalConvertedFiles(eadDAO.countEads(convertedSearchOptions));
         }
         /*
-        * statistics for total validated files
+         * statistics for total validated files
          */
         if (contentSearchOptions.getValidated().isEmpty()
                 || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
@@ -353,7 +354,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalValidatedFiles(eadDAO.countEads(validatedSearchOptions));
         }
         /*
-        * statistics for total published units
+         * statistics for total published units
          */
         if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
             ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -362,7 +363,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
         if (contentSearchOptions.getContentClass().equals(FindingAid.class)) {
             /*
-            * statistics for total delivered daos
+             * statistics for total delivered daos
              */
             if (contentSearchOptions.getEuropeana().isEmpty()
                     || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
@@ -371,7 +372,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
                 results.setTotalChosDeliveredToEuropeana(eadDAO.countChos(europeanaSearchOptions));
             }
             /*
-            * statistics for total converted daos
+             * statistics for total converted daos
              */
             if (contentSearchOptions.getEuropeana().isEmpty()
                     || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
@@ -409,7 +410,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         results.setTotalNumberOfResults(ead3DAO.countEad3s(contentSearchOptions));
         Long countResults = results.totalNumberOfResults;
         /*
-        * statistics for total converted files
+         * statistics for total converted files
          */
         if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
             ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -417,7 +418,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalConvertedFiles(ead3DAO.countEad3s(convertedSearchOptions));
         }
         /*
-        * statistics for total validated files
+         * statistics for total validated files
          */
         if (contentSearchOptions.getValidated().isEmpty()
                 || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
@@ -428,7 +429,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalValidatedFiles(ead3DAO.countEad3s(validatedSearchOptions));
         }
         /*
-        * statistics for total published units
+         * statistics for total published units
          */
         if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
             ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -436,7 +437,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalPublishedUnits(ead3DAO.countUnits(publishedSearchOptions));
         }
         /*
-            * statistics for total delivered daos
+         * statistics for total delivered daos
          */
 //            if (contentSearchOptions.getEuropeana().isEmpty()
 //                    || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
@@ -511,7 +512,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         results.setTotalNumberOfResults(eacCpfDAO.countEacCpfs(contentSearchOptions));
         Long countResults = results.totalNumberOfResults;
         /*
-        * statistics for number of converted files
+         * statistics for number of converted files
          */
         if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
             ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -519,7 +520,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalConvertedFiles(eacCpfDAO.countEacCpfs(convertedSearchOptions));
         }
         /*
-        * statistics for number of validated files
+         * statistics for number of validated files
          */
         if (contentSearchOptions.getValidated().isEmpty()
                 || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
@@ -530,7 +531,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalValidatedFiles(eacCpfDAO.countEacCpfs(validatedSearchOptions));
         }
         /*
-        * statistics for number of published files
+         * statistics for number of published files
          */
         if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
             ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
@@ -538,7 +539,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalPublishedUnits(eacCpfDAO.countEacCpfs(publishedSearchOptions));
         }
         /*
-        * statistics for number of files delivered to Europeana
+         * statistics for number of files delivered to Europeana
          */
         if (contentSearchOptions.getEuropeana().isEmpty()
                 || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
@@ -547,7 +548,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
             results.setTotalChosDeliveredToEuropeana(eacCpfDAO.countEacCpfs(europeanaSearchOptions));
         }
         /*
-        * statistics for number of files converted to EDM
+         * statistics for number of files converted to EDM
          */
         if (contentSearchOptions.getEuropeana().isEmpty()
                 || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
