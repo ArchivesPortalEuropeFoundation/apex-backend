@@ -58,6 +58,7 @@ public class EacFacetFields {
                 if (!facetSettings.getFacetType().isDate()) {
                     Object field = FieldUtils.readField(this, 
                             dictionary.getResponseFieldName(facetSettings.getFacetType().getName()), true);
+                    //Will refelct one of the above List<NameCountPair> fields, so filed object will hold a list.class type
                     Method setMethod = thisClass.getMethod("setField", List.class, FacetField.class);
                     setMethod.invoke(this, field, queryResponse.getFacetField(facetSettings.getFacetType().getName()));
                 }
