@@ -130,7 +130,7 @@ public class Ead3SolrDocBuilder {
 
         return solrDocTree;
     }
-    
+
     private void retrieveArchdescMain() {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
@@ -712,7 +712,7 @@ public class Ead3SolrDocBuilder {
             try {
                 ApeType apeType = ApeType.get(this.localTypeMap.getApeType(part.getLocaltype().toLowerCase()));
                 if (apeType == null) {
-                    LOGGER.debug("Unsupported ApeType: "+part.getLocaltype());
+                    LOGGER.debug("Unsupported ApeType: " + part.getLocaltype());
                     continue;
                 }
                 switch (apeType) {
@@ -742,14 +742,16 @@ public class Ead3SolrDocBuilder {
                         deathDate = getContent(part);
                         if (StringUtils.isEmpty(deathDate)) {
                             deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-                        }   partDateCount++;
+                        }
+                        partDateCount++;
                         eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
                         break;
                     case BITHDATE:
                         birthDate = getContent(part);
                         if (StringUtils.isEmpty(birthDate)) {
                             birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-                        }   eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
+                        }
+                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
                         break;
                     default:
                         break;
@@ -772,6 +774,7 @@ public class Ead3SolrDocBuilder {
 
         //test build map for ead3 to eac
         eacMap.put(Ead3ToEacFieldMapKeys.TEXT_LOCAL_ID_ + "1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
+        eacMap.put(Ead3ToEacFieldMapKeys.APE_ID, returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
 
         //for test
         eacMap.put("dateExistenceTable_rows", returnAsArray("1"));

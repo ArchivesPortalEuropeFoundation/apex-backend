@@ -68,6 +68,8 @@ public interface Ead3ToEacFieldMapKeys {
      * FA-UNITID-SERIAL_NUMBER
      */
     String TEXT_LOCAL_ID_ = "textLocalId_";
+
+    String APE_ID = "apeId";
     /**
      * // used with counter like "dateExistenceTable_date_2_1" _1 means from _2
      * means to and last counter is number of date. Probable value can be known,
