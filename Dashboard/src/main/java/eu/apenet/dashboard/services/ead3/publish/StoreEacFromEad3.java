@@ -5,9 +5,11 @@
  */
 package eu.apenet.dashboard.services.ead3.publish;
 
+import com.neovisionaries.i18n.LanguageAlpha3Code;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.eaccpf.CreateEacCpf;
+import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.Part;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -130,39 +133,26 @@ public class StoreEacFromEad3 {
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
                 storedEacEntry.setValidated(ValidatedState.VALIDATED);
-                eacCpfDAO.update(storedEacEntry);
-
+                storedEacEntry = eacCpfDAO.update(storedEacEntry);
+                
+                //add to queue
+                EacCpfService.convertValidatePublish(storedEacEntry.getId(), new Properties(), "");
+                
                 this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
                 this.setFileToLoad(storedEacEntry.getId());
             } else {
                 LOG.info("The file " + filename + " is not valid");
-                for (int i = 0; i < warnings_ead.size(); i++) {
-                    String warning = warnings_ead.get(i).replace("<br/>", "");
-//                    LOG.debug(warning);
-//                    ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning, false, this);
-//                    if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
-//                        String currentError = parseEag2012Errors.errorsValidation();
-//                        if (!this.getActionMessages().contains(currentError)) {
-//                            addActionMessage(parseEag2012Errors.errorsValidation());
-//                        }
-//                    } else {
-//                        addActionMessage(parseEag2012Errors.errorsValidation());
-//                    }
-                }
                 if (eacCpfTempFile.exists()) {
                     try {
                         FileUtils.forceDelete(eacCpfTempFile);
                     } catch (IOException e) {
-//                        LOG.error(e.getMessage(), e);
+                        LOG.error(e.getMessage(), e);
                     }
                 }
             }
-        } catch (JAXBException jaxbe) {
-//            LOG.error(jaxbe.getMessage(), jaxbe);
-        } catch (APEnetException e) {
-//            LOG.error(e.getMessage(), e);
-        } catch (SAXException e) {
-//            LOG.error(e.getMessage());
+            
+        } catch (JAXBException | APEnetException | SAXException ex) {
+            LOG.debug("Ead3 to Eac-CPF store exception ", ex);
         }
     }
 
