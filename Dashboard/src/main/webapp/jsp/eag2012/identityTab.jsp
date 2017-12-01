@@ -111,7 +111,7 @@
 					<table id="identityButtonAddNames" class="tablePadding">
 						<tr>
 							<td colspan="3">
-								<input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("eag2012.identity.addAnotherForm")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('eag2012.commons.pleaseFillData')" />', '<s:property value="getText('error.specialCharacters')" escape="false" />');"/>
+								<input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("eag2012.identity.addTranslationOfName")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('eag2012.commons.pleaseFillData')" />', '<s:property value="getText('error.specialCharacters')" escape="false" />');"/>
 							</td>
 							<td>
 							</td>
@@ -125,7 +125,7 @@
 							<table id="identityTableParallelNameOfTheInstitution_<s:property value="%{#status.index + 1}" />" class="tablePadding">
 								<tr class="marginTop" id="trParallelNameOfTheInstitution" >
 									<td>
-										<label for="textParallelNameOfTheInstitution"><s:property value="getText('eag2012.commons.parallelNameOfInstitution')" />:</label>
+										<label for="textParallelNameOfTheInstitution"><s:property value="getText('eag2012.commons.alternativeCurrentNameOfInstitution')" />:</label>
 									</td>
 									<td colspan="2" class="textContact">
 										<s:if test="%{#status.index == 0}">
@@ -157,7 +157,7 @@
 						<table id="identityTableParallelNameOfTheInstitution_1" class="tablePadding">
 							<tr class="marginTop" id="trParallelNameOfTheInstitution" >
 								<td>
-									<label for=" "><s:property value="getText('eag2012.commons.parallelNameOfInstitution')" />:</label>
+									<label for=" "><s:property value="getText('eag2012.commons.alternativeCurrentNameOfInstitution')" />:</label>
 								</td>
 								<td colspan="2" class="textContact">
 									<textarea id="textParallelNameOfTheInstitution" disabled="disabled"></textarea>
@@ -177,7 +177,7 @@
 					<table id="identityButtonAddParallelNames" class="tablePadding">
 						<tr>
 							<td colspan="2">
-								<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("eag2012.identity.addAnotherParallelName")' />" onclick="addParallelNameOfTheInstitution('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
+								<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("eag2012.identity.addTranslationOfAlternativeCurrentName")' />" onclick="addParallelNameOfTheInstitution('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 							</td>
 							<td colspan="2">
 							</td>
@@ -190,7 +190,7 @@
 								<table id="identityTableFormerlyUsedName_<s:property value="%{#status.index + 1}" />" class="tablePadding">
 									<tr id="trTextFormerlyUsedName" class="marginTop">
 										<td>
-											<label for="textFormerlyUsedName"><s:property value="getText('eag2012.identity.previousNameOfArchive')" /></label>
+											<label for="textFormerlyUsedName"><s:property value="getText('eag2012.identity.previousNameOfInstitution')" /></label>
 										</td>
 										<td colspan="2">
 											<textarea id="textFormerlyUsedName"><s:property value="#current" /></textarea>
@@ -281,7 +281,7 @@
 					<table id="identityButtonAddFormerlyUsedName" class="tablePadding">
 						<tr id="trAddMoreAnotherFormerlyUsedName">
 							<td colspan="2">
-								<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("eag2012.identity.addAnotherFormerlyUsedName")' />" onclick="addMoreAnotherFormerlyUsedName('<s:property value="getText('eag2012.identity.previousNameOfArchive')" />', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.identity.yearsOfUsedName')" />', '<s:property value="getText('eag2012.commons.year')" />', '<s:property value="getText('eag2012.commons.addYearButton')" />', '<s:property value="getText('eag2012.commons.addYearRangeButton')" />', '<s:property value="getText('eag2012.commons.yearFrom')" />', '<s:property value="getText('eag2012.commons.to')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
+								<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("eag2012.identity.addPreviouslyUsedName")' />" onclick="addMoreAnotherFormerlyUsedName('<s:property value="getText('eag2012.identity.previousNameOfInstitution')" />', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.identity.yearsOfUsedName')" />', '<s:property value="getText('eag2012.commons.year')" />', '<s:property value="getText('eag2012.commons.addYearButton')" />', '<s:property value="getText('eag2012.commons.addYearRangeButton')" />', '<s:property value="getText('eag2012.commons.yearFrom')" />', '<s:property value="getText('eag2012.commons.to')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 							</td>
 							<td colspan="2">
 							</td>
