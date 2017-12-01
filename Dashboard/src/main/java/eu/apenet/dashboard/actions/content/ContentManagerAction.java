@@ -154,12 +154,12 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL, getText("content.message.rights.creative.attribution.non.commercial")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE, getText("content.message.rights.creative.attribution.non.commercial.sharealike")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES, getText("content.message.rights.creative.attribution.non.commercial.no.derivates")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_COPYRIGHT_NOT_EVALUATED, getText("ead2ese.content.license.europeana.copyrightnotevaluated")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT, getText("ead2ese.content.license.europeana.incopyright")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EDUCATIONAL_USE_ONLY, getText("ead2ese.content.license.europeana.incopyright.eduuse")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EU_ORPHAN_WORK, getText("ead2ese.content.license.europeana.incopyright.euorphan")));
+        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EDUCATIONAL_USE_ONLY, getText("ead2ese.content.license.europeana.incopyright.eduuse")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY, getText("ead2ese.content.license.europeana.nocopyright.noncommercial")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_OTHER_KNOWN_LEGAL_RESTRICTIONS, getText("ead2ese.content.license.europeana.nocopyright.otherlegal")));
-        rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.EUROPEANA_COPYRIGHT_NOT_EVALUATED, getText("ead2ese.content.license.europeana.copyrightnotevaluated")));
 
         return rightsSet;
     }
