@@ -91,7 +91,7 @@ public class CreateEacCpf {
     private static final long serialVersionUID = 1967202440160548074L;
     private EacCpf eacCpf = new EacCpf();
     private Map parameters;
-    private eu.apenet.persistence.vo.EacCpf newEac = new eu.apenet.persistence.vo.EacCpf();
+    private eu.apenet.persistence.vo.EacCpf dbEacCpf = new eu.apenet.persistence.vo.EacCpf();
     private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
     private int aiId;
     private int eacCpfId;
@@ -114,7 +114,7 @@ public class CreateEacCpf {
         System.out.println(new Gson().toJson(eacMap));
         this.aiId = aiId;
         this.eacCpfId = eacCpfId;
-        newEac = getDatabaseEacCpf();
+        dbEacCpf = getDatabaseEacCpf();
         
         Control control = fillControl();
         CpfDescription cpfDescription = fillCpfDescription();
@@ -131,13 +131,13 @@ public class CreateEacCpf {
         return eacCpf;
     }
     
-    public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
+    public final eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
         if (this.getJaxbEacCpf().getControl() != null && this.getJaxbEacCpf().getControl().getRecordId() != null && this.getJaxbEacCpf().getControl().getRecordId().getValue() != null) {
-            newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
+            dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
         }
-        newEac.getPath();
+        dbEacCpf.getPath(); //??
         
-        return newEac;
+        return dbEacCpf;
     }
     
     private Control fillControl() {
@@ -165,8 +165,8 @@ public class CreateEacCpf {
         if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
             String[] content = (String[]) parameters.get("apeId");
             if (content.length == 1) {
-                newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, content[0]);
-                oldPathName = newEac.getPath();
+                dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, content[0]);
+                oldPathName = dbEacCpf.getPath();
             }
             if (control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()) {
                 control.getRecordId().setValue(control.getOtherRecordId().get(0).getContent());
@@ -175,38 +175,39 @@ public class CreateEacCpf {
                     control.getRecordId().setValue(content[0]);
                 }
             }
-            newEac.setIdentifier(control.getRecordId().getValue());
-        } else {
-            if (StringUtils.isBlank(newEac.getIdentifier()) && newEac.getId() == null) {
+            dbEacCpf.setIdentifier(control.getRecordId().getValue());
+        } else { //NO apeId found in the xml
+            if (StringUtils.isBlank(dbEacCpf.getIdentifier()) && dbEacCpf.getId() == null) {
                 String otherRecordId = null;
                 if (control.getOtherRecordId().size() > 0) {
                     otherRecordId = control.getOtherRecordId().get(0).getContent();
                 }
                 boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
                 
+                
+                
                 if (noRecordIdAvailable) {
                     String id = System.currentTimeMillis() + "";
-                    id = id.substring(0, id.length() - 4);
-                    newEac.setIdentifier(id);
+                    dbEacCpf.setIdentifier(id);
                 } else {
-                    newEac.setIdentifier(otherRecordId);
+                    dbEacCpf.setIdentifier(otherRecordId);
                     
                 }
             }
-            control.getRecordId().setValue(replaceNonNmtokenChars(newEac.getIdentifier()));
+            control.getRecordId().setValue(replaceNonNmtokenChars(dbEacCpf.getIdentifier()));
         }
         UploadMethod uploadMethod = new UploadMethod();
         uploadMethod.setMethod(UploadMethod.HTTP);
         uploadMethod.setId(3);
         ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-        newEac.setUploadDate(new java.util.Date());
-        newEac.setUploadMethod(uploadMethod);
-        newEac.setArchivalInstitution(archivalInstitution);
-        String filename = APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
-        newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
-        newEac.setTitle("temporary title");
-        newEac = eacCpfDAO.store(newEac);
-        if (oldPathName != null && !oldPathName.equals(newEac.getPath())) {
+        dbEacCpf.setUploadDate(new java.util.Date());
+        dbEacCpf.setUploadMethod(uploadMethod);
+        dbEacCpf.setArchivalInstitution(archivalInstitution);
+        String filename = APEnetUtilities.convertToFilename(dbEacCpf.getEncodedIdentifier()) + ".xml";
+        dbEacCpf.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
+        dbEacCpf.setTitle("temporary title");
+        dbEacCpf = eacCpfDAO.store(dbEacCpf);
+        if (oldPathName != null && !oldPathName.equals(dbEacCpf.getPath())) {
             File fileToDelete = new File(APEnetUtilities.getConfig().getRepoDirPath() + oldPathName);
             if (fileToDelete.exists()) {
                 fileToDelete.delete();

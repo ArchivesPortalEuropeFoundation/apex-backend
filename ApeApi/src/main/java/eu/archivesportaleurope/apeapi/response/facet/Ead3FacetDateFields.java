@@ -47,6 +47,7 @@ public class Ead3FacetDateFields {
             try {
                 Object field = FieldUtils.readField(this,
                         dictionary.getResponseFieldName(facetSettings.getFacetType().getName()), true);
+                //Will refelct one of the above List<NameCountPair> fields, so filed object will hold a list.class type
                 Method setMethod = thisClass.getMethod("setDate", List.class, FacetField.class);
                 setMethod.invoke(this, field, queryResponse.getFacetDate(facetSettings.getFacetType().getName()));
             } catch (IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
