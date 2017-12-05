@@ -22,6 +22,9 @@ import eu.apenet.dashboard.utils.FileDownloader;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
 import eu.apenet.dpt.utils.eaccpf.Sources;
+import eu.apenet.persistence.dao.EacCpfDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead3;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
@@ -773,8 +776,13 @@ public class Ead3SolrDocBuilder {
         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
 
         //test build map for ead3 to eac
-        eacMap.put(Ead3ToEacFieldMapKeys.TEXT_LOCAL_ID_ + "1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
-        eacMap.put(Ead3ToEacFieldMapKeys.APE_ID, returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
+        EacCpfDAO cpfDAO = DAOFactory.instance().getEacCpfDAO();
+        EacCpf eacCpf = cpfDAO.getEacCpfByIdentifier(ead3Entity.getAiId(), cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count);
+        if (null != eacCpf) {
+            eacMap.put(Ead3ToEacFieldMapKeys.APE_ID, returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
+        } else {
+            eacMap.put(Ead3ToEacFieldMapKeys.TEXT_LOCAL_ID_ + "1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
+        }
 
         //for test
         eacMap.put("dateExistenceTable_rows", returnAsArray("1"));
