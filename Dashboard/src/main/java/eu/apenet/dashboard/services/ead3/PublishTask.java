@@ -10,7 +10,6 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dashboard.services.ead3.publish.SolrPublisher;
-import eu.apenet.dashboard.services.ead3.publish.StoreEacFromEad3;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
 import gov.loc.ead.Ead;
@@ -20,7 +19,6 @@ import java.io.FileNotFoundException;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.apache.log4j.Logger;
 
@@ -59,7 +57,7 @@ public class PublishTask extends AbstractEad3Task {
                 SolrPublisher publisher = new SolrPublisher();
                 long numberOfDocs = publisher.publish(tree);
                 publisher.printTree(tree);
-                
+
                 ead3Entity.setTotalNumberOfDaos(Long.parseLong(tree.getRoot().getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString()));
                 ead3Entity.setTotalNumberOfUnits(numberOfDocs);
                 ead3Entity.setPublished(true);

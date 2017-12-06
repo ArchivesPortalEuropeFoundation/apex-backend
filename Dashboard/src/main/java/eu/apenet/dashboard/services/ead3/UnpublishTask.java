@@ -10,8 +10,8 @@ import eu.apenet.commons.solr.Ead3SolrServerHolder;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.dao.Ead3DAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead3;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.util.Properties;
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -30,12 +30,20 @@ public class UnpublishTask extends AbstractEad3Task {
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         XmlType xmlType = XmlType.getContentType(ead3);
         long solrTime = deleteFromSolr(ead3.getId(), ead3.getAiId());
-        JpaUtil.beginDatabaseTransaction();
         ead3.setTotalNumberOfUnits(0l);
         ead3.setTotalNumberOfDaos(0l);
         ead3.setPublished(false);
-        ead3DAO.insertSimple(ead3);
-        JpaUtil.commitDatabaseTransaction();
+        for (EacCpf eacCpf : ead3.getEacCpfs()) {
+            if (eacCpf.isPublished()) {
+                new eu.apenet.dashboard.services.eaccpf.UnpublishTask().execute(eacCpf);
+            }
+            new eu.apenet.dashboard.services.eaccpf.DeleteTask().execute(eacCpf);
+        }
+//        Properties ead3Properties = new Properties();
+        //ead3Properties.put("priority", "2000");
+        //EacCpfService.addBatchToQueue(eacCpfIds, ead3.getAiId(), QueueAction.DELETE, ead3Properties);
+//        ead3.setEacCpfs(null);
+        ead3DAO.store(ead3);
     }
 
     @Override

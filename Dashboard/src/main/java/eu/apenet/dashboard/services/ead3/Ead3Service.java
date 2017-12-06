@@ -495,8 +495,9 @@ public class Ead3Service extends AbstractService {
                         DAOFactory.instance().getUpFileDAO().delete(upFile);
                         upFileDeleted = true;
                     } else if (queueAction.isDeleteAction()) {
-
-                        new UnpublishTask().execute(ead3, preferences);
+                        if (ead3.isPublished()) {
+                            new UnpublishTask().execute(ead3, preferences);
+                        }
                         new DeleteTask().execute(ead3, preferences);
                         eacDeleted = true;
                     }

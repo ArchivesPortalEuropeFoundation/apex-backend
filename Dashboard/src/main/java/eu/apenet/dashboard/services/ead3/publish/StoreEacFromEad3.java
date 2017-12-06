@@ -5,11 +5,9 @@
  */
 package eu.apenet.dashboard.services.ead3.publish;
 
-import com.neovisionaries.i18n.LanguageAlpha3Code;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.eaccpf.CreateEacCpf;
-import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.Part;
@@ -18,6 +16,7 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -49,14 +47,16 @@ public class StoreEacFromEad3 {
     private String fileId;
     private int fileToLoad;
     private int aiId;
+    private String ead3Identifier;
     private List<String> warnings_ead = new ArrayList<String>();
 
     Logger LOG = Logger.getLogger(StoreEacFromEad3.class);
 
-    public StoreEacFromEad3(Map parameters, String countryCode, int aiId) {
+    public StoreEacFromEad3(Map parameters, String countryCode, int aiId, String ead3Identifier) {
         this.parameters = parameters;
         this.countryCode = countryCode;
         this.aiId = aiId;
+        this.ead3Identifier = ead3Identifier;
     }
 
     public void storeEacCpf() throws Exception {
@@ -129,17 +129,22 @@ public class StoreEacFromEad3 {
                 } else {
                     storedEacEntry = creator.getDatabaseEacCpf();
                 }
+
+                Ead3 ead3 = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(aiId, ead3Identifier);
+
                 storedEacEntry.setTitle(getTitleFromFile(eac));
                 storedEacEntry.setUploadDate(new Date());
                 storedEacEntry.setPath(path);
                 storedEacEntry.setValidated(ValidatedState.VALIDATED);
+                storedEacEntry.setEad3(ead3);
                 storedEacEntry = eacCpfDAO.update(storedEacEntry);
-                
                 //add to queue
-                EacCpfService.convertValidatePublish(storedEacEntry.getId(), new Properties(), "");
-                
+//                EacCpfService.convertValidatePublish(storedEacEntry.getId(), new Properties(), "");
                 this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
                 this.setFileToLoad(storedEacEntry.getId());
+                ead3.getEacCpfs().add(storedEacEntry);
+
+                DAOFactory.instance().getEad3DAO().update(ead3);
             } else {
                 LOG.info("The file " + filename + " is not valid");
                 if (eacCpfTempFile.exists()) {
@@ -150,7 +155,7 @@ public class StoreEacFromEad3 {
                     }
                 }
             }
-            
+
         } catch (JAXBException | APEnetException | SAXException ex) {
             LOG.debug("Ead3 to Eac-CPF store exception ", ex);
         }
@@ -315,6 +320,14 @@ public class StoreEacFromEad3 {
 
     public void setAiId(int aiId) {
         this.aiId = aiId;
+    }
+
+    public String getEad3Identifier() {
+        return ead3Identifier;
+    }
+
+    public void setEad3Identifier(String ead3Identifier) {
+        this.ead3Identifier = ead3Identifier;
     }
 
 }
