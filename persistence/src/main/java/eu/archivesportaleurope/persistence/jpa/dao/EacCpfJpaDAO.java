@@ -53,7 +53,9 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         query.setMaxResults(1);
         List<EacCpf> list = query.getResultList();
         if (list.size() > 0) {
-            return list.get(0);
+            EacCpf eacCpf  = list.get(0);
+            eacCpf.setAiId(aiId); //No idea why this remain null in some case
+            return eacCpf;
         }
         return null;
     }
