@@ -114,7 +114,7 @@ public class EacCpfService extends AbstractService {
     public static boolean convertValidatePublish(Integer id, Properties properties, String currentLanguage) throws IOException {
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
-        SecurityContext.get().checkAuthorized(eacCpf);
+//        SecurityContext.get().checkAuthorized(eacCpf);
         if (!eacCpf.isPublished()) {
             properties.put(CURRENT_LANGUAGE_KEY, currentLanguage);
             addToQueue(eacCpf, QueueAction.CONVERT_VALIDATE_PUBLISH, properties);

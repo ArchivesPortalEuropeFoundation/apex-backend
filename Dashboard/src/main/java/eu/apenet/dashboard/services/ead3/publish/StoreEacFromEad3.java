@@ -117,7 +117,7 @@ public class StoreEacFromEad3 {
 //                        LOG.error(e.getMessage(), e);
                     }
                 }
-
+                synchronized (this) {
                 //update ddbb entry
                 eu.apenet.persistence.vo.EacCpf storedEacEntry = null;
 
@@ -136,10 +136,11 @@ public class StoreEacFromEad3 {
                 storedEacEntry = eacCpfDAO.update(storedEacEntry);
                 
                 //add to queue
-                EacCpfService.convertValidatePublish(storedEacEntry.getId(), new Properties(), "");
+                EacCpfService.convertValidatePublish(storedEacEntry.getId(), new Properties(), "dut");
                 
                 this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
                 this.setFileToLoad(storedEacEntry.getId());
+                }
             } else {
                 LOG.info("The file " + filename + " is not valid");
                 if (eacCpfTempFile.exists()) {

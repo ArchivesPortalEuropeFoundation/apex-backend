@@ -111,7 +111,7 @@ public class CreateEacCpf {
     
     public CreateEacCpf(Map eacMap, int aiId, int eacCpfId) {
         this.parameters = eacMap;
-        System.out.println(new Gson().toJson(eacMap));
+//        System.out.println(new Gson().toJson(eacMap));
         this.aiId = aiId;
         this.eacCpfId = eacCpfId;
         dbEacCpf = getDatabaseEacCpf();
