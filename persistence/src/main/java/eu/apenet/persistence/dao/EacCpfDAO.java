@@ -23,6 +23,8 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
     public List<Integer> getAllIds(Class<EacCpf> aClass, int aiId);
 
     public boolean existEacCpfs(ContentSearchOptions contentSearchOptions);
-    
+
     public Integer isEacCpfIdIndexed(String eadid, Class<? extends EacCpf> clazz);
+
+    public int deleteById(Integer id);
 }
