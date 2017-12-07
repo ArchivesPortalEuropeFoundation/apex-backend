@@ -640,15 +640,15 @@ public class EacCpfService extends AbstractService {
                     if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(eac, preferences);
                     }
-                    
+
                     if (queueAction.isConvertAction()) {
                         new ConvertTask().execute(eac, preferences);
                     }
-                    
+
                     if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(eac, preferences);
                     }
-                    
+
                     if (queueAction.isPublishAction()) {
                         new PublishTask().execute(eac, preferences);
                     }
@@ -955,7 +955,7 @@ public class EacCpfService extends AbstractService {
      * @see SecurityContext#checkAuthorized(EacCpf)
      */
     public static void addBatchToQueue(ContentSearchOptions eacCpfSearchOptions, QueueAction queueAction, Properties preferences) throws IOException {
-        SecurityContext.get().checkAuthorized(eacCpfSearchOptions.getArchivalInstitionId());
+//        SecurityContext.get().checkAuthorized(eacCpfSearchOptions.getArchivalInstitionId());
         QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         eacCpfSearchOptions.setPageSize(0);
@@ -1062,7 +1062,7 @@ public class EacCpfService extends AbstractService {
      * @see eu.apenet.persistence.vo.QueueItem
      */
     public static void deleteBatchFromQueue(ContentSearchOptions eacCpfSearchOptions) throws IOException {
-        SecurityContext.get().checkAuthorized(eacCpfSearchOptions.getArchivalInstitionId());
+//        SecurityContext.get().checkAuthorized(eacCpfSearchOptions.getArchivalInstitionId());
         EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
         eacCpfSearchOptions.setPageSize(0);
         List<QueuingState> queueStates = new ArrayList<QueuingState>();

@@ -22,7 +22,7 @@ public class Ead3Actions extends AbstractEad3Actions {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private Integer id;
-    
+
     private Ead3Service ead3Service = new Ead3Service();
 
     public Integer getId() {

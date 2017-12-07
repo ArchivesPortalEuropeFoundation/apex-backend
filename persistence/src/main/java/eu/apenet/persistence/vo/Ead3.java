@@ -61,6 +61,9 @@ public class Ead3 extends AbstractContent {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ead3")
     private Set<Warnings> warningses = new HashSet<Warnings>(0);
 
+    @OneToMany(mappedBy = "ead3", cascade = CascadeType.ALL)
+    private Set<EacCpf> eacCpfs = new HashSet<EacCpf>(0);
+
     @Override
     public Integer getId() {
         return id;
@@ -217,6 +220,14 @@ public class Ead3 extends AbstractContent {
     @Override
     public void setWarningses(Set<Warnings> warningses) {
         this.warningses = warningses;
+    }
+
+    public Set<EacCpf> getEacCpfs() {
+        return eacCpfs;
+    }
+
+    public void setEacCpfs(Set<EacCpf> eacCpfs) {
+        this.eacCpfs = eacCpfs;
     }
 
     public Long getTotalNumberOfDaos() {

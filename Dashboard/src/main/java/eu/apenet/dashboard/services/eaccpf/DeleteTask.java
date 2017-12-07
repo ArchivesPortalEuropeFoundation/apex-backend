@@ -12,12 +12,12 @@ import eu.apenet.persistence.vo.EacCpf;
 import java.io.File;
 
 public class DeleteTask extends AbstractEacCpfTask {
-
+    
     @Override
     protected String getActionName() {
         return "delete";
     }
-
+    
     public static boolean valid(EacCpf eacCpf) {
         boolean valid = false;
         if (!eacCpf.isPublished()) {
@@ -25,10 +25,10 @@ public class DeleteTask extends AbstractEacCpfTask {
         }
         return valid;
     }
-
+    
     @Override
     protected void execute(EacCpf eacCpf, Properties properties) throws Exception {
-
+        
         if (valid(eacCpf)) {
             try {
                 File fileToDelete = new File(APEnetUtilities.getConfig().getRepoDirPath() + eacCpf.getPath());
@@ -36,14 +36,14 @@ public class DeleteTask extends AbstractEacCpfTask {
                     ContentUtils.deleteFile(fileToDelete, true);
                 }
                 EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-                eacCpfDAO.delete(eacCpf);
+//                eacCpfDAO.delete(eacCpf);
+                eacCpfDAO.deleteById(eacCpf.getId());
                 logAction(eacCpf);
             } catch (Exception e) {
                 logAction(eacCpf, e);
                 throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
             }
         }
-
+        
     }
-
 }

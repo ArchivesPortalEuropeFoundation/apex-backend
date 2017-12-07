@@ -13,9 +13,11 @@ import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.util.ApeUtil;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,7 +34,9 @@ import org.hibernate.criterion.Restrictions;
  * @author mahbub
  */
 public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements Ead3DAO {
+
     private static final Logger LOGGER = Logger.getLogger(Ead3JpaDAO.class);
+
     @Override
     public Ead3 getFirstPublishedEad3ByIdentifier(String identifier, boolean isPublished) {
         Criteria criteria = getSession().createCriteria(Ead3.class, "ead3");
@@ -64,6 +68,17 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
     }
 
     @Override
+    public int deleteById(Integer id) {
+        JpaUtil.beginDatabaseTransaction();
+        Query query = getEntityManager().createQuery(
+                "DELETE  FROM Ead3 ead3 WHERE ead3.id = :id");
+        query.setParameter("id", id);
+        int res = query.executeUpdate();
+        JpaUtil.commitDatabaseTransaction();
+        return res;
+    }
+
+    @Override
     public Ead3 getEad3ByIdentifier(String repositorycode, String identifier, boolean onlyPublished) {
         Criteria criteria = getSession().createCriteria(Ead3.class, "ead3");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -85,7 +100,7 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
     public List<Ead3> getEad3s(ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Ead3> cq = criteriaBuilder.createQuery(Ead3.class);
-        if (contentSearchOptions.getContentClass()==null) {
+        if (contentSearchOptions.getContentClass() == null) {
             contentSearchOptions.setContentClass(Ead3.class);
         }
         Root<? extends Ead3> from = (Root<? extends Ead3>) cq.from(contentSearchOptions.getContentClass());
@@ -105,14 +120,14 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
                 query.setFirstResult(contentSearchOptions.getPageSize() * (contentSearchOptions.getPageNumber() - 1));
             }
         }
-        LOGGER.debug("Ead3 query with criteria: "+query.unwrap(org.hibernate.Query.class).getQueryString());
+        LOGGER.debug("Ead3 query with criteria: " + query.unwrap(org.hibernate.Query.class).getQueryString());
         return query.getResultList();
     }
 
     @Override
     public long countEad3s(ContentSearchOptions contentSearchOptions) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-        if (contentSearchOptions.getContentClass()==null) {
+        if (contentSearchOptions.getContentClass() == null) {
             contentSearchOptions.setContentClass(Ead3.class);
         }
         CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
@@ -125,7 +140,7 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
 
     @Override
     public Long countUnits(ContentSearchOptions contentSearchOptions) {
-        if (contentSearchOptions.getContentClass()==null) {
+        if (contentSearchOptions.getContentClass() == null) {
             contentSearchOptions.setContentClass(Ead3.class);
         }
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();

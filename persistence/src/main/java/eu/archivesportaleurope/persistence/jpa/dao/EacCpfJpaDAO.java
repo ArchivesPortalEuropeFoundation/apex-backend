@@ -22,7 +22,9 @@ import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.util.ApeUtil;
+import javax.persistence.Query;
 
 public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implements EacCpfDAO {
 
@@ -42,6 +44,17 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public int deleteById(Integer id) {
+        JpaUtil.beginDatabaseTransaction();
+        Query query = getEntityManager().createQuery(
+                "DELETE  FROM EacCpf eacCpf WHERE eacCpf.id = :id");
+        query.setParameter("id", id);
+        int res = query.executeUpdate();
+        JpaUtil.commitDatabaseTransaction();
+        return res;
     }
 
     @Override

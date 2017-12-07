@@ -647,7 +647,7 @@ public class Ead3SolrDocBuilder {
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
 
                     try {
-                        new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId()).storeEacCpf();
+                        new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
                     } catch (Exception ex) {
                         java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
                     }
