@@ -703,7 +703,7 @@ public class Ead3SolrDocBuilder {
         eacMap.put(SolrFields.REPOSITORY_CODE, returnAsArray(cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE).toString()));
         eacMap.put(Ead3SolrFields.RECORD_ID, returnAsArray(cRoot.getDataElement(Ead3SolrFields.RECORD_ID).toString()));
 
-        int partNameCount = 0;
+        int partNameCount = 1;
         int partGenealogyDescriptionCount = 0;
         int partDateCount = 0;
         String firstName = "";
@@ -772,8 +772,8 @@ public class Ead3SolrDocBuilder {
         }
 
         partNameCount++;
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName + " " + lastName));
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
+        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_1", returnAsArray(firstName + " " + lastName));
+        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_1", returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
 
         //test build map for ead3 to eac
         EacCpfDAO cpfDAO = DAOFactory.instance().getEacCpfDAO();
