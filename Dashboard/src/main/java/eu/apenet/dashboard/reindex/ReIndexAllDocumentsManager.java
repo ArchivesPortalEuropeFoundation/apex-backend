@@ -9,12 +9,14 @@ import eu.apenet.commons.exceptions.ProcessBusyException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.Ead3DAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.GenericDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -125,6 +127,7 @@ public class ReIndexAllDocumentsManager {
                 totalToBeReindexed = 0;
                 Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
                 EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+                EacCpfDAO cpfDAO = DAOFactory.instance().getEacCpfDAO();
 
                 if (!this.testRun) {
                     for (int i = 0; i < types.size() && !this.stopSignal; i++) {
@@ -133,9 +136,9 @@ public class ReIndexAllDocumentsManager {
                         if (xmlType.getIdentifier() == XmlType.EAD_3.getIdentifier()) {
                             totalToBeReindexed += ead3DAO.countEad3s(contentSearchOptions);
                         } else if (xmlType.getIdentifier() == XmlType.EAC_CPF.getIdentifier()) {
-                            totalToBeReindexed += DAOFactory.instance().getEacCpfDAO().countEacCpfs(contentSearchOptions);
+                            totalToBeReindexed += cpfDAO.countEacCpfs(contentSearchOptions);
                         } else {
-                            totalToBeReindexed += DAOFactory.instance().getEadDAO().countEads(contentSearchOptions);
+                            totalToBeReindexed += eadDAO.countEads(contentSearchOptions);
                         }
                     }
                 } else {
@@ -148,6 +151,7 @@ public class ReIndexAllDocumentsManager {
                     if (xmlType.getIdentifier() == XmlType.EAD_3.getIdentifier()) {
                         this.addEads(queueDao, ead3DAO, contentSearchOptions);
                     } else if (xmlType.getIdentifier() == XmlType.EAC_CPF.getIdentifier()) {
+                        this.addEads(queueDao, cpfDAO, contentSearchOptions);
                     } else {
                         this.addEads(queueDao, eadDAO, contentSearchOptions);
                     }
@@ -176,6 +180,8 @@ public class ReIndexAllDocumentsManager {
                 publishedContents = ((EadDAO) eadDAO).getEads(contentSearchOptions);
             } else if (eadDAO instanceof Ead3DAO) {
                 publishedContents = ((Ead3DAO) eadDAO).getEad3s(contentSearchOptions);
+            } else if (eadDAO instanceof EacCpfDAO) {
+                publishedContents = ((EacCpfDAO) ((EacCpfDAO) eadDAO)).getEacCpfs(contentSearchOptions);
             }
 
             if (publishedContents == null) {
@@ -227,6 +233,8 @@ public class ReIndexAllDocumentsManager {
                     priority += 50;
                 } else if (ead instanceof Ead3) {
                     queueItem.setEad3((Ead3) ead);
+                } else if (ead instanceof EacCpf) {
+                    queueItem.setEacCpf((EacCpf) ead);
                 }
                 queueItem.setAiId(ead.getAiId());
             } else if (ead instanceof HoldingsGuide) {

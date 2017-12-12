@@ -146,6 +146,7 @@ public class ManageQueueAction extends AbstractAction {
         this.selections.add(XmlType.EAD_FA.getName());
         this.selections.add(XmlType.EAD_HG.getName());
         this.selections.add(XmlType.EAD_SG.getName());
+        this.selections.add(XmlType.EAC_CPF.getName());
 
         getServletRequest().setAttribute("selections", this.selections);
 
@@ -180,8 +181,8 @@ public class ManageQueueAction extends AbstractAction {
         getServletRequest().setAttribute(EAD3_UNITS, ead3Units);
         long total = ReIndexAllDocumentsManager.getInstance().getTotalToBeReindexed();
         long alreadyAdded = ReIndexAllDocumentsManager.getInstance().getAlreadyAdded();
-        double percent = alreadyAdded*100.0/total;
-        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + alreadyAdded + " / " + total + " ) - "+String.format("%.2f", percent)+"%");
+        double percent = alreadyAdded * 100.0 / total;
+        getServletRequest().setAttribute(REINDEX_ON_PROGRESS_ADDITIONAL, " ( " + alreadyAdded + " / " + total + " ) - " + String.format("%.2f", percent) + "%");
     }
 
     private List<DisplayQueueItem> convert(List<QueueItem> queueItems) {
