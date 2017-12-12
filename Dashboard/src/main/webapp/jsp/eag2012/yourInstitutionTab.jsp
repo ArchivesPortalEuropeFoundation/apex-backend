@@ -112,7 +112,7 @@
 		</tr>
 		<tr>
 			<td>
-				<label for="textYIParallelNameOfTheInstitution"><s:property value="getText('eag2012.commons.parallelNameOfInstitution')"/>:</label>
+				<label for="textYIParallelNameOfTheInstitution"><s:property value="getText('eag2012.commons.alternativeCurrentNameOfInstitution')"/>:</label>
 			</td>
 			<td colspan="2">
 				<textarea id="textYIParallelNameOfTheInstitution" onchange="parallelNameOfInstitutionChanged();">${loader.parform}</textarea>
