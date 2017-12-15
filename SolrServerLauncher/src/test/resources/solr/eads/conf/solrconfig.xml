@@ -120,7 +120,7 @@
                 title^2.5 scopecontent^1.3 other^0.5 alterdate^0.4 spell fond
             </str>
             <str name="fl">
-                id,parentId,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow
+                id,parentId,title,scopecontent,alterdate,fond,unitid,country,ai,dao,type,unitidfond,otherunitid,roledao,level,eadid,repositoryCode,duplicateUnitid,orderId,numberOfDescendents,numberOfAncestors,numberOfDao,numberOfDaoBelow,language,langmaterial
             </str>
             <str name="df">title</str>
                         
