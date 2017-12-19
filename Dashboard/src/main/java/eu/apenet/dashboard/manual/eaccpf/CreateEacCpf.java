@@ -4,7 +4,6 @@
  */
 package eu.apenet.dashboard.manual.eaccpf;
 
-import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -17,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
+import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
 import eu.apenet.dpt.utils.eaccpf.Address;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
@@ -67,6 +67,9 @@ import eu.apenet.dpt.utils.eaccpf.RelationEntry;
 import eu.apenet.dpt.utils.eaccpf.Relations;
 import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
 import eu.apenet.dpt.utils.eaccpf.Script;
+import eu.apenet.dpt.utils.eaccpf.Source;
+import eu.apenet.dpt.utils.eaccpf.SourceEntry;
+import eu.apenet.dpt.utils.eaccpf.Sources;
 import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import eu.apenet.dpt.utils.eaccpf.Term;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
@@ -340,6 +343,19 @@ public class CreateEacCpf {
 
         // MaintenanceHistory
         control.getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
+
+        if (parameters.containsKey("agent")) {
+            Sources sources = new Sources();
+            Source source = new Source();
+            SourceEntry sourceEntry = new SourceEntry();
+            if (parameters.get(Ead3ToEacFieldMapStaticValues.SOURCE) != null) {
+                sourceEntry.setContent(parameters.get(Ead3ToEacFieldMapStaticValues.SOURCE).toString());
+            }
+            source.setSourceEntry(sourceEntry);
+            sources.getSource().add(source);
+
+            control.setSources(sources);
+        }
 
         return control;
     }

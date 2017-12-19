@@ -24,5 +24,6 @@ public interface Ead3ToEacFieldMapStaticValues {
     String PART_LOCAL_TYPE_PERS_NAME = "persname";
     String DATE_EXISTING_TYPE_UNKNOWN = "unknown";
     String DATE_EXISTING_TYPE_OPEN = "open";
+    String SOURCE = "source";
 
 }

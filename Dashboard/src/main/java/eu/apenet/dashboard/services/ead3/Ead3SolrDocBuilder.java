@@ -35,6 +35,7 @@ import gov.loc.ead.Dsc;
 import gov.loc.ead.Ead;
 import gov.loc.ead.Event;
 import gov.loc.ead.Famname;
+import gov.loc.ead.Genreform;
 import gov.loc.ead.Item;
 import gov.loc.ead.MMixedBasic;
 import gov.loc.ead.Langmaterial;
@@ -171,7 +172,7 @@ public class Ead3SolrDocBuilder {
             return; //ToDo: invalid c exception?
         }
 
-        Map<String, Object> didMap = this.processDid(aDid);
+        Map<String, Object> didMap = this.processDid(aDid, archdescNode);
         if (this.archdescNode.getDataElement(Ead3SolrFields.ID) == null) {
             this.archdescNode.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
         }
@@ -253,7 +254,7 @@ public class Ead3SolrDocBuilder {
             return null; //ToDo: invalid c exception?
         }
 
-        Map<String, Object> didMap = this.processDid(cDid);
+        Map<String, Object> didMap = this.processDid(cDid, cRoot);
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
@@ -517,7 +518,7 @@ public class Ead3SolrDocBuilder {
         return stringBuilder.toString();
     }
 
-    private Map<String, Object> processDid(Did did) {
+    private Map<String, Object> processDid(Did did, SolrDocNode cRoot) {
         Map<String, Object> didInfoMap = new HashMap<>();
 
         didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
@@ -527,6 +528,16 @@ public class Ead3SolrDocBuilder {
             for (Object obj : did.getMDid()) {
                 if (obj instanceof Unittitle) {
                     didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getContent((MMixedBasicPlusAccess) obj));
+                    Unittitle unittitle = (Unittitle) obj;
+                    for (Serializable innerObjs : unittitle.getContent()) {
+                        if (innerObjs instanceof JAXBElement) {
+                            JAXBElement genreform = (JAXBElement) innerObjs;
+                            if (genreform.getDeclaredType().equals(Genreform.class)) {
+                                cRoot.setTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE, processSource((Genreform) genreform.getValue()));
+                            }
+
+                        }
+                    }
                     didInfoMap.put(Ead3SolrFields.UNIT_TITLE_LOCALTYPE, ((Unittitle) obj).getLocaltype());
                 } else if (obj instanceof Daoset) {
                     int count = 0;
@@ -598,6 +609,16 @@ public class Ead3SolrDocBuilder {
         return didInfoMap;
     }
 
+    private String processSource(Genreform genreform) {
+        String source = "";
+        for (Part part : genreform.getPart()) {
+            if (part.getLocaltype().equals(Ead3ToEacFieldMapStaticValues.SOURCE)) {
+                source = getContent(part);
+            }
+        }
+        return source;
+    }
+
     private String processLangmaterial(Langmaterial langmaterial) {
         StringBuilder langcodes = new StringBuilder();
         if (langmaterial != null) {
@@ -645,6 +666,7 @@ public class Ead3SolrDocBuilder {
                     count++;
                     Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), count);
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
+                    personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
 
                     try {
                         new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
