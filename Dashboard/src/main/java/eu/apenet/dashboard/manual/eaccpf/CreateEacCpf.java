@@ -104,42 +104,42 @@ public class CreateEacCpf {
 
     //global StringBuilder for date format
     StringBuilder standardDate = new StringBuilder();
-    
+
     public CreateEacCpf(Map eacMap, int aiId) {
         this(eacMap, aiId, 0);
     }
-    
+
     public CreateEacCpf(Map eacMap, int aiId, int eacCpfId) {
         this.parameters = eacMap;
 //        System.out.println(new Gson().toJson(eacMap));
         this.aiId = aiId;
         this.eacCpfId = eacCpfId;
         dbEacCpf = getDatabaseEacCpf();
-        
+
         Control control = fillControl();
         CpfDescription cpfDescription = fillCpfDescription();
-        
+
         eacCpf.setControl(control);
         eacCpf.setCpfDescription(cpfDescription);
     }
-    
+
     public CreateEacCpf(HttpServletRequest request, int aiId, int eacCpfId) {
         this(request.getParameterMap(), aiId, eacCpfId);
     }
-    
+
     public EacCpf getJaxbEacCpf() {
         return eacCpf;
     }
-    
+
     public final eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
         if (this.getJaxbEacCpf().getControl() != null && this.getJaxbEacCpf().getControl().getRecordId() != null && this.getJaxbEacCpf().getControl().getRecordId().getValue() != null) {
             dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
         }
         dbEacCpf.getPath(); //??
-        
+
         return dbEacCpf;
     }
-    
+
     private Control fillControl() {
         Control control = new Control();
         // eacCpf/control/otherRecordId
@@ -183,15 +183,13 @@ public class CreateEacCpf {
                     otherRecordId = control.getOtherRecordId().get(0).getContent();
                 }
                 boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
-                
-                
-                
+
                 if (noRecordIdAvailable) {
                     String id = System.currentTimeMillis() + "";
                     dbEacCpf.setIdentifier(id);
                 } else {
                     dbEacCpf.setIdentifier(otherRecordId);
-                    
+
                 }
             }
             control.getRecordId().setValue(replaceNonNmtokenChars(dbEacCpf.getIdentifier()));
@@ -253,13 +251,13 @@ public class CreateEacCpf {
             if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])
                     || !"----".equals(((String[]) parameters.get("controlScript"))[0])) {
                 LanguageDeclaration languageDeclaration = new LanguageDeclaration();
-                
+
                 if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])) {
                     Language language = new Language();
                     language.setLanguageCode(((String[]) parameters.get("controlLanguage"))[0]);
                     languageDeclaration.setLanguage(language);
                 }
-                
+
                 if (!"----".equals(((String[]) parameters.get("controlScript"))[0])) {
                     Script script = new Script();
                     script.setScriptCode(((String[]) parameters.get("controlScript"))[0]);
@@ -274,7 +272,7 @@ public class CreateEacCpf {
         for (String conventionValue : conventionValues) {
             ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
             Abbreviation abbreviation = new Abbreviation();
-            
+
             abbreviation.setValue(conventionValue);
             conventionDeclaration.setAbbreviation(abbreviation);
             conventionDeclaration.setCitation(new Citation());
@@ -312,7 +310,11 @@ public class CreateEacCpf {
         // eacCpf/control/maintenanceHistory/maintenanceEvent/agentType
         if (maintenanceEvent.getAgentType() == null) {
             AgentType agentType = new AgentType();
-            agentType.setValue("human");
+            if (parameters.containsKey("agent")) {
+                agentType.setValue("machine");
+            } else {
+                agentType.setValue("human");
+            }
             maintenanceEvent.setAgentType(agentType);
         }
 
@@ -327,23 +329,27 @@ public class CreateEacCpf {
             User countryManager = partnerdao.getCountryManagerOfCountry(archivalInstitution.getCountry());
             maintenanceEvent.getAgent().setContent(countryManager.getName());
         }
-        
+
         EventDescription eventDescription = new EventDescription();
-        eventDescription.setContent("Created_with_apeEAC-CPF_form");
+        if (parameters.containsKey("agent")) {
+            eventDescription.setContent("Automatically Created from EAD3");
+        } else {
+            eventDescription.setContent("Created_with_apeEAC-CPF_form");
+        }
         maintenanceEvent.setEventDescription(eventDescription);
 
         // MaintenanceHistory
         control.getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
-        
+
         return control;
     }
-    
+
     private CpfDescription fillCpfDescription() {
         CpfDescription cpfDescription = new CpfDescription();
-        
+
         Identity identity = fillIdentity();
         cpfDescription.setIdentity(identity);
-        
+
         Description description = fillDescription();
         cpfDescription.setDescription(description);
         if (parameters.containsKey("textCpfRelationName_1")) {
@@ -352,9 +358,19 @@ public class CreateEacCpf {
                 cpfDescription.setRelations(relations);
             }
         }
+
+        if (parameters.containsKey("agent")) {
+            if (parameters.containsKey("textResRelationName_1")) {
+                if (!((String[]) parameters.get("textResRelationName_1"))[0].isEmpty()) {
+                    Relations relations = fillRelations();
+                    cpfDescription.setRelations(relations);
+                }
+            }
+        }
+
         return cpfDescription;
     }
-    
+
     private Identity fillIdentity() {
         Identity identity = new Identity();
         //general counter and auxilliary vars
@@ -372,7 +388,7 @@ public class CreateEacCpf {
         tableCounter = 1;
         parameterName1 = "textPersonTypeId_";
         parameterName2 = "textPersonId_";
-        
+
         while (parameters.containsKey(parameterName2 + tableCounter) || (String[]) parameters.get(parameterName2 + tableCounter) != null) {
             EntityId entityId = new EntityId();
             parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
@@ -403,9 +419,9 @@ public class CreateEacCpf {
         parameterName2 = "identityNameLanguage_";
         parameterName3 = "identityFormOfName_";
         parameterName4 = "_comp_";
-        
+
         while (parameters.containsKey("identityPersonName_" + tableCounter + parameterName1 + rowCounter) || (String[]) parameters.get("identityPersonName_" + tableCounter + parameterName1 + rowCounter) != null) {
-            
+
             Identity.NameEntry nameEntry = new Identity.NameEntry();
             parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
             if (null != parameterContent) {
@@ -535,10 +551,10 @@ public class CreateEacCpf {
 //        }
 //        //Add remaining forms
         identity.getNameEntryParallelOrNameEntry().addAll(nameEntries);
-        
+
         return identity;
     }
-    
+
     private Description fillDescription() {
         Description description = new Description();
         //general counter and auxilliary vars
@@ -559,7 +575,7 @@ public class CreateEacCpf {
         if (parameters.containsKey("dateExistenceTable_rows")) {
             actualDateRows = Integer.parseInt(((String[]) parameters.get("dateExistenceTable_rows"))[0]);
         }
-        
+
         ExistDates existDates = new ExistDates();
 
         // If there are any dates
@@ -609,10 +625,10 @@ public class CreateEacCpf {
         if (parameters.containsKey(parameterName1 + tableCounter)) {
             if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
                 Places places = new Places();
-                
+
                 while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
                     Place place = new Place();
-                    
+
                     PlaceEntry placeEntry = new PlaceEntry();
 
                     // .../places/place@countryCode
@@ -660,7 +676,7 @@ public class CreateEacCpf {
                     if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null
                             && !((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) {
                         Address address = new Address();
-                        
+
                         while ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null || parameters.containsKey("placeTable_" + tableCounter + parameterName5 + rowCounter)) {
                             if (!((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) {
                                 AddressLine addressLine = new AddressLine();
@@ -688,7 +704,7 @@ public class CreateEacCpf {
                                         addressLine.setContent(parameterContent[0]);
                                     }
                                 }
-                                
+
                                 address.getAddressLine().add(addressLine);
                             }
                             rowCounter++;
@@ -734,7 +750,7 @@ public class CreateEacCpf {
                     places.getPlace().add(place);
                     tableCounter++;
                 }
-                
+
                 description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(places);
             }
         }
@@ -751,7 +767,7 @@ public class CreateEacCpf {
         if (parameters.containsKey(parameterName1 + tableCounter)) {
             if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
                 Functions functions = new Functions();
-                
+
                 while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
                     Function function = new Function();
 
@@ -763,7 +779,7 @@ public class CreateEacCpf {
                             language = parameterContent[0];
                         }
                     }
-                    
+
                     Term term = new Term();
 
                     // .../functions/function/term@vocabularySource
@@ -828,7 +844,7 @@ public class CreateEacCpf {
                                     placeEntry.setContent(parameterContent[0]);
                                 }
                             }
-                            
+
                             function.getPlaceEntry().add(placeEntry);
                             rowCounter++;
                         }
@@ -869,11 +885,11 @@ public class CreateEacCpf {
                             }
                         }
                     }
-                    
+
                     functions.getFunction().add(function);
                     tableCounter++;
                 }
-                
+
                 description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(functions);
             }
         }
@@ -890,7 +906,7 @@ public class CreateEacCpf {
         if (parameters.containsKey(parameterName1 + tableCounter)) {
             if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
                 Occupations occupations = new Occupations();
-                
+
                 while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
                     Occupation occupation = new Occupation();
 
@@ -902,7 +918,7 @@ public class CreateEacCpf {
                             language = parameterContent[0];
                         }
                     }
-                    
+
                     Term term = new Term();
 
                     // .../occupations/occupation/term@vocabularySource
@@ -967,7 +983,7 @@ public class CreateEacCpf {
                                     placeEntry.setContent(parameterContent[0]);
                                 }
                             }
-                            
+
                             occupation.getPlaceEntry().add(placeEntry);
                             rowCounter++;
                         }
@@ -1008,11 +1024,11 @@ public class CreateEacCpf {
                             }
                         }
                     }
-                    
+
                     occupations.getOccupation().add(occupation);
                     tableCounter++;
                 }
-                
+
                 description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(occupations);
             }
         }
@@ -1024,7 +1040,7 @@ public class CreateEacCpf {
         if (parameters.containsKey(parameterName1 + tableCounter)) {
             if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
                 StructureOrGenealogy genealogy = null;
-                
+
                 while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
                     if (genealogy == null) {
                         genealogy = new StructureOrGenealogy();
@@ -1046,7 +1062,7 @@ public class CreateEacCpf {
                             p.setContent(parameterContent[0]);
                         }
                     }
-                    
+
                     if (!p.getContent().equals("")) {
                         genealogy.getMDiscursiveSet().add(p);
                     }
@@ -1065,7 +1081,7 @@ public class CreateEacCpf {
         if (parameters.containsKey(parameterName1 + tableCounter)) {
             if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
                 BiogHist biogHist = null;
-                
+
                 while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
                     if (biogHist == null) {
                         biogHist = new BiogHist();
@@ -1087,7 +1103,7 @@ public class CreateEacCpf {
                             p.setContent(parameterContent[0]);
                         }
                     }
-                    
+
                     if (!p.getContent().equals("")) {
                         biogHist.getChronListOrPOrCitation().add(p);
                     }
@@ -1098,10 +1114,10 @@ public class CreateEacCpf {
                 }
             }
         }
-        
+
         return description;
     }
-    
+
     private Relations fillRelations() {
         Relations relations = new Relations();
         //general counter and auxilliary vars
@@ -1128,7 +1144,7 @@ public class CreateEacCpf {
         parameterName6 = "textareaCpfRelationDescription_";
         parameterName7 = "_textCpfRelRespOrgPerson_";
         parameterName8 = "_textCpfRelRespOrgId_";
-        
+
         while ((parameters.containsKey(parameterName5 + relationCounter) || (String[]) parameters.get(parameterName5 + relationCounter) != null) && !((String[]) parameters.get(parameterName5 + relationCounter))[0].isEmpty()) {
             CpfRelation cpfRelation = new CpfRelation();
             String language = null;
@@ -1220,7 +1236,7 @@ public class CreateEacCpf {
                         cpfRelation.getRelationEntry().add(relationEntry);
                     }
                 }
-                
+
                 if ((String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
                     parameterContent = (String[]) parameters.get("cpfRelationsTable_" + relationCounter + parameterName8 + organisationCounter);
                     if (!parameterContent[0].isEmpty()) {
@@ -1237,7 +1253,7 @@ public class CreateEacCpf {
                 }
                 organisationCounter++;
             }
-            
+
             relations.getCpfRelation().add(cpfRelation);
             organisationCounter = 1;
             relationCounter++;
@@ -1254,7 +1270,7 @@ public class CreateEacCpf {
         parameterName6 = "textareaResRelationDescription_";
         parameterName7 = "_textResRelRespOrgPerson_";
         parameterName8 = "_textResRelRespOrgId_";
-        
+
         while ((parameters.containsKey(parameterName5 + relationCounter) || (String[]) parameters.get(parameterName5 + relationCounter) != null) && !((String[]) parameters.get(parameterName5 + relationCounter))[0].isEmpty()) {
             ResourceRelation resRelation = new ResourceRelation();
             String language = null;
@@ -1279,7 +1295,11 @@ public class CreateEacCpf {
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    resRelation.setHref(parameterContent[0]);
+                    if (parameters.containsKey("agent")) {
+                        resRelation.setType(parameterContent[0]);
+                    } else {
+                        resRelation.setHref(parameterContent[0]);
+                    }
                 }
             }
 
@@ -1309,7 +1329,11 @@ public class CreateEacCpf {
                     if (parameterContent.length == 1) {
                         relationEntry.setContent(parameterContent[0]);
                     }
-                    resRelation.getRelationEntry().add(relationEntry);
+                    if (parameters.containsKey("agent")) {
+                        resRelation.setTitle(parameterContent[0]);
+                    } else {
+                        resRelation.getRelationEntry().add(relationEntry);
+                    }
                 }
             }
 
@@ -1325,7 +1349,11 @@ public class CreateEacCpf {
                     if (parameterContent.length == 1) {
                         relationEntry.setContent(parameterContent[0]);
                     }
-                    resRelation.getRelationEntry().add(relationEntry);
+                    if (parameters.containsKey("agent")) {
+                        resRelation.setHref(parameterContent[0]);
+                    } else {
+                        resRelation.getRelationEntry().add(relationEntry);
+                    }
                 }
             }
 
@@ -1346,7 +1374,7 @@ public class CreateEacCpf {
                         resRelation.getRelationEntry().add(relationEntry);
                     }
                 }
-                
+
                 if ((String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
                     parameterContent = (String[]) parameters.get("resRelationsTable_" + relationCounter + parameterName8 + organisationCounter);
                     if (!parameterContent[0].isEmpty()) {
@@ -1363,7 +1391,7 @@ public class CreateEacCpf {
                 }
                 organisationCounter++;
             }
-            
+
             relations.getResourceRelation().add(resRelation);
             organisationCounter = 1;
             relationCounter++;
@@ -1380,7 +1408,7 @@ public class CreateEacCpf {
         parameterName6 = "textareaFncRelationDescription_";
         parameterName7 = "_textFncRelRespOrgPerson_";
         parameterName8 = "_textFncRelRespOrgId_";
-        
+
         while ((parameters.containsKey(parameterName5 + relationCounter) || (String[]) parameters.get(parameterName5 + relationCounter) != null) && !((String[]) parameters.get(parameterName5 + relationCounter))[0].isEmpty()) {
             FunctionRelation fncRelation = new FunctionRelation();
             String language = null;
@@ -1472,7 +1500,7 @@ public class CreateEacCpf {
                         fncRelation.getRelationEntry().add(relationEntry);
                     }
                 }
-                
+
                 if ((String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName8 + organisationCounter) != null) {
                     parameterContent = (String[]) parameters.get("fncRelationsTable_" + relationCounter + parameterName8 + organisationCounter);
                     if (!parameterContent[0].isEmpty()) {
@@ -1489,15 +1517,15 @@ public class CreateEacCpf {
                 }
                 organisationCounter++;
             }
-            
+
             relations.getFunctionRelation().add(fncRelation);
             organisationCounter = 1;
             relationCounter++;
         }
-        
+
         return relations;
     }
-    
+
     private DateRange createDateRange(String tableName, int rowCounter) {
         String date1year = tableName + "_date_1_Year_";
         String date1month = tableName + "_date_1_Month_";
@@ -1512,7 +1540,7 @@ public class CreateEacCpf {
 
         //clear StringBuilder first
         standardDate.delete(0, standardDate.length());
-        
+
         DateRange dateRange = new DateRange();
 
         //set localType if any of the dates is not known in any way
@@ -1554,7 +1582,7 @@ public class CreateEacCpf {
 
         //add toDate if known; same procedure as with fromDate
         ToDate toDate = new ToDate();
-        
+
         if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(KNOWN) && !((String[]) parameters.get(date2year + rowCounter))[0].isEmpty()) {
             standardDate.append(((String[]) parameters.get(date2year + rowCounter))[0]);
             if (!((String[]) parameters.get(date2month + rowCounter))[0].isEmpty()) {
@@ -1572,13 +1600,13 @@ public class CreateEacCpf {
         } else if (((String[]) parameters.get(date2radio + rowCounter))[0].equals(OPEN)) {
             toDate.setContent(OPEN);
         }
-        
+
         dateRange.setFromDate(fromDate);
         dateRange.setToDate(toDate);
-        
+
         return dateRange;
     }
-    
+
     private Date createDate(String tableName, int rowCounter) {
         String date1year = tableName + "_date_1_Year_";
         String date1month = tableName + "_date_1_Month_";
@@ -1588,7 +1616,7 @@ public class CreateEacCpf {
 
         //clear StringBuilder first
         standardDate.delete(0, standardDate.length());
-        
+
         Date date = new Date();
 
         //set localType attribute for unknown dates
@@ -1620,7 +1648,7 @@ public class CreateEacCpf {
         }
         return date;
     }
-    
+
     private DateSet hasData(DateSet dateSet) {
         DateSet result = new DateSet();
         for (Object object : dateSet.getDateOrDateRange()) {
@@ -1639,7 +1667,7 @@ public class CreateEacCpf {
         }
         return result;
     }
-    
+
     private boolean hasData(DateRange dateRange) {
         if (dateRange.getLocalType() == null || dateRange.getLocalType().isEmpty()) {
             return dateRange.getFromDate().getContent() != null && dateRange.getToDate().getContent() != null;
@@ -1647,7 +1675,7 @@ public class CreateEacCpf {
             return true;
         }
     }
-    
+
     private boolean hasData(Date date) {
         if (date.getLocalType() == null || date.getLocalType().isEmpty()) {
             return date.getContent() != null && !date.getContent().isEmpty();
@@ -1655,7 +1683,7 @@ public class CreateEacCpf {
             return true;
         }
     }
-    
+
     private static String replaceNonNmtokenChars(String urlPart) {
         if (urlPart != null) {
             String result = urlPart.replaceAll("\\*", "_");

@@ -784,12 +784,22 @@ public class Ead3SolrDocBuilder {
             eacMap.put(Ead3ToEacFieldMapKeys.TEXT_LOCAL_ID_ + "1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString() + "_" + count));
         }
 
+        //adding relation to resource 
+        eacMap.put("textResRelationName_1", returnAsArray("See more"));
+        eacMap.put("textResRelationId_1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString()));
+        eacMap.put("textResRelationLink_1", returnAsArray("simple"));
+        eacMap.put("resRelationType_1", returnAsArray("subjectOf"));
+        eacMap.put("textareaResRelationDescription_1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_TITLE).toString()));
+
         //for test
         eacMap.put("dateExistenceTable_rows", returnAsArray("1"));
         eacMap.put("dateExistenceTable_date_1_radio_1", returnAsArray("unknown"));
         eacMap.put("dateExistenceTable_date_2_radio_1", returnAsArray("unknown"));
 
         eacMap.put("identityPersonName_1_rows", returnAsArray("0"));
+
+        //identify automatic eac generation from ead3
+        eacMap.put("agent", "Ead3");
         return eacMap;
     }
 
