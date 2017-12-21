@@ -68,6 +68,7 @@ public class JsonToObject {
             solrDoc.addField(SolrFields.AI, ead.getRepository());
             solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
             solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
+            solrDoc.addField(SolrFields.EADID, ead.getFindingAidNo());
             solrDoc.addField(SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
