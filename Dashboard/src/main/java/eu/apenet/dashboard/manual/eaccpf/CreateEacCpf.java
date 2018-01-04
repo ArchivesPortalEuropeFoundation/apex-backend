@@ -16,7 +16,9 @@ import org.apache.commons.lang.StringUtils;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
+import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapKeys;
 import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
+import eu.apenet.dashboard.types.ead3.ApeType;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
 import eu.apenet.dpt.utils.eaccpf.Address;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
@@ -49,6 +51,8 @@ import eu.apenet.dpt.utils.eaccpf.Functions;
 import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.Language;
 import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
+import eu.apenet.dpt.utils.eaccpf.LocalDescription;
+import eu.apenet.dpt.utils.eaccpf.LocalDescriptions;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceEvent;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceHistory;
@@ -627,6 +631,29 @@ public class CreateEacCpf {
             }
         }
         description.setExistDates(existDates);
+        if (parameters.containsKey("agent")) {
+            LocalDescriptions localDescriptions = new LocalDescriptions();
+            localDescriptions.setLocalType("status");
+            if (parameters.containsKey(ApeType.GENDER.getValue())) {
+                LocalDescription localDescription = new LocalDescription();
+                localDescription.setLocalType(ApeType.GENDER.getValue());
+                Term term = new Term();
+                term.setContent(parameters.get(ApeType.GENDER.getValue()).toString());
+                term.setLang(parameters.get(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE).toString());
+                localDescription.setTerm(term);
+                localDescriptions.getLocalDescription().add(localDescription);
+            }
+            if (parameters.containsKey(ApeType.ROLE.getValue())) {
+                LocalDescription localDescription = new LocalDescription();
+                localDescription.setLocalType(ApeType.ROLE.getValue());
+                Term term = new Term();
+                term.setContent(parameters.get(ApeType.ROLE.getValue()).toString());
+                term.setLang(parameters.get(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE).toString());
+                localDescription.setTerm(term);
+                localDescriptions.getLocalDescription().add(localDescription);
+            }
+            description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(localDescriptions);
+        }
 
         // /eacCpf/cpfDescription/description/places
         tableCounter = 1;

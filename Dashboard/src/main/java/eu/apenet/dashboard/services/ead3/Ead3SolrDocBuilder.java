@@ -50,6 +50,7 @@ import gov.loc.ead.Part;
 import gov.loc.ead.Persname;
 import gov.loc.ead.Recordid;
 import gov.loc.ead.Scopecontent;
+import gov.loc.ead.Script;
 import gov.loc.ead.Subtitle;
 import gov.loc.ead.Titleproper;
 import gov.loc.ead.Unitdate;
@@ -157,6 +158,9 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retrieveRecordId());
         this.archdescNode.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
+
+        this.archdescNode.setTransientDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
+        this.archdescNode.setTransientDataElement("script", this.retrieveControlScript());
         retrieveAgency();
 
         this.processArchdesc();
@@ -505,6 +509,18 @@ public class Ead3SolrDocBuilder {
         }
     }
 
+    private String retrieveControlScript() {
+        if (this.ead3 == null || this.jXPathContext == null) {
+            throw new IllegalStateException("Not initialized properly");
+        }
+        try {
+            Script script = (Script) jXPathContext.getValue("control/languagedeclaration/scriptType");
+            return script.getScriptcode();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     private String retrieveSubtitle() {
         StringBuilder stringBuilder = new StringBuilder();
         List<Subtitle> subtitles = (List<Subtitle>) jXPathContext.getValue("control/filedesc/titlestmt/subtitle");
@@ -754,14 +770,10 @@ public class Ead3SolrDocBuilder {
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_SUR_NAME));
                         break;
                     case GENDER:
+                        eacMap.put(ApeType.GENDER.getValue(), getContent(part));
+                        break;
                     case ROLE:
-                        partGenealogyDescriptionCount++;
-                        eacMap.put(Ead3ToEacFieldMapKeys.GENEALOGY_DESCRIPTION_ + partGenealogyDescriptionCount, returnAsArray(getContent(part)));
-                        //need to add language form default arcdes lang
-                        eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE, returnAsArray("dut"));
-                        eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_SCRIPT, returnAsArray("Latn"));
-                        eacMap.put("controlLanguage", returnAsArray("dut"));
-                        eacMap.put("controlScript", returnAsArray("Latn"));
+                        eacMap.put(ApeType.ROLE.getValue(), getContent(part));
                         break;
                     case DEATHDATE:
                         deathDate = getContent(part);
@@ -819,6 +831,11 @@ public class Ead3SolrDocBuilder {
         eacMap.put("dateExistenceTable_date_2_radio_1", returnAsArray("unknown"));
 
         eacMap.put("identityPersonName_1_rows", returnAsArray("0"));
+
+        eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE, archdescNode.getTransientDataElement(Ead3SolrFields.LANGUAGE).toString());
+        eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_SCRIPT, archdescNode.getTransientDataElement("script").toString());
+        eacMap.put("controlLanguage", returnAsArray(archdescNode.getTransientDataElement(Ead3SolrFields.LANGUAGE).toString()));
+        eacMap.put("controlScript", returnAsArray(archdescNode.getTransientDataElement("script").toString()));
 
         //identify automatic eac generation from ead3
         eacMap.put("agent", "Ead3");
