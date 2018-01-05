@@ -24,13 +24,15 @@ public class SearchStatResponse {
 
     public SearchStatResponse(QueryResponse response) {
         this.queryTime = response.getQTime();
-        Object row = ((NamedList) response.getResponseHeader().get("params")).get("rows");
-        if (row != null) {
-            this.rows = Integer.parseInt(row.toString());
-        } else {
-            this.rows = 0;
+        NamedList params = (NamedList) response.getResponseHeader().get("params");
+        this.rows = 1;
+        if (params!=null) {
+            Object row = params.get("rows");
+            if (row != null) {
+                this.rows = Integer.parseInt(row.toString());
+            }
+            this.q = params.get("q").toString();
         }
-        this.q = ((NamedList) response.getResponseHeader().get("params")).get("q").toString();
     }
 
     /**

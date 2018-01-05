@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.services;
 
 import eu.archivesportaleurope.apeapi.response.common.AutocompletionResponseSet;
 import eu.archivesportaleurope.apeapi.response.common.SuggestionResponseSet;
+import java.io.IOException;
 import org.apache.solr.client.solrj.SolrServerException;
 
 /**
@@ -15,7 +16,7 @@ import org.apache.solr.client.solrj.SolrServerException;
  */
 public interface SuggestionService {
 
-    AutocompletionResponseSet autoComplete(String term) throws SolrServerException;
+    AutocompletionResponseSet autoComplete(String term) throws SolrServerException, IOException;
 
-    SuggestionResponseSet suggest(String term) throws SolrServerException;
+    SuggestionResponseSet suggest(String term) throws SolrServerException, IOException;
 }

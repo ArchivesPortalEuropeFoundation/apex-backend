@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.2.2.RELEASE</spring.version>
         <postgresql.version>9.4-1205-jdbc41</postgresql.version>
-        <archivesportaleurope.dptutil.version>2.6.0</archivesportaleurope.dptutil.version>
+        <archivesportaleurope.dptutil.version>2.6.1-SNAPSHOT</archivesportaleurope.dptutil.version>
     </properties>
 
 
@@ -42,6 +42,30 @@
         </plugins>
         <pluginManagement>
             <plugins>
+<!--                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.4.1</version>
+                    <executions>
+                        <execution>
+                            <id>enforce</id>
+                            <configuration>
+                                <rules>
+                                    <dependencyConvergence />
+                                    <requireMavenVersion>
+                                        <version>3.0</version>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                        <version>1.7</version>
+                                    </requireJavaVersion>
+                                </rules>
+                            </configuration>
+                            <goals>
+                                <goal>display-info</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
@@ -336,7 +360,7 @@
             <dependency>
                 <groupId>org.apache.solr</groupId>
                 <artifactId>solr-solrj</artifactId>
-                <version>4.7.0</version>
+                <version>5.5.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.derby</groupId>

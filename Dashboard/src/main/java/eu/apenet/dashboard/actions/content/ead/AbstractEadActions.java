@@ -68,7 +68,7 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
 
         // Recover the conversion options from session.
         HttpSession session = getServletRequest().getSession();
-    	// Options related to DAO type.
+        // Options related to DAO type.
         this.fillDaoTypePrarameters(session, parameters);
 
         // Options related to rights statement for digital objects.
@@ -81,8 +81,8 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
     }
 
     /**
-     * Method to recover the DAO type preferences from session and added them
-     * as conversion parameters.
+     * Method to recover the DAO type preferences from session and added them as
+     * conversion parameters.
      *
      * If the default option is not set, the default value "UNSPECIFIED" is
      * assigned.
@@ -134,23 +134,23 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
         // Check the values recovered.
         // Selected rights statement for digital objects.
         if (option_default_rights_digital == null
-        		|| option_default_rights_digital.equalsIgnoreCase("---")) {
-        	option_default_rights_digital = "";
+                || option_default_rights_digital.equalsIgnoreCase("---")) {
+            option_default_rights_digital = "";
         }
 
         // Recover the text for the selected rights statement for digital objects.
         if (!option_default_rights_digital.isEmpty()) {
-        	option_default_rights_digital_text = this.recoverRightsStatementText(option_default_rights_digital);
+            option_default_rights_digital_text = this.recoverRightsStatementText(option_default_rights_digital);
         }
 
         // Description added for the rights statement for digital objects.
         if (option_rights_digital_description == null || option_default_rights_digital.isEmpty()) {
-        	option_rights_digital_description = "";
+            option_rights_digital_description = "";
         }
 
         // Rights holder added for the rights statement for digital objects.
         if (option_rights_digital_holder == null || option_default_rights_digital.isEmpty()) {
-        	option_rights_digital_holder = "";
+            option_rights_digital_holder = "";
         }
 
         // Add the conversion options related to rights statement for digital
@@ -161,9 +161,9 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
         parameters.put(AjaxConversionOptionsConstants.SCRIPT_RIGHTS_DIGITAL_HOLDER, option_rights_digital_holder);
     }
 
-	/**
-     * Method to recover the rights statement, description and holder for
-     * EAD data from session and added them as conversion parameters.
+    /**
+     * Method to recover the rights statement, description and holder for EAD
+     * data from session and added them as conversion parameters.
      *
      * If the rights statement is not filled, the description and holder are
      * also set as empty values.
@@ -181,23 +181,23 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
         // Check the values recovered.
         // Selected rights statement for EAD data.
         if (option_default_rights_ead == null
-        		|| option_default_rights_ead.equalsIgnoreCase("---")) {
-        	option_default_rights_ead = "";
+                || option_default_rights_ead.equalsIgnoreCase("---")) {
+            option_default_rights_ead = "";
         }
 
         // Recover the text for the selected rights statement for EAD data.
         if (!option_default_rights_ead.isEmpty()) {
-        	option_default_rights_ead_text = this.recoverRightsStatementText(option_default_rights_ead);
+            option_default_rights_ead_text = this.recoverRightsStatementText(option_default_rights_ead);
         }
 
         // Description added for the rights statement for EAD data.
         if (option_rights_ead_description == null || option_default_rights_ead.isEmpty()) {
-        	option_rights_ead_description = "";
+            option_rights_ead_description = "";
         }
 
         // Rights holder added for the rights statement for EAD data.
         if (option_rights_ead_holder == null || option_default_rights_ead.isEmpty()) {
-        	option_rights_ead_holder = "";
+            option_rights_ead_holder = "";
         }
 
         // Add the conversion options related to rights statement for EAD data
@@ -209,58 +209,64 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
     }
 
     /**
-     * Method to recover the rights statement text from the rights statement
-     * URL selected.
+     * Method to recover the rights statement text from the rights statement URL
+     * selected.
      *
      * @param option_default_rights rights statement URL selected.
      *
      * @return Rights statement text.
      */
     private String recoverRightsStatementText(String option_default_rights) {
-    	String option_default_rights_text = null;
+        String option_default_rights_text = null;
 
-    	// Check the URL selected
-    	if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, No Derivatives.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.no.derivates");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, Non-Commercial.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, Non-Commercial, No Derivatives.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.no.derivates");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, Non-Commercial, ShareAlike.
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.sharealike");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE.equalsIgnoreCase(option_default_rights)) {
-    		// Creative Commons Attribution, ShareAlike .
-    		option_default_rights_text = getText("content.message.rights.creative.attribution.sharealike");
-    	} else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC.equalsIgnoreCase(option_default_rights)) {
-    		//  Creative Commons CC0 Public Domain Dedication .
-    		option_default_rights_text = getText("content.message.rights.creative.public.domain");
-    	} else if (AjaxConversionOptionsConstants.FREE_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
-    		// Free access – no re-use.
-    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.free");
-    	} else if (AjaxConversionOptionsConstants.ORPHAN_WORKS.equalsIgnoreCase(option_default_rights)) {
-    		// Orphan works.
-    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.orphan");
-    	} else if (AjaxConversionOptionsConstants.OUT_OF_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
-    		// Out of copyright - no commercial re-use.
-    		option_default_rights_text = getText("ead2ese.content.license.out.of.copyright");
-    	} else if (AjaxConversionOptionsConstants.PAID_ACCESS_NO_REUSE.equalsIgnoreCase(option_default_rights)) {
-    		// Paid access – no re-use.
-    		option_default_rights_text = getText("ead2ese.content.license.europeana.access.paid");
-    	} else if (AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK.equalsIgnoreCase(option_default_rights)) {
-    		// Public Domain Mark.
-    		option_default_rights_text = getText("content.message.rights.public.domain");
-    	} else {
-    		// Unknown.
-    		option_default_rights_text = getText("content.message.rights.unknown");
-    	}
+        // Check the URL selected
+        if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution.
+            option_default_rights_text = getText("content.message.rights.creative.attribution");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, No Derivatives.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.no.derivates");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NON_COMERCIAL.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, Non-Commercial.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_NO_DERIVATES.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, Non-Commercial, No Derivatives.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.no.derivates");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_NC_SHARE.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, Non-Commercial, ShareAlike.
+            option_default_rights_text = getText("content.message.rights.creative.attribution.non.commercial.sharealike");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_ATTRIBUTION_SHARE.equalsIgnoreCase(option_default_rights)) {
+            // Creative Commons Attribution, ShareAlike .
+            option_default_rights_text = getText("content.message.rights.creative.attribution.sharealike");
+        } else if (AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC.equalsIgnoreCase(option_default_rights)) {
+            //  Creative Commons CC0 Public Domain Dedication .
+            option_default_rights_text = getText("content.message.rights.creative.public.domain");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT.equalsIgnoreCase(option_default_rights)) {
+            // Europeana In Copyright
+            option_default_rights_text = getText("ead2ese.content.license.europeana.incopyright");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EU_ORPHAN_WORK.equalsIgnoreCase(option_default_rights)) {
+            // Europeana In Copyright, EU Orphan Works
+            option_default_rights_text = getText("ead2ese.content.license.europeana.incopyright.euorphan");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_IN_COPYRIGHT_EDUCATIONAL_USE_ONLY.equalsIgnoreCase(option_default_rights)) {
+            // Europeana In Copyright, educational use only
+            option_default_rights_text = getText("ead2ese.content.license.europeana.incopyright.eduuse");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY.equalsIgnoreCase(option_default_rights)) {
+            // Europeana No Copyright, non-commercial use only
+            option_default_rights_text = getText("ead2ese.content.license.europeana.nocopyright.noncommercial");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_NO_COPYRIGHT_NONCOMMERCIAL_USE_ONLY.equalsIgnoreCase(option_default_rights)) {
+            // Europeana No Copyright, other known legal restrictions
+            option_default_rights_text = getText("ead2ese.content.license.europeana.nocopyright.otherlegal");
+        } else if (AjaxConversionOptionsConstants.EUROPEANA_COPYRIGHT_NOT_EVALUATED.equalsIgnoreCase(option_default_rights)) {
+            // Europeana, copyright not evaluated
+            option_default_rights_text = getText("ead2ese.content.license.europeana.copyrightnotevaluated");
+        } else if (AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK.equalsIgnoreCase(option_default_rights)) {
+            // Public Domain Mark.
+            option_default_rights_text = getText("content.message.rights.public.domain");
+        } else {
+            // Unknown.
+            option_default_rights_text = getText("content.message.rights.unknown");
+        }
 
-		return option_default_rights_text;
-	}
+        return option_default_rights_text;
+    }
 }

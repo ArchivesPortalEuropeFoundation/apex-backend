@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
-    <luceneMatchVersion>LUCENE_43</luceneMatchVersion>
+    <luceneMatchVersion>5.5.0</luceneMatchVersion>
     <jmx />
 
     <schemaFactory class="ClassicIndexSchemaFactory" />
@@ -9,7 +9,7 @@
     <indexConfig>
         <lockType>single</lockType>
         <ramBufferSizeMB>50</ramBufferSizeMB>
-        <mergeFactor>20</mergeFactor>
+        <!--<mergeFactor>20</mergeFactor>-->
     </indexConfig>
     <!-- the default high-performance update handler -->
     <updateHandler class="solr.DirectUpdateHandler2">
@@ -97,8 +97,7 @@
     </requestDispatcher>
 
 
-    <requestHandler name="standard" class="solr.StandardRequestHandler"
-                    default="true">
+    <requestHandler name="standard" class="solr.StandardRequestHandler">
         <lst name="defaults">
             <str name="echoParams">explicit</str>
         </lst>
@@ -126,8 +125,10 @@
 
     </requestHandler>
 
-    <requestHandler name="list" class="solr.SearchHandler">
+    <requestHandler name="list" class="solr.SearchHandler" default="true">
         <lst name="defaults">
+            <str name="collection_name">eac-cpfs</str> <!--             ${solr.core.name}-->
+            <str name="df">names</str>
             <str name="defType">edismax</str>
             <str name="echoParams">explicit</str>
             <float name="tie">0.01</float>

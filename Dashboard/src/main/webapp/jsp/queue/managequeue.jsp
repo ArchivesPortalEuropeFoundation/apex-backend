@@ -26,6 +26,8 @@
                     } else if ($(this).val() === "Source Guide") {
                         msg += " <s:property value="getText('content.message.sg')"/> : " + "${numberOfSourceGuide}" + ". ";
 
+                    } else if ($(this).val() === "EAC-CPF") {
+                        msg += " <s:property value="getText('content.message.ec')"/> : " + "${numberOfEacCpfs}" + ". ";
                     } else {
                     }
                 }
@@ -89,7 +91,7 @@
         <c:if test="${reIndexOnProgress}">
             <tr>
                 <th><s:text name="admin.queuemanagement.reindexing.inprogress" /></th>
-                <td>${reIndexOnProgress}</td>
+                <td>${reIndexOnProgressAdditional}</td>
             </tr>
         </c:if>
     </table>
