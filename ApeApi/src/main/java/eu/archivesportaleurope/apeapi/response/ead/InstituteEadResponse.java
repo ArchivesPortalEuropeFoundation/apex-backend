@@ -97,13 +97,13 @@ public class InstituteEadResponse {
 
         this.findingAidTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE_OF_FOND));
         int lastIndexOfColon = this.findingAidTitle.lastIndexOf(":");
-        
-        if (lastIndexOfColon<0) {
+
+        if (lastIndexOfColon < 0) {
             throw new InternalErrorException("Illformated findingAidTitle", "fond don't have fonds id seperated by colon");
         }
         this.findingAidTitle = this.findingAidTitle.substring(0, lastIndexOfColon);
-        
-        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
+
+        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.EADID));
 
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));

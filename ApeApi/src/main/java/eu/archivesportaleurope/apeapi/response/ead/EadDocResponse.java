@@ -76,7 +76,7 @@ public class EadDocResponse {
         this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
         this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
         this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
-        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID_OF_FOND));
+        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.EADID));
         this.unitDate = this.objectToString(solrDocument.getFieldValue(SolrFields.ALTERDATE));
         this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
 
