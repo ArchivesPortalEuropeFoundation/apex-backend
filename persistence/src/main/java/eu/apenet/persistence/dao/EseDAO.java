@@ -21,4 +21,5 @@ public interface EseDAO extends GenericDAO<Ese, Integer> {
 	public List<Ese> getEsesByFindingAidAndState(Integer faId,EseState eseState);
 	public List<Ese> getEsesFromDeletedFindingaids(String oaiIdentifier);
 	public List<String> getSets();
+        public List<String> getSetsWithPublicatedFiles();
 }

@@ -23,7 +23,7 @@ public class ListSetsResponse extends AbstractResponse {
 	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params)
 			throws XMLStreamException, IOException {
 		writer.writeStartElement(getVerb());
-		List<String> oaiPmhSets = DAOFactory.instance().getEseDAO().getSets();
+		List<String> oaiPmhSets = DAOFactory.instance().getEseDAO().getSetsWithPublicatedFiles();
 		List<ArchivalInstitution> archivalInstitutions = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsByOaiPmhSets(oaiPmhSets);
 		for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
 			writer.writeStartElement("set");
