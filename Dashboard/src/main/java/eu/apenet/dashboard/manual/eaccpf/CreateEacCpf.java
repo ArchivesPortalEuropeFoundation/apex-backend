@@ -387,7 +387,6 @@ public class CreateEacCpf {
                 }
             }
         }
-
         return cpfDescription;
     }
 
@@ -1350,14 +1349,20 @@ public class CreateEacCpf {
             if ((String[]) parameters.get(parameterName6 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName6 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    DescriptiveNote descriptiveNote = new DescriptiveNote();
-                    P p = new P();
-                    if (language != null && !language.isEmpty()) {
-                        p.setLang(language);
+                    if (parameters.containsKey("agent")) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        relationEntry.setContent(parameterContent[0]);
+                        resRelation.getRelationEntry().add(relationEntry);
+                    } else {
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        P p = new P();
+                        if (language != null && !language.isEmpty()) {
+                            p.setLang(language);
+                        }
+                        p.setContent(parameterContent[0]);
+                        descriptiveNote.getP().add(p);
+                        resRelation.setDescriptiveNote(descriptiveNote);
                     }
-                    p.setContent(parameterContent[0]);
-                    descriptiveNote.getP().add(p);
-                    resRelation.setDescriptiveNote(descriptiveNote);
                 }
             }
             // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry[title]
@@ -1373,7 +1378,7 @@ public class CreateEacCpf {
                         relationEntry.setContent(parameterContent[0]);
                     }
                     if (parameters.containsKey("agent")) {
-                        resRelation.setTitle(parameterContent[0]);
+//                        resRelation.setTitle(parameterContent[0]);
                     } else {
                         resRelation.getRelationEntry().add(relationEntry);
                     }
