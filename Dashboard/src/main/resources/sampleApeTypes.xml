@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localTypes id="apetypes" xmlns="https://www.archivesportaleurope.net/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.archivesportaleurope.net/ https://raw.githubusercontent.com/ArchivesPortalEuropeFoundation/ape-backend/ead3ToEac/Dashboard/src/main/resources/apeTypes.xsd">
+    <localType id="age">
+        <description>age of a person</description>
+        <aliases>
+            <alias language="dut">leeftijd</alias>
+        </aliases>
+    </localType>
+    <localType id="alias">
+        <description>other name of a person</description>
+        <aliases>
+            <alias language="dut">bijnaam</alias>
+        </aliases>
+    </localType>
+    <localType id="baptismdate">
+        <description>date of baptism of a person</description>
+        <aliases>
+            <alias language="dut">doopdatum</alias>
+        </aliases>
+    </localType>
+    <localType id="baptismplace">
+        <description>location where baptism of a person took place</description>
+        <aliases>
+            <alias language="dut">doopplaats</alias>
+        </aliases>
+    </localType>
+    <localType id="birthdate">
+        <description>date of birth of a person</description>
+        <aliases>
+            <alias language="dut">geboortedatum</alias>
+        </aliases>
+    </localType>
+    <localType id="birthname">
+        <description>name of a person by birth, f.i. maidenname for women</description>
+        <aliases>
+            <alias language="dut">geboortenaam</alias>
+        </aliases>
+    </localType>
+    <localType id="birthplace">
+        <description>location where birth of a person took place</description>
+        <aliases>
+            <alias language="dut">geboorteplaats</alias>
+        </aliases>
+    </localType>
+    <localType id="burialdate">
+        <description>date of burial of a person</description>
+        <aliases>
+            <alias language="dut">begraafdatum</alias>
+        </aliases>
+    </localType>
+    <localType id="burialplace">
+        <description>location where burial of a person took place</description>
+        <aliases>
+            <alias language="dut">begraafplaats</alias>
+        </aliases>
+    </localType>
+    <localType id="business-residence">
+        <description>place of residence of a person, family or corporate body for business purposes</description>
+        <aliases>
+            <alias language="dut">vestigingsplaats</alias>
+        </aliases>
+    </localType>
+    <localType id="corpname">
+        <description>name of a corporate body or organisation</description>
+        <aliases>
+            <alias language="dut">bedrijfsnaam</alias>
+            <alias language="dut">organisatienaam</alias>
+        </aliases>
+    </localType>
+    <localType id="dates">
+        <description>dates</description>
+        <aliases>
+            <alias language="dut">datums</alias>
+        </aliases>
+    </localType>
+    <localType id="deathdate">
+        <description>date of death of a person</description>
+        <aliases>
+            <alias language="dut">overlijdensdatum</alias>
+        </aliases>
+    </localType>
+    <localType id="deathplace">
+        <description>location where death of a person took place</description>
+        <aliases>
+            <alias language="dut">overlijdensplaats</alias>
+            <alias language="dut">plaats van overlijden</alias>
+        </aliases>
+    </localType>
+    <localType id="divorcedate">
+        <description>date of divorce of a person</description>
+        <aliases>
+            <alias language="dut">scheidingsdatum</alias>
+        </aliases>
+    </localType>
+    <localType id="famname">
+        <description>full name of a family</description>
+        <aliases>
+            <alias language="dut">familienaam</alias>
+        </aliases>
+    </localType>
+    <localType id="firstname">
+        <description>all firstnames of a person</description>
+        <aliases>
+            <alias language="dut">voornaam</alias>
+            <alias language="dut">voornamen</alias>
+        </aliases>
+    </localType>
+    <localType id="gender">
+        <description>gender of a person</description>
+        <aliases>
+            <alias language="dut">geslacht</alias>
+        </aliases>
+    </localType>
+    <localType id="infix">
+        <description>part of the name of a person between firstname and lastname</description>
+        <aliases>
+            <alias language="dut">tussenvoegsel</alias>
+        </aliases>
+    </localType>
+    <localType id="infixtitle">
+        <description>title of a person, which has to be put between a person's firstname and lastname</description>
+        <aliases>
+            <alias language="dut">titel</alias>
+        </aliases>
+    </localType>
+    <localType id="initials">
+        <description>initials of a person</description>
+        <aliases>
+            <alias language="dut">initialen</alias>
+        </aliases>
+    </localType>
+    <localType id="lastname">
+        <description>lastname of a person or family</description>
+        <aliases>
+            <alias language="dut">achternaam</alias>
+            <alias language="dut">familienaam</alias>
+        </aliases>
+    </localType>
+    <localType id="legalform">
+        <description>legal form of a name of a corporate body or organisation</description>
+        <aliases>
+            <alias language="dut">rechtsvorm</alias>
+        </aliases>
+    </localType>
+    <localType id="maritalstatus">
+        <description>maritalstatus of a person</description>
+        <aliases>
+            <alias language="dut">huwelijkse staat</alias>
+        </aliases>
+    </localType>
+    <localType id="marriagedate">
+        <description>date of marriage of a person</description>
+        <aliases>
+            <alias language="dut">huwelijksdatum</alias>
+        </aliases>
+    </localType>
+    <localType id="marriageplace">
+        <description>location of marriage of a person</description>
+        <aliases>
+            <alias language="dut">huwelijksplaats</alias>
+        </aliases>
+    </localType>
+    <localType id="occupation">
+        <description>professional occupation of a person</description>
+        <aliases>
+            <alias language="dut">beroep</alias>
+        </aliases>
+    </localType>
+    <localType id="patronym">
+        <description>patronymic name of a person</description>
+        <aliases>
+            <alias language="dut">patroniem</alias>
+        </aliases>
+    </localType>
+    <localType id="persname">
+        <description>full name of a person</description>
+        <aliases>
+            <alias language="dut">persoonsnaam</alias>
+        </aliases>
+    </localType>
+    <localType id="posttitle">
+        <description>title of a person, which has to be put after a person's name</description>
+        <aliases>
+            <alias language="dut">titel</alias>
+        </aliases>
+    </localType>
+    <localType id="pretitle">
+        <description>title of a person, which has to be put in front of a person's name</description>
+        <aliases>
+            <alias language="dut">titel</alias>
+        </aliases>
+    </localType>
+    <localType id="private-residence">
+        <description>place of residence of a person or family for private purposes</description>
+        <aliases>
+            <alias language="dut">woonplaats</alias>
+        </aliases>
+    </localType>
+    <localType id="remark">
+        <description>general remark or comment on a person</description>
+        <aliases>
+            <alias language="dut">opmerking</alias>
+        </aliases>
+    </localType>
+    <localType id="role">
+        <description>role of a person in the record</description>
+        <aliases>
+            <alias language="dut">rol</alias>
+        </aliases>
+    </localType>
+    <localType id="suffix">
+        <description>addition to a person's name which is not a title</description>
+        <aliases>
+            <alias language="dut">toevoegsel</alias>
+        </aliases>
+    </localType>
+</localTypes>

@@ -5,9 +5,7 @@
  */
 package eu.apenet.dashboard.services.ead3.publish;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,8 +16,10 @@ public class SolrDocNode {
 
     private SolrDocNode sibling = null;
     private SolrDocNode child = null;
+    //This object is for Solr which can handle primitive data types and collections of primitives
     private Map<String, Object> data = new HashMap<>();
-    private List<Map<String, Object>> eacData = new ArrayList<>();
+    private Map<String, Object> transientData = new HashMap<>();
+//    private List<Map<String, Object>> eacData = new ArrayList<>();
 
     public SolrDocNode getSibling() {
         return sibling;
@@ -59,11 +59,26 @@ public class SolrDocNode {
         return this.data.get(key);
     }
 
-    public List<Map<String, Object>> getEacData() {
-        return eacData;
+//    public List<Map<String, Object>> getEacData() {
+//        return eacData;
+//    }
+//
+//    public void setEacData(List<Map<String, Object>> eacData) {
+//        this.eacData = eacData;
+//    }
+    public Map<String, Object> getTransientData() {
+        return transientData;
     }
 
-    public void setEacData(List<Map<String, Object>> eacData) {
-        this.eacData = eacData;
+    public void setTransientData(Map<String, Object> transientData) {
+        this.transientData = transientData;
+    }
+
+    public void setTransientDataElement(String key, Object value) {
+        this.transientData.put(key, value);
+    }
+
+    public Object getTransientDataElement(String key) {
+        return this.transientData.get(key);
     }
 }

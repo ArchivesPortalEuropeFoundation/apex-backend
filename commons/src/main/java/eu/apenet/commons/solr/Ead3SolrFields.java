@@ -26,6 +26,7 @@ public final class Ead3SolrFields {
     public final static String PARENT_UNIT_ID = "parentUnitId";//indexed+stored - 
 
     public final static String UNIT_TITLE = "unitTitle"; //indexed+stored - 
+    public final static String UNIT_TITLE_LOCALTYPE = "recordType";
     public final static String UNIT_DATE = "unitDate"; //indexed+stored - 
     public final static String SCOPE_CONTENT = "scopeContent"; //indexed+stored - 
     public final static String OTHER = "other";  //indexed+stored - other fields valaues, excluding unitTitle, scopeContent, titleProper, etc already stored data fields
@@ -37,6 +38,9 @@ public final class Ead3SolrFields {
 
     public final static String COUNTRY = "country"; //indexed+stored - countryName:countryId
     public final static String AI = "ai"; //indexed+stored - db value - aiName:aiId
+
+    public final static String AGENCY_CODE = "agencyCode";
+    public final static String AGENCY_NAME = "agencyName";
 
     public final static String REPOSITORY_CODE = "repositoryCode"; //indexed+stored - db value
     public final static String NUMBER_OF_DESCENDENTS = "numberOfDescendents"; //stored - 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
+<jmeterTestPlan version="1.2" properties="3.2" jmeter="3.3 r1808647">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Dev test" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -15,11 +15,11 @@
         <collectionProp name="HeaderManager.headers">
           <elementProp name="" elementType="Header">
             <stringProp name="Header.name">APIkey</stringProp>
-            <stringProp name="Header.value">3b65b8aed5b73017aa67fcf40508f118</stringProp>
+            <stringProp name="Header.value">4c528fdb4788e5ed5edaf54de95d60</stringProp>
           </elementProp>
           <elementProp name="" elementType="Header">
             <stringProp name="Header.name">Content-Type</stringProp>
-            <stringProp name="Header.value">application/vnd.ape-v1+json</stringProp>
+            <stringProp name="Header.value">application/vnd.ape-v5+json</stringProp>
           </elementProp>
         </collectionProp>
       </HeaderManager>
@@ -30,8 +30,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">2</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">500</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">300</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <longProp name="ThreadGroup.start_time">1461328837000</longProp>
         <longProp name="ThreadGroup.end_time">1461328837000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -46,9 +46,9 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;query&quot;: &quot;*&quot;,&#xd;
-  &quot;count&quot;: 0,&#xd;
-  &quot;startIndex&quot;: 0&#xd;
+  &quot;query&quot;: &quot;${__RandomString(${__Random(1,10)},abcdefghijklmnopqrstuvwxyz*,)}&quot;,&#xd;
+  &quot;count&quot;: 50,&#xd;
+  &quot;startIndex&quot;: ${__Random(00,99)}&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -56,8 +56,6 @@
           </elementProp>
           <stringProp name="HTTPSampler.domain">acceptance.archivesportaleurope.net</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/ApeApi/services/search/ead</stringProp>
@@ -66,8 +64,9 @@
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
@@ -172,5 +171,9 @@
         </hashTree>
       </hashTree>
     </hashTree>
+    <WorkBench guiclass="WorkBenchGui" testclass="WorkBench" testname="WorkBench" enabled="true">
+      <boolProp name="WorkBench.save">true</boolProp>
+    </WorkBench>
+    <hashTree/>
   </hashTree>
 </jmeterTestPlan>

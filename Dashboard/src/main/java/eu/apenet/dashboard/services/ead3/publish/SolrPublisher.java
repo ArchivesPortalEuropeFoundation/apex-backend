@@ -24,7 +24,7 @@ import org.apache.solr.common.SolrInputDocument;
 public class SolrPublisher {
     
     private final Ead3SolrServerHolder ead3SolrCore = Ead3SolrServerHolder.getInstance();
-    private final EacCpfSolrServerHolder cpfSolrServerHolder = EacCpfSolrServerHolder.getInstance();
+//    private final EacCpfSolrServerHolder cpfSolrServerHolder = EacCpfSolrServerHolder.getInstance();
     
     protected static final Logger LOGGER = Logger.getLogger(SolrPublisher.class);
     
@@ -39,27 +39,27 @@ public class SolrPublisher {
                 solrDoc.addField(entry.getKey(), entry.getValue());
             }
             solrDocList.add(solrDoc);
-            this.publishEacCpf(node);
+//            this.publishEacCpf(node);
         }
         this.ead3SolrCore.add(solrDocList);
         return solrDocList.size();
     }
     
-    private long publishEacCpf(SolrDocNode node) throws SolrServerException {
-        List<SolrInputDocument> eacInputDocList = new ArrayList<>();
-        if (null != node.getEacData() && !node.getEacData().isEmpty()) {
-            LOGGER.info("Object EAC size " + node.getEacData().size());
-            for (Map<String, Object> eacNode : node.getEacData()) {
-                SolrInputDocument eacSolrDoc = new SolrInputDocument();
-                for (Entry<String, Object> entry : eacNode.entrySet()) {
-                    eacSolrDoc.addField(entry.getKey(), entry.getValue());
-                }
-                eacInputDocList.add(eacSolrDoc);
-            }
-            this.cpfSolrServerHolder.add(eacInputDocList);
-        }
-        return eacInputDocList.size();
-    }
+//    private long publishEacCpf(SolrDocNode node) throws SolrServerException {
+//        List<SolrInputDocument> eacInputDocList = new ArrayList<>();
+//        if (null != node.getEacData() && !node.getEacData().isEmpty()) {
+//            LOGGER.info("Object EAC size " + node.getEacData().size());
+//            for (Map<String, Object> eacNode : node.getEacData()) {
+//                SolrInputDocument eacSolrDoc = new SolrInputDocument();
+//                for (Entry<String, Object> entry : eacNode.entrySet()) {
+//                    eacSolrDoc.addField(entry.getKey(), entry.getValue());
+//                }
+//                eacInputDocList.add(eacSolrDoc);
+//            }
+//            this.cpfSolrServerHolder.add(eacInputDocList);
+//        }
+//        return eacInputDocList.size();
+//    }
     
     public void printTree(Iterator<SolrDocNode> docIterator) throws SolrServerException {
         while (docIterator.hasNext()) {

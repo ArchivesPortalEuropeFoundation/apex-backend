@@ -22,7 +22,9 @@ import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.util.ApeUtil;
+import javax.persistence.Query;
 
 public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implements EacCpfDAO {
 
@@ -45,6 +47,17 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     }
 
     @Override
+    public int deleteById(Integer id) {
+        JpaUtil.beginDatabaseTransaction();
+        Query query = getEntityManager().createQuery(
+                "DELETE  FROM EacCpf eacCpf WHERE eacCpf.id = :id");
+        query.setParameter("id", id);
+        int res = query.executeUpdate();
+        JpaUtil.commitDatabaseTransaction();
+        return res;
+    }
+
+    @Override
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier) {
         TypedQuery<EacCpf> query = getEntityManager().createQuery(
                 "SELECT eacCpf FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);
@@ -53,7 +66,9 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         query.setMaxResults(1);
         List<EacCpf> list = query.getResultList();
         if (list.size() > 0) {
-            return list.get(0);
+            EacCpf eacCpf  = list.get(0);
+            eacCpf.setAiId(aiId); //No idea why this remain null in some case
+            return eacCpf;
         }
         return null;
     }

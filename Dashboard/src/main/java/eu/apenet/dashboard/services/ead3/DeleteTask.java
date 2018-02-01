@@ -22,8 +22,8 @@ public class DeleteTask extends AbstractEad3Task {
     protected void execute(Ead3 ead3, Properties properties) throws Exception {
         if (vaild(ead3)) {
             Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-            ead3DAO.delete(ead3);
             ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + ead3.getPath());
+            ead3DAO.deleteById(ead3.getId());
         }
     }
 

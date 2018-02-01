@@ -15,8 +15,10 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.manual.eaccpf.actions.EacCpfAction;
 import eu.apenet.dashboard.services.eaccpf.CreateEacCpfTask;
+import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapKeys;
+import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
+import eu.apenet.dashboard.types.ead3.ApeType;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
 import eu.apenet.dpt.utils.eaccpf.Address;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
@@ -49,6 +51,8 @@ import eu.apenet.dpt.utils.eaccpf.Functions;
 import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.Language;
 import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
+import eu.apenet.dpt.utils.eaccpf.LocalDescription;
+import eu.apenet.dpt.utils.eaccpf.LocalDescriptions;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceEvent;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceHistory;
@@ -67,11 +71,13 @@ import eu.apenet.dpt.utils.eaccpf.RelationEntry;
 import eu.apenet.dpt.utils.eaccpf.Relations;
 import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
 import eu.apenet.dpt.utils.eaccpf.Script;
+import eu.apenet.dpt.utils.eaccpf.Source;
+import eu.apenet.dpt.utils.eaccpf.SourceEntry;
+import eu.apenet.dpt.utils.eaccpf.Sources;
 import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import eu.apenet.dpt.utils.eaccpf.Term;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
 import eu.apenet.dpt.utils.eaccpf.UseDates;
-import eu.apenet.dpt.utils.util.FileUtil;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -79,16 +85,12 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
  * @author papp
  */
-public class CreateEacCpf extends EacCpfAction {
+public class CreateEacCpf {
 
     /**
      *
@@ -96,7 +98,7 @@ public class CreateEacCpf extends EacCpfAction {
     private static final long serialVersionUID = 1967202440160548074L;
     private EacCpf eacCpf = new EacCpf();
     private Map parameters;
-    private eu.apenet.persistence.vo.EacCpf newEac = new eu.apenet.persistence.vo.EacCpf();
+    private eu.apenet.persistence.vo.EacCpf dbEacCpf = new eu.apenet.persistence.vo.EacCpf();
     private EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
     private int aiId;
     private int eacCpfId;
@@ -110,11 +112,16 @@ public class CreateEacCpf extends EacCpfAction {
     //global StringBuilder for date format
     StringBuilder standardDate = new StringBuilder();
 
-    public CreateEacCpf(HttpServletRequest request, int aiId, int eacCpfId) {
-        this.parameters = request.getParameterMap();
+    public CreateEacCpf(Map eacMap, int aiId) {
+        this(eacMap, aiId, 0);
+    }
+
+    public CreateEacCpf(Map eacMap, int aiId, int eacCpfId) {
+        this.parameters = eacMap;
+//        System.out.println(new Gson().toJson(eacMap));
         this.aiId = aiId;
         this.eacCpfId = eacCpfId;
-        newEac = getDatabaseEacCpf();
+        dbEacCpf = getDatabaseEacCpf();
 
         Control control = fillControl();
         CpfDescription cpfDescription = fillCpfDescription();
@@ -123,17 +130,21 @@ public class CreateEacCpf extends EacCpfAction {
         eacCpf.setCpfDescription(cpfDescription);
     }
 
+    public CreateEacCpf(HttpServletRequest request, int aiId, int eacCpfId) {
+        this(request.getParameterMap(), aiId, eacCpfId);
+    }
+
     public EacCpf getJaxbEacCpf() {
         return eacCpf;
     }
 
-    public eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
+    public final eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
         if (this.getJaxbEacCpf().getControl() != null && this.getJaxbEacCpf().getControl().getRecordId() != null && this.getJaxbEacCpf().getControl().getRecordId().getValue() != null) {
-            newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
+            dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
         }
-        newEac.getPath();
+        dbEacCpf.getPath(); //??
 
-        return newEac;
+        return dbEacCpf;
     }
 
     private Control fillControl() {
@@ -161,8 +172,8 @@ public class CreateEacCpf extends EacCpfAction {
         if (parameters.containsKey("apeId") || (String[]) parameters.get("apeId") != null) {
             String[] content = (String[]) parameters.get("apeId");
             if (content.length == 1) {
-                newEac = eacCpfDAO.getEacCpfByIdentifier(aiId, content[0]);
-                oldPathName = newEac.getPath();
+                dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, content[0]);
+                oldPathName = dbEacCpf.getPath();
             }
             if (control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()) {
                 control.getRecordId().setValue(control.getOtherRecordId().get(0).getContent());
@@ -171,9 +182,9 @@ public class CreateEacCpf extends EacCpfAction {
                     control.getRecordId().setValue(content[0]);
                 }
             }
-            newEac.setIdentifier(control.getRecordId().getValue());
-        } else {
-            if (StringUtils.isBlank(newEac.getIdentifier()) && newEac.getId() == null) {
+            dbEacCpf.setIdentifier(control.getRecordId().getValue());
+        } else { //NO apeId found in the xml
+            if (StringUtils.isBlank(dbEacCpf.getIdentifier()) && dbEacCpf.getId() == null) {
                 String otherRecordId = null;
                 if (control.getOtherRecordId().size() > 0) {
                     otherRecordId = control.getOtherRecordId().get(0).getContent();
@@ -182,29 +193,28 @@ public class CreateEacCpf extends EacCpfAction {
 
                 if (noRecordIdAvailable) {
                     String id = System.currentTimeMillis() + "";
-                    id = id.substring(0, id.length() - 4);
-                    newEac.setIdentifier(id);
+                    dbEacCpf.setIdentifier(id);
                 } else {
-                    newEac.setIdentifier(otherRecordId);
+                    dbEacCpf.setIdentifier(otherRecordId);
 
                 }
             }
-            control.getRecordId().setValue(replaceNonNmtokenChars(newEac.getIdentifier()));
+            control.getRecordId().setValue(replaceNonNmtokenChars(dbEacCpf.getIdentifier()));
         }
         UploadMethod uploadMethod = new UploadMethod();
         uploadMethod.setMethod(UploadMethod.HTTP);
         uploadMethod.setId(3);
         ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-        newEac.setUploadDate(new java.util.Date());
-        newEac.setUploadMethod(uploadMethod);
-        newEac.setArchivalInstitution(archivalInstitution);
-        String filename = APEnetUtilities.convertToFilename(newEac.getEncodedIdentifier()) + ".xml";
-        newEac.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
-        newEac.setTitle("temporary title");
-        newEac = eacCpfDAO.store(newEac);
-        if(oldPathName != null && !oldPathName.equals(newEac.getPath())){
+        dbEacCpf.setUploadDate(new java.util.Date());
+        dbEacCpf.setUploadMethod(uploadMethod);
+        dbEacCpf.setArchivalInstitution(archivalInstitution);
+        String filename = APEnetUtilities.convertToFilename(dbEacCpf.getEncodedIdentifier()) + ".xml";
+        dbEacCpf.setPath(CreateEacCpfTask.getPath(XmlType.EAC_CPF, archivalInstitution) + filename);
+        dbEacCpf.setTitle("temporary title");
+        dbEacCpf = eacCpfDAO.store(dbEacCpf);
+        if (oldPathName != null && !oldPathName.equals(dbEacCpf.getPath())) {
             File fileToDelete = new File(APEnetUtilities.getConfig().getRepoDirPath() + oldPathName);
-            if(fileToDelete.exists()){
+            if (fileToDelete.exists()) {
                 fileToDelete.delete();
             }
         }
@@ -233,31 +243,35 @@ public class CreateEacCpf extends EacCpfAction {
         if (control.getMaintenanceAgency().getAgencyCode() == null) {
             control.getMaintenanceAgency().setAgencyCode(new AgencyCode());
         }
-        control.getMaintenanceAgency().getAgencyCode().setValue(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getRepositorycode());
+        //getAiId() -- todo: check security context immidately after clicking create button in FE
+        control.getMaintenanceAgency().getAgencyCode().setValue(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(aiId).getRepositorycode());
 
         // eacCpf/control/maintenanceAgency/agencyName
         if (control.getMaintenanceAgency().getAgencyName() == null) {
             control.getMaintenanceAgency().setAgencyName(new AgencyName());
         }
-        control.getMaintenanceAgency().getAgencyName().setContent(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getAiname());
+        //getAiId() -- todo: check security context immidately after clicking create button in FE
+        control.getMaintenanceAgency().getAgencyName().setContent(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(aiId).getAiname());
 
         // eacCpf/control/languageDeclaration
-        if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])
-                || !"----".equals(((String[]) parameters.get("controlScript"))[0])) {
-            LanguageDeclaration languageDeclaration = new LanguageDeclaration();
+        if (null != parameters.get("controlLanguage")) {
+            if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])
+                    || !"----".equals(((String[]) parameters.get("controlScript"))[0])) {
+                LanguageDeclaration languageDeclaration = new LanguageDeclaration();
 
-            if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])) {
-                Language language = new Language();
-                language.setLanguageCode(((String[]) parameters.get("controlLanguage"))[0]);
-                languageDeclaration.setLanguage(language);
-            }
+                if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])) {
+                    Language language = new Language();
+                    language.setLanguageCode(((String[]) parameters.get("controlLanguage"))[0]);
+                    languageDeclaration.setLanguage(language);
+                }
 
-            if (!"----".equals(((String[]) parameters.get("controlScript"))[0])) {
-                Script script = new Script();
-                script.setScriptCode(((String[]) parameters.get("controlScript"))[0]);
-                languageDeclaration.setScript(script);
+                if (!"----".equals(((String[]) parameters.get("controlScript"))[0])) {
+                    Script script = new Script();
+                    script.setScriptCode(((String[]) parameters.get("controlScript"))[0]);
+                    languageDeclaration.setScript(script);
+                }
+                control.setLanguageDeclaration(languageDeclaration);
             }
-            control.setLanguageDeclaration(languageDeclaration);
         }
 
         // eacCpf/control/conventionDeclaration items
@@ -303,7 +317,11 @@ public class CreateEacCpf extends EacCpfAction {
         // eacCpf/control/maintenanceHistory/maintenanceEvent/agentType
         if (maintenanceEvent.getAgentType() == null) {
             AgentType agentType = new AgentType();
-            agentType.setValue("human");
+            if (parameters.containsKey("agent")) {
+                agentType.setValue("machine");
+            } else {
+                agentType.setValue("human");
+            }
             maintenanceEvent.setAgentType(agentType);
         }
 
@@ -320,11 +338,28 @@ public class CreateEacCpf extends EacCpfAction {
         }
 
         EventDescription eventDescription = new EventDescription();
-        eventDescription.setContent("Created_with_apeEAC-CPF_form");
+        if (parameters.containsKey("agent")) {
+            eventDescription.setContent("Automatically Created from EAD3");
+        } else {
+            eventDescription.setContent("Created_with_apeEAC-CPF_form");
+        }
         maintenanceEvent.setEventDescription(eventDescription);
 
         // MaintenanceHistory
         control.getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
+
+        if (parameters.containsKey("agent")) {
+            Sources sources = new Sources();
+            Source source = new Source();
+            SourceEntry sourceEntry = new SourceEntry();
+            if (parameters.get(Ead3ToEacFieldMapStaticValues.SOURCE) != null) {
+                sourceEntry.setContent(parameters.get(Ead3ToEacFieldMapStaticValues.SOURCE).toString());
+            }
+            source.setSourceEntry(sourceEntry);
+            sources.getSource().add(source);
+
+            control.setSources(sources);
+        }
 
         return control;
     }
@@ -337,10 +372,20 @@ public class CreateEacCpf extends EacCpfAction {
 
         Description description = fillDescription();
         cpfDescription.setDescription(description);
+        if (parameters.containsKey("textCpfRelationName_1")) {
+            if (!((String[]) parameters.get("textCpfRelationName_1"))[0].isEmpty() || !((String[]) parameters.get("textResRelationName_1"))[0].isEmpty()) {
+                Relations relations = fillRelations();
+                cpfDescription.setRelations(relations);
+            }
+        }
 
-        if (!((String[]) parameters.get("textCpfRelationName_1"))[0].isEmpty() || !((String[]) parameters.get("textResRelationName_1"))[0].isEmpty()) {
-            Relations relations = fillRelations();
-            cpfDescription.setRelations(relations);
+        if (parameters.containsKey("agent")) {
+            if (parameters.containsKey("textResRelationName_1")) {
+                if (!((String[]) parameters.get("textResRelationName_1"))[0].isEmpty()) {
+                    Relations relations = fillRelations();
+                    cpfDescription.setRelations(relations);
+                }
+            }
         }
         return cpfDescription;
     }
@@ -398,9 +443,11 @@ public class CreateEacCpf extends EacCpfAction {
 
             Identity.NameEntry nameEntry = new Identity.NameEntry();
             parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
-            if (parameterContent.length == 1) {
-                if (!parameterContent[0].equals("")) {
-                    nameEntry.setLocalType(parameterContent[0]);
+            if (null != parameterContent) {
+                if (parameterContent.length == 1) {
+                    if (!parameterContent[0].equals("")) {
+                        nameEntry.setLocalType(parameterContent[0]);
+                    }
                 }
             }
 
@@ -532,7 +579,7 @@ public class CreateEacCpf extends EacCpfAction {
         //general counter and auxilliary vars
         int tableCounter;
         int rowCounter;
-        int actualDateRows;
+        int actualDateRows = 0;
         String parameterName1;
         String parameterName2;
         String parameterName3;
@@ -544,7 +591,9 @@ public class CreateEacCpf extends EacCpfAction {
 
         // /eacCpf/cpfDescription/description/existDates
         rowCounter = 1;
-        actualDateRows = Integer.parseInt(((String[]) parameters.get("dateExistenceTable_rows"))[0]);
+        if (parameters.containsKey("dateExistenceTable_rows")) {
+            actualDateRows = Integer.parseInt(((String[]) parameters.get("dateExistenceTable_rows"))[0]);
+        }
 
         ExistDates existDates = new ExistDates();
 
@@ -581,6 +630,29 @@ public class CreateEacCpf extends EacCpfAction {
             }
         }
         description.setExistDates(existDates);
+        if (parameters.containsKey("agent")) {
+            LocalDescriptions localDescriptions = new LocalDescriptions();
+            localDescriptions.setLocalType("status");
+            if (parameters.containsKey(ApeType.GENDER.getValue())) {
+                LocalDescription localDescription = new LocalDescription();
+                localDescription.setLocalType(ApeType.GENDER.getValue());
+                Term term = new Term();
+                term.setContent(parameters.get(ApeType.GENDER.getValue()).toString());
+                term.setLang(parameters.get(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE).toString());
+                localDescription.setTerm(term);
+                localDescriptions.getLocalDescription().add(localDescription);
+            }
+            if (parameters.containsKey(ApeType.ROLE.getValue())) {
+                LocalDescription localDescription = new LocalDescription();
+                localDescription.setLocalType(ApeType.ROLE.getValue());
+                Term term = new Term();
+                term.setContent(parameters.get(ApeType.ROLE.getValue()).toString());
+                term.setLang(parameters.get(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE).toString());
+                localDescription.setTerm(term);
+                localDescriptions.getLocalDescription().add(localDescription);
+            }
+            description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(localDescriptions);
+        }
 
         // /eacCpf/cpfDescription/description/places
         tableCounter = 1;
@@ -592,136 +664,137 @@ public class CreateEacCpf extends EacCpfAction {
         parameterName5 = "_addressDetails_";
         parameterName6 = "_addressComponent_";
         parameterName7 = "placeRole_";
+        if (parameters.containsKey(parameterName1 + tableCounter)) {
+            if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
+                Places places = new Places();
 
-        if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
-            Places places = new Places();
+                while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
+                    Place place = new Place();
 
-            while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
-                Place place = new Place();
+                    PlaceEntry placeEntry = new PlaceEntry();
 
-                PlaceEntry placeEntry = new PlaceEntry();
-
-                // .../places/place@countryCode
-                if ((String[]) parameters.get(parameterName4 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName4 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        placeEntry.setCountryCode(parameterContent[0]);
-                    }
-                }
-
-                // .../places/place@localType
-                if ((String[]) parameters.get(parameterName7 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName7 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        placeEntry.setLocalType(parameterContent[0]);
-                    }
-                }
-
-                // .../places/place@vocabularySource
-                if ((String[]) parameters.get(parameterName3 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        placeEntry.setVocabularySource(parameterContent[0]);
-                    }
-                }
-
-                // .../places/place@xml:lang
-                if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        placeEntry.setLang(parameterContent[0]);
-                    }
-                }
-
-                // .../places/place
-                if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
-                    if (parameterContent.length == 1) {
-                        placeEntry.setContent(parameterContent[0]);
-                    }
-                }
-                place.getPlaceEntry().add(placeEntry);
-
-                // .../places/place/address
-                if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null
-                        && !((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) {
-                    Address address = new Address();
-
-                    while ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null || parameters.containsKey("placeTable_" + tableCounter + parameterName5 + rowCounter)) {
-                        if (!((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) {
-                            AddressLine addressLine = new AddressLine();
-
-                            // .../places/place/address/addressLine@localType
-                            if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName6 + rowCounter) != null) {
-                                parameterContent = (String[]) parameters.get("placeTable_" + tableCounter + parameterName6 + rowCounter);
-                                if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                                    addressLine.setLocalType(parameterContent[0]);
-                                }
-                            }
-
-                            // .../places/place/address/addressLine@xml:lang
-                            if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
-                                parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
-                                if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                                    addressLine.setLang(parameterContent[0]);
-                                }
-                            }
-
-                            // .../places/place/address/addressLine
-                            if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                                parameterContent = (String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter);
-                                if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                                    addressLine.setContent(parameterContent[0]);
-                                }
-                            }
-
-                            address.getAddressLine().add(addressLine);
-                        }
-                        rowCounter++;
-                    }
-                    place.setAddress(address);
-                }
-
-                //add any dates
-                rowCounter = 1;
-                actualDateRows = Integer.parseInt(((String[]) parameters.get("placeTable_" + tableCounter + "_rows"))[0]);
-
-                // If there are any dates
-                if (actualDateRows > 0) {
-                    DateSet dateSet = new DateSet();
-                    while (parameters.containsKey("placeTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
-                        //if the rows have two dates, we need a date range, otherwise a simple date will cut it
-                        if (parameters.containsKey("placeTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
-                            DateRange dateRange = createDateRange("placeTable_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(dateRange);
-                        } else {
-                            //Apply same procedure as above to single date
-                            Date date = createDate("placeTable_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(date);
-                        }
-                        rowCounter++;
-                    }
-                    //filter all empty rows
-                    dateSet = hasData(dateSet);
-
-                    //add respective elements according to number of non-empty rows
-                    if (!dateSet.getDateOrDateRange().isEmpty()) {
-                        if (dateSet.getDateOrDateRange().size() == 1) {
-                            if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
-                                place.setDate((Date) dateSet.getDateOrDateRange().get(0));
-                            } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
-                                place.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
-                            }
-                        } else {
-                            place.setDateSet(dateSet);
+                    // .../places/place@countryCode
+                    if ((String[]) parameters.get(parameterName4 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName4 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            placeEntry.setCountryCode(parameterContent[0]);
                         }
                     }
+
+                    // .../places/place@localType
+                    if ((String[]) parameters.get(parameterName7 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName7 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            placeEntry.setLocalType(parameterContent[0]);
+                        }
+                    }
+
+                    // .../places/place@vocabularySource
+                    if ((String[]) parameters.get(parameterName3 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            placeEntry.setVocabularySource(parameterContent[0]);
+                        }
+                    }
+
+                    // .../places/place@xml:lang
+                    if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            placeEntry.setLang(parameterContent[0]);
+                        }
+                    }
+
+                    // .../places/place
+                    if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            placeEntry.setContent(parameterContent[0]);
+                        }
+                    }
+                    place.getPlaceEntry().add(placeEntry);
+
+                    // .../places/place/address
+                    if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null
+                            && !((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) {
+                        Address address = new Address();
+
+                        while ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null || parameters.containsKey("placeTable_" + tableCounter + parameterName5 + rowCounter)) {
+                            if (!((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) {
+                                AddressLine addressLine = new AddressLine();
+
+                                // .../places/place/address/addressLine@localType
+                                if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName6 + rowCounter) != null) {
+                                    parameterContent = (String[]) parameters.get("placeTable_" + tableCounter + parameterName6 + rowCounter);
+                                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                                        addressLine.setLocalType(parameterContent[0]);
+                                    }
+                                }
+
+                                // .../places/place/address/addressLine@xml:lang
+                                if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
+                                    parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
+                                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                                        addressLine.setLang(parameterContent[0]);
+                                    }
+                                }
+
+                                // .../places/place/address/addressLine
+                                if ((String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter) != null) {
+                                    parameterContent = (String[]) parameters.get("placeTable_" + tableCounter + parameterName5 + rowCounter);
+                                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                                        addressLine.setContent(parameterContent[0]);
+                                    }
+                                }
+
+                                address.getAddressLine().add(addressLine);
+                            }
+                            rowCounter++;
+                        }
+                        place.setAddress(address);
+                    }
+
+                    //add any dates
+                    rowCounter = 1;
+                    actualDateRows = Integer.parseInt(((String[]) parameters.get("placeTable_" + tableCounter + "_rows"))[0]);
+
+                    // If there are any dates
+                    if (actualDateRows > 0) {
+                        DateSet dateSet = new DateSet();
+                        while (parameters.containsKey("placeTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
+                            //if the rows have two dates, we need a date range, otherwise a simple date will cut it
+                            if (parameters.containsKey("placeTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
+                                DateRange dateRange = createDateRange("placeTable_" + tableCounter, rowCounter);
+                                dateSet.getDateOrDateRange().add(dateRange);
+                            } else {
+                                //Apply same procedure as above to single date
+                                Date date = createDate("placeTable_" + tableCounter, rowCounter);
+                                dateSet.getDateOrDateRange().add(date);
+                            }
+                            rowCounter++;
+                        }
+                        //filter all empty rows
+                        dateSet = hasData(dateSet);
+
+                        //add respective elements according to number of non-empty rows
+                        if (!dateSet.getDateOrDateRange().isEmpty()) {
+                            if (dateSet.getDateOrDateRange().size() == 1) {
+                                if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                                    place.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                                } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                                    place.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                                }
+                            } else {
+                                place.setDateSet(dateSet);
+                            }
+                        }
+                    }
+                    places.getPlace().add(place);
+                    tableCounter++;
                 }
-                places.getPlace().add(place);
-                tableCounter++;
+
+                description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(places);
             }
-
-            description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(places);
         }
 
         // /eacCpf/cpfDescription/description/functions
@@ -733,133 +806,134 @@ public class CreateEacCpf extends EacCpfAction {
         parameterName4 = "functionDescription_";
         parameterName5 = "_place_";
         parameterName6 = "_country_";
+        if (parameters.containsKey(parameterName1 + tableCounter)) {
+            if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
+                Functions functions = new Functions();
 
-        if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
-            Functions functions = new Functions();
+                while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
+                    Function function = new Function();
 
-            while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
-                Function function = new Function();
-
-                // retrieve language, if available
-                String language = null;
-                if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        language = parameterContent[0];
-                    }
-                }
-
-                Term term = new Term();
-
-                // .../functions/function/term@vocabularySource
-                if ((String[]) parameters.get(parameterName3 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        term.setVocabularySource(parameterContent[0]);
-                    }
-                }
-
-                // .../functions/function/term@xml:lang
-                if (language != null) {
-                    term.setLang(language);
-                }
-
-                // .../functions/function/term
-                if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
-                    if (parameterContent.length == 1) {
-                        term.setContent(parameterContent[0]);
-                    }
-                }
-                function.setTerm(term);
-
-                // .../functions/function/descriptiveNote
-                if ((String[]) parameters.get(parameterName4 + tableCounter) != null && !((String[]) parameters.get(parameterName4 + tableCounter))[0].isEmpty()) {
-                    parameterContent = (String[]) parameters.get(parameterName4 + tableCounter);
-                    if (parameterContent.length == 1) {
-                        DescriptiveNote descriptiveNote = new DescriptiveNote();
-                        P p = new P();
-                        if (language != null) {
-                            p.setLang(language);
+                    // retrieve language, if available
+                    String language = null;
+                    if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            language = parameterContent[0];
                         }
-                        p.setContent(parameterContent[0]);
-                        descriptiveNote.getP().add(p);
-                        function.setDescriptiveNote(descriptiveNote);
                     }
-                }
 
-                // .../functions/function/placeEntry
-                if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                    while (parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter)) {
-                        PlaceEntry placeEntry = new PlaceEntry();
+                    Term term = new Term();
 
-                        // .../placeEntry@countryCode
-                        if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName6 + rowCounter) != null) {
-                            parameterContent = (String[]) parameters.get("functionTable_" + tableCounter + parameterName6 + rowCounter);
-                            if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                                placeEntry.setCountryCode(parameterContent[0]);
+                    // .../functions/function/term@vocabularySource
+                    if ((String[]) parameters.get(parameterName3 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            term.setVocabularySource(parameterContent[0]);
+                        }
+                    }
+
+                    // .../functions/function/term@xml:lang
+                    if (language != null) {
+                        term.setLang(language);
+                    }
+
+                    // .../functions/function/term
+                    if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            term.setContent(parameterContent[0]);
+                        }
+                    }
+                    function.setTerm(term);
+
+                    // .../functions/function/descriptiveNote
+                    if ((String[]) parameters.get(parameterName4 + tableCounter) != null && !((String[]) parameters.get(parameterName4 + tableCounter))[0].isEmpty()) {
+                        parameterContent = (String[]) parameters.get(parameterName4 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            DescriptiveNote descriptiveNote = new DescriptiveNote();
+                            P p = new P();
+                            if (language != null) {
+                                p.setLang(language);
+                            }
+                            p.setContent(parameterContent[0]);
+                            descriptiveNote.getP().add(p);
+                            function.setDescriptiveNote(descriptiveNote);
+                        }
+                    }
+
+                    // .../functions/function/placeEntry
+                    if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter) != null) {
+                        while (parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("functionTable_" + tableCounter + parameterName5 + rowCounter)) {
+                            PlaceEntry placeEntry = new PlaceEntry();
+
+                            // .../placeEntry@countryCode
+                            if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName6 + rowCounter) != null) {
+                                parameterContent = (String[]) parameters.get("functionTable_" + tableCounter + parameterName6 + rowCounter);
+                                if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                                    placeEntry.setCountryCode(parameterContent[0]);
+                                }
+                            }
+
+                            // .../placeEntry@xml:lang
+                            if (language != null) {
+                                placeEntry.setLang(language);
+                            }
+
+                            // .../placeEntry
+                            if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter) != null) {
+                                parameterContent = (String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter);
+                                if (parameterContent.length == 1) {
+                                    placeEntry.setContent(parameterContent[0]);
+                                }
+                            }
+
+                            function.getPlaceEntry().add(placeEntry);
+                            rowCounter++;
+                        }
+                    }
+
+                    //add any dates
+                    rowCounter = 1;
+                    actualDateRows = Integer.parseInt(((String[]) parameters.get("functionTable_" + tableCounter + "_rows"))[0]);
+
+                    // If there are any dates
+                    if (actualDateRows > 0) {
+                        DateSet dateSet = new DateSet();
+                        while (parameters.containsKey("functionTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
+                            //if the rows have two dates, we need a date range, otherwise a simple date will cut it
+                            if (parameters.containsKey("functionTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
+                                DateRange dateRange = createDateRange("functionTable_" + tableCounter, rowCounter);
+                                dateSet.getDateOrDateRange().add(dateRange);
+                            } else {
+                                //Apply same procedure as above to single date
+                                Date date = createDate("functionTable_" + tableCounter, rowCounter);
+                                dateSet.getDateOrDateRange().add(date);
+                            }
+                            rowCounter++;
+                        }
+                        //filter all empty rows
+                        dateSet = hasData(dateSet);
+
+                        //add respective elements according to number of non-empty rows
+                        if (!dateSet.getDateOrDateRange().isEmpty()) {
+                            if (dateSet.getDateOrDateRange().size() == 1) {
+                                if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                                    function.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                                } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                                    function.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                                }
+                            } else {
+                                function.setDateSet(dateSet);
                             }
                         }
-
-                        // .../placeEntry@xml:lang
-                        if (language != null) {
-                            placeEntry.setLang(language);
-                        }
-
-                        // .../placeEntry
-                        if ((String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                            parameterContent = (String[]) parameters.get("functionTable_" + tableCounter + parameterName5 + rowCounter);
-                            if (parameterContent.length == 1) {
-                                placeEntry.setContent(parameterContent[0]);
-                            }
-                        }
-
-                        function.getPlaceEntry().add(placeEntry);
-                        rowCounter++;
                     }
+
+                    functions.getFunction().add(function);
+                    tableCounter++;
                 }
 
-                //add any dates
-                rowCounter = 1;
-                actualDateRows = Integer.parseInt(((String[]) parameters.get("functionTable_" + tableCounter + "_rows"))[0]);
-
-                // If there are any dates
-                if (actualDateRows > 0) {
-                    DateSet dateSet = new DateSet();
-                    while (parameters.containsKey("functionTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
-                        //if the rows have two dates, we need a date range, otherwise a simple date will cut it
-                        if (parameters.containsKey("functionTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
-                            DateRange dateRange = createDateRange("functionTable_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(dateRange);
-                        } else {
-                            //Apply same procedure as above to single date
-                            Date date = createDate("functionTable_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(date);
-                        }
-                        rowCounter++;
-                    }
-                    //filter all empty rows
-                    dateSet = hasData(dateSet);
-
-                    //add respective elements according to number of non-empty rows
-                    if (!dateSet.getDateOrDateRange().isEmpty()) {
-                        if (dateSet.getDateOrDateRange().size() == 1) {
-                            if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
-                                function.setDate((Date) dateSet.getDateOrDateRange().get(0));
-                            } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
-                                function.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
-                            }
-                        } else {
-                            function.setDateSet(dateSet);
-                        }
-                    }
-                }
-
-                functions.getFunction().add(function);
-                tableCounter++;
+                description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(functions);
             }
-
-            description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(functions);
         }
 
         // /eacCpf/cpfDescription/description/occupations
@@ -871,172 +945,174 @@ public class CreateEacCpf extends EacCpfAction {
         parameterName4 = "occupationDescription_";
         parameterName5 = "_place_";
         parameterName6 = "_country_";
+        if (parameters.containsKey(parameterName1 + tableCounter)) {
+            if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
+                Occupations occupations = new Occupations();
 
-        if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
-            Occupations occupations = new Occupations();
+                while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
+                    Occupation occupation = new Occupation();
 
-            while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
-                Occupation occupation = new Occupation();
-
-                // retrieve language, if available
-                String language = null;
-                if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        language = parameterContent[0];
-                    }
-                }
-
-                Term term = new Term();
-
-                // .../occupations/occupation/term@vocabularySource
-                if ((String[]) parameters.get(parameterName3 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                        term.setVocabularySource(parameterContent[0]);
-                    }
-                }
-
-                // .../occupations/occupation/term@xml:lang
-                if (language != null) {
-                    term.setLang(language);
-                }
-
-                // .../occupations/occupation/term
-                if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
-                    if (parameterContent.length == 1) {
-                        term.setContent(parameterContent[0]);
-                    }
-                }
-                occupation.setTerm(term);
-
-                // .../occupations/occupation/descriptiveNote
-                if ((String[]) parameters.get(parameterName4 + tableCounter) != null && !((String[]) parameters.get(parameterName4 + tableCounter))[0].isEmpty()) {
-                    parameterContent = (String[]) parameters.get(parameterName4 + tableCounter);
-                    if (parameterContent.length == 1) {
-                        DescriptiveNote descriptiveNote = new DescriptiveNote();
-                        P p = new P();
-                        if (language != null) {
-                            p.setLang(language);
+                    // retrieve language, if available
+                    String language = null;
+                    if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            language = parameterContent[0];
                         }
-                        p.setContent(parameterContent[0]);
-                        descriptiveNote.getP().add(p);
-                        occupation.setDescriptiveNote(descriptiveNote);
                     }
-                }
 
-                // .../occupations/occupation/placeEntry
-                if ((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                    while (parameters.containsKey("occupationTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("occupationTable_" + tableCounter + parameterName5 + rowCounter)) {
-                        PlaceEntry placeEntry = new PlaceEntry();
+                    Term term = new Term();
 
-                        // .../placeEntry@countryCode
-                        if ((String[]) parameters.get("occupationTable_" + tableCounter + parameterName6 + rowCounter) != null) {
-                            parameterContent = (String[]) parameters.get("occupationTable_" + tableCounter + parameterName6 + rowCounter);
-                            if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
-                                placeEntry.setCountryCode(parameterContent[0]);
+                    // .../occupations/occupation/term@vocabularySource
+                    if ((String[]) parameters.get(parameterName3 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                            term.setVocabularySource(parameterContent[0]);
+                        }
+                    }
+
+                    // .../occupations/occupation/term@xml:lang
+                    if (language != null) {
+                        term.setLang(language);
+                    }
+
+                    // .../occupations/occupation/term
+                    if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            term.setContent(parameterContent[0]);
+                        }
+                    }
+                    occupation.setTerm(term);
+
+                    // .../occupations/occupation/descriptiveNote
+                    if ((String[]) parameters.get(parameterName4 + tableCounter) != null && !((String[]) parameters.get(parameterName4 + tableCounter))[0].isEmpty()) {
+                        parameterContent = (String[]) parameters.get(parameterName4 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            DescriptiveNote descriptiveNote = new DescriptiveNote();
+                            P p = new P();
+                            if (language != null) {
+                                p.setLang(language);
+                            }
+                            p.setContent(parameterContent[0]);
+                            descriptiveNote.getP().add(p);
+                            occupation.setDescriptiveNote(descriptiveNote);
+                        }
+                    }
+
+                    // .../occupations/occupation/placeEntry
+                    if ((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter) != null) {
+                        while (parameters.containsKey("occupationTable_" + tableCounter + parameterName5 + rowCounter) && (!((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter))[0].isEmpty()) || parameters.containsKey("occupationTable_" + tableCounter + parameterName5 + rowCounter)) {
+                            PlaceEntry placeEntry = new PlaceEntry();
+
+                            // .../placeEntry@countryCode
+                            if ((String[]) parameters.get("occupationTable_" + tableCounter + parameterName6 + rowCounter) != null) {
+                                parameterContent = (String[]) parameters.get("occupationTable_" + tableCounter + parameterName6 + rowCounter);
+                                if (parameterContent.length == 1 && !parameterContent[0].equals("")) {
+                                    placeEntry.setCountryCode(parameterContent[0]);
+                                }
+                            }
+
+                            // .../placeEntry@xml:lang
+                            if (language != null) {
+                                placeEntry.setLang(language);
+                            }
+
+                            // .../placeEntry
+                            if ((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter) != null) {
+                                parameterContent = (String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter);
+                                if (parameterContent.length == 1) {
+                                    placeEntry.setContent(parameterContent[0]);
+                                }
+                            }
+
+                            occupation.getPlaceEntry().add(placeEntry);
+                            rowCounter++;
+                        }
+                    }
+
+                    //add any dates
+                    rowCounter = 1;
+                    actualDateRows = Integer.parseInt(((String[]) parameters.get("occupationTable_" + tableCounter + "_rows"))[0]);
+
+                    // If there are any dates
+                    if (actualDateRows > 0) {
+                        DateSet dateSet = new DateSet();
+                        while (parameters.containsKey("occupationTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
+                            //if the rows have two dates, we need a date range, otherwise a simple date will cut it
+                            if (parameters.containsKey("occupationTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
+                                DateRange dateRange = createDateRange("occupationTable_" + tableCounter, rowCounter);
+                                dateSet.getDateOrDateRange().add(dateRange);
+                            } else {
+                                //Apply same procedure as above to single date
+                                Date date = createDate("occupationTable_" + tableCounter, rowCounter);
+                                dateSet.getDateOrDateRange().add(date);
+                            }
+                            rowCounter++;
+                        }
+                        //filter all empty rows
+                        dateSet = hasData(dateSet);
+
+                        //add respective elements according to number of non-empty rows
+                        if (!dateSet.getDateOrDateRange().isEmpty()) {
+                            if (dateSet.getDateOrDateRange().size() == 1) {
+                                if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
+                                    occupation.setDate((Date) dateSet.getDateOrDateRange().get(0));
+                                } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
+                                    occupation.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
+                                }
+                            } else {
+                                occupation.setDateSet(dateSet);
                             }
                         }
-
-                        // .../placeEntry@xml:lang
-                        if (language != null) {
-                            placeEntry.setLang(language);
-                        }
-
-                        // .../placeEntry
-                        if ((String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter) != null) {
-                            parameterContent = (String[]) parameters.get("occupationTable_" + tableCounter + parameterName5 + rowCounter);
-                            if (parameterContent.length == 1) {
-                                placeEntry.setContent(parameterContent[0]);
-                            }
-                        }
-
-                        occupation.getPlaceEntry().add(placeEntry);
-                        rowCounter++;
                     }
+
+                    occupations.getOccupation().add(occupation);
+                    tableCounter++;
                 }
 
-                //add any dates
-                rowCounter = 1;
-                actualDateRows = Integer.parseInt(((String[]) parameters.get("occupationTable_" + tableCounter + "_rows"))[0]);
-
-                // If there are any dates
-                if (actualDateRows > 0) {
-                    DateSet dateSet = new DateSet();
-                    while (parameters.containsKey("occupationTable_" + tableCounter + "_date_1_radio_" + rowCounter)) {
-                        //if the rows have two dates, we need a date range, otherwise a simple date will cut it
-                        if (parameters.containsKey("occupationTable_" + tableCounter + "_date_2_radio_" + rowCounter)) {
-                            DateRange dateRange = createDateRange("occupationTable_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(dateRange);
-                        } else {
-                            //Apply same procedure as above to single date
-                            Date date = createDate("occupationTable_" + tableCounter, rowCounter);
-                            dateSet.getDateOrDateRange().add(date);
-                        }
-                        rowCounter++;
-                    }
-                    //filter all empty rows
-                    dateSet = hasData(dateSet);
-
-                    //add respective elements according to number of non-empty rows
-                    if (!dateSet.getDateOrDateRange().isEmpty()) {
-                        if (dateSet.getDateOrDateRange().size() == 1) {
-                            if (dateSet.getDateOrDateRange().get(0) instanceof Date) {
-                                occupation.setDate((Date) dateSet.getDateOrDateRange().get(0));
-                            } else if (dateSet.getDateOrDateRange().get(0) instanceof DateRange) {
-                                occupation.setDateRange((DateRange) dateSet.getDateOrDateRange().get(0));
-                            }
-                        } else {
-                            occupation.setDateSet(dateSet);
-                        }
-                    }
-                }
-
-                occupations.getOccupation().add(occupation);
-                tableCounter++;
+                description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(occupations);
             }
-
-            description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(occupations);
         }
 
         // /eacCpf/cpfDescription/description/structureOrGenealogy
         tableCounter = 1;
         parameterName1 = "genealogyDescription_";
         parameterName2 = "genealogyLanguage_";
+        if (parameters.containsKey(parameterName1 + tableCounter)) {
+            if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
+                StructureOrGenealogy genealogy = null;
 
-        if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
-            StructureOrGenealogy genealogy = null;
-
-            while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
-                if (genealogy == null) {
-                    genealogy = new StructureOrGenealogy();
-                }
-                P p = new P();
-
-                //determine language of entry, if available
-                if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("----")) {
-                        p.setLang(parameterContent[0]);
+                while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
+                    if (genealogy == null) {
+                        genealogy = new StructureOrGenealogy();
                     }
-                }
+                    P p = new P();
 
-                // /eacCpf/cpfDescription/relations/cpfRelation@cpfRelationType
-                if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
-                    if (parameterContent.length == 1) {
-                        p.setContent(parameterContent[0]);
+                    //determine language of entry, if available
+                    if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("----")) {
+                            p.setLang(parameterContent[0]);
+                        }
                     }
-                }
 
-                if (!p.getContent().equals("")) {
-                    genealogy.getMDiscursiveSet().add(p);
+                    // /eacCpf/cpfDescription/relations/cpfRelation@cpfRelationType
+                    if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            p.setContent(parameterContent[0]);
+                        }
+                    }
+
+                    if (!p.getContent().equals("")) {
+                        genealogy.getMDiscursiveSet().add(p);
+                    }
+                    tableCounter++;
                 }
-                tableCounter++;
-            }
-            if (genealogy != null) {
-                description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(genealogy);
+                if (genealogy != null) {
+                    description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(genealogy);
+                }
             }
         }
 
@@ -1044,39 +1120,40 @@ public class CreateEacCpf extends EacCpfAction {
         tableCounter = 1;
         parameterName1 = "biographyDescription_";
         parameterName2 = "biographyLanguage_";
+        if (parameters.containsKey(parameterName1 + tableCounter)) {
+            if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
+                BiogHist biogHist = null;
 
-        if (!((String[]) parameters.get(parameterName1 + tableCounter))[0].isEmpty()) {
-            BiogHist biogHist = null;
-
-            while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
-                if (biogHist == null) {
-                    biogHist = new BiogHist();
-                }
-                P p = new P();
-
-                // determine language of entry, if available
-                if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
-                    if (parameterContent.length == 1 && !parameterContent[0].equals("----")) {
-                        p.setLang(parameterContent[0]);
+                while ((String[]) parameters.get(parameterName1 + tableCounter) != null || parameters.containsKey(parameterName1 + tableCounter)) {
+                    if (biogHist == null) {
+                        biogHist = new BiogHist();
                     }
-                }
+                    P p = new P();
 
-                // determine <p> content
-                if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
-                    parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
-                    if (parameterContent.length == 1) {
-                        p.setContent(parameterContent[0]);
+                    // determine language of entry, if available
+                    if ((String[]) parameters.get(parameterName2 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
+                        if (parameterContent.length == 1 && !parameterContent[0].equals("----")) {
+                            p.setLang(parameterContent[0]);
+                        }
                     }
-                }
 
-                if (!p.getContent().equals("")) {
-                    biogHist.getChronListOrPOrCitation().add(p);
+                    // determine <p> content
+                    if ((String[]) parameters.get(parameterName1 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            p.setContent(parameterContent[0]);
+                        }
+                    }
+
+                    if (!p.getContent().equals("")) {
+                        biogHist.getChronListOrPOrCitation().add(p);
+                    }
+                    tableCounter++;
                 }
-                tableCounter++;
-            }
-            if (biogHist != null) {
-                description.getBiogHist().add(biogHist);
+                if (biogHist != null) {
+                    description.getBiogHist().add(biogHist);
+                }
             }
         }
 
@@ -1260,7 +1337,11 @@ public class CreateEacCpf extends EacCpfAction {
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    resRelation.setHref(parameterContent[0]);
+                    if (parameters.containsKey("agent")) {
+                        resRelation.setType(parameterContent[0]);
+                    } else {
+                        resRelation.setHref(parameterContent[0]);
+                    }
                 }
             }
 
@@ -1268,14 +1349,20 @@ public class CreateEacCpf extends EacCpfAction {
             if ((String[]) parameters.get(parameterName6 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName6 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    DescriptiveNote descriptiveNote = new DescriptiveNote();
-                    P p = new P();
-                    if (language != null && !language.isEmpty()) {
-                        p.setLang(language);
+                    if (parameters.containsKey("agent")) {
+                        RelationEntry relationEntry = new RelationEntry();
+                        relationEntry.setContent(parameterContent[0]);
+                        resRelation.getRelationEntry().add(relationEntry);
+                    } else {
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        P p = new P();
+                        if (language != null && !language.isEmpty()) {
+                            p.setLang(language);
+                        }
+                        p.setContent(parameterContent[0]);
+                        descriptiveNote.getP().add(p);
+                        resRelation.setDescriptiveNote(descriptiveNote);
                     }
-                    p.setContent(parameterContent[0]);
-                    descriptiveNote.getP().add(p);
-                    resRelation.setDescriptiveNote(descriptiveNote);
                 }
             }
             // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry[title]
@@ -1290,7 +1377,11 @@ public class CreateEacCpf extends EacCpfAction {
                     if (parameterContent.length == 1) {
                         relationEntry.setContent(parameterContent[0]);
                     }
-                    resRelation.getRelationEntry().add(relationEntry);
+                    if (parameters.containsKey("agent")) {
+//                        resRelation.setTitle(parameterContent[0]);
+                    } else {
+                        resRelation.getRelationEntry().add(relationEntry);
+                    }
                 }
             }
 
@@ -1306,7 +1397,11 @@ public class CreateEacCpf extends EacCpfAction {
                     if (parameterContent.length == 1) {
                         relationEntry.setContent(parameterContent[0]);
                     }
-                    resRelation.getRelationEntry().add(relationEntry);
+                    if (parameters.containsKey("agent")) {
+                        resRelation.setHref(parameterContent[0]);
+                    } else {
+                        resRelation.getRelationEntry().add(relationEntry);
+                    }
                 }
             }
 
