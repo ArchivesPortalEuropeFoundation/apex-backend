@@ -142,7 +142,7 @@ public class ManageQueueAction extends AbstractAction {
         this.selections = new ArrayList<>();
 
 //        hide Ead3
-//        this.selections.add(XmlType.EAD_3.getName());
+        this.selections.add(XmlType.EAD_3.getName());
         this.selections.add(XmlType.EAD_FA.getName());
         this.selections.add(XmlType.EAD_HG.getName());
         this.selections.add(XmlType.EAD_SG.getName());

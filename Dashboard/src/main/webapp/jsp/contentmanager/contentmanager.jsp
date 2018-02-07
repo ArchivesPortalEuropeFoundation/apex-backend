@@ -91,10 +91,10 @@
                 <c:when test="${xmlTypeId == '2'}">
                     <jsp:include page="contentmanager-eaccpf-results.jsp" />
                 </c:when>
-                <%--Hide Ead3
+                <%--Hide Ead3--%>
                 <c:when test="${xmlTypeId == '4'}">
                     <jsp:include page="contentmanager-ead3-results.jsp" />
-                </c:when>--%>
+                </c:when>
                 <c:otherwise>
                     <jsp:include page="contentmanager-results.jsp" />
                 </c:otherwise>

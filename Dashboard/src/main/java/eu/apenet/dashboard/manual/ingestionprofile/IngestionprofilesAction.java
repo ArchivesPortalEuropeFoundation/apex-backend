@@ -461,7 +461,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAC_CPF.getIdentifier(), getText("content.message.ec")));
 //        Hide Ead3
-//        associatedFiletypes.add(new SelectItem(XmlType.EAD_3.getIdentifier(), getText("content.message.ead3")));
+        associatedFiletypes.add(new SelectItem(XmlType.EAD_3.getIdentifier(), getText("content.message.ead3")));
         uploadedFileActions.add(new SelectItem("1", getText("ingestionprofiles.upload.convertValidatePublish")));
         if (convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)) {
             uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
