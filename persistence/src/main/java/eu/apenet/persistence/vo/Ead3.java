@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -62,7 +63,13 @@ public class Ead3 extends AbstractContent {
     private Set<Warnings> warningses = new HashSet<Warnings>(0);
 
     @OneToMany(mappedBy = "ead3", cascade = CascadeType.ALL)
-    private Set<EacCpf> eacCpfs = new HashSet<EacCpf>(0);
+    private Set<EacCpf> eacCpfs = new HashSet<>(0);
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private EadContent eadContent;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ead3", fetch = FetchType.LAZY)
+    private Set<CLevel> cLevels = new HashSet<>(0);
 
     @Override
     public Integer getId() {
@@ -246,6 +253,22 @@ public class Ead3 extends AbstractContent {
         this.totalNumberOfUnits = totalNumberOfUnits;
     }
 
+    public EadContent getEadContent() {
+        return eadContent;
+    }
+
+    public void setEadContent(EadContent eadContent) {
+        this.eadContent = eadContent;
+    }
+
+    public Set<CLevel> getcLevels() {
+        return cLevels;
+    }
+
+    public void setcLevels(Set<CLevel> cLevels) {
+        this.cLevels = cLevels;
+    }
+    
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + " - (" + getIdentifier() + "," + getId() + ") ";

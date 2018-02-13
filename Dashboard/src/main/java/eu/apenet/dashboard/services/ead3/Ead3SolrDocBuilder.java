@@ -24,8 +24,12 @@ import eu.apenet.dpt.utils.eaccpf.RecordId;
 import eu.apenet.dpt.utils.eaccpf.Sources;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead3;
+import eu.apenet.persistence.vo.EadContent;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import gov.loc.ead.Archdesc;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
 import gov.loc.ead.Dao;
@@ -56,11 +60,13 @@ import gov.loc.ead.Titleproper;
 import gov.loc.ead.Unitdate;
 import gov.loc.ead.Unitid;
 import gov.loc.ead.Unittitle;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +80,9 @@ import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import net.archivesportaleurope.apetypes.LocalTypes;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
@@ -192,15 +200,43 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.LEVEL_NAME, "archdesc");
 //        this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DAO, Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO)));
 
+        //Generate eadcontent xml
+        Archdesc archdesc = this.ead3.getArchdesc();
+        List<Object> dscBackup = new ArrayList<>();
+        
         Iterator it = this.jXPathContext.iterate("archdesc/*");
 
         while (it.hasNext()) {
             Object element = it.next();
-            if (element instanceof Did) {
-            } else if (element instanceof Dsc) {
+            if (element instanceof Dsc) {
+                dscBackup.add(element);
                 this.processDsc((Dsc) element, this.archdescNode);
+                archdesc.getAccessrestrictOrAccrualsOrAcqinfo().remove(element);
             }
         }
+        //Arcdesc don't have the dscs now. lets generate xml
+        try {
+            JAXBContext ead3Context = JAXBContext.newInstance(gov.loc.ead.Ead.class);
+            Marshaller marshaller = ead3Context.createMarshaller();
+            ByteArrayOutputStream baos=new ByteArrayOutputStream(100);
+            marshaller.marshal(this.ead3, baos);
+            String arcdescXml = baos.toString("UTF-8");
+            EadContent eadContent = new EadContent();
+            eadContent.setEadid(ead3.getId());
+            eadContent.setTitleproper((String) this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER));
+            eadContent.setXml(arcdescXml);
+            this.ead3Entity.setEadContent(eadContent);
+            JpaUtil.beginDatabaseTransaction();
+//            DAOFactory.instance().getEadContentDAO().store(eadContent);
+            DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
+            JpaUtil.commitDatabaseTransaction();
+            JpaUtil.closeDatabaseSession();
+        } catch (JAXBException | UnsupportedEncodingException ex) {
+            LOGGER.debug("Archdesc to xml fail", ex);
+        }
+        
+        //add the removed dsc back.
+        archdesc.getAccessrestrictOrAccrualsOrAcqinfo().addAll(dscBackup);
     }
 
     private void processDsc(Dsc dsc, SolrDocNode parent) {
@@ -219,12 +255,12 @@ public class Ead3SolrDocBuilder {
 
         int currentNumberofDao = 0;
         int currentNumberOfDescendents = 0;
-
+        long orderId=1;
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof MCBase) {
                 //ToDo update based on child
-                SolrDocNode child = processC((MCBase) element, this.archdescNode);
+                SolrDocNode child = processC((MCBase) element, this.archdescNode, null, orderId++);
                 this.archdescNode.setChild(child);
                 currentNumberofDao += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString());
                 currentNumberOfDescendents += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS).toString()) + 1;
@@ -247,7 +283,7 @@ public class Ead3SolrDocBuilder {
         }
     }
 
-    private SolrDocNode processC(MCBase cElement, SolrDocNode parent) {
+    private SolrDocNode processC(MCBase cElement, SolrDocNode parent, CLevel parentC, long orderId) {
         if (cElement == null) {
             return null;
         }
@@ -257,6 +293,10 @@ public class Ead3SolrDocBuilder {
         if (cDid == null) {
             return null; //ToDo: invalid c exception?
         }
+        CLevel cLevel = new CLevel();
+        cLevel.setId(orderId);
+        cLevel.setEad3(ead3Entity);
+        cLevel.setParent(parentC);
 
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
         //ToDo gen currentNodeId
@@ -298,7 +338,7 @@ public class Ead3SolrDocBuilder {
         Iterator it = context.iterate("*");
 
         StringBuilder otherStrBuilder = new StringBuilder();
-
+        long currentOrderId = 1;
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof Scopecontent) {
@@ -313,7 +353,7 @@ public class Ead3SolrDocBuilder {
             } else if (element instanceof Did) {
             } else if (element instanceof MCBase) {
                 //ToDo update based on child
-                SolrDocNode child = processC((MCBase) element, cRoot);
+                SolrDocNode child = processC((MCBase) element, cRoot, cLevel, currentOrderId++);
                 cRoot.setChild(child);
                 currentNumberofDao += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString());
                 currentNumberOfDescendents += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS).toString()) + 1;
@@ -335,6 +375,26 @@ public class Ead3SolrDocBuilder {
 
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
+        }
+        
+        
+        //to xml
+        Marshaller marshaller=null;
+        ByteArrayOutputStream baos=new ByteArrayOutputStream(100);
+
+        try {
+            JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
+            marshaller = cLevelContext.createMarshaller();
+            QName qName = new QName("c");
+            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
+
+            marshaller.marshal(rootedC, baos);
+            String cLevelXml = baos.toString("UTF-8");
+            System.out.println("Clevel xml: "+cLevelXml);
+            
+            
+        } catch (JAXBException | UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return cRoot;

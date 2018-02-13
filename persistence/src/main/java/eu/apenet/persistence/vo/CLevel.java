@@ -55,6 +55,10 @@ public class CLevel implements Serializable{
 	private Long parentClId;
 	@Column(name = "href_eadid")
 	private String hrefEadid;
+        
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "ead3_id", foreignKey = @ForeignKey(name = "ead3_id_fkey"), insertable = false, updatable = false)
+        private Ead3 ead3;
 
 	@OneToMany(mappedBy="hgSgClevel")
 	private Set<HgSgFaRelation> hgSgFaRelations = new HashSet<HgSgFaRelation>();
@@ -157,6 +161,12 @@ public class CLevel implements Serializable{
 		this.cid = cid;
 	}
 
+    public Ead3 getEad3() {
+        return ead3;
+    }
 
-    
+    public void setEad3(Ead3 ead3) {
+        this.ead3 = ead3;
+    }
+   
 }
