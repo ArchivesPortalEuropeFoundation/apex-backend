@@ -502,6 +502,7 @@ CREATE TABLE ead3
   um_id integer,
   totalnumberofdaos bigint,
   totalnumberofunits bigint,
+  eadcontent_id bigint
 --   CONSTRAINT ead3_pkey PRIMARY KEY (id),
 --   CONSTRAINT ead3_ai_id_fkey FOREIGN KEY (ai_id)
 --       REFERENCES archival_institution (id) MATCH SIMPLE
