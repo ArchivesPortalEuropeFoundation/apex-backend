@@ -502,8 +502,8 @@ public class Ead3Service extends AbstractService {
                         new DeleteTask().execute(ead3, preferences);
                         eacDeleted = true;
                     }
-                    DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
-//                    queueItemDAO.delete(queueItem);
+//                    DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
+                    queueItemDAO.delete(queueItem);
                 } catch (Exception e) {
                     if (!eacDeleted) {
                         queueItem.setEad3(ead3);
@@ -517,8 +517,8 @@ public class Ead3Service extends AbstractService {
                     LOGGER.error(APEnetUtilities.generateThrowableLog(e));
                     queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                     queueItem.setPriority(0);
-                    DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
-//                    queueItemDAO.store(queueItem);
+//                    DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
+                    queueItemDAO.store(queueItem);
                     /*
                      * throw exception when solr has problem, so the queue will stop for a while.
                      */
@@ -550,8 +550,8 @@ public class Ead3Service extends AbstractService {
 
                     ead3.setQueuing(QueuingState.NO);
                     ead3DAO.store(ead3);
-                    DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
-//                    queueItemDAO.delete(queueItem);
+//                    DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
+                    queueItemDAO.delete(queueItem);
                 } catch (APEnetException e) {
                     String err = "identifier: " + ead3.getIdentifier() + " - id: " + ead3.getId() + " - type: " + xmlType.getName();
                     LOGGER.error(APEnetUtilities.generateThrowableLog(e));

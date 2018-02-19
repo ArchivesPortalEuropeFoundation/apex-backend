@@ -230,7 +230,7 @@ public class Ead3SolrDocBuilder {
 //            DAOFactory.instance().getEadContentDAO().store(eadContent);
             DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
             JpaUtil.commitDatabaseTransaction();
-            JpaUtil.closeDatabaseSession();
+//            JpaUtil.closeDatabaseSession();
         } catch (JAXBException | UnsupportedEncodingException ex) {
             LOGGER.debug("Archdesc to xml fail", ex);
         }
