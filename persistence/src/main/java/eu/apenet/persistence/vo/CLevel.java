@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import eu.archivesportaleurope.util.ApeUtil;
 import javax.persistence.ForeignKey;
+import javax.persistence.Lob;
 
 @Entity
 @Table(name = "c_level")
@@ -41,11 +42,17 @@ public class CLevel implements Serializable{
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="ec_id", foreignKey = @ForeignKey(name="c_level_ec_id_fkey"), insertable=false, updatable=false)
 	private EadContent eadContent;
+        
+        @Column(columnDefinition="TEXT")
 	private String unittitle;
+        
+        @Column(columnDefinition="TEXT")
 	private String unitid;
+        
 	@Column(name = "duplicate_unitid")	
 	private boolean duplicateUnitid;
-	@Column(name = "cid")
+        
+	@Column(name = "cid", columnDefinition="TEXT")
 	private String cid;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="parent_cl_id", foreignKey = @ForeignKey(name="c_level_parent_cl_id_fkey"), insertable=false, updatable=false)
@@ -63,6 +70,7 @@ public class CLevel implements Serializable{
 	@OneToMany(mappedBy="hgSgClevel")
 	private Set<HgSgFaRelation> hgSgFaRelations = new HashSet<HgSgFaRelation>();
 	
+        @Column(columnDefinition="TEXT")
 	private String xml;
 
 	public String getUnittitle() {

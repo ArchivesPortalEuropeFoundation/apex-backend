@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -87,10 +88,12 @@ public class QueueItem implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "queue_date")
     private Date queueDate;
+    @Column(columnDefinition="TEXT")
     private String errors;
     private Integer priority;
     @Enumerated(EnumType.STRING)
     private QueueAction action;
+    @Column(columnDefinition="TEXT")
     private String preferences;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "queue_ai_id_fkey"), updatable = false, insertable = false)

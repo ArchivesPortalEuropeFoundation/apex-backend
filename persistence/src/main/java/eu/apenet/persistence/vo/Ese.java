@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -35,6 +36,7 @@ public class Ese implements java.io.Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
+    @Column(columnDefinition="TEXT")
     private String eset;
 
     @Column(name = "modification_date")
@@ -51,7 +53,7 @@ public class Ese implements java.io.Serializable {
 
     private String path;
 
-    @Column(name = "path_html")
+    @Column(name = "path_html", columnDefinition="TEXT")
     private String pathHtml;
 
     //bi-directional many-to-one association to EseState

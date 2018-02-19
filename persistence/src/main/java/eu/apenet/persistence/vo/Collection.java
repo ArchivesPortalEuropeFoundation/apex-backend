@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -35,7 +36,7 @@ public class Collection implements java.io.Serializable {
 	private boolean public_collection;
 	@Column(name = "edit", nullable = false)
 	private boolean edit;
-	@Column(name = "description")
+	@Column(name = "description", columnDefinition="TEXT")
 	private String description;
 	@Column(name = "modified_date")
 	private Date modified_date;

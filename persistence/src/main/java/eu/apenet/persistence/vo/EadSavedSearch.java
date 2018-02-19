@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /***
@@ -54,14 +55,15 @@ public class EadSavedSearch {
 	/*
 	 * archival landscape search options
 	 */
-	@Column(name = "al_tree_selected_nodes")
+	@Column(name = "al_tree_selected_nodes", columnDefinition="TEXT")
 	private	String alTreeSelectedNodes;	  
 	private String topic;
 	
 
-	@Column(name = "refinement_country")
+	@Column(name = "refinement_country", columnDefinition="TEXT")
+        
 	private	String refinementCountry;	
-	@Column(name = "refinement_ai")
+	@Column(name = "refinement_ai", columnDefinition="TEXT")
 	private	String refinementAi;
 	@Column(name = "refinement_topic")
 	private	String refinementTopic;	

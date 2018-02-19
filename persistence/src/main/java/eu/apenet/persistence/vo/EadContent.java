@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -40,9 +41,12 @@ public class EadContent implements Serializable {
     private SourceGuide sourceGuide;
     @Column(name = "sg_id")
     private Integer sgId;
+    @Column(columnDefinition="TEXT")
     private String titleproper;
     private String eadid;
+    @Column(columnDefinition="TEXT")
     private String unittitle;
+    @Column(columnDefinition="TEXT")
     private String xml;
 
     public Ead getEad() {

@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -28,10 +29,13 @@ public class Ead3 extends AbstractContent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
+    @Column(columnDefinition="TEXT")
     private String title;
     @Column(name = "upload_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date uploadDate;
+    
     private String path;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "um_id", foreignKey = @ForeignKey(name = "ead3_um_id_fkey"))
