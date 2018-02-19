@@ -203,7 +203,7 @@ public class Ead3SolrDocBuilder {
         //Generate eadcontent xml
         Archdesc archdesc = this.ead3.getArchdesc();
         List<Object> dscBackup = new ArrayList<>();
-        
+
         Iterator it = this.jXPathContext.iterate("archdesc/*");
 
         while (it.hasNext()) {
@@ -218,10 +218,13 @@ public class Ead3SolrDocBuilder {
         try {
             JAXBContext ead3Context = JAXBContext.newInstance(gov.loc.ead.Ead.class);
             Marshaller marshaller = ead3Context.createMarshaller();
-            ByteArrayOutputStream baos=new ByteArrayOutputStream(100);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
             marshaller.marshal(this.ead3, baos);
             String arcdescXml = baos.toString("UTF-8");
-            EadContent eadContent = new EadContent();
+            EadContent eadContent = ead3Entity.getEadContent();
+            if (eadContent == null) {
+                eadContent = new EadContent();
+            }
             eadContent.setEadid(ead3.getId());
             eadContent.setTitleproper((String) this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER));
             eadContent.setXml(arcdescXml);
@@ -234,7 +237,7 @@ public class Ead3SolrDocBuilder {
         } catch (JAXBException | UnsupportedEncodingException ex) {
             LOGGER.debug("Archdesc to xml fail", ex);
         }
-        
+
         //add the removed dsc back.
         archdesc.getAccessrestrictOrAccrualsOrAcqinfo().addAll(dscBackup);
     }
@@ -255,7 +258,7 @@ public class Ead3SolrDocBuilder {
 
         int currentNumberofDao = 0;
         int currentNumberOfDescendents = 0;
-        long orderId=1;
+        long orderId = 1;
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof MCBase) {
@@ -376,11 +379,10 @@ public class Ead3SolrDocBuilder {
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
-        
-        
+
         //to xml
-        Marshaller marshaller=null;
-        ByteArrayOutputStream baos=new ByteArrayOutputStream(100);
+        Marshaller marshaller = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
 
         try {
             JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
@@ -390,9 +392,8 @@ public class Ead3SolrDocBuilder {
 
             marshaller.marshal(rootedC, baos);
             String cLevelXml = baos.toString("UTF-8");
-            System.out.println("Clevel xml: "+cLevelXml);
-            
-            
+            System.out.println("Clevel xml: " + cLevelXml);
+
         } catch (JAXBException | UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
