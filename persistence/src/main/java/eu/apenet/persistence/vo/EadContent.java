@@ -10,8 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -48,6 +49,9 @@ public class EadContent implements Serializable {
     private String unittitle;
     @Column(columnDefinition="TEXT")
     private String xml;
+
+    @OneToOne(mappedBy = "eadContent", fetch = FetchType.LAZY)
+    private Ead3 ead3;
 
     public Ead getEad() {
         if (findingAid != null) {
@@ -157,4 +161,11 @@ public class EadContent implements Serializable {
         this.hgId = hgId;
     }
 
+    public Ead3 getEad3() {
+        return ead3;
+    }
+
+    public void setEad3(Ead3 ead3) {
+        this.ead3 = ead3;
+    }
 }

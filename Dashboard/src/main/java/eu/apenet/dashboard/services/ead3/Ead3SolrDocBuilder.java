@@ -224,16 +224,18 @@ public class Ead3SolrDocBuilder {
             EadContent eadContent = ead3Entity.getEadContent();
             if (eadContent == null) {
                 eadContent = new EadContent();
+                eadContent.setEad3(ead3Entity);
             }
             eadContent.setEadid(ead3.getId());
+            eadContent.setUnittitle((String) this.archdescNode.getDataElement(Ead3SolrFields.UNIT_TITLE));
             eadContent.setTitleproper((String) this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER));
             eadContent.setXml(arcdescXml);
             this.ead3Entity.setEadContent(eadContent);
             JpaUtil.beginDatabaseTransaction();
-//            DAOFactory.instance().getEadContentDAO().store(eadContent);
+            JpaUtil.getEntityManager().flush();
             DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
             JpaUtil.commitDatabaseTransaction();
-//            JpaUtil.closeDatabaseSession();
+
         } catch (JAXBException | UnsupportedEncodingException ex) {
             LOGGER.debug("Archdesc to xml fail", ex);
         }

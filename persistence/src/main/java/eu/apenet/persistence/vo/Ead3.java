@@ -69,7 +69,8 @@ public class Ead3 extends AbstractContent {
     @OneToMany(mappedBy = "ead3", cascade = CascadeType.ALL)
     private Set<EacCpf> eacCpfs = new HashSet<>(0);
     
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="eadContent_id")
     private EadContent eadContent;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ead3", fetch = FetchType.LAZY)
