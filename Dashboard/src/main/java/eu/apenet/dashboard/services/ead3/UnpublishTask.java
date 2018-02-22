@@ -37,7 +37,6 @@ public class UnpublishTask extends AbstractEad3Task {
             if (eacCpf.isPublished()) {
                 new eu.apenet.dashboard.services.eaccpf.UnpublishTask().execute(eacCpf);
             }
-            new eu.apenet.dashboard.services.eaccpf.DeleteTask().execute(eacCpf);
         }
 //        Properties ead3Properties = new Properties();
         //ead3Properties.put("priority", "2000");

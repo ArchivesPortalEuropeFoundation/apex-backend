@@ -24,6 +24,7 @@ import eu.apenet.persistence.dao.QueueItemDAO;
 
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.EuropeanaState;
@@ -546,6 +547,13 @@ public class Ead3Service extends AbstractService {
 //
                     if (queueAction.isUnpublishAction()) {
                         new UnpublishTask().execute(ead3, preferences);
+                        //remove related eac-cpfs
+                        for (EacCpf eacCpf : ead3.getEacCpfs()) {
+                            if (eacCpf.isPublished()) {
+                                new eu.apenet.dashboard.services.eaccpf.UnpublishTask().execute(eacCpf);
+                            }
+                            new eu.apenet.dashboard.services.eaccpf.DeleteTask().execute(eacCpf);
+                        }
                     }
 
                     ead3.setQueuing(QueuingState.NO);
