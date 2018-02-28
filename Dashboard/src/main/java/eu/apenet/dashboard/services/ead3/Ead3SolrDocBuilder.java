@@ -99,6 +99,7 @@ public class Ead3SolrDocBuilder {
     private JXPathContext jXPathContext;
     private Ead ead3;
     private Ead3 ead3Entity;
+    private Set<CLevel> cLevelEntities = new HashSet<>();
     private LocalTypeMap localTypeMap = new LocalTypeMap();
     private SolrDocNode archdescNode = new SolrDocNode();
     private boolean openDataEnable = false;
@@ -140,6 +141,18 @@ public class Ead3SolrDocBuilder {
         }
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
+        if (!this.cLevelEntities.isEmpty()) {
+            //save updated ead3Entity
+            try {
+                JpaUtil.beginDatabaseTransaction();
+                this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
+                this.ead3Entity.setcLevels(this.cLevelEntities);
+                DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
+                JpaUtil.commitDatabaseTransaction();
+            } catch (Exception ex) {
+                LOGGER.error("DB exception!", ex);
+            }
+        }
 
         return solrDocTree;
     }
@@ -231,11 +244,6 @@ public class Ead3SolrDocBuilder {
             eadContent.setTitleproper((String) this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER));
             eadContent.setXml(arcdescXml);
             this.ead3Entity.setEadContent(eadContent);
-            JpaUtil.beginDatabaseTransaction();
-            JpaUtil.getEntityManager().flush();
-            DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
-            JpaUtil.commitDatabaseTransaction();
-
         } catch (JAXBException | UnsupportedEncodingException ex) {
             LOGGER.debug("Archdesc to xml fail", ex);
         }
@@ -260,7 +268,7 @@ public class Ead3SolrDocBuilder {
 
         int currentNumberofDao = 0;
         int currentNumberOfDescendents = 0;
-        long orderId = 1;
+        int orderId = 1;
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof MCBase) {
@@ -288,7 +296,7 @@ public class Ead3SolrDocBuilder {
         }
     }
 
-    private SolrDocNode processC(MCBase cElement, SolrDocNode parent, CLevel parentC, long orderId) {
+    private SolrDocNode processC(MCBase cElement, SolrDocNode parent, CLevel parentC, int orderId) {
         if (cElement == null) {
             return null;
         }
@@ -298,12 +306,40 @@ public class Ead3SolrDocBuilder {
         if (cDid == null) {
             return null; //ToDo: invalid c exception?
         }
-        CLevel cLevel = new CLevel();
-        cLevel.setId(orderId);
-        cLevel.setEad3(ead3Entity);
-        cLevel.setParent(parentC);
+        CLevel cLevelEntity = new CLevel();
+        cLevelEntity.setOrderId(orderId);
+        //cLevelEntity.setEad3(ead3Entity);
+        cLevelEntity.setParent(parentC);
+        
+        //to xml
+        Marshaller marshaller = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+
+        try {
+            JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
+            marshaller = cLevelContext.createMarshaller();
+            QName qName = new QName("c");
+            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
+
+            marshaller.marshal(rootedC, baos);
+            String cLevelXml = baos.toString("UTF-8");
+            cLevelEntity.setXml(cLevelXml);
+//            System.out.println("Clevel xml: " + cLevelXml);
+
+        } catch (JAXBException | UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
+        cLevelEntity.setEad3(ead3Entity);
+//        JpaUtil.getEntityManager().persist(cLevelEntity);
+        this.cLevelEntities.add(cLevelEntity);
+        //ead3Entity.addcLevel(cLevelEntity);
 
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
+        
+        cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
+            
+            
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
@@ -343,7 +379,7 @@ public class Ead3SolrDocBuilder {
         Iterator it = context.iterate("*");
 
         StringBuilder otherStrBuilder = new StringBuilder();
-        long currentOrderId = 1;
+        int currentOrderId = 1;
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof Scopecontent) {
@@ -358,7 +394,7 @@ public class Ead3SolrDocBuilder {
             } else if (element instanceof Did) {
             } else if (element instanceof MCBase) {
                 //ToDo update based on child
-                SolrDocNode child = processC((MCBase) element, cRoot, cLevel, currentOrderId++);
+                SolrDocNode child = processC((MCBase) element, cRoot, cLevelEntity, currentOrderId++);
                 cRoot.setChild(child);
                 currentNumberofDao += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString());
                 currentNumberOfDescendents += Integer.parseInt(child.getDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS).toString()) + 1;
@@ -372,6 +408,10 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
+        
+        if(cRoot.getChild()==null) {
+            cLevelEntity.setLeaf(true);
+        }
 
         cRoot.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
         cRoot.setDataElement(Ead3SolrFields.LEVEL_NAME, "clevel");
@@ -382,23 +422,6 @@ public class Ead3SolrDocBuilder {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
 
-        //to xml
-        Marshaller marshaller = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
-
-        try {
-            JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
-            marshaller = cLevelContext.createMarshaller();
-            QName qName = new QName("c");
-            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
-
-            marshaller.marshal(rootedC, baos);
-            String cLevelXml = baos.toString("UTF-8");
-            System.out.println("Clevel xml: " + cLevelXml);
-
-        } catch (JAXBException | UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         return cRoot;
     }

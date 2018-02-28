@@ -84,6 +84,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.io.File;
 
 /**

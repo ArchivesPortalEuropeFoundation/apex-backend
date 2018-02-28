@@ -64,7 +64,7 @@ public class CLevel implements Serializable{
 	private String hrefEadid;
         
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "ead3_id", foreignKey = @ForeignKey(name = "ead3_id_fkey"), insertable = false, updatable = false)
+        @JoinColumn(name = "ead3_id", foreignKey = @ForeignKey(name = "ead3_id_fkey"))
         private Ead3 ead3;
 
 	@OneToMany(mappedBy="hgSgClevel")

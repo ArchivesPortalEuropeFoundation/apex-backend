@@ -274,6 +274,13 @@ public class Ead3 extends AbstractContent {
         this.cLevels = cLevels;
     }
     
+    public void addcLevel(CLevel cLevel) {
+        if (this.cLevels==null) {
+            this.cLevels = new HashSet<>(0);
+        }
+        this.cLevels.add(cLevel);
+    }
+    
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + " - (" + getIdentifier() + "," + getId() + ") ";
