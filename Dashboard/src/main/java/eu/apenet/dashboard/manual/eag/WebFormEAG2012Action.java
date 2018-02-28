@@ -32,7 +32,7 @@ import eu.apenet.dashboard.manual.APEnetEAGDashboard;
 import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
 import eu.apenet.dashboard.manual.eag.utils.EAG2012Loader;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
-import eu.apenet.dashboard.manual.eag.utils.parseJsonObj.AccesAndServicesJsonObjToEag2012;
+import eu.apenet.dashboard.manual.eag.utils.parseJsonObj.AccessAndServicesJsonObjToEag2012;
 import eu.apenet.dashboard.manual.eag.utils.parseJsonObj.ContactJsonObjToEag2012;
 import eu.apenet.dashboard.manual.eag.utils.parseJsonObj.ControlJsonObjToEag2012;
 import eu.apenet.dashboard.manual.eag.utils.parseJsonObj.DescriptionJsonObjToEag2012;
@@ -1222,7 +1222,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
                 eag2012 = contactJsonObjToEag2012.JsonObjToEag2012(eag2012, jsonObj);
             }
             if (jsonObj.has("accessAndServices")) {
-                AccesAndServicesJsonObjToEag2012 accesAndServicesJsonObjToEag2012 = new AccesAndServicesJsonObjToEag2012();
+                AccessAndServicesJsonObjToEag2012 accesAndServicesJsonObjToEag2012 = new AccessAndServicesJsonObjToEag2012();
                 eag2012 = accesAndServicesJsonObjToEag2012.JsonObjToEag2012(eag2012, jsonObj);
             }
             if (jsonObj.has("description")) {

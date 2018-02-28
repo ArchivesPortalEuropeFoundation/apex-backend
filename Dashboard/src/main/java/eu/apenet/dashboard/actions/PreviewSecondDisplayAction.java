@@ -16,85 +16,99 @@ import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.Ead3;
 
 public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
-	private static final Logger LOGGER = Logger.getLogger(PreviewSecondDisplayAction.class);
-	private String id;
-	private String xmlTypeId;
 
-	public String getId() {
-		return id;
-	}
+    private static final Logger LOGGER = Logger.getLogger(PreviewSecondDisplayAction.class);
+    private String id;
+    private String xmlTypeId;
+    
+    public String getId() {
+        return id;
+    }
+    
+    public String getXmlTypeId() {
+        return xmlTypeId;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public void setXmlTypeId(String xmlTypeId) {
+        this.xmlTypeId = xmlTypeId;
+    }
 
-	public String getXmlTypeId() {
-		return xmlTypeId;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public void setXmlTypeId(String xmlTypeId) {
-		this.xmlTypeId = xmlTypeId;
-	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1953305569537661585L;
-
-	public String execute() throws Exception {
-		try {
-			XmlType xmlType = XmlType.getType(Integer.parseInt(getXmlTypeId()));
-			if (StringUtils.isNotBlank(getId()) && StringUtils.isNumeric(getId())) {
-				//String language = getServletRequest().getLocale().getLanguage();
-				Object language = null;
-				Map<String, Object> session = ActionContext.getContext().getSession();
-		    	if(session.get("WW_TRANS_I18N_LOCALE")==null){
-		    		language = session.get("org.apache.tiles.LOCALE");
-		    	}else{    		
-		    		language = session.get("WW_TRANS_I18N_LOCALE");
-		    	}
-		    	if (language == null){
-		    		language = getServletRequest().getLocale().getLanguage();
-		    	}
-				if (xmlType.equals(XmlType.EAC_CPF)) {
-					EacCpfService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
-					EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO()
-							.findById(Integer.parseInt(id), xmlType.getClazz());
-					if (eacCpf != null) {
-						getServletRequest().setAttribute("identifier", eacCpf.getEncodedIdentifier());
-						getServletRequest().setAttribute("repoCode",
-								eacCpf.getArchivalInstitution().getEncodedRepositorycode());
-
-						String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + "/" + language
-								+ PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAC_DISPLAY);
-						getServletRequest().setAttribute("url", url);
-						return "success-eaccpf";
-					}
-				} else {
-					EadService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
-					Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), xmlType.getClazz());
-					if (ead != null && getAiId() != null && getAiId().equals(ead.getAiId())) {
-						getServletRequest().setAttribute("xmlTypeName", xmlType.getResourceName());
-						getServletRequest().setAttribute("identifier", ead.getEncodedIdentifier());
-						getServletRequest().setAttribute("repoCode",
-								ead.getArchivalInstitution().getEncodedRepositorycode());
-						String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + "/" + language
-								+ PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAD_DISPLAY);
-						getServletRequest().setAttribute("url", url);
-						return SUCCESS;
-					}
-				}
-			}
-		} catch (Exception e) {
-			LOGGER.error(getText("previewseconddisplay.unabletopreview") + " (id,xmlType): (" + getId() + ","
-					+ getXmlTypeId() + "): " + e.getMessage(), e);
-
-		}
-		addActionError(getText("error.user.second.display.notindexed"));
-		return ERROR;
-
-	}
-
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1953305569537661585L;
+    
+    public String execute() throws Exception {
+        try {
+            XmlType xmlType = XmlType.getType(Integer.parseInt(getXmlTypeId()));
+            if (StringUtils.isNotBlank(getId()) && StringUtils.isNumeric(getId())) {
+                //String language = getServletRequest().getLocale().getLanguage();
+                Object language = null;
+                Map<String, Object> session = ActionContext.getContext().getSession();
+                if (session.get("WW_TRANS_I18N_LOCALE") == null) {
+                    language = session.get("org.apache.tiles.LOCALE");
+                } else {                    
+                    language = session.get("WW_TRANS_I18N_LOCALE");
+                }
+                if (language == null) {
+                    language = getServletRequest().getLocale().getLanguage();
+                }
+                if (xmlType.equals(XmlType.EAC_CPF)) {
+                    EacCpfService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
+                    EacCpf eacCpf = DAOFactory.instance().getEacCpfDAO()
+                            .findById(Integer.parseInt(id), xmlType.getClazz());
+                    if (eacCpf != null) {
+                        getServletRequest().setAttribute("identifier", eacCpf.getEncodedIdentifier());
+                        getServletRequest().setAttribute("repoCode",
+                                eacCpf.getArchivalInstitution().getEncodedRepositorycode());
+                        
+                        String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + "/" + language
+                                + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAC_DISPLAY);
+                        getServletRequest().setAttribute("url", url);
+                        return "success-eaccpf";
+                    }
+                } else if (xmlType.equals(XmlType.EAD_3)) {
+                    Ead3 ead3 = DAOFactory.instance().getEad3DAO().findById(Integer.parseInt(id));
+                    if (ead3 != null && getAiId() != null && getAiId().equals(ead3.getAiId())) {
+                        getServletRequest().setAttribute("xmlTypeName", xmlType.getResourceName());
+                        getServletRequest().setAttribute("identifier", ead3.getEncodedIdentifier());
+                        getServletRequest().setAttribute("repoCode",
+                                ead3.getArchivalInstitution().getEncodedRepositorycode());
+                        String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + "/" + language
+                                + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAD_DISPLAY);
+                        getServletRequest().setAttribute("url", url);
+                        return SUCCESS;
+                    }
+                } else {
+                    EadService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
+                    Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), xmlType.getClazz());
+                    if (ead != null && getAiId() != null && getAiId().equals(ead.getAiId())) {
+                        getServletRequest().setAttribute("xmlTypeName", xmlType.getResourceName());
+                        getServletRequest().setAttribute("identifier", ead.getEncodedIdentifier());
+                        getServletRequest().setAttribute("repoCode",
+                                ead.getArchivalInstitution().getEncodedRepositorycode());
+                        String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + "/" + language
+                                + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAD_DISPLAY);
+                        getServletRequest().setAttribute("url", url);
+                        return SUCCESS;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error(getText("previewseconddisplay.unabletopreview") + " (id,xmlType): (" + getId() + ","
+                    + getXmlTypeId() + "): " + e.getMessage(), e);
+            
+        }
+        addActionError(getText("error.user.second.display.notindexed"));
+        return ERROR;
+        
+    }
+    
 }
