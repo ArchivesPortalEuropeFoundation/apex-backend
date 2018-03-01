@@ -338,6 +338,7 @@ public class Ead3SolrDocBuilder {
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
         
         cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
+        cLevelEntity.setUnitid((String) this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + (String) didMap.get(Ead3SolrFields.UNIT_ID));
             
             
         //ToDo gen currentNodeId
