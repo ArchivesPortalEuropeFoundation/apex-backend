@@ -24,6 +24,12 @@
                 <jaxb:property name="ScriptType"/>
             </jaxb:bindings>
         </jaxb:bindings>
+        <jaxb:bindings node="//xs:complexType[@name='c']">
+            <annox:annotate>
+                <annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
+                                name="c" />
+            </annox:annotate>
+        </jaxb:bindings>
         
         <jaxb:bindings node="//xs:complexType[@name='e.anyname']/xs:choice/xs:any[@namespace='##other']">
             <jaxb:property name="Any2"/>

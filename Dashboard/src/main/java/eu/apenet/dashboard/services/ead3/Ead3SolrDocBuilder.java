@@ -30,6 +30,7 @@ import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import gov.loc.ead.Archdesc;
+import gov.loc.ead.C;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
 import gov.loc.ead.Dao;
@@ -318,10 +319,10 @@ public class Ead3SolrDocBuilder {
         try {
             JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
             marshaller = cLevelContext.createMarshaller();
-            QName qName = new QName("c");
-            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
+//            QName qName = new QName("c");
+//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
 
-            marshaller.marshal(rootedC, baos);
+            marshaller.marshal((C)cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
 //            System.out.println("Clevel xml: " + cLevelXml);
