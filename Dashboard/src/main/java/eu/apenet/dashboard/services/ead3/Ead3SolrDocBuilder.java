@@ -269,7 +269,7 @@ public class Ead3SolrDocBuilder {
 
         int currentNumberofDao = 0;
         int currentNumberOfDescendents = 0;
-        int orderId = 1;
+        int orderId = 0;
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof MCBase) {
