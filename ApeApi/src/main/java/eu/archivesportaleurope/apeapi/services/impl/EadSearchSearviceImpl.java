@@ -154,7 +154,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
 
-        extraParam.put("qf", "fond^100 title scopecontent^0.5 alterdate^0.5 other^0.1 spell");
+        extraParam.put("qf", "fond^100 title scopecontent^0.5 alterdate^0.5 other^0.1");
         extraParam.put("bq", "id:(F*)^100");
         extraParam.put("group.sort", "id " + SolrQuery.ORDER.desc);
 
