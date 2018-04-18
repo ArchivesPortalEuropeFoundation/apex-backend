@@ -1,5 +1,6 @@
 package eu.apenet.persistence.dao;
 
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.Ead3;
 
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 public interface Ead3DAO extends GenericDAO<Ead3, Integer> {
 
     public Ead3 getFirstPublishedEad3ByIdentifier(String identifier, boolean isPublished);
+
+    public Integer isEad3idIndexed(String identifier, Integer aiId, Class<? extends AbstractContent> clazz);
 
     public Ead3 getEad3ByIdentifier(Integer aiId, String identifier);
 
@@ -25,8 +28,8 @@ public interface Ead3DAO extends GenericDAO<Ead3, Integer> {
     public List<Integer> getAllIds(Class<Ead3> aClass, int aiId);
 
     public boolean existEad3s(ContentSearchOptions contentSearchOptions);
-    
+
     public Long getTotalCountOfUnits();
-    
+
     public int deleteById(Integer id);
 }

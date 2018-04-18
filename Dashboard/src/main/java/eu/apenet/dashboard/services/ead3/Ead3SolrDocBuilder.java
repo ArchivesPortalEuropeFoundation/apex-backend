@@ -322,7 +322,7 @@ public class Ead3SolrDocBuilder {
 //            QName qName = new QName("c");
 //            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
 
-            marshaller.marshal((C)cElement, baos);
+            marshaller.marshal(cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
 //            System.out.println("Clevel xml: " + cLevelXml);
