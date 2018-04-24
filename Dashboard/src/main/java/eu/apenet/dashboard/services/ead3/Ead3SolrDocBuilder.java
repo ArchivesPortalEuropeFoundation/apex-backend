@@ -330,7 +330,7 @@ public class Ead3SolrDocBuilder {
         } catch (JAXBException | UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
+//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
         cLevelEntity.setEad3(ead3Entity);
 //        JpaUtil.getEntityManager().persist(cLevelEntity);
         this.cLevelEntities.add(cLevelEntity);
