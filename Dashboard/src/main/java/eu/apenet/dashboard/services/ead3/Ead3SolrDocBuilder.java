@@ -15,6 +15,7 @@ import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapKeys;
 import eu.apenet.dashboard.services.ead3.publish.Ead3ToEacFieldMapStaticValues;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocNode;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
+import eu.apenet.dashboard.services.ead3.publish.SolrRootDocNodeInit;
 import eu.apenet.dashboard.services.ead3.publish.StoreEacFromEad3;
 import eu.apenet.dashboard.types.ead3.ApeType;
 import eu.apenet.dashboard.types.ead3.LocalTypeMap;
@@ -30,7 +31,6 @@ import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import gov.loc.ead.Archdesc;
-import gov.loc.ead.C;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
 import gov.loc.ead.Dao;
@@ -83,7 +83,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
 import net.archivesportaleurope.apetypes.LocalTypes;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
@@ -141,7 +140,7 @@ public class Ead3SolrDocBuilder {
             LOGGER.debug(ex.getMessage());
         }
         this.retrieveArchdescMain();
-        SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
+
         if (!this.cLevelEntities.isEmpty()) {
             //save updated ead3Entity
             try {
@@ -154,6 +153,10 @@ public class Ead3SolrDocBuilder {
                 LOGGER.error("DB exception!", ex);
             }
         }
+
+//        reinit archdescNode with all clevel DB id
+        archdescNode = new SolrRootDocNodeInit(archdescNode, cLevelEntities).getProcessedNode();
+        SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
 
         return solrDocTree;
     }
@@ -311,7 +314,7 @@ public class Ead3SolrDocBuilder {
         cLevelEntity.setOrderId(orderId);
         //cLevelEntity.setEad3(ead3Entity);
         cLevelEntity.setParent(parentC);
-        
+
         //to xml
         Marshaller marshaller = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
@@ -337,11 +340,10 @@ public class Ead3SolrDocBuilder {
         //ead3Entity.addcLevel(cLevelEntity);
 
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
-        
+
         cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
         cLevelEntity.setUnitid((String) this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + (String) didMap.get(Ead3SolrFields.UNIT_ID));
-            
-            
+
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
@@ -352,7 +354,7 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.COUNTRY, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY));
 
         cRoot.setDataElement(Ead3SolrFields.REPOSITORY_CODE, this.archdescNode.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
-        cRoot.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
+        cRoot.setDataElement(Ead3SolrFields.ID, "C" + cLevelEntity.getId());
 
         //global fields
         cRoot.setDataElement(Ead3SolrFields.LANGUAGE, this.archdescNode.getDataElement(Ead3SolrFields.LANGUAGE));
@@ -410,8 +412,8 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
-        
-        if(cRoot.getChild()==null) {
+
+        if (cRoot.getChild() == null) {
             cLevelEntity.setLeaf(true);
         }
 
@@ -423,7 +425,6 @@ public class Ead3SolrDocBuilder {
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
-
 
         return cRoot;
     }
@@ -638,6 +639,9 @@ public class Ead3SolrDocBuilder {
                             JAXBElement genreform = (JAXBElement) innerObjs;
                             if (genreform.getDeclaredType().equals(Genreform.class)) {
                                 cRoot.setTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE, processSource((Genreform) genreform.getValue()));
+                                if (StringUtils.isBlank(didInfoMap.get(Ead3SolrFields.UNIT_TITLE).toString())) {
+                                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, processUnitTitleIfUnitTitleIsBlank((Genreform) genreform.getValue()));
+                                }
                             }
 
                         }
@@ -711,6 +715,14 @@ public class Ead3SolrDocBuilder {
             }
         }
         return didInfoMap;
+    }
+
+    private String processUnitTitleIfUnitTitleIsBlank(Genreform genreform) {
+        String source = "";
+        for (Part part : genreform.getPart()) {
+            source += getContent(part) + " ";
+        }
+        return source;
     }
 
     private String processSource(Genreform genreform) {
