@@ -11,6 +11,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.ead3.Ead3Service;
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -23,19 +24,19 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
     private static final Logger LOGGER = Logger.getLogger(PreviewSecondDisplayAction.class);
     private String id;
     private String xmlTypeId;
-    
+
     public String getId() {
         return id;
     }
-    
+
     public String getXmlTypeId() {
         return xmlTypeId;
     }
-    
+
     public void setId(String id) {
         this.id = id;
     }
-    
+
     public void setXmlTypeId(String xmlTypeId) {
         this.xmlTypeId = xmlTypeId;
     }
@@ -44,7 +45,7 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
      *
      */
     private static final long serialVersionUID = 1953305569537661585L;
-    
+
     public String execute() throws Exception {
         try {
             XmlType xmlType = XmlType.getType(Integer.parseInt(getXmlTypeId()));
@@ -54,7 +55,7 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
                 Map<String, Object> session = ActionContext.getContext().getSession();
                 if (session.get("WW_TRANS_I18N_LOCALE") == null) {
                     language = session.get("org.apache.tiles.LOCALE");
-                } else {                    
+                } else {
                     language = session.get("WW_TRANS_I18N_LOCALE");
                 }
                 if (language == null) {
@@ -68,13 +69,14 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
                         getServletRequest().setAttribute("identifier", eacCpf.getEncodedIdentifier());
                         getServletRequest().setAttribute("repoCode",
                                 eacCpf.getArchivalInstitution().getEncodedRepositorycode());
-                        
+
                         String url = "http://" + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN) + "/" + language
                                 + PropertiesUtil.get(PropertiesKeys.APE_PORTAL_EAC_DISPLAY);
                         getServletRequest().setAttribute("url", url);
                         return "success-eaccpf";
                     }
                 } else if (xmlType.equals(XmlType.EAD_3)) {
+                    Ead3Service.createPreviewHTML(xmlType, Integer.parseInt(id));
                     Ead3 ead3 = DAOFactory.instance().getEad3DAO().findById(Integer.parseInt(id));
                     if (ead3 != null && getAiId() != null && getAiId().equals(ead3.getAiId())) {
                         getServletRequest().setAttribute("xmlTypeName", xmlType.getResourceName());
@@ -104,11 +106,11 @@ public class PreviewSecondDisplayAction extends AbstractInstitutionAction {
         } catch (Exception e) {
             LOGGER.error(getText("previewseconddisplay.unabletopreview") + " (id,xmlType): (" + getId() + ","
                     + getXmlTypeId() + "): " + e.getMessage(), e);
-            
+
         }
         addActionError(getText("error.user.second.display.notindexed"));
         return ERROR;
-        
+
     }
-    
+
 }

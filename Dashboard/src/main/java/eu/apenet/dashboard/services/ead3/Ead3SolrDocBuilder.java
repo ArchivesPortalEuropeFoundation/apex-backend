@@ -322,7 +322,7 @@ public class Ead3SolrDocBuilder {
 //            QName qName = new QName("c");
 //            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
 
-            marshaller.marshal((C)cElement, baos);
+            marshaller.marshal(cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
 //            System.out.println("Clevel xml: " + cLevelXml);
@@ -330,7 +330,7 @@ public class Ead3SolrDocBuilder {
         } catch (JAXBException | UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
+//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
         cLevelEntity.setEad3(ead3Entity);
 //        JpaUtil.getEntityManager().persist(cLevelEntity);
         this.cLevelEntities.add(cLevelEntity);

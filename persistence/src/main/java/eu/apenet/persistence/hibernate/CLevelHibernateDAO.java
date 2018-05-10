@@ -172,6 +172,34 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
         return null;
     }
 
+//    long startTime = System.currentTimeMillis();
+//        Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
+//        criteria.add(Restrictions.ge("clevel.orderId", orderId));
+//        criteria.createAlias("clevel.ead3", "ead3");
+//        criteria.add(Restrictions.eq("ead3.id", ead3Id));
+//        criteria.setMaxResults(maxNumberOfItems);
+//        criteria.addOrder(Order.asc("clevel.orderId"));
+//        List<CLevel> results = criteria.list();
+//        long endTime = System.currentTimeMillis();
+//        if (LOG.isDebugEnabled()) {
+//            LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+//        }
+//
+//        return results;
+    @Override
+    public List<CLevel> getCLevelWithEad3Id(String repositoryCode, String ead3Id, String unitid) {
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
+        criteria.add(Restrictions.eq("unitid", unitid));
+        criteria.createAlias("clevel.ead3.", "ead3");
+        criteria.add(Restrictions.eq("ead3.identifier", ead3Id));
+        criteria.createAlias("clevel.ead3.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", repositoryCode));
+        criteria.setMaxResults(2);
+        criteria.addOrder(Order.asc("clevel.orderId"));
+        List<CLevel> results = criteria.list();
+        return results;
+    }
+
     @Override
     public Long countCLevels(Class<? extends AbstractContent> clazz, Integer id) {
         String propertyName = "faId";

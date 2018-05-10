@@ -8,9 +8,8 @@ package eu.archivesportaleurope.persistence.jpa.dao;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.Ead3DAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.Ead3;
-import eu.apenet.persistence.vo.EuropeanaState;
-import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -49,6 +48,21 @@ public class Ead3JpaDAO extends AbstractHibernateDAO<Ead3, Integer> implements E
         List<Ead3> list = criteria.list();
         if (list.size() > 0) {
             return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public Integer isEad3idIndexed(String identifier, Integer aiId, Class<? extends AbstractContent> clazz) {
+        Criteria criteria = getSession().createCriteria(clazz, "ead3").setProjection(Projections.property("id"));
+        criteria.createAlias("ead3.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+        criteria.add(Restrictions.eq("published", true));
+        criteria.setMaxResults(1);
+        List<Integer> result = criteria.list();
+        if (result.size() > 0) {
+            return result.get(0);
         }
         return null;
     }
