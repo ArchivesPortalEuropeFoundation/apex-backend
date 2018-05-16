@@ -5,6 +5,7 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.Ead3DAO;
@@ -20,10 +21,16 @@ public class DeleteTask extends AbstractEad3Task {
 
     @Override
     protected void execute(Ead3 ead3, Properties properties) throws Exception {
-        if (vaild(ead3)) {
-            Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
-            ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + ead3.getPath());
-            ead3DAO.delete(ead3);
+        if (valid(ead3)) {
+            try {
+                Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
+                ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + ead3.getPath());
+                ead3DAO.delete(ead3);
+                logAction(ead3);
+            } catch (Exception e) {
+                logAction(ead3, e);
+                throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
+            }
         }
     }
 
@@ -32,7 +39,7 @@ public class DeleteTask extends AbstractEad3Task {
         return "delete";
     }
 
-    private static boolean vaild(Ead3 ead3) {
+    private static boolean valid(Ead3 ead3) {
         boolean valid = false;
         if (!ead3.isPublished()) {
             valid = true;
