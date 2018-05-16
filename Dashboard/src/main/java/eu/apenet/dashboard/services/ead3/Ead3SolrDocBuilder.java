@@ -104,7 +104,7 @@ public class Ead3SolrDocBuilder {
     private LocalTypeMap localTypeMap = new LocalTypeMap();
     private SolrDocNode archdescNode = new SolrDocNode();
     private boolean openDataEnable = false;
-
+    private final JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
 //    private final JAXBContext ead3Context;
     private final JAXBContext localTypeContext;
     private final Unmarshaller localTypeUnmarshaller;
@@ -307,34 +307,14 @@ public class Ead3SolrDocBuilder {
         if (cDid == null) {
             return null; //ToDo: invalid c exception?
         }
+//        String cClassName = cElement.getClass().getName();
+//        String cPostFix = cClassName.replace("C", "");
+        
         CLevel cLevelEntity = new CLevel();
         cLevelEntity.setOrderId(orderId);
         //cLevelEntity.setEad3(ead3Entity);
         cLevelEntity.setParent(parentC);
         
-        //to xml
-        Marshaller marshaller = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
-
-        try {
-            JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
-            marshaller = cLevelContext.createMarshaller();
-//            QName qName = new QName("c");
-//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
-
-            marshaller.marshal(cElement, baos);
-            String cLevelXml = baos.toString("UTF-8");
-            cLevelEntity.setXml(cLevelXml);
-//            System.out.println("Clevel xml: " + cLevelXml);
-
-        } catch (JAXBException | UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
-        cLevelEntity.setEad3(ead3Entity);
-//        JpaUtil.getEntityManager().persist(cLevelEntity);
-        this.cLevelEntities.add(cLevelEntity);
-        //ead3Entity.addcLevel(cLevelEntity);
 
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
         
@@ -394,7 +374,7 @@ public class Ead3SolrDocBuilder {
                 }
                 cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retrieveScopeContentAsText(element));
             } else if (element instanceof Did) {
-            } else if (element instanceof MCBase) {
+            } else if (element instanceof C) {
                 //ToDo update based on child
                 SolrDocNode child = processC((MCBase) element, cRoot, cLevelEntity, currentOrderId++);
                 cRoot.setChild(child);
@@ -423,6 +403,29 @@ public class Ead3SolrDocBuilder {
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
+        
+        //to xml
+        Marshaller marshaller = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+        ((C)cElement).getTheadAndC().clear(); //remove all child c
+        try {
+            marshaller = this.cLevelContext.createMarshaller();
+//            QName qName = new QName("c");
+//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
+
+            marshaller.marshal(cElement, baos);
+            String cLevelXml = baos.toString("UTF-8");
+            cLevelEntity.setXml(cLevelXml);
+//            System.out.println("Clevel xml: " + cLevelXml);
+
+        } catch (JAXBException | UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
+        cLevelEntity.setEad3(ead3Entity);
+//        JpaUtil.getEntityManager().persist(cLevelEntity);
+        this.cLevelEntities.add(cLevelEntity);
+        //ead3Entity.addcLevel(cLevelEntity);
 
 
         return cRoot;
