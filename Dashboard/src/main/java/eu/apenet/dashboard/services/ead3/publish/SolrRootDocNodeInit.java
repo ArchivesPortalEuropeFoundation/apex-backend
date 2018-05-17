@@ -9,6 +9,9 @@ import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.persistence.vo.CLevel;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -16,23 +19,28 @@ import java.util.stream.Collectors;
  * @author kaisar
  */
 public class SolrRootDocNodeInit {
-
+    
     private SolrDocNode docNode;
     private Set<CLevel> cLevels;
     private Map<String, Long> unitIdvsIdMap;
-
+    
     public SolrRootDocNodeInit(SolrDocNode root, Set<CLevel> levels) {
         this.docNode = root;
         this.cLevels = levels;
-        this.unitIdvsIdMap = levels.stream().collect(Collectors.toMap(CLevel::getUnitid, CLevel::getId));
+        this.unitIdvsIdMap = levels.stream().filter(distinctByKey(CLevel::getId)).collect(Collectors.toMap(CLevel::getUnitid, CLevel::getId));
         this.processTree(this.docNode);
-
+        
     }
 
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
+    
     public SolrDocNode getProcessedNode() {
         return this.docNode;
     }
-
+    
     private void processTree(SolrDocNode root) {
         SolrDocNode currentNode = root.getChild();
         if (currentNode != null) {
@@ -43,9 +51,9 @@ public class SolrRootDocNodeInit {
             processTree(currentNode);
         }
         processNode(root);
-
+        
     }
-
+    
     private void processNode(SolrDocNode node) {
         Long idValue = unitIdvsIdMap.get(node.getDataElement(Ead3SolrFields.UNIT_ID).toString());
         if (null != idValue) {

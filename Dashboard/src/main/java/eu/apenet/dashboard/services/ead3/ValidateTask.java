@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.xml.sax.SAXException;
@@ -30,6 +32,12 @@ import org.xml.sax.helpers.LocatorImpl;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 class ValidateTask extends AbstractEad3Task {
 
@@ -95,7 +103,7 @@ class ValidateTask extends AbstractEad3Task {
                                 .append("</span>").append("<br />");
                     }
 //                    if (ead3.isConverted()) {
-                        ead3.setValidated(ValidatedState.FATAL_ERROR);
+                    ead3.setValidated(ValidatedState.FATAL_ERROR);
 //                    }
                     boolean warningExists = false;
                     Set<Warnings> warningsFromEad3 = ead3.getWarningses();
@@ -129,6 +137,20 @@ class ValidateTask extends AbstractEad3Task {
                     }
                 }
                 DAOFactory.instance().getEad3DAO().store(ead3);
+
+                String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath() + APEnetUtilities.FILESEPARATOR + "ead3conversion.xsl";
+                String filePath = APEnetUtilities.getDashboardConfig().getRepoDirPath() + ead3.getPath();
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = null;
+                try {
+                    transformer = transformerFactory.newTransformer(new StreamSource(new File(xslFilePath)));
+                    transformer.transform(new StreamSource(new File(filePath)), new StreamResult(new File(filePath)));
+                } catch (TransformerConfigurationException ex) {
+                    Logger.getLogger(ValidateTask.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException ex) {
+                    Logger.getLogger(ValidateTask.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
                 logAction(ead3);
             } catch (FileNotFoundException e) {
                 logAction(ead3, e);

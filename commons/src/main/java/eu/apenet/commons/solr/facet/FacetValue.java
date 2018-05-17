@@ -26,6 +26,7 @@ public class FacetValue {
     private final static Logger LOGGER = Logger.getLogger(FacetValue.class);
     private final static SimpleDateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final char COLON = ':';
+    private static final char BAR = '|';
     private static final int MAX_NUMBER_OF_CHARACTERS = 25;
     private String id;
     private String description;
@@ -46,7 +47,13 @@ public class FacetValue {
         String value = count.getName();
         if (facetType.isHasId()) {
             int index = value.indexOf(COLON);
+            if (index == -1) {
+                index = value.indexOf(BAR);
+            }
             int lastIndex = value.lastIndexOf(COLON);
+            if (lastIndex == -1) {
+                lastIndex = value.lastIndexOf(BAR);
+            }
             id = value.substring(lastIndex + 1);
             description = value.substring(0, index);
         } else {
