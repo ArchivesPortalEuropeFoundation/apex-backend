@@ -50,7 +50,8 @@ public class PublishTask extends AbstractEad3Task {
             try {
                 long startTime = System.currentTimeMillis();
                 long solrTime = 0l;
-                fileInputStream = getFileInputStream(ead3Entity.getPath());
+                String[] nameAndExt = ead3Entity.getPath().split("\\.(?=[^\\.]+$)");
+                fileInputStream = getFileInputStream(nameAndExt[0] + "_converted_." + nameAndExt[1]);
                 Ead ead3 = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
                 ead3.setId(String.valueOf(ead3Entity.getId()));
                 SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead3, ead3Entity);

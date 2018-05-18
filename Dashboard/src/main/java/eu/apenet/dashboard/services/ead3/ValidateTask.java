@@ -140,11 +140,12 @@ class ValidateTask extends AbstractEad3Task {
 
                 String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath() + APEnetUtilities.FILESEPARATOR + "ead3conversion.xsl";
                 String filePath = APEnetUtilities.getDashboardConfig().getRepoDirPath() + ead3.getPath();
+                String[] nameAndExt = filePath.split("\\.(?=[^\\.]+$)");
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = null;
                 try {
                     transformer = transformerFactory.newTransformer(new StreamSource(new File(xslFilePath)));
-                    transformer.transform(new StreamSource(new File(filePath)), new StreamResult(new File(filePath)));
+                    transformer.transform(new StreamSource(new File(filePath)), new StreamResult(new File(nameAndExt[0] + "_converted_." + nameAndExt[1])));
                 } catch (TransformerConfigurationException ex) {
                     Logger.getLogger(ValidateTask.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TransformerException ex) {
