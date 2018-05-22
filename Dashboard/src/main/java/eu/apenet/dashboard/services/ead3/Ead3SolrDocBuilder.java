@@ -147,8 +147,14 @@ public class Ead3SolrDocBuilder {
             try {
                 JpaUtil.beginDatabaseTransaction();
                 this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
+                
+                for (CLevel cls : this.cLevelEntities) {
+                    if (cls.getParent() != null) {
+                        cls.setParentClId(cls.getParent().getId());
+                    }
+                }
                 this.ead3Entity.setcLevels(this.cLevelEntities);
-                DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
+                this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
                 JpaUtil.commitDatabaseTransaction();
             } catch (Exception ex) {
                 LOGGER.error("DB exception!", ex);
@@ -309,19 +315,21 @@ public class Ead3SolrDocBuilder {
         }
 //        String cClassName = cElement.getClass().getName();
 //        String cPostFix = cClassName.replace("C", "");
-        
+
         CLevel cLevelEntity = new CLevel();
         cLevelEntity.setOrderId(orderId);
         //cLevelEntity.setEad3(ead3Entity);
         cLevelEntity.setParent(parentC);
-        
+//        if (parentC != null) {
+//            cLevelEntity.setParentClId(parentC.getId());
+//        }
+        JpaUtil.getEntityManager().persist(cLevelEntity);
 
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
-        
+
         cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
         cLevelEntity.setUnitid((String) this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + (String) didMap.get(Ead3SolrFields.UNIT_ID));
-            
-            
+
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
@@ -390,8 +398,8 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
-        
-        if(cRoot.getChild()==null) {
+
+        if (cRoot.getChild() == null) {
             cLevelEntity.setLeaf(true);
         }
 
@@ -403,11 +411,11 @@ public class Ead3SolrDocBuilder {
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
-        
+
         //to xml
         Marshaller marshaller = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
-        ((C)cElement).getTheadAndC().clear(); //remove all child c
+        ((C) cElement).getTheadAndC().clear(); //remove all child c
         try {
             marshaller = this.cLevelContext.createMarshaller();
 //            QName qName = new QName("c");
@@ -423,10 +431,9 @@ public class Ead3SolrDocBuilder {
         }
 //        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
         cLevelEntity.setEad3(ead3Entity);
-//        JpaUtil.getEntityManager().persist(cLevelEntity);
+        JpaUtil.getEntityManager().persist(cLevelEntity);
         this.cLevelEntities.add(cLevelEntity);
         //ead3Entity.addcLevel(cLevelEntity);
-
 
         return cRoot;
     }
