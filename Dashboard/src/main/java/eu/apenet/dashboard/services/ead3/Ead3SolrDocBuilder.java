@@ -83,7 +83,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
 import net.archivesportaleurope.apetypes.LocalTypes;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang.StringUtils;
@@ -147,7 +146,7 @@ public class Ead3SolrDocBuilder {
             try {
                 JpaUtil.beginDatabaseTransaction();
                 this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
-                
+
                 for (CLevel cls : this.cLevelEntities) {
                     if (cls.getParent() != null) {
                         cls.setParentClId(cls.getParent().getId());
@@ -369,7 +368,7 @@ public class Ead3SolrDocBuilder {
         Iterator it = context.iterate("*");
 
         StringBuilder otherStrBuilder = new StringBuilder();
-        int currentOrderId = 1;
+        int currentOrderId = 0;
         while (it.hasNext()) {
             Object element = it.next();
             if (element instanceof Scopecontent) {
