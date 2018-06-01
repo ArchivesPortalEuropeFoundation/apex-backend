@@ -725,7 +725,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			buffer.append(FOLDER_LAZY);
 			buffer.append(COMMA);
 			buffer.append("\"parentId\":");
-			buffer.append(" \"" + clevel.getParentClId() + "\" ");
+			buffer.append(" \"" + clevel.getParentId() + "\" ");
 			buffer.append(COMMA);
 			buffer.append("\"ecId\":");
 			buffer.append(" \"" + clevel.getEcId() + "\" ");
@@ -790,7 +790,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			addMoreTitle(buffer, getText("eadcontent.more.after"));
 			buffer.append(COMMA);
 			buffer.append("\"parentId\":");
-			buffer.append(" \"" + clevel.getParentClId() + "\" ");
+			buffer.append(" \"" + clevel.getParentId() + "\" ");
 			buffer.append(COMMA);
 			buffer.append("\"ecId\":");
 			buffer.append(" \"" + clevel.getEcId() + "\" ");

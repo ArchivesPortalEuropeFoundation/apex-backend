@@ -44,7 +44,7 @@ public class XmlCLevelParser extends AbstractParser {
         CLevel clevel = new CLevel();
         clevel.setEcId(eadContentId);
         clevel.setLeaf(true);
-        clevel.setParentClId(parentId);
+        clevel.setParentId(parentId);
         clevel.setOrderId(orderId);
         int childOrderId = 0;
         //int lastId = ownId;

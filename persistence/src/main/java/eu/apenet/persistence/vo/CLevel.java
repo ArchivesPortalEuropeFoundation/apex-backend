@@ -16,8 +16,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import eu.archivesportaleurope.util.ApeUtil;
+import javax.persistence.CascadeType;
 import javax.persistence.ForeignKey;
 import javax.persistence.Lob;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "c_level")
@@ -40,6 +43,7 @@ public class CLevel implements Serializable{
 	@Column(name = "ec_id")
 	private Long ecId;
 	@ManyToOne(fetch=FetchType.LAZY)
+        @OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name="ec_id", foreignKey = @ForeignKey(name="c_level_ec_id_fkey"), insertable=false, updatable=false)
 	private EadContent eadContent;
         
@@ -54,12 +58,13 @@ public class CLevel implements Serializable{
         
 	@Column(name = "cid", columnDefinition="TEXT")
 	private String cid;
+        
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="parent_cl_id", foreignKey = @ForeignKey(name="c_level_parent_cl_id_fkey"), insertable=false, updatable=false)
+	@JoinColumn(name="parent_id", foreignKey = @ForeignKey(name="c_level_parent_id_fkey"), insertable=false, updatable=false)
 	private CLevel parent;
 	
-	@Column(name = "parent_cl_id")
-	private Long parentClId;
+	@Column(name = "parent_id")
+	private Long parentId;
 	@Column(name = "href_eadid")
 	private String hrefEadid;
         
@@ -103,11 +108,11 @@ public class CLevel implements Serializable{
 	public void setLeaf(boolean leaf) {
 		this.leaf = leaf;
 	}
-	public Long getParentClId() {
-		return parentClId;
+	public Long getParentId() {
+		return parentId;
 	}
-	public void setParentClId(Long parentClId) {
-		this.parentClId = parentClId;
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
 	}
 	public Long getId() {
 		return id;

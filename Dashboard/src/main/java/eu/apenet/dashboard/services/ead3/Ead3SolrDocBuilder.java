@@ -148,9 +148,10 @@ public class Ead3SolrDocBuilder {
                 JpaUtil.beginDatabaseTransaction();
                 this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
                 
+                //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
                 for (CLevel cls : this.cLevelEntities) {
                     if (cls.getParent() != null) {
-                        cls.setParentClId(cls.getParent().getId());
+                        cls.setParentId(cls.getParent().getId());
                     }
                 }
                 this.ead3Entity.setcLevels(this.cLevelEntities);
