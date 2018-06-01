@@ -86,6 +86,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String rightEadDescription;
     private String rightEadHolder;
     private String defaultXslFile;
+    private String extractEacFromEad3;
 
     //fields for Europeana tab components
     private String conversiontype;
@@ -150,6 +151,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
                 daoType = Integer.toString(ingestionprofile.getDaoType().getId());
                 daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
+                if (null != ingestionprofile.getExtractEacFromEad3()) {
+                    extractEacFromEad3 = Boolean.toString(ingestionprofile.getExtractEacFromEad3());
+                } else {
+                    extractEacFromEad3 = Boolean.toString(false);
+                }
                 // Rights for digital objects.
                 this.setRightDigitalObjects(ingestionprofile.getRightsOfDigitalObjects());
                 this.setRightDigitalDescription(ingestionprofile.getRightsOfDigitalDescription());
@@ -221,6 +227,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setNoeadidAction(IngestionprofileDefaultNoEadidAction.getExistingFileAction(noEadidAction));
         profile.setDaoType(IngestionprofileDefaultDaoType.getDaoType(daoType));
         profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
+        profile.setExtractEacFromEad3(Boolean.parseBoolean(extractEacFromEad3));
         // Only adds the rights options if file type is an EAD.
         if (profile.getFileType() != 2) {
             // Rights for digital objects.
@@ -416,6 +423,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         noEadidAction = "0";
         daoType = "0";
         daoTypeCheck = Boolean.toString(true);
+        extractEacFromEad3 = Boolean.toString(false);
         // Rights for digital objects.
         this.setRightDigitalObjects(AjaxConversionOptionsConstants.NO_SELECTED);
         this.setRightDigitalDescription("");
@@ -779,6 +787,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setDaoTypeCheck(String daoTypeCheck) {
         this.daoTypeCheck = daoTypeCheck;
+    }
+
+    public String getExtractEacFromEad3() {
+        return extractEacFromEad3;
+    }
+
+    public void setExtractEacFromEad3(String extractEacFromEad3) {
+        this.extractEacFromEad3 = extractEacFromEad3;
     }
 
     /**

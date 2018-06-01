@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "ingestionprofile")
 public class Ingestionprofile implements Serializable {
@@ -27,11 +26,11 @@ public class Ingestionprofile implements Serializable {
     private Long id;
     @Column(name = "ai_id")
     private Integer aiId;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ai_id", foreignKey = @ForeignKey(name = "ingestionprofile_ai_id_fkey"), insertable = false, updatable = false)
     private ArchivalInstitution archivalInstitution;
-    
+
     @Column(name = "name_profile")
     private String nameProfile;
     @Column(name = "file_type")
@@ -84,6 +83,8 @@ public class Ingestionprofile implements Serializable {
     private String sourceOfIdentifiers;
     @Column(name = "use_archdesc_unittitle")
     private Boolean useArchdescUnittitle;
+    @Column(name = "extract_eac_from_ead3")
+    private Boolean extractEacFromEad3;
     @Column(name = "rights_of_digital_objects")
     private String rightsOfDigitalObjects;
     @Column(name = "rights_of_digital_description")
@@ -329,6 +330,14 @@ public class Ingestionprofile implements Serializable {
 
     public void setEuropeanaInheritUnittitle(Boolean europeanaInheritUnittitle) {
         this.europeanaInheritUnittitle = europeanaInheritUnittitle;
+    }
+
+    public Boolean getExtractEacFromEad3() {
+        return extractEacFromEad3;
+    }
+
+    public void setExtractEacFromEad3(Boolean extractEacFromEad3) {
+        this.extractEacFromEad3 = extractEacFromEad3;
     }
 
     /**

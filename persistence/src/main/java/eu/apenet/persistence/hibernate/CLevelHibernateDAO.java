@@ -14,7 +14,6 @@ import org.hibernate.criterion.Restrictions;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
@@ -467,6 +466,8 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
     public List<CLevel> findTopEad3CLevels(Integer ead3Id, Integer orderId, Integer maxNumberOfItems) {
         long startTime = System.currentTimeMillis();
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.isNull("clevel.parentClId"));
         criteria.add(Restrictions.ge("clevel.orderId", orderId));
         criteria.createAlias("clevel.ead3", "ead3");
         criteria.add(Restrictions.eq("ead3.id", ead3Id));

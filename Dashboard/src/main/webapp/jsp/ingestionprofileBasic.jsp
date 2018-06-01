@@ -26,59 +26,66 @@
                 <s:label key="ead2ese.label.type.file" for="daoType"/>
             </td>
         </tr>
-		<c:if test="${!empty xslFiles}">
-			<tr>
-				<td><s:label key="ingestionprofiles.defaultXslFile" /></td>
-				<td><s:select id="defaultXslFile" name="defaultXslFile" list="xslFiles" listKey="value" listValue="content" /></td>
-			</tr>
-		</c:if>
-		<tr id="trRightForDigitalObject">
-			<td id="tdLabelRightForDigitalObject">
-				<s:label key="content.message.default.rights.digital.objects" for="rightDigitalObjects"/>
-			</td>
-			<td id="tdSelectRightForDigitalObject">
-				<s:select id="rightDigitalObjects" name="rightDigitalObjects" list="rightsDigitalObjects" listKey="value" listValue="content" onchange="deleteMessage($(this));" />
-			</td>
-		</tr>
-		<tr id="trDescriptionRightForDigitalObject">
-			<td id="tdLabelDescriptionRightForDigitalObject" class="optionsSubLabels">
-				<s:label key="dashboard.hgcreation.label.description" for="descriptionRightForDigitalObject" />
-			</td>
-			<td id="tdTextDescriptionRightForDigitalObject">
-				<s:textarea id="rightDigitalDescription" name="rightDigitalDescription" />
-			</td>
-		</tr>
-		<tr id="trHolderRightForDigitalObject">
-			<td id="tdLabelHolderRightForDigitalObject" class="optionsSubLabels">
-				<s:label key="content.message.rights.holder" for="textHolderRightForDigitalObject" />
-			</td>
-			<td id="tdTextHolderRightForDigitalObject">
-				<s:textfield id="rightDigitalHolder" name="rightDigitalHolder" cssClass="longInputText" />
-			</td>
-		</tr>
-		<tr id="trRightForEADData">
-			<td id="tdLabelRightForEADData">
-				<s:label key="content.message.default.rights.ead.data" for="rightEadData"/>
-			</td>
-			<td id="tdSelectRightForEADData">
-				<s:select id="rightEadData" name="rightEadData" list="rightsEadData" listKey="value" listValue="content" onchange="deleteMessage($(this));" />
-			</td>
-		</tr>
-		<tr id="trDescriptionRightForEADData">
-			<td id="tdLabelDescriptionRightForEADData" class="optionsSubLabels">
-				<s:label key="dashboard.hgcreation.label.description" for="descriptionRightForEADData" />
-			</td>
-			<td id="tdTextDescriptionRightForEADData">
-				<s:textarea id="rightEadDescription" name="rightEadDescription" />
-			</td>
-		</tr>
-		<tr id="trHolderRightForEADData">
-			<td id="tdLabelHolderRightForEADData" class="optionsSubLabels">
-				<s:label key="content.message.rights.holder" for="textHolderRightForEADData" />
-			</td>
-			<td id="tdTextHolderRightForEADData">
-				<s:textfield id="rightEadHolder" name="rightEadHolder" cssClass="longInputText" />
-			</td>
-		</tr>
+        <%--<c:if test="${associatedFiletype == 4}">--%>
+        
+            <tr id="extractEacObject">
+                <td><s:label for="extractEac" value="Extract Eac-CPF form "/></td>
+                <td><s:checkbox id="extractEac" name="extractEacFromEad3"/></td>
+            </tr>
+        <%--</c:if>--%>
+        <c:if test="${!empty xslFiles}">
+            <tr>
+                <td><s:label key="ingestionprofiles.defaultXslFile" /></td>
+                <td><s:select id="defaultXslFile" name="defaultXslFile" list="xslFiles" listKey="value" listValue="content" /></td>
+            </tr>
+        </c:if>
+        <tr id="trRightForDigitalObject">
+            <td id="tdLabelRightForDigitalObject">
+                <s:label key="content.message.default.rights.digital.objects" for="rightDigitalObjects"/>
+            </td>
+            <td id="tdSelectRightForDigitalObject">
+                <s:select id="rightDigitalObjects" name="rightDigitalObjects" list="rightsDigitalObjects" listKey="value" listValue="content" onchange="deleteMessage($(this));" />
+            </td>
+        </tr>
+        <tr id="trDescriptionRightForDigitalObject">
+            <td id="tdLabelDescriptionRightForDigitalObject" class="optionsSubLabels">
+                <s:label key="dashboard.hgcreation.label.description" for="descriptionRightForDigitalObject" />
+            </td>
+            <td id="tdTextDescriptionRightForDigitalObject">
+                <s:textarea id="rightDigitalDescription" name="rightDigitalDescription" />
+            </td>
+        </tr>
+        <tr id="trHolderRightForDigitalObject">
+            <td id="tdLabelHolderRightForDigitalObject" class="optionsSubLabels">
+                <s:label key="content.message.rights.holder" for="textHolderRightForDigitalObject" />
+            </td>
+            <td id="tdTextHolderRightForDigitalObject">
+                <s:textfield id="rightDigitalHolder" name="rightDigitalHolder" cssClass="longInputText" />
+            </td>
+        </tr>
+        <tr id="trRightForEADData">
+            <td id="tdLabelRightForEADData">
+                <s:label key="content.message.default.rights.ead.data" for="rightEadData"/>
+            </td>
+            <td id="tdSelectRightForEADData">
+                <s:select id="rightEadData" name="rightEadData" list="rightsEadData" listKey="value" listValue="content" onchange="deleteMessage($(this));" />
+            </td>
+        </tr>
+        <tr id="trDescriptionRightForEADData">
+            <td id="tdLabelDescriptionRightForEADData" class="optionsSubLabels">
+                <s:label key="dashboard.hgcreation.label.description" for="descriptionRightForEADData" />
+            </td>
+            <td id="tdTextDescriptionRightForEADData">
+                <s:textarea id="rightEadDescription" name="rightEadDescription" />
+            </td>
+        </tr>
+        <tr id="trHolderRightForEADData">
+            <td id="tdLabelHolderRightForEADData" class="optionsSubLabels">
+                <s:label key="content.message.rights.holder" for="textHolderRightForEADData" />
+            </td>
+            <td id="tdTextHolderRightForEADData">
+                <s:textfield id="rightEadHolder" name="rightEadHolder" cssClass="longInputText" />
+            </td>
+        </tr>
     </table>
 </div>
