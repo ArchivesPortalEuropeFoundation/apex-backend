@@ -463,7 +463,7 @@ public class Ead3Service extends AbstractService {
      */
     
     public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
-        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+         QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         QueueAction queueAction = queueItem.getAction();
         Properties preferences = null;
@@ -765,7 +765,7 @@ public class Ead3Service extends AbstractService {
                 new ValidateTask().execute(newEad3);
 //                new ConvertTask().execute(newEad3, conversionProperties);
                 new ValidateTask().execute(newEad3);
-                new PublishTask().execute(newEad3);
+                new PublishTask().execute(newEad3,preferences);
             }
             newEad3.setQueuing(QueuingState.NO);
             ead3DAO.store(newEad3);

@@ -103,6 +103,7 @@ public class Ead3SolrDocBuilder {
     private LocalTypeMap localTypeMap = new LocalTypeMap();
     private SolrDocNode archdescNode = new SolrDocNode();
     private boolean openDataEnable = false;
+    private boolean persistEac = false;
     private final JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
 //    private final JAXBContext ead3Context;
     private final JAXBContext localTypeContext;
@@ -118,7 +119,8 @@ public class Ead3SolrDocBuilder {
         this.localTypeUnmarshaller = localTypeContext.createUnmarshaller();
     }
 
-    public SolrDocTree buildDocTree(Ead ead3, Ead3 ead3Entity) throws JAXBException {
+    public SolrDocTree buildDocTree(Ead ead3, Ead3 ead3Entity, boolean persistEac) throws JAXBException {
+        this.persistEac = persistEac;
         this.ead3Entity = ead3Entity;
         this.openDataEnable = ead3Entity.getArchivalInstitution().isOpenDataEnabled();
         this.ead3 = ead3;
@@ -781,10 +783,12 @@ public class Ead3SolrDocBuilder {
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
                     personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
 
-                    try {
-                        new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
-                    } catch (Exception ex) {
-                        java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    if (this.persistEac) {
+                        try {
+                            new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
+                        } catch (Exception ex) {
+                            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                     listOfEacs.add(personMap);
                 } else if (eacElement.getDeclaredType().equals(Corpname.class)) {

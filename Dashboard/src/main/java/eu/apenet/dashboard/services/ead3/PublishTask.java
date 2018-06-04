@@ -11,6 +11,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead3.publish.SolrDocTree;
 import eu.apenet.dashboard.services.ead3.publish.SolrPublisher;
 import eu.apenet.persistence.vo.Ead3;
+import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.ValidatedState;
 import gov.loc.ead.Ead;
 import java.io.File;
@@ -54,7 +55,7 @@ public class PublishTask extends AbstractEad3Task {
                 fileInputStream = getFileInputStream(nameAndExt[0] + "_converted_." + nameAndExt[1]);
                 Ead ead3 = (Ead) ead3Unmarshaller.unmarshal(fileInputStream);
                 ead3.setId(String.valueOf(ead3Entity.getId()));
-                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead3, ead3Entity);
+                SolrDocTree tree = this.ead3SolrDocBuilder.buildDocTree(ead3, ead3Entity, Boolean.parseBoolean(properties.getProperty(QueueItem.PERSIST_EACCPF_FROM_EAD3, Boolean.toString(false))));
                 SolrPublisher publisher = new SolrPublisher();
                 long numberOfDocs = publisher.publish(tree);
                 publisher.printTree(tree);

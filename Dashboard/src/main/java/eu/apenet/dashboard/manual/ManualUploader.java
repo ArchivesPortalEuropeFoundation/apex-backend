@@ -747,6 +747,7 @@ public abstract class ManualUploader {
         properties.setProperty(QueueItem.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
         properties.setProperty(QueueItem.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
         properties.setProperty(QueueItem.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
+        properties.setProperty(QueueItem.PERSIST_EACCPF_FROM_EAD3, ingestionprofile.getExtractEacFromEad3() + "");
         properties.setProperty(QueueItem.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
         properties.setProperty(QueueItem.CONVERSION_TYPE, ingestionprofile.getEuropeanaConversionType() + "");
         properties.setProperty(QueueItem.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
