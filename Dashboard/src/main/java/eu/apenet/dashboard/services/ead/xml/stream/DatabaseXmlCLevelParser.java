@@ -46,7 +46,7 @@ public class DatabaseXmlCLevelParser {
         EadPublishData publishData = new EadPublishData();
         parse(clevel, publishData);
         publishData.setId(clevel.getId());
-        publishData.setParentId(clevel.getParentClId());
+        publishData.setParentId(clevel.getParentId());
         publishData.setLeaf(clevel.isLeaf());
         publishData.setUpperLevelUnittitles(upperLevelUnittitles);
         publishData.setFullHierarchy(fullHierarchy);

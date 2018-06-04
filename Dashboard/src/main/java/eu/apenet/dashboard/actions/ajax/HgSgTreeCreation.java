@@ -204,7 +204,7 @@ public class HgSgTreeCreation extends AjaxControllerAbstractAction {
             if(type.equals(TYPE_C_LEVEL)){
                 Long ecId = DAOFactory.instance().getCLevelDAO().findById(Long.parseLong(parentId)).getEcId();
                 cLevel.setEcId(ecId);
-                cLevel.setParentClId(Long.parseLong(parentId));
+                cLevel.setParentId(Long.parseLong(parentId));
                 if (addLevel){
 	                Long sizeChildren = DAOFactory.instance().getCLevelDAO().countChildCLevels(Long.parseLong(parentId));
 	                cLevel.setOrderId(sizeChildren.intValue());

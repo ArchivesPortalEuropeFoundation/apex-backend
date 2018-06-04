@@ -193,7 +193,7 @@ public class LinkingService {
                 cLevel.setUnitid(unitidString);
                 cLevel.setUnittitle(unittitleString);
                 cLevel.setOrderId(sizeChildren++);
-                cLevel.setParentClId(parentCLevelId);
+                cLevel.setParentId(parentCLevelId);
                 cLevel.setEcId(ecId);
                 cLevel.setHrefEadid(ead.getEadid());
                 JpaUtil.getEntityManager().persist(cLevel);
