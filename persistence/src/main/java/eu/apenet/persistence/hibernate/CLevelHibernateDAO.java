@@ -25,7 +25,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 
     @Override
     public CLevel getChildCLevel(Long parentId, Integer orderId) {
-        String jpaQuery = "SELECT clevel FROM CLevel clevel WHERE clevel.parentClId = :parentId AND clevel.orderId = :orderId";
+        String jpaQuery = "SELECT clevel FROM CLevel clevel WHERE clevel.parentId = :parentId AND clevel.orderId = :orderId";
         TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
         query.setParameter("orderId", orderId);
         query.setParameter("parentId", parentId);
@@ -39,7 +39,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 
     @Override
     public Long getChildCLevelId(Long parentId, Integer orderId) {
-        String jpaQuery = "SELECT clevel.id FROM CLevel clevel WHERE clevel.parentClId = :parentId AND clevel.orderId = :orderId";
+        String jpaQuery = "SELECT clevel.id FROM CLevel clevel WHERE clevel.parentId = :parentId AND clevel.orderId = :orderId";
         TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);
         query.setParameter("orderId", orderId);
         query.setParameter("parentId", parentId);
@@ -63,7 +63,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
             varName = "holdingsGuide";
         }
 
-        String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent." + varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode AND clevel.parentClId IS NULL AND clevel.orderId = :orderId";
+        String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent." + varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode AND clevel.parentId IS NULL AND clevel.orderId = :orderId";
         TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
         query.setParameter("orderId", orderId);
         query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
@@ -88,7 +88,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
             varName = "holdingsGuide";
         }
 
-        String jpaQuery = "SELECT clevel.id FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent." + varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode AND clevel.parentClId IS NULL AND clevel.orderId = :orderId";
+        String jpaQuery = "SELECT clevel.id FROM CLevel clevel JOIN clevel.eadContent eadContent JOIN eadContent." + varName + " ead JOIN ead.archivalInstitution archivalInstitution WHERE ead.eadid= :eadid AND ead.published = true AND archivalInstitution.repositorycode = :repoCode AND clevel.parentId IS NULL AND clevel.orderId = :orderId";
         TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);
         query.setParameter("orderId", orderId);
         query.setParameter("eadid", ApeUtil.decodeSpecialCharacters(eadid));
@@ -238,7 +238,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
         }
         TypedQuery<CLevel> query = getEntityManager().createQuery(
                 "SELECT clevel FROM CLevel clevel WHERE clevel.eadContent." + propertyName
-                + " = :fileId AND clevel.parentClId IS NULL ORDER BY clevel.orderId ASC", CLevel.class);
+                + " = :fileId AND clevel.parentId IS NULL ORDER BY clevel.orderId ASC", CLevel.class);
         query.setParameter("fileId", fileId);
         query.setMaxResults(maxResult);
         query.setFirstResult(firstResult);
@@ -254,7 +254,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
         }
         TypedQuery<CLevel> query = getEntityManager().createQuery(
                 "SELECT clevel FROM CLevel clevel WHERE clevel.eadContent." + propertyName
-                + " = :fileId AND clevel.parentClId IS NULL AND clevel.orderId = :orderId", CLevel.class);
+                + " = :fileId AND clevel.parentId IS NULL AND clevel.orderId = :orderId", CLevel.class);
         query.setParameter("fileId", fileId);
         query.setParameter("orderId", orderId);
         try {
@@ -370,14 +370,14 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel")
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .setProjection(Projections.distinct(Projections.projectionList().add(Projections.property("level"))))
-                .add(Restrictions.eq("clevel.parentClId", parentId));
+                .add(Restrictions.eq("clevel.parentId", parentId));
         return criteria.list();
     }
 
     private Criteria createTopCLevelsCriteria(Long eadContentId) {
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria.add(Restrictions.isNull("clevel.parentClId"));
+        criteria.add(Restrictions.isNull("clevel.parentId"));
         criteria.add(Restrictions.eq("clevel.ecId", eadContentId));
 
         return criteria;
@@ -386,7 +386,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
     private Criteria createChildCLevelsCriteria(Long parentId) {
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria.add(Restrictions.eq("clevel.parentClId", parentId));
+        criteria.add(Restrictions.eq("clevel.parentId", parentId));
         return criteria;
     }
 
@@ -467,7 +467,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
         long startTime = System.currentTimeMillis();
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria.add(Restrictions.isNull("clevel.parentClId"));
+        criteria.add(Restrictions.isNull("clevel.parentId"));
         criteria.add(Restrictions.ge("clevel.orderId", orderId));
         criteria.createAlias("clevel.ead3", "ead3");
         criteria.add(Restrictions.eq("ead3.id", ead3Id));

@@ -60,10 +60,10 @@ public class CLevel implements Serializable{
 	private String cid;
         
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="parent_id", foreignKey = @ForeignKey(name="c_level_parent_id_fkey"), insertable=false, updatable=false)
+	@JoinColumn(name="parent_cl_id", foreignKey = @ForeignKey(name="c_level_parent_id_fkey"), insertable=false, updatable=false)
 	private CLevel parent;
 	
-	@Column(name = "parent_id")
+	@Column(name = "parent_cl_id")
 	private Long parentId;
 	@Column(name = "href_eadid")
 	private String hrefEadid;
