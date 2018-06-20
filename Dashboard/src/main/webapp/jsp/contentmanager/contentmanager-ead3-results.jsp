@@ -44,9 +44,10 @@
             <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
                 id="batchSelectedAction" name="action">
                 <!-- Option to call the action for apply a profile. -->
-                <option value="displayProfile">
+                <%--<option value="displayProfile">
                     <s:text name="content.message.applyProfile" />
                 </option>
+                --%>
                 <option value="validate_publish">
                     <s:text name="content.message.validatepublish" />
                 </option>
@@ -240,7 +241,7 @@
                                                 <s:text name="label.edit" />
                                             </option>
                                         </c:if>
-                                        <c:if test="${eadResult.validated}">
+                                        <c:if test="${eadResult.published}">
                                             <option value="_blank|preview.action">
                                                 <s:text name="content.message.preview" />
                                             </option>

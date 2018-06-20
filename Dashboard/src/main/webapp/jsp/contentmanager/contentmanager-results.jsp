@@ -49,9 +49,10 @@
             <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
                 id="batchSelectedAction" name="action">
                 <!-- Option to call the action for apply a profile. -->
-                <option value="displayProfile">
+                <%--<option value="displayProfile">
                     <s:text name="content.message.applyProfile" />
                 </option>
+                --%>
                 <option value="convert_validate_publish">
                     <s:text name="content.message.doitall" />
                 </option>
@@ -153,87 +154,87 @@
                        	</th>
                         <th id="thId">
                             <s:text name="content.message.id" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('eadid','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
-                </th>
-                <th id="thTitle">
-                    <s:text name="content.message.title" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('title','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
-                </th>
-                <th id="thDate">
-                    <s:text name="content.message.date" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('uploadDate','true')">
-                        <img class="noStyle" src="images/expand/arrow-down.gif"	 alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"                                                                                      src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
-                </th>
-                <th id="thConverted">
-                    <s:text name="content.message.converted" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
-                <br/> <a href="#conversionOptsDiv" class="link_right" id="conversionOpts"><s:text name="content.message.conversion.options" /></a>
-                </th>
-                <th id="thValidated">
-                    <s:text name="content.message.validated" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
-                </th>
-                <th id="thPublished">
-                    <s:text name="content.message.published" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
-                </th>
-                <c:choose>
-                    <c:when test="${results.findingAid}">
-                        <th id="thHoldings">
-                            <s:text name="content.message.holdings" />
+                            <div class="arrows">
+                                <a class="order" href="javascript:changeOrder('eadid','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                                <a class="order" href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                            </div>
                         </th>
-                        <th id="thEdm">
-                            <s:text name="content.message.eseedm" />
-                        <div class="arrows">
-                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                        </div>
+                        <th id="thTitle">
+                            <s:text name="content.message.title" />
+                            <div class="arrows">
+                                <a class="order" href="javascript:changeOrder('title','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                                <a class="order" href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                            </div>
                         </th>
-                        <th id="thEuropeana">
-                            <s:text name="content.message.europeana" />
-                        <div class="arrows">
-                            <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
-                            <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                        </div>
+                        <th id="thDate">
+                            <s:text name="content.message.date" />
+                            <div class="arrows">
+                                <a class="order" href="javascript:changeOrder('uploadDate','true')">
+                                    <img class="noStyle" src="images/expand/arrow-down.gif"	 alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"                                                                                      src="images/expand/arrow-up.gif" alt="up" /></a>
+                            </div>
                         </th>
-                    </c:when>
-                    <c:when test="${results.holdingsGuide or results.sourceGuide}">
-                        <th id="thDynamic">
-                            <s:text name="content.message.dynamic" />
+                        <th id="thConverted">
+                            <s:text name="content.message.converted" />
+                            <div class="arrows">
+                                <a class="order" href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                                <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                            </div>
+                            <br/> <a href="#conversionOptsDiv" class="link_right" id="conversionOpts"><s:text name="content.message.conversion.options" /></a>
                         </th>
-                        <th id="thLynked">
-                            <s:text name="content.message.linked" />
+                        <th id="thValidated">
+                            <s:text name="content.message.validated" />
+                            <div class="arrows">
+                                <a class="order" href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                                <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                            </div>
                         </th>
-                    </c:when>
-                </c:choose>
-                <th id="thQueue">
-                    <s:text name="content.message.queue" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
-                    <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
-                </th>
-                <th id="thActions">
-                    <s:text name="content.message.actions" />
-                </th>
-                </tr>
+                        <th id="thPublished">
+                            <s:text name="content.message.published" />
+                            <div class="arrows">
+                                <a class="order" href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                                <a class="order" href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                            </div>
+                        </th>
+                        <c:choose>
+                            <c:when test="${results.findingAid}">
+                                <th id="thHoldings">
+                                    <s:text name="content.message.holdings" />
+                                </th>
+                                <th id="thEdm">
+                                    <s:text name="content.message.eseedm" />
+                                    <div class="arrows">
+                                        <a class="order" href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                                        <a class="order" href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                                    </div>
+                                </th>
+                                <th id="thEuropeana">
+                                    <s:text name="content.message.europeana" />
+                                    <div class="arrows">
+                                        <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
+                                        <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                                    </div>
+                                </th>
+                            </c:when>
+                            <c:when test="${results.holdingsGuide or results.sourceGuide}">
+                                <th id="thDynamic">
+                                    <s:text name="content.message.dynamic" />
+                                </th>
+                                <th id="thLynked">
+                                    <s:text name="content.message.linked" />
+                                </th>
+                            </c:when>
+                        </c:choose>
+                        <th id="thQueue">
+                            <s:text name="content.message.queue" />
+                            <div class="arrows">
+                                <a class="order" href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
+                                <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                            </div>
+                        </th>
+                        <th id="thActions">
+                            <s:text name="content.message.actions" />
+                        </th>
+                    </tr>
                 </thead>
                 <c:forEach var="eadResult" items="${results.eadResults}">
                     <tr class="${eadResult.cssClass}">
@@ -350,13 +351,14 @@
 
                                         <!-- Option to call the action for apply a profile. -->
                                         <!-- For finding aids display if is not deliver to Europeana. -->
-                                        <c:if test="${results.findingAid}">
+                                        <%--<c:if test="${results.findingAid}">
                                             <c:if test="${(not eadResult.deliveredToEuropeana and not eadResult.validatedFatalError) or not eadResult.published}">
                                                 <option value="_self|displayProfile.action">
                                                     <s:text name="content.message.applyProfile" />
                                                 </option>
                                             </c:if>
                                         </c:if>
+                                        
                                         <!-- For holdings guides and source guides display if is not published. -->
                                         <c:if test="${results.holdingsGuide or results.sourceGuide}">
                                             <c:if test="${not eadResult.published and not eadResult.validatedFatalError}">
@@ -365,6 +367,7 @@
                                                 </option>
                                             </c:if>
                                         </c:if>
+                                        --%>
 
                                         <c:if test="${eadResult.published}">
                                             <option value="action|unpublish">
