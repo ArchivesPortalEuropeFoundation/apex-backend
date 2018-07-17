@@ -107,7 +107,10 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         queuingStatusList.put(QueuingState.BUSY.toString(), getText("content.message.queueprocessing"));
         queuingStatusList.put(QueuingState.ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
         typeList.put(XmlType.EAD_FA.getIdentifier() + "",
-                getText("content.message." + XmlType.EAD_FA.getResourceName()));
+                getText("content.message.ead2002." + XmlType.EAD_FA.getResourceName()));
+        typeList.put(XmlType.EAD_3.getIdentifier() + "",
+                getText("content.message.fa." + XmlType.EAD_3.getResourceName()));
+//                "Finding Aid - EAD3");
         typeList.put(XmlType.EAD_HG.getIdentifier() + "",
                 getText("content.message." + XmlType.EAD_HG.getResourceName()));
         typeList.put(XmlType.EAD_SG.getIdentifier() + "",
@@ -115,7 +118,7 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         typeList.put(XmlType.EAC_CPF.getIdentifier() + "",
                 getText("content.message." + XmlType.EAC_CPF.getResourceName()));
 //        Hide Ead3
-        typeList.put(XmlType.EAD_3.getIdentifier() + "", "EAD3");
+
         searchTermsFieldList.put("", getText("content.message.all"));
         searchTermsFieldList.put("eadid", getText("content.message.id"));
         searchTermsFieldList.put("title", getText("content.message.title"));
