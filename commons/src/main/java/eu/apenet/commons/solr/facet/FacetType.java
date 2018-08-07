@@ -9,28 +9,31 @@ import eu.apenet.commons.solr.SolrFields;
 public enum FacetType {
 //    EAD3_COUNTRY(Ead3SolrFields.COUNTRY, Ead3SolrFields.COUNTRY, true, true, "country."),
 //    EAD3_AI(Ead3SolrFields.AI, Ead3SolrFields.AI, true),
-//    TITLE_PROPER(Ead3SolrFields.TITLE_PROPER, Ead3SolrFields.EAD_ID, true),
+//    TITLE_PROPER(Ead3SolrFields.TITLE_PROPER, Ead3SolrFields.ROOT_DOC_ID, true),
     EAD3_TYPE(Ead3SolrFields.DAO_TYPE, Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.text."),
     EAD3_LEVEL(Ead3SolrFields.LEVEL_NAME, Ead3SolrFields.LEVEL_NAME, false, true, "advancedsearch.facet.value.level."),
-    EAD3_START_DATE(Ead3SolrFields.START_DATE, true, true),
-    EAD3_END_DATE(Ead3SolrFields.END_DATE, true, false),
-    COUNTRY(SolrFields.COUNTRY, SolrFields.COUNTRY_ID, true, true, "country."),
-    AI(SolrFields.AI, SolrFields.AI_ID, true),
-    FOND(SolrFields.TITLE_OF_FOND, SolrFields.FOND_ID, true),
-    TOPIC(SolrFields.TOPIC_FACET, false, true, "topics.", true),
-    TYPE(SolrFields.TYPE, false, true, "advancedsearch.text."),
-    LEVEL(SolrFields.LEVEL, false, true, "advancedsearch.facet.value.level."),
-    DAO(SolrFields.DAO, false, true, "advancedsearch.facet.value.dao."),
-    ROLEDAO(SolrFields.ROLEDAO, false, true, "advancedsearch.facet.value.roledao.", true),
-    DATE_TYPE(SolrFields.DATE_TYPE, false, true, "advancedsearch.facet.value.datetype."),
-    START_DATE(SolrFields.START_DATE, true, true),
-    END_DATE(SolrFields.END_DATE, true, false),
+//    EAD3_START_DATE(Ead3SolrFields.START_DATE, true, true),
+//    EAD3_END_DATE(Ead3SolrFields.END_DATE, true, false),
+    COUNTRY(Ead3SolrFields.COUNTRY, Ead3SolrFields.COUNTRY_ID, true, true, "country."),
+    AI(Ead3SolrFields.AI, Ead3SolrFields.AI_ID, true),
+//    FOND(SolrFields.TITLE_OF_FOND, SolrFields.FOND_ID, true), //ToDo: Merge
+    TOPIC(Ead3SolrFields.TOPIC, false, true, "topics.", true),
+    TYPE(Ead3SolrFields.RECORD_TYPE, false, true, "advancedsearch.text."),
+    LEVEL(Ead3SolrFields.LEVEL_NAME, false, true, "advancedsearch.facet.value.level."),
+    DAO(Ead3SolrFields.DAO, false, true, "advancedsearch.facet.value.dao."),
+    ROLEDAO(Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.facet.value.roledao.", true),
+    DATE_TYPE(Ead3SolrFields.DATE_TYPE, false, true, "advancedsearch.facet.value.datetype."),
+    START_DATE(Ead3SolrFields.START_DATE, true, true),
+    END_DATE(Ead3SolrFields.END_DATE, true, false),
+    
+    EAC_CPF_START_DATE(SolrFields.EAC_CPF_START_DATE, true, true),
+    EAC_CPF_END_DATE(SolrFields.EAC_CPF_END_DATE, true, false),
     EAC_CPF_PLACES(SolrFields.EAC_CPF_FACET_PLACES, false, false),
     EAC_CPF_OCCUPATION(SolrFields.EAC_CPF_FACET_OCCUPATION, false, false),
     EAC_CPF_FUNCTION(SolrFields.EAC_CPF_FACET_FUNCTION, false, false),
     EAC_CPF_MANDATE(SolrFields.EAC_CPF_FACET_MANDATE, false, false),
     EAC_CPF_ENTITY_TYPE(SolrFields.EAC_CPF_FACET_ENTITY_TYPE, false, true, "advancedsearch.facet.value.eaccpf.entitytype."),
-    LANGUAGE(SolrFields.LANGUAGE, false, true, "language."),
+    LANGUAGE(Ead3SolrFields.LANGUAGE, false, true, "language."),
     EAG_AI_GROUPS(SolrFields.EAG_AI_GROUPS_FACET, SolrFields.EAG_AI_GROUP_ID, true),
     EAG_REPOSITORY_TYPE(SolrFields.EAG_REPOSITORY_TYPE, false, true, "eag2012.options.institutionType.");
     private final String name;
@@ -132,8 +135,8 @@ public enum FacetType {
     public static List<ListFacetSettings> getEad3DateListFacetSettings() {
         List<ListFacetSettings> result = new ArrayList<>();
 
-        result.add(new ListFacetSettings(FacetType.EAD3_START_DATE));
-        result.add(new ListFacetSettings(FacetType.EAD3_END_DATE));
+        result.add(new ListFacetSettings(FacetType.START_DATE));
+        result.add(new ListFacetSettings(FacetType.END_DATE));
         return result;
     }
 
@@ -158,8 +161,8 @@ public enum FacetType {
         results.add(new ListFacetSettings(FacetType.AI));
         results.add(new ListFacetSettings(FacetType.EAD3_LEVEL));
         results.add(new ListFacetSettings(FacetType.EAD3_TYPE));
-        results.add(new ListFacetSettings(FacetType.EAD3_START_DATE));
-        results.add(new ListFacetSettings(FacetType.EAD3_END_DATE));
+        results.add(new ListFacetSettings(FacetType.START_DATE));
+        results.add(new ListFacetSettings(FacetType.END_DATE));
         return results;
     }
 
@@ -182,8 +185,8 @@ public enum FacetType {
         //result.add(new ListFacetSettings(FacetType.EAC_CPF_FUNCTION, true,2));    
         result.add(new ListFacetSettings(FacetType.LANGUAGE));
         result.add(new ListFacetSettings(FacetType.DATE_TYPE));
-        result.add(new ListFacetSettings(FacetType.START_DATE));
-        result.add(new ListFacetSettings(FacetType.END_DATE));
+        result.add(new ListFacetSettings(FacetType.EAC_CPF_START_DATE));
+        result.add(new ListFacetSettings(FacetType.EAC_CPF_END_DATE));
         return result;
     }
 

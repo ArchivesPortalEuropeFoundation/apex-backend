@@ -163,10 +163,10 @@ public class OpenDataService {
     }
 
     private void addUnStoredFields(AbstractSolrServerHolder solrHolder, SolrDocument doc, ArchivalInstitution archivalInstitution) {
-        doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountryId());
+        doc.addField(Ead3SolrFields.COUNTRY_ID, archivalInstitution.getCountryId());
 
         if (solrHolder instanceof EadSolrServerHolder) {
-            doc.addField(SolrFields.FOND_ID, getIdFromFiled(doc.getFieldValue(SolrFields.TITLE_OF_FOND).toString()));
+            doc.addField(Ead3SolrFields.ID, getIdFromFiled(doc.getFieldValue(Ead3SolrFields.TITLE_PROPER).toString()));
         }
 
         if (solrHolder instanceof EagSolrServerHolder) {
@@ -178,7 +178,7 @@ public class OpenDataService {
             }
             doc.addField(SolrFields.EAG_AI_GROUP_ID, ais);
         } else {
-            doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
+            doc.addField(Ead3SolrFields.AI_ID, archivalInstitution.getAiId());
         }
     }
 
@@ -190,14 +190,14 @@ public class OpenDataService {
     private SolrQuery genOpenDataByAiSearchQuery(AbstractSolrServerHolder solrHolder, ArchivalInstitution archivalInstitution, boolean openDataEnable) throws SolrServerException {
         String queryString = "";
         if (solrHolder instanceof EagSolrServerHolder) {
-            queryString = SolrFields.ID + ":\"" + archivalInstitution.getAiId() + "\" ";
+            queryString = Ead3SolrFields.ID + ":\"" + archivalInstitution.getAiId() + "\" ";
 
         } else if (solrHolder instanceof Ead3SolrServerHolder) {
             queryString = Ead3SolrFields.AI_ID + ":\"" + archivalInstitution.getAiId() + "\" ";
         } else {
-            queryString = SolrFields.AI + ":\"" + archivalInstitution.getAiname() + "\\:" + archivalInstitution.getAiId() + "\" ";
+            queryString = Ead3SolrFields.AI + ":\"" + archivalInstitution.getAiname() + "\\:" + archivalInstitution.getAiId() + "\" ";
         }
-        queryString += "AND -" + SolrFields.OPEN_DATA + ":" + Boolean.toString(openDataEnable);
+        queryString += "AND -" + Ead3SolrFields.OPEN_DATA + ":" + Boolean.toString(openDataEnable);
         SolrQuery query = new SolrQuery(queryString);
         query.setRows(0);
 

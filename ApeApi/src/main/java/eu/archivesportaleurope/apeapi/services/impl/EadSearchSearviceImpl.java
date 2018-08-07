@@ -1,5 +1,6 @@
 package eu.archivesportaleurope.apeapi.services.impl;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.facet.FacetType;
@@ -135,7 +136,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         extraParam.put("q", this.onlyOpenData);
 
         extraParam.put("group", "true");
-        extraParam.put("group.field", SolrFields.AI);
+        extraParam.put("group.field", Ead3SolrFields.AI);
         extraParam.put("group.ngroups", "true");
 
         return this.search(searchRequest, extraParam, false);
@@ -226,8 +227,8 @@ public class EadSearchSearviceImpl extends EadSearchService {
             //for every decendent get their ancestors
             for (SolrDocument descenDocument : decendentDocumentList) {
 
-                if (null != descenDocument && null != descenDocument.getFieldValue(SolrFields.ID)) {
-                    String foundId = descenDocument.getFieldValue(SolrFields.ID).toString();
+                if (null != descenDocument && null != descenDocument.getFieldValue(Ead3SolrFields.ID)) {
+                    String foundId = descenDocument.getFieldValue(Ead3SolrFields.ID).toString();
                     TypedList ancList = this.extractParentList(descenDocument, foundId);
                     descendantAncesMap.put(foundId, ancList.keyLevel);
                     ancList.keyLevel.entrySet().stream().forEach((ancId) -> {
@@ -256,7 +257,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             SolrDocumentList ancDocs = allAncestorData.getResults();
             Map<String, SolrDocument> ancIdDocMap = new HashMap<>();
             for (SolrDocument ancDoc : ancDocs) {
-                String ancId = ancDoc.getFieldValue(SolrFields.ID).toString();
+                String ancId = ancDoc.getFieldValue(Ead3SolrFields.ID).toString();
                 ancIdDocMap.put(ancId, ancDoc);
             }
             EadHierarchyResponseSet response = new EadHierarchyResponseSet(decendentResponse, descendantAncesMap, ancIdDocMap);
@@ -269,7 +270,8 @@ public class EadSearchSearviceImpl extends EadSearchService {
     @Override
     public QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest) {
         StringBuilder query = new StringBuilder();
-        query.append(SolrFields.UNITID_OF_FOND).append(":")
+        //ToDo: Merge
+        query.append(Ead3SolrFields.UNIT_ID).append(":")
                 .append(filteredSortedPageRequest.getFindingAidNo())
                 .append(this.solrAND);
         if (StringUtils.isBlank(filteredSortedPageRequest.getUnitId())) {
@@ -277,14 +279,14 @@ public class EadSearchSearviceImpl extends EadSearchService {
             query.append(queryToFindOnlyTopLevelItem);
         } else {
             query.append("(")
-                    .append(SolrFields.UNITID).append(":")
+                    .append(Ead3SolrFields.UNIT_ID).append(":")
                     .append("\"")
                     .append(filteredSortedPageRequest.getFindingAidNo())
                     .append(" - ")
                     .append(filteredSortedPageRequest.getUnitId())
                     .append("\"")
                     .append(this.solrOR)
-                    .append(SolrFields.UNITID).append(":")
+                    .append(Ead3SolrFields.UNIT_ID).append(":")
                     .append("\"")
                     .append(filteredSortedPageRequest.getFindingAidNo())
                     .append("-")
@@ -333,7 +335,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         request.setCount(pageRequest.getCount());
         request.setStartIndex(pageRequest.getStartIndex());
         SortRequest sortRequest = new SortRequest();
-        sortRequest.addField(SolrFields.ORDER_ID);
+        sortRequest.addField(Ead3SolrFields.ORDER_ID);
         request.setSortRequest(sortRequest);
         request.setQuery("*" + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
 
@@ -352,7 +354,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         query.setQuery("id:" + id + this.solrAND + onlyOpenData);
         query.setRows(1);
         query.setStart(0);
-        query.setParam("fl", "id, F*_s, H*_s, S*_s, type");
+        query.setParam("fl", Ead3SolrFields.ID+", F*_s, H*_s, S*_s, "+Ead3SolrFields.RECORD_TYPE);
         logger.debug("real query is " + query.toString());
         this.searchUtil.setQuery(query);
 
@@ -365,8 +367,8 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SolrDocument document = documentList.get(0);
 
         String foundId = "";
-        if (null != document && null != document.getFieldValue(SolrFields.ID)) {
-            foundId = document.getFieldValue(SolrFields.ID).toString();
+        if (null != document && null != document.getFieldValue(Ead3SolrFields.ID)) {
+            foundId = document.getFieldValue(Ead3SolrFields.ID).toString();
         }
 
         if (!foundId.equalsIgnoreCase(id)) {
@@ -378,7 +380,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
     private TypedList extractParentList(SolrDocument document, String selfId) {
 
-        String docType = document.getFieldValue(SolrFields.TYPE).toString();
+        String docType = document.getFieldValue(Ead3SolrFields.RECORD_TYPE).toString();
         String[] typePrefix = {"", ""};
         if (docType.equals(SolrValues.FA_TYPE)) {
             typePrefix[0] = SolrFields.FA_DYNAMIC_ID;

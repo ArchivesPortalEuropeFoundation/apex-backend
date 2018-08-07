@@ -72,15 +72,15 @@ public class EadDocResponse {
         //get the default document
         SolrDocument solrDocument = group.getResult().get(0);
 
-        this.language = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGUAGE));
-        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
-        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
-        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
-        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.EADID));
-        this.unitDate = this.objectToString(solrDocument.getFieldValue(SolrFields.ALTERDATE));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
+        this.language = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.LANGUAGE));
+        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY)), 0);
+        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.AI)), 0);
+        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.REPOSITORY_CODE));
+        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.RECORD_ID));
+        this.unitDate = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ALTERNATE_UNIT_DATE));
+        this.scopeContent = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
 
-        Object dao = solrDocument.getFieldValue(SolrFields.NO_OF_DAO);
+        Object dao = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO);
         if (dao != null) {
             this.numberOfDigitalObjects = Integer.parseInt(this.objectToString(dao));
         }
@@ -90,7 +90,7 @@ public class EadDocResponse {
             this.numberOfDigitalObjectsInDescendents = Integer.parseInt(this.objectToString(daoBelow));
         }
 
-        Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
+        Object des = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DESCENDENTS);
         if (des != null) {
             this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
         }

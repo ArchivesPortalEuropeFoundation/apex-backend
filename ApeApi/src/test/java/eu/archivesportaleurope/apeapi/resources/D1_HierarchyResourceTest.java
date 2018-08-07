@@ -40,7 +40,7 @@ import org.springframework.http.HttpStatus;
 public class D1_HierarchyResourceTest extends JerseySpringWithSecurityTest {
 
     @Autowired
-    public SolrClient eadSolrServer;
+    public SolrClient ead3SolrServer;
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
 
@@ -50,7 +50,7 @@ public class D1_HierarchyResourceTest extends JerseySpringWithSecurityTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            EmbeddedSolrManager.setupData("/HierarchyData.json", "eads"); //eads
+            EmbeddedSolrManager.setupData("/HierarchyData.json", "ead3s"); //eads
         } catch (SolrServerException | IOException ex) {
             java.util.logging.Logger.getLogger(D1_HierarchyResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         }

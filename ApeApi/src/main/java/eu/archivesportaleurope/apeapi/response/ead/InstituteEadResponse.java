@@ -73,7 +73,7 @@ public class InstituteEadResponse {
     private String indexDate;
 
     public InstituteEadResponse(SolrDocument solrDocument, QueryResponse response) {
-        this.id = this.objectToString(solrDocument.getFieldValue(SolrFields.ID));
+        this.id = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ID));
         XmlType xmlType = XmlType.getTypeBySolrPrefix(this.id.substring(0, 1));
         if (xmlType == null) {
             if (this.id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
@@ -89,13 +89,13 @@ public class InstituteEadResponse {
             this.level = "archdesc";
         }
 
-        this.language = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGUAGE));
-        this.langMaterial = this.objectToString(solrDocument.getFieldValue(SolrFields.LANGMATERIAL));
-        this.unitDate = this.objectToString(solrDocument.getFieldValue(SolrFields.ALTERDATE));
+        this.language = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.LANGUAGE));
+        this.langMaterial = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.LANG_MATERIAL));
+        this.unitDate = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ALTERNATE_UNIT_DATE));
 
-        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
+        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY)), 0);
 
-        this.findingAidTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE_OF_FOND));
+        this.findingAidTitle = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.TITLE_PROPER));
         int lastIndexOfColon = this.findingAidTitle.lastIndexOf(":");
 
         if (lastIndexOfColon < 0) {
@@ -103,15 +103,15 @@ public class InstituteEadResponse {
         }
         this.findingAidTitle = this.findingAidTitle.substring(0, lastIndexOfColon);
 
-        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(SolrFields.EADID));
+        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.RECORD_ID));
 
-        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
-        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
-        this.indexDate = this.objectToString(solrDocument.getFieldValue(SolrFields.TIMESTAMP));
-        if (solrDocument.getFieldValue(SolrFields.DAO) != null) {
-            this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(SolrFields.DAO);
+        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.AI)), 0);
+        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.REPOSITORY_CODE));
+        this.indexDate = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.TIMESTAMP));
+        if (solrDocument.getFieldValue(Ead3SolrFields.DAO) != null) {
+            this.hasDigitalObject = (Boolean) solrDocument.getFieldValue(Ead3SolrFields.DAO);
         }
-        Object dao = solrDocument.getFieldValue(SolrFields.NO_OF_DAO);
+        Object dao = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO);
         if (dao != null) {
             this.numberOfDigitalObjects = Integer.parseInt(this.objectToString(dao));
         }
@@ -121,7 +121,7 @@ public class InstituteEadResponse {
             this.numberOfDigitalObjectsInDescendents = Integer.parseInt(this.objectToString(daoBelow));
         }
 
-        Object des = solrDocument.getFieldValue(SolrFields.NO_OF_DESCENDENTS);
+        Object des = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DESCENDENTS);
         if (des != null) {
             this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
         }

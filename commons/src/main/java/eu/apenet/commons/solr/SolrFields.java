@@ -2,7 +2,7 @@ package eu.apenet.commons.solr;
 
 public final class SolrFields {
 
-    public final static String ID = "id";
+    /*public final static String ID = "id";
     public final static String TITLE = "title";
     public final static String SCOPECONTENT = "scopecontent";
     public final static String OTHER = "other";
@@ -41,7 +41,7 @@ public final class SolrFields {
 
     public final static String ORDER_ID = "orderId";
     public final static String DEPTH = "depth";
-    public final static String LEAF = "leaf";
+    public final static String LEAF = "leaf";*/
     public final static String DYNAMIC_STRING_SUFFIX = "_s";
     public final static String FA_DYNAMIC_ID = "FID";
     public final static String FA_DYNAMIC = "F";
@@ -59,6 +59,8 @@ public final class SolrFields {
     /*
      * EAC-CPF
      */
+    public final static String EAC_CPF_START_DATE = "startdate";
+    public final static String EAC_CPF_END_DATE = "enddate";
     public final static String EAC_CPF_RECORD_ID = "recordId";
     public final static String EAC_CPF_ENTITY_ID = "entityId";
     public final static String EAC_CPF_NAMES = "names";
@@ -79,7 +81,6 @@ public final class SolrFields {
     public final static String EAC_CPF_NUMBER_OF_NAME_RELATIONS = "numberOfNameRelations";
     public final static String EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS = "numberOfInstitutions";
 
-    public final static String REPOSITORY_CODE = "repositoryCode";
     public final static String DUPLICATE_UNITID = "duplicateUnitid";
     public final static String EAG_NAME = "name";
     public final static String EAG_OTHER_NAMES = "otherNames";

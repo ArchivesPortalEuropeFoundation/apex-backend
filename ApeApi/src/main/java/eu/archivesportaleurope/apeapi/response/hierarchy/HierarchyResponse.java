@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.hierarchy;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.archivesportaleurope.apeapi.response.ead.*;
 import eu.apenet.commons.solr.SolrFields;
 import io.swagger.annotations.ApiModel;
@@ -38,12 +39,12 @@ public class HierarchyResponse extends InstituteEadResponse {
 
     public HierarchyResponse(SolrDocument solrDocument, QueryResponse response, int parentLevel) {
         super(solrDocument, response);
-        this.unitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE));
+        this.unitTitle = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
         
-        this.siblingPosition = Integer.parseInt(this.objectToString(solrDocument.getFieldValue(SolrFields.ORDER_ID)));
+        this.siblingPosition = this.objectToInt(solrDocument.getFieldValue(Ead3SolrFields.ORDER_ID));
 
-        this.unitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
+        this.unitId = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
+        this.scopeContent = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
         this.ancestorLevel = parentLevel;
     }
 
@@ -59,6 +60,19 @@ public class HierarchyResponse extends InstituteEadResponse {
             return o.toString();
         } else {
             return "";
+        }
+    }
+    
+    private int objectToInt(Object o) {
+        if (o != null) {
+            try {
+                int n = Integer.parseInt(o.toString());
+                return n;
+            } catch(NullPointerException|NumberFormatException ex) {
+            }
+            return 0;
+        } else {
+            return 0;
         }
     }
 

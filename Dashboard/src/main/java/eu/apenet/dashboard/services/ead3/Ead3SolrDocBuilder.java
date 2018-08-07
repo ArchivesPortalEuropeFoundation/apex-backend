@@ -181,7 +181,7 @@ public class Ead3SolrDocBuilder {
 
         this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, ead3Entity.getArchivalInstitution().getRepositorycode());
         this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
-        this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ROOT_DOC_ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper());
@@ -342,16 +342,17 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.COUNTRY, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY));
 
         cRoot.setDataElement(Ead3SolrFields.REPOSITORY_CODE, this.archdescNode.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
-        cRoot.setDataElement(Ead3SolrFields.ID, UUID.randomUUID());
+        cRoot.setDataElement(Ead3SolrFields.ID, UUID.randomUUID()); //ToDo: DB ID
 
         //global fields
         cRoot.setDataElement(Ead3SolrFields.LANGUAGE, this.archdescNode.getDataElement(Ead3SolrFields.LANGUAGE));
         cRoot.setDataElement(Ead3SolrFields.LANG_MATERIAL, this.archdescNode.getDataElement(Ead3SolrFields.LANG_MATERIAL));
         cRoot.setDataElement(Ead3SolrFields.RECORD_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID));
-        cRoot.setDataElement(Ead3SolrFields.TITLE_PROPER, this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER));
+        cRoot.setDataElement(Ead3SolrFields.TITLE_PROPER, this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER)+
+                ":"+this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID)); //ToDo: Recheck prefix
 
         cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
-        cRoot.setDataElement(Ead3SolrFields.EAD_ID, this.archdescNode.getDataElement(Ead3SolrFields.EAD_ID));
+        cRoot.setDataElement(Ead3SolrFields.ROOT_DOC_ID, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
         cRoot.setDataElement(Ead3SolrFields.UNIT_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
 //        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
@@ -840,7 +841,7 @@ public class Ead3SolrDocBuilder {
 //        eacCpf.
 //        eacMap.put(SolrFields.COUNTRY, cRoot.getDataElement(Ead3SolrFields.COUNTRY));
 //        eacMap.put(SolrFields.AI, cRoot.getDataElement(Ead3SolrFields.AI));
-        eacMap.put(SolrFields.REPOSITORY_CODE, returnAsArray(cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE).toString()));
+        eacMap.put(Ead3SolrFields.REPOSITORY_CODE, returnAsArray(cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE).toString()));
         eacMap.put(Ead3SolrFields.RECORD_ID, returnAsArray(cRoot.getDataElement(Ead3SolrFields.RECORD_ID).toString()));
 
         int partNameCount = 1;

@@ -11,14 +11,14 @@ package eu.apenet.commons.solr;
  */
 public final class Ead3SolrFields {
 
-    public final static String ID = "id"; //indexed+stored - unique
+    public final static String ID = "id"; //indexed+stored - //unique db id
     public final static String PARENT_ID = "parentId";//indexed+stored -
-    public final static String EAD_ID = "eadId";//indexed+stored -
+    public final static String ROOT_DOC_ID = "rootDocId";//indexed+stored - //same as id
 
-    public final static String TITLE_PROPER = "titleProper"; //indexed+stored - global
+    public final static String TITLE_PROPER = "titleProper"; //indexed+stored - global //old title as well as fond title
     public final static String LANGUAGE = "language"; //indexed+stored - global // from tag <languagedeclaration>
     public final static String LANG_MATERIAL = "langMaterial"; //stored - global // from tag <langmaterial>
-    public final static String RECORD_ID = "recordId"; //indexed+stored - global
+    public final static String RECORD_ID = "recordId"; //indexed+stored - global //old eadId as well as old fonds id
     public final static String RECORD_TYPE = "recordType"; //indexed+stored - fa, sg, hg - generated
 
     public final static String UNIT_ID = "unitId"; //indexed+stored - 
@@ -26,8 +26,9 @@ public final class Ead3SolrFields {
     public final static String PARENT_UNIT_ID = "parentUnitId";//indexed+stored - 
 
     public final static String UNIT_TITLE = "unitTitle"; //indexed+stored - 
-    public final static String UNIT_TITLE_LOCALTYPE = "recordType";
+    public final static String UNIT_TITLE_LOCALTYPE = "unitTitleLocalType";
     public final static String UNIT_DATE = "unitDate"; //indexed+stored - 
+    public final static String ALTERNATE_UNIT_DATE = "alternateUnitdate";
     public final static String SCOPE_CONTENT = "scopeContent"; //indexed+stored - 
     public final static String OTHER = "other";  //indexed+stored - other fields valaues, excluding unitTitle, scopeContent, titleProper, etc already stored data fields
 
@@ -62,6 +63,9 @@ public final class Ead3SolrFields {
     public final static String DUPLICATE_UNIT_ID = "duplicateUnitId";//stored
     public final static String SIBLING_POSITION = "siblingPosition";//stored
     public final static String OPEN_DATA = "openData";//indexed+stored
+    
+    public final static String ORDER_ID = "orderId";
+    public final static String LEAF = "leaf";
 
     public final static String SPELL = "spell";//indexed+stored
     public final static String OPEN_DATA_SPELL = "openDataSpell"; //indexed+stored

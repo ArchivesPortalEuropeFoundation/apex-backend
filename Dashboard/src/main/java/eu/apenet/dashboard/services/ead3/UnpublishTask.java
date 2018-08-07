@@ -52,7 +52,7 @@ public class UnpublishTask extends AbstractEad3Task {
 
     private static long deleteFromSolr(int eadId, int aiId) throws SolrServerException {
         return Ead3SolrServerHolder.getInstance().deleteByQuery("(" + Ead3SolrFields.AI_ID
-                + ":" + aiId + " AND " + Ead3SolrFields.EAD_ID + ":" + eadId + ")");
+                + ":" + aiId + " AND " + Ead3SolrFields.RECORD_ID + ":" + eadId + ")");
     }
 
 }

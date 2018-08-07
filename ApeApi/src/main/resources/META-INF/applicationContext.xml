@@ -45,7 +45,7 @@
         <!--solrUrl-->
         <constructor-arg index="0" ref="solrUrl" />
         <!--sorlCore-->
-        <constructor-arg index="1" value="eads"/>
+        <constructor-arg index="1" value="ead3s"/>
         
         <constructor-arg index="2" value="resource.properties"/>
     </bean>

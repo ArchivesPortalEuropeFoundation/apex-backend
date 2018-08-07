@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.hierarchy;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
@@ -69,7 +70,7 @@ public class HierarchyResponseSet extends ResponseSet {
 
         for (SolrDocument document : documentList) {
 
-            this.addResult(new HierarchyResponse(document, response, keyLevel.get(document.getFieldValue(SolrFields.ID).toString())));
+            this.addResult(new HierarchyResponse(document, response, keyLevel.get(document.getFieldValue(Ead3SolrFields.ID).toString())));
         }
 
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));

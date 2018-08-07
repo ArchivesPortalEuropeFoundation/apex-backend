@@ -31,7 +31,7 @@
     <!--    <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>
     </bean>-->
-    <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr/eads"/>
+    <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr/ead3s"/>
     <solr:embedded-solr-server id="ead3SolrServer" solrHome="src/test/resources/solr/ead3s"/>
     <solr:embedded-solr-server id="eacSolrServer" solrHome="src/test/resources/solr/eac-cpfs"/>
     

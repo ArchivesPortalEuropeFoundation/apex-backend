@@ -14,6 +14,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.w3c.dom.NodeList;
 
 import eu.apenet.commons.solr.AbstractSolrServerHolder;
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.EagSolrServerHolder;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
@@ -32,8 +33,8 @@ public class EagSolrPublisher extends AbstractSolrPublisher {
     public void publish(ArchivalInstitution archivalInstitution, EagPublishData publishData) throws MalformedURLException, SolrServerException, IOException {
         recordId = archivalInstitution.getAiId() + "";
         SolrInputDocument doc = new SolrInputDocument();
-        doc.addField(SolrFields.ID, archivalInstitution.getAiId());
-        doc.addField(SolrFields.REPOSITORY_CODE, archivalInstitution.getRepositorycode());
+        doc.addField(Ead3SolrFields.ID, archivalInstitution.getAiId());
+        doc.addField(Ead3SolrFields.REPOSITORY_CODE, archivalInstitution.getRepositorycode());
         doc.addField(SolrFields.EAG_NAME, archivalInstitution.getAiname());
         doc.addField(SolrFields.EAG_OTHER_NAMES, publishData.getOtherNames());
         doc.addField(SolrFields.EAG_ADDRESS, publishData.getAddress());
@@ -46,11 +47,11 @@ public class EagSolrPublisher extends AbstractSolrPublisher {
         doc.addField(SolrFields.EAG_AI_GROUPS_FACET, publishData.getAiGroupFacets());
         doc.addField(SolrFields.EAG_AI_GROUP_ID, publishData.getAiGroupIds());
         doc.addField(SolrFields.EAG_COUNTRIES, publishData.getCountries());
-        add(doc, SolrFields.COUNTRY, archivalInstitution.getCountry().getEncodedCname() + COLON + SolrValues.TYPE_GROUP + COLON + archivalInstitution.getCountry().getId());
-        doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountry().getId());
+        add(doc, Ead3SolrFields.COUNTRY, archivalInstitution.getCountry().getEncodedCname() + COLON + SolrValues.TYPE_GROUP + COLON + archivalInstitution.getCountry().getId());
+        doc.addField(Ead3SolrFields.COUNTRY_ID, archivalInstitution.getCountry().getId());
 
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-        doc.addField(SolrFields.OPEN_DATA, archivalInstitutionDao.findById(archivalInstitution.getAiId()).isOpenDataEnabled());
+        doc.addField(Ead3SolrFields.OPEN_DATA, archivalInstitutionDao.findById(archivalInstitution.getAiId()).isOpenDataEnabled());
 
         addSolrDocument(doc);
     }
@@ -120,6 +121,6 @@ public class EagSolrPublisher extends AbstractSolrPublisher {
     }
 
     public long unpublish(ArchivalInstitution archivalInstitution) throws SolrServerException, IOException {
-        return getSolrServerHolder().deleteByQuery("(" + SolrFields.ID + ":" + archivalInstitution.getAiId() + ")");
+        return getSolrServerHolder().deleteByQuery("(" + Ead3SolrFields.ID + ":" + archivalInstitution.getAiId() + ")");
     }
 }

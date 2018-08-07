@@ -45,7 +45,7 @@ import org.springframework.http.HttpStatus;
 public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
 
     @Autowired
-    public SolrClient eadSolrServer;
+    public SolrClient ead3SolrServer;
 
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
@@ -53,7 +53,7 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            EmbeddedSolrManager.setupData("/EadMockData.json", "eads", EadResponseSet.class); //eads
+            EmbeddedSolrManager.setupData("/EadMockData.json", "ead3s", EadResponseSet.class); //eads
         } catch (IOException | SolrServerException | InterruptedException ex) {
             java.util.logging.Logger.getLogger(A1_SearchResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         }

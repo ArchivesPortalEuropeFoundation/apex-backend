@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
@@ -68,7 +69,7 @@ public class EadHierarchyResponseSet extends ResponseSet {
         for (SolrDocument document : documentList) {
             try {
                 EadHierarchyResponse eadResponse = new EadHierarchyResponse(document, decendentResponse,
-                        descendantAncesMap.get(document.getFieldValue(SolrFields.ID).toString()), ancIdDocMap);
+                        descendantAncesMap.get(document.getFieldValue(Ead3SolrFields.ID).toString()), ancIdDocMap);
                 this.addEadSearchResult(eadResponse);
             } catch (Exception ex) {
                 logger.error("Ead response format error: " + document.values(), ex);
