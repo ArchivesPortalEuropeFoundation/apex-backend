@@ -338,7 +338,7 @@ public class EadSolrPublisher {
 
         doc1.setField(Ead3SolrFields.OTHER_UNIT_ID, publishData.getOtherUnitid());
         if (StringUtils.isNotBlank(publishData.getUnitid())) {
-            doc1.addField(SolrFields.DUPLICATE_UNITID, publishData.isDuplicateUnitid());
+            doc1.addField(Ead3SolrFields.DUPLICATE_UNIT_ID, publishData.isDuplicateUnitid());
         }
         add(doc1, Ead3SolrFields.SCOPE_CONTENT, publishData.getScopecontent());
         add(doc1, Ead3SolrFields.TITLE_PROPER, publishData.getFirstUnittitle());

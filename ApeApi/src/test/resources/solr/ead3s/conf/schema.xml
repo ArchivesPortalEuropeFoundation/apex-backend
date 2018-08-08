@@ -126,6 +126,7 @@
         <field name="repositoryCode" type="unitidType" indexed="true" stored="true" required="false"/>
         <field name="numberOfDescendents" type="string" indexed="false" stored="true" required="false"/>
         <field name="numberOfAncestors" type="string" indexed="false" stored="true" required="false"/>
+        <field name="numberOfDaoBelow" type="int" indexed="false" stored="true" required="false"/>
 	    
 	  	
   
