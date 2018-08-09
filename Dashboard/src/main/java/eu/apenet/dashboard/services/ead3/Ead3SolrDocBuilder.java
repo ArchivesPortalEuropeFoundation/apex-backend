@@ -108,6 +108,7 @@ public class Ead3SolrDocBuilder {
 //    private final JAXBContext ead3Context;
     private final JAXBContext localTypeContext;
     private final Unmarshaller localTypeUnmarshaller;
+    private boolean exists = false;
 
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
@@ -124,6 +125,9 @@ public class Ead3SolrDocBuilder {
         this.ead3Entity = ead3Entity;
         this.openDataEnable = ead3Entity.getArchivalInstitution().isOpenDataEnabled();
         this.ead3 = ead3;
+        if (ead3Entity.getEadContent() != null) {
+            exists = true;
+        }
         jXPathContext = JXPathContext.newContext(this.ead3);
         try {
             Localtypedeclaration localTypeDeclaration = this.retrieveLocaltypedeclaration();
@@ -143,23 +147,25 @@ public class Ead3SolrDocBuilder {
         }
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
-        if (!this.cLevelEntities.isEmpty()) {
-            //save updated ead3Entity
-            try {
-                JpaUtil.beginDatabaseTransaction();
-                this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
-                
-                //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
-                for (CLevel cls : this.cLevelEntities) {
-                    if (cls.getParent() != null) {
-                        cls.setParentId(cls.getParent().getId());
+        if (!exists) {
+            if (!this.cLevelEntities.isEmpty()) {
+                //save updated ead3Entity
+                try {
+                    JpaUtil.beginDatabaseTransaction();
+                    this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
+
+                    //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
+                    for (CLevel cls : this.cLevelEntities) {
+                        if (cls.getParent() != null) {
+                            cls.setParentId(cls.getParent().getId());
+                        }
                     }
+                    this.ead3Entity.setcLevels(this.cLevelEntities);
+                    this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
+                    JpaUtil.commitDatabaseTransaction();
+                } catch (Exception ex) {
+                    LOGGER.error("DB exception!", ex);
                 }
-                this.ead3Entity.setcLevels(this.cLevelEntities);
-                this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
-                JpaUtil.commitDatabaseTransaction();
-            } catch (Exception ex) {
-                LOGGER.error("DB exception!", ex);
             }
         }
 
@@ -180,7 +186,7 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, ead3Entity.getArchivalInstitution().getCountry().getCname() + "|" + ead3Entity.getArchivalInstitution().getCountry().getId());
 
         this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, ead3Entity.getArchivalInstitution().getRepositorycode());
-        this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ID, SolrValues.EAD3_PREFIX + ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.EAD_ID, ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, 0);
@@ -193,8 +199,47 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setTransientDataElement("script", this.retrieveControlScript());
         retrieveAgency();
 
-        this.processArchdesc();
+        if (!exists) {
+            this.processArchdesc();
+        } else {
+            List<CLevel> firstLevel = DAOFactory.instance().getCLevelDAO().findTopEad3CLevels(ead3Entity.getId(), 0, Integer.MAX_VALUE);
+            for (CLevel c : firstLevel) {
+                SolrDocNode self = new SolrDocNode();
+                self.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + c.getId());
+                processBDClevel(this.archdescNode, self, 0);
+            }
+        }
 
+    }
+
+    private void processBDClevel(SolrDocNode root, SolrDocNode self, int orderId) {
+
+        CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(Long.parseLong(self.getDataElement(Ead3SolrFields.ID).toString().substring(1)));
+
+        self.setDataElement(Ead3SolrFields.PARENT_ID, root.getDataElement(Ead3SolrFields.ID));
+        self.setDataElement(Ead3SolrFields.EAD_ID, this.archdescNode.getDataElement(Ead3SolrFields.EAD_ID));
+        self.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
+        self.setDataElement(Ead3SolrFields.AI, this.archdescNode.getDataElement(Ead3SolrFields.AI));
+        self.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
+        self.setDataElement(Ead3SolrFields.COUNTRY, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY));
+        self.setDataElement(Ead3SolrFields.COUNTRY_ID, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY_ID));
+        self.setDataElement(Ead3SolrFields.COUNTRY_NAME, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY_NAME));
+        root.setChild(self);
+
+        if (!cLevel.isLeaf()) {
+
+            List<CLevel> children = DAOFactory.instance().getCLevelDAO().findChilds(cLevel.getId());
+
+            for (CLevel child : children) {
+                SolrDocNode childClevel = new SolrDocNode();
+                childClevel.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + child.getId());
+                processBDClevel(self, childClevel, orderId++);
+            }
+            orderId = 0;
+        }
+        self.setDataElement(Ead3SolrFields.UNIT_ID, cLevel.getUnitid());
+        self.setDataElement(Ead3SolrFields.UNIT_TITLE, cLevel.getUnittitle());
+        String xml = cLevel.getXml();
     }
 
     private void processArchdesc() {
@@ -435,6 +480,7 @@ public class Ead3SolrDocBuilder {
         cLevelEntity.setEad3(ead3Entity);
         JpaUtil.getEntityManager().persist(cLevelEntity);
         this.cLevelEntities.add(cLevelEntity);
+        cRoot.setDataElement(Ead3SolrFields.ID, cLevelEntity.getId());
         //ead3Entity.addcLevel(cLevelEntity);
 
         return cRoot;
