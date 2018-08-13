@@ -98,7 +98,8 @@
     </types>
     <fields>
         <field name="id" type="string" indexed="true" stored="true" required="true"/>	
-        <field name="eadId" type="string" indexed="true" stored="true" required="true"/>
+        <!--<field name="eadId" type="string" indexed="true" stored="true" required="true"/>-->
+        <field name="rootDocId" type="string" indexed="true" stored="true" required="false"/>
         <!-- Fields that are used for search and highlighted
         According to http://wiki.apache.org/solr/FieldOptionsByUseCase
         fields with highlighting has termVectors, termPositions, termOffsets
