@@ -126,6 +126,21 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
     }
 
     @Override
+    public CLevel getCLevelByUnitId(String unitId, String repositoryCode, String ead3Id) {
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.eq("clevel.unitid", unitId));
+        criteria.createAlias("clevel.ead3", "ead3");
+        criteria.add(Restrictions.eq("ead3.id", Integer.parseInt(ead3Id)));
+        criteria.setMaxResults(1);
+        List<CLevel> results = criteria.list();
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public List<CLevel> getCLevel(String repositoryCode, Class<? extends AbstractContent> clazz, String eadid, String unitid) {
         String varName = "findingAid";
         if (FindingAid.class.equals(clazz)) {
