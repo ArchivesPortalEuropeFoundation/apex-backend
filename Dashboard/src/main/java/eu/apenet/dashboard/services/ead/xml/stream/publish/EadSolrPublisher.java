@@ -53,7 +53,7 @@ public class EadSolrPublisher {
     private String language;
     private String archdesc_langmaterial;
     private String eadidstring;
-    private String fond;
+    private String eadTitle;
     private String unitidfond;
     private EadDAO eadDao;
     private Ead ead;
@@ -71,7 +71,7 @@ public class EadSolrPublisher {
     public EadSolrPublisher(Ead ead) {
         this.ead = ead;
         eadidstring = XMLUtils.removeUnusedCharacters(ead.getEadid());
-        fond = XMLUtils.removeUnusedCharacters(ead.getTitle());
+        eadTitle = XMLUtils.removeUnusedCharacters(ead.getTitle());
         xmlType = XmlType.getContentType(ead);
         eadDao = DAOFactory.instance().getEadDAO();
         TopicMappingDAO topicMappingDAO = DAOFactory.instance().getTopicMappingDAO();
@@ -341,7 +341,7 @@ public class EadSolrPublisher {
             doc1.addField(Ead3SolrFields.DUPLICATE_UNIT_ID, publishData.isDuplicateUnitid());
         }
         add(doc1, Ead3SolrFields.SCOPE_CONTENT, publishData.getScopecontent());
-        add(doc1, Ead3SolrFields.TITLE_PROPER, publishData.getFirstUnittitle());
+        add(doc1, Ead3SolrFields.UNIT_TITLE, publishData.getFirstUnittitle());
         if (publishData.isArchdesc()) {
             add(doc1, Ead3SolrFields.LEVEL_NAME, SolrValues.LEVEL_ARCHDESC);
         } else {
@@ -391,7 +391,7 @@ public class EadSolrPublisher {
 //        doc1.addField(Ead3SolrFields.LEAF, publishData.isLeaf());
 
 //        add(doc1, SolrFields.FOND_ID, solrPrefix + ead.getId());
-//        add(doc1, SolrFields.TITLE_OF_FOND, fond + COLON + solrPrefix + ead.getId());
+        add(doc1, Ead3SolrFields.TITLE_PROPER, eadTitle + COLON + solrPrefix + ead.getId());
         add(doc1, Ead3SolrFields.RECORD_TYPE, solrType);
         Set<String> topics = new HashSet<String>();
         topics.addAll(topicsBySourceGuides);
@@ -407,7 +407,7 @@ public class EadSolrPublisher {
             String result = "";
             String id = null;
             if (i == 0) {
-                result = fond + COLON + SolrValues.TYPE_GROUP + COLON + solrPrefix + ead.getId();
+                result = eadTitle + COLON + SolrValues.TYPE_GROUP + COLON + solrPrefix + ead.getId();
                 id = solrPrefix + ead.getId();
             } else {
                 result = levelInfo.getUnittitle() + COLON + SolrValues.TYPE_GROUP + COLON;
