@@ -138,7 +138,7 @@
                 unitTitle^2.5 scopeContent^1.3 other^0.5 unitDate^0.4
             </str>
             <str name="fl">
-                id,unitTitle,scopeContent,unitDate,titleProper,unitId,countryName,aiName,dao,levelName,titleProper,otherUnitId,daoType,siblingPosition,orderId,recordId,repositoryCode,duplicateUnitid,numberOfDecendents,numberOfAncestors
+                id,unitTitle,scopeContent,unitDate,titleProper,recordType,unitId,country,ai,dao,levelName,titleProper,otherUnitId,daoType,siblingPosition,orderId,recordId,repositoryCode,duplicateUnitid,numberOfDecendents,numberOfAncestors,rootDocId
             </str>
             <str name="q.alt">*:*</str>
             <str name="hl.fl">unitTitle scopeContent other alternateUnitdate</str>
