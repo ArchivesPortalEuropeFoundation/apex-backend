@@ -146,7 +146,7 @@ public enum FacetType {
         result.add(new ListFacetSettings(FacetType.AI));
         result.add(new ListFacetSettings(FacetType.TOPIC, true));
         result.add(new ListFacetSettings(FacetType.TYPE));
-        result.add(new ListFacetSettings(FacetType.LEVEL));
+        result.add(new ListFacetSettings(FacetType.EAD3_LEVEL));
         result.add(new ListFacetSettings(FacetType.DAO));
         result.add(new ListFacetSettings(FacetType.ROLEDAO));
         result.add(new ListFacetSettings(FacetType.DATE_TYPE));

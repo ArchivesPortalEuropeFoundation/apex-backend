@@ -107,7 +107,7 @@ public class Ead3FacetFields {
         for (int i = 0; i < counts.size(); i++) {
             NameCountPair pair = new NameCountPair();
             FacetField.Count countObj = counts.get(i);
-            String[] arr = countObj.getName().split("\\|");
+            String[] arr = countObj.getName().split(":");
             pair.setName(arr[0]);
             pair.setId(arr[arr.length - 1]);
             pair.setFrequency(countObj.getCount());
