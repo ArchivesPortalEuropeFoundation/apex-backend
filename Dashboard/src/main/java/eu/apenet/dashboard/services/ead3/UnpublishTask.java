@@ -7,6 +7,7 @@ package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.Ead3SolrServerHolder;
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.dao.Ead3DAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -52,7 +53,7 @@ public class UnpublishTask extends AbstractEad3Task {
 
     private static long deleteFromSolr(int eadId, int aiId) throws SolrServerException {
         return Ead3SolrServerHolder.getInstance().deleteByQuery("(" + Ead3SolrFields.AI_ID
-                + ":" + aiId + " AND " + Ead3SolrFields.RECORD_ID + ":" + eadId + ")");
+                + ":" + aiId + " AND " + Ead3SolrFields.ROOT_DOC_ID + ":" + SolrValues.EAD3_PREFIX + eadId + ")");
     }
 
 }

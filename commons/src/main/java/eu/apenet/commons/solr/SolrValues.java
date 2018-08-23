@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 public final class SolrValues {
 
     public static final String ESCAPING_CHARACTER = "\\\\";
+    public final static String EAD3_PREFIX = "E";
     public final static String HG_PREFIX = "H";
     public final static String FA_PREFIX = "F";
     public final static String SG_PREFIX = "S";

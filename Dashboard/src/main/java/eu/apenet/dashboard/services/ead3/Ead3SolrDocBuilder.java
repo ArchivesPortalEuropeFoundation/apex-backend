@@ -6,7 +6,6 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.ItemNotFoundException;
@@ -108,6 +107,8 @@ public class Ead3SolrDocBuilder {
 //    private final JAXBContext ead3Context;
     private final JAXBContext localTypeContext;
     private final Unmarshaller localTypeUnmarshaller;
+    private boolean exists = false;
+    private static final String DOC_TYPE = "fa-ead3";
 
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
@@ -124,6 +125,9 @@ public class Ead3SolrDocBuilder {
         this.ead3Entity = ead3Entity;
         this.openDataEnable = ead3Entity.getArchivalInstitution().isOpenDataEnabled();
         this.ead3 = ead3;
+        if (ead3Entity.getEadContent() != null) {
+            exists = true;
+        }
         jXPathContext = JXPathContext.newContext(this.ead3);
         try {
             Localtypedeclaration localTypeDeclaration = this.retrieveLocaltypedeclaration();
@@ -148,22 +152,28 @@ public class Ead3SolrDocBuilder {
             try {
                 JpaUtil.beginDatabaseTransaction();
                 this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
-                
+
                 //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
                 for (CLevel cls : this.cLevelEntities) {
                     if (cls.getParent() != null) {
                         cls.setParentId(cls.getParent().getId());
                     }
                 }
-                this.ead3Entity.setcLevels(this.cLevelEntities);
+                if (!exists) {
+                    this.ead3Entity.setcLevels(this.cLevelEntities);
+                }
                 this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
                 JpaUtil.commitDatabaseTransaction();
             } catch (Exception ex) {
                 LOGGER.error("DB exception!", ex);
             }
+//            List<CLevel> levels = DAOFactory.instance().getCLevelDAO().getCLevelWithEad3Id(this.ead3Entity.getArchivalInstitution().getRepositorycode(), this.ead3Entity.getIdentifier(), null);
+//            SolrDocNode processedDocNode = new SolrRootDocNodeInit(archdescNode, levels).getProcessedNode();
+//            solrDocTree = new SolrDocTree(processedDocNode);
         }
 
         return solrDocTree;
+
     }
 
     private void retrieveArchdescMain() {
@@ -180,13 +190,14 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, ead3Entity.getArchivalInstitution().getCountry().getCname() + ":" + ead3Entity.getArchivalInstitution().getCountry().getId());
 
         this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, ead3Entity.getArchivalInstitution().getRepositorycode());
-        this.archdescNode.setDataElement(Ead3SolrFields.ID, ead3.getId());
-        this.archdescNode.setDataElement(Ead3SolrFields.ROOT_DOC_ID, ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ID, SolrValues.EAD3_PREFIX + ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ROOT_DOC_ID, SolrValues.EAD3_PREFIX + ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, 0);
-        this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper());
+        this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper() + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retrieveRecordId());
+        this.archdescNode.setDataElement(Ead3SolrFields.RECORD_TYPE, Ead3SolrDocBuilder.DOC_TYPE); //ToDo: auto find the type?
         this.archdescNode.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
 
         this.archdescNode.setTransientDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
@@ -318,6 +329,7 @@ public class Ead3SolrDocBuilder {
 //        String cClassName = cElement.getClass().getName();
 //        String cPostFix = cClassName.replace("C", "");
 
+        JpaUtil.beginDatabaseTransaction();
         CLevel cLevelEntity = new CLevel();
         cLevelEntity.setOrderId(orderId);
         //cLevelEntity.setEad3(ead3Entity);
@@ -325,13 +337,30 @@ public class Ead3SolrDocBuilder {
 //        if (parentC != null) {
 //            cLevelEntity.setParentClId(parentC.getId());
 //        }
-        JpaUtil.getEntityManager().persist(cLevelEntity);
 
+//to xml
+        Marshaller marshaller = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+        ((C) cElement).getTheadAndC().clear(); //remove all child c
+        try {
+            marshaller = this.cLevelContext.createMarshaller();
+//            QName qName = new QName("c");
+//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
+
+            marshaller.marshal(cElement, baos);
+            String cLevelXml = baos.toString("UTF-8");
+            cLevelEntity.setXml(cLevelXml);
+//            System.out.println("Clevel xml: " + cLevelXml);
+
+        } catch (JAXBException | UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
+        cLevelEntity.setEad3(ead3Entity);
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
-
         cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
         cLevelEntity.setUnitid((String) this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + (String) didMap.get(Ead3SolrFields.UNIT_ID));
-
+        
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
@@ -342,14 +371,13 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.COUNTRY, this.archdescNode.getDataElement(Ead3SolrFields.COUNTRY));
 
         cRoot.setDataElement(Ead3SolrFields.REPOSITORY_CODE, this.archdescNode.getDataElement(Ead3SolrFields.REPOSITORY_CODE));
-        cRoot.setDataElement(Ead3SolrFields.ID, UUID.randomUUID()); //ToDo: DB ID
 
         //global fields
         cRoot.setDataElement(Ead3SolrFields.LANGUAGE, this.archdescNode.getDataElement(Ead3SolrFields.LANGUAGE));
         cRoot.setDataElement(Ead3SolrFields.LANG_MATERIAL, this.archdescNode.getDataElement(Ead3SolrFields.LANG_MATERIAL));
         cRoot.setDataElement(Ead3SolrFields.RECORD_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID));
-        cRoot.setDataElement(Ead3SolrFields.TITLE_PROPER, this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER)+
-                ":"+this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID)); //ToDo: Recheck prefix
+        cRoot.setDataElement(Ead3SolrFields.RECORD_TYPE, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_TYPE));
+        cRoot.setDataElement(Ead3SolrFields.TITLE_PROPER, this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER)); //ToDo: Recheck prefix
 
         cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
         cRoot.setDataElement(Ead3SolrFields.ROOT_DOC_ID, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
@@ -369,6 +397,19 @@ public class Ead3SolrDocBuilder {
 
         int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO).toString());
         int currentNumberOfDescendents = 0;
+
+        if (!exists) {
+            JpaUtil.getEntityManager().persist(cLevelEntity);
+            JpaUtil.commitDatabaseTransaction();
+        } else {
+            cLevelEntity = DAOFactory.instance().getCLevelDAO().getCLevelByUnitId(cRoot.getDataElement(Ead3SolrFields.UNIT_ID).toString(),
+                    cRoot.getDataElement(Ead3SolrFields.REPOSITORY_CODE).toString(),
+                    cRoot.getDataElement(Ead3SolrFields.ROOT_DOC_ID).toString().substring(1));
+            cRoot.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + cLevelEntity.getId());
+        }
+        
+        cRoot.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + cLevelEntity.getId()); //ToDo: DB ID
+        
         Iterator it = context.iterate("*");
 
         StringBuilder otherStrBuilder = new StringBuilder();
@@ -414,28 +455,10 @@ public class Ead3SolrDocBuilder {
         if (otherStrBuilder.length() > 0) {
             cRoot.setDataElement(Ead3SolrFields.OTHER, otherStrBuilder.toString());
         }
-
-        //to xml
-        Marshaller marshaller = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
-        ((C) cElement).getTheadAndC().clear(); //remove all child c
-        try {
-            marshaller = this.cLevelContext.createMarshaller();
-//            QName qName = new QName("c");
-//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
-
-            marshaller.marshal(cElement, baos);
-            String cLevelXml = baos.toString("UTF-8");
-            cLevelEntity.setXml(cLevelXml);
-//            System.out.println("Clevel xml: " + cLevelXml);
-
-        } catch (JAXBException | UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        if (!exists) {
+            JpaUtil.getEntityManager().persist(cLevelEntity);
+            this.cLevelEntities.add(cLevelEntity);
         }
-//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
-        cLevelEntity.setEad3(ead3Entity);
-        JpaUtil.getEntityManager().persist(cLevelEntity);
-        this.cLevelEntities.add(cLevelEntity);
         //ead3Entity.addcLevel(cLevelEntity);
 
         return cRoot;

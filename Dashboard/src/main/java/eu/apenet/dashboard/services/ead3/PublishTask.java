@@ -60,7 +60,9 @@ public class PublishTask extends AbstractEad3Task {
                 long numberOfDocs = publisher.publish(tree);
                 publisher.printTree(tree);
 
-                ead3Entity.setTotalNumberOfDaos(Long.parseLong(tree.getRoot().getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString()));
+                if (tree.getRoot().getData().containsKey(Ead3SolrFields.NUMBER_OF_DAO)) {
+                    ead3Entity.setTotalNumberOfDaos(Long.parseLong(tree.getRoot().getDataElement(Ead3SolrFields.NUMBER_OF_DAO).toString()));
+                }
                 ead3Entity.setTotalNumberOfUnits(numberOfDocs);
                 ead3Entity.setPublished(true);
 
