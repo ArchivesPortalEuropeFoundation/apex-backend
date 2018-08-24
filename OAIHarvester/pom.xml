@@ -4,7 +4,7 @@
     <parent>
         <groupId>eu.archivesportaleurope.backend</groupId>
         <artifactId>backend-project</artifactId>
-        <version>2018-08</version>
+        <version>2018-09-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>OAIHarvester</artifactId>
