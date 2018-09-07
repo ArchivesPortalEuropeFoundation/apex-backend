@@ -68,6 +68,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,6 +110,7 @@ public class Ead3SolrDocBuilder {
     private final Unmarshaller localTypeUnmarshaller;
     private boolean exists = false;
     private static final String DOC_TYPE = "fa-ead3";
+    public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
 
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
@@ -199,6 +201,10 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retrieveRecordId());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_TYPE, Ead3SolrDocBuilder.DOC_TYPE); //ToDo: auto find the type?
         this.archdescNode.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
+        this.archdescNode.setDataElement(SolrValues.FA_PREFIX + "0_s", this.retrieveTitleProper() + ":" + SolrValues.TYPE_GROUP + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        this.archdescNode.setDataElement(SolrValues.FA_PREFIX + "ID0_s", this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        this.archdescNode.setDataElement(SolrValues.AI_PREFIX + "ID0_s", "A" + ead3Entity.getArchivalInstitution().getAiId());
+        this.archdescNode.setDataElement(SolrValues.AI_PREFIX + "0_s", ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
 
         this.archdescNode.setTransientDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
         this.archdescNode.setTransientDataElement("script", this.retrieveControlScript());
@@ -339,28 +345,12 @@ public class Ead3SolrDocBuilder {
 //        }
 
 //to xml
-        Marshaller marshaller = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
-        ((C) cElement).getTheadAndC().clear(); //remove all child c
-        try {
-            marshaller = this.cLevelContext.createMarshaller();
-//            QName qName = new QName("c");
-//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
-
-            marshaller.marshal(cElement, baos);
-            String cLevelXml = baos.toString("UTF-8");
-            cLevelEntity.setXml(cLevelXml);
-//            System.out.println("Clevel xml: " + cLevelXml);
-
-        } catch (JAXBException | UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
 //        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
         cLevelEntity.setEad3(ead3Entity);
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
         cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
-        cLevelEntity.setUnitid((String) this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + (String) didMap.get(Ead3SolrFields.UNIT_ID));
-        
+        cLevelEntity.setUnitid((String) parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
+
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
@@ -382,7 +372,7 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
         cRoot.setDataElement(Ead3SolrFields.ROOT_DOC_ID, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
-        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
+        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
 //        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
         cRoot.setDataElement(Ead3SolrFields.START_DATE, didMap.get(Ead3SolrFields.START_DATE));
@@ -394,6 +384,23 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.DAO, didMap.get(Ead3SolrFields.DAO));
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
         cRoot.setDataElement(Ead3SolrFields.PARENT_UNIT_ID, parent.getDataElement(Ead3SolrFields.PARENT_UNIT_ID));
+        cRoot.setDataElement(SolrValues.FA_PREFIX + "0_s", this.archdescNode.getDataElement(SolrValues.FA_PREFIX + "0_s"));
+        cRoot.setDataElement(SolrValues.FA_PREFIX + "ID0_s", this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+
+        //need to change the implementation to retrieve the parent dynamic fs
+        int numberOfAncestors = (int) cRoot.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS);
+
+        for (int i = 1; i < numberOfAncestors - 1; i++) {
+            cRoot.setDataElement(SolrValues.FA_PREFIX + i + "_s", parent.getDataElement(SolrValues.FA_PREFIX + i + "_s"));
+            cRoot.setDataElement(SolrValues.FA_PREFIX + "ID" + i + "_s", parent.getDataElement(SolrValues.FA_PREFIX + "ID" + i + "_s"));
+        }
+
+        if (numberOfAncestors > 1) {
+            cRoot.setDataElement(SolrValues.FA_PREFIX + (numberOfAncestors - 1) + "_s", parent.getTransientDataElement(SolrValues.FA_PREFIX + (numberOfAncestors - 1) + "_s"));
+            cRoot.setDataElement(SolrValues.FA_PREFIX + "ID" + (numberOfAncestors - 1) + "_s", parent.getTransientDataElement(SolrValues.FA_PREFIX + "ID" + (numberOfAncestors - 1) + "_s"));
+        }
+        cRoot.setDataElement(SolrValues.AI_PREFIX + "ID0_s", "A" + ead3Entity.getArchivalInstitution().getAiId());
+        cRoot.setDataElement(SolrValues.AI_PREFIX + "0_s", ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
 
         int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO).toString());
         int currentNumberOfDescendents = 0;
@@ -407,9 +414,12 @@ public class Ead3SolrDocBuilder {
                     cRoot.getDataElement(Ead3SolrFields.ROOT_DOC_ID).toString().substring(1));
             cRoot.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + cLevelEntity.getId());
         }
-        
+
         cRoot.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + cLevelEntity.getId()); //ToDo: DB ID
-        
+
+        cRoot.setTransientDataElement(SolrValues.FA_PREFIX + numberOfAncestors + "_s", NUMBERFORMAT.format(orderId) + ":" + didMap.get(Ead3SolrFields.UNIT_TITLE) + ":" + SolrValues.TYPE_GROUP + ":" + cRoot.getDataElement(Ead3SolrFields.ID));
+        cRoot.setTransientDataElement(SolrValues.FA_PREFIX + "ID" + numberOfAncestors + "_s", cRoot.getDataElement(Ead3SolrFields.ID));
+
         Iterator it = context.iterate("*");
 
         StringBuilder otherStrBuilder = new StringBuilder();
@@ -445,6 +455,22 @@ public class Ead3SolrDocBuilder {
 
         if (cRoot.getChild() == null) {
             cLevelEntity.setLeaf(true);
+        }
+        Marshaller marshaller = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+        ((C) cElement).getTheadAndC().clear(); //remove all child c
+        try {
+            marshaller = this.cLevelContext.createMarshaller();
+//            QName qName = new QName("c");
+//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
+
+            marshaller.marshal(cElement, baos);
+            String cLevelXml = baos.toString("UTF-8");
+            cLevelEntity.setXml(cLevelXml);
+//            System.out.println("Clevel xml: " + cLevelXml);
+
+        } catch (JAXBException | UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         cRoot.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
