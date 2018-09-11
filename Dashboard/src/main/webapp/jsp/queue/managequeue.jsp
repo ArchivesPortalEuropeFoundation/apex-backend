@@ -8,7 +8,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(".checkboxLabel").each(function(index){
-            console.log($(this).html()+index);
  
                     if ($(this).html() === "EAD3") {
                         $(this).html("<s:property value="getText('content.message.fa.ead3')"/>");

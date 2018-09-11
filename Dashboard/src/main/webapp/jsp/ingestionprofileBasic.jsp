@@ -29,7 +29,7 @@
         <%--<c:if test="${associatedFiletype == 4}">--%>
         
             <tr id="extractEacObject">
-                <td><s:label for="extractEac" value="Extract Eac-CPF form "/></td>
+                <td><s:label for="extractEac" key="content.message.ead3.eac.extract"/></td>
                 <td><s:checkbox id="extractEac" name="extractEacFromEad3"/></td>
             </tr>
         <%--</c:if>--%>
