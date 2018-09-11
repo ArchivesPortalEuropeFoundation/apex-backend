@@ -7,6 +7,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $(".checkboxLabel").each(function(index){
+            console.log($(this).html()+index);
+ 
+                    if ($(this).html() === "EAD3") {
+                        $(this).html("<s:property value="getText('content.message.fa.ead3')"/>");
+
+                    } else if ($(this).html() === "Finding Aid") {
+                        $(this).html("<s:property value="getText('content.message.ead2002.fa')"/>");
+                    } 
+                    else{}
+            });
         $("#reindex_all").click(function () {
             msg = "<s:property value="getText('content.message.reindex.comfirm')" />" + "\n";
 
@@ -17,10 +28,10 @@
                 if ($(this).attr("checked")) {
                     checked = true;
                     if ($(this).val() === "EAD3") {
-                        msg += " <s:property value="getText('content.message.ead3')"/> : " + "${numberOfEad3s}" + ". ";
+                        msg += " <s:property value="getText('content.message.fa.ead3')"/> : " + "${numberOfEad3s}" + ". ";
 
                     } else if ($(this).val() === "Finding Aid") {
-                        msg += " <s:property value="getText('content.message.fa')"/> : " + "${numberOfFindingAids}" + ". ";
+                        msg += " <s:property value="getText('content.message.ead2002.fa')"/> : " + "${numberOfFindingAids}" + ". ";
                     } else if ($(this).val() === "Holdings Guide") {
                         msg += " <s:property value="getText('content.message.hg')"/> : " + "${numberOfHoldingsGuide}" + ". ";
                     } else if ($(this).val() === "Source Guide") {
