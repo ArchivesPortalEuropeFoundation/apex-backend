@@ -108,7 +108,7 @@ public class Ead3SolrDocBuilder {
     private final JAXBContext localTypeContext;
     private final Unmarshaller localTypeUnmarshaller;
     private boolean exists = false;
-    private static final String DOC_TYPE = "fa-ead3";
+    private static final String DOC_TYPE = "ead3";
 
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
