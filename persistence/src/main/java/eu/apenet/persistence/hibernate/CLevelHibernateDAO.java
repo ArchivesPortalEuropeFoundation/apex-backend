@@ -18,6 +18,7 @@ import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.util.ApeUtil;
+import java.util.ArrayList;
 
 public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> implements CLevelDAO {
 
@@ -200,19 +201,41 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 //        }
 //
 //        return results;
+    /*
     @Override
     public List<CLevel> getCLevelWithEad3Id(String repositoryCode, String ead3Id, String unitid) {
+        
+        LOG.debug("here: "+repositoryCode+" ead3Id:"+ead3Id+" unitid:"+unitid);
         Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
+
         criteria.add(Restrictions.eq("unitid", unitid));
-        criteria.createAlias("clevel.ead3.", "ead3");
+//        criteria.createAlias("clevel.ead3", "ead3");
         criteria.add(Restrictions.eq("ead3.identifier", ead3Id));
-        criteria.createAlias("clevel.ead3.archivalInstitution", "archivalInstitution");
-        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", repositoryCode));
+//        criteria.createAlias("clevel.ead3.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("ead3.archivalInstitution.repositorycode", repositoryCode));
         criteria.setMaxResults(2);
-        criteria.addOrder(Order.asc("clevel.orderId"));
+        criteria.addOrder(Order.asc("orderId")); //clevel.
         List<CLevel> results = criteria.list();
         return results;
     }
+    //*/
+    //*
+    @Override
+    public List<CLevel> getCLevelWithEad3Id(String repositoryCode, String ead3Id, String unitid) {
+        
+        LOG.debug("here: "+repositoryCode+" ead3Id:"+ead3Id+" unitid:"+unitid);
+        String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.ead3 ead3 JOIN ead3.archivalInstitution archivalInstitution WHERE clevel.unitid  = :unitid AND ead3.identifier= :identifier AND ead3.published = true AND archivalInstitution.repositorycode = :repoCode";
+        TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
+        query.setParameter("unitid", unitid);
+        query.setParameter("identifier", ApeUtil.decodeSpecialCharacters(ead3Id));
+        query.setParameter("repoCode", ApeUtil.decodeRepositoryCode(repositoryCode));
+        query.setMaxResults(1);
+//        List<CLevel> results = new ArrayList<>();
+        List<CLevel> results = query.getResultList();
+        
+        return results;
+    }
+    //*/
 
     @Override
     public Long countCLevels(Class<? extends AbstractContent> clazz, Integer id) {
