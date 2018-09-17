@@ -29,17 +29,19 @@ public class DeleteTask extends AbstractEad3Task {
             try {
                 Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
                 CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
-                
+
                 JpaUtil.beginDatabaseTransaction();
                 ead3 = ead3DAO.findById(ead3.getId());
                 Set<CLevel> clevels = ead3.getcLevels();
-                
+
                 for (CLevel c : clevels) {
                     c.setParentId(null);
                 }
                 cLevelDAO.store(clevels);
                 JpaUtil.commitDatabaseTransaction();
                 ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + ead3.getPath());
+                String[] nameAndExt = ead3.getPath().split("\\.(?=[^\\.]+$)");
+                ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + nameAndExt[0] + "_converted_." + nameAndExt[1]);
                 ead3DAO.delete(ead3);
                 logAction(ead3);
             } catch (Exception e) {

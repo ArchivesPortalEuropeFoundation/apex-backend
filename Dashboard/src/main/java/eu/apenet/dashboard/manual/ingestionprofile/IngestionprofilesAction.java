@@ -464,12 +464,12 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     private void setUp() {
         //basic preferences
-        associatedFiletypes.add(new SelectItem(XmlType.EAD_FA.getIdentifier(), getText("content.message.fa")));
+        associatedFiletypes.add(new SelectItem(XmlType.EAD_FA.getIdentifier(), getText("content.message.ead2002.fa")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_HG.getIdentifier(), getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAC_CPF.getIdentifier(), getText("content.message.ec")));
 //        Hide Ead3
-        associatedFiletypes.add(new SelectItem(XmlType.EAD_3.getIdentifier(), getText("content.message.ead3")));
+        associatedFiletypes.add(new SelectItem(XmlType.EAD_3.getIdentifier(), getText("content.message.fa.ead3")));
         uploadedFileActions.add(new SelectItem("1", getText("ingestionprofiles.upload.convertValidatePublish")));
         if (convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)) {
             uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
