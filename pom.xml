@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.archivesportaleurope.backend</groupId>
     <artifactId>backend-project</artifactId>
-    <version>2018-09-SNAPSHOT</version>
+    <version>2018-09</version>
     <packaging>pom</packaging>
     <name>Backend Project</name>
     <description>Maven Project for building the Dashboard/OAI-PMH server and common libraries</description>
     <scm>
         <connection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-backend.git</connection>
         <developerConnection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-backend.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>backend-project-2018-09</tag>
     </scm>
     <!--<scm>
         <connection>scm:svn:https://build.archivesportaleurope.net/svn/apex/branches/backend-project-2.5</connection>
