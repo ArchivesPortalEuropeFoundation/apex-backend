@@ -3,7 +3,6 @@ package eu.apenet.commons.types;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.EacCpf;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -19,8 +18,8 @@ public enum XmlType {
     EAD_HG(1, "Holdings Guide", HoldingsGuide.class, "hg", SolrValues.HG_PREFIX),
     EAC_CPF(2, "EAC-CPF", EacCpf.class, "ec", null),
     EAD_SG(3, "Source Guide", SourceGuide.class, "sg", SolrValues.SG_PREFIX),
-    EAD_3(4, "EAD3", Ead3.class, "ead3", ""); //to-do
-    
+    EAD_3(4, "EAD3", Ead3.class, "ead3", SolrValues.EAD3_PREFIX);
+
 
     private final String resourceName;
     private final int identifier;
@@ -96,14 +95,11 @@ public enum XmlType {
     public static XmlType getContentType(AbstractContent content) {
         if (content instanceof FindingAid) {
             return XmlType.EAD_FA;
-        }
-        else if (content instanceof HoldingsGuide) {
+        } else if (content instanceof HoldingsGuide) {
             return XmlType.EAD_HG;
-        }
-        else if (content instanceof SourceGuide) {
+        } else if (content instanceof SourceGuide) {
             return XmlType.EAD_SG;
-        }
-        else if (content instanceof EacCpf) {
+        } else if (content instanceof EacCpf) {
             return XmlType.EAC_CPF;
         } else if (content instanceof Ead3) {
             return XmlType.EAD_3;
