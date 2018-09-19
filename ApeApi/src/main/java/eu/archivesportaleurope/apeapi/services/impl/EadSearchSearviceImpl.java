@@ -382,7 +382,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
         String docType = document.getFieldValue(Ead3SolrFields.RECORD_TYPE).toString();
         String[] typePrefix = {"", ""};
-        if (docType.equals(SolrValues.FA_TYPE)) {
+        if (docType.equals(SolrValues.FA_TYPE) || docType.equals(SolrValues.E3_FA_TYPE)) {
             typePrefix[0] = SolrFields.FA_DYNAMIC_ID;
             typePrefix[1] = SolrFields.FA_DYNAMIC;
         } else if (docType.equals(SolrValues.HG_TYPE)) {

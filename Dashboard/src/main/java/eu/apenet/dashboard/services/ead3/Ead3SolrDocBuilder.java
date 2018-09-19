@@ -6,6 +6,7 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.ItemNotFoundException;
@@ -190,11 +191,11 @@ public class Ead3SolrDocBuilder {
         
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_ID, ead3Entity.getArchivalInstitution().getCountry().getId());
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_NAME, ead3Entity.getArchivalInstitution().getCountry().getCname());
-        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, ead3Entity.getArchivalInstitution().getCountry().getCname() + ":" + ead3Entity.getArchivalInstitution().getCountry().getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, ead3Entity.getArchivalInstitution().getCountry().getCname() + ":" + SolrValues.TYPE_GROUP + ":" + ead3Entity.getArchivalInstitution().getCountry().getId());
         
         this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, ead3Entity.getArchivalInstitution().getRepositorycode());
-        this.archdescNode.setDataElement(Ead3SolrFields.ID, SolrValues.EAD3_PREFIX + ead3.getId());
-        this.archdescNode.setDataElement(Ead3SolrFields.ROOT_DOC_ID, SolrValues.EAD3_PREFIX + ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ID, SolrValues.E3_FA_PREFIX + ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ROOT_DOC_ID, SolrValues.E3_FA_PREFIX + ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper() + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
@@ -202,10 +203,11 @@ public class Ead3SolrDocBuilder {
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retrieveRecordId());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_TYPE, Ead3SolrDocBuilder.DOC_TYPE); //ToDo: auto find the type?
         this.archdescNode.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
-        this.archdescNode.setDataElement(SolrValues.FA_PREFIX + "0_s", this.retrieveTitleProper() + ":" + SolrValues.TYPE_GROUP + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
-        this.archdescNode.setDataElement(SolrValues.FA_PREFIX + "ID0_s", this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
-        this.archdescNode.setDataElement(SolrValues.AI_PREFIX + "ID0_s", "A" + ead3Entity.getArchivalInstitution().getAiId());
-        this.archdescNode.setDataElement(SolrValues.AI_PREFIX + "0_s", ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
+        
+        this.archdescNode.setDataElement(SolrFields.FA_DYNAMIC_NAME, this.retrieveTitleProper() + ":" + SolrValues.TYPE_GROUP + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        this.archdescNode.setDataElement(SolrFields.FA_DYNAMIC_ID + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        this.archdescNode.setDataElement(SolrFields.AI_DYNAMIC_ID + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
+        this.archdescNode.setDataElement(SolrFields.AI_DYNAMIC + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
         
         this.archdescNode.setTransientDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
         this.archdescNode.setTransientDataElement("script", this.retrieveControlScript());
@@ -391,23 +393,23 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.DAO, didMap.get(Ead3SolrFields.DAO));
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
         cRoot.setDataElement(Ead3SolrFields.PARENT_UNIT_ID, parent.getDataElement(Ead3SolrFields.PARENT_UNIT_ID));
-        cRoot.setDataElement(SolrValues.FA_PREFIX + "0_s", this.archdescNode.getDataElement(SolrValues.FA_PREFIX + "0_s"));
-        cRoot.setDataElement(SolrValues.FA_PREFIX + "ID0_s", this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        cRoot.setDataElement(SolrFields.FA_DYNAMIC_NAME, this.archdescNode.getDataElement(SolrFields.FA_DYNAMIC_NAME));
+        cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
 
         //need to change the implementation to retrieve the parent dynamic fs
         int numberOfAncestors = (int) cRoot.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS);
         
         for (int i = 1; i < numberOfAncestors - 1; i++) {
-            cRoot.setDataElement(SolrValues.FA_PREFIX + i + "_s", parent.getDataElement(SolrValues.FA_PREFIX + i + "_s"));
-            cRoot.setDataElement(SolrValues.FA_PREFIX + "ID" + i + "_s", parent.getDataElement(SolrValues.FA_PREFIX + "ID" + i + "_s"));
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC + i + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getDataElement(SolrFields.FA_DYNAMIC + i + SolrFields.DYNAMIC_STRING_SUFFIX));
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + i + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getDataElement(SolrFields.FA_DYNAMIC_ID + i + SolrFields.DYNAMIC_STRING_SUFFIX));
         }
         
         if (numberOfAncestors > 1) {
-            cRoot.setDataElement(SolrValues.FA_PREFIX + (numberOfAncestors - 1) + "_s", parent.getTransientDataElement(SolrValues.FA_PREFIX + (numberOfAncestors - 1) + "_s"));
-            cRoot.setDataElement(SolrValues.FA_PREFIX + "ID" + (numberOfAncestors - 1) + "_s", parent.getTransientDataElement(SolrValues.FA_PREFIX + "ID" + (numberOfAncestors - 1) + "_s"));
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getTransientDataElement(SolrFields.FA_DYNAMIC + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX));
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getTransientDataElement(SolrFields.FA_DYNAMIC_ID + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX));
         }
-        cRoot.setDataElement(SolrValues.AI_PREFIX + "ID0_s", "A" + ead3Entity.getArchivalInstitution().getAiId());
-        cRoot.setDataElement(SolrValues.AI_PREFIX + "0_s", ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
+        cRoot.setDataElement(SolrFields.AI_DYNAMIC_ID + "0"+ SolrFields.DYNAMIC_STRING_SUFFIX, SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
+        cRoot.setDataElement(SolrFields.AI_DYNAMIC + "0"+ SolrFields.DYNAMIC_STRING_SUFFIX, ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
         
         int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO).toString());
         int currentNumberOfDescendents = 0;
@@ -424,8 +426,8 @@ public class Ead3SolrDocBuilder {
         
         cRoot.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + cLevelEntity.getId()); //ToDo: DB ID
 
-        cRoot.setTransientDataElement(SolrValues.FA_PREFIX + numberOfAncestors + "_s", NUMBERFORMAT.format(orderId) + ":" + didMap.get(Ead3SolrFields.UNIT_TITLE) + ":" + SolrValues.TYPE_GROUP + ":" + cRoot.getDataElement(Ead3SolrFields.ID));
-        cRoot.setTransientDataElement(SolrValues.FA_PREFIX + "ID" + numberOfAncestors + "_s", cRoot.getDataElement(Ead3SolrFields.ID));
+        cRoot.setTransientDataElement(SolrFields.FA_DYNAMIC + numberOfAncestors + SolrFields.DYNAMIC_STRING_SUFFIX, NUMBERFORMAT.format(orderId) + ":" + didMap.get(Ead3SolrFields.UNIT_TITLE) + ":" + SolrValues.TYPE_GROUP + ":" + cRoot.getDataElement(Ead3SolrFields.ID));
+        cRoot.setTransientDataElement(SolrFields.FA_DYNAMIC_ID + numberOfAncestors + SolrFields.DYNAMIC_STRING_SUFFIX, cRoot.getDataElement(Ead3SolrFields.ID));
         
         Iterator it = context.iterate("*");
         
