@@ -18,7 +18,7 @@ public enum XmlType {
     EAD_HG(1, "Holdings Guide", HoldingsGuide.class, "hg", SolrValues.HG_PREFIX),
     EAC_CPF(2, "EAC-CPF", EacCpf.class, "ec", null),
     EAD_SG(3, "Source Guide", SourceGuide.class, "sg", SolrValues.SG_PREFIX),
-    EAD_3(4, "EAD3", Ead3.class, "ead3", SolrValues.EAD3_PREFIX);
+    EAD_3(4, "EAD3", Ead3.class, "ead3", SolrValues.E3_FA_PREFIX);
 
 
     private final String resourceName;

@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 public final class SolrValues {
 
     public static final String ESCAPING_CHARACTER = "\\\\";
-    public final static String EAD3_PREFIX = "E";
+    public final static String E3_FA_PREFIX = "E";
     public final static String HG_PREFIX = "H";
     public final static String FA_PREFIX = "F";
     public final static String SG_PREFIX = "S";
@@ -13,6 +13,7 @@ public final class SolrValues {
     public final static String C_LEVEL_PREFIX = "C";
     public final static String HG_TYPE = "hg";
     public final static String FA_TYPE = "fa";
+    public final static String E3_FA_TYPE = "ead3";
     public final static String SG_TYPE = "sg";
     @Deprecated
     public final static String GROUP_SUFFIX = "G";
