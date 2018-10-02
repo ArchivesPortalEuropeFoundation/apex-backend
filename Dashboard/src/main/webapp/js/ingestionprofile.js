@@ -167,8 +167,10 @@ function showHideEacExtractionFromEad3() {
     var assocType = $("#associatedFiletypeCb").val();
     if (assocType == 4) {
         $("tr#extractEacObject").show();
+        $("tr#xslConversion").hide();
     } else {
         $("tr#extractEacObject").hide();
+        $("tr#xslConversion").show();
     }
 }
 

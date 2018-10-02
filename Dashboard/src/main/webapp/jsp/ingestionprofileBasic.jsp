@@ -33,14 +33,14 @@
             <td><s:checkbox id="extractEac" name="extractEacFromEad3"/></td>
         </tr>
         <%--</c:if>--%>
-        <c:if test="${associatedFiletype != 4}">
+        
             <c:if test="${!empty xslFiles}">
-                <tr>
+                <tr id="xslConversion">
                     <td><s:label key="ingestionprofiles.defaultXslFile" /></td>
                     <td><s:select id="defaultXslFile" name="defaultXslFile" list="xslFiles" listKey="value" listValue="content" /></td>
                 </tr>
             </c:if>
-        </c:if>
+
         <tr id="trRightForDigitalObject">
             <td id="tdLabelRightForDigitalObject">
                 <s:label key="content.message.default.rights.digital.objects" for="rightDigitalObjects"/>
