@@ -438,10 +438,12 @@ public class Ead3SolrDocBuilder {
             if (element instanceof Scopecontent) {
                 Scopecontent scopecontent = (Scopecontent) element;
 //                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
-                Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
-                this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
-                for (Map.Entry entry : eventMap.entrySet()) {
-                    cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                if (scopecontent.getChronlistOrListOrTable() instanceof Chronlist) {
+                    Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+                    this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+                    for (Map.Entry entry : eventMap.entrySet()) {
+                        cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                    }
                 }
                 cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retrieveScopeContentAsText(element));
             } else if (element instanceof Did) {
