@@ -151,13 +151,14 @@ public class Ead3SolrDocBuilder {
         }
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
-        if (!this.cLevelEntities.isEmpty()) {
-            //save updated ead3Entity
-            try {
-                JpaUtil.beginDatabaseTransaction();
-                this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
 
-                //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
+        //save updated ead3Entity
+        try {
+            JpaUtil.beginDatabaseTransaction();
+            this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
+
+            //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
+            if (!this.cLevelEntities.isEmpty()) {
                 for (CLevel cls : this.cLevelEntities) {
                     if (cls.getParent() != null) {
                         cls.setParentId(cls.getParent().getId());
@@ -166,15 +167,15 @@ public class Ead3SolrDocBuilder {
                 if (!exists) {
                     this.ead3Entity.setcLevels(this.cLevelEntities);
                 }
-                this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
-                JpaUtil.commitDatabaseTransaction();
-            } catch (Exception ex) {
-                LOGGER.error("DB exception!", ex);
             }
+            this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
+            JpaUtil.commitDatabaseTransaction();
+        } catch (Exception ex) {
+            LOGGER.error("DB exception!", ex);
+        }
 //            List<CLevel> levels = DAOFactory.instance().getCLevelDAO().getCLevelWithEad3Id(this.ead3Entity.getArchivalInstitution().getRepositorycode(), this.ead3Entity.getIdentifier(), null);
 //            SolrDocNode processedDocNode = new SolrRootDocNodeInit(archdescNode, levels).getProcessedNode();
 //            solrDocTree = new SolrDocTree(processedDocNode);
-        }
 
         return solrDocTree;
 
@@ -394,7 +395,7 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
         cRoot.setDataElement(Ead3SolrFields.PARENT_UNIT_ID, parent.getDataElement(Ead3SolrFields.PARENT_UNIT_ID));
         cRoot.setDataElement(SolrFields.FA_DYNAMIC_NAME, this.archdescNode.getDataElement(SolrFields.FA_DYNAMIC_NAME));
-        cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID +"0"+ SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
 
         //need to change the implementation to retrieve the parent dynamic fs
         int numberOfAncestors = (int) cRoot.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS);
@@ -703,7 +704,7 @@ public class Ead3SolrDocBuilder {
             for (Object obj : did.getMDid()) {
                 if (obj instanceof Unittitle) {
                     String unitTitle = this.getContent((MMixedBasicPlusAccess) obj);
-                    String composedUnitTitle=" ";
+                    String composedUnitTitle = " ";
 
                     Unittitle unittitle = (Unittitle) obj;
                     for (Serializable innerObjs : unittitle.getContent()) {
@@ -711,9 +712,9 @@ public class Ead3SolrDocBuilder {
                             JAXBElement genreform = (JAXBElement) innerObjs;
                             if (genreform.getDeclaredType().equals(Genreform.class)) {
                                 String partValue = processSource((Genreform) genreform.getValue());
-                                composedUnitTitle = generateUnitTitleFromGenreform((Genreform)genreform.getValue());
+                                composedUnitTitle = generateUnitTitleFromGenreform((Genreform) genreform.getValue());
                                 cRoot.setTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE, partValue);
-                                
+
                             }
 
                         }
