@@ -394,7 +394,7 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
         cRoot.setDataElement(Ead3SolrFields.PARENT_UNIT_ID, parent.getDataElement(Ead3SolrFields.PARENT_UNIT_ID));
         cRoot.setDataElement(SolrFields.FA_DYNAMIC_NAME, this.archdescNode.getDataElement(SolrFields.FA_DYNAMIC_NAME));
-        cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID +"0"+ SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
 
         //need to change the implementation to retrieve the parent dynamic fs
         int numberOfAncestors = (int) cRoot.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS);
