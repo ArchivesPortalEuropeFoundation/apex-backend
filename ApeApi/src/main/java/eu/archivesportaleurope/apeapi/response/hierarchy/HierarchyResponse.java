@@ -6,8 +6,6 @@
 package eu.archivesportaleurope.apeapi.response.hierarchy;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.archivesportaleurope.apeapi.response.ead.*;
-import eu.apenet.commons.solr.SolrFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,31 +18,27 @@ import org.apache.solr.common.SolrDocument;
  */
 @XmlRootElement
 @ApiModel
-public class HierarchyResponse extends InstituteEadResponse {
+public class HierarchyResponse {
+
+    @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
+    protected String id;
 
     @ApiModelProperty(value = "Identifier of the result provided by the repository")
     private String unitId;
 
-    @ApiModelProperty(value = "Description of the result")
-    private String unitTitle;
-
-    @ApiModelProperty(value = "More descriptive information about the result. ")
-    private String scopeContent;
-    
     @ApiModelProperty(value = "Index relative to its siblings")
     private int siblingPosition;
-    
+
     @ApiModelProperty(value = "Greatest ancestor is a level 0")
     private int ancestorLevel;
 
     public HierarchyResponse(SolrDocument solrDocument, QueryResponse response, int parentLevel) {
-        super(solrDocument, response);
-        this.unitTitle = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
-        
+        this.id = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ID));
+
         this.siblingPosition = this.objectToInt(solrDocument.getFieldValue(Ead3SolrFields.ORDER_ID));
 
         this.unitId = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
+
         this.ancestorLevel = parentLevel;
     }
 
@@ -62,13 +56,13 @@ public class HierarchyResponse extends InstituteEadResponse {
             return "";
         }
     }
-    
+
     private int objectToInt(Object o) {
         if (o != null) {
             try {
                 int n = Integer.parseInt(o.toString());
                 return n;
-            } catch(NullPointerException|NumberFormatException ex) {
+            } catch (NullPointerException | NumberFormatException ex) {
             }
             return 0;
         } else {
@@ -76,20 +70,12 @@ public class HierarchyResponse extends InstituteEadResponse {
         }
     }
 
-    public String getUnitTitle() {
-        return unitTitle;
+    public String getId() {
+        return id;
     }
 
-    public void setUnitTitle(String unitTitle) {
-        this.unitTitle = unitTitle;
-    }
-
-    public String getScopeContent() {
-        return scopeContent;
-    }
-
-    public void setScopeContent(String scopeContent) {
-        this.scopeContent = scopeContent;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUnitId() {
