@@ -146,7 +146,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SearchRequest request = new SearchRequest();
         request.setFilters(searchRequest.getFilters());
         request.setDateFilters(searchRequest.getDateFilters());
-        request.setQuery(searchRequest.getQuery() + this.solrAND + "type:" + searchRequest.getDocType());
+        request.setQuery(searchRequest.getQuery() + this.solrAND + "recordType:" + searchRequest.getDocType());
 
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
@@ -155,7 +155,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         extraParam.clear();
         extraParam.put("q", this.onlyOpenData);
 
-        extraParam.put("qf", "fond^100 titleProper scopecontent^0.5 alterdate^0.5 other^0.1");
+        extraParam.put("qf", "titleProper^100 unitTitle scopeContent^0.5 alternateUnitdate^0.5 other^0.1");
         extraParam.put("bq", "id:(F*)^100");
         extraParam.put("group.sort", "id " + SolrQuery.ORDER.desc);
 
