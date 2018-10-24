@@ -165,9 +165,9 @@ public class OpenDataService {
     private void addUnStoredFields(AbstractSolrServerHolder solrHolder, SolrDocument doc, ArchivalInstitution archivalInstitution) {
         doc.addField(Ead3SolrFields.COUNTRY_ID, archivalInstitution.getCountryId());
 
-        if (solrHolder instanceof EadSolrServerHolder) {
-            doc.addField(Ead3SolrFields.ID, getIdFromFiled(doc.getFieldValue(Ead3SolrFields.TITLE_PROPER).toString()));
-        }
+//        if (solrHolder instanceof EadSolrServerHolder) {
+//            doc.addField(Ead3SolrFields.ID, getIdFromFiled(doc.getFieldValue(Ead3SolrFields.TITLE_PROPER).toString()));
+//        }
 
         if (solrHolder instanceof EagSolrServerHolder) {
             ArchivalInstitution ai = archivalInstitution.getParent();
