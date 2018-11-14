@@ -6,12 +6,10 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.apenet.commons.solr.SolrFields;
-import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponse;
+import eu.archivesportaleurope.apeapi.response.hierarchy.SimplifiedHierarchyResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -43,9 +41,9 @@ public class EadHierarchyResponse extends InstituteEadResponse {
 
     @ApiModelProperty(value = "Number of Ancestors")
     private int numberOfAncestors = 0;
-    
+
     @ApiModelProperty(required = true, value = "Array of search result, total number of elements can be less than query limit.")
-    private List<HierarchyResponse> ancestors;
+    private List<SimplifiedHierarchyResponse> ancestors;
 
     private EadHierarchyResponse(SolrDocument solrDocument, QueryResponse response) {
         super(solrDocument, response);
@@ -77,10 +75,10 @@ public class EadHierarchyResponse extends InstituteEadResponse {
         this.ancestors = new ArrayList<>();
         ancestorIdList.entrySet().stream().forEach((ancId) -> {
             SolrDocument ancestor = ancIdDocMap.get(ancId.getKey());
-            HierarchyResponse ancestorResponse = new HierarchyResponse(ancestor, null, ancId.getValue());
+            SimplifiedHierarchyResponse ancestorResponse = new SimplifiedHierarchyResponse(ancestor, null, ancId.getValue());
             this.ancestors.add(ancestorResponse);
         });
-        this.ancestors.sort((HierarchyResponse a, HierarchyResponse b) -> a.getAncestorLevel()-b.getAncestorLevel());
+        this.ancestors.sort((SimplifiedHierarchyResponse a, SimplifiedHierarchyResponse b) -> a.getAncestorLevel() - b.getAncestorLevel());
     }
 
     private String objectToString(Object o) {
@@ -139,15 +137,15 @@ public class EadHierarchyResponse extends InstituteEadResponse {
         this.numberOfAncestors = numberOfAncestors;
     }
 
-    public List<HierarchyResponse> getAncestors() {
+    public List<SimplifiedHierarchyResponse> getAncestors() {
         return ancestors;
     }
 
-    public void setAncestors(List<HierarchyResponse> ancestors) {
+    public void setAncestors(List<SimplifiedHierarchyResponse> ancestors) {
         this.ancestors = ancestors;
     }
-    
-    public void addAncestor(HierarchyResponse ancestor) {
+
+    public void addAncestor(SimplifiedHierarchyResponse ancestor) {
         if (null != this.ancestors) {
             this.ancestors.add(ancestor);
         }
