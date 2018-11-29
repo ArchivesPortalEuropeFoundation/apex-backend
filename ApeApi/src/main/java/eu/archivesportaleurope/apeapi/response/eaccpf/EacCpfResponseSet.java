@@ -45,14 +45,12 @@ public class EacCpfResponseSet extends ResponseSet {
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
         SolrDocumentList documentList = response.getResults();
-        if (null != documentList) {
-            super.setTotalResults(documentList.getNumFound());
-            super.setStartIndex(documentList.getStart());
+        super.setTotalResults(documentList.getNumFound());
+        super.setStartIndex(documentList.getStart());
 
-            for (SolrDocument document : documentList) {
+        for (SolrDocument document : documentList) {
 
-                this.addEadSearchResult(new EacCpfResponse(document, response));
-            }
+            this.addEadSearchResult(new EacCpfResponse(document, response));
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
         if (super.totalResults % responseHeader.getRows() > 0) {
