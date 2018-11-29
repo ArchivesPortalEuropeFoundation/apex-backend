@@ -14,6 +14,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
+import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
@@ -23,9 +24,10 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 @XmlRootElement
 @ApiModel
 public class EadDocResponseSet extends ResponseSet {
+
     @ApiModelProperty(required = true, value = "Total number of EAD documents found.")
     private int totalDocs;
-    @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
+    @ApiModelProperty(required = true, value = "Array of search result, total number of elements can be less than query limit.")
     private List<EadDocResponse> eadDocList;
 
     public EadDocResponseSet() {
@@ -34,18 +36,24 @@ public class EadDocResponseSet extends ResponseSet {
 
     public EadDocResponseSet(SearchDocRequest request, QueryResponse response) {
         this();
-        GroupCommand command = response.getGroupResponse().getValues().get(0);
-        this.setTotalDocs(command.getNGroups());
-        super.setTotalResults(command.getMatches());
-        super.setStartIndex(request.getStartIndex());
-        super.setTotalPages((int) (this.totalDocs / request.getCount()));
-        if (this.totalDocs % request.getCount() > 0) {
-            super.totalPages++;
-        }
+        GroupResponse groupResponse = response.getGroupResponse();
+        if (null != groupResponse) {
+            List<GroupCommand> groupCommands = groupResponse.getValues();
+            if (groupCommands.size() > 0) {
+                GroupCommand command = groupCommands.get(0);
+                this.setTotalDocs(command.getNGroups());
+                super.setTotalResults(command.getMatches());
+                super.setStartIndex(request.getStartIndex());
+                super.setTotalPages((int) (this.totalDocs / request.getCount()));
+                if (this.totalDocs % request.getCount() > 0) {
+                    super.totalPages++;
+                }
 
-        for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
-            if (group.getGroupValue() != null) {
-                this.addEadDoc(new EadDocResponse(group));
+                for (Group group : groupCommands.get(0).getValues()) {
+                    if (group.getGroupValue() != null) {
+                        this.addEadDoc(new EadDocResponse(group));
+                    }
+                }
             }
         }
     }

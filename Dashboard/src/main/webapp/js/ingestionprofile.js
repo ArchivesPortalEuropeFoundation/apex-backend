@@ -168,9 +168,11 @@ function showHideEacExtractionFromEad3() {
     if (assocType == 4) {
         $("tr#extractEacObject").show();
         $("tr#xslConversion").hide();
+        $("#tab-europeana").hide();
     } else {
         $("tr#extractEacObject").hide();
         $("tr#xslConversion").show();
+        $("#tab-europeana").show();
     }
 }
 
