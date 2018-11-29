@@ -35,7 +35,7 @@ public class EadResponseSet extends ResponseSet {
 
     @ApiModelProperty(value = "Available fields for sort option")
     private Set<String> sortFields;
-    
+
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public EadResponseSet() {
@@ -49,15 +49,17 @@ public class EadResponseSet extends ResponseSet {
         SearchStatResponse responseHeader = new SearchStatResponse(response);
 
         SolrDocumentList documentList = response.getResults();
-        super.setTotalResults(documentList.getNumFound());
-        super.setStartIndex(documentList.getStart());
+        if (null != documentList) {
+            super.setTotalResults(documentList.getNumFound());
+            super.setStartIndex(documentList.getStart());
 
-        for (SolrDocument document : documentList) {
-            try {
-                EadResponse eadResponse = new EadResponse(document, response);
-                this.addEadSearchResult(eadResponse);
-            } catch (Exception ex) {
-                logger.error("Ead response format error"+document.values(), ex);
+            for (SolrDocument document : documentList) {
+                try {
+                    EadResponse eadResponse = new EadResponse(document, response);
+                    this.addEadSearchResult(eadResponse);
+                } catch (Exception ex) {
+                    logger.error("Ead response format error" + document.values(), ex);
+                }
             }
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));
