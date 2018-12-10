@@ -690,7 +690,7 @@
                     <label for="textYIOpeningTimes" ><s:property value="getText('eag2012.commons.openingHours')"/><span class="required">*</span>:</label>
                 </td>
                 <td colspan="2" class="textContact">
-                    <textarea id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));">${loader.opening}</textarea>
+                    <textarea id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));"></textarea>
                 </td>
                 <td>
                     <label class="language" for="selectTextYIOpeningTimes"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
