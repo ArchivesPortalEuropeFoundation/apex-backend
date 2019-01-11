@@ -439,13 +439,22 @@ public class Ead3SolrDocBuilder {
             if (element instanceof Scopecontent) {
                 Scopecontent scopecontent = (Scopecontent) element;
 //                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
-                if (scopecontent.getChronlistOrListOrTable() instanceof Chronlist) {
-                    Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
-                    this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
-                    for (Map.Entry entry : eventMap.entrySet()) {
-                        cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                for (Object o : scopecontent.getChronlistOrListOrTable()) {
+                    if (o instanceof Chronlist) {
+                        Map<String, String> eventMap = buildEvent(((Chronlist) o).getChronitem().get(0).getEvent());
+                        this.buildAndStoreEacData(cRoot, ((Chronlist) o).getChronitem().get(0).getEvent());
+                        for (Map.Entry entry : eventMap.entrySet()) {
+                            cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                        }
                     }
                 }
+//                if (scopecontent.getChronlistOrListOrTable() instanceof List<?>) {
+//                    Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+//                    this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+//                    for (Map.Entry entry : eventMap.entrySet()) {
+//                        cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+//                    }
+//                }
                 cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retrieveScopeContentAsText(element));
             } else if (element instanceof Did) {
             } else if (element instanceof C) {
@@ -766,8 +775,12 @@ public class Ead3SolrDocBuilder {
                     String dateNormal = unitdate.getNormal();
 
                     List<String> dates = DateUtil.getDates(didInfoMap.get(Ead3SolrFields.UNIT_DATE).toString(), dateNormal);
-                    didInfoMap.put(Ead3SolrFields.START_DATE, dates.get(0));
-                    didInfoMap.put(Ead3SolrFields.END_DATE, dates.get(1));
+                    if (!StringUtils.isBlank(dates.get(0))) {
+                        didInfoMap.put(Ead3SolrFields.START_DATE, dates.get(0));
+                    }
+                    if (!StringUtils.isBlank(dates.get(1))) {
+                        didInfoMap.put(Ead3SolrFields.END_DATE, dates.get(1));
+                    }
                     if (StringUtils.isBlank(didInfoMap.get(Ead3SolrFields.UNIT_DATE).toString())) {
                         didInfoMap.put(Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
                     } else if (StringUtils.isBlank(dates.get(0))) {
