@@ -109,7 +109,7 @@
             </annox:annotate>
         </jaxb:bindings>
         
-        <jaxb:bindings node="//xs:complexType[@name='e.anyname']/xs:choice/xs:any[@namespace='##other']">
+        <jaxb:bindings node="//xs:complexType[@name='e.anyname']/xs:sequence/xs:any[@processContents='lax']">
             <jaxb:property name="Any2"/>
         </jaxb:bindings>
     </jaxb:bindings>

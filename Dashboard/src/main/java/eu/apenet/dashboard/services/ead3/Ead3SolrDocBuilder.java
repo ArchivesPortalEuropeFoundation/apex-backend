@@ -48,6 +48,7 @@ import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
 import gov.loc.ead.Localtypedeclaration;
 import gov.loc.ead.MCBase;
+import gov.loc.ead.MMixedBasicDate;
 import gov.loc.ead.MMixedBasicPlusAccess;
 import gov.loc.ead.Maintenanceagency;
 import gov.loc.ead.Origination;
@@ -611,6 +612,10 @@ public class Ead3SolrDocBuilder {
         return this.getContentText(obj.getContent());
     }
 
+    private String getContent(MMixedBasicDate obj) {
+        return this.getContentText(obj.getContent());
+    }
+
     private String getContentText(List<Serializable> contents) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Serializable sr : contents) {
@@ -945,7 +950,10 @@ public class Ead3SolrDocBuilder {
         for (Part part : parts) {
             //ToDo:
             try {
-                ApeType apeType = ApeType.get(this.localTypeMap.getApeType(part.getLocaltype().toLowerCase()));
+                ApeType apeType = null;
+                if (StringUtils.isNotBlank(part.getLocaltype())) {
+                    apeType = ApeType.get(this.localTypeMap.getApeType(part.getLocaltype().toLowerCase()));
+                }
                 if (apeType == null) {
                     LOGGER.debug("Unsupported ApeType: " + part.getLocaltype());
                     continue;
