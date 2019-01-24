@@ -714,6 +714,9 @@ public class Ead3SolrDocBuilder {
         Map<String, Object> didInfoMap = new HashMap<>();
 
         didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
+        int daoCount = 0;
+        List<String> daoFieldValues = new ArrayList<>();
+        Set<String> daoTypeValues = new HashSet<>();
 
         if (did != null) {
             didInfoMap.put(Ead3SolrFields.DAO, false);
@@ -740,28 +743,34 @@ public class Ead3SolrDocBuilder {
                     }
                     didInfoMap.put(Ead3SolrFields.UNIT_TITLE, unitTitle);
                     didInfoMap.put(Ead3SolrFields.UNIT_TITLE_LOCALTYPE, ((Unittitle) obj).getLocaltype());
+                } else if (obj instanceof Dao) {
+                    daoCount++;
+                    Dao dao = (Dao) obj;
+                    if (StringUtils.isNotBlank(dao.getHref())) {
+                        daoFieldValues.add(dao.getHref());
+                    }
+                    if (StringUtils.isNotBlank(dao.getDaotype())) {
+                        daoTypeValues.add(dao.getDaotype());
+                    }
+
                 } else if (obj instanceof Daoset) {
-                    int count = 0;
                     List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
-                    List<String> daoFieldValues = new ArrayList<>();
-                    Set<String> daoTypeValues = new HashSet<>();
+                    daoCount++;
                     for (JAXBElement jAXBElement : daos) {
                         if (jAXBElement.getDeclaredType().equals(Dao.class)) {
-
-                            count++;
-                            if (count <= 10) {
-                                Dao dao = (Dao) jAXBElement.getValue();
-                                if (!dao.getLocaltype().equals("fullsize")) {
-                                    daoFieldValues.add(dao.getHref());
-                                    daoTypeValues.add(dao.getDaotype());
-                                }
+                            Dao dao = (Dao) jAXBElement.getValue();
+                            if (StringUtils.isNotBlank(dao.getHref())) {
+                                daoFieldValues.add(dao.getHref());
+                            }
+                            if (StringUtils.isNotBlank(dao.getDaotype())) {
+                                daoTypeValues.add(dao.getDaotype());
                             }
                         }
                     }
                     didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
                     didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
-                    didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, count + "");
-                    if (count > 0) {
+                    didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, daoCount + "");
+                    if (daoCount > 0) {
                         didInfoMap.put(Ead3SolrFields.DAO, true);
                     } else {
                         didInfoMap.put(Ead3SolrFields.DAO, false);
