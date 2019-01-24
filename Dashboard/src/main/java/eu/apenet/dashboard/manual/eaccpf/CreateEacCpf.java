@@ -652,7 +652,9 @@ public class CreateEacCpf {
                 localDescription.setTerm(term);
                 localDescriptions.getLocalDescription().add(localDescription);
             }
-            description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(localDescriptions);
+            if (!localDescriptions.getLocalDescription().isEmpty()) {
+                description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(localDescriptions);
+            }
         }
 
         // /eacCpf/cpfDescription/description/places

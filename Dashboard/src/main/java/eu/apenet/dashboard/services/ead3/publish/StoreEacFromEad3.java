@@ -246,7 +246,7 @@ public class StoreEacFromEad3 {
         try {
             in = new FileInputStream(tempFile);
             List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);
-            if (exceptions != null) {
+            if (exceptions != null && !exceptions.isEmpty()) {
                 StringBuilder warn;
                 for (SAXParseException exception : exceptions) {
                     warn = new StringBuilder();
@@ -256,6 +256,7 @@ public class StoreEacFromEad3 {
                     warnings_ead.add(warn.toString());
                 }
                 result = false;
+                throw exceptions.get(0);
             }
         } catch (FileNotFoundException e) {
             throw new APEnetException("Exception while validating: File not found", e);

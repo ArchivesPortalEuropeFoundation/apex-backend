@@ -31,6 +31,7 @@ import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import gov.loc.ead.Archdesc;
 import gov.loc.ead.C;
+import gov.loc.ead.Chronitem;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
 import gov.loc.ead.Dao;
@@ -442,10 +443,13 @@ public class Ead3SolrDocBuilder {
 //                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
                 for (Object o : scopecontent.getChronlistOrListOrTable()) {
                     if (o instanceof Chronlist) {
-                        Map<String, String> eventMap = buildEvent(((Chronlist) o).getChronitem().get(0).getEvent());
-                        this.buildAndStoreEacData(cRoot, ((Chronlist) o).getChronitem().get(0).getEvent());
-                        for (Map.Entry entry : eventMap.entrySet()) {
-                            cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                        Chronlist cList = (Chronlist) o;
+                        for (Chronitem co : cList.getChronitem()) {
+                            Map<String, String> eventMap = buildEvent(co.getEvent());
+                            this.buildAndStoreEacData(cRoot, co.getEvent());
+                            for (Map.Entry entry : eventMap.entrySet()) {
+                                cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                            }
                         }
                     }
                 }
@@ -712,10 +716,9 @@ public class Ead3SolrDocBuilder {
 
     private Map<String, Object> processDid(Did did, SolrDocNode cRoot) {
         Map<String, Object> didInfoMap = new HashMap<>();
-
-        didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
+        
         int daoCount = 0;
-        List<String> daoFieldValues = new ArrayList<>();
+        List<String> daoFieldValues = new ArrayList<>(); 
         Set<String> daoTypeValues = new HashSet<>();
 
         if (did != null) {
@@ -767,15 +770,6 @@ public class Ead3SolrDocBuilder {
                             }
                         }
                     }
-                    didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
-                    didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
-                    didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, daoCount + "");
-                    if (daoCount > 0) {
-                        didInfoMap.put(Ead3SolrFields.DAO, true);
-                    } else {
-                        didInfoMap.put(Ead3SolrFields.DAO, false);
-                    }
-
                 } else if (obj instanceof Unitid) {
                     if (didInfoMap.get(Ead3SolrFields.UNIT_ID) == null) {
                         didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getContent((MMixedBasic) obj));
@@ -819,6 +813,15 @@ public class Ead3SolrDocBuilder {
                 }
 
             }
+        }
+        
+        didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
+        didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
+        didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, daoCount + "");
+        if (daoCount > 0) {
+            didInfoMap.put(Ead3SolrFields.DAO, true);
+        } else {
+            didInfoMap.put(Ead3SolrFields.DAO, false);
         }
         return didInfoMap;
     }
@@ -885,8 +888,11 @@ public class Ead3SolrDocBuilder {
             if (eacEvent instanceof JAXBElement) {
                 JAXBElement eacElement = (JAXBElement) eacEvent;
                 if (eacElement.getDeclaredType().equals(Persname.class)) {
-                    count++;
                     Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), count);
+                    if (personMap == null) {
+                        continue;
+                    }
+                    count++;
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
                     personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
 
@@ -899,13 +905,19 @@ public class Ead3SolrDocBuilder {
                     }
                     listOfEacs.add(personMap);
                 } else if (eacElement.getDeclaredType().equals(Corpname.class)) {
-                    count++;
                     Map<String, Object> corpMap = generateEacCpfDataMap(cRoot, ((Corpname) eacElement.getValue()).getPart(), count);
+                    if (corpMap == null) {
+                        continue;
+                    }
+                    count++;
                     corpMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_CORPORATE_BODY);
                     listOfEacs.add(corpMap);
                 } else if (eacElement.getDeclaredType().equals(Famname.class)) {
-                    count++;
                     Map<String, Object> famMap = generateEacCpfDataMap(cRoot, ((Famname) eacElement.getValue()).getPart(), count);
+                    if (famMap == null) {
+                        continue;
+                    }
+                    count++;
                     famMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_FAMILY);
                     listOfEacs.add(famMap);
                 }
@@ -956,6 +968,7 @@ public class Ead3SolrDocBuilder {
         String lastName = "";
         String birthDate = "";
         String deathDate = "";
+        boolean valid = false; //ToDo: quick fix
         for (Part part : parts) {
             //ToDo:
             try {
@@ -973,12 +986,14 @@ public class Ead3SolrDocBuilder {
                         firstName = getContent(part);
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName));
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME));
+                        valid = true;
                         break;
                     case LASTNAME:
                         partNameCount++;
                         lastName = getContent(part);
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(lastName));
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_SUR_NAME));
+                        valid = true;
                         break;
                     case GENDER:
                         eacMap.put(ApeType.GENDER.getValue(), getContent(part));
@@ -1050,6 +1065,9 @@ public class Ead3SolrDocBuilder {
 
         //identify automatic eac generation from ead3
         eacMap.put("agent", "Ead3");
+        if (!valid) {
+            return null;
+        }
         return eacMap;
     }
 
