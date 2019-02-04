@@ -441,18 +441,23 @@ public class Ead3SolrDocBuilder {
             if (element instanceof Scopecontent) {
                 Scopecontent scopecontent = (Scopecontent) element;
 //                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
+
+                //* !Do not remove!
                 for (Object o : scopecontent.getChronlistOrListOrTable()) {
                     if (o instanceof Chronlist) {
                         Chronlist cList = (Chronlist) o;
                         for (Chronitem co : cList.getChronitem()) {
                             Map<String, String> eventMap = buildEvent(co.getEvent());
                             this.buildAndStoreEacData(cRoot, co.getEvent());
+                            
+                            //in ead3 solrdocs, creating dynamic fields with all the i.e firstname from the document to make it searchable
                             for (Map.Entry entry : eventMap.entrySet()) {
                                 cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
                             }
                         }
                     }
                 }
+                //*/
 //                if (scopecontent.getChronlistOrListOrTable() instanceof List<?>) {
 //                    Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
 //                    this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
@@ -478,13 +483,48 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
+        /*
+        it = context.iterate("//persname");
+        int count=0, itCount=0;
+        while (it.hasNext()) {
+            //itCount++;
+            Object element = it.next();
+            if (element instanceof Did || element == null) {
+                continue;
+            } else {
+                //System.out.println("#####Text: "+element.toString());
+                if (element instanceof Persname) {
+                    Persname persname = (Persname) element;
+                    System.out.println("Found Persname: "+ persname.getPart().size());
+                    Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, persname.getPart(), count);
+                    if (personMap == null) {
+                        System.out.println("blank person! "+this.getContentText(persname, " "));
+                        continue;
+                    }
+                    count++;
+                    personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
+                    personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
+
+                    if (this.persistEac) {
+                        System.out.println("Storing persname");
+                        try {
+                            new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
+                        } catch (Exception ex) {
+                            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }
+        //*/
+        //System.out.println("total persname: "+count+ " Iterator count: "+itCount);
 
         if (cRoot.getChild() == null) {
             cLevelEntity.setLeaf(true);
         }
         Marshaller marshaller = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
-        ((C) cElement).getTheadAndC().clear(); //remove all child c
+        ((C) cElement).getTheadAndC().clear(); //remove all child Cs only to serialized current level
         try {
             marshaller = this.cLevelContext.createMarshaller();
 //            QName qName = new QName("c");
@@ -549,14 +589,18 @@ public class Ead3SolrDocBuilder {
         } else {
             JXPathContext context = JXPathContext.newContext(obj);
             Iterator it = context.iterate("*");
-
+            String str1= "";
             while (it.hasNext()) {
                 Object object = it.next();
                 if (object instanceof MMixedBasic) {
                     MMixedBasic contentHolder = (MMixedBasic) object;
 
                     for (Serializable sr : contentHolder.getContent()) {
-                        String str1 = (String) sr;
+                        try {
+                            str1 = (String) sr;
+                        } catch (ClassCastException cx){
+                            Ead3SolrDocBuilder.LOGGER.debug("Failed to convert to string: "+sr.toString());
+                        }
                         if (!str1.isEmpty()) {
                             if (stringBuilder.length() > 0) {
                                 stringBuilder.append(" ");
@@ -584,26 +628,29 @@ public class Ead3SolrDocBuilder {
         Iterator it = context.iterate("*");
 
         String tmpStr = "";
-
-        while (it.hasNext()) {
-            Object object = it.next();
-            if (object instanceof MMixedBasic) {
-                tmpStr = this.getContent((MMixedBasic) object);
-            } else if (object instanceof Item) {
-                tmpStr = this.getPlainText(object);
-            } else if (object instanceof MMixedBasicPlusAccess) {
-                tmpStr = this.getContent((MMixedBasicPlusAccess) obj);
-            } else {
-                tmpStr = this.getContentText(object, delimiter);
-            }
-            tmpStr = tmpStr.trim();
-
-            if (!tmpStr.isEmpty()) {
-                if (stringBuilder.length() > 0) {
-                    stringBuilder.append(delimiter);
+        try {
+            while (it.hasNext()) {
+                Object object = it.next();
+                if (object instanceof MMixedBasic) {
+                    tmpStr = this.getContent((MMixedBasic) object);
+                } else if (object instanceof Item) {
+                    tmpStr = this.getPlainText(object);
+                } else if (object instanceof MMixedBasicPlusAccess) {
+                    tmpStr = this.getContent((MMixedBasicPlusAccess) obj);
+                } else {
+                    tmpStr = this.getContentText(object, delimiter);
                 }
-                stringBuilder.append(tmpStr);
+                tmpStr = tmpStr.trim();
+
+                if (!tmpStr.isEmpty()) {
+                    if (stringBuilder.length() > 0) {
+                        stringBuilder.append(delimiter);
+                    }
+                    stringBuilder.append(tmpStr);
+                }
             }
+        } catch (Exception ex) {
+            LOGGER.error("Failed to get content text: ", ex);
         }
         return stringBuilder.toString().trim();
     }
@@ -982,6 +1029,7 @@ public class Ead3SolrDocBuilder {
                 }
                 switch (apeType) {
                     case FIRSTNAME:
+                    case PERSNAME:
                         partNameCount++;
                         firstName = getContent(part);
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName));
