@@ -442,7 +442,7 @@ public class Ead3SolrDocBuilder {
                 Scopecontent scopecontent = (Scopecontent) element;
 //                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
 
-                //* !Do not remove!
+                /* !Do not remove!
                 for (Object o : scopecontent.getChronlistOrListOrTable()) {
                     if (o instanceof Chronlist) {
                         Chronlist cList = (Chronlist) o;
@@ -483,41 +483,6 @@ public class Ead3SolrDocBuilder {
                 }
             }
         }
-        /*
-        it = context.iterate("//persname");
-        int count=0, itCount=0;
-        while (it.hasNext()) {
-            //itCount++;
-            Object element = it.next();
-            if (element instanceof Did || element == null) {
-                continue;
-            } else {
-                //System.out.println("#####Text: "+element.toString());
-                if (element instanceof Persname) {
-                    Persname persname = (Persname) element;
-                    System.out.println("Found Persname: "+ persname.getPart().size());
-                    Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, persname.getPart(), count);
-                    if (personMap == null) {
-                        System.out.println("blank person! "+this.getContentText(persname, " "));
-                        continue;
-                    }
-                    count++;
-                    personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
-                    personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
-
-                    if (this.persistEac) {
-                        System.out.println("Storing persname");
-                        try {
-                            new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
-                        } catch (Exception ex) {
-                            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
-        }
-        //*/
-        //System.out.println("total persname: "+count+ " Iterator count: "+itCount);
 
         if (cRoot.getChild() == null) {
             cLevelEntity.setLeaf(true);
@@ -525,6 +490,40 @@ public class Ead3SolrDocBuilder {
         Marshaller marshaller = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
         ((C) cElement).getTheadAndC().clear(); //remove all child Cs only to serialized current level
+        
+        //*
+        JXPathContext context1 = JXPathContext.newContext(cElement);
+        it = context1.iterate("//*"); //.iteratePointers("//*");//
+        int count=0, itCount=0;
+        while (it.hasNext()) {
+            //itCount++;
+            Object element = it.next();
+            
+            if (element instanceof Persname) {
+                Persname persname = (Persname) element;
+                System.out.println("Found Persname: "+ persname.getPart().size());
+                Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, persname.getPart(), count);
+                if (personMap == null) {
+                    System.out.println("blank person! "+this.getContentText(persname, " "));
+                    continue;
+                }
+                count++;
+                personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
+                personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
+
+                if (this.persistEac) {
+                    System.out.println("Storing persname");
+                    try {
+                        new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
+                    } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        //*/
+        System.out.println("total persname: "+count);
+        
         try {
             marshaller = this.cLevelContext.createMarshaller();
 //            QName qName = new QName("c");
@@ -533,7 +532,7 @@ public class Ead3SolrDocBuilder {
             marshaller.marshal(cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
-//            System.out.println("Clevel xml: " + cLevelXml);
+            System.out.println("Clevel xml: " + cLevelXml);
 
         } catch (JAXBException | UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
