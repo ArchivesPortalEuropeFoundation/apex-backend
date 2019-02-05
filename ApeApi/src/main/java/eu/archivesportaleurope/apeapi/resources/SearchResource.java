@@ -57,9 +57,7 @@ public class SearchResource {
     EadSearchService eadSearch;
     @Autowired
     SearchService eacCpfSearch;
-    @Autowired
-    SearchService ead3Search;
-
+    
     @POST
     @Path("/ead")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -79,36 +77,6 @@ public class SearchResource {
             QueryResponse queryResponse = eadSearch.searchOpenData(searchRequest);
             EadFactedResponseSet eadResponseSet = new EadFactedResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
-    }
-
-    @POST
-    @Path("/ead3")
-    @PreAuthorize("hasRole('ROLE_USER')")
-//    Hide Ead3
-//    @ApiOperation(value = "Search for EAD3",
-//            response = Ead3ResponseSet.class
-//    )
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 500, message = "Internal server error"),
-//        @ApiResponse(code = 400, message = "Bad request"),
-//        @ApiResponse(code = 401, message = "Unauthorized")
-//    })
-    @Consumes({ServerConstants.APE_API_V1})
-    public Response searchEad3(
-            @ApiParam(value = "Search EAD3 units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
-    ) {
-        try {
-            QueryResponse queryResponse = ead3Search.searchOpenData(searchRequest);
-            Ead3FacetedResponseSet responseSet = new Ead3FacetedResponseSet(queryResponse);
-            return Response.ok().entity(responseSet).build();
         } catch (WebApplicationException e) {
             logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
             return e.getResponse();
