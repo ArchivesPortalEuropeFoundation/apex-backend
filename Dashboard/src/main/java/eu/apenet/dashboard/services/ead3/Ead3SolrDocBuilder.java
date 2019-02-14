@@ -344,20 +344,13 @@ public class Ead3SolrDocBuilder {
         if (cDid == null) {
             return null; //ToDo: invalid c exception?
         }
-//        String cClassName = cElement.getClass().getName();
-//        String cPostFix = cClassName.replace("C", "");
 
         JpaUtil.beginDatabaseTransaction();
         CLevel cLevelEntity = new CLevel();
         cLevelEntity.setOrderId(orderId);
         //cLevelEntity.setEad3(ead3Entity);
         cLevelEntity.setParent(parentC);
-//        if (parentC != null) {
-//            cLevelEntity.setParentClId(parentC.getId());
-//        }
 
-//to xml
-//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
         cLevelEntity.setEad3(ead3Entity);
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
         cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
@@ -493,10 +486,9 @@ public class Ead3SolrDocBuilder {
         
         //*
         JXPathContext context1 = JXPathContext.newContext(cElement);
-        it = context1.iterate("//*"); //.iteratePointers("//*");//
-        int count=0, itCount=0;
+        it = context1.iterate("//*"); 
+        int count=0;
         while (it.hasNext()) {
-            //itCount++;
             Object element = it.next();
             
             if (element instanceof Persname) {

@@ -85,6 +85,7 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import eu.archivesportaleurope.util.ApeUtil;
 import java.io.File;
 
 /**
@@ -141,7 +142,7 @@ public class CreateEacCpf {
 
     public final eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
         if (this.getJaxbEacCpf().getControl() != null && this.getJaxbEacCpf().getControl().getRecordId() != null && this.getJaxbEacCpf().getControl().getRecordId().getValue() != null) {
-            dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
+            dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, ApeUtil.decodeSpecialCharactersWithSpaces(this.getJaxbEacCpf().getControl().getRecordId().getValue()));
         }
         dbEacCpf.getPath(); //??
 
@@ -177,10 +178,13 @@ public class CreateEacCpf {
                 oldPathName = dbEacCpf.getPath();
             }
             if (control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()) {
-                control.getRecordId().setValue(control.getOtherRecordId().get(0).getContent());
+                OtherRecordId otherRecordId = control.getOtherRecordId().get(0);
+                otherRecordId.setLocalType("unitid");
+                String recordId = ApeUtil.encodeSpecialCharactersWithSpaces(otherRecordId.getContent());
+                control.getRecordId().setValue(recordId);
             } else {
                 if (content.length == 1) {
-                    control.getRecordId().setValue(content[0]);
+                    control.getRecordId().setValue(ApeUtil.encodeSpecialCharactersWithSpaces(content[0]));
                 }
             }
             dbEacCpf.setIdentifier(control.getRecordId().getValue());
@@ -200,7 +204,7 @@ public class CreateEacCpf {
 
                 }
             }
-            control.getRecordId().setValue(replaceNonNmtokenChars(dbEacCpf.getIdentifier()));
+            control.getRecordId().setValue(ApeUtil.encodeSpecialCharactersWithSpaces(dbEacCpf.getIdentifier()));
         }
         UploadMethod uploadMethod = new UploadMethod();
         uploadMethod.setMethod(UploadMethod.HTTP);

@@ -19,6 +19,7 @@ import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.util.ApeUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -50,7 +51,7 @@ public class StoreEacFromEad3 {
     private int fileToLoad;
     private int aiId;
     private String ead3Identifier;
-    private List<String> warnings_ead = new ArrayList<String>();
+    private List<String> warnings_ead = new ArrayList<>();
 
     Logger LOG = Logger.getLogger(StoreEacFromEad3.class);
 
