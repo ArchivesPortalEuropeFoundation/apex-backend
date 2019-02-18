@@ -69,7 +69,7 @@ public class StoreEacFromEad3 {
         EacCpf eac = creator.getJaxbEacCpf();
         String filename;
         if (this.getFileId() == null || this.getFileId().isEmpty()) {
-            filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier());
+            filename = APEnetUtilities.convertToFilename(ApeUtil.encodeSpecialCharactersWithSpaces(creator.getDatabaseEacCpf().getEncodedIdentifier()));
             this.setFileId(filename);
         } else {
             filename = this.getFileId();

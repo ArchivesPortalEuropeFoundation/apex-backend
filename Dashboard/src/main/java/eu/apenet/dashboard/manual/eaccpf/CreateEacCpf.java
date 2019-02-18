@@ -1218,7 +1218,7 @@ public class CreateEacCpf {
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    cpfRelation.setHref(parameterContent[0]);
+                    cpfRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                 }
             }
 
@@ -1347,7 +1347,7 @@ public class CreateEacCpf {
                     if (parameters.containsKey("agent")) {
                         resRelation.setType(parameterContent[0]);
                     } else {
-                        resRelation.setHref(parameterContent[0]);
+                        resRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                     }
                 }
             }
@@ -1405,7 +1405,7 @@ public class CreateEacCpf {
                         relationEntry.setContent(parameterContent[0]);
                     }
                     if (parameters.containsKey("agent")) {
-                        resRelation.setHref(parameterContent[0]);
+                        resRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                     } else {
                         resRelation.getRelationEntry().add(relationEntry);
                     }
@@ -1488,7 +1488,7 @@ public class CreateEacCpf {
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    fncRelation.setHref(parameterContent[0]);
+                    fncRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                 }
             }
 

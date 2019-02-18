@@ -84,7 +84,8 @@ public class ApeUtil {
         if (urlPart != null) {
             String result = urlPart.trim();
             result = ApeUtil.encodeSpecialCharacters(result);
-
+            result = result.replaceAll("\\{", "_LSCUBRKT_");
+            result = result.replaceAll("\\}", "_RSCUBRKT_");
             result = result.replaceAll("\\s", "_SPACE_");
             return result;
         }
@@ -127,6 +128,8 @@ public class ApeUtil {
     public static String decodeSpecialCharactersWithSpaces(String urlPart) {
         if (urlPart != null) {
             String result = ApeUtil.decodeSpecialCharacters(urlPart);
+            result = result.replaceAll("_LSCUBRKT_", "{");
+            result = result.replaceAll("_RSCUBRKT_", "}");
             result = result.replaceAll("_SPACE_", " ");
             return result;
         } else {
