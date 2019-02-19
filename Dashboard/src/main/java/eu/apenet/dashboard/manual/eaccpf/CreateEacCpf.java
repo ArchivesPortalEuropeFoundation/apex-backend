@@ -142,7 +142,7 @@ public class CreateEacCpf {
 
     public final eu.apenet.persistence.vo.EacCpf getDatabaseEacCpf() {
         if (this.getJaxbEacCpf().getControl() != null && this.getJaxbEacCpf().getControl().getRecordId() != null && this.getJaxbEacCpf().getControl().getRecordId().getValue() != null) {
-            dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, ApeUtil.decodeSpecialCharactersWithSpaces(this.getJaxbEacCpf().getControl().getRecordId().getValue()));
+            dbEacCpf = eacCpfDAO.getEacCpfByIdentifier(aiId, this.getJaxbEacCpf().getControl().getRecordId().getValue());
         }
         dbEacCpf.getPath(); //??
 
@@ -182,17 +182,18 @@ public class CreateEacCpf {
                 otherRecordId.setLocalType("unitid");
                 String recordId = ApeUtil.encodeSpecialCharactersWithSpaces(otherRecordId.getContent());
                 control.getRecordId().setValue(recordId);
+            } else if (content.length == 1) {
+                control.getRecordId().setValue(ApeUtil.encodeSpecialCharactersWithSpaces(content[0]));
             } else {
-                if (content.length == 1) {
-                    control.getRecordId().setValue(ApeUtil.encodeSpecialCharactersWithSpaces(content[0]));
-                }
+                String id = System.currentTimeMillis() + "";
+                dbEacCpf.setIdentifier(id);
             }
             dbEacCpf.setIdentifier(control.getRecordId().getValue());
         } else { //NO apeId found in the xml
             if (StringUtils.isBlank(dbEacCpf.getIdentifier()) && dbEacCpf.getId() == null) {
                 String otherRecordId = null;
                 if (control.getOtherRecordId().size() > 0) {
-                    otherRecordId = control.getOtherRecordId().get(0).getContent();
+                    otherRecordId = ApeUtil.encodeSpecialCharactersWithSpaces(control.getOtherRecordId().get(0).getContent());
                 }
                 boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
 
@@ -200,11 +201,11 @@ public class CreateEacCpf {
                     String id = System.currentTimeMillis() + "";
                     dbEacCpf.setIdentifier(id);
                 } else {
-                    dbEacCpf.setIdentifier(otherRecordId);
+                    dbEacCpf.setIdentifier(ApeUtil.encodeSpecialCharactersWithSpaces(otherRecordId));
 
                 }
             }
-            control.getRecordId().setValue(ApeUtil.encodeSpecialCharactersWithSpaces(dbEacCpf.getIdentifier()));
+            control.getRecordId().setValue(dbEacCpf.getIdentifier());
         }
         UploadMethod uploadMethod = new UploadMethod();
         uploadMethod.setMethod(UploadMethod.HTTP);
@@ -261,7 +262,10 @@ public class CreateEacCpf {
         // eacCpf/control/languageDeclaration
         if (null != parameters.get("controlLanguage")) {
             if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])
-                    || !"----".equals(((String[]) parameters.get("controlScript"))[0])) {
+                    && !"----".equals(((String[]) parameters.get("controlScript"))[0])
+                    && !((String[]) parameters.get("controlScript"))[0].trim().isEmpty()
+                    && !((String[]) parameters.get("controlLanguage"))[0].trim().isEmpty()
+                    ) {
                 LanguageDeclaration languageDeclaration = new LanguageDeclaration();
 
                 if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])) {

@@ -61,7 +61,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier) {
         TypedQuery<EacCpf> query = getEntityManager().createQuery(
                 "SELECT eacCpf FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);
-        query.setParameter("identifier", ApeUtil.decodeSpecialCharacters(identifier));
+        query.setParameter("identifier", identifier);
         query.setParameter("aiId", aiId);
         query.setMaxResults(1);
         List<EacCpf> list = query.getResultList();
