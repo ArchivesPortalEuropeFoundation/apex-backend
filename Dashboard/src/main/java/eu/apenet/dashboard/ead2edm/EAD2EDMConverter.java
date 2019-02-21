@@ -20,6 +20,7 @@ import eu.apenet.persistence.vo.Ese;
  * @author bverhoef
  */
 public class EAD2EDMConverter {
+        //define COLON variable
 	private static final String COLON = ":";
 
 
