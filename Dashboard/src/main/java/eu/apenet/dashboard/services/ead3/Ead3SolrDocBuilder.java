@@ -524,7 +524,7 @@ public class Ead3SolrDocBuilder {
             marshaller.marshal(cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
-            System.out.println("Clevel xml: " + cLevelXml);
+//            System.out.println("Clevel xml: " + cLevelXml);
 
         } catch (JAXBException | UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -1001,7 +1001,7 @@ public class Ead3SolrDocBuilder {
 
         int partNameCount = 1;
         int partGenealogyDescriptionCount = 0;
-        int partDateCount = 0;
+        int partDateCount = 1;
         String firstName = "";
         String lastName = "";
         String birthDate = "";
@@ -1020,19 +1020,25 @@ public class Ead3SolrDocBuilder {
                 }
                 switch (apeType) {
                     case FIRSTNAME:
-                    case PERSNAME:
-                        partNameCount++;
                         firstName = getContent(part);
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName));
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME));
                         valid = true;
+                        partNameCount++;
                         break;
                     case LASTNAME:
-                        partNameCount++;
                         lastName = getContent(part);
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(lastName));
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_SUR_NAME));
                         valid = true;
+                        partNameCount++;
+                        break;
+                    case PERSNAME:
+                        String persName = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(persName));
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
+                        valid = true;
+                        partNameCount++;
                         break;
                     case GENDER:
                         eacMap.put(ApeType.GENDER.getValue(), getContent(part));
@@ -1040,20 +1046,21 @@ public class Ead3SolrDocBuilder {
                     case ROLE:
                         eacMap.put(ApeType.ROLE.getValue(), getContent(part));
                         break;
-                    case DEATHDATE:
-                        deathDate = getContent(part);
-                        if (StringUtils.isEmpty(deathDate)) {
-                            deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-                        }
-                        partDateCount++;
-                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
-                        break;
                     case BITHDATE:
                         birthDate = getContent(part);
                         if (StringUtils.isEmpty(birthDate)) {
                             birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
                         }
                         eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
+                        partDateCount++;
+                        break;
+                    case DEATHDATE:
+                        deathDate = getContent(part);
+                        if (StringUtils.isEmpty(deathDate)) {
+                            deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+                        }
+                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
+                        partDateCount++;
                         break;
                     default:
                         break;
@@ -1063,16 +1070,14 @@ public class Ead3SolrDocBuilder {
             }
         }
 
-        if (StringUtils.isEmpty(deathDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
-        }
         if (StringUtils.isEmpty(birthDate)) {
             eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
         }
-
-        partNameCount++;
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_1", returnAsArray(firstName + " " + lastName));
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_1", returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
+        if (StringUtils.isEmpty(deathDate)) {
+            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
+        }
+        
+        
 
         //test build map for ead3 to eac
         EacCpfDAO cpfDAO = DAOFactory.instance().getEacCpfDAO();
@@ -1095,7 +1100,7 @@ public class Ead3SolrDocBuilder {
         eacMap.put("dateExistenceTable_date_1_radio_1", returnAsArray("unknown"));
         eacMap.put("dateExistenceTable_date_2_radio_1", returnAsArray("unknown"));
 
-        eacMap.put("identityPersonName_1_rows", returnAsArray("0"));
+        eacMap.put("identityPersonName_1_rows", returnAsArray("1"));
 
         eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE, archdescNode.getTransientDataElement(Ead3SolrFields.LANGUAGE).toString());
         eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_SCRIPT, archdescNode.getTransientDataElement("script").toString());
