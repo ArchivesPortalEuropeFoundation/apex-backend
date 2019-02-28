@@ -5,7 +5,6 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
-import com.sun.javafx.binding.StringFormatter;
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
