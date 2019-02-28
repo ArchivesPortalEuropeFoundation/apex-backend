@@ -5,6 +5,7 @@
  */
 package eu.apenet.dashboard.services.ead3;
 
+import com.sun.javafx.binding.StringFormatter;
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
@@ -73,6 +74,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1004,8 +1008,8 @@ public class Ead3SolrDocBuilder {
         int partDateCount = 1;
         String firstName = "";
         String lastName = "";
-        String birthDate = "";
-        String deathDate = "";
+        String birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+        String deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
         boolean valid = false; //ToDo: quick fix
         for (Part part : parts) {
             //ToDo:
@@ -1048,18 +1052,10 @@ public class Ead3SolrDocBuilder {
                         break;
                     case BITHDATE:
                         birthDate = getContent(part);
-                        if (StringUtils.isEmpty(birthDate)) {
-                            birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-                        }
-                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
                         partDateCount++;
                         break;
                     case DEATHDATE:
                         deathDate = getContent(part);
-                        if (StringUtils.isEmpty(deathDate)) {
-                            deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-                        }
-                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
                         partDateCount++;
                         break;
                     default:
@@ -1070,13 +1066,8 @@ public class Ead3SolrDocBuilder {
             }
         }
 
-        if (StringUtils.isEmpty(birthDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
-        }
-        if (StringUtils.isEmpty(deathDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
-        }
-        
+        eacMap.put(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE, birthDate);
+        eacMap.put(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE, deathDate);
         
 
         //test build map for ead3 to eac
@@ -1094,11 +1085,6 @@ public class Ead3SolrDocBuilder {
         eacMap.put("textResRelationLink_1", returnAsArray("simple"));
         eacMap.put("resRelationType_1", returnAsArray("subjectOf"));
         eacMap.put("textareaResRelationDescription_1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_TITLE).toString()));
-
-        //for test
-        eacMap.put("dateExistenceTable_rows", returnAsArray("1"));
-        eacMap.put("dateExistenceTable_date_1_radio_1", returnAsArray("unknown"));
-        eacMap.put("dateExistenceTable_date_2_radio_1", returnAsArray("unknown"));
 
         eacMap.put("identityPersonName_1_rows", returnAsArray("1"));
 

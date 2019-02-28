@@ -87,6 +87,7 @@ import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.util.ApeUtil;
 import java.io.File;
+import java.util.Calendar;
 
 /**
  *
@@ -603,11 +604,13 @@ public class CreateEacCpf {
         if (parameters.containsKey("dateExistenceTable_rows")) {
             actualDateRows = Integer.parseInt(((String[]) parameters.get("dateExistenceTable_rows"))[0]);
         }
-
-        ExistDates existDates = new ExistDates();
-
+        
+        actualDateRows += (parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE) ||
+                parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE)) ? 1 : 0;
+        
         // If there are any dates
         if (actualDateRows > 0) {
+            ExistDates existDates = new ExistDates();
             DateSet dateSet = new DateSet();
             while (parameters.containsKey("dateExistenceTable_date_1_radio_" + rowCounter)) {
                 //if the rows have two dates, we need a date range, otherwise a simple date will cut it
@@ -620,6 +623,13 @@ public class CreateEacCpf {
                     dateSet.getDateOrDateRange().add(date);
                 }
                 rowCounter++;
+            }
+            
+            if (parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE) ||
+                parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE)) {
+                DateRange dateRange = createDateRange((String)parameters.get(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE),
+                        (String)parameters.get(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE));
+                dateSet.getDateOrDateRange().add(dateRange);
             }
 
             //filter all empty rows
@@ -637,8 +647,9 @@ public class CreateEacCpf {
                     existDates.setDateSet(dateSet);
                 }
             }
+            description.setExistDates(existDates);
         }
-        description.setExistDates(existDates);
+        
         if (parameters.containsKey("agent")) {
             LocalDescriptions localDescriptions = new LocalDescriptions();
             localDescriptions.setLocalType("status");
@@ -1584,6 +1595,37 @@ public class CreateEacCpf {
 
         return relations;
     }
+    
+    private DateRange createDateRange(String birthDate, String deathDate) {
+        DateRange dateRange = new DateRange();
+        String normalizeBirthDate = this.getNormalizedDate(birthDate);
+        String normalizedDeathDate = this.getNormalizedDate(deathDate);
+        
+        if (normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN) && normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+            dateRange.setLocalType(UNKNOWN);
+        } else if (normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN) && !normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+            dateRange.setLocalType(UNKNOWN_START);
+        } else if (!normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN) && normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+            dateRange.setLocalType(UNKNOWN_END);
+        }
+        
+        FromDate fromDate = new FromDate();
+        if (!normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+            fromDate.setStandardDate(normalizeBirthDate);
+        }
+        fromDate.setContent(birthDate);
+        
+        dateRange.setFromDate(fromDate);
+        
+        ToDate toDate = new ToDate();
+        if (!normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+            toDate.setStandardDate(normalizedDeathDate);
+        }
+        toDate.setContent(deathDate);
+        dateRange.setToDate(toDate);
+        
+        return dateRange;
+    }
 
     private DateRange createDateRange(String tableName, int rowCounter) {
         String date1year = tableName + "_date_1_Year_";
@@ -1772,5 +1814,29 @@ public class CreateEacCpf {
         } else {
             return null;
         }
+    }
+    
+    private String getNormalizedDate(String dateStr) {
+        java.util.Date date = APEnetUtilities.extractDate(dateStr);
+        java.util.Date maxDateEac = APEnetUtilities.extractDate("31.12.2099"); //Ape-EacCpf xsd!
+        if (date==null) {
+            if (dateStr != null) {
+                try {
+                    int year = Integer.parseInt(dateStr);
+                    if (year>0 && year<=2099) {
+                        return dateStr;
+                    }
+                } catch (NumberFormatException ex) {}
+            }
+            return Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+        } else if (date.after(maxDateEac)) {
+            return Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+        }
+        Calendar calendarDate = new GregorianCalendar();
+        calendarDate.setTime(date);
+        
+        String normalizedDate = String.format("%1$tY-%1$tm-%1$td", calendarDate);
+        
+        return normalizedDate;
     }
 }
