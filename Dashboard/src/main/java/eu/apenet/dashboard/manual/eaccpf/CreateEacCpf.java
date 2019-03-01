@@ -1597,18 +1597,33 @@ public class CreateEacCpf {
     }
     
     private DateRange createDateRange(String birthDate, String deathDate) {
+        if (birthDate==null) {
+            birthDate = "";
+        }
+        if (deathDate==null) {
+            deathDate = "";
+        }
+        birthDate = birthDate.trim();
+        deathDate = deathDate.trim();
+        
         DateRange dateRange = new DateRange();
         String normalizeBirthDate = this.getNormalizedDate(birthDate);
         String normalizedDeathDate = this.getNormalizedDate(deathDate);
         
-        if (normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN) && normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+        if (birthDate.isEmpty() && deathDate.isEmpty()) {
             dateRange.setLocalType(UNKNOWN);
-        } else if (normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN) && !normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+        } else if (birthDate.isEmpty() && !deathDate.isEmpty()) {
             dateRange.setLocalType(UNKNOWN_START);
-        } else if (!normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN) && normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+        } else if (!birthDate.isEmpty() && deathDate.isEmpty()) {
             dateRange.setLocalType(UNKNOWN_END);
         }
         
+        if (birthDate.isEmpty()) {
+            birthDate = UNKNOWN;
+        }
+        if (deathDate.isEmpty()) {
+            deathDate = UNKNOWN;
+        }
         FromDate fromDate = new FromDate();
         if (!normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
             fromDate.setStandardDate(normalizeBirthDate);

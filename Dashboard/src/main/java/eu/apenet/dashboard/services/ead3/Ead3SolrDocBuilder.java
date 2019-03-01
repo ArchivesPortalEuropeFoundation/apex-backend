@@ -496,10 +496,10 @@ public class Ead3SolrDocBuilder {
             
             if (element instanceof Persname) {
                 Persname persname = (Persname) element;
-                System.out.println("Found Persname: "+ persname.getPart().size());
+                //System.out.println("Found Persname: "+ persname.getPart().size());
                 Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, persname.getPart(), count);
                 if (personMap == null) {
-                    System.out.println("blank person! "+this.getContentText(persname, " "));
+                    //System.out.println("blank person! "+this.getContentText(persname, " "));
                     continue;
                 }
                 count++;
@@ -507,7 +507,7 @@ public class Ead3SolrDocBuilder {
                 personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
 
                 if (this.persistEac) {
-                    System.out.println("Storing persname");
+                    //System.out.println("Storing persname");
                     try {
                         new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
                     } catch (Exception ex) {
@@ -517,7 +517,7 @@ public class Ead3SolrDocBuilder {
             }
         }
         //*/
-        System.out.println("total persname: "+count);
+        //System.out.println("total persname: "+count);
         
         try {
             marshaller = this.cLevelContext.createMarshaller();
@@ -1007,8 +1007,8 @@ public class Ead3SolrDocBuilder {
         int partDateCount = 1;
         String firstName = "";
         String lastName = "";
-        String birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-        String deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+        String birthDate = "";
+        String deathDate = "";
         boolean valid = false; //ToDo: quick fix
         for (Part part : parts) {
             //ToDo:
