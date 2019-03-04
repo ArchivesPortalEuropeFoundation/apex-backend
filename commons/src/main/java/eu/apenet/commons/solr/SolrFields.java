@@ -59,8 +59,8 @@ public final class SolrFields {
     /*
      * EAC-CPF
      */
-    public final static String EAC_CPF_START_DATE = "startdate";
-    public final static String EAC_CPF_END_DATE = "enddate";
+    public final static String EAC_CPF_START_DATE = "startDate";
+    public final static String EAC_CPF_END_DATE = "endDate";
     public final static String EAC_CPF_RECORD_ID = "recordId";
     public final static String EAC_CPF_ENTITY_ID = "entityId";
     public final static String EAC_CPF_NAMES = "names";
