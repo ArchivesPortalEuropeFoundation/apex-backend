@@ -21,6 +21,7 @@ public interface Ead3ToEacFieldMapStaticValues {
     String PART_LOCAL_TYPE_GENDER = "gender";
     String PART_LOCAL_TYPE_DEATH_DATE = "deathdate";
     String PART_LOCAL_TYPE_BIRTH_DATE = "birthdate";
+    String PART_LOCAL_TYPE_BIRTH_NAME = "birthname";
     String PART_LOCAL_TYPE_PERS_NAME = "persname";
     String DATE_EXISTING_TYPE_UNKNOWN = "unknown";
     String DATE_EXISTING_TYPE_OPEN = "open";

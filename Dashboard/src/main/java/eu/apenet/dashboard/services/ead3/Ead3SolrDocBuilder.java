@@ -1043,6 +1043,12 @@ public class Ead3SolrDocBuilder {
                         valid = true;
                         partNameCount++;
                         break;
+                    case BIRTHNAME:
+                        String birthName = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(birthName));
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_NAME));
+                        partNameCount++;
+                        break;
                     case GENDER:
                         eacMap.put(ApeType.GENDER.getValue(), getContent(part));
                         break;
