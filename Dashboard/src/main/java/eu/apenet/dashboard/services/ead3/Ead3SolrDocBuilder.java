@@ -1005,10 +1005,13 @@ public class Ead3SolrDocBuilder {
         int partNameCount = 1;
         int partGenealogyDescriptionCount = 0;
         int partDateCount = 1;
+        int partPlaceCount = 1;
+        String partLang = "";
         String firstName = "";
         String lastName = "";
         String birthDate = "";
         String deathDate = "";
+        String tmpStr;
         boolean valid = false; //ToDo: quick fix
         for (Part part : parts) {
             //ToDo:
@@ -1021,6 +1024,10 @@ public class Ead3SolrDocBuilder {
                     LOGGER.debug("Unsupported ApeType: " + part.getLocaltype());
                     continue;
                 }
+//                partLang="";
+//                if (StringUtils.isNotBlank(part.getLang())) {
+//                    partLang = part.getLang();
+//                }
                 switch (apeType) {
                     case FIRSTNAME:
                         firstName = getContent(part);
@@ -1062,6 +1069,20 @@ public class Ead3SolrDocBuilder {
                     case DEATHDATE:
                         deathDate = getContent(part);
                         partDateCount++;
+                        break;
+                    case BIRTHPLACE:
+                        tmpStr = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_+partPlaceCount, returnAsArray(tmpStr));
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_+partPlaceCount, returnAsArray("birth")); // ToDo: change the hard code
+//                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_LANGUAGE_+partPlaceCount, returnAsArray(partLang));
+                        partPlaceCount++;
+                        break;
+                    case DEATHPLACE:
+                        tmpStr = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_+partPlaceCount, returnAsArray(tmpStr));
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_+partPlaceCount, returnAsArray("death")); // ToDo: change the hard code
+//                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_LANGUAGE_+partPlaceCount, returnAsArray(partLang));
+                        partPlaceCount++;
                         break;
                     default:
                         break;

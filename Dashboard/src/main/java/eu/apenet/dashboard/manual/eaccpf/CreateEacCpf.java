@@ -778,7 +778,11 @@ public class CreateEacCpf {
 
                     //add any dates
                     rowCounter = 1;
-                    actualDateRows = Integer.parseInt(((String[]) parameters.get("placeTable_" + tableCounter + "_rows"))[0]);
+                    try {
+                        actualDateRows = Integer.parseInt(((String[]) parameters.get("placeTable_" + tableCounter + "_rows"))[0]);
+                    } catch (NumberFormatException | NullPointerException ex) {
+                        actualDateRows = 0;
+                    }
 
                     // If there are any dates
                     if (actualDateRows > 0) {
