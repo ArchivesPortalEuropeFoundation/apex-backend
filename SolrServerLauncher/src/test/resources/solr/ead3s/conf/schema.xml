@@ -159,6 +159,7 @@
         <field name="unitIdSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
         <field name="unitTitleSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/> 	
         <field name="unitRecordIDSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>   
+        <field name="idSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>   
         
         <field name="orderId" type="int" indexed="true" stored="true" required="false"/>
         <field name="leaf" type="boolean" indexed="true" stored="true" required="false"/>
@@ -181,4 +182,5 @@
     <copyField source="recordId" dest="unitRecordIDSort"/>
     <copyField source="unitTitle" dest="unitTitleSort"/>
     <copyField source="unitId" dest="unitIdSort"/>
+    <copyField source="id" dest="idSort"/>
 </schema>
