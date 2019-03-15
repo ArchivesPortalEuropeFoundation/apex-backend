@@ -21,7 +21,8 @@ public class SortFields {
         title(Ead3SolrFields.SORTABLE_UNIT_TITLE),
         referenceCode(Ead3SolrFields.SORTABLE_UNIT_ID),
         findingAidNo(Ead3SolrFields.SORTABLE_RECORD_ID),
-        orderId(Ead3SolrFields.ORDER_ID);
+        orderId(Ead3SolrFields.ORDER_ID),
+        id(Ead3SolrFields.ID);
         private final String solrFieldValue;
 
         private SortFieldsEnum(String solrFieldValue) {
