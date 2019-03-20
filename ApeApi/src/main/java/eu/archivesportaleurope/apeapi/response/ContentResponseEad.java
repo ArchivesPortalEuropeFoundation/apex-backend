@@ -17,11 +17,8 @@ public class ContentResponseEad extends ContentResponse {
     @ApiModelProperty(required = true, value="Information in EAD-format, serialized as JSON. This part could potentially contain all the elements that can be part of an EAD/XML-document.")
     private Ead content;
 
-    public ContentResponseEad() {
-    }
-    
-    public ContentResponseEad(DetailContent detailContent, String Id) {
-        super(detailContent, Id);
+    public ContentResponseEad(DetailContent detailContent, String id) {
+        super(detailContent, id);
     }
     
     public Ead getContent() {

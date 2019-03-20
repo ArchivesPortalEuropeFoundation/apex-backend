@@ -6,7 +6,6 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.apenet.commons.solr.SolrFields;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;

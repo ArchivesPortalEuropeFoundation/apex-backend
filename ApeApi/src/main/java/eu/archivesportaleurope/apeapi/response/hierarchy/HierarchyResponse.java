@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.response.hierarchy;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.archivesportaleurope.apeapi.response.ead.*;
+import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,12 +39,12 @@ public class HierarchyResponse extends InstituteEadResponse {
 
     public HierarchyResponse(SolrDocument solrDocument, QueryResponse response, int parentLevel) {
         super(solrDocument, response);
-        this.unitTitle = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
+        this.unitTitle = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
 
-        this.siblingPosition = this.objectToInt(solrDocument.getFieldValue(Ead3SolrFields.ORDER_ID));
+        this.siblingPosition = CommonUtils.objectToInt(solrDocument.getFieldValue(Ead3SolrFields.ORDER_ID));
 
-        this.unitId = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
+        this.unitId = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
+        this.scopeContent = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
         this.ancestorLevel = parentLevel;
     }
 
@@ -52,27 +53,6 @@ public class HierarchyResponse extends InstituteEadResponse {
      */
     public HierarchyResponse() {
         //Do nothing
-    }
-
-    private String objectToString(Object o) {
-        if (o != null) {
-            return o.toString();
-        } else {
-            return "";
-        }
-    }
-
-    private int objectToInt(Object o) {
-        if (o != null) {
-            try {
-                int n = Integer.parseInt(o.toString());
-                return n;
-            } catch (NullPointerException | NumberFormatException ex) {
-            }
-            return 0;
-        } else {
-            return 0;
-        }
     }
 
     public String getUnitTitle() {

@@ -6,11 +6,14 @@
 package eu.archivesportaleurope.apeapi.response.hierarchy;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -31,43 +34,15 @@ public class SimplifiedHierarchyResponse {
 
     @ApiModelProperty(value = "Greatest ancestor is a level 0")
     private int ancestorLevel;
+    
+    public SimplifiedHierarchyResponse(SolrDocument solrDocument, int parentLevel) {
+        this.id = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ID));
 
-    public SimplifiedHierarchyResponse(SolrDocument solrDocument, QueryResponse response, int parentLevel) {
-        this.id = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ID));
+        this.siblingPosition = CommonUtils.objectToInt(solrDocument.getFieldValue(Ead3SolrFields.ORDER_ID));
 
-        this.siblingPosition = this.objectToInt(solrDocument.getFieldValue(Ead3SolrFields.ORDER_ID));
-
-        this.unitId = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
+        this.unitId = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
 
         this.ancestorLevel = parentLevel;
-    }
-
-    /**
-     * Default constructor
-     */
-    public SimplifiedHierarchyResponse() {
-        //Do nothing
-    }
-
-    private String objectToString(Object o) {
-        if (o != null) {
-            return o.toString();
-        } else {
-            return "";
-        }
-    }
-
-    private int objectToInt(Object o) {
-        if (o != null) {
-            try {
-                int n = Integer.parseInt(o.toString());
-                return n;
-            } catch (NullPointerException | NumberFormatException ex) {
-            }
-            return 0;
-        } else {
-            return 0;
-        }
     }
 
     public String getId() {

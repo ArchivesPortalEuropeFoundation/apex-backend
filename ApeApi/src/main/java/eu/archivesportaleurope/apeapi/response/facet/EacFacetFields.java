@@ -5,17 +5,13 @@
  */
 package eu.archivesportaleurope.apeapi.response.facet;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
 import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.solr.client.solrj.response.FacetField;

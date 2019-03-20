@@ -48,9 +48,9 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
     private String solrUrl;
     private final String solrCore;
-    private final String onlyOpenData = "openData:true";
-    private final String solrAND = " AND ";
-    private final String solrOR = " OR ";
+    private static final String ONLY_OPEN_DATA = "openData:true";
+    private static final String SOLR_AND = " AND ";
+    private static final String SOLR_OR = " OR ";
     private final SolrSearchUtil searchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -107,7 +107,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
         extraParam.clear();
-        extraParam.put("q", this.onlyOpenData);
+        extraParam.put("q", EadSearchSearviceImpl.ONLY_OPEN_DATA);
         return this.search(request, extraParam, true);
     }
 
@@ -117,11 +117,11 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setCount(request.getCount());
         searchRequest.setStartIndex(request.getStartIndex());
         searchRequest.setSortRequest(request.getSortRequest());
-        searchRequest.setQuery("ai:*" + request.getInstituteId() + this.solrAND
+        searchRequest.setQuery("ai:*" + request.getInstituteId() + EadSearchSearviceImpl.SOLR_AND
                 + "id:" + XmlType.getTypeByResourceName(request.getDocType()).getSolrPrefix() + "*");
 
         extraParam.clear();
-        extraParam.put("q", this.onlyOpenData);
+        extraParam.put("q", EadSearchSearviceImpl.ONLY_OPEN_DATA);
         return this.search(searchRequest, this.extraParam, false);
     }
 
@@ -133,7 +133,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         searchRequest.setQuery("(id:" + SolrValues.FA_PREFIX + "* OR id:" + SolrValues.HG_PREFIX + "* OR id:" + SolrValues.SG_PREFIX + "*)");
 
         extraParam.clear();
-        extraParam.put("q", this.onlyOpenData);
+        extraParam.put("q", EadSearchSearviceImpl.ONLY_OPEN_DATA);
 
         extraParam.put("group", "true");
         extraParam.put("group.field", Ead3SolrFields.AI);
@@ -146,14 +146,14 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SearchRequest request = new SearchRequest();
         request.setFilters(searchRequest.getFilters());
         request.setDateFilters(searchRequest.getDateFilters());
-        request.setQuery(searchRequest.getQuery() + this.solrAND + "recordType:" + searchRequest.getDocType());
+        request.setQuery(searchRequest.getQuery() + EadSearchSearviceImpl.SOLR_AND + "recordType:" + searchRequest.getDocType());
 
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
 
         extraParam.clear();
-        extraParam.put("q", this.onlyOpenData);
+        extraParam.put("q", EadSearchSearviceImpl.ONLY_OPEN_DATA);
 
         extraParam.put("qf", "titleProper^100 unitTitle scopeContent^0.5 alternateUnitdate^0.5 other^0.1");
         extraParam.put("bq", "id:(F*)^100");
@@ -197,7 +197,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             String levelStr = this.getDocHighestLevelText(id); //FID0_s or HID0_s etc
 
             extraParam.clear();
-            extraParam.put("q", levelStr + ":" + id + this.solrAND + "(-id:" + id +")"+ this.solrAND + this.onlyOpenData);
+            extraParam.put("q", levelStr + ":" + id + EadSearchSearviceImpl.SOLR_AND + "(-id:" + id +")"+ EadSearchSearviceImpl.SOLR_AND + EadSearchSearviceImpl.ONLY_OPEN_DATA);
 
             return this.search(searchRequest, extraParam, true);
         } catch (SolrServerException | IOException ex) {
@@ -211,7 +211,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             String levelStr = this.getDocHighestLevelText(id); //FID0_s or HID0_s etc
 
             extraParam.clear();
-            extraParam.put("q", levelStr + ":" + id + this.solrAND + "(-id:" + id +")"+ this.solrAND + this.onlyOpenData);
+            extraParam.put("q", levelStr + ":" + id + EadSearchSearviceImpl.SOLR_AND + "(-id:" + id +")"+ EadSearchSearviceImpl.SOLR_AND + EadSearchSearviceImpl.ONLY_OPEN_DATA);
             extraParam.put("fl", "*");
 
             QueryResponse decendentResponse = this.search(searchRequest, extraParam, true);
@@ -231,9 +231,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
                     String foundId = descenDocument.getFieldValue(Ead3SolrFields.ID).toString();
                     TypedList ancList = this.extractParentList(descenDocument, foundId);
                     descendantAncesMap.put(foundId, ancList.keyLevel);
-                    ancList.keyLevel.entrySet().stream().forEach((ancId) -> {
-                        allAncestors.add(ancId.getKey());
-                    });
+                    ancList.keyLevel.entrySet().stream().forEach( ancId -> allAncestors.add(ancId.getKey()) );
                 }
             }
 
@@ -273,7 +271,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         //ToDo: Merge
         query.append(Ead3SolrFields.UNIT_ID).append(":")
                 .append(filteredSortedPageRequest.getFindingAidNo())
-                .append(this.solrAND);
+                .append(EadSearchSearviceImpl.SOLR_AND);
         if (StringUtils.isBlank(filteredSortedPageRequest.getUnitId())) {
             String queryToFindOnlyTopLevelItem = "(id:F* OR id:H* OR id:S*)";
             query.append(queryToFindOnlyTopLevelItem);
@@ -285,7 +283,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
                     .append(" - ")
                     .append(filteredSortedPageRequest.getUnitId())
                     .append("\"")
-                    .append(this.solrOR)
+                    .append(EadSearchSearviceImpl.SOLR_OR)
                     .append(Ead3SolrFields.UNIT_ID).append(":")
                     .append("\"")
                     .append(filteredSortedPageRequest.getFindingAidNo())
@@ -309,7 +307,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         }
 
         extraParam.clear();
-        extraParam.put("q", this.onlyOpenData);
+        extraParam.put("q", EadSearchSearviceImpl.ONLY_OPEN_DATA);
         return this.search(request, extraParam, true);
     }
 
@@ -325,7 +323,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SearchRequest request = new SearchRequest();
         request.setCount(searchRequest.getCount());
         request.setStartIndex(searchRequest.getStartIndex());
-        request.setQuery(searchRequest.getQuery() + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
+        request.setQuery(searchRequest.getQuery() + EadSearchSearviceImpl.SOLR_AND + "-id:" + id + EadSearchSearviceImpl.SOLR_AND + "parentId:" + id);
         return this.searchOpenData(request);
     }
 
@@ -337,7 +335,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SortRequest sortRequest = new SortRequest();
         sortRequest.addField(Ead3SolrFields.ORDER_ID);
         request.setSortRequest(sortRequest);
-        request.setQuery("*" + this.solrAND + "-id:" + id + this.solrAND + "parentId:" + id);
+        request.setQuery("*" + EadSearchSearviceImpl.SOLR_AND + "-id:" + id + EadSearchSearviceImpl.SOLR_AND + "parentId:" + id);
 
         QueryResponse qr = this.searchOpenData(request);
         try {
@@ -351,7 +349,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
 
     private TypedList getParentList(String id) throws SolrServerException, IOException {
         SolrQuery query = new SolrQuery();
-        query.setQuery("id:" + id + this.solrAND + onlyOpenData);
+        query.setQuery("id:" + id + EadSearchSearviceImpl.SOLR_AND + ONLY_OPEN_DATA);
         query.setRows(1);
         query.setStart(0);
         query.setParam("fl", Ead3SolrFields.ID+", F*_s, H*_s, S*_s, "+Ead3SolrFields.RECORD_TYPE);
@@ -402,7 +400,6 @@ public class EadSearchSearviceImpl extends EadSearchService {
         }
         if (document.getFieldValue(typePrefix[0] + (level - 1) + "_s").toString().equalsIgnoreCase(selfId)) {
             typedList.keyLevel.remove(selfId);
-            level--;
         }
 
         return typedList;
@@ -421,7 +418,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             boolean orIt = false;
             for (Map.Entry<String, Integer> aLevel : typedList.keyLevel.entrySet()) {
                 if (orIt) {
-                    requestStrBuffer.append(" OR ");
+                    requestStrBuffer.append(EadSearchSearviceImpl.SOLR_OR);
                 }
                 requestStrBuffer.append("id:").append(aLevel.getKey());
                 orIt = true;
@@ -430,9 +427,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
             requestStrBuffer.append(")");
 
             SearchRequest request = new SearchRequest();
-//            request.setCount(pageRequest.getCount());
             request.setCount(typedList.keyLevel.size());
-//            request.setStartIndex(pageRequest.getStartIndex());
             request.setQuery(requestStrBuffer.toString());
 
             QueryResponse qr = this.searchOpenData(request);

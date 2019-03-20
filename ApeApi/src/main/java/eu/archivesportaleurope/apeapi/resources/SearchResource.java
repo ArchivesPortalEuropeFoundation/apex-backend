@@ -17,8 +17,6 @@ import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadHierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
-import eu.archivesportaleurope.apeapi.response.ead3.Ead3FacetedResponseSet;
-import eu.archivesportaleurope.apeapi.response.ead3.Ead3ResponseSet;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
 import eu.archivesportaleurope.apeapi.services.SearchService;
 import io.swagger.annotations.Api;

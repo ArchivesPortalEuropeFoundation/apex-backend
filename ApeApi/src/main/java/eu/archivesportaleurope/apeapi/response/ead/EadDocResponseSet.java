@@ -39,7 +39,7 @@ public class EadDocResponseSet extends ResponseSet {
         GroupResponse groupResponse = response.getGroupResponse();
         if (null != groupResponse) {
             List<GroupCommand> groupCommands = groupResponse.getValues();
-            if (groupCommands.size() > 0) {
+            if (!groupCommands.isEmpty()) {
                 GroupCommand command = groupCommands.get(0);
                 if (null != command) {
                     this.setTotalDocs(command.getNGroups());

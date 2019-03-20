@@ -6,7 +6,6 @@
 package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
 import eu.archivesportaleurope.apeapi.response.common.SortFields;

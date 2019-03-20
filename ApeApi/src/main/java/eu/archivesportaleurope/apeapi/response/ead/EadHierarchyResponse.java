@@ -73,9 +73,9 @@ public class EadHierarchyResponse extends InstituteEadResponse {
     EadHierarchyResponse(SolrDocument document, QueryResponse decendentResponse, Map<String, Integer> ancestorIdList, Map<String, SolrDocument> ancIdDocMap) {
         this(document, decendentResponse);
         this.ancestors = new ArrayList<>();
-        ancestorIdList.entrySet().stream().forEach((ancId) -> {
+        ancestorIdList.entrySet().stream().forEach( ancId -> {
             SolrDocument ancestor = ancIdDocMap.get(ancId.getKey());
-            SimplifiedHierarchyResponse ancestorResponse = new SimplifiedHierarchyResponse(ancestor, null, ancId.getValue());
+            SimplifiedHierarchyResponse ancestorResponse = new SimplifiedHierarchyResponse(ancestor, ancId.getValue());
             this.ancestors.add(ancestorResponse);
         });
         this.ancestors.sort((SimplifiedHierarchyResponse a, SimplifiedHierarchyResponse b) -> a.getAncestorLevel() - b.getAncestorLevel());

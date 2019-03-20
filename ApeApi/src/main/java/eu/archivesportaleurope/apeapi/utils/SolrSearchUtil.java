@@ -25,7 +25,6 @@ public class SolrSearchUtil {
     private SolrQuery solrQuery;
     private QueryResponse queryResponse;
     private String coreName = null;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     
     public SolrSearchUtil(String url) {
         this.solrServer = new HttpSolrClient(url);

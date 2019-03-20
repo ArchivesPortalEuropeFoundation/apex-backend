@@ -11,6 +11,7 @@ import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
  *
  * @author kaisar
  */
+@FunctionalInterface
 public interface AiStatService {
 
     ArchivalInstitutesResponse getAiWithOpenDataEnabled(int startIndex, int count);

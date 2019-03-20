@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author mahbub
  */
+@FunctionalInterface
 public interface HttpRequestLogger {
     /**
      * Logs a http request.

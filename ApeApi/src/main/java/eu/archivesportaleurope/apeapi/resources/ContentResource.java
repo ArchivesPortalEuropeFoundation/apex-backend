@@ -107,11 +107,7 @@ public class ContentResource {
             InputStream stream = new ByteArrayInputStream(detailContent.getXml().getBytes());
             C clevel = (C) cUnmarshaller.unmarshal(stream);
             contentResponse.setContent(clevel);
-            
-//            Marshaller marshaller = clevelContext.createMarshaller();
-//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//            marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
-//            marshaller.marshal(clevel, System.out);
+
             return Response.ok().entity(contentResponse).build();
 
         } catch (WebApplicationException e) {

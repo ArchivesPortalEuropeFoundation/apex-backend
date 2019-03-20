@@ -35,9 +35,6 @@
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchServiceImpl"/>
     </bean>
     
-    <bean id="suggestionService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl"/>
-    </bean>
     <bean id="aiStatService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.AiStatServiceImpl"/>
     </bean>

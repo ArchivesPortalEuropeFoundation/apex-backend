@@ -5,7 +5,6 @@
  */
 package eu.archivesportaleurope.apeapi.response.eaccpf;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;

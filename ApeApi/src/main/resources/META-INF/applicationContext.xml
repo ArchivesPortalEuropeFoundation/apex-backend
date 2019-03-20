@@ -58,12 +58,6 @@
         
         <constructor-arg index="2" value="resource.properties"/>
     </bean>
-    <bean id="suggestionService" class="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl">
-        <!--solrUrl-->
-        <constructor-arg index="0" ref="solrUrl" />
-        <constructor-arg index="1" value="eads"/>
-    </bean>
-    
 <!--    <solr:solr-server id="eadSolrServer" url="http://localhost:8080/solr/eads"/>
 
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">

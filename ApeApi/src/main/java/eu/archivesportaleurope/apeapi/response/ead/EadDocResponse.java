@@ -10,7 +10,6 @@ package eu.archivesportaleurope.apeapi.response.ead;
  * @author kaisar
  */
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
