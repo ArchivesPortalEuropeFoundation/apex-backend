@@ -7,6 +7,7 @@ package eu.archivesportaleurope.apeapi.response.ead;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.archivesportaleurope.apeapi.response.hierarchy.SimplifiedHierarchyResponse;
+import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -47,19 +48,19 @@ public class EadHierarchyResponse extends InstituteEadResponse {
 
     private EadHierarchyResponse(SolrDocument solrDocument, QueryResponse response) {
         super(solrDocument, response);
-        this.unitTitle = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
+        this.unitTitle = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
         if (response.getHighlighting().get(id).get(Ead3SolrFields.UNIT_TITLE) != null) {
-            this.unitTitleWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(Ead3SolrFields.UNIT_TITLE).get(0));
+            this.unitTitleWithHighlighting = CommonUtils.objectToString(response.getHighlighting().get(id).get(Ead3SolrFields.UNIT_TITLE).get(0));
         }
 
-        this.unitId = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
+        this.unitId = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
+        this.scopeContent = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
         if (response.getHighlighting().get(id).get(Ead3SolrFields.SCOPE_CONTENT) != null) {
-            this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(Ead3SolrFields.SCOPE_CONTENT).get(0));
+            this.scopeContentWithHighlighting = CommonUtils.objectToString(response.getHighlighting().get(id).get(Ead3SolrFields.SCOPE_CONTENT).get(0));
         }
         Object anc = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_ANCESTORS);
         if (anc != null) {
-            this.numberOfAncestors = Integer.parseInt(this.objectToString(anc));
+            this.numberOfAncestors = Integer.parseInt(CommonUtils.objectToString(anc));
         }
     }
 
@@ -81,13 +82,6 @@ public class EadHierarchyResponse extends InstituteEadResponse {
         this.ancestors.sort((SimplifiedHierarchyResponse a, SimplifiedHierarchyResponse b) -> a.getAncestorLevel() - b.getAncestorLevel());
     }
 
-    private String objectToString(Object o) {
-        if (o != null) {
-            return o.toString();
-        } else {
-            return "";
-        }
-    }
 
     public String getUnitTitle() {
         return unitTitle;

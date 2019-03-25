@@ -59,7 +59,6 @@ public class EadDocResponse {
     private int numberOfDescendents = 0;
 
     public EadDocResponse(Group group) {
-        //ToDo: change this
         //ex: Inventaris van het archief van de Nederlandse Ambassade in Nepal, 1965-1974:G:F124
         String temp = group.getGroupValue();
         int lastColonIndex = temp.lastIndexOf(":");
@@ -71,27 +70,27 @@ public class EadDocResponse {
         //get the default document
         SolrDocument solrDocument = group.getResult().get(0);
 
-        this.language = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.LANGUAGE));
-        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY)), 0);
-        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.AI)), 0);
-        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.REPOSITORY_CODE));
-        this.findingAidNo = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.RECORD_ID));
-        this.unitDate = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ALTERNATE_UNIT_DATE));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
+        this.language = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.LANGUAGE));
+        this.country = CommonUtils.splitByColon(CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY)), 0);
+        this.repository = CommonUtils.splitByColon(CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.AI)), 0);
+        this.repositoryCode = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.REPOSITORY_CODE));
+        this.findingAidNo = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.RECORD_ID));
+        this.unitDate = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ALTERNATE_UNIT_DATE));
+        this.scopeContent = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
 
         Object dao = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO);
         if (dao != null) {
-            this.numberOfDigitalObjects = Integer.parseInt(this.objectToString(dao));
+            this.numberOfDigitalObjects = Integer.parseInt(CommonUtils.objectToString(dao));
         }
 
         Object daoBelow = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DAO_BELOW);
         if (daoBelow != null) {
-            this.numberOfDigitalObjectsInDescendents = Integer.parseInt(this.objectToString(daoBelow));
+            this.numberOfDigitalObjectsInDescendents = Integer.parseInt(CommonUtils.objectToString(daoBelow));
         }
 
         Object des = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_DESCENDENTS);
         if (des != null) {
-            this.numberOfDescendents = Integer.parseInt(this.objectToString(des));
+            this.numberOfDescendents = Integer.parseInt(CommonUtils.objectToString(des));
         }
     }
 
@@ -105,14 +104,6 @@ public class EadDocResponse {
 
     public long getNumberOfResults() {
         return numberOfResults;
-    }
-
-    private String objectToString(Object o) {
-        if (o != null) {
-            return o.toString();
-        } else {
-            return "";
-        }
     }
 
     public String getRepository() {
