@@ -32,6 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,19 @@ public class SearchResource {
     @Autowired
     SearchService eacCpfSearch;
     
+    private Response process(ApiService service) {
+        try {
+            return service.serve();
+        } catch (WebApplicationException e) {
+            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
+            return e.getResponse();
+        } catch (Exception e) {
+            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
+            AppException errMsg = new InternalErrorException(e.getMessage());
+            return errMsg.getResponse();
+        }
+    }
+    
     @POST
     @Path("/ead")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -71,18 +85,12 @@ public class SearchResource {
     public Response search(
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
-        try {
+        ApiService apiService = () -> {
             QueryResponse queryResponse = eadSearch.searchOpenData(searchRequest);
             EadFactedResponseSet eadResponseSet = new EadFactedResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        return this.process(apiService);
     }
 
     @POST
@@ -99,17 +107,12 @@ public class SearchResource {
 
     @Consumes({ServerConstants.APE_API_V1})
     public Response eacCpfSearch(@ApiParam(value = "Search EAC units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest) {
-        try {
+        ApiService apiService = () -> {
             return Response.ok().entity(new EacCpfFacetedResponseSet(eacCpfSearch
                     .searchOpenData(searchRequest))).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return this.process(apiService);
     }
 
     @POST
@@ -127,17 +130,11 @@ public class SearchResource {
     public Response searchEadDocs(
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchDocRequest searchRequest
     ) {
-        try {
+        ApiService apiService = () -> {
             QueryResponse response = eadSearch.getEadList(searchRequest);
             return Response.ok().entity(new EadFactedDocResponseSet(searchRequest, response)).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        return this.process(apiService);
     }
 
     @POST
@@ -156,17 +153,12 @@ public class SearchResource {
             @PathParam("id") String id,
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
-        try {
+        ApiService apiService = () -> {
             QueryResponse response = eadSearch.getDescendants(id, searchRequest);
             return Response.ok().entity(new EadFactedResponseSet(response)).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return this.process(apiService);
     }
 
     @POST
@@ -185,17 +177,12 @@ public class SearchResource {
             @PathParam("id") String id,
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchRequest searchRequest
     ) {
-        try {
+        ApiService apiService = () -> {
             EadHierarchyResponseSet response = eadSearch.getDescendantsWithAncestors(id, searchRequest);
             return Response.ok().entity(response).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return this.process(apiService);
     }
 
     @POST
@@ -214,17 +201,12 @@ public class SearchResource {
             @PathParam("id") String id,
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid QueryPageRequest searchRequest
     ) {
-        try {
+        ApiService apiService = () -> {
             QueryResponse response = eadSearch.getChildren(id, searchRequest);
             return Response.ok().entity(new EadResponseSet(response)).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return this.process(apiService);
     }
 
     @POST
@@ -242,17 +224,11 @@ public class SearchResource {
     public Response searchEadFindingAidNo (
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid SearchPageRequestWithUnitId filteredSortedPageRequest
     ) {
-        try {
+        ApiService apiService = () -> {
             QueryResponse response = eadSearch.getEadsByFondsUnitId(filteredSortedPageRequest);
             return Response.ok().entity(new EadFactedResponseSet(response)).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return this.process(apiService);
     }
-
 }
