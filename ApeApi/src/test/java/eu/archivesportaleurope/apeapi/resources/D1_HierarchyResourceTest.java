@@ -11,14 +11,22 @@ import com.google.gson.reflect.TypeToken;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
+import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadDocResponse;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
 import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
 import eu.archivesportaleurope.test.util.EmbeddedSolrManager;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -92,6 +100,34 @@ public class D1_HierarchyResourceTest extends JerseySpringWithSecurityTest {
             Assert.assertEquals(siblingPositions[i], responseSet.getResults().get(i).getSiblingPosition());
             Assert.assertEquals(ancestorLevels[i], responseSet.getResults().get(i).getAncestorLevel());
         }
+    }
+
+    @Test
+    public void testSearch_ead_Doc_List() throws FileNotFoundException, SolrServerException, URISyntaxException {
+        logger.debug("Test Search Doc list");
+        SearchDocRequest request = new SearchDocRequest();
+        request.setCount(10);
+        request.setQuery("*");
+        request.setStartIndex(0);
+        request.setDocType("fa");
+
+        Response response = super.target("search").path("ead").path("docList").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+//        Response response = super.target("search").path("ead/F13716/children").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("*****Response Json: " + jsonResponse);
+
+        TypeToken<EadFactedDocResponseSet> token = new TypeToken<EadFactedDocResponseSet>() {
+        };
+        EadFactedDocResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Assert.assertEquals(1, responseEad.getTotalDocs());
+        Assert.assertEquals(247, responseEad.getTotalResults());
+        EadDocResponse doc = responseEad.getEadDocList().get(0);
+        Assert.assertTrue(StringUtils.contains(doc.getFindingAidTitle(), "Inventaris van de verzameling Ernsting"));
+        logger.debug("Title: " + doc.getRepositoryCode());
     }
 
     @Test
