@@ -269,7 +269,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
     public QueryResponse getEadsByFondsUnitId(SearchPageRequestWithUnitId filteredSortedPageRequest) {
         StringBuilder query = new StringBuilder();
         //ToDo: Merge
-        query.append(Ead3SolrFields.UNIT_ID).append(":")
+        query.append(Ead3SolrFields.RECORD_ID).append(":")
                 .append(filteredSortedPageRequest.getFindingAidNo())
                 .append(EadSearchSearviceImpl.SOLR_AND);
         if (StringUtils.isBlank(filteredSortedPageRequest.getUnitId())) {

@@ -60,6 +60,7 @@ public class JsonToObject {
             solrDoc.addField(Ead3SolrFields.TITLE_PROPER, ead.getFindingAidTitle());
             solrDoc.addField(Ead3SolrFields.UNIT_ID, ead.getUnitId());
             solrDoc.addField(Ead3SolrFields.SCOPE_CONTENT, ead.getScopeContent());
+            solrDoc.addField(Ead3SolrFields.PARENT_ID, ead.getParentId());
             solrDoc.addField(Ead3SolrFields.LANGUAGE, ead.getLanguage());
             solrDoc.addField(Ead3SolrFields.LANG_MATERIAL, ead.getLangMaterial());
             solrDoc.addField(Ead3SolrFields.ALTERNATE_UNIT_DATE, ead.getUnitDate());

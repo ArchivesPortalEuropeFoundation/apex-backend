@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
+import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchPageRequestWithUnitId;
 import eu.archivesportaleurope.apeapi.request.SearchRequest;
 import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
@@ -251,6 +252,50 @@ public class A1_SearchResourceTest extends JerseySpringWithSecurityTest {
         Response response = super.target("search").path("ead").request().header("APIkey", "Blabal").post(Entity.entity(request, ServerConstants.APE_API_V1));
 
         Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+    }
+    
+    @Test
+    public void testGetChildrenHasNoChild() {
+        QueryPageRequest request = new QueryPageRequest();
+        request.setCount(10);
+        request.setQuery("*");
+        request.setStartIndex(0);
+
+        Response response = super.target("search").path("ead").path("F9732").path("children").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadResponseSet> token = new TypeToken<EadResponseSet>() {
+        };
+        EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Assert.assertTrue(responseEad.getTotalResults() == 0);
+    }
+    
+    @Test
+    public void testGetChildrenHasSomeChild() {
+        QueryPageRequest request = new QueryPageRequest();
+        request.setCount(10);
+        request.setQuery("*");
+        request.setStartIndex(0);
+
+        Response response = super.target("search").path("ead").path("F13716").path("children").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadResponseSet> token = new TypeToken<EadResponseSet>() {
+        };
+        EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Assert.assertTrue(responseEad.getTotalResults() > 0);
     }
 
     @Override
