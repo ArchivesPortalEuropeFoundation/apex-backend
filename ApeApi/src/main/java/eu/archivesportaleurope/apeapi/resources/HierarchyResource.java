@@ -6,8 +6,6 @@
 package eu.archivesportaleurope.apeapi.resources;
 
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
-import eu.archivesportaleurope.apeapi.exceptions.AppException;
-import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.services.EadSearchService;
@@ -23,7 +21,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,7 +36,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Path("/hierarchy")
 @Api("/hierarchy")
 @Produces({ServerConstants.APE_API_V1})
-public class HierarchyResource {
+public class HierarchyResource extends ApiServiceProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -61,17 +58,12 @@ public class HierarchyResource {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getAncestors(@PathParam("id") String id) {
-        try {
+        ApiService apiService = () -> {
             HierarchyResponseSet response = eadSearch.getAncestors(id);
             return Response.ok().entity(response).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return super.process(apiService);
     }
 
     @POST
@@ -90,17 +82,12 @@ public class HierarchyResource {
             @PathParam("id") String id,
             @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid PageRequest searchRequest
     ) {
-        try {
+        ApiService apiService = () -> {
             HierarchyResponseSet response = eadSearch.getChildren(id, searchRequest);
             return Response.ok().entity(response).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return super.process(apiService);
     }
 
 }

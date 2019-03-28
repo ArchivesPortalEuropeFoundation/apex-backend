@@ -49,23 +49,6 @@ public class SolrSearchUtil {
         return this.queryResponse;
     }
 
-    public TermsResponse getTermsResponse(String q) throws SolrServerException, IOException {
-        SolrQuery query = new SolrQuery(q);
-        query.setRequestHandler("list");
-        query.set("spellcheck", "true");
-        query.setTermsPrefix(q.toLowerCase());
-        query.setTermsLower(q.toLowerCase());
-        query.setRequestHandler("/terms");
-        this.queryResponse = this.solrServer.query(query);
-        return this.queryResponse.getTermsResponse();
-    }
-
-    public QueryResponse getSuggestion() throws SolrServerException, IOException {
-        solrQuery.setRequestHandler("list");
-        solrQuery.set("spellcheck", "true");
-        return solrServer.query(solrQuery);
-    }
-
     public String getCoreName() {
         return coreName;
     }

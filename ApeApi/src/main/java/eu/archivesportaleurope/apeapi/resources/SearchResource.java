@@ -6,8 +6,6 @@
 package eu.archivesportaleurope.apeapi.resources;
 
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
-import eu.archivesportaleurope.apeapi.exceptions.AppException;
-import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.SearchPageRequestWithUnitId;
 import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
 import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
@@ -30,9 +28,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,7 +44,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Path("/search")
 @Api("/search")
 @Produces({ServerConstants.APE_API_V1})
-public class SearchResource {
+public class SearchResource extends ApiServiceProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -56,8 +52,8 @@ public class SearchResource {
     EadSearchService eadSearch;
     @Autowired
     SearchService eacCpfSearch;
-    
-    private Response process(ApiService service) {
+    /*
+    public Response process(ApiService service) {
         try {
             return service.serve();
         } catch (WebApplicationException e) {
@@ -68,7 +64,7 @@ public class SearchResource {
             AppException errMsg = new InternalErrorException(e.getMessage());
             return errMsg.getResponse();
         }
-    }
+    }*/
     
     @POST
     @Path("/ead")
@@ -90,7 +86,7 @@ public class SearchResource {
             EadFactedResponseSet eadResponseSet = new EadFactedResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
         };
-        return this.process(apiService);
+        return super.process(apiService);
     }
 
     @POST
@@ -112,7 +108,7 @@ public class SearchResource {
                     .searchOpenData(searchRequest))).build();
         };
         
-        return this.process(apiService);
+        return super.process(apiService);
     }
 
     @POST
@@ -134,7 +130,7 @@ public class SearchResource {
             QueryResponse response = eadSearch.getEadList(searchRequest);
             return Response.ok().entity(new EadFactedDocResponseSet(searchRequest, response)).build();
         };
-        return this.process(apiService);
+        return super.process(apiService);
     }
 
     @POST
@@ -158,7 +154,7 @@ public class SearchResource {
             return Response.ok().entity(new EadFactedResponseSet(response)).build();
         };
         
-        return this.process(apiService);
+        return super.process(apiService);
     }
 
     @POST
@@ -182,7 +178,7 @@ public class SearchResource {
             return Response.ok().entity(response).build();
         };
         
-        return this.process(apiService);
+        return super.process(apiService);
     }
 
     @POST
@@ -206,7 +202,7 @@ public class SearchResource {
             return Response.ok().entity(new EadResponseSet(response)).build();
         };
         
-        return this.process(apiService);
+        return super.process(apiService);
     }
 
     @POST
@@ -229,6 +225,6 @@ public class SearchResource {
             return Response.ok().entity(new EadFactedResponseSet(response)).build();
         };
         
-        return this.process(apiService);
+        return super.process(apiService);
     }
 }
