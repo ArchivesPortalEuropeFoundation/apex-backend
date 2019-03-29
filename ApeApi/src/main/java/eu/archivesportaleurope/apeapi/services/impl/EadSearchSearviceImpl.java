@@ -62,6 +62,15 @@ public class EadSearchSearviceImpl extends EadSearchService {
         Map<String, Integer> keyLevel = new HashMap<>();
     }
 
+    public EadSearchSearviceImpl(String solrUrl, String solrCore, String propFileName) {
+        this.extraParam = new HashMap<>();
+        this.solrUrl = solrUrl;
+        this.solrCore = solrCore;
+        logger.debug("Solr server got created!");
+        this.searchUtil = new SolrSearchUtil(solrUrl, solrCore);
+        this.propertiesUtil = new PropertiesUtil(propFileName);
+    }
+
     public EadSearchSearviceImpl(SolrClient solrServer, String propFileName) {
         this.extraParam = new HashMap<>();
         this.solrUrl = this.solrCore = "";
