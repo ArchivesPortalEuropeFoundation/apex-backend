@@ -7,8 +7,6 @@ package eu.archivesportaleurope.apeapi.resources;
 
 import de.staatsbibliothek_berlin.eac.EacCpf;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
-import eu.archivesportaleurope.apeapi.exceptions.AppException;
-import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.response.ContentResponseClevel;
 import eu.archivesportaleurope.apeapi.response.ContentResponseEacCpf;
 import eu.archivesportaleurope.apeapi.response.ContentResponseEad;
@@ -31,13 +29,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +47,7 @@ import org.springframework.stereotype.Component;
 @Path("/content")
 @Api("/content")
 @Produces({ServerConstants.APE_API_V1})
-public class ContentResource {
+public class ContentResource extends ApiServiceProcessor {
 
     @Autowired
     private EadContentService eadContentService;
@@ -99,7 +94,7 @@ public class ContentResource {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getClevelContent(@PathParam("id") String id) {
-        try {
+        ApiService apiService = () -> {
             DetailContent detailContent = eadContentService.findClevelContent(id);
 
             ContentResponseClevel contentResponse = new ContentResponseClevel(detailContent, id);
@@ -110,14 +105,9 @@ public class ContentResource {
 
             return Response.ok().entity(contentResponse).build();
 
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return super.process(apiService);
     }
 //*/
     //*
@@ -135,7 +125,7 @@ public class ContentResource {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getEadContent(@PathParam("id") String id) {
-        try {
+        ApiService apiService = () -> {
             DetailContent detailContent = eadContentService.findEadContent(id);
 
             ContentResponseEad contentResponse = new ContentResponseEad(detailContent, id);
@@ -144,15 +134,9 @@ public class ContentResource {
             Ead ead = (Ead) eadUnmarshaller.unmarshal(stream);
             contentResponse.setContent(ead);
             return Response.ok().entity(contentResponse).build();
-
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return super.process(apiService);
     }
 //*/
     //*
@@ -170,7 +154,7 @@ public class ContentResource {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getEacCpfContent(@PathParam("id") String id) {
-        try {
+        ApiService apiService = () -> {
             eu.apenet.persistence.vo.EacCpf eacCpf = eacCpfContentService.findEacCpfById(id);
             String repoPath = this.servletContext.getInitParameter(ServerConstants.REPOSITORY_DIR_PATH);
             File file = new File(repoPath + eacCpf.getPath());
@@ -182,14 +166,8 @@ public class ContentResource {
             contentResponse.setContent(eacCpfJson);
             return Response.ok().entity(contentResponse).build();
 
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        return super.process(apiService);
     }
 //*/
 }

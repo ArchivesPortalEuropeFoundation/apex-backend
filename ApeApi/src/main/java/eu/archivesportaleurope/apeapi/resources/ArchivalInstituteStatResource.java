@@ -6,8 +6,6 @@
 package eu.archivesportaleurope.apeapi.resources;
 
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
-import eu.archivesportaleurope.apeapi.exceptions.AppException;
-import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.InstituteDocRequest;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
 import eu.archivesportaleurope.apeapi.response.ArchivalInstitutesResponse;
@@ -24,7 +22,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
@@ -41,7 +38,7 @@ import org.springframework.stereotype.Component;
 @Path("/institute")
 @Api("/institute")
 @Produces({ServerConstants.APE_API_V1})
-public class ArchivalInstituteStatResource {
+public class ArchivalInstituteStatResource extends ApiServiceProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -63,16 +60,10 @@ public class ArchivalInstituteStatResource {
     @Consumes({ServerConstants.APE_API_V1})
     public Response getInsByOpenData(@ApiParam(value = "Page request by count and startIndex", required = true)
             @Valid PageRequest request) {
-        try {
+        ApiService apiService = () -> {
             return Response.ok().entity(aiStatService.getAiWithOpenDataEnabled((request.getStartIndex() < 0) ? 0 : request.getStartIndex(), request.getCount())).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        return super.process(apiService);
     }
 
     @POST
@@ -87,17 +78,11 @@ public class ArchivalInstituteStatResource {
     @Consumes({ServerConstants.APE_API_V1})
     public Response getInsDocument(@ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true)
             @Valid InstituteDocRequest request) {
-        try {
+        ApiService apiService = () -> {
             QueryResponse queryResponse = eadSearch.searchDocPerInstitute(request);
             InstituteEadResponseSet eadResponseSet = new InstituteEadResponseSet(queryResponse);
             return Response.ok().entity(eadResponseSet).build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        return super.process(apiService);
     }
 }
