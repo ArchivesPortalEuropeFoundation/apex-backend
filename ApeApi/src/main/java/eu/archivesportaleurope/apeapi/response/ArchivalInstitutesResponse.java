@@ -9,8 +9,6 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.solr.client.solrj.response.Group;
-import org.apache.solr.client.solrj.response.QueryResponse;
 
 /**
  *
@@ -18,9 +16,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
  */
 public class ArchivalInstitutesResponse {
 
-    @ApiModelProperty(required = true, value="Total number of AI found.")
+    @ApiModelProperty(required = true, value = "Total number of AI found.")
     private long totalResults;
-    @ApiModelProperty(required = true, value="Array of search result, total number of elements can be less than query limit.")
+    @ApiModelProperty(required = true, value = "Array of search result, total number of elements can be less than query limit.")
     private List<ArchivalInstituteResponse> institutes;
 
     public ArchivalInstitutesResponse() {
@@ -31,14 +29,6 @@ public class ArchivalInstitutesResponse {
         this();
         for (ArchivalInstitution ai : ais) {
             this.addInstitutes(new ArchivalInstituteResponse(ai));
-        }
-    }
-
-    public ArchivalInstitutesResponse(QueryResponse response) {
-        this();
-        this.setTotalResults(response.getGroupResponse().getValues().get(0).getNGroups());
-        for (Group group : response.getGroupResponse().getValues().get(0).getValues()) {
-            this.addInstitutes(new ArchivalInstituteResponse(group));
         }
     }
 
