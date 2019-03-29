@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -27,10 +28,10 @@ public class SearchPageRequestWithUnitId extends PageRequest {
     String unitId;
 
     @ApiModelProperty(value = "List of search filters using facet filed")
-    ArrayList<SearchFilterRequest> filters;
+    List<SearchFilterRequest> filters;
 
     @ApiModelProperty(value = "List of search filters using date")
-    ArrayList<DateFilterRequest> dateFilters;
+    List<DateFilterRequest> dateFilters;
 
     @ApiModelProperty(value = "Sorting result with fields and sorting type")
     SortRequest sortRequest;
@@ -51,25 +52,25 @@ public class SearchPageRequestWithUnitId extends PageRequest {
         this.unitId = unitId;
     }
 
-    public ArrayList<SearchFilterRequest> getFilters() {
+    public List<SearchFilterRequest> getFilters() {
         if (filters == null) {
             filters = new ArrayList<>();
         }
         return filters;
     }
 
-    public void setFilters(ArrayList<SearchFilterRequest> filters) {
+    public void setFilters(List<SearchFilterRequest> filters) {
         this.filters = filters;
     }
 
-    public ArrayList<DateFilterRequest> getDateFilters() {
+    public List<DateFilterRequest> getDateFilters() {
         if (dateFilters == null) {
             dateFilters = new ArrayList<>();
         }
         return dateFilters;
     }
 
-    public void setDateFilters(ArrayList<DateFilterRequest> dateFilters) {
+    public void setDateFilters(List<DateFilterRequest> dateFilters) {
         this.dateFilters = dateFilters;
     }
 

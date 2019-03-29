@@ -7,7 +7,7 @@ package eu.archivesportaleurope.apeapi.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,13 +18,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @ApiModel
 public class SearchFilterRequest {
-    @ApiModelProperty(value="Name of the facet field")
-    @NotNull(message="Field name can not be null")
+
+    @ApiModelProperty(value = "Name of the facet field")
+    @NotNull(message = "Field name can not be null")
     String facetFieldName;
-    
-    @ApiModelProperty(value="List of field ids")
-    @NotNull(message="Field value can not be null")
-    ArrayList<String> facetFieldIds;
+
+    @ApiModelProperty(value = "List of field ids")
+    @NotNull(message = "Field value can not be null")
+    List<String> facetFieldIds;
 
     public String getFacetFieldName() {
         return facetFieldName;
@@ -34,11 +35,11 @@ public class SearchFilterRequest {
         this.facetFieldName = facetFieldName;
     }
 
-    public ArrayList<String> getFacetFieldIds() {
+    public List<String> getFacetFieldIds() {
         return facetFieldIds;
     }
 
-    public void setFacetFieldIds(ArrayList<String> facetFieldIds) {
+    public void setFacetFieldIds(List<String> facetFieldIds) {
         this.facetFieldIds = facetFieldIds;
     }
 }
