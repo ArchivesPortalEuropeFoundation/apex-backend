@@ -11,7 +11,6 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsConstants;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
-import static eu.apenet.dashboard.manual.ExistingFilesChecker.extractAttributeFromXML;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.AbstractService;
 import eu.apenet.dashboard.services.opendata.OpenDataService;
@@ -19,7 +18,6 @@ import eu.apenet.dashboard.services.opendata.OpenDataService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.Ead3DAO;
-import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 
 import eu.apenet.persistence.factory.DAOFactory;
@@ -461,9 +459,8 @@ public class Ead3Service extends AbstractService {
      * @return
      * @throws java.lang.Exception
      */
-    
     public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
-         QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
         Ead3DAO ead3DAO = DAOFactory.instance().getEad3DAO();
         QueueAction queueAction = queueItem.getAction();
         Properties preferences = null;
@@ -540,10 +537,10 @@ public class Ead3Service extends AbstractService {
                         new ValidateTask().execute(ead3, preferences);
                         new PublishTask().execute(ead3, preferences);
                     }
-//                    if (queueAction.isRePublishAction()) {
-//                        new UnpublishTask().execuiidentifierdentifiidentifiererte(eac, preferences);
-//                        new PublishTask().execute(eac, preferences);
-//                    }
+                    if (queueAction.isRePublishAction()) {
+                        new UnpublishTask().execute(ead3, preferences);
+                        new PublishTask().execute(ead3, preferences);
+                    }
 //
                     if (queueAction.isUnpublishAction()) {
                         new UnpublishTask().execute(ead3, preferences);
@@ -765,7 +762,7 @@ public class Ead3Service extends AbstractService {
                 new ValidateTask().execute(newEad3);
 //                new ConvertTask().execute(newEad3, conversionProperties);
                 new ValidateTask().execute(newEad3);
-                new PublishTask().execute(newEad3,preferences);
+                new PublishTask().execute(newEad3, preferences);
             }
             newEad3.setQueuing(QueuingState.NO);
             ead3DAO.store(newEad3);

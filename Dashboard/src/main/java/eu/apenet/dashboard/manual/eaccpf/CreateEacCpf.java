@@ -85,7 +85,9 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import eu.archivesportaleurope.util.ApeUtil;
 import java.io.File;
+import java.util.Calendar;
 
 /**
  *
@@ -177,18 +179,22 @@ public class CreateEacCpf {
                 oldPathName = dbEacCpf.getPath();
             }
             if (control.getOtherRecordId() != null && !control.getOtherRecordId().isEmpty()) {
-                control.getRecordId().setValue(control.getOtherRecordId().get(0).getContent());
+                OtherRecordId otherRecordId = control.getOtherRecordId().get(0);
+                otherRecordId.setLocalType("unitid");
+                String recordId = ApeUtil.encodeSpecialCharactersWithSpaces(otherRecordId.getContent());
+                control.getRecordId().setValue(recordId);
+            } else if (content.length == 1) {
+                control.getRecordId().setValue(ApeUtil.encodeSpecialCharactersWithSpaces(content[0]));
             } else {
-                if (content.length == 1) {
-                    control.getRecordId().setValue(content[0]);
-                }
+                String id = System.currentTimeMillis() + "";
+                dbEacCpf.setIdentifier(id);
             }
             dbEacCpf.setIdentifier(control.getRecordId().getValue());
         } else { //NO apeId found in the xml
             if (StringUtils.isBlank(dbEacCpf.getIdentifier()) && dbEacCpf.getId() == null) {
                 String otherRecordId = null;
                 if (control.getOtherRecordId().size() > 0) {
-                    otherRecordId = control.getOtherRecordId().get(0).getContent();
+                    otherRecordId = ApeUtil.encodeSpecialCharactersWithSpaces(control.getOtherRecordId().get(0).getContent());
                 }
                 boolean noRecordIdAvailable = StringUtils.isBlank(otherRecordId) || eacCpfDAO.getEacCpfByIdentifier(aiId, otherRecordId) != null;
 
@@ -196,11 +202,11 @@ public class CreateEacCpf {
                     String id = System.currentTimeMillis() + "";
                     dbEacCpf.setIdentifier(id);
                 } else {
-                    dbEacCpf.setIdentifier(otherRecordId);
+                    dbEacCpf.setIdentifier(ApeUtil.encodeSpecialCharactersWithSpaces(otherRecordId));
 
                 }
             }
-            control.getRecordId().setValue(replaceNonNmtokenChars(dbEacCpf.getIdentifier()));
+            control.getRecordId().setValue(dbEacCpf.getIdentifier());
         }
         UploadMethod uploadMethod = new UploadMethod();
         uploadMethod.setMethod(UploadMethod.HTTP);
@@ -257,7 +263,10 @@ public class CreateEacCpf {
         // eacCpf/control/languageDeclaration
         if (null != parameters.get("controlLanguage")) {
             if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])
-                    || !"----".equals(((String[]) parameters.get("controlScript"))[0])) {
+                    && !"----".equals(((String[]) parameters.get("controlScript"))[0])
+                    && !((String[]) parameters.get("controlScript"))[0].trim().isEmpty()
+                    && !((String[]) parameters.get("controlLanguage"))[0].trim().isEmpty()
+                    ) {
                 LanguageDeclaration languageDeclaration = new LanguageDeclaration();
 
                 if (!"----".equals(((String[]) parameters.get("controlLanguage"))[0])) {
@@ -595,11 +604,13 @@ public class CreateEacCpf {
         if (parameters.containsKey("dateExistenceTable_rows")) {
             actualDateRows = Integer.parseInt(((String[]) parameters.get("dateExistenceTable_rows"))[0]);
         }
-
-        ExistDates existDates = new ExistDates();
-
+        
+        actualDateRows += (parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE) ||
+                parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE)) ? 1 : 0;
+        
         // If there are any dates
         if (actualDateRows > 0) {
+            ExistDates existDates = new ExistDates();
             DateSet dateSet = new DateSet();
             while (parameters.containsKey("dateExistenceTable_date_1_radio_" + rowCounter)) {
                 //if the rows have two dates, we need a date range, otherwise a simple date will cut it
@@ -612,6 +623,13 @@ public class CreateEacCpf {
                     dateSet.getDateOrDateRange().add(date);
                 }
                 rowCounter++;
+            }
+            
+            if (parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE) ||
+                parameters.containsKey(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE)) {
+                DateRange dateRange = createDateRange((String)parameters.get(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE),
+                        (String)parameters.get(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE));
+                dateSet.getDateOrDateRange().add(dateRange);
             }
 
             //filter all empty rows
@@ -629,8 +647,9 @@ public class CreateEacCpf {
                     existDates.setDateSet(dateSet);
                 }
             }
+            description.setExistDates(existDates);
         }
-        description.setExistDates(existDates);
+        
         if (parameters.containsKey("agent")) {
             LocalDescriptions localDescriptions = new LocalDescriptions();
             localDescriptions.setLocalType("status");
@@ -652,7 +671,9 @@ public class CreateEacCpf {
                 localDescription.setTerm(term);
                 localDescriptions.getLocalDescription().add(localDescription);
             }
-            description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(localDescriptions);
+            if (!localDescriptions.getLocalDescription().isEmpty()) {
+                description.getPlacesOrLocalDescriptionsOrLegalStatuses().add(localDescriptions);
+            }
         }
 
         // /eacCpf/cpfDescription/description/places
@@ -757,7 +778,11 @@ public class CreateEacCpf {
 
                     //add any dates
                     rowCounter = 1;
-                    actualDateRows = Integer.parseInt(((String[]) parameters.get("placeTable_" + tableCounter + "_rows"))[0]);
+                    try {
+                        actualDateRows = Integer.parseInt(((String[]) parameters.get("placeTable_" + tableCounter + "_rows"))[0]);
+                    } catch (NumberFormatException | NullPointerException ex) {
+                        actualDateRows = 0;
+                    }
 
                     // If there are any dates
                     if (actualDateRows > 0) {
@@ -1212,7 +1237,7 @@ public class CreateEacCpf {
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    cpfRelation.setHref(parameterContent[0]);
+                    cpfRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                 }
             }
 
@@ -1341,7 +1366,7 @@ public class CreateEacCpf {
                     if (parameters.containsKey("agent")) {
                         resRelation.setType(parameterContent[0]);
                     } else {
-                        resRelation.setHref(parameterContent[0]);
+                        resRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                     }
                 }
             }
@@ -1399,7 +1424,7 @@ public class CreateEacCpf {
                         relationEntry.setContent(parameterContent[0]);
                     }
                     if (parameters.containsKey("agent")) {
-                        resRelation.setHref(parameterContent[0]);
+                        resRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                     } else {
                         resRelation.getRelationEntry().add(relationEntry);
                     }
@@ -1482,7 +1507,7 @@ public class CreateEacCpf {
             if ((String[]) parameters.get(parameterName4 + relationCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName4 + relationCounter);
                 if (parameterContent.length == 1 && !parameterContent[0].isEmpty()) {
-                    fncRelation.setHref(parameterContent[0]);
+                    fncRelation.setHref(ApeUtil.encodeSpecialCharactersWithSpaces(parameterContent[0]));
                 }
             }
 
@@ -1573,6 +1598,52 @@ public class CreateEacCpf {
         }
 
         return relations;
+    }
+    
+    private DateRange createDateRange(String birthDate, String deathDate) {
+        if (birthDate==null) {
+            birthDate = "";
+        }
+        if (deathDate==null) {
+            deathDate = "";
+        }
+        birthDate = birthDate.trim();
+        deathDate = deathDate.trim();
+        
+        DateRange dateRange = new DateRange();
+        String normalizeBirthDate = this.getNormalizedDate(birthDate);
+        String normalizedDeathDate = this.getNormalizedDate(deathDate);
+        
+        if (birthDate.isEmpty() && deathDate.isEmpty()) {
+            dateRange.setLocalType(UNKNOWN);
+        } else if (birthDate.isEmpty() && !deathDate.isEmpty()) {
+            dateRange.setLocalType(UNKNOWN_START);
+        } else if (!birthDate.isEmpty() && deathDate.isEmpty()) {
+            dateRange.setLocalType(UNKNOWN_END);
+        }
+        
+        if (birthDate.isEmpty()) {
+            birthDate = UNKNOWN;
+        }
+        if (deathDate.isEmpty()) {
+            deathDate = UNKNOWN;
+        }
+        FromDate fromDate = new FromDate();
+        if (!normalizeBirthDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+            fromDate.setStandardDate(normalizeBirthDate);
+        }
+        fromDate.setContent(birthDate);
+        
+        dateRange.setFromDate(fromDate);
+        
+        ToDate toDate = new ToDate();
+        if (!normalizedDeathDate.equals(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN)) {
+            toDate.setStandardDate(normalizedDeathDate);
+        }
+        toDate.setContent(deathDate);
+        dateRange.setToDate(toDate);
+        
+        return dateRange;
     }
 
     private DateRange createDateRange(String tableName, int rowCounter) {
@@ -1762,5 +1833,29 @@ public class CreateEacCpf {
         } else {
             return null;
         }
+    }
+    
+    private String getNormalizedDate(String dateStr) {
+        java.util.Date date = APEnetUtilities.extractDate(dateStr);
+        java.util.Date maxDateEac = APEnetUtilities.extractDate("31.12.2099"); //Ape-EacCpf xsd!
+        if (date==null) {
+            if (dateStr != null) {
+                try {
+                    int year = Integer.parseInt(dateStr);
+                    if (year>0 && year<=2099) {
+                        return dateStr;
+                    }
+                } catch (NumberFormatException ex) {}
+            }
+            return Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+        } else if (date.after(maxDateEac)) {
+            return Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
+        }
+        Calendar calendarDate = new GregorianCalendar();
+        calendarDate.setTime(date);
+        
+        String normalizedDate = String.format("%1$tY-%1$tm-%1$td", calendarDate);
+        
+        return normalizedDate;
     }
 }

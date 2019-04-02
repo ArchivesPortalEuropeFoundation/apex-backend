@@ -7,8 +7,6 @@ package eu.archivesportaleurope.apeapi.resources;
 
 import eu.apenet.persistence.vo.EacCpf;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
-import eu.archivesportaleurope.apeapi.exceptions.AppException;
-import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.services.EacCpfContentService;
 import eu.archivesportaleurope.apeapi.services.EadContentService;
 import io.swagger.annotations.Api;
@@ -22,7 +20,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -39,7 +36,7 @@ import org.springframework.stereotype.Component;
 @Path("/download")
 @Api("/download")
 @Produces({ServerConstants.APE_API_V1})
-public class DownloadResource {
+public class DownloadResource extends ApiServiceProcessor {
     @Autowired
     private EadContentService eadContentService;
     
@@ -66,21 +63,16 @@ public class DownloadResource {
     @Consumes({ServerConstants.APE_API_V1})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadXmlEad(@PathParam("id") String id) {
-        try {
+        ApiService apiService = () -> {
             eu.apenet.persistence.vo.Ead ead = eadContentService.findEadById(id);
             String repoPath = this.servletContext.getInitParameter(ServerConstants.REPOSITORY_DIR_PATH);
             File file = new File(repoPath + ead.getPath());
             Response.ResponseBuilder response = Response.ok((Object) file);
             response.header("Content-Disposition", "attachment; filename="+id+".xml");
             return response.build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return super.process(apiService);
     }
 //*/
     
@@ -100,21 +92,16 @@ public class DownloadResource {
     @Consumes({ServerConstants.APE_API_V1})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadXmlEacCpf(@PathParam("id") String id) {
-        try {
+        ApiService apiService = () -> {
             EacCpf eacCpf = eacCpfContentService.findEacCpfById(id);
             String repoPath = this.servletContext.getInitParameter(ServerConstants.REPOSITORY_DIR_PATH);
             File file = new File(repoPath + eacCpf.getPath());
             Response.ResponseBuilder response = Response.ok((Object) file);
             response.header("Content-Disposition", "attachment; filename="+id+".xml");
             return response.build();
-        } catch (WebApplicationException e) {
-            logger.debug(ServerConstants.WEB_APP_EXCEPTION, e);
-            return  e.getResponse();
-        } catch (Exception e) {
-            logger.debug(ServerConstants.UNKNOWN_EXCEPTION, e);
-            AppException errMsg = new InternalErrorException(e.getMessage());
-            return errMsg.getResponse();
-        }
+        };
+        
+        return super.process(apiService);
     }
 //*/
 }

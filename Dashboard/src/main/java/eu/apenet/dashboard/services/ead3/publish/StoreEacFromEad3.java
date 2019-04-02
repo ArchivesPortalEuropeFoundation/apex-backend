@@ -19,6 +19,7 @@ import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.util.ApeUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -50,7 +51,7 @@ public class StoreEacFromEad3 {
     private int fileToLoad;
     private int aiId;
     private String ead3Identifier;
-    private List<String> warnings_ead = new ArrayList<String>();
+    private List<String> warnings_ead = new ArrayList<>();
 
     Logger LOG = Logger.getLogger(StoreEacFromEad3.class);
 
@@ -68,7 +69,7 @@ public class StoreEacFromEad3 {
         EacCpf eac = creator.getJaxbEacCpf();
         String filename;
         if (this.getFileId() == null || this.getFileId().isEmpty()) {
-            filename = APEnetUtilities.convertToFilename(creator.getDatabaseEacCpf().getEncodedIdentifier());
+            filename = APEnetUtilities.convertToFilename(ApeUtil.encodeSpecialCharactersWithSpaces(creator.getDatabaseEacCpf().getEncodedIdentifier()));
             this.setFileId(filename);
         } else {
             filename = this.getFileId();
@@ -246,7 +247,7 @@ public class StoreEacFromEad3 {
         try {
             in = new FileInputStream(tempFile);
             List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);
-            if (exceptions != null) {
+            if (exceptions != null && !exceptions.isEmpty()) {
                 StringBuilder warn;
                 for (SAXParseException exception : exceptions) {
                     warn = new StringBuilder();
@@ -256,6 +257,7 @@ public class StoreEacFromEad3 {
                     warnings_ead.add(warn.toString());
                 }
                 result = false;
+                throw exceptions.get(0);
             }
         } catch (FileNotFoundException e) {
             throw new APEnetException("Exception while validating: File not found", e);

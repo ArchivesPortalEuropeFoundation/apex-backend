@@ -7,7 +7,6 @@ package eu.archivesportaleurope.apeapi.common.datatypes;
 
 import com.google.common.collect.ImmutableMap;
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.apenet.commons.solr.SolrFields;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.TreeBidiMap;
 

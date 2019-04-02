@@ -9,7 +9,6 @@ import static eu.apenet.commons.solr.AbstractSearcher.SOLR_DATE_FORMAT;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,9 +23,10 @@ import org.apache.solr.client.solrj.SolrServerException;
  * @author mahbub
  */
 public class SolrQueryBuilder {
+
     private FacetType startDateFacetType = FacetType.START_DATE;
     private FacetType endDateFacetType = FacetType.END_DATE;
-    
+
     public SolrQuery getTermQuery(String term) {
         SolrQuery query = new SolrQuery();
         // query.setShowDebugInfo(true);
@@ -60,13 +60,13 @@ public class SolrQueryBuilder {
         this.buildDateRefinement(query, dateId, type, true);
     }
 
-    public void addFilters(SolrQuery query, FacetType facet, ArrayList<String> values) {
+    public void addFilters(SolrQuery query, FacetType facet, List<String> values) {
         if (query != null && facet != null) {
             this.addFilters(query, facet.getRefinementFieldWithLabel(), values);
         }
     }
 
-    public void addFilters(SolrQuery query, String criteria, ArrayList<String> values) {
+    public void addFilters(SolrQuery query, String criteria, List<String> values) {
         if (query != null && criteria != null && !criteria.isEmpty()) {
             query.addFilterQuery(criteria + ":" + SearchUtil.convertToOrQuery(values));
         }
@@ -98,11 +98,11 @@ public class SolrQueryBuilder {
     private void buildDateRefinement(SolrQuery query, String dateValue, FacetType dateFacet, boolean searchResults)
             throws SolrServerException, ParseException {
         boolean facetDate = true;
-        
-        if (dateFacet==null) {
+
+        if (dateFacet == null) {
             return;
         }
-        
+
         if (StringUtils.isNotBlank(dateValue)) {
             String[] splittedStartDate = dateValue.split("_");
             String startDateString = splittedStartDate[0];
@@ -115,11 +115,11 @@ public class SolrQueryBuilder {
                 endDateCalendar.add(dateGap.getType(), dateGap.getSolrTimespan());
                 String finalStartDateString = startDateString + "T00:00:00Z";
                 String finalEndDateString = finalStartDateString + "+" + dateGap.previous().getName();
-                query.addFilterQuery(dateFacet.getName()+":[" + finalStartDateString + " TO " + finalEndDateString + "]");
+                query.addFilterQuery(dateFacet.getName() + ":[" + finalStartDateString + " TO " + finalEndDateString + "]");
                 if (searchResults && dateGap.next() != null) {
-                    query.setParam("f."+dateFacet.getName()+".facet.date.start", finalStartDateString);
-                    query.setParam("f."+dateFacet.getName()+".facet.date.end", finalEndDateString);
-                    query.set("f."+dateFacet.getName()+".facet.date.gap", "+" + dateGap.getName());
+                    query.setParam("f." + dateFacet.getName() + ".facet.date.start", finalStartDateString);
+                    query.setParam("f." + dateFacet.getName() + ".facet.date.end", finalEndDateString);
+                    query.set("f." + dateFacet.getName() + ".facet.date.gap", "+" + dateGap.getName());
                 } else {
                     facetDate = false;
                 }
@@ -127,16 +127,16 @@ public class SolrQueryBuilder {
                 facetDate = false;
             }
         } else if (searchResults) {
-            query.setParam("f."+dateFacet.getName()+".facet.date.start", "0000-01-01T00:00:00Z");
-            query.setParam("f."+dateFacet.getName()+".facet.date.end", "NOW");
-            query.set("f."+dateFacet.getName()+".facet.date.gap", "+200YEARS");
+            query.setParam("f." + dateFacet.getName() + ".facet.date.start", "0000-01-01T00:00:00Z");
+            query.setParam("f." + dateFacet.getName() + ".facet.date.end", "NOW");
+            query.set("f." + dateFacet.getName() + ".facet.date.gap", "+200YEARS");
         } else {
             facetDate = false;
         }
-        
+
         if (facetDate) {
-            String [] hasStartParam = query.getParams("facet.date");
-            if (hasStartParam==null) {
+            String[] hasStartParam = query.getParams("facet.date");
+            if (hasStartParam == null) {
                 query.setParam("facet.date", dateFacet.getName());
             } else {
                 if (hasStartParam.length < 2) {

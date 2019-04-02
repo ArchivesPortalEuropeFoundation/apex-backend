@@ -9,7 +9,6 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.FindingAid;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.solr.client.solrj.response.Group;
 
 /**
  *
@@ -25,7 +24,7 @@ public class ArchivalInstituteResponse {
     private String country;
     @ApiModelProperty(value = "Id of the country")
     private int countryId;
-    @ApiModelProperty(required = true, value="Total number of documents found.")
+    @ApiModelProperty(required = true, value = "Total number of documents found.")
     private int totalDocs;
     @ApiModelProperty(value = "Code of the repository holding the fonds. Preferably, but not necessarily <a target='_blank' href='https://en.wikipedia.org/wiki/International_Standard_Identifier_for_Libraries_and_Related_Organizations'>ISIL</a>")
     private String repositoryCode;
@@ -42,31 +41,13 @@ public class ArchivalInstituteResponse {
                 numberOfPublishedItem++;
             }
         }
-        for(Ead3 ead3:ai.getEad3()){
-            if(ead3.isPublished())
+        for (Ead3 ead3 : ai.getEad3()) {
+            if (ead3.isPublished()) {
                 numberOfPublishedItem++;
+            }
         }
         this.setTotalDocs(numberOfPublishedItem);
         this.repositoryCode = ai.getRepositorycode();
-    }
-    
-    public ArchivalInstituteResponse(Group group){
-        String groupValue = group.getGroupValue();
-        String[] groupValueSplitted = groupValue.split(":");
-        String countryInfo = group.getResult().get(0).get("country").toString();
-        String[] countrySplitted = countryInfo.split(":");
-        String repoCode = group.getResult().get(0).get("repositoryCode").toString();
-        long numberOfPublishedItem = group.getResult().getNumFound();
-        
-        this.setName(groupValueSplitted[0]);
-        this.setId(Integer.parseInt(groupValueSplitted[1]));
-        
-        this.setCountry(countrySplitted[0]);
-        this.setCountryId(Integer.parseInt(countrySplitted[2]));
-        this.setRepositoryCode(repoCode);
-        this.setTotalDocs((int)numberOfPublishedItem);
-        
-        
     }
 
     public String getName() {

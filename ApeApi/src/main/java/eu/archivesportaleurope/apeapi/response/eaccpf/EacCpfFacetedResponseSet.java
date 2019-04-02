@@ -23,7 +23,7 @@ public class EacCpfFacetedResponseSet extends EacCpfResponseSet {
     @ApiModelProperty(value = "Array of facet date fileds.")
     private FacetDateFields facetDateFields;
 
-    public EacCpfFacetedResponseSet(EacFacetFields facetFields, FacetDateFields facetDateFields) {
+    public EacCpfFacetedResponseSet() {
         this.facetFields = new EacFacetFields();
         this.facetDateFields = new FacetDateFields();
     }

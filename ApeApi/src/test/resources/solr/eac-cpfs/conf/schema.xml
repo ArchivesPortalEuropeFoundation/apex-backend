@@ -99,8 +99,8 @@
 
 
 
-      <field name="startdate" type="date" indexed="true" stored="true" required="false"/>
-	  <field name="enddate" type="date" indexed="true" stored="true" required="false"/>
+      <field name="startDate" type="date" indexed="true" stored="true" required="false"/>
+	  <field name="endDate" type="date" indexed="true" stored="true" required="false"/>
 
 	  <field name="dateType" type="string" indexed="true" stored="true" required="false"/>
 	  <field name="numberOfArchivalMaterialRelations" type="int" indexed="false" stored="true" required="false"/>

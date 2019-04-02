@@ -34,11 +34,8 @@ public class ContentResponse {
     @ApiModelProperty(required = true, value = "Name of the repository.")
     private String repository;
 
-    public ContentResponse() {
-    }
-
-    public ContentResponse(DetailContent detailContent, String Id) {
-        this.setId(Id);
+    public ContentResponse(DetailContent detailContent, String id) {
+        this.setId(id);
         this.setRepositoryId(detailContent.getAiId());
         this.setRepository(detailContent.getAiRepoName());
         this.setFindingAidNo(detailContent.getUnitId());

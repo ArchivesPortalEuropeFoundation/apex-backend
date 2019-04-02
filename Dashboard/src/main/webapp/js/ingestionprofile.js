@@ -167,8 +167,12 @@ function showHideEacExtractionFromEad3() {
     var assocType = $("#associatedFiletypeCb").val();
     if (assocType == 4) {
         $("tr#extractEacObject").show();
+        $("tr#xslConversion").hide();
+        $("#tab-europeana").hide();
     } else {
         $("tr#extractEacObject").hide();
+        $("tr#xslConversion").show();
+        $("#tab-europeana").show();
     }
 }
 

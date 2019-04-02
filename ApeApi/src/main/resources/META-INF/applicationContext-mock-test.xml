@@ -31,16 +31,10 @@
     <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearviceImpl"/>
     </bean>
-    <bean id="ead3Search" name="ead3Search" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.Ead3SearchServiceImpl"/>
-    </bean>
     <bean id="eacCpfSearch" name="eacCpfSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchServiceImpl"/>
     </bean>
     
-    <bean id="suggestionService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl"/>
-    </bean>
     <bean id="aiStatService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.AiStatServiceImpl"/>
     </bean>

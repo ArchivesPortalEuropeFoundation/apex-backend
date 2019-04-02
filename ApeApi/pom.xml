@@ -4,12 +4,12 @@
     <parent>
         <artifactId>backend-project</artifactId>
         <groupId>eu.archivesportaleurope.backend</groupId>
-        <version>2018-05.1-SNAPSHOT</version>
+        <version>2019-02.1-SNAPSHOT</version>
     </parent>
 
     <groupId>eu.archivesportaleurope.backend</groupId>
     <artifactId>ApeApi</artifactId>
-    <version>2018-05.1-SNAPSHOT</version>
+    <version>2019-02.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>ApeApi</name>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.3.11.RELEASE</version>
+            <version>4.3.22.RELEASE</version>
             <scope>compile</scope>
         </dependency>
         
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>4.2.3.RELEASE</version>
+            <version>4.2.11.RELEASE</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>4.2.3.RELEASE</version>
+            <version>4.2.11.RELEASE</version>
             <type>jar</type>
             <exclusions>
                 <exclusion>
@@ -113,7 +113,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>4.2.3.RELEASE</version>
+            <version>4.2.11.RELEASE</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>

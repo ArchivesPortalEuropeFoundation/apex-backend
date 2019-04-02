@@ -45,18 +45,11 @@
         <!--solrUrl-->
         <constructor-arg index="0" ref="solrUrl" />
         <!--sorlCore-->
-        <constructor-arg index="1" value="eads"/>
-        
-        <constructor-arg index="2" value="resource.properties"/>
-    </bean>
-    <bean id="ead3Search" class="eu.archivesportaleurope.apeapi.services.impl.Ead3SearchServiceImpl">
-        <!--solrUrl-->
-        <constructor-arg index="0" ref="solrUrl" />
-        <!--sorlCore-->
         <constructor-arg index="1" value="ead3s"/>
         
         <constructor-arg index="2" value="resource.properties"/>
     </bean>
+    
     <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchServiceImpl">
         <!--solrUrl-->
         <constructor-arg index="0" ref="solrUrl" />
@@ -65,12 +58,6 @@
         
         <constructor-arg index="2" value="resource.properties"/>
     </bean>
-    <bean id="suggestionService" class="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl">
-        <!--solrUrl-->
-        <constructor-arg index="0" ref="solrUrl" />
-        <constructor-arg index="1" value="eads"/>
-    </bean>
-    
 <!--    <solr:solr-server id="eadSolrServer" url="http://localhost:8080/solr/eads"/>
 
     <bean id="eadSearch" class="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice">

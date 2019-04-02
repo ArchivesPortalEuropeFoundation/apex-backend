@@ -6,6 +6,7 @@
 package eu.apenet.dashboard.services.ead3;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.ItemNotFoundException;
@@ -30,6 +31,7 @@ import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import gov.loc.ead.Archdesc;
 import gov.loc.ead.C;
+import gov.loc.ead.Chronitem;
 import gov.loc.ead.Chronlist;
 import gov.loc.ead.Corpname;
 import gov.loc.ead.Dao;
@@ -47,6 +49,7 @@ import gov.loc.ead.Language;
 import gov.loc.ead.Languageset;
 import gov.loc.ead.Localtypedeclaration;
 import gov.loc.ead.MCBase;
+import gov.loc.ead.MMixedBasicDate;
 import gov.loc.ead.MMixedBasicPlusAccess;
 import gov.loc.ead.Maintenanceagency;
 import gov.loc.ead.Origination;
@@ -68,7 +71,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -109,6 +116,9 @@ public class Ead3SolrDocBuilder {
     private final Unmarshaller localTypeUnmarshaller;
     private boolean exists = false;
 
+    public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
+    private static final String DOC_TYPE = "ead3";
+
     public String getRecordId(Ead ead) {
         return ead.getControl().getRecordid().getContent();
     }
@@ -146,13 +156,14 @@ public class Ead3SolrDocBuilder {
         }
         this.retrieveArchdescMain();
         SolrDocTree solrDocTree = new SolrDocTree(archdescNode);
-        if (!this.cLevelEntities.isEmpty()) {
-            //save updated ead3Entity
-            try {
-                JpaUtil.beginDatabaseTransaction();
-                this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
 
-                //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
+        //save updated ead3Entity
+        try {
+            JpaUtil.beginDatabaseTransaction();
+            this.ead3Entity = DAOFactory.instance().getEad3DAO().getEad3ByIdentifier(this.ead3Entity.getAiId(), this.ead3Entity.getIdentifier());
+
+            //Note: Some problem with hibernate, parent id don't get saved, so this following loop might seem redundant but it is need for now!
+            if (!this.cLevelEntities.isEmpty()) {
                 for (CLevel cls : this.cLevelEntities) {
                     if (cls.getParent() != null) {
                         cls.setParentId(cls.getParent().getId());
@@ -161,15 +172,15 @@ public class Ead3SolrDocBuilder {
                 if (!exists) {
                     this.ead3Entity.setcLevels(this.cLevelEntities);
                 }
-                this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
-                JpaUtil.commitDatabaseTransaction();
-            } catch (Exception ex) {
-                LOGGER.error("DB exception!", ex);
             }
+            this.ead3Entity = DAOFactory.instance().getEad3DAO().store(this.ead3Entity);
+            JpaUtil.commitDatabaseTransaction();
+        } catch (Exception ex) {
+            LOGGER.error("DB exception!", ex);
+        }
 //            List<CLevel> levels = DAOFactory.instance().getCLevelDAO().getCLevelWithEad3Id(this.ead3Entity.getArchivalInstitution().getRepositorycode(), this.ead3Entity.getIdentifier(), null);
 //            SolrDocNode processedDocNode = new SolrRootDocNodeInit(archdescNode, levels).getProcessedNode();
 //            solrDocTree = new SolrDocTree(processedDocNode);
-        }
 
         return solrDocTree;
 
@@ -182,21 +193,27 @@ public class Ead3SolrDocBuilder {
 
         this.archdescNode.setDataElement(Ead3SolrFields.AI_ID, ead3Entity.getAiId());
         this.archdescNode.setDataElement(Ead3SolrFields.AI_NAME, ead3Entity.getArchivalInstitution().getAiname());
-        this.archdescNode.setDataElement(Ead3SolrFields.AI, ead3Entity.getArchivalInstitution().getAiname() + "|" + ead3Entity.getAiId());
+        this.archdescNode.setDataElement(Ead3SolrFields.AI, ead3Entity.getArchivalInstitution().getAiname() + ":" + ead3Entity.getAiId());
 
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_ID, ead3Entity.getArchivalInstitution().getCountry().getId());
         this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY_NAME, ead3Entity.getArchivalInstitution().getCountry().getCname());
-        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, ead3Entity.getArchivalInstitution().getCountry().getCname() + "|" + ead3Entity.getArchivalInstitution().getCountry().getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.COUNTRY, ead3Entity.getArchivalInstitution().getCountry().getCname() + ":" + SolrValues.TYPE_GROUP + ":" + ead3Entity.getArchivalInstitution().getCountry().getId());
 
         this.archdescNode.setDataElement(Ead3SolrFields.REPOSITORY_CODE, ead3Entity.getArchivalInstitution().getRepositorycode());
-        this.archdescNode.setDataElement(Ead3SolrFields.ID, SolrValues.EAD3_PREFIX + ead3.getId());
-        this.archdescNode.setDataElement(Ead3SolrFields.ROOT_DOC_ID, SolrValues.EAD3_PREFIX + ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ID, SolrValues.E3_FA_PREFIX + ead3.getId());
+        this.archdescNode.setDataElement(Ead3SolrFields.ROOT_DOC_ID, SolrValues.E3_FA_PREFIX + ead3.getId());
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, 0);
         this.archdescNode.setDataElement(Ead3SolrFields.NUMBER_OF_DESCENDENTS, 0);
-        this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper());
+        this.archdescNode.setDataElement(Ead3SolrFields.TITLE_PROPER, this.retrieveTitleProper() + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
         this.archdescNode.setDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
         this.archdescNode.setDataElement(Ead3SolrFields.RECORD_ID, this.retrieveRecordId());
+        this.archdescNode.setDataElement(Ead3SolrFields.RECORD_TYPE, Ead3SolrDocBuilder.DOC_TYPE); //ToDo: auto find the type?
         this.archdescNode.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
+
+        this.archdescNode.setDataElement(SolrFields.FA_DYNAMIC_NAME, this.retrieveTitleProper() + ":" + SolrValues.TYPE_GROUP + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        this.archdescNode.setDataElement(SolrFields.FA_DYNAMIC_ID + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+        this.archdescNode.setDataElement(SolrFields.AI_DYNAMIC_ID + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
+        this.archdescNode.setDataElement(SolrFields.AI_DYNAMIC + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
 
         this.archdescNode.setTransientDataElement(Ead3SolrFields.LANGUAGE, this.retrieveControlLanguage());
         this.archdescNode.setTransientDataElement("script", this.retrieveControlScript());
@@ -259,7 +276,13 @@ public class Ead3SolrDocBuilder {
             }
             eadContent.setEadid(ead3.getId());
             eadContent.setUnittitle((String) this.archdescNode.getDataElement(Ead3SolrFields.UNIT_TITLE));
-            eadContent.setTitleproper((String) this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER));
+            String titleProper = (String) this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER);
+            try {
+                titleProper = titleProper.substring(0, titleProper.lastIndexOf(":"));
+            } catch (Exception e) {
+                LOGGER.debug("No : added in title proper" + e);
+            }
+            eadContent.setTitleproper(titleProper);
             eadContent.setXml(arcdescXml);
             this.ead3Entity.setEadContent(eadContent);
         } catch (JAXBException | UnsupportedEncodingException ex) {
@@ -324,41 +347,18 @@ public class Ead3SolrDocBuilder {
         if (cDid == null) {
             return null; //ToDo: invalid c exception?
         }
-//        String cClassName = cElement.getClass().getName();
-//        String cPostFix = cClassName.replace("C", "");
 
         JpaUtil.beginDatabaseTransaction();
         CLevel cLevelEntity = new CLevel();
         cLevelEntity.setOrderId(orderId);
         //cLevelEntity.setEad3(ead3Entity);
         cLevelEntity.setParent(parentC);
-//        if (parentC != null) {
-//            cLevelEntity.setParentClId(parentC.getId());
-//        }
 
-//to xml
-        Marshaller marshaller = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
-        ((C) cElement).getTheadAndC().clear(); //remove all child c
-        try {
-            marshaller = this.cLevelContext.createMarshaller();
-//            QName qName = new QName("c");
-//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
-
-            marshaller.marshal(cElement, baos);
-            String cLevelXml = baos.toString("UTF-8");
-            cLevelEntity.setXml(cLevelXml);
-//            System.out.println("Clevel xml: " + cLevelXml);
-
-        } catch (JAXBException | UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-//        cLevelEntity = JpaUtil.getEntityManager().merge(cLevelEntity);
         cLevelEntity.setEad3(ead3Entity);
         Map<String, Object> didMap = this.processDid(cDid, cRoot);
         cLevelEntity.setUnittitle((String) didMap.get(Ead3SolrFields.UNIT_TITLE));
-        cLevelEntity.setUnitid((String) this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + (String) didMap.get(Ead3SolrFields.UNIT_ID));
-        
+        cLevelEntity.setUnitid((String) parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
+
         //ToDo gen currentNodeId
         cRoot.setDataElement(Ead3SolrFields.AI_ID, this.archdescNode.getDataElement(Ead3SolrFields.AI_ID));
         cRoot.setDataElement(Ead3SolrFields.AI_NAME, this.archdescNode.getDataElement(Ead3SolrFields.AI_NAME));
@@ -374,13 +374,13 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.LANGUAGE, this.archdescNode.getDataElement(Ead3SolrFields.LANGUAGE));
         cRoot.setDataElement(Ead3SolrFields.LANG_MATERIAL, this.archdescNode.getDataElement(Ead3SolrFields.LANG_MATERIAL));
         cRoot.setDataElement(Ead3SolrFields.RECORD_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID));
-        cRoot.setDataElement(Ead3SolrFields.TITLE_PROPER, this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER)
-                + ":" + this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID)); //ToDo: Recheck prefix
+        cRoot.setDataElement(Ead3SolrFields.RECORD_TYPE, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_TYPE));
+        cRoot.setDataElement(Ead3SolrFields.TITLE_PROPER, this.archdescNode.getDataElement(Ead3SolrFields.TITLE_PROPER)); //ToDo: Recheck prefix
 
         cRoot.setDataElement(Ead3SolrFields.PARENT_ID, parent.getDataElement(Ead3SolrFields.ID));
         cRoot.setDataElement(Ead3SolrFields.ROOT_DOC_ID, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_TITLE, didMap.get(Ead3SolrFields.UNIT_TITLE));
-        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, this.archdescNode.getDataElement(Ead3SolrFields.RECORD_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
+        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
 //        cRoot.setDataElement(Ead3SolrFields.UNIT_ID, parent.getDataElement(Ead3SolrFields.UNIT_ID) + "-" + didMap.get(Ead3SolrFields.UNIT_ID));
         cRoot.setDataElement(Ead3SolrFields.UNIT_DATE, didMap.get(Ead3SolrFields.UNIT_DATE));
         cRoot.setDataElement(Ead3SolrFields.START_DATE, didMap.get(Ead3SolrFields.START_DATE));
@@ -392,6 +392,23 @@ public class Ead3SolrDocBuilder {
         cRoot.setDataElement(Ead3SolrFields.DAO, didMap.get(Ead3SolrFields.DAO));
         cRoot.setDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS, (Integer) parent.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS) + 1);
         cRoot.setDataElement(Ead3SolrFields.PARENT_UNIT_ID, parent.getDataElement(Ead3SolrFields.PARENT_UNIT_ID));
+        cRoot.setDataElement(SolrFields.FA_DYNAMIC_NAME, this.archdescNode.getDataElement(SolrFields.FA_DYNAMIC_NAME));
+        cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, this.archdescNode.getDataElement(Ead3SolrFields.ROOT_DOC_ID));
+
+        //need to change the implementation to retrieve the parent dynamic fs
+        int numberOfAncestors = (int) cRoot.getDataElement(Ead3SolrFields.NUMBER_OF_ANCESTORS);
+
+        for (int i = 1; i < numberOfAncestors - 1; i++) {
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC + i + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getDataElement(SolrFields.FA_DYNAMIC + i + SolrFields.DYNAMIC_STRING_SUFFIX));
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + i + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getDataElement(SolrFields.FA_DYNAMIC_ID + i + SolrFields.DYNAMIC_STRING_SUFFIX));
+        }
+
+        if (numberOfAncestors > 1) {
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getTransientDataElement(SolrFields.FA_DYNAMIC + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX));
+            cRoot.setDataElement(SolrFields.FA_DYNAMIC_ID + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX, parent.getTransientDataElement(SolrFields.FA_DYNAMIC_ID + (numberOfAncestors - 1) + SolrFields.DYNAMIC_STRING_SUFFIX));
+        }
+        cRoot.setDataElement(SolrFields.AI_DYNAMIC_ID + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
+        cRoot.setDataElement(SolrFields.AI_DYNAMIC + "0" + SolrFields.DYNAMIC_STRING_SUFFIX, ead3Entity.getArchivalInstitution().getAiname() + ":" + SolrValues.TYPE_LEAF + ":" + SolrValues.AI_PREFIX + ead3Entity.getArchivalInstitution().getAiId());
 
         int currentNumberofDao = Integer.parseInt(didMap.get(Ead3SolrFields.NUMBER_OF_DAO).toString());
         int currentNumberOfDescendents = 0;
@@ -405,9 +422,12 @@ public class Ead3SolrDocBuilder {
                     cRoot.getDataElement(Ead3SolrFields.ROOT_DOC_ID).toString().substring(1));
             cRoot.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + cLevelEntity.getId());
         }
-        
+
         cRoot.setDataElement(Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + cLevelEntity.getId()); //ToDo: DB ID
-        
+
+        cRoot.setTransientDataElement(SolrFields.FA_DYNAMIC + numberOfAncestors + SolrFields.DYNAMIC_STRING_SUFFIX, NUMBERFORMAT.format(orderId) + ":" + didMap.get(Ead3SolrFields.UNIT_TITLE) + ":" + SolrValues.TYPE_GROUP + ":" + cRoot.getDataElement(Ead3SolrFields.ID));
+        cRoot.setTransientDataElement(SolrFields.FA_DYNAMIC_ID + numberOfAncestors + SolrFields.DYNAMIC_STRING_SUFFIX, cRoot.getDataElement(Ead3SolrFields.ID));
+
         Iterator it = context.iterate("*");
 
         StringBuilder otherStrBuilder = new StringBuilder();
@@ -417,11 +437,30 @@ public class Ead3SolrDocBuilder {
             if (element instanceof Scopecontent) {
                 Scopecontent scopecontent = (Scopecontent) element;
 //                cRoot.setEacData(this.buildEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent()));
-                Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
-                this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
-                for (Map.Entry entry : eventMap.entrySet()) {
-                    cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+
+                /* !Do not remove!
+                for (Object o : scopecontent.getChronlistOrListOrTable()) {
+                    if (o instanceof Chronlist) {
+                        Chronlist cList = (Chronlist) o;
+                        for (Chronitem co : cList.getChronitem()) {
+                            Map<String, String> eventMap = buildEvent(co.getEvent());
+                            this.buildAndStoreEacData(cRoot, co.getEvent());
+                            
+                            //in ead3 solrdocs, creating dynamic fields with all the i.e firstname from the document to make it searchable
+                            for (Map.Entry entry : eventMap.entrySet()) {
+                                cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+                            }
+                        }
+                    }
                 }
+                //*/
+//                if (scopecontent.getChronlistOrListOrTable() instanceof List<?>) {
+//                    Map<String, String> eventMap = buildEvent(((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+//                    this.buildAndStoreEacData(cRoot, ((Chronlist) scopecontent.getChronlistOrListOrTable().get(0)).getChronitem().get(0).getEvent());
+//                    for (Map.Entry entry : eventMap.entrySet()) {
+//                        cRoot.setDataElement(entry.getKey().toString() + "_s", entry.getValue().toString());
+//                    }
+//                }
                 cRoot.setDataElement(Ead3SolrFields.SCOPE_CONTENT, retrieveScopeContentAsText(element));
             } else if (element instanceof Did) {
             } else if (element instanceof C) {
@@ -443,6 +482,55 @@ public class Ead3SolrDocBuilder {
 
         if (cRoot.getChild() == null) {
             cLevelEntity.setLeaf(true);
+        }
+        Marshaller marshaller = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+        ((C) cElement).getTheadAndC().clear(); //remove all child Cs only to serialized current level
+        
+        //*
+        JXPathContext context1 = JXPathContext.newContext(cElement);
+        it = context1.iterate("//*"); 
+        int count=0;
+        while (it.hasNext()) {
+            Object element = it.next();
+            
+            if (element instanceof Persname) {
+                Persname persname = (Persname) element;
+                //System.out.println("Found Persname: "+ persname.getPart().size());
+                Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, persname.getPart(), count);
+                if (personMap == null) {
+                    //System.out.println("blank person! "+this.getContentText(persname, " "));
+                    continue;
+                }
+                count++;
+                personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
+                personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
+
+                if (this.persistEac) {
+                    //System.out.println("Storing persname");
+                    try {
+                        new StoreEacFromEad3(personMap, ead3Entity.getArchivalInstitution().getCountry().getIsoname(), ead3Entity.getAiId(), ead3Entity.getIdentifier()).storeEacCpf();
+                    } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        //*/
+        //System.out.println("total persname: "+count);
+        
+        try {
+            marshaller = this.cLevelContext.createMarshaller();
+//            QName qName = new QName("c");
+//            JAXBElement<MCBase> rootedC = new JAXBElement<>(qName, MCBase.class, cElement);
+
+            marshaller.marshal(cElement, baos);
+            String cLevelXml = baos.toString("UTF-8");
+            cLevelEntity.setXml(cLevelXml);
+//            System.out.println("Clevel xml: " + cLevelXml);
+
+        } catch (JAXBException | UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         cRoot.setDataElement(Ead3SolrFields.OPEN_DATA, this.openDataEnable);
@@ -495,14 +583,18 @@ public class Ead3SolrDocBuilder {
         } else {
             JXPathContext context = JXPathContext.newContext(obj);
             Iterator it = context.iterate("*");
-
+            String str1= "";
             while (it.hasNext()) {
                 Object object = it.next();
                 if (object instanceof MMixedBasic) {
                     MMixedBasic contentHolder = (MMixedBasic) object;
 
                     for (Serializable sr : contentHolder.getContent()) {
-                        String str1 = (String) sr;
+                        try {
+                            str1 = (String) sr;
+                        } catch (ClassCastException cx){
+                            Ead3SolrDocBuilder.LOGGER.debug("Failed to convert to string: "+sr.toString());
+                        }
                         if (!str1.isEmpty()) {
                             if (stringBuilder.length() > 0) {
                                 stringBuilder.append(" ");
@@ -530,26 +622,29 @@ public class Ead3SolrDocBuilder {
         Iterator it = context.iterate("*");
 
         String tmpStr = "";
-
-        while (it.hasNext()) {
-            Object object = it.next();
-            if (object instanceof MMixedBasic) {
-                tmpStr = this.getContent((MMixedBasic) object);
-            } else if (object instanceof Item) {
-                tmpStr = this.getPlainText(object);
-            } else if (object instanceof MMixedBasicPlusAccess) {
-                tmpStr = this.getContent((MMixedBasicPlusAccess) obj);
-            } else {
-                tmpStr = this.getContentText(object, delimiter);
-            }
-            tmpStr = tmpStr.trim();
-
-            if (!tmpStr.isEmpty()) {
-                if (stringBuilder.length() > 0) {
-                    stringBuilder.append(delimiter);
+        try {
+            while (it.hasNext()) {
+                Object object = it.next();
+                if (object instanceof MMixedBasic) {
+                    tmpStr = this.getContent((MMixedBasic) object);
+                } else if (object instanceof Item) {
+                    tmpStr = this.getPlainText(object);
+                } else if (object instanceof MMixedBasicPlusAccess) {
+                    tmpStr = this.getContent((MMixedBasicPlusAccess) obj);
+                } else {
+                    tmpStr = this.getContentText(object, delimiter);
                 }
-                stringBuilder.append(tmpStr);
+                tmpStr = tmpStr.trim();
+
+                if (!tmpStr.isEmpty()) {
+                    if (stringBuilder.length() > 0) {
+                        stringBuilder.append(delimiter);
+                    }
+                    stringBuilder.append(tmpStr);
+                }
             }
+        } catch (Exception ex) {
+            LOGGER.error("Failed to get content text: ", ex);
         }
         return stringBuilder.toString().trim();
     }
@@ -559,6 +654,10 @@ public class Ead3SolrDocBuilder {
     }
 
     private String getContent(MMixedBasicPlusAccess obj) {
+        return this.getContentText(obj.getContent());
+    }
+
+    private String getContent(MMixedBasicDate obj) {
         return this.getContentText(obj.getContent());
     }
 
@@ -658,52 +757,60 @@ public class Ead3SolrDocBuilder {
 
     private Map<String, Object> processDid(Did did, SolrDocNode cRoot) {
         Map<String, Object> didInfoMap = new HashMap<>();
-
-        didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, "0");
+        
+        int daoCount = 0;
+        List<String> daoFieldValues = new ArrayList<>(); 
+        Set<String> daoTypeValues = new HashSet<>();
 
         if (did != null) {
             didInfoMap.put(Ead3SolrFields.DAO, false);
             for (Object obj : did.getMDid()) {
                 if (obj instanceof Unittitle) {
-                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, this.getContent((MMixedBasicPlusAccess) obj));
+                    String unitTitle = this.getContent((MMixedBasicPlusAccess) obj);
+                    String composedUnitTitle = " ";
+
                     Unittitle unittitle = (Unittitle) obj;
                     for (Serializable innerObjs : unittitle.getContent()) {
                         if (innerObjs instanceof JAXBElement) {
                             JAXBElement genreform = (JAXBElement) innerObjs;
                             if (genreform.getDeclaredType().equals(Genreform.class)) {
-                                cRoot.setTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE, processSource((Genreform) genreform.getValue()));
+                                String partValue = processSource((Genreform) genreform.getValue());
+                                composedUnitTitle = generateUnitTitleFromGenreform((Genreform) genreform.getValue());
+                                cRoot.setTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE, partValue);
+
                             }
 
                         }
                     }
+                    if (StringUtils.isEmpty(unitTitle)) {
+                        unitTitle = composedUnitTitle;
+                    }
+                    didInfoMap.put(Ead3SolrFields.UNIT_TITLE, unitTitle);
                     didInfoMap.put(Ead3SolrFields.UNIT_TITLE_LOCALTYPE, ((Unittitle) obj).getLocaltype());
+                } else if (obj instanceof Dao) {
+                    daoCount++;
+                    Dao dao = (Dao) obj;
+                    if (StringUtils.isNotBlank(dao.getHref())) {
+                        daoFieldValues.add(dao.getHref());
+                    }
+                    if (StringUtils.isNotBlank(dao.getDaotype())) {
+                        daoTypeValues.add(dao.getDaotype());
+                    }
+
                 } else if (obj instanceof Daoset) {
-                    int count = 0;
                     List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
-                    List<String> daoFieldValues = new ArrayList<>();
-                    Set<String> daoTypeValues = new HashSet<>();
+                    daoCount++;
                     for (JAXBElement jAXBElement : daos) {
                         if (jAXBElement.getDeclaredType().equals(Dao.class)) {
-
-                            count++;
-                            if (count <= 10) {
-                                Dao dao = (Dao) jAXBElement.getValue();
-                                if (!dao.getLocaltype().equals("fullsize")) {
-                                    daoFieldValues.add(dao.getHref());
-                                    daoTypeValues.add(dao.getDaotype());
-                                }
+                            Dao dao = (Dao) jAXBElement.getValue();
+                            if (StringUtils.isNotBlank(dao.getHref())) {
+                                daoFieldValues.add(dao.getHref());
+                            }
+                            if (StringUtils.isNotBlank(dao.getDaotype())) {
+                                daoTypeValues.add(dao.getDaotype());
                             }
                         }
                     }
-                    didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
-                    didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
-                    didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, count + "");
-                    if (count > 0) {
-                        didInfoMap.put(Ead3SolrFields.DAO, true);
-                    } else {
-                        didInfoMap.put(Ead3SolrFields.DAO, false);
-                    }
-
                 } else if (obj instanceof Unitid) {
                     if (didInfoMap.get(Ead3SolrFields.UNIT_ID) == null) {
                         didInfoMap.put(Ead3SolrFields.UNIT_ID, this.getContent((MMixedBasic) obj));
@@ -717,8 +824,12 @@ public class Ead3SolrDocBuilder {
                     String dateNormal = unitdate.getNormal();
 
                     List<String> dates = DateUtil.getDates(didInfoMap.get(Ead3SolrFields.UNIT_DATE).toString(), dateNormal);
-                    didInfoMap.put(Ead3SolrFields.START_DATE, dates.get(0));
-                    didInfoMap.put(Ead3SolrFields.END_DATE, dates.get(1));
+                    if (!StringUtils.isBlank(dates.get(0))) {
+                        didInfoMap.put(Ead3SolrFields.START_DATE, dates.get(0));
+                    }
+                    if (!StringUtils.isBlank(dates.get(1))) {
+                        didInfoMap.put(Ead3SolrFields.END_DATE, dates.get(1));
+                    }
                     if (StringUtils.isBlank(didInfoMap.get(Ead3SolrFields.UNIT_DATE).toString())) {
                         didInfoMap.put(Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
                     } else if (StringUtils.isBlank(dates.get(0))) {
@@ -744,6 +855,15 @@ public class Ead3SolrDocBuilder {
 
             }
         }
+        
+        didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
+        didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
+        didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, daoCount + "");
+        if (daoCount > 0) {
+            didInfoMap.put(Ead3SolrFields.DAO, true);
+        } else {
+            didInfoMap.put(Ead3SolrFields.DAO, false);
+        }
         return didInfoMap;
     }
 
@@ -755,6 +875,14 @@ public class Ead3SolrDocBuilder {
             }
         }
         return source;
+    }
+
+    private String generateUnitTitleFromGenreform(Genreform genreform) {
+        StringBuilder title = new StringBuilder();
+        for (Part part : genreform.getPart()) {
+            title.append(getContent(part)).append(" ");
+        }
+        return title.toString();
     }
 
     private String processLangmaterial(Langmaterial langmaterial) {
@@ -801,8 +929,11 @@ public class Ead3SolrDocBuilder {
             if (eacEvent instanceof JAXBElement) {
                 JAXBElement eacElement = (JAXBElement) eacEvent;
                 if (eacElement.getDeclaredType().equals(Persname.class)) {
-                    count++;
                     Map<String, Object> personMap = this.generateEacCpfDataMap(cRoot, ((Persname) eacElement.getValue()).getPart(), count);
+                    if (personMap == null) {
+                        continue;
+                    }
+                    count++;
                     personMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_PERSON);
                     personMap.put(Ead3ToEacFieldMapStaticValues.SOURCE, cRoot.getTransientDataElement(Ead3ToEacFieldMapStaticValues.SOURCE));
 
@@ -815,13 +946,19 @@ public class Ead3SolrDocBuilder {
                     }
                     listOfEacs.add(personMap);
                 } else if (eacElement.getDeclaredType().equals(Corpname.class)) {
-                    count++;
                     Map<String, Object> corpMap = generateEacCpfDataMap(cRoot, ((Corpname) eacElement.getValue()).getPart(), count);
+                    if (corpMap == null) {
+                        continue;
+                    }
+                    count++;
                     corpMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_CORPORATE_BODY);
                     listOfEacs.add(corpMap);
                 } else if (eacElement.getDeclaredType().equals(Famname.class)) {
-                    count++;
                     Map<String, Object> famMap = generateEacCpfDataMap(cRoot, ((Famname) eacElement.getValue()).getPart(), count);
+                    if (famMap == null) {
+                        continue;
+                    }
+                    count++;
                     famMap.put(Ead3ToEacFieldMapKeys.CPF_TYPE, Ead3ToEacFieldMapStaticValues.CPF_TYPE_FAMILY);
                     listOfEacs.add(famMap);
                 }
@@ -867,31 +1004,57 @@ public class Ead3SolrDocBuilder {
 
         int partNameCount = 1;
         int partGenealogyDescriptionCount = 0;
-        int partDateCount = 0;
+        int partDateCount = 1;
+        int partPlaceCount = 1;
+        String partLang = "";
         String firstName = "";
         String lastName = "";
         String birthDate = "";
         String deathDate = "";
+        String tmpStr;
+        boolean valid = false; //ToDo: quick fix
         for (Part part : parts) {
             //ToDo:
             try {
-                ApeType apeType = ApeType.get(this.localTypeMap.getApeType(part.getLocaltype().toLowerCase()));
+                ApeType apeType = null;
+                if (StringUtils.isNotBlank(part.getLocaltype())) {
+                    apeType = ApeType.get(this.localTypeMap.getApeType(part.getLocaltype().toLowerCase()));
+                }
                 if (apeType == null) {
                     LOGGER.debug("Unsupported ApeType: " + part.getLocaltype());
                     continue;
                 }
+//                partLang="";
+//                if (StringUtils.isNotBlank(part.getLang())) {
+//                    partLang = part.getLang();
+//                }
                 switch (apeType) {
                     case FIRSTNAME:
-                        partNameCount++;
                         firstName = getContent(part);
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(firstName));
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_FRIST_NAME));
+                        valid = true;
+                        partNameCount++;
                         break;
                     case LASTNAME:
-                        partNameCount++;
                         lastName = getContent(part);
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(lastName));
                         eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_SUR_NAME));
+                        valid = true;
+                        partNameCount++;
+                        break;
+                    case PERSNAME:
+                        String persName = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(persName));
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
+                        valid = true;
+                        partNameCount++;
+                        break;
+                    case BIRTHNAME:
+                        String birthName = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_" + partNameCount, returnAsArray(birthName));
+                        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_" + partNameCount, returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_NAME));
+                        partNameCount++;
                         break;
                     case GENDER:
                         eacMap.put(ApeType.GENDER.getValue(), getContent(part));
@@ -899,20 +1062,27 @@ public class Ead3SolrDocBuilder {
                     case ROLE:
                         eacMap.put(ApeType.ROLE.getValue(), getContent(part));
                         break;
-                    case DEATHDATE:
-                        deathDate = getContent(part);
-                        if (StringUtils.isEmpty(deathDate)) {
-                            deathDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-                        }
-                        partDateCount++;
-                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_" + partDateCount, returnAsArray(deathDate));
-                        break;
                     case BITHDATE:
                         birthDate = getContent(part);
-                        if (StringUtils.isEmpty(birthDate)) {
-                            birthDate = Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN;
-                        }
-                        eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_" + partDateCount, returnAsArray(birthDate));
+                        partDateCount++;
+                        break;
+                    case DEATHDATE:
+                        deathDate = getContent(part);
+                        partDateCount++;
+                        break;
+                    case BIRTHPLACE:
+                        tmpStr = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_+partPlaceCount, returnAsArray(tmpStr));
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_+partPlaceCount, returnAsArray("birth")); // ToDo: change the hard code
+//                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_LANGUAGE_+partPlaceCount, returnAsArray(partLang));
+                        partPlaceCount++;
+                        break;
+                    case DEATHPLACE:
+                        tmpStr = getContent(part);
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_+partPlaceCount, returnAsArray(tmpStr));
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_+partPlaceCount, returnAsArray("death")); // ToDo: change the hard code
+//                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_LANGUAGE_+partPlaceCount, returnAsArray(partLang));
+                        partPlaceCount++;
                         break;
                     default:
                         break;
@@ -922,16 +1092,9 @@ public class Ead3SolrDocBuilder {
             }
         }
 
-        if (StringUtils.isEmpty(deathDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "2_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
-        }
-        if (StringUtils.isEmpty(birthDate)) {
-            eacMap.put(Ead3ToEacFieldMapKeys.DATE_EXISTENCE_TABLE_DATE_ + "1_1", returnAsArray(Ead3ToEacFieldMapStaticValues.DATE_EXISTING_TYPE_UNKNOWN));
-        }
-
-        partNameCount++;
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_part_1", returnAsArray(firstName + " " + lastName));
-        eacMap.put(Ead3ToEacFieldMapKeys.IDENTITY_PERSON_NAME_ + "1_comp_1", returnAsArray(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_PERS_NAME));
+        eacMap.put(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE, birthDate);
+        eacMap.put(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE, deathDate);
+        
 
         //test build map for ead3 to eac
         EacCpfDAO cpfDAO = DAOFactory.instance().getEacCpfDAO();
@@ -949,12 +1112,7 @@ public class Ead3SolrDocBuilder {
         eacMap.put("resRelationType_1", returnAsArray("subjectOf"));
         eacMap.put("textareaResRelationDescription_1", returnAsArray(cRoot.getDataElement(Ead3SolrFields.UNIT_TITLE).toString()));
 
-        //for test
-        eacMap.put("dateExistenceTable_rows", returnAsArray("1"));
-        eacMap.put("dateExistenceTable_date_1_radio_1", returnAsArray("unknown"));
-        eacMap.put("dateExistenceTable_date_2_radio_1", returnAsArray("unknown"));
-
-        eacMap.put("identityPersonName_1_rows", returnAsArray("0"));
+        eacMap.put("identityPersonName_1_rows", returnAsArray("1"));
 
         eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_LANGUAGE, archdescNode.getTransientDataElement(Ead3SolrFields.LANGUAGE).toString());
         eacMap.put(Ead3ToEacFieldMapKeys.DEFAULT_SCRIPT, archdescNode.getTransientDataElement("script").toString());
@@ -963,6 +1121,9 @@ public class Ead3SolrDocBuilder {
 
         //identify automatic eac generation from ead3
         eacMap.put("agent", "Ead3");
+        if (!valid) {
+            return null;
+        }
         return eacMap;
     }
 

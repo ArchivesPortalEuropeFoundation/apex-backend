@@ -19,11 +19,8 @@ public class ContentResponseClevel extends ContentResponse {
     @ApiModelProperty(required = true, value="Information of C-level in EAD, serialized as JSON. This part could potentially contain all the elements that can be part of a Component-element (&lt;c&gt;) of an EAD/XML-document. ")
     private C content;
 
-    public ContentResponseClevel() {
-    }
-
-    public ContentResponseClevel(DetailContent detailContent, String Id) {
-        super(detailContent, Id);
+    public ContentResponseClevel(DetailContent detailContent, String id) {
+        super(detailContent, id);
     }
     
     public C getContent() {

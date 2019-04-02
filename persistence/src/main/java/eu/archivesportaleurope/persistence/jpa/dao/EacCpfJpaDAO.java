@@ -61,7 +61,7 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier) {
         TypedQuery<EacCpf> query = getEntityManager().createQuery(
                 "SELECT eacCpf FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);
-        query.setParameter("identifier", ApeUtil.decodeSpecialCharacters(identifier));
+        query.setParameter("identifier", identifier);
         query.setParameter("aiId", aiId);
         query.setMaxResults(1);
         List<EacCpf> list = query.getResultList();
@@ -79,8 +79,8 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         criteria = criteria.createAlias("eacCpf.archivalInstitution", "archivalInstitution");
-        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
-        criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
+        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", repositorycode));
+        criteria.add(Restrictions.eq("identifier", identifier));
         if (onlyPublished) {
             criteria.add(Restrictions.eq("published", true));
         }

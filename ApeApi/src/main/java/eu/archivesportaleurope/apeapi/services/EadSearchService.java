@@ -24,8 +24,6 @@ public abstract class EadSearchService extends SearchService {
 
     public abstract QueryResponse searchDocPerInstitute(InstituteDocRequest request);
 
-    public abstract QueryResponse searchInstituteInGroup(int startIndex, int count);
-
     public abstract QueryResponse getEadList(SearchDocRequest searchRequest);
 
     public abstract QueryResponse getDescendants(String id, SearchRequest searchRequest);

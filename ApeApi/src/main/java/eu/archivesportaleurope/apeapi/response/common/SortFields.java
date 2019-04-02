@@ -5,6 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.common;
 
+import eu.apenet.commons.solr.Ead3SolrFields;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,11 +17,12 @@ import java.util.Set;
 public class SortFields {
 
     private enum SortFieldsEnum {
-        date("startdate"),
-        title("titlesort"),
-        referenceCode("unitidsort"),
-        findingAidNo("unitidfondsort"),
-        orderId("orderId");
+        date(Ead3SolrFields.START_DATE),
+        title(Ead3SolrFields.SORTABLE_UNIT_TITLE),
+        referenceCode(Ead3SolrFields.SORTABLE_UNIT_ID),
+        findingAidNo(Ead3SolrFields.SORTABLE_RECORD_ID),
+        orderId(Ead3SolrFields.ORDER_ID),
+        id(Ead3SolrFields.ID);
         private final String solrFieldValue;
 
         private SortFieldsEnum(String solrFieldValue) {

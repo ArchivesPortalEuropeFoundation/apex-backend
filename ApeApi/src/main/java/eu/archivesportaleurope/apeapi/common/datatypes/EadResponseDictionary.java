@@ -21,16 +21,16 @@ public final class EadResponseDictionary implements SolrApiResponseDictionary {
      *
      */
     private static final BidiMap EAD_RESPONSE_DIC = new TreeBidiMap(ImmutableMap.builder()
-            .put("subject", SolrFields.TOPIC_FACET)
-            .put("repository", SolrFields.AI)
-            .put("docType", SolrFields.TYPE)
-            .put("hasDigitalObject", SolrFields.DAO)
-            .put("digitalObjectType", SolrFields.ROLEDAO)
-            .put("unitDateType", SolrFields.DATE_TYPE)
+            .put("subject", Ead3SolrFields.TOPIC)
+            .put("repository", Ead3SolrFields.AI)
+            .put("docType", Ead3SolrFields.RECORD_TYPE)
+            .put("hasDigitalObject", Ead3SolrFields.DAO)
+            .put("digitalObjectType", Ead3SolrFields.DAO_TYPE)
+            .put("unitDateType", Ead3SolrFields.DATE_TYPE)
             .put("entityType", SolrFields.EAC_CPF_FACET_ENTITY_TYPE)
             .put("place", SolrFields.EAC_CPF_FACET_PLACES)
-            .put("fromDate", SolrFields.START_DATE)
-            .put("toDate", SolrFields.END_DATE)
+            .put("fromDate", Ead3SolrFields.START_DATE)
+            .put("toDate", Ead3SolrFields.END_DATE)
             .build()
     );
 

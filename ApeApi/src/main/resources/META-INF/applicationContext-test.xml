@@ -31,7 +31,7 @@
     <!--    <bean id="eadSearch" name="eadSearch" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="eu.archivesportaleurope.apeapi.services.impl.EadSearchSearvice"/>
     </bean>-->
-    <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr/eads"/>
+    <solr:embedded-solr-server id="eadSolrServer" solrHome="src/test/resources/solr/ead3s"/>
     <solr:embedded-solr-server id="ead3SolrServer" solrHome="src/test/resources/solr/ead3s"/>
     <solr:embedded-solr-server id="eacSolrServer" solrHome="src/test/resources/solr/eac-cpfs"/>
     
@@ -40,19 +40,8 @@
         <constructor-arg index="1" value="resource.properties"/>
     </bean>
     
-    <bean id="ead3Search" class="eu.archivesportaleurope.apeapi.services.impl.Ead3SearchServiceImpl">
-        <constructor-arg index="0" ref="ead3SolrServer"/>
-        <constructor-arg index="1" value="resource.properties"/>
-    </bean>
-    
     <bean id="eacCpfSearch" class="eu.archivesportaleurope.apeapi.services.impl.EacCpfSearchServiceImpl">
         <constructor-arg index="0" ref="eacSolrServer"/>
         <constructor-arg index="1" value="resource.properties"/>
-    </bean>
-    
-    <!--<solr:embedded-solr-server id="eadSuggestionSolrServer" solrHome="src/test/resources/solr"/>-->
-    
-    <bean id="suggestionService" class="eu.archivesportaleurope.apeapi.services.impl.SuggestionServiceImpl">
-        <constructor-arg index="0" ref="eadSolrServer"/>
     </bean>
 </beans>

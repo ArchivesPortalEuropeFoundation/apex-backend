@@ -8,7 +8,6 @@ package eu.archivesportaleurope.apeapi.services;
 import eu.apenet.commons.solr.SolrQueryBuilder;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import eu.archivesportaleurope.apeapi.common.datatypes.EadResponseDictionary;
 import eu.archivesportaleurope.apeapi.common.datatypes.SolrApiResponseDictionary;
 import eu.archivesportaleurope.apeapi.exceptions.InternalErrorException;
 import eu.archivesportaleurope.apeapi.request.DateFilterRequest;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Mahbub
  */
 public abstract class SearchService {
-    private final String solrAND = " AND ";
+    private static final String SOLR_AND = " AND ";
 
     public abstract QueryResponse search(SearchRequest request, Map<String, String> extraSearchParam, boolean includeFacet);
 
@@ -62,8 +61,8 @@ public abstract class SearchService {
             
             if (extraSearchParam != null && !extraSearchParam.isEmpty()) {
                 for (Map.Entry<String, String> entry : extraSearchParam.entrySet()) {
-                    if (entry.getKey().equalsIgnoreCase("q") && !entry.getValue().isEmpty()) {
-                        queryStr += solrAND + entry.getValue();
+                    if ("q".equalsIgnoreCase(entry.getKey()) && !entry.getValue().isEmpty()) {
+                        queryStr += SOLR_AND + entry.getValue();
                     } else {
                         query.add(entry.getKey(), entry.getValue());
                     }
@@ -72,7 +71,7 @@ public abstract class SearchService {
             query.setQuery(queryStr);
 
             //openData - true or false should be managed by the query
-            assert (query.getQuery().contains("openData") == true);
+            assert query.getQuery().contains("openData") == true;
 
             logger.debug("Final search query: " + query);
             eadSearchUtil.setQuery(query);
@@ -105,9 +104,6 @@ public abstract class SearchService {
                 order = SolrQuery.ORDER.desc;
             }
             if (sortFilterRequest.getFields() != null) {
-                //ToDo: For every search type, sort fileds could be different
-                //If we don't want exception because sort field was not found in specific type
-                //this should be fixed
                 Map<String, String> sortFieldMap = new SortFields().getSolrSortFieldMap();
                 for (String field : sortFilterRequest.getFields()) {
                     String solrSortField = sortFieldMap.get(field);

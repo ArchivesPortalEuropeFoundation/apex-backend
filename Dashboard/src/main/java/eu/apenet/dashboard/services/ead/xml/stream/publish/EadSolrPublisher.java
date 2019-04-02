@@ -53,7 +53,7 @@ public class EadSolrPublisher {
     private String language;
     private String archdesc_langmaterial;
     private String eadidstring;
-    private String fond;
+    private String eadTitle;
     private String unitidfond;
     private EadDAO eadDao;
     private Ead ead;
@@ -71,7 +71,7 @@ public class EadSolrPublisher {
     public EadSolrPublisher(Ead ead) {
         this.ead = ead;
         eadidstring = XMLUtils.removeUnusedCharacters(ead.getEadid());
-        fond = XMLUtils.removeUnusedCharacters(ead.getTitle());
+        eadTitle = XMLUtils.removeUnusedCharacters(ead.getTitle());
         xmlType = XmlType.getContentType(ead);
         eadDao = DAOFactory.instance().getEadDAO();
         TopicMappingDAO topicMappingDAO = DAOFactory.instance().getTopicMappingDAO();
@@ -325,51 +325,51 @@ public class EadSolrPublisher {
         }
         SolrInputDocument doc1 = new SolrInputDocument();
         if (publishData.isArchdesc()) {
-            add(doc1, SolrFields.ID, solrPrefix + publishData.getId());
+            add(doc1, Ead3SolrFields.ID, solrPrefix + publishData.getId());
         } else {
-            add(doc1, SolrFields.ID, SolrValues.C_LEVEL_PREFIX + publishData.getId());
+            add(doc1, Ead3SolrFields.ID, SolrValues.C_LEVEL_PREFIX + publishData.getId());
         }
         if (publishData.getParentId() == null) {
-            add(doc1, SolrFields.PARENT_ID, solrPrefix + ead.getId());
+            add(doc1, Ead3SolrFields.PARENT_ID, solrPrefix + ead.getId());
         } else {
-            add(doc1, SolrFields.PARENT_ID, SolrValues.C_LEVEL_PREFIX + publishData.getParentId());
+            add(doc1, Ead3SolrFields.PARENT_ID, SolrValues.C_LEVEL_PREFIX + publishData.getParentId());
         }
-        add(doc1, SolrFields.UNITID, publishData.getUnitid());
+        add(doc1, Ead3SolrFields.UNIT_ID, publishData.getUnitid());
 
-        doc1.setField(SolrFields.OTHERUNITID, publishData.getOtherUnitid());
+        doc1.setField(Ead3SolrFields.OTHER_UNIT_ID, publishData.getOtherUnitid());
         if (StringUtils.isNotBlank(publishData.getUnitid())) {
-            doc1.addField(SolrFields.DUPLICATE_UNITID, publishData.isDuplicateUnitid());
+            doc1.addField(Ead3SolrFields.DUPLICATE_UNIT_ID, publishData.isDuplicateUnitid());
         }
-        add(doc1, SolrFields.SCOPECONTENT, publishData.getScopecontent());
-        add(doc1, SolrFields.TITLE, publishData.getFirstUnittitle());
+        add(doc1, Ead3SolrFields.SCOPE_CONTENT, publishData.getScopecontent());
+        add(doc1, Ead3SolrFields.UNIT_TITLE, publishData.getFirstUnittitle());
         if (publishData.isArchdesc()) {
-            add(doc1, SolrFields.LEVEL, SolrValues.LEVEL_ARCHDESC);
+            add(doc1, Ead3SolrFields.LEVEL_NAME, SolrValues.LEVEL_ARCHDESC);
         } else {
-            add(doc1, SolrFields.LEVEL, SolrValues.LEVEL_CLEVEL);
+            add(doc1, Ead3SolrFields.LEVEL_NAME, SolrValues.LEVEL_CLEVEL);
         }
-        add(doc1, SolrFields.START_DATE, sdate);
-        add(doc1, SolrFields.END_DATE, edate);
-        add(doc1, SolrFields.ALTERDATE, alterdate);
+        add(doc1, Ead3SolrFields.START_DATE, sdate);
+        add(doc1, Ead3SolrFields.END_DATE, edate);
+        add(doc1, Ead3SolrFields.ALTERNATE_UNIT_DATE, alterdate);
         if (StringUtils.isBlank(alterdate)) {
-            add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
+            add(doc1, Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
         } else if (StringUtils.isBlank(sdate)) {
-            add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
+            add(doc1, Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
         } else {
-            add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
+            add(doc1, Ead3SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
         }
-        add(doc1, SolrFields.COUNTRY, archivalinstitution.getCountry().getCname().replace(" ", "_") + COLON
+        add(doc1, Ead3SolrFields.COUNTRY, archivalinstitution.getCountry().getCname().replace(" ", "_") + COLON
                 + SolrValues.TYPE_GROUP + COLON + archivalinstitution.getCountry().getId());
-        doc1.addField(SolrFields.COUNTRY_ID, archivalinstitution.getCountry().getId());
-        add(doc1, SolrFields.REPOSITORY_CODE, archivalinstitution.getRepositorycode());
-        add(doc1, SolrFields.LANGUAGE, language);
-        add(doc1, SolrFields.LANGMATERIAL, langmaterial);
+        doc1.addField(Ead3SolrFields.COUNTRY_ID, archivalinstitution.getCountry().getId());
+        add(doc1, Ead3SolrFields.REPOSITORY_CODE, archivalinstitution.getRepositorycode());
+        add(doc1, Ead3SolrFields.LANGUAGE, language);
+        add(doc1, Ead3SolrFields.LANG_MATERIAL, langmaterial);
         // deprecated
-        add(doc1, SolrFields.AI, archivalinstitution.getAiname() + COLON + archivalinstitution.getAiId());
-        doc1.addField(SolrFields.AI_ID, archivalinstitution.getAiId());
-        add(doc1, SolrFields.EADID, ead.getEadid());
-        add(doc1, SolrFields.UNITID_OF_FOND, unitidfond);
+        add(doc1, Ead3SolrFields.AI, archivalinstitution.getAiname() + COLON + archivalinstitution.getAiId());
+        doc1.addField(Ead3SolrFields.AI_ID, archivalinstitution.getAiId());
+        add(doc1, Ead3SolrFields.RECORD_ID, ead.getEadid());
+//        add(doc1, Ead3SolrFields.UNITID_OF_FOND, unitidfond);
         boolean dao = publishData.getNumberOfDaos() > 0;
-        doc1.addField(SolrFields.DAO, dao);
+        doc1.addField(Ead3SolrFields.DAO, dao);
         if (dao) {
             LOG.debug(this.eadidstring + Ead3SolrFields.NUMBER_OF_DAO + ": " + publishData.getNumberOfDaos());
         }
@@ -382,16 +382,17 @@ public class EadSolrPublisher {
         }
         doc1.addField(Ead3SolrFields.NUMBER_OF_ANCESTORS, numberOfAncestors);
         if (dao && publishData.getRoledao().size() == 0) {
-            doc1.addField(SolrFields.ROLEDAO, SolrValues.ROLE_DAO_UNSPECIFIED);
+            doc1.addField(Ead3SolrFields.DAO_TYPE, SolrValues.ROLE_DAO_UNSPECIFIED);
         } else if (dao) {
-            doc1.addField(SolrFields.ROLEDAO, publishData.getRoledao());
+            doc1.addField(Ead3SolrFields.DAO_TYPE, publishData.getRoledao());
         }
-        add(doc1, SolrFields.OTHER, publishData.getOtherinfo());
-        doc1.addField(SolrFields.LEAF, publishData.isLeaf());
+        add(doc1, Ead3SolrFields.OTHER, publishData.getOtherinfo());
+        //ToDo: Merge 1
+//        doc1.addField(Ead3SolrFields.LEAF, publishData.isLeaf());
 
-        add(doc1, SolrFields.FOND_ID, solrPrefix + ead.getId());
-        add(doc1, SolrFields.TITLE_OF_FOND, fond + COLON + solrPrefix + ead.getId());
-        add(doc1, SolrFields.TYPE, solrType);
+//        add(doc1, SolrFields.FOND_ID, solrPrefix + ead.getId());
+        add(doc1, Ead3SolrFields.TITLE_PROPER, eadTitle + COLON + solrPrefix + ead.getId());
+        add(doc1, Ead3SolrFields.RECORD_TYPE, solrType);
         Set<String> topics = new HashSet<String>();
         topics.addAll(topicsBySourceGuides);
         topics.addAll(topicsByArchdescControlAccess);
@@ -399,14 +400,14 @@ public class EadSolrPublisher {
             addTopics(topics, publishData.getControlAccessSubjectsOccupationsGenreforms());
         }
         if (topics.size() > 0) {
-            doc1.addField(SolrFields.TOPIC_FACET, topics);
+            doc1.addField(Ead3SolrFields.TOPIC, topics);
         }
         for (int i = 0; i < publishData.getUpperLevelUnittitles().size(); i++) {
             LevelInfo levelInfo = publishData.getUpperLevelUnittitles().get(i);
             String result = "";
             String id = null;
             if (i == 0) {
-                result = fond + COLON + SolrValues.TYPE_GROUP + COLON + solrPrefix + ead.getId();
+                result = eadTitle + COLON + SolrValues.TYPE_GROUP + COLON + solrPrefix + ead.getId();
                 id = solrPrefix + ead.getId();
             } else {
                 result = levelInfo.getUnittitle() + COLON + SolrValues.TYPE_GROUP + COLON;
@@ -423,12 +424,12 @@ public class EadSolrPublisher {
                 doc1.addField(entry.getKey(), entry.getValue());
             }
         }
-        doc1.addField(SolrFields.ORDER_ID, publishData.getOrderId());
+        doc1.addField(Ead3SolrFields.ORDER_ID, publishData.getOrderId());
 
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(archivalinstitution.getAiId());
 
-        doc1.addField(SolrFields.OPEN_DATA, archivalInstitution.isOpenDataEnabled());
+        doc1.addField(Ead3SolrFields.OPEN_DATA, archivalInstitution.isOpenDataEnabled());
         docs.add(doc1);
         if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
             solrTime += EadSolrServerHolder.getInstance().add(docs);
@@ -485,7 +486,7 @@ public class EadSolrPublisher {
         }
 
         solrTime += EadSolrServerHolder.getInstance()
-                .deleteByQuery(SolrFields.FOND_ID + ":" + solrPrefix + ead.getId());
+                .deleteByQuery(Ead3SolrFields.ID + ":" + solrPrefix + ead.getId());
         Ead rollBackEad = eadDao.findById(ead.getId(), xmlType.getClazz());
         ContentUtils.changeSearchable(rollBackEad, false);
         eadDao.store(rollBackEad);

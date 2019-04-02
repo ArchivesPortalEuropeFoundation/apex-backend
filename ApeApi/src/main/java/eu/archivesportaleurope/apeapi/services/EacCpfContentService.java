@@ -11,6 +11,7 @@ import eu.apenet.persistence.vo.EacCpf;
  *
  * @author kaisar
  */
+@FunctionalInterface
 public interface EacCpfContentService {
     EacCpf findEacCpfById(String id);
 }

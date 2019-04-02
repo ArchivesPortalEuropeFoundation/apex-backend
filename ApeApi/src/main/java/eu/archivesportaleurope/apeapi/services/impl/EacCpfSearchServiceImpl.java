@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class EacCpfSearchServiceImpl extends SearchService {
 
     private String solrUrl;
-    private final String onlyOpenData = "openData:true";
+    private static final String ONLY_OPEN_DATA = "openData:true";
     private final SolrSearchUtil eacSearchUtil;
     private final PropertiesUtil propertiesUtil;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -87,7 +87,7 @@ public class EacCpfSearchServiceImpl extends SearchService {
     @Override
     public QueryResponse searchOpenData(SearchRequest request) {
         extraParam.clear();
-        extraParam.put("q", this.onlyOpenData);
+        extraParam.put("q", EacCpfSearchServiceImpl.ONLY_OPEN_DATA);
         return this.search(request, extraParam, true);
     }
 }

@@ -96,9 +96,9 @@ public final class SearchUtil {
         if (StringUtils.isNotBlank(fromDate)) {
             String date = parseDate(fromDate, true);
             if (exact) {
-                setParameter(parameters, SolrFields.START_DATE, "[" + date + "T00:00:00Z TO *]");
+                setParameter(parameters, Ead3SolrFields.START_DATE, "[" + date + "T00:00:00Z TO *]");
             } else {
-                setParameter(parameters, SolrFields.END_DATE, "[" + date + "T00:00:00Z TO *]");
+                setParameter(parameters, Ead3SolrFields.END_DATE, "[" + date + "T00:00:00Z TO *]");
             }
         }
     }
@@ -107,9 +107,9 @@ public final class SearchUtil {
         if (StringUtils.isNotBlank(toDate)) {
             String date = parseDate(toDate, false);
             if (exact) {
-                setParameter(parameters, SolrFields.END_DATE, "[* TO " + date + "T23:59:59Z]");
+                setParameter(parameters, Ead3SolrFields.END_DATE, "[* TO " + date + "T23:59:59Z]");
             } else {
-                setParameter(parameters, SolrFields.START_DATE, "[* TO " + date + "T23:59:59Z]");
+                setParameter(parameters, Ead3SolrFields.START_DATE, "[* TO " + date + "T23:59:59Z]");
             }
         }
     }
@@ -253,15 +253,15 @@ public final class SearchUtil {
             }
 
             if (countriesSelected.size() > 0) {
-                SearchUtil.setParameter(solrQueryParameters.getOrParameters(), SolrFields.COUNTRY_ID,
+                SearchUtil.setParameter(solrQueryParameters.getOrParameters(), Ead3SolrFields.COUNTRY_ID,
                         countriesSelected);
             }
             if (archivalInstitutionsIdsSelected.size() > 0) {
-                SearchUtil.setParameter(solrQueryParameters.getOrParameters(), SolrFields.AI_ID,
+                SearchUtil.setParameter(solrQueryParameters.getOrParameters(), Ead3SolrFields.AI_ID,
                         archivalInstitutionsIdsSelected);
             }
 
-            SearchUtil.setParameter(solrQueryParameters.getOrParameters(), SolrFields.FOND_ID, faHgIdsSelected);
+            SearchUtil.setParameter(solrQueryParameters.getOrParameters(), Ead3SolrFields.ID, faHgIdsSelected);
         }
     }
 
@@ -282,7 +282,7 @@ public final class SearchUtil {
                     solrToDate += "T23:59:59Z";
                 }
                 String solrQuery = "[" + solrFromDate + " TO " + solrToDate + "]";
-                setParameter(solrQueryParameters.getAndParameters(), SolrFields.TIMESTAMP, solrQuery);
+                setParameter(solrQueryParameters.getAndParameters(), Ead3SolrFields.TIMESTAMP, solrQuery);
             }
         }
     }

@@ -5,12 +5,12 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
-import eu.apenet.commons.solr.SolrFields;
-import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponse;
+import eu.apenet.commons.solr.Ead3SolrFields;
+import eu.archivesportaleurope.apeapi.response.hierarchy.SimplifiedHierarchyResponse;
+import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -42,25 +42,25 @@ public class EadHierarchyResponse extends InstituteEadResponse {
 
     @ApiModelProperty(value = "Number of Ancestors")
     private int numberOfAncestors = 0;
-    
+
     @ApiModelProperty(required = true, value = "Array of search result, total number of elements can be less than query limit.")
-    private List<HierarchyResponse> ancestors;
+    private List<SimplifiedHierarchyResponse> ancestors;
 
     private EadHierarchyResponse(SolrDocument solrDocument, QueryResponse response) {
         super(solrDocument, response);
-        this.unitTitle = this.objectToString(solrDocument.getFieldValue(SolrFields.TITLE));
-        if (response.getHighlighting().get(id).get(SolrFields.TITLE) != null) {
-            this.unitTitleWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.TITLE).get(0));
+        this.unitTitle = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
+        if (response.getHighlighting().get(id).get(Ead3SolrFields.UNIT_TITLE) != null) {
+            this.unitTitleWithHighlighting = CommonUtils.objectToString(response.getHighlighting().get(id).get(Ead3SolrFields.UNIT_TITLE).get(0));
         }
 
-        this.unitId = this.objectToString(solrDocument.getFieldValue(SolrFields.UNITID));
-        this.scopeContent = this.objectToString(solrDocument.getFieldValue(SolrFields.SCOPECONTENT));
-        if (response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT) != null) {
-            this.scopeContentWithHighlighting = this.objectToString(response.getHighlighting().get(id).get(SolrFields.SCOPECONTENT).get(0));
+        this.unitId = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
+        this.scopeContent = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
+        if (response.getHighlighting().get(id).get(Ead3SolrFields.SCOPE_CONTENT) != null) {
+            this.scopeContentWithHighlighting = CommonUtils.objectToString(response.getHighlighting().get(id).get(Ead3SolrFields.SCOPE_CONTENT).get(0));
         }
-        Object anc = solrDocument.getFieldValue(SolrFields.NO_OF_ANCESTORS);
+        Object anc = solrDocument.getFieldValue(Ead3SolrFields.NUMBER_OF_ANCESTORS);
         if (anc != null) {
-            this.numberOfAncestors = Integer.parseInt(this.objectToString(anc));
+            this.numberOfAncestors = Integer.parseInt(CommonUtils.objectToString(anc));
         }
     }
 
@@ -74,21 +74,14 @@ public class EadHierarchyResponse extends InstituteEadResponse {
     EadHierarchyResponse(SolrDocument document, QueryResponse decendentResponse, Map<String, Integer> ancestorIdList, Map<String, SolrDocument> ancIdDocMap) {
         this(document, decendentResponse);
         this.ancestors = new ArrayList<>();
-        ancestorIdList.entrySet().stream().forEach((ancId) -> {
+        ancestorIdList.entrySet().stream().forEach( ancId -> {
             SolrDocument ancestor = ancIdDocMap.get(ancId.getKey());
-            HierarchyResponse ancestorResponse = new HierarchyResponse(ancestor, null, ancId.getValue());
+            SimplifiedHierarchyResponse ancestorResponse = new SimplifiedHierarchyResponse(ancestor, ancId.getValue());
             this.ancestors.add(ancestorResponse);
         });
-        this.ancestors.sort((HierarchyResponse a, HierarchyResponse b) -> a.getAncestorLevel()-b.getAncestorLevel());
+        this.ancestors.sort((SimplifiedHierarchyResponse a, SimplifiedHierarchyResponse b) -> a.getAncestorLevel() - b.getAncestorLevel());
     }
 
-    private String objectToString(Object o) {
-        if (o != null) {
-            return o.toString();
-        } else {
-            return "";
-        }
-    }
 
     public String getUnitTitle() {
         return unitTitle;
@@ -138,15 +131,15 @@ public class EadHierarchyResponse extends InstituteEadResponse {
         this.numberOfAncestors = numberOfAncestors;
     }
 
-    public List<HierarchyResponse> getAncestors() {
+    public List<SimplifiedHierarchyResponse> getAncestors() {
         return ancestors;
     }
 
-    public void setAncestors(List<HierarchyResponse> ancestors) {
+    public void setAncestors(List<SimplifiedHierarchyResponse> ancestors) {
         this.ancestors = ancestors;
     }
-    
-    public void addAncestor(HierarchyResponse ancestor) {
+
+    public void addAncestor(SimplifiedHierarchyResponse ancestor) {
         if (null != this.ancestors) {
             this.ancestors.add(ancestor);
         }

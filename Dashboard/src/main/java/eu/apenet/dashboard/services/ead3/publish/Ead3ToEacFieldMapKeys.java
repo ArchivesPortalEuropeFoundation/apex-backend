@@ -91,4 +91,8 @@ public interface Ead3ToEacFieldMapKeys {
      * composed with DATE_EXISTENCE_TABLE_DATE
      */
     String DAY_ = "Day_";
+    
+    String PLACE_ = "place_";
+    String PLACE_ROLE_ = "placeRole_";
+    String PLACE_LANGUAGE_= "placeLanguage_";
 }

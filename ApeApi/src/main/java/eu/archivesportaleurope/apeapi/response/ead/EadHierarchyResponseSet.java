@@ -5,7 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.ead;
 
-import eu.apenet.commons.solr.SolrFields;
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.archivesportaleurope.apeapi.response.ResponseSet;
 import eu.archivesportaleurope.apeapi.response.SearchStatResponse;
 import eu.archivesportaleurope.apeapi.response.common.SortFields;
@@ -62,16 +62,18 @@ public class EadHierarchyResponseSet extends ResponseSet {
         SearchStatResponse responseHeader = new SearchStatResponse(decendentResponse);
 
         SolrDocumentList documentList = decendentResponse.getResults();
-        super.setTotalResults(documentList.getNumFound());
-        super.setStartIndex(documentList.getStart());
+        if (null != documentList) {
+            super.setTotalResults(documentList.getNumFound());
+            super.setStartIndex(documentList.getStart());
 
-        for (SolrDocument document : documentList) {
-            try {
-                EadHierarchyResponse eadResponse = new EadHierarchyResponse(document, decendentResponse,
-                        descendantAncesMap.get(document.getFieldValue(SolrFields.ID).toString()), ancIdDocMap);
-                this.addEadSearchResult(eadResponse);
-            } catch (Exception ex) {
-                logger.error("Ead response format error: " + document.values(), ex);
+            for (SolrDocument document : documentList) {
+                try {
+                    EadHierarchyResponse eadResponse = new EadHierarchyResponse(document, decendentResponse,
+                            descendantAncesMap.get(document.getFieldValue(Ead3SolrFields.ID).toString()), ancIdDocMap);
+                    this.addEadSearchResult(eadResponse);
+                } catch (Exception ex) {
+                    logger.error("Ead response format error: " + document.values(), ex);
+                }
             }
         }
         this.setTotalPages((int) (super.totalResults / responseHeader.getRows()));

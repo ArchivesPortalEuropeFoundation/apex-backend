@@ -11,14 +11,27 @@ import com.google.gson.reflect.TypeToken;
 import eu.archivesportaleurope.apeapi.common.datatypes.ServerConstants;
 import eu.archivesportaleurope.apeapi.jersey.JerseySpringWithSecurityTest;
 import eu.archivesportaleurope.apeapi.request.PageRequest;
+import eu.archivesportaleurope.apeapi.request.QueryPageRequest;
+import eu.archivesportaleurope.apeapi.request.SearchDocRequest;
+import eu.archivesportaleurope.apeapi.request.SearchRequest;
+import eu.archivesportaleurope.apeapi.request.SortRequest;
+import eu.archivesportaleurope.apeapi.response.ead.EadDocResponse;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedDocResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadFactedResponseSet;
+import eu.archivesportaleurope.apeapi.response.ead.EadResponse;
+import eu.archivesportaleurope.apeapi.response.ead.EadResponseSet;
 import eu.archivesportaleurope.apeapi.response.hierarchy.HierarchyResponseSet;
 import eu.archivesportaleurope.apeapi.response.utils.JsonDateDeserializer;
 import eu.archivesportaleurope.test.util.EmbeddedSolrManager;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -40,7 +53,7 @@ import org.springframework.http.HttpStatus;
 public class D1_HierarchyResourceTest extends JerseySpringWithSecurityTest {
 
     @Autowired
-    public SolrClient eadSolrServer;
+    public SolrClient ead3SolrServer;
     final private transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private Gson gson;
 
@@ -50,7 +63,7 @@ public class D1_HierarchyResourceTest extends JerseySpringWithSecurityTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            EmbeddedSolrManager.setupData("/HierarchyData.json", "eads"); //eads
+            EmbeddedSolrManager.setupData("/HierarchyData.json", "ead3s"); //eads
         } catch (SolrServerException | IOException ex) {
             java.util.logging.Logger.getLogger(D1_HierarchyResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -91,6 +104,130 @@ public class D1_HierarchyResourceTest extends JerseySpringWithSecurityTest {
             Assert.assertEquals(ids[i], responseSet.getResults().get(i).getId());
             Assert.assertEquals(siblingPositions[i], responseSet.getResults().get(i).getSiblingPosition());
             Assert.assertEquals(ancestorLevels[i], responseSet.getResults().get(i).getAncestorLevel());
+        }
+    }
+
+    @Test
+    public void testSearch_ead_Doc_List() throws FileNotFoundException, SolrServerException, URISyntaxException {
+        logger.debug("Test Search Doc list");
+        SearchDocRequest request = new SearchDocRequest();
+        request.setCount(10);
+        request.setQuery("*");
+        request.setStartIndex(0);
+        request.setDocType("fa");
+
+        Response response = super.target("search").path("ead").path("docList").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+//        Response response = super.target("search").path("ead/F13716/children").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("*****Response Json: " + jsonResponse);
+
+        TypeToken<EadFactedDocResponseSet> token = new TypeToken<EadFactedDocResponseSet>() {
+        };
+        EadFactedDocResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Assert.assertEquals(1, responseEad.getTotalDocs());
+        Assert.assertEquals(247, responseEad.getTotalResults());
+        EadDocResponse doc = responseEad.getEadDocList().get(0);
+        Assert.assertTrue(StringUtils.contains(doc.getFindingAidTitle(), "Inventaris van de verzameling Ernsting"));
+        logger.debug("Title: " + doc.getRepositoryCode());
+    }
+
+    @Test
+    public void testSearch_ead_get_children() throws FileNotFoundException, SolrServerException, URISyntaxException {
+        logger.debug("Test Search Title");
+        QueryPageRequest request = new QueryPageRequest();
+        request.setCount(10);
+        request.setQuery("*");
+        request.setStartIndex(0);
+        String[] children = new String[]{"C97742", "C97805", "C97892", "C97973"};
+
+        Response response = super.target("search").path("ead").path("F158").path("children").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadResponseSet> token = new TypeToken<EadResponseSet>() {
+        };
+        EadResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+//
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Assert.assertEquals(4, responseEad.getTotalResults());
+        for (EadResponse ead : responseEad.getEadSearchResults()) {
+            Assert.assertTrue(Arrays.asList(children).contains(ead.getId()));
+            logger.debug("Title: " + ead.getUnitTitle());
+        }
+    }
+
+    @Test
+    public void testSearch_ead_get_descendants_with_sort_asc() throws FileNotFoundException, SolrServerException, URISyntaxException {
+        logger.debug("Test Search descendants");
+        SearchRequest request = new SearchRequest();
+        request.setCount(5);
+        request.setQuery("*");
+        request.setStartIndex(0);
+        SortRequest sortRequest = new SortRequest();
+        sortRequest.setFields(Arrays.asList("id"));
+        sortRequest.setSortType("asc");
+        request.setSortRequest(sortRequest);
+        String[] descendantsAsc = new String[]{"C97742", "C97743", "C97744", "C97745", "C97746"};
+
+        Response response = super.target("search").path("ead").path("F158").path("descendants").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadFactedResponseSet> token = new TypeToken<EadFactedResponseSet>() {
+        };
+        EadFactedResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+//
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Assert.assertEquals(246, responseEad.getTotalResults());
+        int i = 0;
+        for (EadResponse ead : responseEad.getEadSearchResults()) {
+            Assert.assertEquals(descendantsAsc[i], ead.getId());
+            logger.debug("Title: " + ead.getUnitTitle());
+            i++;
+        }
+    }
+    
+    @Test
+    public void testSearch_ead_get_descendants_with_sort_desc() throws FileNotFoundException, SolrServerException, URISyntaxException {
+        logger.debug("Test Search descendants");
+        SearchRequest request = new SearchRequest();
+        request.setCount(5);
+        request.setQuery("*");
+        request.setStartIndex(0);
+        SortRequest sortRequest = new SortRequest();
+        sortRequest.setFields(Arrays.asList("id"));
+        sortRequest.setSortType("desc");
+        request.setSortRequest(sortRequest);
+        String[] descendantsDesc = new String[]{"C97987", "C97986", "C97985", "C97984", "C97983"};
+
+        Response response = super.target("search").path("ead").path("F158").path("descendants").request().header("APIkey", "myApiKeyXXXX123456789").post(Entity.entity(request, ServerConstants.APE_API_V1));
+        response.bufferEntity();
+
+        //No idea why directly asking for EadResponseSet.class does not works
+        String jsonResponse = response.readEntity(String.class); //.replaceAll("[\n]+", "");
+        logger.debug("Response Json: " + jsonResponse);
+
+        TypeToken<EadFactedResponseSet> token = new TypeToken<EadFactedResponseSet>() {
+        };
+        EadFactedResponseSet responseEad = gson.fromJson(jsonResponse, token.getType());
+//
+        Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Assert.assertEquals(246, responseEad.getTotalResults());
+        int i = 0;
+        for (EadResponse ead : responseEad.getEadSearchResults()) {
+            Assert.assertEquals(descendantsDesc[i], ead.getId());
+            logger.debug("Title: " + ead.getUnitTitle());
+            i++;
         }
     }
 

@@ -5,7 +5,7 @@
  */
 package eu.archivesportaleurope.apeapi.response.eaccpf;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
@@ -74,7 +74,7 @@ public class EacCpfResponse {
     private String numberOfNameRelations;
 
     public EacCpfResponse(SolrDocument solrDocument, QueryResponse response) {
-        this.id = this.objectToString(solrDocument.getFieldValue(SolrFields.ID));
+        this.id = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ID));
         Map<String, List<String>> highlightMap = response.getHighlighting().get(id);
         this.recordId = this.objectToString(solrDocument.getFieldValue(SolrFields.EAC_CPF_RECORD_ID));
         this.entityType = this.objectToString(solrDocument.getFieldValue(SolrFields.EAC_CPF_FACET_ENTITY_TYPE));
@@ -87,15 +87,15 @@ public class EacCpfResponse {
         if (descriptionHighlight != null) {
             this.descriptionWithHighlighting = descriptionHighlight.get(0);
         }
-        this.other = this.objectToString(solrDocument.getFieldValue(SolrFields.OTHER));
-        List<String> otherHighlight = highlightMap.get(SolrFields.OTHER);
+        this.other = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.OTHER));
+        List<String> otherHighlight = highlightMap.get(Ead3SolrFields.OTHER);
         if (otherHighlight != null) {
             this.otherWithHighlighting = otherHighlight.get(0);
         }
-        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.AI)), 0);
-        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(SolrFields.REPOSITORY_CODE));
-        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 0);
-        this.countryId = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(SolrFields.COUNTRY)), 2);
+        this.repository = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.AI)), 0);
+        this.repositoryCode = this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.REPOSITORY_CODE));
+        this.country = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY)), 0);
+        this.countryId = CommonUtils.splitByColon(this.objectToString(solrDocument.getFieldValue(Ead3SolrFields.COUNTRY)), 2);
         this.numberOfArchivalMaterialRelations = this.objectToString(solrDocument.getFieldValue(SolrFields.EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS));
         this.numberOfNameRelations = this.objectToString(solrDocument.getFieldValue(SolrFields.EAC_CPF_NUMBER_OF_NAME_RELATIONS));
     }

@@ -6,6 +6,7 @@
 package eu.archivesportaleurope.test.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.apenet.commons.solr.Ead3SolrFields;
 import eu.apenet.commons.solr.SolrFields;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfResponse;
 import eu.archivesportaleurope.apeapi.response.eaccpf.EacCpfResponseSet;
@@ -45,7 +46,7 @@ public class JsonToObject {
             for (String key : map.keySet()) {
                 solrDoc.addField(key, map.get(key));
             }
-            solrDoc.addField(SolrFields.OPEN_DATA, "true");
+            solrDoc.addField(Ead3SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;
@@ -55,21 +56,21 @@ public class JsonToObject {
         List<SolrInputDocument> solrDocs = new ArrayList<>();
         for (EadResponse ead : eads.getEadSearchResults()) {
             SolrInputDocument solrDoc = new SolrInputDocument();
-            solrDoc.addField(SolrFields.ID, ead.getId());
-            solrDoc.addField(SolrFields.TITLE, ead.getUnitTitle());
-            solrDoc.addField(SolrFields.UNITID, ead.getUnitId());
-            solrDoc.addField(SolrFields.SCOPECONTENT, ead.getScopeContent());
-            solrDoc.addField(SolrFields.LANGUAGE, ead.getLanguage());
-            solrDoc.addField(SolrFields.LANGMATERIAL, ead.getLangMaterial());
-            solrDoc.addField(SolrFields.ALTERDATE, ead.getUnitDate());
-            solrDoc.addField(SolrFields.COUNTRY, ead.getCountry());
-            solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFindingAidTitle());
-            solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFindingAidNo());
-            solrDoc.addField(SolrFields.AI, ead.getRepository());
-            solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
-            solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
-            solrDoc.addField(SolrFields.EADID, ead.getFindingAidNo());
-            solrDoc.addField(SolrFields.OPEN_DATA, "true");
+            solrDoc.addField(Ead3SolrFields.ID, ead.getId());
+            solrDoc.addField(Ead3SolrFields.TITLE_PROPER, ead.getFindingAidTitle());
+            solrDoc.addField(Ead3SolrFields.UNIT_ID, ead.getUnitId());
+            solrDoc.addField(Ead3SolrFields.SCOPE_CONTENT, ead.getScopeContent());
+            solrDoc.addField(Ead3SolrFields.PARENT_ID, ead.getParentId());
+            solrDoc.addField(Ead3SolrFields.LANGUAGE, ead.getLanguage());
+            solrDoc.addField(Ead3SolrFields.LANG_MATERIAL, ead.getLangMaterial());
+            solrDoc.addField(Ead3SolrFields.ALTERNATE_UNIT_DATE, ead.getUnitDate());
+            solrDoc.addField(Ead3SolrFields.COUNTRY, ead.getCountry());
+            solrDoc.addField(Ead3SolrFields.UNIT_TITLE, ead.getUnitTitle());
+            solrDoc.addField(Ead3SolrFields.RECORD_ID, ead.getFindingAidNo());
+            solrDoc.addField(Ead3SolrFields.AI, ead.getRepository());
+            solrDoc.addField(Ead3SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
+            solrDoc.addField(Ead3SolrFields.DAO, ead.isHasDigitalObject());
+            solrDoc.addField(Ead3SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;
@@ -79,18 +80,18 @@ public class JsonToObject {
         List<SolrInputDocument> solrDocs = new ArrayList<>();
         for (EadDocMock ead : eads.getEadSearchResults()) {
             SolrInputDocument solrDoc = new SolrInputDocument();
-            solrDoc.addField(SolrFields.ID, ead.getId());
-            solrDoc.addField(SolrFields.TITLE, ead.getUnitTitle());
-            solrDoc.addField(SolrFields.UNITID, ead.getUnitId());
-            solrDoc.addField(SolrFields.SCOPECONTENT, ead.getScopeContent());
-            solrDoc.addField(SolrFields.LANGUAGE, ead.getLanguage());
-            solrDoc.addField(SolrFields.LANGMATERIAL, ead.getLangMaterial());
-            solrDoc.addField(SolrFields.ALTERDATE, ead.getUnitDate());
-            solrDoc.addField(SolrFields.COUNTRY, ead.getCountry());
-            solrDoc.addField(SolrFields.TITLE_OF_FOND, ead.getFindingAidTitle());
-            solrDoc.addField(SolrFields.UNITID_OF_FOND, ead.getFindingAidNo());
-            solrDoc.addField(SolrFields.AI, ead.getRepository());
-            solrDoc.addField(SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
+            solrDoc.addField(Ead3SolrFields.ID, ead.getId());
+            solrDoc.addField(Ead3SolrFields.TITLE_PROPER, ead.getFindingAidTitle());
+            solrDoc.addField(Ead3SolrFields.UNIT_ID, ead.getUnitId());
+            solrDoc.addField(Ead3SolrFields.SCOPE_CONTENT, ead.getScopeContent());
+            solrDoc.addField(Ead3SolrFields.LANGUAGE, ead.getLanguage());
+            solrDoc.addField(Ead3SolrFields.LANG_MATERIAL, ead.getLangMaterial());
+            solrDoc.addField(Ead3SolrFields.ALTERNATE_UNIT_DATE, ead.getUnitDate());
+            solrDoc.addField(Ead3SolrFields.COUNTRY, ead.getCountry());
+            solrDoc.addField(Ead3SolrFields.UNIT_TITLE, ead.getUnitTitle());
+            solrDoc.addField(Ead3SolrFields.RECORD_ID, ead.getFindingAidNo());
+            solrDoc.addField(Ead3SolrFields.AI, ead.getRepository());
+            solrDoc.addField(Ead3SolrFields.REPOSITORY_CODE, ead.getRepositoryCode());
             if ("du".equals(ead.getDocTypeId()) || "fa".equals(ead.getDocTypeId())) {
                 solrDoc.addField(SolrFields.FA_DYNAMIC_NAME, ead.getDynamicName());
                 solrDoc.addField(SolrFields.FA_DYNAMIC_ID + "0_s", ead.getDynamicId());
@@ -101,8 +102,8 @@ public class JsonToObject {
                 solrDoc.addField(SolrFields.SG_DYNAMIC_NAME, ead.getDynamicName());
                 solrDoc.addField(SolrFields.SG_DYNAMIC_ID + "0_s", ead.getDynamicId());
             }
-            solrDoc.addField(SolrFields.DAO, ead.isHasDigitalObject());
-            solrDoc.addField(SolrFields.OPEN_DATA, "true");
+            solrDoc.addField(Ead3SolrFields.DAO, ead.isHasDigitalObject());
+            solrDoc.addField(Ead3SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;
@@ -112,19 +113,19 @@ public class JsonToObject {
         List<SolrInputDocument> solrDocs = new ArrayList<>();
         for (EacCpfResponse eac : eacs.getEacSearchResults()) {
             SolrInputDocument solrDoc = new SolrInputDocument();
-            solrDoc.addField(SolrFields.ID, eac.getId());
+            solrDoc.addField(Ead3SolrFields.ID, eac.getId());
             solrDoc.addField(SolrFields.EAC_CPF_RECORD_ID, eac.getRecordId());
             solrDoc.addField(SolrFields.EAC_CPF_FACET_ENTITY_TYPE, eac.getEntityType());
             solrDoc.addField(SolrFields.EAC_CPF_NAMES, eac.getNameEntries());
             solrDoc.addField(SolrFields.EAC_CPF_DATE_DESCRIPTION, eac.getExistDates());
             solrDoc.addField(SolrFields.EAC_CPF_DESCRIPTION, eac.getDescription());
-            solrDoc.addField(SolrFields.OTHER, eac.getOther());
-            solrDoc.addField(SolrFields.COUNTRY, eac.getCountry());
-            solrDoc.addField(SolrFields.AI, eac.getRepository());
-            solrDoc.addField(SolrFields.REPOSITORY_CODE, eac.getRepositoryCode());
+            solrDoc.addField(Ead3SolrFields.OTHER, eac.getOther());
+            solrDoc.addField(Ead3SolrFields.COUNTRY, eac.getCountry());
+            solrDoc.addField(Ead3SolrFields.AI, eac.getRepository());
+            solrDoc.addField(Ead3SolrFields.REPOSITORY_CODE, eac.getRepositoryCode());
             solrDoc.addField(SolrFields.EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS, eac.getNumberOfArchivalMaterialRelations());
             solrDoc.addField(SolrFields.EAC_CPF_NUMBER_OF_NAME_RELATIONS, eac.getNumberOfNameRelations());
-            solrDoc.addField(SolrFields.OPEN_DATA, "true");
+            solrDoc.addField(Ead3SolrFields.OPEN_DATA, "true");
             solrDocs.add(solrDoc);
         }
         return solrDocs;

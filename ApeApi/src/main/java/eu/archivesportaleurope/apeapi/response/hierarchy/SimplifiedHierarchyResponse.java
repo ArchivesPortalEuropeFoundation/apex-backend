@@ -6,69 +6,51 @@
 package eu.archivesportaleurope.apeapi.response.hierarchy;
 
 import eu.apenet.commons.solr.Ead3SolrFields;
-import eu.archivesportaleurope.apeapi.response.ead.*;
 import eu.archivesportaleurope.apeapi.utils.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author mahbub
+ * @author kaisar
  */
 @XmlRootElement
 @ApiModel
-public class HierarchyResponse extends InstituteEadResponse {
+public class SimplifiedHierarchyResponse {
+
+    @ApiModelProperty(required = true, value = "Internal APE identifier of the result")
+    protected String id;
 
     @ApiModelProperty(value = "Identifier of the result provided by the repository")
     private String unitId;
-
-    @ApiModelProperty(value = "Description of the result")
-    private String unitTitle;
-
-    @ApiModelProperty(value = "More descriptive information about the result. ")
-    private String scopeContent;
 
     @ApiModelProperty(value = "Index relative to its siblings")
     private int siblingPosition;
 
     @ApiModelProperty(value = "Greatest ancestor is a level 0")
     private int ancestorLevel;
-
-    public HierarchyResponse(SolrDocument solrDocument, QueryResponse response, int parentLevel) {
-        super(solrDocument, response);
-        this.unitTitle = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_TITLE));
+    
+    public SimplifiedHierarchyResponse(SolrDocument solrDocument, int parentLevel) {
+        this.id = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.ID));
 
         this.siblingPosition = CommonUtils.objectToInt(solrDocument.getFieldValue(Ead3SolrFields.ORDER_ID));
 
         this.unitId = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.UNIT_ID));
-        this.scopeContent = CommonUtils.objectToString(solrDocument.getFieldValue(Ead3SolrFields.SCOPE_CONTENT));
+
         this.ancestorLevel = parentLevel;
     }
 
-    /**
-     * Default constructor
-     */
-    public HierarchyResponse() {
-        //Do nothing
+    public String getId() {
+        return id;
     }
 
-    public String getUnitTitle() {
-        return unitTitle;
-    }
-
-    public void setUnitTitle(String unitTitle) {
-        this.unitTitle = unitTitle;
-    }
-
-    public String getScopeContent() {
-        return scopeContent;
-    }
-
-    public void setScopeContent(String scopeContent) {
-        this.scopeContent = scopeContent;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUnitId() {

@@ -5,15 +5,11 @@
  */
 package eu.archivesportaleurope.apeapi.response.facet;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.apenet.commons.solr.facet.FacetType;
 import eu.apenet.commons.solr.facet.ListFacetSettings;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -34,7 +30,7 @@ public class EadFacetFields {
     private List<NameCountPair> subject;    
     private final List<NameCountPair> repository;    
     private final List<NameCountPair> docType;
-    private final List<NameCountPair> level;    
+    private final List<NameCountPair> levelName;    
     private final List<NameCountPair> hasDigitalObject;
     private final List<NameCountPair> digitalObjectType;
     private final List<NameCountPair> unitDateType;
@@ -48,7 +44,7 @@ public class EadFacetFields {
         this.subject = new ArrayList<>();
         this.repository = new ArrayList<>();
         this.docType = new ArrayList<>();
-        this.level = new ArrayList<>();
+        this.levelName = new ArrayList<>();
         this.hasDigitalObject = new ArrayList<>();
         this.digitalObjectType = new ArrayList<>();
         this.unitDateType = new ArrayList<>();
@@ -89,8 +85,8 @@ public class EadFacetFields {
         return docType;
     }
 
-    public List<NameCountPair> getLevel() {
-        return level;
+    public List<NameCountPair> getLevelName() {
+        return levelName;
     }
 
     public List<NameCountPair> getHasDigitalObject() {
