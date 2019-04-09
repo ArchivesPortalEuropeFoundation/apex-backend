@@ -29,40 +29,38 @@ import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import gov.loc.ead.Archdesc;
-import gov.loc.ead.C;
-import gov.loc.ead.Chronitem;
-import gov.loc.ead.Chronlist;
-import gov.loc.ead.Corpname;
-import gov.loc.ead.Dao;
-import gov.loc.ead.Daoset;
-import gov.loc.ead.Did;
-import gov.loc.ead.Dsc;
-import gov.loc.ead.Ead;
-import gov.loc.ead.Event;
-import gov.loc.ead.Famname;
-import gov.loc.ead.Genreform;
-import gov.loc.ead.Item;
-import gov.loc.ead.MMixedBasic;
-import gov.loc.ead.Langmaterial;
-import gov.loc.ead.Language;
-import gov.loc.ead.Languageset;
-import gov.loc.ead.Localtypedeclaration;
-import gov.loc.ead.MCBase;
-import gov.loc.ead.MMixedBasicDate;
-import gov.loc.ead.MMixedBasicPlusAccess;
-import gov.loc.ead.Maintenanceagency;
-import gov.loc.ead.Origination;
-import gov.loc.ead.Part;
-import gov.loc.ead.Persname;
-import gov.loc.ead.Recordid;
-import gov.loc.ead.Scopecontent;
-import gov.loc.ead.Script;
-import gov.loc.ead.Subtitle;
-import gov.loc.ead.Titleproper;
-import gov.loc.ead.Unitdate;
-import gov.loc.ead.Unitid;
-import gov.loc.ead.Unittitle;
+import gov.loc.ead3.Archdesc;
+import gov.loc.ead3.C;
+import gov.loc.ead3.Corpname;
+import gov.loc.ead3.Dao;
+import gov.loc.ead3.Daoset;
+import gov.loc.ead3.Did;
+import gov.loc.ead3.Dsc;
+import gov.loc.ead3.Ead;
+import gov.loc.ead3.Event;
+import gov.loc.ead3.Famname;
+import gov.loc.ead3.Genreform;
+import gov.loc.ead3.Item;
+import gov.loc.ead3.MMixedBasic;
+import gov.loc.ead3.Langmaterial;
+import gov.loc.ead3.Language;
+import gov.loc.ead3.Languageset;
+import gov.loc.ead3.Localtypedeclaration;
+import gov.loc.ead3.MCBase;
+import gov.loc.ead3.MMixedBasicDate;
+import gov.loc.ead3.MMixedBasicPlusAccess;
+import gov.loc.ead3.Maintenanceagency;
+import gov.loc.ead3.Origination;
+import gov.loc.ead3.Part;
+import gov.loc.ead3.Persname;
+import gov.loc.ead3.Recordid;
+import gov.loc.ead3.Scopecontent;
+import gov.loc.ead3.Script;
+import gov.loc.ead3.Subtitle;
+import gov.loc.ead3.Titleproper;
+import gov.loc.ead3.Unitdate;
+import gov.loc.ead3.Unitid;
+import gov.loc.ead3.Unittitle;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -110,7 +108,7 @@ public class Ead3SolrDocBuilder {
     private SolrDocNode archdescNode = new SolrDocNode();
     private boolean openDataEnable = false;
     private boolean persistEac = false;
-    private final JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
+    private final JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead3.MCBase.class);
 //    private final JAXBContext ead3Context;
     private final JAXBContext localTypeContext;
     private final Unmarshaller localTypeUnmarshaller;
@@ -250,12 +248,12 @@ public class Ead3SolrDocBuilder {
 
         //Generate eadcontent xml
         Archdesc archdesc = this.ead3.getArchdesc();
-        List<Object> dscBackup = new ArrayList<>();
+        List<Serializable> dscBackup = new ArrayList<>();
 
         Iterator it = this.jXPathContext.iterate("archdesc/*");
 
         while (it.hasNext()) {
-            Object element = it.next();
+            Serializable element = (Serializable) it.next();
             if (element instanceof Dsc) {
                 dscBackup.add(element);
                 this.processDsc((Dsc) element, this.archdescNode);
@@ -264,7 +262,7 @@ public class Ead3SolrDocBuilder {
         }
         //Arcdesc don't have the dscs now. lets generate xml
         try {
-            JAXBContext ead3Context = JAXBContext.newInstance(gov.loc.ead.Ead.class);
+            JAXBContext ead3Context = JAXBContext.newInstance(gov.loc.ead3.Ead.class);
             Marshaller marshaller = ead3Context.createMarshaller();
             ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
             marshaller.marshal(this.ead3, baos);
@@ -798,7 +796,7 @@ public class Ead3SolrDocBuilder {
                     }
 
                 } else if (obj instanceof Daoset) {
-                    List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
+                    List<JAXBElement<? extends Serializable>> daos = ((Daoset) obj).getContent();
                     daoCount++;
                     for (JAXBElement jAXBElement : daos) {
                         if (jAXBElement.getDeclaredType().equals(Dao.class)) {
