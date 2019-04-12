@@ -120,7 +120,7 @@ public class StoreEacFromEad3 {
 //                        LOG.error(e.getMessage(), e);
                     }
                 }
-                
+
                 //update ddbb entry
                 eu.apenet.persistence.vo.EacCpf storedEacEntry = null;
 
@@ -143,7 +143,7 @@ public class StoreEacFromEad3 {
                 storedEacEntry = eacCpfDAO.update(storedEacEntry);
                 //add to queue
                 EacCpfService.convertValidatePublish(storedEacEntry.getId(), new Properties(), "dut");
-                
+
                 this.setEacDaoId(Integer.toString(storedEacEntry.getId()));
                 this.setFileToLoad(storedEacEntry.getId());
                 ead3.getEacCpfs().add(storedEacEntry);
@@ -170,7 +170,7 @@ public class StoreEacFromEad3 {
         StringBuilder builderTitle = new StringBuilder();
         try {
             List<Object> allNameEntries = eacCpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry();
-            List<Identity.NameEntry> nameEntries = new ArrayList<Identity.NameEntry>();
+            List<Identity.NameEntry> nameEntries = new ArrayList<>();
             for (Object object : allNameEntries) {
                 if (object instanceof Identity.NameEntry) {
                     nameEntries.add((Identity.NameEntry) object);
@@ -184,9 +184,10 @@ public class StoreEacFromEad3 {
                     StringBuilder surname = new StringBuilder();
                     StringBuilder firstname = new StringBuilder();
                     StringBuilder patronymic = new StringBuilder();
+                    StringBuilder persname = new StringBuilder();
                     for (Part part : parts) {
                         if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
-                            builderTitle.append(part.getContent());
+                            persname.append(part.getContent());
                         }
                         if (part.getLocalType().equals("surname")) {
                             if (surname.length() != 0) {
@@ -209,15 +210,16 @@ public class StoreEacFromEad3 {
                     }
                     if (builderTitle.length() == 0) {
                         // build the title
-                        builderTitle.append(surname);
-                        if (builderTitle.length() > 0 && ((firstname != null && firstname.length() > 0) || (patronymic != null && patronymic.length() > 0))) {
-                            builderTitle.append(", ");
+                        if (surname.length() > 0 && firstname.length() > 0) {
+                            builderTitle.append(surname).append(", ").append(firstname);
+                            if (patronymic.length() > 0) {
+                                builderTitle.append(" ").append(patronymic);
+                            }
+                        } else if (persname.length() > 0) {
+                            builderTitle.append(persname);
+                        } else {
+                            builderTitle.append("No title");
                         }
-                        builderTitle.append(firstname);
-                        if (builderTitle.length() != 0) {
-                            builderTitle.append(" ");
-                        }
-                        builderTitle.append(patronymic);
                     }
                     title = builderTitle.toString();
                 }
