@@ -21,13 +21,22 @@ import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dashboard.services.ead.xml.XMLStreamWriterHolder;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadArchDescCLevelXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadGlobalXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 //import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
+import gov.loc.ead.C;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 public class XmlCLevelParser extends AbstractParser {
 
@@ -81,6 +90,7 @@ public class XmlCLevelParser extends AbstractParser {
                             }
                         }
                         clevel.setXml(stringWriter.toString());
+                        clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
                         JpaUtil.getEntityManager().persist(clevel);
                         stringWriter.close();
                         stringWriter = null;
@@ -152,8 +162,8 @@ public class XmlCLevelParser extends AbstractParser {
                     unitids.add(clevel.getUnitid());
                 }
             }
-
             clevel.setXml(stringWriter.toString());
+            clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
             JpaUtil.getEntityManager().persist(clevel);
             stringWriter.close();
             stringWriter = null;
@@ -202,6 +212,25 @@ public class XmlCLevelParser extends AbstractParser {
                 path.removeLast();
             }
         }
+
+    }
+
+    private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
+        JAXBContext clevelContext;
+        Unmarshaller cUnmarshaller;
+        clevelContext = JAXBContext.newInstance(C.class);
+        cUnmarshaller = clevelContext.createUnmarshaller();
+
+        InputStream stream = new ByteArrayInputStream(objectString.getBytes());
+        C clevelObj = (C) cUnmarshaller.unmarshal(stream);
+        stream.close();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutput oos = new ObjectOutputStream(baos);
+        oos.writeObject(clevelObj);
+        oos.flush();
+        byte[] clevelObjBytes = baos.toByteArray();
+        oos.close();
+        return clevelObjBytes;
 
     }
 
