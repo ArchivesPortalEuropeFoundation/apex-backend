@@ -31,11 +31,30 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
+import gov.loc.ead.C;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 public class DatabaseXmlCLevelParser {
-    
+
     private static final int NUMBER_OF_CLEVEL_ONCE = 1;
-    
+
+    private static JAXBContext clevelContext = null;
+    private static Unmarshaller cUnmarshaller = null;
+
+    static {
+        try {
+            clevelContext = JAXBContext.newInstance(C.class);
+            cUnmarshaller = clevelContext.createUnmarshaller();
+        } catch (JAXBException e) {
+        }
+    }
+
     public static EADCounts publish(EADCounts parentEADCounts, CLevel clevel, Long eadContentId,
             Ead ead, EadSolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids, EadDatabaseSaver eadDatabaseSaver)
             throws Exception {
@@ -45,6 +64,10 @@ public class DatabaseXmlCLevelParser {
         EADCounts currentEadCounts = new EADCounts();
         EadPublishData publishData = new EadPublishData();
         parse(clevel, publishData);
+        if (clevel.getcBinary() == null) {
+            clevel.setcBinary(getBytesFromObjectStr(clevel.getXml()));
+            clevelDAO.update(clevel);
+        }
         publishData.setId(clevel.getId());
         publishData.setParentId(clevel.getParentId());
         publishData.setLeaf(clevel.isLeaf());
@@ -59,7 +82,7 @@ public class DatabaseXmlCLevelParser {
                 unitids.add(clevel.getUnitid());
             }
         }
-        
+
         if (publishData.getParentId() == null) {
             publishData.setOrderId(clevel.getOrderId() + 1);
         } else {
@@ -86,9 +109,24 @@ public class DatabaseXmlCLevelParser {
         publishData.setNumberOfTotalDaos((int) currentEadCounts.getNumberOfTotalDAOs());
         solrPublisher.publishCLevel(publishData);
         return currentEadCounts;
-        
+
     }
-    
+
+    private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
+
+        InputStream stream = new ByteArrayInputStream(objectString.getBytes());
+        C clevelObj = (C) cUnmarshaller.unmarshal(stream);
+        stream.close();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutput oos = new ObjectOutputStream(baos);
+        oos.writeObject(clevelObj);
+        oos.flush();
+        byte[] clevelObjBytes = baos.toByteArray();
+        oos.close();
+        return clevelObjBytes;
+
+    }
+
     private static void parse(CLevel clevel, EadPublishData publishData) throws Exception {
         InputStream inputstream = IOUtils.toInputStream(clevel.getXml());
         XMLStreamReader xmlReader = getXMLReader(inputstream);
@@ -117,19 +155,19 @@ public class DatabaseXmlCLevelParser {
         inputstream.close();
         clevelParser.fillData(publishData, clevel);
     }
-    
+
     private static XMLStreamReader getXMLReader(InputStream inputStream) throws XMLStreamException, IOException {
-        
+
         XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
         return (XMLStreamReader) inputFactory.createXMLStreamReader(inputStream, ApeXMLConstants.UTF_8);
     }
-    
+
     private static void add(LinkedList<QName> path, QName qName) {
         // if (!CLEVEL.equals(qName)) {
         path.add(qName);
         // }
     }
-    
+
     private static void removeLast(LinkedList<QName> path, QName qName) {
         // if (!CLEVEL.equals(qName)) {
         if (!path.isEmpty()) {
