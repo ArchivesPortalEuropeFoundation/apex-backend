@@ -43,6 +43,17 @@ public class XmlCLevelParser extends AbstractParser {
     public static final QName CLEVEL = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "c");
     private static final QName PERSISTENT_ID = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "id");
 
+    private static JAXBContext clevelContext = null;
+    private static Unmarshaller cUnmarshaller = null;
+
+    static {
+        try {
+            clevelContext = JAXBContext.newInstance(C.class);
+            cUnmarshaller = clevelContext.createUnmarshaller();
+        } catch (JAXBException e) {
+        }
+    }
+
     //private static final Logger LOG = Logger.getLogger(CLevelParser.class);
     public static void parse(EADCounts parentEadCounts, XMLStreamReader xmlReader, Long eadContentId,
             Long parentId, int orderId, Ead ead, EadSolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids)
@@ -216,10 +227,6 @@ public class XmlCLevelParser extends AbstractParser {
     }
 
     private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
-        JAXBContext clevelContext;
-        Unmarshaller cUnmarshaller;
-        clevelContext = JAXBContext.newInstance(C.class);
-        cUnmarshaller = clevelContext.createUnmarshaller();
 
         InputStream stream = new ByteArrayInputStream(objectString.getBytes());
         C clevelObj = (C) cUnmarshaller.unmarshal(stream);
