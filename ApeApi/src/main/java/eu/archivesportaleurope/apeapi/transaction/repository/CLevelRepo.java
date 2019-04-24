@@ -6,6 +6,8 @@
 package eu.archivesportaleurope.apeapi.transaction.repository;
 
 import eu.apenet.persistence.vo.CLevel;
+import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,4 +19,7 @@ public interface CLevelRepo extends JpaRepository<CLevel, Long> {
 
     @Query("select a from CLevel a where id = ?")
     CLevel findById(Long id);
+    
+    List<CLevel> findFirst1000ByOrderByIdAsc();
+    List<CLevel> findByIdIn(List<Long> idList);
 }

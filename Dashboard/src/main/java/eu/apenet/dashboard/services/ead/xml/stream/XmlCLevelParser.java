@@ -37,6 +37,7 @@ import java.io.ObjectOutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 
 public class XmlCLevelParser extends AbstractParser {
@@ -44,6 +45,18 @@ public class XmlCLevelParser extends AbstractParser {
     public static final QName CLEVEL = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "c");
     private static final QName PERSISTENT_ID = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "id");
 
+    private static JAXBContext clevelContext = null;
+    private static Unmarshaller cUnmarshaller = null;
+
+    static {
+        try {
+            clevelContext = JAXBContext.newInstance(C.class);
+            cUnmarshaller = clevelContext.createUnmarshaller();
+        } catch (JAXBException e) {
+        }
+    }
+
+    //private static final Logger LOG = Logger.getLogger(CLevelParser.class);
     private static final Logger LOG = Logger.getLogger(XmlCLevelParser.class);
     public static void parse(EADCounts parentEadCounts, XMLStreamReader xmlReader, Long eadContentId,
             Long parentId, int orderId, Ead ead, EadSolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids)
@@ -91,7 +104,7 @@ public class XmlCLevelParser extends AbstractParser {
                             }
                         }
                         clevel.setXml(stringWriter.toString());
-                        clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
+                        //clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
                         JpaUtil.getEntityManager().persist(clevel);
                         stringWriter.close();
                         stringWriter = null;
@@ -218,22 +231,20 @@ public class XmlCLevelParser extends AbstractParser {
 
     private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
         LOG.debug("getBytesFromObjectStr");
-        JAXBContext clevelContext;
-        Unmarshaller cUnmarshaller;
-        clevelContext = JAXBContext.newInstance(C.class);
-        cUnmarshaller = clevelContext.createUnmarshaller();
 
         InputStream stream = new ByteArrayInputStream(objectString.getBytes());
         C clevelObj = (C) cUnmarshaller.unmarshal(stream);
         stream.close();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        return SerializationUtils.serialize(clevelObj);
+        /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutput oos = new ObjectOutputStream(baos);
         oos.writeObject(clevelObj);
         oos.flush();
         byte[] clevelObjBytes = baos.toByteArray();
         oos.close();
         return clevelObjBytes;
-
+        */
     }
 
 }

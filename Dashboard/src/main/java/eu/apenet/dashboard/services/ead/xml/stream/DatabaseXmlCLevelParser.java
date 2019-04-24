@@ -39,6 +39,7 @@ import java.io.ObjectOutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import org.apache.commons.lang.SerializationUtils;
 
 public class DatabaseXmlCLevelParser {
 
@@ -113,18 +114,19 @@ public class DatabaseXmlCLevelParser {
     }
 
     private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
-
         InputStream stream = new ByteArrayInputStream(objectString.getBytes());
         C clevelObj = (C) cUnmarshaller.unmarshal(stream);
         stream.close();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        return SerializationUtils.serialize(clevelObj);
+        
+        /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutput oos = new ObjectOutputStream(baos);
         oos.writeObject(clevelObj);
         oos.flush();
         byte[] clevelObjBytes = baos.toByteArray();
         oos.close();
         return clevelObjBytes;
-
+        */
     }
 
     private static void parse(CLevel clevel, EadPublishData publishData) throws Exception {

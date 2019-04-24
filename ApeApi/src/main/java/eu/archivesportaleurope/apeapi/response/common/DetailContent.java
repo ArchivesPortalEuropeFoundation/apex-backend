@@ -5,12 +5,14 @@
  */
 package eu.archivesportaleurope.apeapi.response.common;
 
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import io.swagger.annotations.ApiModelProperty;
+import javax.xml.bind.annotation.XmlTransient;
 
 public class DetailContent {
 
@@ -26,6 +28,10 @@ public class DetailContent {
     private ArchivalInstitution archivalInstitution;
     @ApiModelProperty(value = "Ead Response")
     private Ead ead;
+    @XmlTransient
+    private byte[] cBinary;
+    @XmlTransient
+    private String clevelId;
 
     public DetailContent(EadContent eadContent) {
         this.eadContent = eadContent;
@@ -42,7 +48,9 @@ public class DetailContent {
         this.ead = this.eadContent.getEad();
         this.archivalInstitution = this.ead.getArchivalInstitution();
         this.xmlType = XmlType.getContentType(ead);
-        this.xml = currentLevel.getXml().replaceAll("[\t\n\r]", "").replaceAll(">\\s+<", "><");
+//        this.xml = currentLevel.getXml().replaceAll("[\t\n\r]", "").replaceAll(">\\s+<", "><");
+        this.cBinary = currentLevel.getcBinary();
+        this.clevelId=SolrValues.C_LEVEL_PREFIX+currentLevel.getId();
     }
     
     public XmlType getXmlType() {
@@ -69,6 +77,18 @@ public class DetailContent {
         return this.xml;
     }
 
+    public byte[] getcBinary() {
+        return cBinary;
+    }
+
+    public String getClevelId() {
+        return clevelId;
+    }
+
+    public void setClevelId(String clevelId) {
+        this.clevelId = clevelId;
+    }
+    
     public int getAiId() {
         return archivalInstitution.getAiId();
     }
