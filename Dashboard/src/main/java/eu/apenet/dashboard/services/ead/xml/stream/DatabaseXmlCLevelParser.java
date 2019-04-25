@@ -33,9 +33,6 @@ import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
 import gov.loc.ead.C;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -113,22 +110,6 @@ public class DatabaseXmlCLevelParser {
 
     }
 
-    private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
-        InputStream stream = new ByteArrayInputStream(objectString.getBytes());
-        C clevelObj = (C) cUnmarshaller.unmarshal(stream);
-        stream.close();
-        return SerializationUtils.serialize(clevelObj);
-        
-        /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutput oos = new ObjectOutputStream(baos);
-        oos.writeObject(clevelObj);
-        oos.flush();
-        byte[] clevelObjBytes = baos.toByteArray();
-        oos.close();
-        return clevelObjBytes;
-        */
-    }
-
     private static void parse(CLevel clevel, EadPublishData publishData) throws Exception {
         InputStream inputstream = IOUtils.toInputStream(clevel.getXml());
         XMLStreamReader xmlReader = getXMLReader(inputstream);
@@ -177,5 +158,12 @@ public class DatabaseXmlCLevelParser {
         }
         // }
 
+    }
+    
+    private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
+        InputStream stream = new ByteArrayInputStream(objectString.getBytes());
+        C clevelObj = (C) cUnmarshaller.unmarshal(stream);
+        stream.close();
+        return SerializationUtils.serialize(clevelObj);
     }
 }

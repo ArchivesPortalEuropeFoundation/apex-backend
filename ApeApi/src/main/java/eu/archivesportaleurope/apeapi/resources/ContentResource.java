@@ -42,6 +42,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -131,7 +132,7 @@ public class ContentResource extends ApiServiceProcessor {
     @POST
     @Path("/ead/clevels")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "Return the contents of the given valid clevel ids",
+    @ApiOperation(value = "Return the contents of the given valid clevel ids, maximum 1k ids are allowed",
             response = ContentResponseClevelList.class
     )
     @ApiResponses(value = {
@@ -141,7 +142,7 @@ public class ContentResource extends ApiServiceProcessor {
     })
     @Consumes({ServerConstants.APE_API_V1})
     public Response getClevelContent(
-            @ApiParam(value = "Search EAD units\nCount should not be more than 50", required = true) @Valid ContentRequest contentRequest
+            @ApiParam(value = "Search EAD units\nMaximum 1000 ids are allowed", required = true) @Valid ContentRequest contentRequest
     ) {
         ApiService apiService = () -> {
             List<DetailContent> detailContents = eadContentService.findClevelContent(contentRequest.getIdList());
