@@ -522,8 +522,6 @@ public class Ead3SolrDocBuilder {
             marshaller.marshal(cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
-//            System.out.println("Clevel xml: " + cLevelXml);
-
         } catch (JAXBException | UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
