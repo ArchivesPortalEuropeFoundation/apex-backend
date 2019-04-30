@@ -29,11 +29,8 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
 import gov.loc.ead.C;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -104,7 +101,7 @@ public class XmlCLevelParser extends AbstractParser {
                             }
                         }
                         clevel.setXml(stringWriter.toString());
-                        //clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
+                        clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
                         JpaUtil.getEntityManager().persist(clevel);
                         stringWriter.close();
                         stringWriter = null;
@@ -230,21 +227,11 @@ public class XmlCLevelParser extends AbstractParser {
     }
 
     private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
-        LOG.debug("getBytesFromObjectStr");
-
         InputStream stream = new ByteArrayInputStream(objectString.getBytes());
         C clevelObj = (C) cUnmarshaller.unmarshal(stream);
         stream.close();
         
         return SerializationUtils.serialize(clevelObj);
-        /*ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutput oos = new ObjectOutputStream(baos);
-        oos.writeObject(clevelObj);
-        oos.flush();
-        byte[] clevelObjBytes = baos.toByteArray();
-        oos.close();
-        return clevelObjBytes;
-        */
     }
 
 }

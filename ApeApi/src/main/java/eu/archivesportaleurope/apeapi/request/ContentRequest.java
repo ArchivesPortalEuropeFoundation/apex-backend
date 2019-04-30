@@ -8,6 +8,7 @@ package eu.archivesportaleurope.apeapi.request;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -16,6 +17,7 @@ import java.util.List;
 public class ContentRequest {
 
     @ApiModelProperty(value = "List of ids")
+    @Size(min=1, max=1000)
     private List<String> idList = new ArrayList<>();
 
     public List<String> getIdList() {
