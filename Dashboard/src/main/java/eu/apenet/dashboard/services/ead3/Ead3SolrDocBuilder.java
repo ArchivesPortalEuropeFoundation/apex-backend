@@ -61,15 +61,11 @@ import gov.loc.ead3.Titleproper;
 import gov.loc.ead3.Unitdate;
 import gov.loc.ead3.Unitid;
 import gov.loc.ead3.Unittitle;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
@@ -526,7 +522,6 @@ public class Ead3SolrDocBuilder {
             marshaller.marshal(cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
-            cLevelEntity.setcBinary(getBytesFromObjectStr((C) cElement));
 //            System.out.println("Clevel xml: " + cLevelXml);
 
         } catch (JAXBException | UnsupportedEncodingException ex) {
@@ -548,17 +543,6 @@ public class Ead3SolrDocBuilder {
         //ead3Entity.addcLevel(cLevelEntity);
 
         return cRoot;
-    }
-
-    private static byte[] getBytesFromObjectStr(C cElement) throws JAXBException, IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutput oos = new ObjectOutputStream(baos);
-        oos.writeObject(cElement);
-        oos.flush();
-        byte[] clevelObjBytes = baos.toByteArray();
-        oos.close();
-        return clevelObjBytes;
-
     }
 
     private String retrieveScopeContentAsText(Object scopecontent) {
