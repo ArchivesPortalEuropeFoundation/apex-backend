@@ -64,7 +64,6 @@ public class DatabaseXmlCLevelParser {
         parse(clevel, publishData);
         if (clevel.getcBinary() == null) {
             clevel.setcBinary(getBytesFromObjectStr(clevel.getXml()));
-            clevelDAO.update(clevel);
         }
         publishData.setId(clevel.getId());
         publishData.setParentId(clevel.getParentId());
@@ -159,7 +158,7 @@ public class DatabaseXmlCLevelParser {
         // }
 
     }
-    
+
     private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
         InputStream stream = new ByteArrayInputStream(objectString.getBytes());
         C clevelObj = (C) cUnmarshaller.unmarshal(stream);
