@@ -143,7 +143,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         	// will check the content of the next ones.
         	boolean foundTitle = false;
         	for (int i = 0; !foundTitle && i < titleElements.size(); i++) {
-        		NameEntry currentNameEntry = titleElements.get(i);
+        		NameEntry currentNameEntry = retrieveEntryByLocalType(titleElements);
 
 	            if (!currentNameEntry.getLocalType().equals(NameEntryLocalType.UNKNOWN)) {
 	                LinkedList<Part> titleEntryParts = currentNameEntry.getParts();
@@ -154,56 +154,41 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 	                StringBuilder patronymic = new StringBuilder();
 	                StringBuilder content = new StringBuilder();
 
-	                //if there is only a persname/famname/corpname, directly attach it to the main StringBuilder, otherwise use the partial builders and build title from them
 	                for (Part part : titleEntryParts) {
 	                	hasPart = true;
 	                    if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
-	                        builderTitle.append(part.getContent());
+	                        content.append(part.getContent());
 	                    }
 	                    if (part.getLocalType().equals("surname")) {
 	                        if (surname.length() != 0) {
 	                            surname.append(" ");
 	                        }
 	                        surname.append(part.getContent());
-	                    }else if (part.getLocalType().equals("firstname")) {
+	                    }
+                            if (part.getLocalType().equals("firstname")) {
 	                        if (firstname.length() != 0) {
 	                            firstname.append(" ");
 	                        }
 	                        firstname.append(part.getContent());
-	                    }else if (part.getLocalType().equals("patronymic")) {
+	                    }
+                            if (part.getLocalType().equals("patronymic")) {
 	                        if (patronymic.length() != 0) {
 	                            patronymic.append(" ");
 	                        }
 	                        patronymic.append(part.getContent());
-	                    }else if (part.getContent()!= null
-	                    		&& !part.getContent().trim().isEmpty()) {
-	                    	if (content.length() != 0) {
-	                    		content.append(", ");
-	                    	}
-	                    	content.append(part.getContent().trim());
 	                    }
 	                }
 
 	                // if the builder is empty, build the title from the parts
-	                if (builderTitle.length() == 0) {
-	                    builderTitle.append(surname);
-	                    if (builderTitle.length() != 0) {
-	                        builderTitle.append(", ");
-	                    }
-	                    builderTitle.append(firstname);
-	                    if (builderTitle.length() != 0) {
-	                        builderTitle.append(" ");
-	                    }
-	                    builderTitle.append(patronymic);
-	                    if (builderTitle.length() == 0) {
-	                    	if(content.length()>0){
-	                    		builderTitle.append(content);
-	                    	}
-//	                    	else{
-//	                    		builderTitle.append(" ");
-//	                    	}
-	                    }
-	                }
+                        if (surname.length() > 0 && firstname.length() > 0){
+                            builderTitle.append(surname).append(", ").append(firstname);
+                            if(patronymic.length() > 0){
+                                builderTitle.append(" ").append(patronymic);
+                            }
+                        } else if (content.length() > 0){
+                            builderTitle.append(content);
+                        }
+                        
 	                //output of the title
 	                if (builderTitle.length() != 0) {
 	                	foundTitle = true;
@@ -236,6 +221,46 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
             }
         } else {
             return getText("eaccpf.error.no.title");
+        }
+    }
+    
+    private NameEntry retrieveEntryByLocalType(LinkedList<NameEntry> titleElements) {
+        int preferred = -1;
+        int authorized = -1;
+        int alternative = -1;
+        int abbreviation = -1;
+        int other = -1;
+        int noLocalType = -1;
+        for (int counter = 0; counter < titleElements.size(); counter++) {
+            NameEntry nameEntry = titleElements.get(counter);
+            if (nameEntry.getLocalType().equals("preferred") && preferred == -1) {
+                preferred = counter;
+            } else if (nameEntry.getLocalType().equals("authorized") && authorized == -1) {
+                authorized = counter;
+            } else if (nameEntry.getLocalType().equals("alternative") && alternative == -1) {
+                alternative = counter;
+            } else if (nameEntry.getLocalType().equals("abbreviation") && abbreviation == -1) {
+                abbreviation = counter;
+            } else if (nameEntry.getLocalType().equals("other") && other == -1) {
+                other = counter;
+            } else if (noLocalType == -1) {
+                noLocalType = counter;
+            }
+        }
+        if (preferred != -1) {
+            return titleElements.get(preferred);
+        } else if (authorized != -1) {
+            return titleElements.get(authorized);
+        } else if (alternative != -1) {
+            return titleElements.get(alternative);
+        } else if (abbreviation != -1) {
+            return titleElements.get(abbreviation);
+        } else if (other != -1) {
+            return titleElements.get(other);
+        } else if (noLocalType != -1) {
+            return titleElements.get(noLocalType);
+        } else {
+            return titleElements.get(0);
         }
     }
 

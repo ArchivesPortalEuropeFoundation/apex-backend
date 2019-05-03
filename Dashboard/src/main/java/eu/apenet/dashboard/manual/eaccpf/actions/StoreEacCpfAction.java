@@ -32,6 +32,7 @@ import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ValidatedState;
+import java.util.Iterator;
 
 /**
  *
@@ -149,8 +150,8 @@ public class StoreEacCpfAction extends EacCpfAction {
                 if (eacCpfFinalFile.exists()) {
                     try {
                         // Windows file lock workaround; uncomment if necessary
-                                         System.gc();
-                                         Thread.sleep(2000);
+                        System.gc();
+                        Thread.sleep(2000);
                         FileUtils.forceDelete(eacCpfFinalFile);
                     } catch (IOException e) {
                         LOG.error(e.getMessage(), e);
@@ -248,20 +249,20 @@ public class StoreEacCpfAction extends EacCpfAction {
         }
         return result;
     }
-    
+
     private String getTitleFromFile(EacCpf eacCpf) {
         String title = "";
         StringBuilder builderTitle = new StringBuilder();
         try {
             List<Object> allNameEntries = eacCpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry();
-            List<Identity.NameEntry> nameEntries = new ArrayList<Identity.NameEntry>();
+            List<Identity.NameEntry> nameEntries = new ArrayList<>();
             for (Object object : allNameEntries) {
                 if (object instanceof Identity.NameEntry) {
                     nameEntries.add((Identity.NameEntry) object);
                 }
             }
             if (!nameEntries.isEmpty()) {
-                Identity.NameEntry firstEntry = nameEntries.get(0);
+                Identity.NameEntry firstEntry = retrieveFirstEntryByLocalType(nameEntries);
                 List<Part> parts = firstEntry.getPart();
                 if (!parts.isEmpty()) {
                     // the title is formed by "surname, firstname patronymic"
@@ -269,10 +270,10 @@ public class StoreEacCpfAction extends EacCpfAction {
                     StringBuilder firstname = new StringBuilder();
                     StringBuilder patronymic = new StringBuilder();
                     for (Part part : parts) {
-                    	if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
-  	                        builderTitle.append(part.getContent());
-  	                    }
-                		if (part.getLocalType().equals("surname")) {
+                        if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
+                            builderTitle.append(part.getContent());
+                        }
+                        if (part.getLocalType().equals("surname")) {
                             if (surname.length() != 0) {
                                 surname.append(" ");
                             }
@@ -290,40 +291,39 @@ public class StoreEacCpfAction extends EacCpfAction {
                             }
                             patronymic.append(part.getContent());
                         }
-                     }
+                    }
                     if (builderTitle.length() == 0) {
-                    	// build the title
+                        // build the title
                         builderTitle.append(surname);
-                        if (builderTitle.length() > 0 && ((firstname!=null && firstname.length()>0) || (patronymic!=null && patronymic.length()>0))){
-                    		builderTitle.append(", ");
+                        if (builderTitle.length() > 0 && ((firstname.length() > 0) || (patronymic.length() > 0))) {
+                            builderTitle.append(", ");
                         }
                         builderTitle.append(firstname);
                         if (builderTitle.length() != 0) {
                             builderTitle.append(" ");
                         }
                         builderTitle.append(patronymic);
-                    }    
+                    }
                     title = builderTitle.toString();
-             	}
+                }
                 //issue 1442
-                if (title.trim().isEmpty()){
-                	for (int i=0;i<parts.size();i++){
-                		builderTitle.append(parts.get(i).getContent());
-                		if (i<(parts.size()-1)){
-                			builderTitle.append(", ");
-                		}
-                	}
-                	title = builderTitle.toString();
+                if (title.trim().isEmpty()) {
+                    for (int i = 0; i < parts.size(); i++) {
+                        builderTitle.append(parts.get(i).getContent());
+                        if (i < (parts.size() - 1)) {
+                            builderTitle.append(", ");
+                        }
+                    }
+                    title = builderTitle.toString();
                 }
             }
-           
+
         } catch (Exception e) {
             title = "";
         }
-       
+
         return title;
     }
- 
 
     /**
      * @return the fileId
@@ -387,5 +387,43 @@ public class StoreEacCpfAction extends EacCpfAction {
 
     public void setFileToLoad(int fileToLoad) {
         this.fileToLoad = fileToLoad;
+    }
+
+    private Identity.NameEntry retrieveFirstEntryByLocalType(List<Identity.NameEntry> nameEntries) {
+        int preferred = -1;
+        int authorized = -1;
+        int alternative = -1;
+        int abbreviation = -1;
+        int other = -1;
+        int noLocalType = -1;
+        for (int counter = 0; counter < nameEntries.size(); counter++) {
+            Identity.NameEntry nameEntry = nameEntries.get(counter);
+            if (nameEntry.getLocalType().equals("preferred") && preferred == -1) {
+                preferred = counter;
+            } else if (nameEntry.getLocalType().equals("authorized") && authorized == -1) {
+                authorized = counter;
+            } else if (nameEntry.getLocalType().equals("alternative") && alternative == -1) {
+                alternative = counter;
+            } else if (nameEntry.getLocalType().equals("abbreviation") && abbreviation == -1) {
+                abbreviation = counter;
+            } else if (nameEntry.getLocalType().equals("other") && other == -1) {
+                other = counter;
+            } else if (noLocalType == -1) {
+                noLocalType = counter;
+            } 
+        }
+            if (preferred != -1) {
+                return nameEntries.get(preferred);
+            } else if (authorized != -1) {
+                return nameEntries.get(authorized);
+            } else if (alternative != -1) {
+                return nameEntries.get(alternative);
+            } else if (abbreviation != -1) {
+                return nameEntries.get(abbreviation);
+            } else if (other != -1) {
+                return nameEntries.get(other);
+            } else if (noLocalType != -1) {
+                return nameEntries.get(noLocalType);
+            } else return nameEntries.get(0);
     }
 }
