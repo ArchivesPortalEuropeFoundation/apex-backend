@@ -129,7 +129,7 @@ public class EadSearchSearviceImpl extends EadSearchService {
         SearchRequest request = new SearchRequest();
         request.setFilters(searchRequest.getFilters());
         request.setDateFilters(searchRequest.getDateFilters());
-        request.setQuery(searchRequest.getQuery() + EadSearchSearviceImpl.SOLR_AND + "recordType:" + searchRequest.getDocType());
+        request.setQuery("(" + searchRequest.getQuery() + ")" + EadSearchSearviceImpl.SOLR_AND + "recordType:" + searchRequest.getDocType());
 
         logger.info("Group query is : " + request.getQuery());
         request.setCount(searchRequest.getCount());
