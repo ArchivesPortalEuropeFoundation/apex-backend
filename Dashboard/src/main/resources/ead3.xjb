@@ -10,7 +10,7 @@
 
     <jaxb:bindings schemaLocation="ead3.xsd" version="1.0">
         <jaxb:schemaBindings>
-            <jaxb:package name="gov.loc.ead"/>
+            <jaxb:package name="gov.loc.ead3"/>
         </jaxb:schemaBindings>
         
         <!-- remove conflict in Script type -->

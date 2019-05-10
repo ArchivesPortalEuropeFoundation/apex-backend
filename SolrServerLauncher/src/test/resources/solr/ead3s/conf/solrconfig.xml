@@ -140,6 +140,7 @@
             <str name="fl">
                 id,unitTitle,scopeContent,unitDate,titleProper,recordType,unitId,country,ai,dao,levelName,titleProper,otherUnitId,daoType,siblingPosition,orderId,recordId,repositoryCode,duplicateUnitid,numberOfDescendents,numberOfAncestors,rootDocId,numberOfDao
             </str>
+            <str name="q.op">AND</str>
             <str name="q.alt">*:*</str>
             <str name="hl.fl">unitTitle scopeContent other alternateUnitdate</str>
             <str name="hl.fragmenter">regex</str>

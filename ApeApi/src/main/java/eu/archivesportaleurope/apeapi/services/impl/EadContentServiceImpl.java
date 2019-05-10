@@ -22,7 +22,12 @@ import eu.archivesportaleurope.apeapi.transaction.repository.EadContentRepo;
 import eu.archivesportaleurope.apeapi.transaction.repository.FindingAidRepo;
 import eu.archivesportaleurope.apeapi.transaction.repository.HoldingsGuideRepo;
 import eu.archivesportaleurope.apeapi.transaction.repository.SourceGuideRepo;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,18 +39,20 @@ public class EadContentServiceImpl implements EadContentService {
 
     @Autowired
     EadContentRepo contentRepo;
-    
+
     @Autowired
     CLevelRepo cLevelRepo;
-    
+
     @Autowired
     FindingAidRepo findingAidRepo;
-    
+
     @Autowired
     HoldingsGuideRepo holdingsGuideRepo;
-    
+
     @Autowired
     SourceGuideRepo sourceGuideRepo;
+    
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Transactional
     @Override
@@ -66,6 +73,68 @@ public class EadContentServiceImpl implements EadContentService {
 
     @Transactional
     @Override
+    public List<DetailContent> findClevelContent(List<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new ResourceNotFoundException("Not a descriptive unit id", "No descriptive unit id found");
+        }
+        List<Long> longIds = new ArrayList<>();
+        for (String id : ids) {
+            if (StringUtils.isNotBlank(id) && id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
+                longIds.add(new Long(id.substring(1)));
+            }
+        }
+        if (!longIds.isEmpty()) {
+            List<DetailContent> detailContents = new ArrayList<>();
+            List<CLevel> currentLevels;
+            currentLevels = cLevelRepo.findByIdIn(longIds);
+            if (currentLevels == null) {
+                throw new ResourceNotFoundException("Couldn't find any item with the given ids", "No Clevel Item not found");
+            }
+            if (currentLevels.isEmpty()) {
+                throw new ResourceNotFoundException("Couldn't find any Clevel", "Clevel Item not found");
+            }
+            currentLevels.forEach(currentLevel -> {
+                //lazy load
+                try {
+                    ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
+                    ai.getAiname();
+                    detailContents.add(new DetailContent(currentLevel));
+                } catch (NullPointerException ex) {
+                    logger.debug("Null exception currentLevel: " + currentLevel.getId(), ex);
+                }
+            });
+
+            return detailContents;
+        }
+        throw new ResourceNotFoundException("Couldn't find any Clevel", "Clevel Item not found");
+    }
+
+    @Transactional
+    @Override
+    public List<DetailContent> getSomeClevelContent() {
+        ArrayList<DetailContent> detailContents = new ArrayList<>();
+        List<CLevel> currentLevels;
+        currentLevels = cLevelRepo.findFirst1000ByOrderByIdAsc(); //new Sort(Sort.Direction.DESC, "id")
+        if (currentLevels == null || currentLevels.isEmpty()) {
+            throw new ResourceNotFoundException("Couldn't find any Clevel", "Clevel Item not found");
+        }
+        currentLevels.forEach(currentLevel -> {
+            //lazy load
+            try {
+                ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
+                ai.getAiname();
+                detailContents.add(new DetailContent(currentLevel));
+            } catch (NullPointerException ex) {
+                System.out.println("Null exception currentLevel: " + currentLevel.getId() + " : " + ex.getMessage());
+            }
+        });
+
+        return detailContents;
+
+    }
+
+    @Transactional
+    @Override
     public Ead findEadById(String id) {
         if (StringUtils.isNotBlank(id)) {
 
@@ -79,7 +148,7 @@ public class EadContentServiceImpl implements EadContentService {
                     ead = findingAidRepo.findById(idLong);
                 } else if (xmlType.getClazz().equals(HoldingsGuide.class)) {
                     ead = holdingsGuideRepo.findById(idLong);
-                } else if (xmlType.getClazz().equals(SourceGuide.class)){
+                } else if (xmlType.getClazz().equals(SourceGuide.class)) {
                     ead = sourceGuideRepo.findById(idLong);
                 } else {
                     throw new ResourceNotFoundException("Provided item is not fully supported or downloadable", "Id should start with F/H/S: " + id);
@@ -93,7 +162,7 @@ public class EadContentServiceImpl implements EadContentService {
         }
         throw new ResourceNotFoundException("Provided id is either malformed or not an Ead item", "Bad ead id, id" + id);
     }
-    
+
     @Transactional
     @Override
     public DetailContent findEadContent(String id) {

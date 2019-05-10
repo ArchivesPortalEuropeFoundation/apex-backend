@@ -29,40 +29,38 @@ import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import gov.loc.ead.Archdesc;
-import gov.loc.ead.C;
-import gov.loc.ead.Chronitem;
-import gov.loc.ead.Chronlist;
-import gov.loc.ead.Corpname;
-import gov.loc.ead.Dao;
-import gov.loc.ead.Daoset;
-import gov.loc.ead.Did;
-import gov.loc.ead.Dsc;
-import gov.loc.ead.Ead;
-import gov.loc.ead.Event;
-import gov.loc.ead.Famname;
-import gov.loc.ead.Genreform;
-import gov.loc.ead.Item;
-import gov.loc.ead.MMixedBasic;
-import gov.loc.ead.Langmaterial;
-import gov.loc.ead.Language;
-import gov.loc.ead.Languageset;
-import gov.loc.ead.Localtypedeclaration;
-import gov.loc.ead.MCBase;
-import gov.loc.ead.MMixedBasicDate;
-import gov.loc.ead.MMixedBasicPlusAccess;
-import gov.loc.ead.Maintenanceagency;
-import gov.loc.ead.Origination;
-import gov.loc.ead.Part;
-import gov.loc.ead.Persname;
-import gov.loc.ead.Recordid;
-import gov.loc.ead.Scopecontent;
-import gov.loc.ead.Script;
-import gov.loc.ead.Subtitle;
-import gov.loc.ead.Titleproper;
-import gov.loc.ead.Unitdate;
-import gov.loc.ead.Unitid;
-import gov.loc.ead.Unittitle;
+import gov.loc.ead3.Archdesc;
+import gov.loc.ead3.C;
+import gov.loc.ead3.Corpname;
+import gov.loc.ead3.Dao;
+import gov.loc.ead3.Daoset;
+import gov.loc.ead3.Did;
+import gov.loc.ead3.Dsc;
+import gov.loc.ead3.Ead;
+import gov.loc.ead3.Event;
+import gov.loc.ead3.Famname;
+import gov.loc.ead3.Genreform;
+import gov.loc.ead3.Item;
+import gov.loc.ead3.MMixedBasic;
+import gov.loc.ead3.Langmaterial;
+import gov.loc.ead3.Language;
+import gov.loc.ead3.Languageset;
+import gov.loc.ead3.Localtypedeclaration;
+import gov.loc.ead3.MCBase;
+import gov.loc.ead3.MMixedBasicDate;
+import gov.loc.ead3.MMixedBasicPlusAccess;
+import gov.loc.ead3.Maintenanceagency;
+import gov.loc.ead3.Origination;
+import gov.loc.ead3.Part;
+import gov.loc.ead3.Persname;
+import gov.loc.ead3.Recordid;
+import gov.loc.ead3.Scopecontent;
+import gov.loc.ead3.Script;
+import gov.loc.ead3.Subtitle;
+import gov.loc.ead3.Titleproper;
+import gov.loc.ead3.Unitdate;
+import gov.loc.ead3.Unitid;
+import gov.loc.ead3.Unittitle;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,9 +71,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -110,7 +105,7 @@ public class Ead3SolrDocBuilder {
     private SolrDocNode archdescNode = new SolrDocNode();
     private boolean openDataEnable = false;
     private boolean persistEac = false;
-    private final JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead.MCBase.class);
+    private final JAXBContext cLevelContext = JAXBContext.newInstance(gov.loc.ead3.MCBase.class);
 //    private final JAXBContext ead3Context;
     private final JAXBContext localTypeContext;
     private final Unmarshaller localTypeUnmarshaller;
@@ -129,7 +124,7 @@ public class Ead3SolrDocBuilder {
         this.localTypeUnmarshaller = localTypeContext.createUnmarshaller();
     }
 
-    public SolrDocTree buildDocTree(Ead ead3, Ead3 ead3Entity, boolean persistEac) throws JAXBException {
+    public SolrDocTree buildDocTree(Ead ead3, Ead3 ead3Entity, boolean persistEac) throws JAXBException, IOException {
         this.persistEac = persistEac;
         this.ead3Entity = ead3Entity;
         this.openDataEnable = ead3Entity.getArchivalInstitution().isOpenDataEnabled();
@@ -186,7 +181,7 @@ public class Ead3SolrDocBuilder {
 
     }
 
-    private void retrieveArchdescMain() {
+    private void retrieveArchdescMain() throws IOException {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
@@ -223,7 +218,7 @@ public class Ead3SolrDocBuilder {
 
     }
 
-    private void processArchdesc() {
+    private void processArchdesc() throws IOException {
         if (this.ead3 == null || this.jXPathContext == null) {
             throw new IllegalStateException("Not initialized properly");
         }
@@ -250,12 +245,12 @@ public class Ead3SolrDocBuilder {
 
         //Generate eadcontent xml
         Archdesc archdesc = this.ead3.getArchdesc();
-        List<Object> dscBackup = new ArrayList<>();
+        List<Serializable> dscBackup = new ArrayList<>();
 
         Iterator it = this.jXPathContext.iterate("archdesc/*");
 
         while (it.hasNext()) {
-            Object element = it.next();
+            Serializable element = (Serializable) it.next();
             if (element instanceof Dsc) {
                 dscBackup.add(element);
                 this.processDsc((Dsc) element, this.archdescNode);
@@ -264,7 +259,7 @@ public class Ead3SolrDocBuilder {
         }
         //Arcdesc don't have the dscs now. lets generate xml
         try {
-            JAXBContext ead3Context = JAXBContext.newInstance(gov.loc.ead.Ead.class);
+            JAXBContext ead3Context = JAXBContext.newInstance(gov.loc.ead3.Ead.class);
             Marshaller marshaller = ead3Context.createMarshaller();
             ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
             marshaller.marshal(this.ead3, baos);
@@ -293,7 +288,7 @@ public class Ead3SolrDocBuilder {
         archdesc.getAccessrestrictOrAccrualsOrAcqinfo().addAll(dscBackup);
     }
 
-    private void processDsc(Dsc dsc, SolrDocNode parent) {
+    private void processDsc(Dsc dsc, SolrDocNode parent) throws IOException {
         if (dsc == null) {
             return;
         }
@@ -337,7 +332,7 @@ public class Ead3SolrDocBuilder {
         }
     }
 
-    private SolrDocNode processC(MCBase cElement, SolrDocNode parent, CLevel parentC, int orderId) {
+    private SolrDocNode processC(MCBase cElement, SolrDocNode parent, CLevel parentC, int orderId) throws IOException {
         if (cElement == null) {
             return null;
         }
@@ -486,14 +481,14 @@ public class Ead3SolrDocBuilder {
         Marshaller marshaller = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
         ((C) cElement).getTheadAndC().clear(); //remove all child Cs only to serialized current level
-        
+
         //*
         JXPathContext context1 = JXPathContext.newContext(cElement);
-        it = context1.iterate("//*"); 
-        int count=0;
+        it = context1.iterate("//*");
+        int count = 0;
         while (it.hasNext()) {
             Object element = it.next();
-            
+
             if (element instanceof Persname) {
                 Persname persname = (Persname) element;
                 //System.out.println("Found Persname: "+ persname.getPart().size());
@@ -518,7 +513,7 @@ public class Ead3SolrDocBuilder {
         }
         //*/
         //System.out.println("total persname: "+count);
-        
+
         try {
             marshaller = this.cLevelContext.createMarshaller();
 //            QName qName = new QName("c");
@@ -527,8 +522,6 @@ public class Ead3SolrDocBuilder {
             marshaller.marshal(cElement, baos);
             String cLevelXml = baos.toString("UTF-8");
             cLevelEntity.setXml(cLevelXml);
-//            System.out.println("Clevel xml: " + cLevelXml);
-
         } catch (JAXBException | UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(Ead3SolrDocBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -583,7 +576,7 @@ public class Ead3SolrDocBuilder {
         } else {
             JXPathContext context = JXPathContext.newContext(obj);
             Iterator it = context.iterate("*");
-            String str1= "";
+            String str1 = "";
             while (it.hasNext()) {
                 Object object = it.next();
                 if (object instanceof MMixedBasic) {
@@ -592,8 +585,8 @@ public class Ead3SolrDocBuilder {
                     for (Serializable sr : contentHolder.getContent()) {
                         try {
                             str1 = (String) sr;
-                        } catch (ClassCastException cx){
-                            Ead3SolrDocBuilder.LOGGER.debug("Failed to convert to string: "+sr.toString());
+                        } catch (ClassCastException cx) {
+                            Ead3SolrDocBuilder.LOGGER.debug("Failed to convert to string: " + sr.toString());
                         }
                         if (!str1.isEmpty()) {
                             if (stringBuilder.length() > 0) {
@@ -757,9 +750,9 @@ public class Ead3SolrDocBuilder {
 
     private Map<String, Object> processDid(Did did, SolrDocNode cRoot) {
         Map<String, Object> didInfoMap = new HashMap<>();
-        
+
         int daoCount = 0;
-        List<String> daoFieldValues = new ArrayList<>(); 
+        List<String> daoFieldValues = new ArrayList<>();
         Set<String> daoTypeValues = new HashSet<>();
 
         if (did != null) {
@@ -798,7 +791,7 @@ public class Ead3SolrDocBuilder {
                     }
 
                 } else if (obj instanceof Daoset) {
-                    List<JAXBElement<?>> daos = ((Daoset) obj).getContent();
+                    List<JAXBElement<? extends Serializable>> daos = ((Daoset) obj).getContent();
                     daoCount++;
                     for (JAXBElement jAXBElement : daos) {
                         if (jAXBElement.getDeclaredType().equals(Dao.class)) {
@@ -855,7 +848,7 @@ public class Ead3SolrDocBuilder {
 
             }
         }
-        
+
         didInfoMap.put(Ead3SolrFields.DAO_LINKS, daoFieldValues);
         didInfoMap.put(Ead3SolrFields.DAO_TYPE, daoTypeValues);
         didInfoMap.put(Ead3SolrFields.NUMBER_OF_DAO, daoCount + "");
@@ -1072,15 +1065,15 @@ public class Ead3SolrDocBuilder {
                         break;
                     case BIRTHPLACE:
                         tmpStr = getContent(part);
-                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_+partPlaceCount, returnAsArray(tmpStr));
-                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_+partPlaceCount, returnAsArray("birth")); // ToDo: change the hard code
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ + partPlaceCount, returnAsArray(tmpStr));
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_ + partPlaceCount, returnAsArray("birth")); // ToDo: change the hard code
 //                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_LANGUAGE_+partPlaceCount, returnAsArray(partLang));
                         partPlaceCount++;
                         break;
                     case DEATHPLACE:
                         tmpStr = getContent(part);
-                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_+partPlaceCount, returnAsArray(tmpStr));
-                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_+partPlaceCount, returnAsArray("death")); // ToDo: change the hard code
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ + partPlaceCount, returnAsArray(tmpStr));
+                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_ROLE_ + partPlaceCount, returnAsArray("death")); // ToDo: change the hard code
 //                        eacMap.put(Ead3ToEacFieldMapKeys.PLACE_LANGUAGE_+partPlaceCount, returnAsArray(partLang));
                         partPlaceCount++;
                         break;
@@ -1094,7 +1087,6 @@ public class Ead3SolrDocBuilder {
 
         eacMap.put(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_BIRTH_DATE, birthDate);
         eacMap.put(Ead3ToEacFieldMapStaticValues.PART_LOCAL_TYPE_DEATH_DATE, deathDate);
-        
 
         //test build map for ead3 to eac
         EacCpfDAO cpfDAO = DAOFactory.instance().getEacCpfDAO();

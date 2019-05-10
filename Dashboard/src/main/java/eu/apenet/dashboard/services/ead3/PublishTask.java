@@ -13,7 +13,7 @@ import eu.apenet.dashboard.services.ead3.publish.SolrPublisher;
 import eu.apenet.persistence.vo.Ead3;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.ValidatedState;
-import gov.loc.ead.Ead;
+import gov.loc.ead3.Ead;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

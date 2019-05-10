@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Mahbub
  */
 public abstract class SearchService {
+
     private static final String SOLR_AND = " AND ";
 
     public abstract QueryResponse search(SearchRequest request, Map<String, String> extraSearchParam, boolean includeFacet);
@@ -56,9 +57,9 @@ public abstract class SearchService {
             } else {
                 query.setRows(searchRequest.getCount());
             }
-            
-            String queryStr = searchRequest.getQuery();
-            
+
+            String queryStr = "(" + searchRequest.getQuery() + ")";
+
             if (extraSearchParam != null && !extraSearchParam.isEmpty()) {
                 for (Map.Entry<String, String> entry : extraSearchParam.entrySet()) {
                     if ("q".equalsIgnoreCase(entry.getKey()) && !entry.getValue().isEmpty()) {
@@ -81,7 +82,7 @@ public abstract class SearchService {
             throw new InternalErrorException("Solarserver Exception", ExceptionUtils.getStackTrace(ex));
         }
     }
-    
+
     private SolrQuery getFacatedQuery(SearchRequest searchRequest,
             List<ListFacetSettings> facetSettingsList, SolrApiResponseDictionary dictionary) throws SolrServerException, ParseException {
         SolrQuery query = queryBuilder.getListViewQuery(searchRequest.getStartIndex(), facetSettingsList, null, null, true);

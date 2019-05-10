@@ -17,11 +17,10 @@ import javax.persistence.Table;
 
 import eu.archivesportaleurope.util.ApeUtil;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.ForeignKey;
-import javax.persistence.Lob;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "c_level")
@@ -78,8 +77,8 @@ public class CLevel implements Serializable {
     private String xml;
 
     @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "TEXT")
-    private String json;
+    @Type(type = "org.hibernate.type.BinaryType")
+    private byte[] cBinary;
 
     public String getUnittitle() {
         return unittitle;
@@ -145,14 +144,6 @@ public class CLevel implements Serializable {
         this.xml = xml;
     }
 
-    public String getJson() {
-        return json;
-    }
-
-    public void setJson(String json) {
-        this.json = json;
-    }
-
     public Long getEcId() {
         return ecId;
     }
@@ -183,6 +174,14 @@ public class CLevel implements Serializable {
 
     public void setHgSgFaRelations(Set<HgSgFaRelation> hgSgFaRelations) {
         this.hgSgFaRelations = hgSgFaRelations;
+    }
+
+    public byte[] getcBinary() {
+        return cBinary;
+    }
+
+    public void setcBinary(byte[] cBinary) {
+        this.cBinary = cBinary;
     }
 
     public HgSgFaRelation getHgSgFaRelation() {

@@ -21,20 +21,40 @@ import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dashboard.services.ead.xml.XMLStreamWriterHolder;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadArchDescCLevelXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadPublishData;
-import eu.apenet.dashboard.services.ead.xml.stream.publish.EadGlobalXpathReader;
 import eu.apenet.dashboard.services.ead.xml.stream.publish.EadSolrPublisher;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 //import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.xml.ApeXMLConstants;
+import gov.loc.ead.C;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.log4j.Logger;
 
 public class XmlCLevelParser extends AbstractParser {
 
     public static final QName CLEVEL = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "c");
     private static final QName PERSISTENT_ID = new QName(ApeXMLConstants.APE_EAD_NAMESPACE, "id");
 
+    private static JAXBContext clevelContext = null;
+    private static Unmarshaller cUnmarshaller = null;
+
+    static {
+        try {
+            clevelContext = JAXBContext.newInstance(C.class);
+            cUnmarshaller = clevelContext.createUnmarshaller();
+        } catch (JAXBException e) {
+        }
+    }
+
     //private static final Logger LOG = Logger.getLogger(CLevelParser.class);
+    private static final Logger LOG = Logger.getLogger(XmlCLevelParser.class);
     public static void parse(EADCounts parentEadCounts, XMLStreamReader xmlReader, Long eadContentId,
             Long parentId, int orderId, Ead ead, EadSolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy, Set<String> unitids)
             throws Exception {
@@ -81,6 +101,7 @@ public class XmlCLevelParser extends AbstractParser {
                             }
                         }
                         clevel.setXml(stringWriter.toString());
+                        clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
                         JpaUtil.getEntityManager().persist(clevel);
                         stringWriter.close();
                         stringWriter = null;
@@ -152,8 +173,8 @@ public class XmlCLevelParser extends AbstractParser {
                     unitids.add(clevel.getUnitid());
                 }
             }
-
             clevel.setXml(stringWriter.toString());
+            clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
             JpaUtil.getEntityManager().persist(clevel);
             stringWriter.close();
             stringWriter = null;
@@ -203,6 +224,14 @@ public class XmlCLevelParser extends AbstractParser {
             }
         }
 
+    }
+
+    private static byte[] getBytesFromObjectStr(String objectString) throws JAXBException, IOException {
+        InputStream stream = new ByteArrayInputStream(objectString.getBytes());
+        C clevelObj = (C) cUnmarshaller.unmarshal(stream);
+        stream.close();
+        
+        return SerializationUtils.serialize(clevelObj);
     }
 
 }
