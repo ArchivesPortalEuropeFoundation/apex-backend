@@ -520,4 +520,9 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
         return results;
     }
 
+    @Override
+    public CLevel getCLevelByUnitId(String unitId, String ead3Id) {
+        return getCLevelByUnitId(unitId, null, ead3Id);
+    }
+
 }

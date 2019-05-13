@@ -4,7 +4,6 @@ import eu.apenet.persistence.vo.AbstractContent;
 import java.util.List;
 
 import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.Ead;
 
 /**
  *
@@ -64,4 +63,6 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
     public CLevel getCLevelByCid(String repositoryCode, Class<? extends AbstractContent> clazz, String eadid, String cid);
 
     public CLevel getCLevelByUnitId(String unitId, String repositoryCode, String ead3Id);
+
+    public CLevel getCLevelByUnitId(String unitid, String ead3recordid);
 }
