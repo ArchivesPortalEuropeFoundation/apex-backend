@@ -32,9 +32,9 @@ import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.UpFile;
 
 /**
- * Creates a new EAC-CPF in the file system and in the data base and
- * builds the title of the EAC-CPF based on the value of @localType
- * in the element {@code <part>}.
+ * Creates a new EAC-CPF in the file system and in the data base and builds the
+ * title of the EAC-CPF based on the value of @localType in the element
+ * {@code <part>}.
  */
 public class CreateEacCpfTask extends AbstractEacCpfTask {
 
@@ -43,18 +43,21 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         return "create EAC-CPF";
     }
 
-   /**
-    * Stores in the data base and in the file system the EAC-CPF uploaded in the Dashboard.
-    * @param xmlType {@link XmlType} The type of the file to upload.
-    * @param upFile {@link UpFile} The file uploaded.
-    * @param aiId {@link Integer} The identifier of the archival institution.
-    * @return {@link EacCpf} 
-    * @throws Exception
-    * @see ExistingFilesChecker#extractAttributeFromXML(String, String, String, boolean, boolean)
-    * @see eu.apenet.persistence.dao.EacCpfDAO
-    * @see eu.apenet.persistence.vo.EacCpf
-    * @see eu.apenet.persistence.vo.ArchivalInstitution
-    */
+    /**
+     * Stores in the data base and in the file system the EAC-CPF uploaded in
+     * the Dashboard.
+     *
+     * @param xmlType {@link XmlType} The type of the file to upload.
+     * @param upFile {@link UpFile} The file uploaded.
+     * @param aiId {@link Integer} The identifier of the archival institution.
+     * @return {@link EacCpf}
+     * @throws Exception
+     * @see ExistingFilesChecker#extractAttributeFromXML(String, String, String,
+     * boolean, boolean)
+     * @see eu.apenet.persistence.dao.EacCpfDAO
+     * @see eu.apenet.persistence.vo.EacCpf
+     * @see eu.apenet.persistence.vo.ArchivalInstitution
+     */
     protected EacCpf execute(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
         String fileName = upFile.getFilename();
         try {
@@ -131,99 +134,106 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 
         //if the list is populated, sort it by priority and process the first entry
         if (titleElements != null && !titleElements.isEmpty()) {
-    		StringBuilder unknownLocalType = new StringBuilder();
-    		boolean hasPart = false;
+            StringBuilder unknownLocalType = new StringBuilder();
+            boolean hasPart = false;
 
             //Collections.sort(titleElements, new NameEntryComp());
-
             //Since the list is sorted prior to use, its first element should almost always return a value from which a
             //title can be built without problems. If this however should not be the case, for example if the file uses
             //other values than the six possibilities for apeEAC-CPF, an error message will be displayed in the title column
-        	// If the content of the "<part>" of the first element is empty,
-        	// will check the content of the next ones.
-        	boolean foundTitle = false;
-        	for (int i = 0; !foundTitle && i < titleElements.size(); i++) {
-        		NameEntry currentNameEntry = retrieveEntryByLocalType(titleElements);
+            // If the content of the "<part>" of the first element is empty,
+            // will check the content of the next ones.
+            boolean foundTitle = false;
+            for (int i = 0; !foundTitle && i < titleElements.size(); i++) {
+                NameEntry currentNameEntry = retrieveEntryByLocalType(titleElements);
 
-	            if (!currentNameEntry.getLocalType().equals(NameEntryLocalType.UNKNOWN)) {
-	                LinkedList<Part> titleEntryParts = currentNameEntry.getParts();
+                if (!currentNameEntry.getLocalType().equals(NameEntryLocalType.UNKNOWN)) {
+                    LinkedList<Part> titleEntryParts = currentNameEntry.getParts();
 
-	                //StringBuilder objects for single parts of the name, if needed
-	                StringBuilder surname = new StringBuilder();
-	                StringBuilder firstname = new StringBuilder();
-	                StringBuilder patronymic = new StringBuilder();
-	                StringBuilder content = new StringBuilder();
+                    //StringBuilder objects for single parts of the name, if needed
+                    StringBuilder surname = new StringBuilder();
+                    StringBuilder firstname = new StringBuilder();
+                    StringBuilder patronymic = new StringBuilder();
+                    StringBuilder fullnames = new StringBuilder();
+                    StringBuilder allParts = new StringBuilder();
 
-	                for (Part part : titleEntryParts) {
-	                	hasPart = true;
-	                    if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
-	                        content.append(part.getContent());
-	                    }
-	                    if (part.getLocalType().equals("surname")) {
-	                        if (surname.length() != 0) {
-	                            surname.append(" ");
-	                        }
-	                        surname.append(part.getContent());
-	                    }
-                            if (part.getLocalType().equals("firstname")) {
-	                        if (firstname.length() != 0) {
-	                            firstname.append(" ");
-	                        }
-	                        firstname.append(part.getContent());
-	                    }
-                            if (part.getLocalType().equals("patronymic")) {
-	                        if (patronymic.length() != 0) {
-	                            patronymic.append(" ");
-	                        }
-	                        patronymic.append(part.getContent());
-	                    }
-	                }
-
-	                // if the builder is empty, build the title from the parts
-                        if (surname.length() > 0 && firstname.length() > 0){
-                            builderTitle.append(surname).append(", ").append(firstname);
-                            if(patronymic.length() > 0){
-                                builderTitle.append(" ").append(patronymic);
-                            }
-                        } else if (content.length() > 0){
-                            builderTitle.append(content);
+                    for (Part part : titleEntryParts) {
+                        hasPart = true;
+                        if (part.getLocalType().equals("persname") || part.getLocalType().equals("famname") || part.getLocalType().equals("corpname")) {
+                            fullnames.append(part.getContent());
                         }
-                        
-	                //output of the title
-	                if (builderTitle.length() != 0) {
-	                	foundTitle = true;
-	                	//issue #1442 extension's, 
-	                	//cases in which it's created via DPT or other external system. 
-	                	//For additional requirements see comment #7.
-	                	String title = builderTitle.toString().trim();
-	                	if(title.endsWith(", ") || title.endsWith(",")){
-	                		builderTitle.setLength(title.lastIndexOf(","));
-	                	}
-	                }
-	            } else {
-	            	unknownLocalType.append(getText("eaccpf.error.no.known.localtype"));
-	            }
-        	}
+                        if (part.getLocalType().equals("surname")) {
+                            if (surname.length() != 0) {
+                                surname.append(" ");
+                            }
+                            surname.append(part.getContent());
+                        }
+                        if (part.getLocalType().equals("firstname")) {
+                            if (firstname.length() != 0) {
+                                firstname.append(" ");
+                            }
+                            firstname.append(part.getContent());
+                        }
+                        if (part.getLocalType().equals("patronymic")) {
+                            if (patronymic.length() != 0) {
+                                patronymic.append(" ");
+                            }
+                            patronymic.append(part.getContent());
+                        }
+                        //collect everything in "allParts" in case there is no tagging for surname, firstname or XXXname
+                        if (allParts.length() != 0) {
+                            allParts.append(" ");
+                        }
+                        allParts.append(part.getContent());
+                    }
+
+                    // if the builder is empty, build the title from the parts
+                    if (surname.length() > 0 && firstname.length() > 0) {
+                        builderTitle.append(surname).append(", ").append(firstname);
+                        if (patronymic.length() > 0) {
+                            builderTitle.append(" ").append(patronymic);
+                        }
+                    } else if (fullnames.length() > 0) {
+                        builderTitle.append(fullnames);
+                    } else if (allParts.length() > 0) {
+                        builderTitle.append(allParts);
+                    }
+
+                    //output of the title
+                    if (builderTitle.length() != 0) {
+                        foundTitle = true;
+                        //issue #1442 extension's, 
+                        //cases in which it's created via DPT or other external system. 
+                        //For additional requirements see comment #7.
+                        String title = builderTitle.toString().trim();
+                        if (title.endsWith(", ") || title.endsWith(",")) {
+                            builderTitle.setLength(title.lastIndexOf(","));
+                        }
+                    }
+                } else {
+                    unknownLocalType.append(getText("eaccpf.error.no.known.localtype"));
+                }
+            }
 
             if (builderTitle.length() != 0) {
-            	// Case in which at least one "<part>" element has content.
+                // Case in which at least one "<part>" element has content.
                 return builderTitle.toString();
             } else if (unknownLocalType.length() != 0 && !hasPart) {
-            	// Case in which the "@localType" attribute of "<nameEntry>"
-            	// element has unknown value.
+                // Case in which the "@localType" attribute of "<nameEntry>"
+                // element has unknown value.
                 return unknownLocalType.toString();
             } else if (hasPart) {
-            	// Case in which has "<part>" element but all have no content.
-            	return " ";
+                // Case in which has "<part>" element but all have no content.
+                return " ";
             } else {
-            	// Case in which the part is ineligible.
+                // Case in which the part is ineligible.
                 return getText("eaccpf.error.no.ineligible.part");
             }
         } else {
             return getText("eaccpf.error.no.title");
         }
     }
-    
+
     private NameEntry retrieveEntryByLocalType(LinkedList<NameEntry> titleElements) {
         int preferred = -1;
         int authorized = -1;
@@ -264,14 +274,16 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         }
     }
 
-   /**
-    * Empty method.
-    */
+    /**
+     * Empty method.
+     */
     @Override
     protected void execute(EacCpf eac, Properties properties) throws APEnetException {
     }
+
     /**
      * This method is implemented by some developer to logs Action.
+     *
      * @param xmlType The type of the file.
      * @param fileName The name of the file.
      * @param exception The exception to treat.
@@ -287,8 +299,10 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
 
     /**
      * Gets the path of the EAC-CPF.
+     *
      * @param xmlType {@link XmlType} The type of the file.
-     * @param archivalInstitution {@link ArchivalInstitution} The institution where is the EAC-CPF.
+     * @param archivalInstitution {@link ArchivalInstitution} The institution
+     * where is the EAC-CPF.
      * @return String The path of the EAC-CPF file.
      */
     public static String getPath(XmlType xmlType, ArchivalInstitution archivalInstitution) {
@@ -302,11 +316,13 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
     }
 
     /**
-     * Method to recover all the values of {@code <part>} in one repeatable element {@code <nameEntry>}.
+     * Method to recover all the values of {@code <part>} in one repeatable
+     * element {@code <nameEntry>}.
      *
      * @param element String the repeatable element {@code <part>}
      *
-     * @return  {@link LinkedList}{@code <}{@link NameEntry}{@code >} All the values of the element
+     * @return {@link LinkedList}{@code <}{@link NameEntry}{@code >} All the
+     * values of the element
      * @see javax.xml.stream.XMLInputFactory
      * @see javax.xml.stream.XMLStreamReader
      * @see javax.xml.stream.events.XMLEvent
@@ -355,8 +371,8 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                         }
                         if (input.getLocalName().equalsIgnoreCase(pathElements[(pathElements.length - 1)])) {
                             Part part = new Part();
-                            if(input.getAttributeCount()>0){
-                            	for (int i = 0; i < input.getAttributeCount(); i++) {
+                            if (input.getAttributeCount() > 0) {
+                                for (int i = 0; i < input.getAttributeCount(); i++) {
                                     if (input.getAttributeLocalName(i).equals("localType")) {
                                         if (input.getAttributeValue(i).equals("persname")
                                                 || (input.getAttributeValue(i).equals("corpname"))
@@ -371,7 +387,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
                                     }
                                 }
                             }
-                        	addText = true;
+                            addText = true;
                             partStack.push(part);
                         }
                         break;
@@ -422,9 +438,8 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         return nameEntries;
     }
 
-   
     /**
-     * 
+     *
      * Class for the element <code>&lt;nameEntry&gt;</code> in the EAC-CPF.
      *
      */
@@ -460,7 +475,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
     }
 
     /**
-     * 
+     *
      * Class for the element <code>&lt;part&gt;</code> in the EAC-CPF.
      *
      */
@@ -491,11 +506,12 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
         }
     }
 
-   /**
-    * 
-    *Values of the attribute @localType in the element <code>&lt;nameEntry&gt;</code>.
-    *
-    */
+    /**
+     *
+     * Values of the attribute @localType in the element
+     * <code>&lt;nameEntry&gt;</code>.
+     *
+     */
     private enum NameEntryLocalType {
 
         PREFERRED("preferred"),
@@ -528,7 +544,7 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
     }
 
     /**
-     * 
+     *
      * Compares two elements <code>&lt;nameEntry&gt;</code>.
      *
      */
@@ -544,11 +560,11 @@ public class CreateEacCpfTask extends AbstractEacCpfTask {
      * Method to get the localized texts.
      *
      * @param code Key for the text to recover in localized form.
-     * 
+     *
      * @return Localized text.
      */
     private String getText(String code) {
-    	ValueStack valueStack = ActionContext.getContext().getValueStack();
-    	return TextProviderHelper.getText(code, code, valueStack);
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        return TextProviderHelper.getText(code, code, valueStack);
     }
 }
