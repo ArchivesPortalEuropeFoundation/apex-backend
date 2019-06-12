@@ -1,55 +1,87 @@
-Content Provider Agreement: Providing content to the Archives Portal Europe will be following the agreement as specified below:
+Content Provider Agreement
+
+
+Providing content to the Archives Portal Europe will be following the agreement as specified below:
 
 Definitions
 
-Content Provider Agreement: forthwith referred to as the agreement.
-Project: The Archives Portal Europe is the result of the APEnet project and will be developed further within the APEx project, the latter forthwith referred to as the project.
-Content providers: for the duration of the project, the members of the project consortium as well as other legal entities accepted by the project, plus those institutions who have signed the present Content Provider Agreement.
-Members of the project consortium: those institutions who have signed the APEx Grant Agreement, provide their data to the Archives Portal Europe and dedicate working hours to the project's work packages.
-Authorised third person or party: forthwith referred to as authorised person; acting as a representative or on behalf of the content provider. The content provider mandates to/permits the authorised person to act on his behalf regarding the registration to the dashboard as well as the use of the dashboard according to Article 1.2 below. The mandate will need to be done in writing (signatures for this agreement) and per case, leaving all rights as in Article 1 to the authorised person. Despite the mandate, the content provider remains the sole and retained decision maker at all times.
-Provider of web services and tools: forthwith referred to as the provider; for the duration of the project or until the APE Foundation is established, the APEx Project Office as representative of the members of the APEx consortium. The provider abides by the decisions of the APEx Project Board, as approved by the APEx Executive Steering Committee (majority vote in person or electronically) - when requested.
-Dashboard: technical facility offering all functions to manage one's data online for the Archives Portal Europe. Its main functions are: upload, conversion, validation, publication, transfer to Europeana, update and deletion of all or part of one's data. The dashboard also comprises the standalone tool downloadable for offline use.
-National contact point: forthwith referred to as Country Manager; archival or administrative institution responsible for the coordination of archival institutions participation to the project and the Archives Portal Europe. In case, no Country Manager has been appointed yet for a certain country, the provider functions as contact point for the institutions of this country.
+Archives Portal Europe (APE): the single online access point to all European archives, allowing the user to easily gain insight into our shared European cultural provenance and progression, turning the spotlight on the vast amount of archival material that documents our European heritage, as well as reflects our multifaceted European culture.
 
-Preamble 
+APEF, in full: Stichting Archives Portal Europe Foundation, an international non-profit organisation with a bureau in the municipality of The Hague, established by a Deed of incorporation passed in The Hague on 27 October 2014. The main aim of the foundation is to keep the Archives Portal Europe operational and up to date, thus guaranteeing the sustainability of its technical infrastructure, needed to aggregate the content of the participating institutions and deliver that to end-users throughout the world.
+
+Assembly of Associates of APEF: the body of the foundation charged with overseeing the policy and the general course of affairs in the foundation, as meant in article 17 of the Deed of incorporation of APEF.
+
+Associate of APEF: an entity that qualifies as a European archival institution, and has been admitted as such by the board of the foundation following the prior approval of the assembly of associates, as meant in article 21 of the Deed of incorporation of APEF.
+
+Authorised third person or party: forthwith referred to as authorised person; acting as a representative or on behalf of the content provider. The content provider mandates to/permits the authorised person to act on his behalf regarding the registration to the dashboard as well as the use of the dashboard according to Article 1.2 below. The mandate will need to be done in writing (signatures for this agreement) and per case, leaving all rights as in Article 1 to the authorised person. Despite the mandate, the content provider remains the sole and retained decision maker at all times.
+
+Content provider: an entity making available to the Archives Portal Europe the data and/or metadata from its holding, without an obligation to pay a contribution, as meant in article 22 of the Deed of incorporation of APEF.
+
+Content Provider Agreement: forthwith referred to as the agreement.
+
+Country Manager: the national contact point: a representative of an archival or administrative institution responsible for the coordination of the content providers of the Archives Portal Europe in a European country. In case no Country Manager has been appointed yet for a certain country, APEF functions as contact point for the institutions of this country.
+
+Dashboard: technical facility offering content providers all functions to manage their data online for the Archives Portal Europe. Its main functions are: upload, conversion, validation, publication, transfer to Europeana, update and deletion of all data or a part of them. The dashboard also comprises the standalone tool downloadable for offline use.
+
+
+Preamble
 
 The Archives Portal Europe was created following an initiative of EBNA (the European Board of National Archivists), the Report on Archives in the enlarged European Union, the resolution on archives in the Member States (OJ 2003/C113/2) by the Council of the European Union, 6 May 2003, and the recommendation from 14 November 2005 of the Council on priority actions to increase cooperation in the field of archives in Europe (OJ 2005/L312/55).
 Its purpose is to enhance cross-border search, investigation in, and publication of archival holdings across Europe by offering a joint publication platform for descriptive information to all European holders of archival material as described in the Report on Archives in the enlarged European Union.
 
-Article 1: Rights and obligations of the content providers
 
-1. All European institutions responsible for archival material can become content providers and use the portal for the publication of information on their holdings and their institutions, once registered by their Country Manager. During the project the Country Manager is registered as such and grants other archival institutions access to the dashboard on their request. It is also possible for these archival institutions to delegate a Country Manager or another authorised person to act on their behalf, provided agreement on this exists between the institutions and the specific Country Manager or other authorised person, subject to notification to the provider (signatures for this agreement). Registered content providers obtain access to the dashboard and the tools provided by the project for the preparation of the data.
-2. The registration to the dashboard and the use of the dashboard must be made by an authorised person acting as a representative or on behalf of the content provider. This person will not transfer the registration information to non-authorised persons or non-authorised third parties.
-3. The content provider or an authorised person can upload, convert, validate, publish, update, or delete content manually (via HTTP and FTP) or automatically (via OAI-PMH) whenever desired. The provider makes the necessary technical interface available through which the content provider has full and immediate control over his own data or the data that he manages on behalf of other institutions that he represents. The result of the deletion operation will become effective on the web presentation after the delay necessary for data processing. Any data that the content provider wants to have deleted will not be included in back-up operations and will be completely erased from the servers.
-4. The content provider or an authorised person can use the functionality made available by the provider to automatically transfer data to third parties. The provider has no responsibility for the data delivered to third parties. Content providers also wishing to make their data available via Europeana will need to sign the special agreements provided for this purpose by Europeana and are recommended to act accordingly with regard to other third parties having separate agreements. The content provider can also stop the order of transferring data with the technical functionality made available by the provider. The provider has no responsibility whatsoever for data that already have been transferred by the content provider using the dashboard.
-5. No data transferred to the Archives Portal Europe can be reused without the explicit authorisation of the content provider. Each registered content provider is responsible for the legal accessibility of and the rights to re-use the data uploaded by himself to the Archives Portal Europe and optionally transferred to third parties using the technical functionality provided for this in the dashboard.
+Article 1 Rights and obligations of the content providers
 
-Article 2: Rights and obligations of the provider
+1. All European institutions responsible for archival material can become content providers and use the portal for the publication of information on their holdings and their institutions, once registered by their Country Manager. The Country Manager is registered as such by APEF and grants other institutions access to the dashboard on their request. It is also possible for these institutions to delegate a Country Manager or another authorised person to act on their behalf, provided agreement on this exists between the institutions and the specific Country Manager or other authorised person, subject to notification to APEF. This delegation has to be signed at the end of this agreement. Registered content providers obtain access to the dashboard and the tools provided by APEF for the preparation of the data.
 
-1. The provider will publish and maintain the content provided to the Archives Portal Europe and will adapt the capacity of the servers when necessary to ensure a sufficient level of performance for the end-user.
-2. The provider operates the web services and tools of the Archives Portal Europe developed in accordance with the project and following the decisions of its governing bodies as well as the work packages responsible for the actual development of the different web services and tools.
-3. The provider is not entitled to use the data for purposes other than for the Archives Portal Europe and is not entitled to transfer the data to a third party. Only the registered content provider is entitled to initiate such a transfer of data by using the corresponding function of the dashboard provided for this purpose. Any transfer of data to a third party as well as all communications concerning those data will be documented and notified to the content provider.
-4. The provider guarantees that any conversion of data performed at the central dashboard conforms to the published rules and manuals. The provider furthermore guarantees that the preview functionalities offered to evaluate how the data will be presented in the Archives Portal Europe accurately reflect the final display.
-5. The provider guarantees the access to the dashboard to the country managers, the registered content providers or authorised persons. The provider does not manage nor delete any data himself, unless asked to do so by a country manager, registered content provider, or authorised person.
+2. The registration to the dashboard and the use of the dashboard must be made by an authorised person acting as a representative of or on behalf of the content provider. This person will not transfer the registration information to non-authorised persons or non-authorised third parties.
 
-Article 3: Termination of this agreement
+3. The content provider or an authorised person can upload, convert, validate, publish, update, or delete content manually (via HTTP and FTP) or automatically (via OAI-PMH) whenever desired. APEF makes this necessary technical interface available through which the content provider has full and immediate control over his own data or the data that he manages on behalf of other institutions that he represents. The result of the deletion operation will become effective on the web presentation after the delay necessary for data processing. Any data that the content provider wants to have deleted will not be included in back-up operations and will be completely erased from the servers.
 
-Termination of this agreement shall be provided in writing. It shall take effect on the date agreed by the parties. 
+4. The content provider or an authorised person can use the functionality made available by APEF to automatically transfer data to third parties, such as Europeana. APEF has no responsibility for the data delivered to third parties. Content providers also wishing to make their data available via Europeana will need to sign the special agreements provided for this purpose by Europeana and are recommended to act accordingly with regard to other third parties having separate agreements. The content provider can also stop the order of transferring data with the technical functionality made available by APEF. APEF has no responsibility whatsoever for data that already have been transferred by the content provider using the dashboard.
 
-Article 4: Modification of this agreement
+5. No data transferred to the Archives Portal Europe can be re-used without the explicit authorisation of the content provider. Each registered content provider is responsible for the legal accessibility of and the rights to re-use the data uploaded by himself to the Archives Portal Europe and optionally transferred to third parties using the technical functionality provided for this in the dashboard.
 
-This agreement may be amended only by approval by the project's consortium or, later on, the steering board of the APE Foundation. No amendment of this agreement shall be binding unless it is in writing.
 
-Article 5: Termination of rights
+Article 2 Rights and obligations of APEF
 
-The rights granted both by the content provider to the provider of the web services and tools and vice versa end when either party terminates this agreement. Termination of this agreement will also end data transfer made by the provider to third parties.
+1. APEF will publish and maintain the content provided to the Archives Portal Europe and will adapt the capacity of the servers when necessary to ensure a sufficient level of performance for the end-user.
 
-Article 6: Applicable law and jurisdiction
+2. APEF operates the web services and tools of the Archives Portal Europe in accordance with the decisions of its governing bodies.
 
-1. This agreement is drawn up in English, which language shall govern all documents, notices, meetings, arbitral proceedings and processes relative thereto. Until the APE Foundation has been established, this agreement shall be construed in accordance with and governed by the terms of the APEx project's Grant Agreement, the relevant European Union acts, the Financial Regulation applicable to the general budget of the European Union and its Implementing Rules, other European Community and European Union law and, on a subsidiary basis, the law of Luxembourg.
-2. All disputes arising out of or in connection with this agreement that cannot be solved amicably, shall be referred to mediation. The outcome of the mediation process will be binding on the parties. The place of mediation shall be The Hague if not otherwise agreed by the conflicting parties.
-3. The provider reserves its rights to take necessary mediating actions in case of disputes arise between constituent content providers e.g. due to unauthorised and/or controversial material being published or privacy regulations (in other countries) being violated. There will be a negotiation process started in such cases in which the provider will advise to the content provider. In case of user complaints the provider will refer them to the content provider concerned.
+3. APEF is not entitled to use the data for purposes other than for the Archives Portal Europe and is not entitled to transfer the data to a third party. Only the registered content provider is entitled to initiate such a transfer of data by using the corresponding function of the dashboard provided for this purpose. Any transfer of data to a third party as well as all communications concerning those data will be documented and notified to the content provider.
 
-Article 7: Final clause
+4. APEF guarantees that any conversion of data performed in the dashboard conforms to the published rules and manuals. APEF furthermore guarantees that the preview functionalities offered in the dashboard to evaluate how the data will be presented in the Archives Portal Europe accurately reflect the final display.
 
-This agreement shall enter into force on the day of the entry into force of the APEx Grant Agreement or according amendments of it for the members of the consortium or on the day of its signature by both parties for the other legal entities. 
+5. APEF guarantees the access to the dashboard to the country managers, the registered content providers or authorised persons. APEF does not manage nor delete any data himself, unless asked to do so by a country manager, registered content provider, or authorised person.
+
+
+Article 3 Termination of this agreement
+
+Termination of this agreement shall be provided in writing. It shall take effect on the date agreed by the parties.
+
+
+Article 4 Modification of this agreement
+
+This agreement may be amended only by approval by the Assembly of Associates of APEF. No amendment of this agreement shall be binding unless it is in writing.
+
+
+Article 5 Termination of rights
+
+The rights granted both by the content provider to APEF and vice versa end when either party terminates this agreement. Termination of this agreement will also end data transfer made by APEF to third parties.
+
+
+Article 6 Applicable law and jurisdiction
+
+1. This agreement is drawn up in English, which language shall govern all documents, notices, meetings, arbitral proceedings and processes relative thereto.
+
+2. All disputes arising out of or in connection with this agreement which cannot be solved amicably, shall be referred to mediation. The outcome of the mediation process will be binding on the parties. The place of mediation shall be The Hague if not otherwise agreed by the conflicting parties. The mediation process will be governed by Dutch law.
+
+3. APEF reserves its rights to take necessary mediating actions in case of disputes arise between content providers e.g. due to unauthorised and/or controversial material being published or privacy regulations (in other countries) being violated. There will be a negotiation process started in such cases in which APEF will advise the content providers.
+
+4. In case of user complaints APEF will refer them to the content provider concerned.
+
+
+Article 7 Final clause
+
+This agreement shall enter into force on the day of its signature by the parties.
