@@ -671,31 +671,79 @@
                 <xsl:choose>
                     <xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
                         <xsl:for-each select="$list">
+                            <xsl:variable name="link" select="current()/@href"></xsl:variable>
+                            <xsl:variable name="text" select="current()/text()"></xsl:variable>
                             <xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
                             <xsl:if test="$currentLang = $language.selected or not($currentLang)">
                                 <p>
-                                    <xsl:value-of select="."/>
+                                    <xsl:choose>
+                                        <xsl:when test="$link and $link != '' and $text and $text != ''">
+                                            <a href="{$link}" target="_blank">
+                                                <xsl:value-of select="$text"/>
+                                            </a>
+                                        </xsl:when>
+                                        <xsl:when test="$link and $link != ''">
+                                            <a href="{$link}" target="_blank">
+                                                <xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
+                                            </a>
+                                        </xsl:when>
+                                        <xsl:when test="$text and $text != ''">
+                                            <xsl:value-of select="$text"/>
+                                        </xsl:when>
+                                    </xsl:choose>
                                 </p>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
                         <xsl:for-each select="$list">
+                            <xsl:variable name="link" select="current()/@href"></xsl:variable>
+                            <xsl:variable name="text" select="current()/text()"></xsl:variable>
                             <xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
                             <xsl:if test="not($currentLang) or $currentLang = $language.default">
                                 <p>
-                                    <xsl:value-of select="."/>
+                                    <xsl:choose>
+                                        <xsl:when test="$link and $link != '' and $text and $text != ''">
+                                            <a href="{$link}" target="_blank">
+                                                <xsl:value-of select="$text"/>
+                                            </a>
+                                        </xsl:when>
+                                        <xsl:when test="$link and $link != ''">
+                                            <a href="{$link}" target="_blank">
+                                                <xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
+                                            </a>
+                                        </xsl:when>
+                                        <xsl:when test="$text and $text != ''">
+                                            <xsl:value-of select="$text"/>
+                                        </xsl:when>
+                                    </xsl:choose>
                                 </p>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:otherwise> <!-- first language -->
                         <xsl:for-each select="$list">
+                            <xsl:variable name="link" select="current()/@href"></xsl:variable>
+                            <xsl:variable name="text" select="current()/text()"></xsl:variable>
                             <xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
                             <xsl:choose>
                                 <xsl:when test="not($currentLang)">
                                     <p class="multilanguageOpeningNoLang">
-                                        <xsl:value-of select="."/>
+                                        <xsl:choose>
+                                            <xsl:when test="$link and $link != '' and $text and $text != ''">
+                                                <a href="{$link}" target="_blank">
+                                                    <xsl:value-of select="$text"/>
+                                                </a>
+                                            </xsl:when>
+                                            <xsl:when test="$link and $link != ''">
+                                                <a href="{$link}" target="_blank">
+                                                    <xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
+                                                </a>
+                                            </xsl:when>
+                                            <xsl:when test="$text and $text != ''">
+                                                <xsl:value-of select="$text"/>
+                                            </xsl:when>
+                                        </xsl:choose>
                                     </p>
                                 </xsl:when>
                                 <xsl:when test="$currentLang">
@@ -704,7 +752,21 @@
                                         <xsl:value-of select="$currentLang"></xsl:value-of>
                                     </xsl:variable>
                                     <p class="{$classValue}">
-                                        <xsl:value-of select="."/>
+                                        <xsl:choose>
+                                            <xsl:when test="$link and $link != '' and $text and $text != ''">
+                                                <a href="{$link}" target="_blank">
+                                                    <xsl:value-of select="$text"/>
+                                                </a>
+                                            </xsl:when>
+                                            <xsl:when test="$link and $link != ''">
+                                                <a href="{$link}" target="_blank">
+                                                    <xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
+                                                </a>
+                                            </xsl:when>
+                                            <xsl:when test="$text and $text != ''">
+                                                <xsl:value-of select="$text"/>
+                                            </xsl:when>
+                                        </xsl:choose>
                                     </p>
                                 </xsl:when>	  
                             </xsl:choose>
@@ -714,8 +776,24 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:for-each select="$list">
+                    <xsl:variable name="link" select="current()/@href"></xsl:variable>
+                    <xsl:variable name="text" select="current()/text()"></xsl:variable>
                     <p>
-                        <xsl:value-of select="."/>
+                        <xsl:choose>
+                            <xsl:when test="$link and $link != '' and $text and $text != ''">
+                                <a href="{$link}" target="_blank">
+                                    <xsl:value-of select="$text"/>
+                                </a>
+                            </xsl:when>
+                            <xsl:when test="$link and $link != ''">
+                                <a href="{$link}" target="_blank">
+                                    <xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
+                                </a>
+                            </xsl:when>
+                            <xsl:when test="$text and $text != ''">
+                                <xsl:value-of select="$text"/>
+                            </xsl:when>
+                        </xsl:choose>
                     </p>
                 </xsl:for-each>
             </xsl:otherwise>
