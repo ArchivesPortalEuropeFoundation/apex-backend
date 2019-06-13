@@ -5,13 +5,13 @@ Providing content to the Archives Portal Europe will be following the agreement 
 
 Definitions
 
-Archives Portal Europe (APE): the single online access point to all European archives, allowing the user to easily gain insight into our shared European cultural provenance and progression, turning the spotlight on the vast amount of archival material that documents our European heritage, as well as reflects our multifaceted European culture.
+Archives Portal Europe (APE): the single online access point to all archives from and about Europe, allowing the user to easily gain insight into our shared European cultural provenance and progression, turning the spotlight on the vast amount of archival material that documents our European heritage, as well as reflects our multifaceted European culture.
 
 APEF, in full: Stichting Archives Portal Europe Foundation, an international non-profit organisation with a bureau in the municipality of The Hague, established by a Deed of incorporation passed in The Hague on 27 October 2014. The main aim of the foundation is to keep the Archives Portal Europe operational and up to date, thus guaranteeing the sustainability of its technical infrastructure, needed to aggregate the content of the participating institutions and deliver that to end-users throughout the world.
 
 Assembly of Associates of APEF: the body of the foundation charged with overseeing the policy and the general course of affairs in the foundation, as meant in article 17 of the Deed of incorporation of APEF.
 
-Associate of APEF: an entity that qualifies as a European archival institution, and has been admitted as such by the board of the foundation following the prior approval of the assembly of associates, as meant in article 21 of the Deed of incorporation of APEF.
+Associate of APEF: an entity that qualifies as an archival (research) institution located in Europe or with collections on European history or themes concerning Europe in the broadest sense, and has been admitted as such by the board of the foundation following the prior approval of the assembly of associates, as meant in article 21 of the Deed of incorporation of APEF.
 
 Authorised third person or party: forthwith referred to as authorised person; acting as a representative or on behalf of the content provider. The content provider mandates to/permits the authorised person to act on his behalf regarding the registration to the dashboard as well as the use of the dashboard according to Article 1.2 below. The mandate will need to be done in writing (signatures for this agreement) and per case, leaving all rights as in Article 1 to the authorised person. Despite the mandate, the content provider remains the sole and retained decision maker at all times.
 
@@ -19,7 +19,7 @@ Content provider: an entity making available to the Archives Portal Europe the d
 
 Content Provider Agreement: forthwith referred to as the agreement.
 
-Country Manager: the national contact point: a representative of an archival or administrative institution responsible for the coordination of the content providers of the Archives Portal Europe in a European country. In case no Country Manager has been appointed yet for a certain country, APEF functions as contact point for the institutions of this country.
+Country Manager: the national contact point: a representative of an archival or administrative institution responsible for the coordination of the content providers of the Archives Portal Europe in one of its associated countries. In case no Country Manager has been appointed yet for a certain country, APEF functions as contact point for the institutions of this country.
 
 Dashboard: technical facility offering content providers all functions to manage their data online for the Archives Portal Europe. Its main functions are: upload, conversion, validation, publication, transfer to Europeana, update and deletion of all data or a part of them. The dashboard also comprises the standalone tool downloadable for offline use.
 
@@ -27,12 +27,12 @@ Dashboard: technical facility offering content providers all functions to manage
 Preamble
 
 The Archives Portal Europe was created following an initiative of EBNA (the European Board of National Archivists), the Report on Archives in the enlarged European Union, the resolution on archives in the Member States (OJ 2003/C113/2) by the Council of the European Union, 6 May 2003, and the recommendation from 14 November 2005 of the Council on priority actions to increase cooperation in the field of archives in Europe (OJ 2005/L312/55).
-Its purpose is to enhance cross-border search, investigation in, and publication of archival holdings across Europe by offering a joint publication platform for descriptive information to all European holders of archival material as described in the Report on Archives in the enlarged European Union.
+Its purpose is to enhance cross-border search, investigation in, and publication of archival holdings from and about Europe by offering a joint publication platform for descriptive information as described in the Report on Archives in the enlarged European Union.
 
 
 Article 1 Rights and obligations of the content providers
 
-1. All European institutions responsible for archival material can become content providers and use the portal for the publication of information on their holdings and their institutions, once registered by their Country Manager. The Country Manager is registered as such by APEF and grants other institutions access to the dashboard on their request. It is also possible for these institutions to delegate a Country Manager or another authorised person to act on their behalf, provided agreement on this exists between the institutions and the specific Country Manager or other authorised person, subject to notification to APEF. This delegation has to be signed at the end of this agreement. Registered content providers obtain access to the dashboard and the tools provided by APEF for the preparation of the data.
+1. All institutions responsible for archival material from and about Europe can become content providers and use the portal for the publication of information on their holdings and their institutions, once registered by their Country Manager. The Country Manager is registered as such by APEF and grants other institutions access to the dashboard on their request. It is also possible for these institutions to delegate a Country Manager or another authorised person to act on their behalf, provided agreement on this exists between the institutions and the specific Country Manager or other authorised person, subject to notification to APEF. This delegation has to be signed at the end of this agreement. Registered content providers obtain access to the dashboard and the tools provided by APEF for the preparation of the data.
 
 2. The registration to the dashboard and the use of the dashboard must be made by an authorised person acting as a representative of or on behalf of the content provider. This person will not transfer the registration information to non-authorised persons or non-authorised third parties.
 
