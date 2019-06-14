@@ -3,7 +3,7 @@
     <parent>
         <groupId>eu.archivesportaleurope.backend</groupId>
         <artifactId>backend-project</artifactId>
-        <version>2019-06</version>
+        <version>2019-07-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>persistence</artifactId>
