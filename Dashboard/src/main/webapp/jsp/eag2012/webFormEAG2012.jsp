@@ -127,6 +127,11 @@
 						var message = "<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);
 					});
+					checkWebpages($("table#yiTableOthers input#linkYIOpeningTimes"),"<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>");
+					$("table#yiTableOthers input[id^='linkYIOpeningTimes_']").each(function(){
+						var message = "<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>";
+						checkWebpages($(this),message);
+					});
 					$("table#resourceRelationTable_1 input[id^='textWebsiteOfResource']").each(function(){
 						var message = "<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);
