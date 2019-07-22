@@ -21,7 +21,7 @@ public enum FacetType {
     TYPE(Ead3SolrFields.RECORD_TYPE, false, true, "advancedsearch.text."),
     LEVEL(Ead3SolrFields.LEVEL_NAME, false, true, "advancedsearch.facet.value.level."),
     DAO(Ead3SolrFields.DAO, false, true, "advancedsearch.facet.value.dao."),
-    ROLEDAO(Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.facet.value.roledao.", true),
+    ROLEDAO(Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.facet.value.daoType.", true),
     DATE_TYPE(Ead3SolrFields.DATE_TYPE, false, true, "advancedsearch.facet.value.datetype."),
     START_DATE(Ead3SolrFields.START_DATE, true, true),
     END_DATE(Ead3SolrFields.END_DATE, true, false),
