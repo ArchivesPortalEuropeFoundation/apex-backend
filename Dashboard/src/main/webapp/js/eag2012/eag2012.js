@@ -4912,7 +4912,7 @@ function codeISILChanged(text1, index) {
     var matched = identifier.match(pattern);
     if (index == undefined) {
         if ($("#selectYICodeISIL").val() == "yes") {
-            if (matched == null || matched != identifier) {
+            if (matched == null) {
                 $("#selectYICodeISIL").attr("value", "no");
                 displayAlertDialog("\"" + identifier + "\" " + text1);
                 $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function () {
@@ -4957,7 +4957,7 @@ function codeISILChanged(text1, index) {
     }
     var id = "";
     if (index == undefined && $("#selectYICodeISIL").val() == "yes") {
-        if (matched == null || matched != identifier) {
+        if (matched == null) {
             $("#selectYICodeISIL").attr("value", "no");
             displayAlertDialog("\"" + identifier + "\" " + text);
         } else {
