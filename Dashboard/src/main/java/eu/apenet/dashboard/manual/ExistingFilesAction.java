@@ -288,8 +288,8 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
         typeSet.add(new SelectItem("1", getText("content.message.hg")));
         typeSet.add(new SelectItem("3", getText("content.message.sg")));
         typeSet.add(new SelectItem("2", getText("content.message.cpf")));
-//        Hide Ead3
-        typeSet.add(new SelectItem("4", getText("content.message.fa.ead3")));
+// HIDE EAD3
+//        typeSet.add(new SelectItem("4", getText("content.message.fa.ead3")));
 
         ExistingFilesChecker checker = new ExistingFilesChecker(this.getAiId());
         checker.retrieveUploadedFiles(this.existingNewXmlFilesUploaded, this.existingNewXslFilesUploaded);

@@ -465,8 +465,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private void setUp() {
         //basic preferences
         associatedFiletypes.add(new SelectItem(XmlType.EAD_FA.getIdentifier(), getText("content.message.ead2002.fa")));
-        //        Hide Ead3
-        associatedFiletypes.add(new SelectItem(XmlType.EAD_3.getIdentifier(), getText("content.message.fa.ead3")));
+// HIDE EAD3
+//        associatedFiletypes.add(new SelectItem(XmlType.EAD_3.getIdentifier(), getText("content.message.fa.ead3")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_HG.getIdentifier(), getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAC_CPF.getIdentifier(), getText("content.message.ec")));
