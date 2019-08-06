@@ -722,7 +722,9 @@ public class FillDescObjectJAXB extends AbstractObjectJAXB implements ObjectJAXB
                                     opening.setLang(openingLangList.get(j));
                                 }
                                 if (openingHrefList != null) {
-                                    opening.setHref(openingHrefList.get(j));
+                                    if(!openingHrefList.get(j).trim().equals("")){
+                                        opening.setHref(openingHrefList.get(j));
+                                    }
                                 }
                                 repository.getTimetable().getOpening().add(opening);
                             }
