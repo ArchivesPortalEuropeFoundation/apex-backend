@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface EadContentService {
     DetailContent findClevelContent(String id);
-    List<DetailContent> findClevelContent(List<String> ids);
+    // List<DetailContent> findClevelContent(List<String> ids);
     List<DetailContent> getSomeClevelContent();
     DetailContent findEadContent(String id);
     Ead findEadById(String id);
