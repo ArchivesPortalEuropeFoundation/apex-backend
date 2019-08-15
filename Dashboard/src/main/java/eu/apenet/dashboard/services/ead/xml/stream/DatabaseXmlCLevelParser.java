@@ -62,9 +62,9 @@ public class DatabaseXmlCLevelParser {
         EADCounts currentEadCounts = new EADCounts();
         EadPublishData publishData = new EadPublishData();
         parse(clevel, publishData);
-        if (clevel.getcBinary() == null) {
-            clevel.setcBinary(getBytesFromObjectStr(clevel.getXml()));
-        }
+//        if (clevel.getcBinary() == null) {
+//            clevel.setcBinary(getBytesFromObjectStr(clevel.getXml()));
+//        }
         publishData.setId(clevel.getId());
         publishData.setParentId(clevel.getParentId());
         publishData.setLeaf(clevel.isLeaf());

@@ -101,7 +101,7 @@ public class XmlCLevelParser extends AbstractParser {
                             }
                         }
                         clevel.setXml(stringWriter.toString());
-                        clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
+                        // clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
                         JpaUtil.getEntityManager().persist(clevel);
                         stringWriter.close();
                         stringWriter = null;
@@ -174,7 +174,7 @@ public class XmlCLevelParser extends AbstractParser {
                 }
             }
             clevel.setXml(stringWriter.toString());
-            clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
+            // clevel.setcBinary(getBytesFromObjectStr(stringWriter.toString()));
             JpaUtil.getEntityManager().persist(clevel);
             stringWriter.close();
             stringWriter = null;
