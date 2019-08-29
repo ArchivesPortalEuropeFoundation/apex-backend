@@ -49,7 +49,7 @@ public class SolrQueryBuilder {
                 buildDateRefinement(query, startDate, this.startDateFacetType, true);
                 buildDateRefinement(query, endDate, this.endDateFacetType, true);
             }
-            query.setParam("facet.method", "enum");
+            query.setParam("facet.method", "fc");
         }
         query.setStart(start);
 
