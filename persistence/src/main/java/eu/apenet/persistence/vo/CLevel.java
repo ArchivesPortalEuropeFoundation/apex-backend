@@ -76,9 +76,9 @@ public class CLevel implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String xml;
 
-//    @Basic(fetch = FetchType.LAZY)
-//    @Type(type = "org.hibernate.type.BinaryType")
-//    private byte[] cBinary;
+    @Basic(fetch = FetchType.LAZY)
+    @Type(type = "org.hibernate.type.BinaryType")
+    private byte[] cBinary;
 
     public String getUnittitle() {
         return unittitle;
@@ -176,13 +176,13 @@ public class CLevel implements Serializable {
         this.hgSgFaRelations = hgSgFaRelations;
     }
 
-//    public byte[] getcBinary() {
-//        return cBinary;
-//    }
-//
-//    public void setcBinary(byte[] cBinary) {
-//        this.cBinary = cBinary;
-//    }
+    public byte[] getcBinary() {
+        return cBinary;
+    }
+
+    public void setcBinary(byte[] cBinary) {
+        this.cBinary = cBinary;
+    }
 
     public HgSgFaRelation getHgSgFaRelation() {
         Set<HgSgFaRelation> set = getHgSgFaRelations();

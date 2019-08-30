@@ -49,7 +49,7 @@ public class DetailContent {
         this.archivalInstitution = this.ead.getArchivalInstitution();
         this.xmlType = XmlType.getContentType(ead);
 //        this.xml = currentLevel.getXml().replaceAll("[\t\n\r]", "").replaceAll(">\\s+<", "><");
-        // this.cBinary = currentLevel.getcBinary();
+        this.cBinary = currentLevel.getcBinary();
         this.clevelId=SolrValues.C_LEVEL_PREFIX+currentLevel.getId();
     }
     

@@ -71,43 +71,43 @@ public class EadContentServiceImpl implements EadContentService {
         throw new ResourceNotFoundException("Not a descriptive unit id", "Not a descriptive unit id: " + id);
     }
 
-//    @Transactional
-//    @Override
-//    public List<DetailContent> findClevelContent(List<String> ids) {
-//        if (ids == null || ids.isEmpty()) {
-//            throw new ResourceNotFoundException("Not a descriptive unit id", "No descriptive unit id found");
-//        }
-//        List<Long> longIds = new ArrayList<>();
-//        for (String id : ids) {
-//            if (StringUtils.isNotBlank(id) && id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
-//                longIds.add(new Long(id.substring(1)));
-//            }
-//        }
-//        if (!longIds.isEmpty()) {
-//            List<DetailContent> detailContents = new ArrayList<>();
-//            List<CLevel> currentLevels;
-//            currentLevels = cLevelRepo.findByIdIn(longIds);
-//            if (currentLevels == null) {
-//                throw new ResourceNotFoundException("Couldn't find any item with the given ids", "No Clevel Item not found");
-//            }
-//            if (currentLevels.isEmpty()) {
-//                throw new ResourceNotFoundException("Couldn't find any Clevel", "Clevel Item not found");
-//            }
-//            currentLevels.forEach(currentLevel -> {
-//                //lazy load
-//                try {
-//                    ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
-//                    ai.getAiname();
-//                    detailContents.add(new DetailContent(currentLevel));
-//                } catch (NullPointerException ex) {
-//                    logger.debug("Null exception currentLevel: " + currentLevel.getId(), ex);
-//                }
-//            });
-//
-//            return detailContents;
-//        }
-//        throw new ResourceNotFoundException("Couldn't find any Clevel", "Clevel Item not found");
-//    }
+    @Transactional
+    @Override
+    public List<DetailContent> findClevelContent(List<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new ResourceNotFoundException("Not a descriptive unit id", "No descriptive unit id found");
+        }
+        List<Long> longIds = new ArrayList<>();
+        for (String id : ids) {
+            if (StringUtils.isNotBlank(id) && id.startsWith(SolrValues.C_LEVEL_PREFIX)) {
+                longIds.add(new Long(id.substring(1)));
+            }
+        }
+        if (!longIds.isEmpty()) {
+            List<DetailContent> detailContents = new ArrayList<>();
+            List<CLevel> currentLevels;
+            currentLevels = cLevelRepo.findByIdIn(longIds);
+            if (currentLevels == null) {
+                throw new ResourceNotFoundException("Couldn't find any item with the given ids", "No Clevel Item not found");
+            }
+            if (currentLevels.isEmpty()) {
+                throw new ResourceNotFoundException("Couldn't find any Clevel", "Clevel Item not found");
+            }
+            currentLevels.forEach(currentLevel -> {
+                //lazy load
+                try {
+                    ArchivalInstitution ai = currentLevel.getEadContent().getEad().getArchivalInstitution();
+                    ai.getAiname();
+                    detailContents.add(new DetailContent(currentLevel));
+                } catch (NullPointerException ex) {
+                    logger.debug("Null exception currentLevel: " + currentLevel.getId(), ex);
+                }
+            });
+
+            return detailContents;
+        }
+        throw new ResourceNotFoundException("Couldn't find any Clevel", "Clevel Item not found");
+    }
 
     @Transactional
     @Override

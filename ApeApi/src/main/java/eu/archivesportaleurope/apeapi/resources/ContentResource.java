@@ -129,39 +129,39 @@ public class ContentResource extends ApiServiceProcessor {
     }
     //*/
     
-//    @POST
-//    @Path("/ead/clevels")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    @ApiOperation(value = "Return the contents of the given valid clevel ids, maximum 1k ids are allowed",
-//            response = ContentResponseClevelList.class
-//    )
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 500, message = "Internal server error"),
-//        @ApiResponse(code = 400, message = "Bad request"),
-//        @ApiResponse(code = 401, message = "Unauthorized")
-//    })
-//    @Consumes({ServerConstants.APE_API_V1})
-//    public Response getClevelContent(
-//            @ApiParam(value = "Search EAD units\nMaximum 1000 ids are allowed", required = true) @Valid ContentRequest contentRequest
-//    ) {
-//        ApiService apiService = () -> {
-//            List<DetailContent> detailContents = eadContentService.findClevelContent(contentRequest.getIdList());
-//            ContentResponseClevelList contentResponseClevelList = new ContentResponseClevelList();
-//            
-//            for (DetailContent detailContent : detailContents) {
-//                ContentResponseClevel contentResponse = new ContentResponseClevel(detailContent);
-//
-//                ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(detailContent.getcBinary()));
-//                C clevel = (C) stream.readObject();
-//                stream.close();
-//
-//                contentResponse.setContent(clevel);
-//                contentResponseClevelList.addResult(contentResponse);
-//            }
-//            return Response.ok().entity(contentResponseClevelList).build();
-//        };
-//        return super.process(apiService);
-//    }
+    @POST
+    @Path("/ead/clevels")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "Return the contents of the given valid clevel ids, maximum 1k ids are allowed",
+            response = ContentResponseClevelList.class
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 500, message = "Internal server error"),
+        @ApiResponse(code = 400, message = "Bad request"),
+        @ApiResponse(code = 401, message = "Unauthorized")
+    })
+    @Consumes({ServerConstants.APE_API_V1})
+    public Response getClevelContent(
+            @ApiParam(value = "Search EAD units\nMaximum 1000 ids are allowed", required = true) @Valid ContentRequest contentRequest
+    ) {
+        ApiService apiService = () -> {
+            List<DetailContent> detailContents = eadContentService.findClevelContent(contentRequest.getIdList());
+            ContentResponseClevelList contentResponseClevelList = new ContentResponseClevelList();
+            
+            for (DetailContent detailContent : detailContents) {
+                ContentResponseClevel contentResponse = new ContentResponseClevel(detailContent);
+
+                ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(detailContent.getcBinary()));
+                C clevel = (C) stream.readObject();
+                stream.close();
+
+                contentResponse.setContent(clevel);
+                contentResponseClevelList.addResult(contentResponse);
+            }
+            return Response.ok().entity(contentResponseClevelList).build();
+        };
+        return super.process(apiService);
+    }
     
     //*
     @GET
