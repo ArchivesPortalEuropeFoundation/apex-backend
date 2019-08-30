@@ -10,7 +10,7 @@ public enum FacetType {
 //    EAD3_COUNTRY(Ead3SolrFields.COUNTRY, Ead3SolrFields.COUNTRY, true, true, "country."),
 //    EAD3_AI(Ead3SolrFields.AI, Ead3SolrFields.AI, true),
 //    TITLE_PROPER(Ead3SolrFields.TITLE_PROPER, Ead3SolrFields.ROOT_DOC_ID, true),
-    EAD3_TYPE(Ead3SolrFields.DAO_TYPE, Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.text."),
+    EAD3_TYPE(Ead3SolrFields.DAO_TYPE, Ead3SolrFields.DAO_TYPE, false, true, "advancedsearch.facet.value.daoType."),
     EAD3_LEVEL(Ead3SolrFields.LEVEL_NAME, Ead3SolrFields.LEVEL_NAME, false, true, "advancedsearch.facet.value.level."),
 //    EAD3_START_DATE(Ead3SolrFields.START_DATE, true, true),
 //    EAD3_END_DATE(Ead3SolrFields.END_DATE, true, false),
