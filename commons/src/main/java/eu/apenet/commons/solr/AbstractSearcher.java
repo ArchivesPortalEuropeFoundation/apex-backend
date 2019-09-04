@@ -121,6 +121,10 @@ public abstract class AbstractSearcher {
     protected QueryResponse executeQuery(SolrQuery query, SolrQueryParameters solrQueryParameters, String queryType,
             boolean needSuggestions, boolean update) throws SolrServerException, IOException {
         query.setQuery(SearchUtil.escapeSolrCharacters(solrQueryParameters.getTerm()));
+        
+            if (!solrQueryParameters.isMatchAllWords()){
+                query.setParam("q.op", "OR");
+            }
 
         if (solrQueryParameters.getAndParameters() != null) {
             for (Map.Entry<String, List<String>> criteria : solrQueryParameters.getAndParameters().entrySet()) {
