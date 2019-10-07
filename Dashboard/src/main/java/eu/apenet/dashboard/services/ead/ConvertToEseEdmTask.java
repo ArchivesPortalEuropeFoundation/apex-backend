@@ -75,26 +75,27 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                     edmConfig.setRepositoryCode(findingAid.getArchivalInstitution().getRepositorycode());
                     edmConfig.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
                     edmConfig.setXmlTypeName(FA_XML_TYPE);
+                    edmConfig.setOutputBaseDirectory(EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
+                    findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
+                    .getArchivalInstitution().getAiId()));
 
                     File apenetEad = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
                             findingAid.getPathApenetead());
-                    String xmlNameRelative = EdmFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
-                    int lastIndex = xmlNameRelative.lastIndexOf('.');
-                    String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
-                            + xmlNameRelative.substring(lastIndex);
-                    File outputEDMDir = EdmFileUtils.getOutputEDMDir(APEnetUtilities.getConfig().getRepoDirPath(),
-                            findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
-                            .getArchivalInstitution().getAiId());
-                    File edmOutputFile = EdmFileUtils.getFile(outputEDMDir, edmOutputFilename);
-                    edmOutputFile.getParentFile().mkdirs();
+//                    String xmlNameRelative = EdmFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
+//                    int lastIndex = xmlNameRelative.lastIndexOf('.');
+//                    String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
+//                            + xmlNameRelative.substring(lastIndex);
+                    File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmConfig.getOutputBaseDirectory(), findingAid.getEadid());
+//                    File edmOutputFile = EdmFileUtils.getFile(edmOutputDir, edmOutputFilename);
+                    edmOutputDir.mkdirs();
                     boolean errors = false;
                     StringBuilder warn = new StringBuilder();
                     try {
-                        edmConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, edmOutputFile);
+                        edmConfig.getTransformerXML2XML().transform(apenetEad);
                     } catch (TransformerException e) {
                         errors = true;
                         warn.append("<span class=\"validation-error\">");
-                        warn.append("EDM conversion error: " + e.getMessage()).append("</span>").append("<br />");
+                        warn.append("EDM conversion error: ").append(e.getMessage()).append("</span>").append("<br />");
                         if (ead instanceof FindingAid) {
                             ((FindingAid) ead).setEuropeana(EuropeanaState.FATAL_ERROR);
                         }
@@ -120,7 +121,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                             ead.getWarningses().add(warnings);
                         }
                     } else {
-                        DigitalObjectCounter digitalObjectCounter = XMLUtil.analyzeESEXML(edmOutputFile);
+                        DigitalObjectCounter digitalObjectCounter = XMLUtil.analyzeEdmXml(edmOutputDir);
                         int numberOfRecords = digitalObjectCounter.getNumberOfProvidedCHO();
 
                         boolean update = false;
@@ -145,10 +146,10 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                             EseState eseState;
                             if (esesToBeDeleted.size() > 0) {
                                 if (!update) {
-                                    for (Ese eseToBeDeleted : esesToBeDeleted) {
+                                    esesToBeDeleted.forEach((eseToBeDeleted) -> {
                                         // FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
                                         eseDao.delete(eseToBeDeleted);
-                                    }
+                                    });
                                     eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
                                 } else {
                                     eseState = ese.getEseState();
@@ -161,7 +162,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                             }
                             ese.setPath(EdmFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution()
                                     .getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(),
-                                    edmOutputFilename));
+                                    edmOutputDir.getName()));
                             ese.setOaiIdentifier(oaiIdentifier);
                             ese.setNumberOfRecords(numberOfRecords);
                             ese.setNumberOfWebResource(digitalObjectCounter.getNumberOfWebResource());
@@ -179,7 +180,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                             findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfWebResource()));
                             findingAid.setEuropeana(EuropeanaState.CONVERTED);
                         } else {
-                            edmOutputFile.delete();
+                            edmOutputDir.delete();
                             findingAid.setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);
                             findingAid.setTotalNumberOfChos(0l);
                         }
@@ -190,13 +191,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 
                 eadDAO.store(findingAid);
                 logAction(ead);
-            } catch (IOException e) {
-                logAction(ead, e);
-                throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
-            } catch (XMLStreamException e) {
-                logAction(ead, e);
-                throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
-            } catch (SAXException e) {
+            } catch (IOException | XMLStreamException | SAXException e) {
                 logAction(ead, e);
                 throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
             }
