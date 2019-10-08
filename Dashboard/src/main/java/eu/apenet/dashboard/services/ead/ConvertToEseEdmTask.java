@@ -85,7 +85,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 //                    int lastIndex = xmlNameRelative.lastIndexOf('.');
 //                    String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
 //                            + xmlNameRelative.substring(lastIndex);
-                    File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmConfig.getOutputBaseDirectory(), findingAid.getEadid());
+                    File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmConfig.getOutputBaseDirectory(), APEnetUtilities.convertToFilename(findingAid.getEadid()));
 //                    File edmOutputFile = EdmFileUtils.getFile(edmOutputDir, edmOutputFilename);
                     edmOutputDir.mkdirs();
                     boolean errors = false;
