@@ -249,12 +249,7 @@
 
         <tr id="trLanguageOfTheMaterial">
             <td class="inputLabel">
-                <s:if test="batchConversion==true">
-                    <s:label key="ead2ese.label.language.material" for="languageOfTheMaterial" /><span class="required">*</span>:
-                </s:if>
-                <s:else>
-                    <s:label key="ead2ese.label.language.material" for="languageOfTheMaterial" />:
-                </s:else>
+                <s:label key="ead2ese.label.language.material" for="languageOfTheMaterial" /><span class="required">*</span>:
             </td>
             <td class="tdVertical">
                 <s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
@@ -273,7 +268,7 @@
         </tr>
 
         <tr>
-            <td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
+            <td class="inputLabel"><s:label key="ead2ese.label.license" for="license" /><span class="required">*</span>:</td>
             <td>
                 <s:if test="licenseCheck==true">
                     <s:checkbox name="licenseCheck" id="licenseCheck" value="true"></s:checkbox>
