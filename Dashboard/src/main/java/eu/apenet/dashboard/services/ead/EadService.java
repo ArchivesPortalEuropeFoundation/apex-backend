@@ -28,6 +28,7 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
@@ -792,6 +793,8 @@ public class EadService extends AbstractService {
                             + APEnetUtilities.FILESEPARATOR + ead.getEadid();
                     properties.put("edm_identifier", oaiIdentifier);
                     properties.put("repository_code", ead.getArchivalInstitution().getRepositorycode());
+                    properties.put("outputBaseDirectory", EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
+                            ead.getArchivalInstitution().getCountry().getIsoname(), ead.getArchivalInstitution().getAiId()));
                     queueItem = fillQueueItem(ead, queueAction, properties);
                 } else {
                     queueItem = fillQueueItem(ead, queueAction, preferences);

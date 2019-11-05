@@ -66,18 +66,18 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                     // OAI Identifier will be built according to the next
                     // syntax:
                     // NL-HaNA/fa/4.VTHR/edm
-                    String oaiIdentifier = findingAid.getArchivalInstitution().getRepositorycode()
+                    String europeanaSetName = findingAid.getArchivalInstitution().getRepositorycode()
                             + APEnetUtilities.FILESEPARATOR + FA_XML_TYPE
                             + APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
 
                     EdmConfig edmConfig = new EdmConfig(properties);
-                    edmConfig.setEdmIdentifier(oaiIdentifier);
+                    edmConfig.setEdmIdentifier(europeanaSetName);
                     edmConfig.setRepositoryCode(findingAid.getArchivalInstitution().getRepositorycode());
                     edmConfig.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
                     edmConfig.setXmlTypeName(FA_XML_TYPE);
                     edmConfig.setOutputBaseDirectory(EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
-                    findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
-                    .getArchivalInstitution().getAiId()));
+                            findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
+                            .getArchivalInstitution().getAiId()));
 
                     File apenetEad = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
                             findingAid.getPathApenetead());
@@ -126,55 +126,59 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 
                         boolean update = false;
                         if (numberOfRecords > 1) {
-                            Ese ese = null;
+//                            Ese ese = null;
                             if (findingAid.getEses().isEmpty()) {
-                                ese = new Ese();
-                                ese.setCreationDate(new Date());
+//                                ese = new Ese();
+//                                ese.setCreationDate(new Date());
                             } else {
-                                ese = findingAid.getEses().iterator().next();
+//                                ese = findingAid.getEses().iterator().next();
                                 update = true;
-                                if (ese.getPathHtml() != null) {
-                                    EdmFileUtils.deleteDir(EdmFileUtils.getRepoFile(APEnetUtilities.getConfig()
-                                            .getRepoDirPath(), ese.getPathHtml()));
-                                    ese.setPathHtml(null);
-                                }
+//                                if (ese.getPathHtml() != null) {
+//                                    EdmFileUtils.deleteDir(EdmFileUtils.getRepoFile(APEnetUtilities.getConfig()
+//                                            .getRepoDirPath(), ese.getPathHtml()));
+//                                    ese.setPathHtml(null);
+//                                }
                             }
 
                             // Ese example = new Ese();
-                            // example.setOaiIdentifier(oaiIdentifier);
-                            List<Ese> esesToBeDeleted = eseDao.getEsesFromDeletedFindingaids(oaiIdentifier);
-                            EseState eseState;
-                            if (esesToBeDeleted.size() > 0) {
-                                if (!update) {
-                                    esesToBeDeleted.forEach((eseToBeDeleted) -> {
-                                        // FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
-                                        eseDao.delete(eseToBeDeleted);
-                                    });
-                                    eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
-                                } else {
-                                    eseState = ese.getEseState();
-                                }
-                                ese.setModificationDate(new Date());
-                            } else {
+                            // example.setOaiIdentifier(europeanaSetName);
+//                            List<Ese> esesToBeDeleted = eseDao.getEsesFromDeletedFindingaids(europeanaSetName);
+//                            EseState eseState;
+//                            if (esesToBeDeleted.size() > 0) {
+//                                if (!update) {
+//                                    esesToBeDeleted.forEach((eseToBeDeleted) -> {
+//                                        // FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
+//                                        eseDao.delete(eseToBeDeleted);
+//                                    });
+//                                    eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
+//                                } else {
+//                                    eseState = ese.getEseState();
+//                                }
+//                                ese.setModificationDate(new Date());
+//                            } else {
+//                                ese.setModificationDate(ese.getCreationDate());
+//                                eseState = DAOFactory.instance().getEseStateDAO()
+//                                        .getEseStateByState(EseState.NOT_PUBLISHED);
+//                            }
+                            for (File file : edmOutputDir.listFiles()) {
+                                Ese ese = new Ese();
+                                ese.setCreationDate(new Date());
                                 ese.setModificationDate(ese.getCreationDate());
-                                eseState = DAOFactory.instance().getEseStateDAO()
-                                        .getEseStateByState(EseState.NOT_PUBLISHED);
-                            }
-                            ese.setPath(EdmFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution()
-                                    .getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(),
-                                    edmOutputDir.getName()));
-                            ese.setOaiIdentifier(oaiIdentifier);
-                            ese.setNumberOfRecords(numberOfRecords);
-                            ese.setNumberOfWebResource(digitalObjectCounter.getNumberOfWebResource());
-                            ese.setFindingAid(findingAid);
-                            ArchivalInstitution ai = findingAid.getArchivalInstitution();
-                            ese.setEseState(eseState);
-                            ese.setEset(ai.getRepositorycode());
-                            ese.setMetadataFormat(MetadataFormat.EDM);
-                            if (update) {
-                                eseDao.update(ese);
-                            } else {
-                                eseDao.store(ese);
+                                ese.setEset(europeanaSetName);
+                                ese.setPath(EdmFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution()
+                                        .getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(),
+                                        edmOutputDir.getName()) + APEnetUtilities.FILESEPARATOR + file.getName());
+                                ese.setEseState(DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED));
+                                ese.setFindingAid(findingAid);
+                                ese.setOaiIdentifier(europeanaSetName + APEnetUtilities.FILESEPARATOR + file.getName());
+                                ese.setNumberOfRecords(1);
+                                ese.setNumberOfWebResource(1);
+                                ese.setMetadataFormat(MetadataFormat.EDM);
+                                if (update) {
+                                    eseDao.update(ese);
+                                } else {
+                                    eseDao.store(ese);
+                                }
                             }
                             findingAid.setTotalNumberOfChos(new Long(numberOfRecords));
                             findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfWebResource()));
