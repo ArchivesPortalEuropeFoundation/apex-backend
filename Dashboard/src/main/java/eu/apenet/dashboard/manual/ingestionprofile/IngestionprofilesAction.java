@@ -49,26 +49,25 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private static final String OPTION_TITLESTMT_TITLEPROPER = "titlestmtTitleproper";
 
     //Collections for basic tab
-    private Set<SelectItem> ingestionprofiles = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> associatedFiletypes = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> uploadedFileActions = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> existingFileActions = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> noEadidActions = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> rightsDigitalObjects = new LinkedHashSet<SelectItem>(); // Rights for digital objects.
-    private Set<SelectItem> rightsEadData = new LinkedHashSet<SelectItem>(); // Rights for EAD data.
-    private Set<SelectItem> xslFiles = new LinkedHashSet<SelectItem>();
+    private Set<SelectItem> ingestionprofiles = new LinkedHashSet<>();
+    private Set<SelectItem> associatedFiletypes = new LinkedHashSet<>();
+    private Set<SelectItem> uploadedFileActions = new LinkedHashSet<>();
+    private Set<SelectItem> existingFileActions = new LinkedHashSet<>();
+    private Set<SelectItem> noEadidActions = new LinkedHashSet<>();
+    private Set<SelectItem> daoTypes = new LinkedHashSet<>();
+    private Set<SelectItem> rightsDigitalObjects = new LinkedHashSet<>(); // Rights for digital objects.
+    private Set<SelectItem> rightsEadData = new LinkedHashSet<>(); // Rights for EAD data.
+    private Set<SelectItem> xslFiles = new LinkedHashSet<>();
 
     //Collections for Europeana tab
-    private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
-    private Set<SelectItem> sourceOfIdentifiersSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> sourceOfFondsTitleSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> languages = new TreeSet<SelectItem>();
-    private Set<SelectItem> licenseSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> europeanaLicenseSet = new TreeSet<SelectItem>();
+    private Set<SelectItem> sourceOfIdentifiersSet = new TreeSet<>();
+    private Set<SelectItem> sourceOfFondsTitleSet = new TreeSet<>();
+    private Set<SelectItem> typeSet = new TreeSet<>();
+    private Set<SelectItem> yesNoSet = new TreeSet<>();
+    private Set<SelectItem> inheritLanguageSet = new TreeSet<>();
+    private Set<SelectItem> languages = new TreeSet<>();
+    private Set<SelectItem> licenseSet = new TreeSet<>();
+    private Set<SelectItem> europeanaLicenseSet = new TreeSet<>();
 
     //fields for basic tab components
     private String profilelist;
@@ -89,24 +88,19 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String extractEacFromEad3;
 
     //fields for Europeana tab components
-    private String conversiontype;
     private String sourceOfIdentifiers;
     private String sourceOfFondsTitle;
     private String textDataProvider;
     private String dataProviderCheck;
     private String europeanaDaoType;
     private String europeanaDaoTypeCheck;
-    private List<String> languageSelection = new ArrayList<String>();
+    private List<String> languageSelection = new ArrayList<>();
     private String languageCheck;
     private String licenseCheck;
     private String license;
     private String europeanaLicense;
     private String cc_js_result_uri;
     private String licenseAdditionalInformation;
-    private String inheritFileParentCheck;
-    private String inheritFileParent;
-    private String inheritOriginationCheck;
-    private String inheritOrigination;
     private String inheritUnittitleCheck;
     private String inheritUnittitle;
 
@@ -165,10 +159,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 this.setRightEadDescription(ingestionprofile.getRightsOfEADDescription());
                 this.setRightEadHolder(ingestionprofile.getRightsOfEADHolder());
 
-                conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
-                if (conversiontype == null || conversiontype.isEmpty()) {
-                    conversiontype = "true";
-                }
                 sourceOfIdentifiers = ingestionprofile.getSourceOfIdentifiers();
                 if (sourceOfIdentifiers == null || sourceOfIdentifiers.isEmpty()) {
                     sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
@@ -195,10 +185,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                     cc_js_result_uri = ingestionprofile.getEuropeanaLicenseDetails();
                 }
                 licenseAdditionalInformation = ingestionprofile.getEuropeanaAddRights();
-                inheritFileParentCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritElementsCheck());
-                inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
-                inheritOriginationCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritOriginCheck());
-                inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
                 inheritUnittitleCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitleCheck());
                 inheritUnittitle = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitle());
                 if (ingestionprofile.getXslUploadId() != null) {
@@ -276,7 +262,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             profile.setRightsOfEADHolder("");
         }
 
-        profile.setEuropeanaConversionType(Boolean.parseBoolean(conversiontype));
         profile.setSourceOfIdentifiers(sourceOfIdentifiers);
         if (sourceOfFondsTitle.equals(IngestionprofilesAction.OPTION_TITLESTMT_TITLEPROPER)) {
             profile.setUseArchdescUnittitle(Boolean.FALSE);
@@ -314,10 +299,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             profile.setEuropeanaLicenseDetails("http://rightsstatements.org/vocab/NoC-NC/1.0/");
         }
         profile.setEuropeanaAddRights(licenseAdditionalInformation);
-        profile.setEuropeanaInheritElementsCheck(Boolean.parseBoolean(inheritFileParentCheck));
-        profile.setEuropeanaInheritElements(Boolean.parseBoolean(inheritFileParent));
-        profile.setEuropeanaInheritOriginCheck(Boolean.parseBoolean(inheritOriginationCheck));
-        profile.setEuropeanaInheritOrigin(Boolean.parseBoolean(inheritOrigination));
         profile.setEuropeanaInheritUnittitleCheck(Boolean.parseBoolean(inheritUnittitleCheck));
         profile.setEuropeanaInheritUnittitle(Boolean.parseBoolean(inheritUnittitle));
 
@@ -433,23 +414,18 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.setRightEadDescription("");
         this.setRightEadHolder("");
 
-        conversiontype = "true";
         sourceOfIdentifiers = IngestionprofilesAction.OPTION_UNITID;
         sourceOfFondsTitle = IngestionprofilesAction.OPTION_ARCHDESC_UNITTITLE;
         textDataProvider = getAiname();
         dataProviderCheck = Boolean.toString(true);
         europeanaDaoType = "";
         europeanaDaoTypeCheck = Boolean.toString(true);
-        languageSelection = new ArrayList<String>();
+        languageSelection = new ArrayList<>();
         languageCheck = Boolean.toString(true);
         licenseCheck = Boolean.toString(true);
         license = EUROPEANA;
         europeanaLicense = "";
         licenseAdditionalInformation = "";
-        inheritFileParentCheck = Boolean.toString(true);
-        inheritFileParent = Boolean.toString(false);
-        inheritOriginationCheck = Boolean.toString(true);
-        inheritOrigination = Boolean.toString(false);
         inheritUnittitleCheck = Boolean.toString(true);
         inheritUnittitle = Boolean.toString(false);
 
@@ -497,8 +473,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.getRightsEadData().addAll(rightsSet);
 
         //Europeana preferences
-        conversiontypeSet.add(new SelectItem("true", this.getText("ead2ese.label.minimal.conversion")));
-        conversiontypeSet.add(new SelectItem("false", this.getText("ead2ese.label.full.conversion")));
         sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         sourceOfIdentifiersSet.add(new SelectItem(IngestionprofilesAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         sourceOfFondsTitleSet.add(new SelectItem(IngestionprofilesAction.OPTION_ARCHDESC_UNITTITLE, this.getText("ead2ese.label.fondstitle.archdescUnittitle").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
@@ -547,7 +521,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
      * @return Set with all the available rights statements for EAD data.
      */
     private Set<SelectItem> addRightsOptions() {
-        Set<SelectItem> rightsSet = new LinkedHashSet<SelectItem>();
+        Set<SelectItem> rightsSet = new LinkedHashSet<>();
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.NO_SELECTED, "---"));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.PUBLIC_DOMAIN_MARK, getText("content.message.rights.public.domain")));
         rightsSet.add(new SelectItem(AjaxConversionOptionsConstants.CREATIVECOMMONS_CC0_PUBLIC, getText("content.message.rights.creative.public.domain")));
@@ -653,14 +627,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
      */
     public void setRightsEadData(Set<SelectItem> rightsEadData) {
         this.rightsEadData = rightsEadData;
-    }
-
-    public Set<SelectItem> getConversiontypeSet() {
-        return conversiontypeSet;
-    }
-
-    public void setConversiontypeSet(Set<SelectItem> conversiontypeSet) {
-        this.conversiontypeSet = conversiontypeSet;
     }
 
     /**
@@ -881,14 +847,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.rightEadHolder = rightEadHolder;
     }
 
-    public String getConversiontype() {
-        return conversiontype;
-    }
-
-    public void setConversiontype(String conversiontype) {
-        this.conversiontype = conversiontype;
-    }
-
     /**
      * @return the sourceOfIdentifiers
      */
@@ -997,38 +955,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setLicenseAdditionalInformation(String licenseAdditionalInformation) {
         this.licenseAdditionalInformation = licenseAdditionalInformation;
-    }
-
-    public String getInheritFileParentCheck() {
-        return inheritFileParentCheck;
-    }
-
-    public void setInheritFileParentCheck(String inheritFileParentCheck) {
-        this.inheritFileParentCheck = inheritFileParentCheck;
-    }
-
-    public String getInheritFileParent() {
-        return inheritFileParent;
-    }
-
-    public void setInheritFileParent(String inheritFileParent) {
-        this.inheritFileParent = inheritFileParent;
-    }
-
-    public String getInheritOriginationCheck() {
-        return inheritOriginationCheck;
-    }
-
-    public void setInheritOriginationCheck(String inheritOriginationCheck) {
-        this.inheritOriginationCheck = inheritOriginationCheck;
-    }
-
-    public String getInheritOrigination() {
-        return inheritOrigination;
-    }
-
-    public void setInheritOrigination(String inheritOrigination) {
-        this.inheritOrigination = inheritOrigination;
     }
 
     public String getInheritUnittitleCheck() {

@@ -1108,6 +1108,8 @@ public class EadService extends AbstractService {
         config.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
         config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         config.setXmlTypeName("fa");
-        return config.getProperties();
+        config.setOutputBaseDirectory(EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
+                            ead.getArchivalInstitution().getCountry().getIsoname(), ead.getArchivalInstitution().getAiId()));
+                        return config.getProperties();
     }
 }

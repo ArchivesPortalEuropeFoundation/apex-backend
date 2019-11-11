@@ -7,24 +7,6 @@
 
 <script type='text/javascript'>
     $(function() {
-        $("#radioConversiontypefalse").click(function() {
-            $('#hiddenInheritFileParent').show();
-            enableInheritFileParentCheckState();
-            $('#hiddenInheritOrigination').show();
-            enableInheritOriginationCheckState();
-            $('#hiddenInheritUnittitle').show();
-            enableInheritUnittitleCheckState();
-        });
-
-        $("#radioConversiontypetrue").click(function() {
-            $('#hiddenInheritFileParent').hide();
-            disableInheritFileParentCheckState();
-            $('#hiddenInheritOrigination').hide();
-            disableInheritOriginationCheckState();
-            $('#hiddenInheritUnittitle').hide();
-            disableInheritUnittitleCheckState();
-        });
-
         $('#licensecreativecommons').click(function() {
             $('#hiddenCreativeCommonsLicense').show();
             $('#hiddenEuropeanaLicense').hide();
@@ -139,14 +121,6 @@
                 <s:label key="ead2ese.label.general.settings" />
             </td>
         </tr>
-        <tr id="conversionMode">
-            <td class="inputLabel"><s:label key="ead2ese.label.choose.conversion.type" for="conversionType" />:</td>
-            <td>
-                <s:iterator value="conversiontypeSet">
-                    <s:radio name="conversiontype" id="radioConversiontype" list="top" listKey="value" listValue="content"></s:radio><br/>
-                </s:iterator>
-            </td>
-        </tr>
         <tr>
             <td class="inputLabel">
                 <s:label key="ead2ese.label.specify.idsource"  for="sourceOfIdentifiers" />:
@@ -164,6 +138,17 @@
             <td>
                 <s:iterator value="sourceOfFondsTitleSet">
                     <s:radio name="sourceOfFondsTitle" id="sourceOfFondsTitle" list="top" listKey="value" listValue="content"></s:radio><br/>
+                </s:iterator>
+            </td>
+        </tr>
+        <tr>
+            <td class="inputLabel">
+                <s:checkbox name="inheritUnittitleCheck" id="inheritUnittitleCheck" value="true" onchange="changeInheritUnittitleCheckState();"></s:checkbox>
+                <s:label key="ead2ese.label.inherit.unittitle" for="inheritUnittitle" />:
+            </td>
+            <td>
+                <s:iterator value="yesNoSet">
+                    <s:radio name="inheritUnittitle" id="inheritUnittitle" list="top" listKey="value" listValue="content"></s:radio><br/>
                 </s:iterator>
             </td>
         </tr>
@@ -234,42 +219,6 @@
         <tr>
             <td class="inputLabel"><s:label key="ead2ese.label.license.additional" for="licenseAdditionalInformation" />:</td>
             <td><s:textarea id="licenseAdditionalInformation" name="licenseAdditionalInformation" />
-            </td>
-        </tr>
-        <s:if test="conversiontype=='true'">
-            <c:set var="showMinimal" value="style=\"display: none;\""></c:set>
-        </s:if>
-        <tr id="hiddenInheritFileParent" ${showMinimal}>
-            <td class="inputLabel">
-                <s:checkbox name="inheritFileParentCheck" id="inheritFileParentCheck" value="true" onchange="changeInheritFileParentCheckState();"></s:checkbox>
-                <s:label key="ead2ese.label.inherit.parent" for="inheritFileParent" />:
-            </td>
-            <td>
-                <s:iterator value="yesNoSet">
-                    <s:radio name="inheritFileParent" id="inheritFileParent" list="top" listKey="value" listValue="content"></s:radio><br/>
-                </s:iterator>
-            </td>
-        </tr>
-        <tr id="hiddenInheritOrigination" ${showMinimal}>
-            <td class="inputLabel">
-                <s:checkbox name="inheritOriginationCheck" id="inheritOriginationCheck" value="true" onchange="changeInheritOriginationCheckState();"></s:checkbox>
-                <s:label key="ead2ese.label.inherit.origination" for="inheritOrigination" />:
-            </td>
-            <td>
-                <s:iterator value="yesNoSet">
-                    <s:radio name="inheritOrigination" id="inheritOrigination" list="top" listKey="value" listValue="content"></s:radio><br/>
-                </s:iterator>
-            </td>
-        </tr>
-        <tr id="hiddenInheritUnittitle" ${showMinimal}>
-            <td class="inputLabel">
-                <s:checkbox name="inheritUnittitleCheck" id="inheritUnittitleCheck" value="true" onchange="changeInheritUnittitleCheckState();"></s:checkbox>
-                <s:label key="ead2ese.label.inherit.unittitle" for="inheritUnittitle" />:
-            </td>
-            <td>
-                <s:iterator value="yesNoSet">
-                    <s:radio name="inheritUnittitle" id="inheritUnittitle" list="top" listKey="value" listValue="content"></s:radio><br/>
-                </s:iterator>
             </td>
         </tr>
     </table>
