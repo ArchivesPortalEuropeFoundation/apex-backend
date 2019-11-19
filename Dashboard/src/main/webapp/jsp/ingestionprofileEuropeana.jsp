@@ -83,14 +83,6 @@
         });
     }
 
-    function changeInheritUnittitleCheckState() {
-        if ($("#inheritUnittitleCheck").attr('checked')) {
-            enableInheritUnittitleCheckState();
-        } else {
-            disableInheritUnittitleCheckState();
-        }
-    }
-
     function enableInheritUnittitleCheckState() {
         $("input[name^='inheritUnittitle']").each(function() {
             $(this).removeAttr('disabled');
@@ -143,7 +135,6 @@
         </tr>
         <tr>
             <td class="inputLabel">
-                <s:checkbox name="inheritUnittitleCheck" id="inheritUnittitleCheck" value="true" onchange="changeInheritUnittitleCheckState();"></s:checkbox>
                 <s:label key="ead2ese.label.inherit.unittitle" for="inheritUnittitle" />:
             </td>
             <td>
@@ -210,7 +201,8 @@
             </td>
         </tr>
         <tr id="hiddenCreativeCommonsLicense" ${creativeCommonsInvisible}>
-            <td colspan="2">
+            <td></td>
+            <td>
                 <div id="cc_js_widget_container">
                     <script type="text/javascript" src="https://api.creativecommons.org/jswidget/tags/0.97/complete.js?locale=en_US&amp;want_a_license=definitely"></script>
                 </div>

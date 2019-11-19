@@ -101,7 +101,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String europeanaLicense;
     private String cc_js_result_uri;
     private String licenseAdditionalInformation;
-    private String inheritUnittitleCheck;
     private String inheritUnittitle;
 
     //other fields
@@ -185,7 +184,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                     cc_js_result_uri = ingestionprofile.getEuropeanaLicenseDetails();
                 }
                 licenseAdditionalInformation = ingestionprofile.getEuropeanaAddRights();
-                inheritUnittitleCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitleCheck());
                 inheritUnittitle = Boolean.toString(ingestionprofile.getEuropeanaInheritUnittitle());
                 if (ingestionprofile.getXslUploadId() != null) {
                     setDefaultXslFile(DAOFactory.instance().getXslUploadDAO().findById(ingestionprofile.getXslUploadId()).getId() + "");
@@ -299,7 +297,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             profile.setEuropeanaLicenseDetails("http://rightsstatements.org/vocab/NoC-NC/1.0/");
         }
         profile.setEuropeanaAddRights(licenseAdditionalInformation);
-        profile.setEuropeanaInheritUnittitleCheck(Boolean.parseBoolean(inheritUnittitleCheck));
         profile.setEuropeanaInheritUnittitle(Boolean.parseBoolean(inheritUnittitle));
 
         if (profilelist.equals("-1")) {
@@ -426,7 +423,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         license = EUROPEANA;
         europeanaLicense = "";
         licenseAdditionalInformation = "";
-        inheritUnittitleCheck = Boolean.toString(true);
         inheritUnittitle = Boolean.toString(false);
 
         this.lastSelection = this.profilelist;
@@ -955,14 +951,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setLicenseAdditionalInformation(String licenseAdditionalInformation) {
         this.licenseAdditionalInformation = licenseAdditionalInformation;
-    }
-
-    public String getInheritUnittitleCheck() {
-        return inheritUnittitleCheck;
-    }
-
-    public void setInheritUnittitleCheck(String inheritUnittitleCheck) {
-        this.inheritUnittitleCheck = inheritUnittitleCheck;
     }
 
     public String getInheritUnittitle() {
