@@ -28,6 +28,7 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dashboard.utils.PropertiesKeys;
 import eu.apenet.dashboard.utils.PropertiesUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
@@ -792,6 +793,8 @@ public class EadService extends AbstractService {
                             + APEnetUtilities.FILESEPARATOR + ead.getEadid();
                     properties.put("edm_identifier", oaiIdentifier);
                     properties.put("repository_code", ead.getArchivalInstitution().getRepositorycode());
+                    properties.put("outputBaseDirectory", EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
+                            ead.getArchivalInstitution().getCountry().getIsoname(), ead.getArchivalInstitution().getAiId()));
                     queueItem = fillQueueItem(ead, queueAction, properties);
                 } else {
                     queueItem = fillQueueItem(ead, queueAction, preferences);
@@ -1078,7 +1081,6 @@ public class EadService extends AbstractService {
         config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
         config.setLanguage(preferences.getProperty(QueueItem.LANGUAGES));
         config.setUseExistingLanguage("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
-        config.setInheritLanguage(true);
         config.setUseExistingRightsInfo("true".equals(preferences.getProperty(QueueItem.LICENSE_CHECK)));
         if ("europeana".equals(preferences.getProperty(QueueItem.LICENSE))) {
             config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
@@ -1090,13 +1092,6 @@ public class EadService extends AbstractService {
             config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
         }
         config.setRightsAdditionalInformation(preferences.getProperty(QueueItem.LICENSE_ADD_INFO));
-        if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE_CHECK)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE))) {
-            config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
-        }
-        if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION_CHECK)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION))) {
-            config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
-        }
-        config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
         String sourceOfIdentifiers = preferences.getProperty(QueueItem.SOURCE_OF_IDENTIFIERS);
         if (StringUtils.isNotBlank(sourceOfIdentifiers)) {
             config.setIdSource(sourceOfIdentifiers);
@@ -1113,6 +1108,8 @@ public class EadService extends AbstractService {
         config.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
         config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
         config.setXmlTypeName("fa");
-        return config.getProperties();
+        config.setOutputBaseDirectory(EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
+                            ead.getArchivalInstitution().getCountry().getIsoname(), ead.getArchivalInstitution().getAiId()));
+                        return config.getProperties();
     }
 }

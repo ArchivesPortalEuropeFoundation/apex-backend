@@ -47,14 +47,9 @@ public class ConvertAction extends AbstractInstitutionAction {
     private static final String TYPE_SOUND = "TEXT"; // Constant for type "sound".
     private static final String TYPE_TEXT = "TEXT"; // Constant for type "text".
     private static final String TYPE_VIDEO = "VIDEO"; // Constant for type "video".
-    // Inherit options.
-    private static final String INHERIT_PROVIDE = "provide";
     // Options.
     private static final String OPTION_YES = "yes"; // Constant for value "yes".
     private static final String OPTION_NO = "no"; // Constant for value "no".
-    // Conversion type.
-    private static final String OPTION_MINIMAL = "minimal"; // Constant for value "minimal".
-    private static final String OPTION_FULL = "full"; // Constant for value "full".
     // Source of identifiers.
     private static final String OPTION_UNITID = "unitid";
     private static final String OPTION_CID = "cid";
@@ -83,7 +78,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     private Set<SelectItem> sourceOfFondsTitleSet = new TreeSet<SelectItem>();
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
 //    private Set<SelectItem> inheritRightsInfoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> providerSet = new TreeSet<SelectItem>();
     private Set<SelectItem> licenseSet = new TreeSet<SelectItem>();
@@ -95,15 +89,11 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String licenseAdditionalInformation;
     private Map<String, String> dateMappings;
     private String filename;
-    private String conversionType = ConvertAction.OPTION_MINIMAL;
     private String sourceOfIdentifiers = ConvertAction.OPTION_UNITID;
     private String sourceOfFondsTitle = ConvertAction.OPTION_ARCHDESC_UNITTITLE;
     private String validateLinks = ConvertAction.OPTION_NO;
-    private String inheritLanguage = ConvertAction.OPTION_NO;
     private String inheritRightsInfo = ConvertAction.OPTION_NO;
     //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
-    private String inheritOrigination = ConvertAction.OPTION_NO;
-    private String inheritFileParent = ConvertAction.OPTION_NO;
     private String inheritUnittitle = ConvertAction.OPTION_NO;
     private String customDataProvider;
     private String mappingsFileFileName; 		//The uploaded file name
@@ -113,10 +103,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean batchConversion;
     private boolean dataProviderCheck = true;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
-    private boolean inheritFileParentCheck;
-    private boolean inheritOriginationCheck;
-    private boolean inheritUnittitleCheck;
-    private boolean inheritLanguageCheck = true;
     private boolean languageOfTheMaterialCheck = true;
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
@@ -135,27 +121,27 @@ public class ConvertAction extends AbstractInstitutionAction {
                 this.addFieldError("languageSelection", getText("errors.required"));
             }
         } else {
-            if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
-                if (StringUtils.isBlank(this.getLanguageSelection())) {
-                    addFieldError("languageSelection", getText("errors.required"));
-                }
-            } else if (ConvertAction.OPTION_NO.equals(this.getInheritLanguage())) {
-                if (this.isNoLanguageOnClevel()) {
-                    addFieldError("inheritLanguage", getText("errors.required")
-                            + ". " + getText("errors.clevel.without.langmaterial"));
-                } else if (!this.isLanguageOfTheMaterialCheck()) {
-                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
-                            + ". " + getText("errors.provide.language"));
-                }
-            } else if (ConvertAction.OPTION_YES.equals(this.getInheritLanguage())) {
-                if (this.isNoLanguageOnParents()) {
-                    addFieldError("inheritLanguage", getText("errors.required")
-                            + ". " + getText("errors.fa.without.langmaterial"));
-                } else if (!this.isLanguageOfTheMaterialCheck()) {
-                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
-                            + ". " + getText("errors.provide.language"));
-                }
+//            if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
+            if (StringUtils.isBlank(this.getLanguageSelection())) {
+                addFieldError("languageSelection", getText("errors.required"));
             }
+//            } else if (ConvertAction.OPTION_NO.equals(this.getInheritLanguage())) {
+//                if (this.isNoLanguageOnClevel()) {
+//                    addFieldError("inheritLanguage", getText("errors.required")
+//                            + ". " + getText("errors.clevel.without.langmaterial"));
+//                } else if (!this.isLanguageOfTheMaterialCheck()) {
+//                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
+//                            + ". " + getText("errors.provide.language"));
+//                }
+//            } else if (ConvertAction.OPTION_YES.equals(this.getInheritLanguage())) {
+//                if (this.isNoLanguageOnParents()) {
+//                    addFieldError("inheritLanguage", getText("errors.required")
+//                            + ". " + getText("errors.fa.without.langmaterial"));
+//                } else if (!this.isLanguageOfTheMaterialCheck()) {
+//                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
+//                            + ". " + getText("errors.provide.language"));
+//                }
+//            }
         }
 
         if (!this.isBatchConversion() && (this.isHasArchdescUnittitle() || this.isHasTitlestmtTitleproper())) {
@@ -210,8 +196,6 @@ public class ConvertAction extends AbstractInstitutionAction {
             this.languages.add(new SelectItem(language, languageDescription));
         }
 
-        this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_MINIMAL, this.getText("ead2ese.label.minimal.conversion")));
-        this.conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_FULL, this.getText("ead2ese.label.full.conversion")));
         this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_UNITID, this.getText("ead2ese.label.id.unitid").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         this.sourceOfIdentifiersSet.add(new SelectItem(ConvertAction.OPTION_CID, this.getText("ead2ese.label.id.c").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
         this.sourceOfFondsTitleSet.add(new SelectItem(ConvertAction.OPTION_ARCHDESC_UNITTITLE, this.getText("ead2ese.label.fondstitle.archdescUnittitle").replaceAll(">", "&#62;").replaceAll("<", "&#60;")));
@@ -225,9 +209,6 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.typeSet.add(new SelectItem(ConvertAction.TYPE_VIDEO, this.getText("ead2ese.content.type.video")));
         this.yesNoSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
         this.yesNoSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
-        this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_YES, this.getText("ead2ese.content.yes")));
-        this.inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_NO, this.getText("ead2ese.content.no")));
-        this.inheritLanguageSet.add(new SelectItem(ConvertAction.INHERIT_PROVIDE, this.getText("ead2ese.label.language.select")));
         this.licenseSet.add(new SelectItem(ConvertAction.EUROPEANA, this.getText("ead2ese.content.license.europeana")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS, this.getText("ead2ese.content.license.creativecommons")));
         this.licenseSet.add(new SelectItem(ConvertAction.CREATIVECOMMONS_CC0, this.getText("ead2ese.content.license.creativecommons.cc0")));
@@ -317,27 +298,10 @@ public class ConvertAction extends AbstractInstitutionAction {
 
     protected EdmConfig fillConfig() {
         EdmConfig config = new EdmConfig();
-        config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
-        config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
         config.setInheritUnittitle(ConvertAction.OPTION_YES.equals(this.getInheritUnittitle()));
 
-        config.setInheritLanguage(true);
-        if (this.isBatchConversion()) {
-            if (!this.isLanguageOfTheMaterialCheck()) {
-                config.setInheritLanguage(false);
-            }
-            String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
-            config.setLanguage(parseLanguages);
-        } else {
-            config.setInheritLanguage(!ConvertAction.OPTION_NO.equals(this.getInheritLanguage()));
-            if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
-                if (!this.isLanguageOfTheMaterialCheck()) {
-                    config.setInheritLanguage(false);
-                }
-                String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
-                config.setLanguage(parseLanguages);
-            }
-        }
+        String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
+        config.setLanguage(parseLanguages);
 
         config.setUseExistingLanguage(this.isLanguageOfTheMaterialCheck());
         config.setUseExistingRepository(this.isDataProviderCheck());
@@ -350,7 +314,6 @@ public class ConvertAction extends AbstractInstitutionAction {
             config.setDataProvider(this.getTextDataProvider());
         }
 
-        config.setInheritRightsInfo(true);
         config.setUseExistingRightsInfo(this.isLicenseCheck());
         if (ConvertAction.EUROPEANA.equals(this.getLicense())) {
             config.setRights(this.getEuropeanaLicense());
@@ -363,11 +326,6 @@ public class ConvertAction extends AbstractInstitutionAction {
         }
         config.setUseExistingDaoRole(this.isDaoTypeCheck());
         config.setRightsAdditionalInformation(this.getLicenseAdditionalInformation());
-        if (ConvertAction.OPTION_MINIMAL.equalsIgnoreCase(this.getConversionType())) {
-            config.setMinimalConversion(true);
-        } else {
-            config.setMinimalConversion(false);
-        }
 
         // Set the source of identifiers.
         if (ConvertAction.OPTION_UNITID.equalsIgnoreCase(this.getSourceOfIdentifiers())) {
@@ -393,6 +351,9 @@ public class ConvertAction extends AbstractInstitutionAction {
                     + APEnetUtilities.FILESEPARATOR + ead.getEadid();
             config.setEdmIdentifier(oaiIdentifier);
             config.setRepositoryCode(ead.getArchivalInstitution().getRepositorycode());
+            config.setOutputBaseDirectory(EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
+                    ead.getArchivalInstitution().getCountry().getIsoname(), ead
+                    .getArchivalInstitution().getAiId()));
         }
         config.setHost(PropertiesUtil.get(PropertiesKeys.APE_PORTAL_DOMAIN));
         config.setXmlTypeName("fa");
@@ -448,36 +409,12 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.validateLinks = validateLinks;
     }
 
-    public String getInheritLanguage() {
-        return inheritLanguage;
-    }
-
-    public void setInheritLanguage(String inheritLanguage) {
-        this.inheritLanguage = inheritLanguage;
-    }
-
     public String getInheritRightsInfo() {
         return inheritRightsInfo;
     }
 
     public void setInheritRightsInfo(String inheritRightsInfo) {
         this.inheritRightsInfo = inheritRightsInfo;
-    }
-
-    public String getInheritOrigination() {
-        return inheritOrigination;
-    }
-
-    public void setInheritOrigination(String inheritOrigination) {
-        this.inheritOrigination = inheritOrigination;
-    }
-
-    public String getInheritFileParent() {
-        return inheritFileParent;
-    }
-
-    public void setInheritFileParent(String inheritFileParent) {
-        this.inheritFileParent = inheritFileParent;
     }
 
     public String getInheritUnittitle() {
@@ -542,14 +479,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 
     public void setYesNoSet(Set<SelectItem> yesNoSet) {
         this.yesNoSet = yesNoSet;
-    }
-
-    public Set<SelectItem> getInheritLanguageSet() {
-        return inheritLanguageSet;
-    }
-
-    public void setInheritLanguageSet(Set<SelectItem> inheritLanguageSet) {
-        this.inheritLanguageSet = inheritLanguageSet;
     }
 
     public Set<SelectItem> getProviderSet() {
@@ -725,20 +654,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     }
 
     /**
-     * @return the conversionType
-     */
-    public String getConversionType() {
-        return this.conversionType;
-    }
-
-    /**
-     * @param conversionType the conversionType to set
-     */
-    public void setConversionType(String conversionType) {
-        this.conversionType = conversionType;
-    }
-
-    /**
      * @param sourceOfIdentifiers the sourceOfIdentifiers to set
      */
     public void setSourceOfIdentifiers(String sourceOfIdentifiers) {
@@ -758,56 +673,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 
     public void setSourceOfFondsTitle(String sourceOfFondsTitle) {
         this.sourceOfFondsTitle = sourceOfFondsTitle;
-    }
-
-    /**
-     * @return the inheritFileParentCheck
-     */
-    public boolean isInheritFileParentCheck() {
-        return this.inheritFileParentCheck;
-    }
-
-    /**
-     * @param inheritFileParentCheck the inheritFileParentCheck to set
-     */
-    public void setInheritFileParentCheck(boolean inheritFileParentCheck) {
-        this.inheritFileParentCheck = inheritFileParentCheck;
-    }
-
-    /**
-     * @return the inheritOriginationCheck
-     */
-    public boolean isInheritOriginationCheck() {
-        return this.inheritOriginationCheck;
-    }
-
-    /**
-     * @param inheritOriginationCheck the inheritOriginationCheck to set
-     */
-    public void setInheritOriginationCheck(boolean inheritOriginationCheck) {
-        this.inheritOriginationCheck = inheritOriginationCheck;
-    }
-
-    public boolean isInheritUnittitleCheck() {
-        return inheritUnittitleCheck;
-    }
-
-    /**
-     * @param inheritUnittitleCheck
-     */
-    public void setInheritUnittitleCheck(boolean inheritUnittitleCheck) {
-        this.inheritUnittitleCheck = inheritUnittitleCheck;
-    }
-
-    public boolean isInheritLanguageCheck() {
-        return this.inheritLanguageCheck;
-    }
-
-    /**
-     * @param inheritLanguageCheck the inheritLanguageCheck to set
-     */
-    public void setInheritLanguageCheck(boolean inheritLanguageCheck) {
-        this.inheritLanguageCheck = inheritLanguageCheck;
     }
 
     /**
