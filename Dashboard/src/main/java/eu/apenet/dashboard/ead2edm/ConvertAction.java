@@ -85,7 +85,8 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String license;
     private String europeanaLicense;
     private String cc_js_result_uri;
-    private String languageSelection;
+    private String languageSelectionMaterial;
+    private String languageSelectionDescription;
     private String licenseAdditionalInformation;
     private Map<String, String> dateMappings;
     private String filename;
@@ -93,7 +94,6 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String sourceOfFondsTitle = ConvertAction.OPTION_ARCHDESC_UNITTITLE;
     private String validateLinks = ConvertAction.OPTION_NO;
     private String inheritRightsInfo = ConvertAction.OPTION_NO;
-    //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
     private String inheritUnittitle = ConvertAction.OPTION_NO;
     private String customDataProvider;
     private String mappingsFileFileName; 		//The uploaded file name
@@ -103,7 +103,9 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean batchConversion;
     private boolean dataProviderCheck = true;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
-    private boolean languageOfTheMaterialCheck = true;
+    private boolean takeLanguageMaterialFromFileCheck = true;
+    private boolean languageDescriptionSameAsMaterialCheck = true;
+    private boolean takeLanguageDescriptionFromFileCheck = false;
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private boolean noLicenceOnClevel = true;
@@ -115,33 +117,14 @@ public class ConvertAction extends AbstractInstitutionAction {
 
     @Override
     public void validate() {
-        if (this.isBatchConversion()) {
-            if (StringUtils.isBlank(this.getLanguageSelection())) {
-//				this.addFieldError("languageOfTheMaterialCheck", getText("errors.required"));
-                this.addFieldError("languageSelection", getText("errors.required"));
-            }
-        } else {
-//            if (ConvertAction.INHERIT_PROVIDE.equals(this.getInheritLanguage())) {
-            if (StringUtils.isBlank(this.getLanguageSelection())) {
-                addFieldError("languageSelection", getText("errors.required"));
-            }
-//            } else if (ConvertAction.OPTION_NO.equals(this.getInheritLanguage())) {
-//                if (this.isNoLanguageOnClevel()) {
-//                    addFieldError("inheritLanguage", getText("errors.required")
-//                            + ". " + getText("errors.clevel.without.langmaterial"));
-//                } else if (!this.isLanguageOfTheMaterialCheck()) {
-//                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
-//                            + ". " + getText("errors.provide.language"));
-//                }
-//            } else if (ConvertAction.OPTION_YES.equals(this.getInheritLanguage())) {
-//                if (this.isNoLanguageOnParents()) {
-//                    addFieldError("inheritLanguage", getText("errors.required")
-//                            + ". " + getText("errors.fa.without.langmaterial"));
-//                } else if (!this.isLanguageOfTheMaterialCheck()) {
-//                    addFieldError("languageOfTheMaterialCheck", getText("errors.required")
-//                            + ". " + getText("errors.provide.language"));
-//                }
-//            }
+        if (StringUtils.isBlank(this.getLanguageSelectionMaterial())) {
+            this.addFieldError("languageSelectionMaterial", getText("errors.required"));
+        }
+        if (this.languageDescriptionSameAsMaterialCheck && this.getLanguageSelectionMaterial() != null && this.getLanguageSelectionMaterial().length() > 2) {
+            addFieldError("languageDescriptionSameAsMaterialCheck", getText("ead2edm.errors.languageDescription.moreThanOneLanguageMaterial"));
+        }
+        if (!this.languageDescriptionSameAsMaterialCheck && StringUtils.isBlank(this.getLanguageSelectionDescription())) {
+            this.addFieldError("languageSelectionDescription", getText("errors.required"));
         }
 
         if (!this.isBatchConversion() && (this.isHasArchdescUnittitle() || this.isHasTitlestmtTitleproper())) {
@@ -300,10 +283,17 @@ public class ConvertAction extends AbstractInstitutionAction {
         EdmConfig config = new EdmConfig();
         config.setInheritUnittitle(ConvertAction.OPTION_YES.equals(this.getInheritUnittitle()));
 
-        String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
-        config.setLanguage(parseLanguages);
+        String parseLanguages = this.getLanguageSelectionMaterial().replaceAll(",", "");
+        config.setLanguageMaterial(parseLanguages);
+        config.setUseExistingLanguageMaterial(this.isTakeLanguageMaterialFromFileCheck());
 
-        config.setUseExistingLanguage(this.isLanguageOfTheMaterialCheck());
+        if (this.isLanguageDescriptionSameAsMaterialCheck()) {
+            config.setLanguageDescription(parseLanguages);
+        } else {
+            config.setLanguageDescription(this.getLanguageSelectionDescription());
+            config.setUseExistingLanguageDescription(this.isTakeLanguageDescriptionFromFileCheck());
+        }
+
         config.setUseExistingRepository(this.isDataProviderCheck());
 
         config.setType(this.getDaoType());
@@ -377,12 +367,12 @@ public class ConvertAction extends AbstractInstitutionAction {
         this.daoType = daoType;
     }
 
-    public String getLanguageSelection() {
-        return languageSelection;
+    public String getLanguageSelectionMaterial() {
+        return languageSelectionMaterial;
     }
 
-    public void setLanguageSelection(String languageSelection) {
-        this.languageSelection = languageSelection;
+    public void setLanguageSelectionMaterial(String languageSelectionMaterial) {
+        this.languageSelectionMaterial = languageSelectionMaterial;
     }
 
     public Map<String, String> getDateMappings() {
@@ -676,17 +666,42 @@ public class ConvertAction extends AbstractInstitutionAction {
     }
 
     /**
-     * @return the languageOfTheMaterialCheck
+     * @return the takeLanguageMaterialFromFileCheck
      */
-    public boolean isLanguageOfTheMaterialCheck() {
-        return this.languageOfTheMaterialCheck;
+    public boolean isTakeLanguageMaterialFromFileCheck() {
+        return this.takeLanguageMaterialFromFileCheck;
     }
 
     /**
-     * @param languageOfTheMaterialCheck the languageOfTheMaterialCheck to set
+     * @param takeLanguageMaterialFromFileCheck the
+     * takeLanguageMaterialFromFileCheck to set
      */
-    public void setLanguageOfTheMaterialCheck(boolean languageOfTheMaterialCheck) {
-        this.languageOfTheMaterialCheck = languageOfTheMaterialCheck;
+    public void setTakeLanguageMaterialFromFileCheck(boolean takeLanguageMaterialFromFileCheck) {
+        this.takeLanguageMaterialFromFileCheck = takeLanguageMaterialFromFileCheck;
+    }
+
+    public String getLanguageSelectionDescription() {
+        return languageSelectionDescription;
+    }
+
+    public void setLanguageSelectionDescription(String languageSelectionDescription) {
+        this.languageSelectionDescription = languageSelectionDescription;
+    }
+
+    public boolean isLanguageDescriptionSameAsMaterialCheck() {
+        return languageDescriptionSameAsMaterialCheck;
+    }
+
+    public void setLanguageDescriptionSameAsMaterialCheck(boolean languageDescriptionSameAsMaterialCheck) {
+        this.languageDescriptionSameAsMaterialCheck = languageDescriptionSameAsMaterialCheck;
+    }
+
+    public boolean isTakeLanguageDescriptionFromFileCheck() {
+        return takeLanguageDescriptionFromFileCheck;
+    }
+
+    public void setTakeLanguageDescriptionFromFileCheck(boolean takeLanguageDescriptionFromFileCheck) {
+        this.takeLanguageDescriptionFromFileCheck = takeLanguageDescriptionFromFileCheck;
     }
 
     /**

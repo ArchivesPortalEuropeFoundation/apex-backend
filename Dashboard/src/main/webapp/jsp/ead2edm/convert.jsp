@@ -158,6 +158,25 @@
         });
     }
 
+    function changeLanguageOfDescriptionState() {
+        if ($("#languageDescriptionSameAsMaterialCheck").attr('checked')) {
+            disableLanguageOfDescription();
+        } else {
+            enableLanguageOfDescription();
+        }
+    }
+
+    function enableLanguageOfDescription() {
+        $("tr#trLanguageOfTheDescription").show();
+    }
+
+    function disableLanguageOfDescription() {
+        $("tr#trLanguageOfTheDescription td.tdVertical select[name^='languageSelectionDescription']").val("");
+        $("tr#trLanguageOfTheDescription td.tdVertical input[name^='takeLanguageDescriptionFromFileCheck']").removeAttr('checked');
+        $("tr#trLanguageOfTheDescription td.tdVertical input[name^='__checkbox_takeLanguageDescriptionFromFileCheck']").removeAttr('checked');
+        $("tr#trLanguageOfTheDescription").hide();
+    }
+
     function setMandatoryField() {
         $("input[name^='inheritLanguage']").each(function () {
             if ($(this).attr("checked") == "checked") {
@@ -252,18 +271,53 @@
                 <s:label key="ead2ese.label.language.material" for="languageOfTheMaterial" /><span class="required">*</span>:
             </td>
             <td class="tdVertical">
-                <s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
+                <s:select name="languageSelectionMaterial" id="languageSelectionMaterial" listKey="value" listValue="content" list="languages" required="true"
                           value="" multiple="true" size="4"></s:select>
 
-                <s:if test="languageOfTheMaterialCheck==true">
-                    <s:checkbox name="languageOfTheMaterialCheck" id="languageOfTheMaterialCheck" value="true"></s:checkbox>
+                <s:if test="takeLanguageMaterialFromFileCheck==true">
+                    <s:checkbox name="takeLanguageMaterialFromFileCheck" id="takeLanguageMaterialFromFileCheck" value="true"></s:checkbox>
                 </s:if>
                 <s:else>
-                    <s:checkbox name="languageOfTheMaterialCheck" id="languageOfTheMaterialCheck" value="false"></s:checkbox>
+                    <s:checkbox name="takeLanguageMaterialFromFileCheck" id="takeLanguageMaterialFromFileCheck" value="false"></s:checkbox>
                 </s:else>
-                <s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
-                <s:fielderror fieldName="languageSelection"/>
-                <s:fielderror fieldName="languageOfTheMaterialCheck"/>
+                <s:label key="ead2ese.label.language.file" for="takeLanguageMaterialFromFileCheck"/>
+                <s:fielderror fieldName="languageSelectionMaterial"/>
+                <s:fielderror fieldName="takeLanguageMaterialFromFileCheck"/>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="inputLabel">
+                <s:label key="ead2ese.label.language.description" for="languageOfTheDescription" /><span class="required">*</span>:
+            </td>
+            <td>
+                <s:if test="languageDescriptionSameAsMaterialCheck==true">
+                    <s:checkbox name="languageDescriptionSameAsMaterialCheck" id="languageDescriptionSameAsMaterialCheck" value="true" onchange="changeLanguageOfDescriptionState();"></s:checkbox>
+                </s:if>
+                <s:else>
+                    <s:checkbox name="languageDescriptionSameAsMaterialCheck" id="languageDescriptionSameAsMaterialCheck" value="false" onchange="changeLanguageOfDescriptionState();"></s:checkbox>
+                </s:else>
+                <s:label key="ead2ese.label.language.descriptionSameAsMaterial" for="languageDescriptionSameAsMaterialCheck"/>
+                <s:fielderror fieldName="languageDescriptionSameAsMaterialCheck"/>
+            </td>
+        </tr>
+        <s:if test="languageDescriptionSameAsMaterialCheck==true">
+            <c:set var="languageDescriptionInvisible" value="style=\"display: none;\""></c:set>
+        </s:if>
+        <tr id="trLanguageOfTheDescription" ${languageDescriptionInvisible}>
+            <td></td>
+            <td class="tdVertical">
+                <s:select name="languageSelectionDescription" id="languageSelectionDescription" listKey="value" listValue="content" list="languages" required="true"
+                          value="" multiple="false" size="4" ></s:select>
+                <s:if test="takeLanguageDescriptionFromFileCheck==true">
+                    <s:checkbox name="takeLanguageDescriptionFromFileCheck" id="takeLanguageDescriptionFromFileCheck" value="true"></s:checkbox>
+                </s:if>
+                <s:else>
+                    <s:checkbox name="takeLanguageDescriptionFromFileCheck" id="takeLanguageDescriptionFromFileCheck" value="false"></s:checkbox>
+                </s:else>
+                <s:label key="ead2ese.label.language.file" for="takeLanguageDescriptionFromFileCheck"/>
+                <s:fielderror fieldName="languageSelectionDescription"/>
+                <s:fielderror fieldName="takeLanguageDescriptionFromFileCheck"/>
             </td>
         </tr>
 
