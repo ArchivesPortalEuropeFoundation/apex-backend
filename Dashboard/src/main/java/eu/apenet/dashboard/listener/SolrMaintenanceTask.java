@@ -50,7 +50,7 @@ public class SolrMaintenanceTask implements Runnable {
         SolrUtil.solrOptimize();
         SolrUtil.rebuildAutosuggestion();
         // restart queue only if it was exclusively stopped for the maintenance task
-        if (!queueActive) {
+        if (queueActive) {
             QueueDaemon.start();
         }
         // lift maintenance mode only if it had not been in place before
