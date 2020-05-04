@@ -181,7 +181,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                                 }
                             }
                             findingAid.setTotalNumberOfChos(new Long(numberOfRecords));
-                            findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfWebResource()));
+                            findingAid.setTotalNumberOfWebResourceEdm(new Long(digitalObjectCounter.getNumberOfDigitalObjects()));
                             findingAid.setEuropeana(EuropeanaState.CONVERTED);
                         } else {
                             edmOutputDir.delete();
