@@ -1,31 +1,21 @@
 package eu.apenet.persistence.hibernate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.TypedQuery;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
-import eu.apenet.persistence.vo.FileType;
-import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.MetadataFormat;
-import eu.apenet.persistence.vo.UpFile;
 
 public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implements EseDAO {
 
@@ -157,7 +147,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 
     @Override
     public List<String> getSets() {
-        String query = "SELECT DISTINCT(eset) FROM Ese";
+        String query = "SELECT DISTINCT(eset) FROM Ese WHERE es_id=2";
         TypedQuery<String> typedQuery = getEntityManager().createQuery(query, String.class);
         return typedQuery.getResultList();
     }
@@ -165,8 +155,11 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
     @Override
     public List<String> getSetsWithPublicatedFiles() {
         //SELECT DISTINCT(eset) FROM Ese WHERE eseState=2;
-        String query = "SELECT DISTINCT(eset) FROM Ese WHERE eseState.id = 2";
-        TypedQuery<String> typedQuery = getEntityManager().createQuery(query, String.class);
-        return typedQuery.getResultList();    }
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "ese")
+                .setProjection(Projections.distinct(Projections.projectionList().add(Projections.property("eset"))))
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .add(Restrictions.eq("eseState.id", 2));
+        return criteria.list();
+    }
 
 }

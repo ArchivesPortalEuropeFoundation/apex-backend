@@ -2,7 +2,6 @@ package eu.apenet.dashboard.services.ead;
 
 import java.io.File;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
@@ -16,7 +15,6 @@ import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
@@ -27,6 +25,8 @@ import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
@@ -63,12 +63,10 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 
                     EseDAO eseDao = DAOFactory.instance().getEseDAO();
 
-                    // OAI Identifier will be built according to the next
-                    // syntax:
-                    // NL-HaNA/fa/4.VTHR/edm
+                    // OAI identifier for each set will be built according to the syntax
+                    // {repocode}:{eadid}, e.g. NL-HaNA:4.VTHR
                     String europeanaSetName = findingAid.getArchivalInstitution().getRepositorycode()
-                            + APEnetUtilities.FILESEPARATOR + FA_XML_TYPE
-                            + APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
+                            + APEnetUtilities.OAIPMH_SET_SEPARATOR + findingAid.getEadid();
 
                     EdmConfig edmConfig = new EdmConfig(properties);
                     edmConfig.setEdmIdentifier(europeanaSetName);
@@ -81,12 +79,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 
                     File apenetEad = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
                             findingAid.getPathApenetead());
-//                    String xmlNameRelative = EdmFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
-//                    int lastIndex = xmlNameRelative.lastIndexOf('.');
-//                    String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
-//                            + xmlNameRelative.substring(lastIndex);
                     File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmConfig.getOutputBaseDirectory(), APEnetUtilities.convertToFilename(findingAid.getEadid()));
-//                    File edmOutputFile = EdmFileUtils.getFile(edmOutputDir, edmOutputFilename);
                     edmOutputDir.mkdirs();
                     boolean errors = false;
                     StringBuilder warn = new StringBuilder();
@@ -126,40 +119,11 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 
                         boolean update = false;
                         if (numberOfRecords > 1) {
-//                            Ese ese = null;
                             if (findingAid.getEses().isEmpty()) {
-//                                ese = new Ese();
-//                                ese.setCreationDate(new Date());
                             } else {
-//                                ese = findingAid.getEses().iterator().next();
                                 update = true;
-//                                if (ese.getPathHtml() != null) {
-//                                    EdmFileUtils.deleteDir(EdmFileUtils.getRepoFile(APEnetUtilities.getConfig()
-//                                            .getRepoDirPath(), ese.getPathHtml()));
-//                                    ese.setPathHtml(null);
-//                                }
                             }
 
-                            // Ese example = new Ese();
-                            // example.setOaiIdentifier(europeanaSetName);
-//                            List<Ese> esesToBeDeleted = eseDao.getEsesFromDeletedFindingaids(europeanaSetName);
-//                            EseState eseState;
-//                            if (esesToBeDeleted.size() > 0) {
-//                                if (!update) {
-//                                    esesToBeDeleted.forEach((eseToBeDeleted) -> {
-//                                        // FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
-//                                        eseDao.delete(eseToBeDeleted);
-//                                    });
-//                                    eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
-//                                } else {
-//                                    eseState = ese.getEseState();
-//                                }
-//                                ese.setModificationDate(new Date());
-//                            } else {
-//                                ese.setModificationDate(ese.getCreationDate());
-//                                eseState = DAOFactory.instance().getEseStateDAO()
-//                                        .getEseStateByState(EseState.NOT_PUBLISHED);
-//                            }
                             for (File file : edmOutputDir.listFiles()) {
                                 Ese ese = new Ese();
                                 ese.setCreationDate(new Date());
@@ -170,7 +134,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                                         edmOutputDir.getName()) + APEnetUtilities.FILESEPARATOR + file.getName());
                                 ese.setEseState(DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED));
                                 ese.setFindingAid(findingAid);
-                                ese.setOaiIdentifier(europeanaSetName + APEnetUtilities.FILESEPARATOR + file.getName());
+                                ese.setOaiIdentifier(europeanaSetName + APEnetUtilities.OAIPMH_SET_SEPARATOR + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.toString()));
                                 ese.setNumberOfRecords(1);
                                 ese.setNumberOfWebResource(1);
                                 ese.setMetadataFormat(MetadataFormat.EDM);

@@ -8,37 +8,37 @@ import javax.xml.stream.XMLStreamException;
 
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.ResumptionToken;
 
 public class ListSetsResponse extends AbstractResponse {
 
-	private ResumptionToken resumptionToken;
+    private ResumptionToken resumptionToken;
 
-	public ListSetsResponse(ResumptionToken resumptionToken) {
-		this.resumptionToken = resumptionToken;
-	}
+    public ListSetsResponse(ResumptionToken resumptionToken) {
+        this.resumptionToken = resumptionToken;
+    }
 
-	@Override
-	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params)
-			throws XMLStreamException, IOException {
-		writer.writeStartElement(getVerb());
-		List<String> oaiPmhSets = DAOFactory.instance().getEseDAO().getSetsWithPublicatedFiles();
-		List<ArchivalInstitution> archivalInstitutions = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsByOaiPmhSets(oaiPmhSets);
-		for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
-			writer.writeStartElement("set");
-			writer.writeTextElement("setSpec", archivalInstitution.getRepositorycode());
-			String institutionName = archivalInstitution.getAiname();
-			writer.writeTextElement("setName", institutionName);
-			writer.closeElement();
-		}
+    @Override
+    protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params)
+            throws XMLStreamException, IOException {
+        writer.writeStartElement(getVerb());
+        List<String> oaiPmhSets = DAOFactory.instance().getEseDAO().getSets();
+        for (String oaiPmhSet : oaiPmhSets) {
+            String institutionName = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByRepositoryCode(oaiPmhSet.substring(0, oaiPmhSet.indexOf(":"))).getAiname();
+            String setName = oaiPmhSet.substring(oaiPmhSet.indexOf(":") + 1);
 
-		writeResumptionToken(writer, resumptionToken);
-		writer.closeElement();
-	}
+            writer.writeStartElement("set");
+            writer.writeTextElement("setSpec", oaiPmhSet);
+            writer.writeTextElement("setName", institutionName + " – " + setName);
+            writer.closeElement();
+        }
 
-	protected String getVerb() {
-		return RequestProcessor.VERB_LIST_SETS;
-	}
+        writeResumptionToken(writer, resumptionToken);
+        writer.closeElement();
+    }
+
+    protected String getVerb() {
+        return RequestProcessor.VERB_LIST_SETS;
+    }
 
 }

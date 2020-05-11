@@ -12,7 +12,7 @@ public class IdentifyResponse extends AbstractResponse {
 
 
 	private static final String REPOSITORY_NAME = "Archives Portal Europe OAI-PMH Repository";
-	private static final String ADMIN_EMAIL = "info@apex-project.eu";
+	private static final String ADMIN_EMAIL = "info@archivesportaleurope.net";
 	private static final String DELETED_RECORD_MANNER = "transient";
 	private static final String GRANULARITY = "YYYY-MM-DDThh:mm:ssZ";
 	private static final String PROTOCOL_VERSION = "2.0";
