@@ -71,8 +71,8 @@ public class DeleteEseEdmTask extends AbstractEadTask {
                 String edmOutputDirPath = EdmFileUtils.getOutputEDMDirPath(APEnetUtilities.getConfig().getRepoDirPath(),
                         findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
                         .getArchivalInstitution().getAiId());
-                ContentUtils.deleteFile(edmOutputDirPath + APEnetUtilities.FILESEPARATOR + APEnetUtilities.convertToFilename(findingAid.getEadid()) + ".zip", false);
-                File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmOutputDirPath, APEnetUtilities.convertToFilename(findingAid.getEadid()));
+                ContentUtils.deleteFile(edmOutputDirPath + APEnetUtilities.FILESEPARATOR + EdmFileUtils.encodeSpecialCharactersForFilename(findingAid.getEadid()) + ".zip", false);
+                File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmOutputDirPath, EdmFileUtils.encodeSpecialCharactersForFilename(findingAid.getEadid()));
                 if (edmOutputDir.exists()) {
                     FileUtils.deleteDirectory(edmOutputDir);
                 }

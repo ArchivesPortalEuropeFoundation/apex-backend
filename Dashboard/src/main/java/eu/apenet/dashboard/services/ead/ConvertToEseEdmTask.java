@@ -79,7 +79,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 
                     File apenetEad = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
                             findingAid.getPathApenetead());
-                    File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmConfig.getOutputBaseDirectory(), APEnetUtilities.convertToFilename(findingAid.getEadid()));
+                    File edmOutputDir = EdmFileUtils.getOutputEDMDir(edmConfig.getOutputBaseDirectory(), EdmFileUtils.encodeSpecialCharactersForFilename(findingAid.getEadid()));
                     edmOutputDir.mkdirs();
                     boolean errors = false;
                     StringBuilder warn = new StringBuilder();
