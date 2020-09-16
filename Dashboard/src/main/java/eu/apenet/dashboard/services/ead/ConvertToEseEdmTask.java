@@ -66,7 +66,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                     // OAI identifier for each set will be built according to the syntax
                     // {repocode}:{eadid}, e.g. NL-HaNA:4.VTHR
                     String europeanaSetName = findingAid.getArchivalInstitution().getRepositorycode()
-                            + APEnetUtilities.OAIPMH_SET_SEPARATOR + findingAid.getEadid();
+                            + APEnetUtilities.OAIPMH_SET_SEPARATOR + EdmFileUtils.encodeSpecialCharactersForFilename(findingAid.getEadid());
 
                     EdmConfig edmConfig = new EdmConfig(properties);
                     edmConfig.setEdmIdentifier(europeanaSetName);
