@@ -46,7 +46,10 @@ public class DownloadEdmXmlAction extends AbstractInstitutionAction {
             if (esesToZip.size() > 0) {
                 String outputFileName = esesToZip.get(0);
                 outputFileName = outputFileName.substring(0, outputFileName.lastIndexOf("/"));
-                outputFileName = outputFileName + ".zip";
+                String outputPath = outputFileName.substring(0, outputFileName.lastIndexOf("/")) + "/";
+                outputFileName = outputFileName.substring(outputFileName.lastIndexOf("/") + 1);
+                outputFileName = EdmFileUtils.encodeSpecialCharactersForFilename(outputFileName);
+                outputFileName = outputPath + outputFileName + ".zip";
                 File zipFile = new File(outputFileName);
                 if (zipFile.exists()){
                     zipFile.delete();
@@ -54,9 +57,6 @@ public class DownloadEdmXmlAction extends AbstractInstitutionAction {
                 ZipManager.zipMultiple(esesToZip, zipFile);
                 ContentUtils.download(getServletRequest(), getServletResponse(), zipFile, "ZIP");
             }
-//                Ese ese = eses.get(0);
-//                File file = EdmFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
-//                ContentUtils.downloadXml(getServletRequest(), getServletResponse(), file);
         }
         return SUCCESS;
     }
