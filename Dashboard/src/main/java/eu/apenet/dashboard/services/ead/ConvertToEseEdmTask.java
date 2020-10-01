@@ -128,13 +128,13 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
                                 Ese ese = new Ese();
                                 ese.setCreationDate(new Date());
                                 ese.setModificationDate(ese.getCreationDate());
-                                ese.setEset(europeanaSetName);
+                                ese.setEset(prepareEdmIdentifier(europeanaSetName));
                                 ese.setPath(EdmFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution()
                                         .getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(),
                                         edmOutputDir.getName()) + APEnetUtilities.FILESEPARATOR + file.getName());
                                 ese.setEseState(DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED));
                                 ese.setFindingAid(findingAid);
-                                ese.setOaiIdentifier(europeanaSetName + APEnetUtilities.OAIPMH_SET_SEPARATOR + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.toString()));
+                                ese.setOaiIdentifier(prepareEdmIdentifier(europeanaSetName + APEnetUtilities.OAIPMH_SET_SEPARATOR + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.toString())));
                                 ese.setNumberOfRecords(1);
                                 ese.setNumberOfWebResource(1);
                                 ese.setMetadataFormat(MetadataFormat.EDM);
@@ -165,6 +165,13 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
             }
 
         }
+    }
+    
+    private String prepareEdmIdentifier(String input){
+        // return input;
+        input = input.replace("+", "_");
+        return input.replace("%", "P");
+        
     }
 
 }

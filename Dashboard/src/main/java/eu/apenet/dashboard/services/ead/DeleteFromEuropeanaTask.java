@@ -50,6 +50,7 @@ public class DeleteFromEuropeanaTask extends AbstractEadTask {
 		                if(ese.getEseState().getState().equals(EseState.PUBLISHED)){
 		                    ese.setEseState(eseStateRemoved);
 		                    ese.setModificationDate(newModificationDate);
+                                    ese.setOaiIdentifier("");
 		                    esesDao.updateSimple(ese);
 		                }
 		            }
