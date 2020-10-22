@@ -169,7 +169,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
     
     private String prepareEdmIdentifier(String input){
         // return input;
-        input = input.replace("+", "_");
+        input = input.replace("+", "%20");
         return input.replace("%", "P");
         
     }
