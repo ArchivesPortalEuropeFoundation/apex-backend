@@ -24,3 +24,11 @@ hs_err_pid*
 /*/target/
 /*/nb-configuration.xml
 /*/nbactions.xml
+
+# IntelliJ project files
+.idea
+**/*.iml
+
+# Generated files
+ApeApi/src/main/resources/swagger/generated/
+ApeApi/src/main/webapp/swagger-ui/
