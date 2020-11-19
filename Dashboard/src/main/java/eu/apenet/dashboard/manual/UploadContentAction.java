@@ -603,8 +603,11 @@ public class UploadContentAction extends AbstractInstitutionAction {
         properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
         properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
         properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
-        properties.setProperty(QueueItem.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
-        properties.setProperty(QueueItem.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
+        properties.setProperty(QueueItem.LANGUAGES_MATERIAL, ingestionprofile.getEuropeanaLanguagesMaterial() + "");
+        properties.setProperty(QueueItem.LANGUAGES_MATERIAL_CHECK, ingestionprofile.getEuropeanaLanguagesMaterialFromFile() + "");
+        properties.setProperty(QueueItem.LANGUAGE_DESCRIPTION, ingestionprofile.getEuropeanaLanguageDescription() + "");
+        properties.setProperty(QueueItem.LANGUAGE_DESCRIPTION_CHECK, ingestionprofile.getEuropeanaLanguageDescriptionFromFile() + "");
+        properties.setProperty(QueueItem.LANGUAGE_DESCRIPTION_SAME_AS_MATERIAL_CHECK, ingestionprofile.getEuropeanaLanguageMaterialDescriptionSame() + "");
         properties.setProperty(QueueItem.LICENSE_CHECK, ingestionprofile.getEuropeanaLicenseFromFile() + "");
         properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
         properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
@@ -666,7 +669,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
             FtpDAO ftpDao = DAOFactory.instance().getFtpDAO();
             // Init object to store
             Ftp ftpObject;
-            if (ftpDao.getFtpConfig(getAiId()) == null){
+            if (ftpDao.getFtpConfig(getAiId()) == null) {
                 ftpObject = new Ftp();
             } else {
                 ftpObject = ftpDao.getFtpConfig(getAiId());
@@ -682,7 +685,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
             LOG.error("Failed to save FTP login data", ex);
         }
     }
-    
+
     private void retrieveFtpLogin() {
         try {
             FtpDAO ftpDao = DAOFactory.instance().getFtpDAO();

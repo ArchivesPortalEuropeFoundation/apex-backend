@@ -55,10 +55,16 @@ public class Ingestionprofile implements Serializable {
     private Integer europeanaDaoType;
     @Column(name = "europeana_dao_type_from_file")
     private Boolean europeanaDaoTypeFromFile = true;
-    @Column(name = "europeana_languages")
-    private String europeanaLanguages;
-    @Column(name = "europeana_languages_from_file")
-    private Boolean europeanaLanguagesFromFile = true;
+    @Column(name = "europeana_languages_material")
+    private String europeanaLanguagesMaterial;
+    @Column(name = "europeana_languages_material_from_file")
+    private Boolean europeanaLanguagesMaterialFromFile = true;
+    @Column(name = "europeana_language_description")
+    private String europeanaLanguageDescription;
+    @Column(name = "europeana_language_description_from_file")
+    private Boolean europeanaLanguageDescriptionFromFile = true;
+    @Column(name = "europeana_language_material_description_same")
+    private Boolean europeanaLanguageMaterialDescriptionSame = true;
     @Column(name = "europeana_license_from_file")
     private Boolean europeanaLicenseFromFile = true;
     @Column(name = "europeana_license")
@@ -236,20 +242,44 @@ public class Ingestionprofile implements Serializable {
         this.europeanaDaoTypeFromFile = europeanaDaoTypeFromFile;
     }
 
-    public String getEuropeanaLanguages() {
-        return europeanaLanguages;
+    public String getEuropeanaLanguagesMaterial() {
+        return europeanaLanguagesMaterial;
     }
 
-    public void setEuropeanaLanguages(String europeanaLanguages) {
-        this.europeanaLanguages = europeanaLanguages;
+    public void setEuropeanaLanguagesMaterial(String europeanaLanguagesMaterial) {
+        this.europeanaLanguagesMaterial = europeanaLanguagesMaterial;
     }
 
-    public Boolean getEuropeanaLanguagesFromFile() {
-        return europeanaLanguagesFromFile;
+    public Boolean getEuropeanaLanguagesMaterialFromFile() {
+        return europeanaLanguagesMaterialFromFile;
     }
 
-    public void setEuropeanaLanguagesFromFile(Boolean europeanaLanguagesFromFile) {
-        this.europeanaLanguagesFromFile = europeanaLanguagesFromFile;
+    public void setEuropeanaLanguagesMaterialFromFile(Boolean europeanaLanguagesMaterialFromFile) {
+        this.europeanaLanguagesMaterialFromFile = europeanaLanguagesMaterialFromFile;
+    }
+
+    public String getEuropeanaLanguageDescription() {
+        return europeanaLanguageDescription;
+    }
+
+    public void setEuropeanaLanguageDescription(String europeanaLanguageDescription) {
+        this.europeanaLanguageDescription = europeanaLanguageDescription;
+    }
+
+    public Boolean getEuropeanaLanguageDescriptionFromFile() {
+        return europeanaLanguageDescriptionFromFile;
+    }
+
+    public void setEuropeanaLanguageDescriptionFromFile(Boolean europeanaLanguageDescriptionFromFile) {
+        this.europeanaLanguageDescriptionFromFile = europeanaLanguageDescriptionFromFile;
+    }
+
+    public Boolean getEuropeanaLanguageMaterialDescriptionSame() {
+        return europeanaLanguageMaterialDescriptionSame;
+    }
+
+    public void setEuropeanaLanguageMaterialDescriptionSame(Boolean europeanaLanguageMaterialDescriptionSame) {
+        this.europeanaLanguageMaterialDescriptionSame = europeanaLanguageMaterialDescriptionSame;
     }
 
     public Boolean getEuropeanaLicenseFromFile() {

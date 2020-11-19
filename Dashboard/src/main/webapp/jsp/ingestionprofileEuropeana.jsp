@@ -101,6 +101,25 @@
             }
         });
     }
+    
+    function changeLanguageOfDescriptionState() {
+        if ($("#languageDescriptionSameAsMaterialCheck").attr('checked')) {
+            disableLanguageOfDescription();
+        } else {
+            enableLanguageOfDescription();
+        }
+    }
+
+    function enableLanguageOfDescription() {
+        $("tr#trLanguageOfTheDescription").show();
+    }
+
+    function disableLanguageOfDescription() {
+        $("tr#trLanguageOfTheDescription td.tdVertical select[name^='languageSelectionDescription']").val("");
+        $("tr#trLanguageOfTheDescription td.tdVertical input[name^='languageDescriptionCheck']").removeAttr('checked');
+        $("tr#trLanguageOfTheDescription td.tdVertical input[name^='__checkbox_languageDescriptionCheck']").removeAttr('checked');
+        $("tr#trLanguageOfTheDescription").hide();
+    }
 </script>
 
 <div id="headerContainer">
@@ -163,20 +182,55 @@
                 <s:label key="ead2ese.label.type.file" for="europeanaDaoType"/>
             </td>
         </tr>
-        <tr id="trLanguage">
+        <tr id="trLanguageOfTheMaterial">
             <td class="inputLabel">
-                <s:label key="ead2ese.label.language.material" for="languageSelection" />*:
+                <s:label key="ead2ese.label.language.material" for="languageSelectionMaterial" /><span class="required">*</span>:
             </td>
             <td class="tdVertical">
-                <s:select name="languageSelection" id="languageselection" listKey="value" listValue="content" list="languages" multiple="true" required="true" />
-                <s:checkbox name="languageCheck" id="languageOfTheMaterialCheck" />
-                <s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
+                <s:select name="languageSelectionMaterial" id="languageSelectionMaterial" listKey="value" listValue="content" list="languages" required="true"
+                          multiple="true" size="4"></s:select>
+
+                <s:checkbox name="languageMaterialCheck" id="languageMaterialCheck" />
+                <s:label key="ead2ese.label.language.file" for="languageMaterialCheck"/>
+                <s:fielderror fieldName="languageSelectionMaterial"/>
+                <s:fielderror fieldName="languageMaterialCheck"/>
             </td>
         </tr>
+
         <tr>
-            <td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
+            <td class="inputLabel">
+                <s:label key="ead2ese.label.language.description" for="languageSelectionDescription" /><span class="required">*</span>:
+            </td>
             <td>
-                <s:checkbox name="licenseCheck" id="licenseCheck" />
+                <s:checkbox name="languageDescriptionSameAsMaterialCheck" id="languageDescriptionSameAsMaterialCheck" onchange="changeLanguageOfDescriptionState();" />
+                <s:label key="ead2ese.label.language.descriptionSameAsMaterial" for="languageDescriptionSameAsMaterialCheck"/>
+                <s:fielderror fieldName="languageDescriptionSameAsMaterialCheck"/>
+            </td>
+        </tr>
+        <s:if test="languageDescriptionSameAsMaterialCheck=='true'">
+            <c:set var="languageDescriptionInvisible" value="style=\"display: none;\""></c:set>
+        </s:if>
+        <tr id="trLanguageOfTheDescription" ${languageDescriptionInvisible}>
+            <td></td>
+            <td class="tdVertical">
+                <s:select name="languageSelectionDescription" id="languageSelectionDescription" listKey="value" listValue="content" list="languages" required="true"
+                          multiple="false" size="4" ></s:select>
+                <s:checkbox name="languageDescriptionCheck" id="languageDescriptionCheck" />
+                <s:label key="ead2ese.label.language.file" for="languageDescriptionCheck"/>
+                <s:fielderror fieldName="languageSelectionDescription"/>
+                <s:fielderror fieldName="languageDescriptionCheck"/>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="inputLabel"><s:label key="ead2ese.label.license" for="license" /><span class="required">*</span>:</td>
+            <td>
+                <s:if test="licenseCheck==true">
+                    <s:checkbox name="licenseCheck" id="licenseCheck" value="true"></s:checkbox>
+                </s:if>
+                <s:else>
+                    <s:checkbox name="licenseCheck" id="licenseCheck" value="false"></s:checkbox>
+                </s:else>
                 <s:label key="ead2ese.label.license.file" for="licenseCheck"/>
             </td>
         </tr>
