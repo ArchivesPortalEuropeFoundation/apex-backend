@@ -299,7 +299,9 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setEuropeanaLanguagesMaterialFromFile(Boolean.parseBoolean(languageMaterialCheck));
         profile.setEuropeanaLanguageMaterialDescriptionSame(Boolean.parseBoolean(languageDescriptionSameAsMaterialCheck));
         if (profile.getEuropeanaLanguageMaterialDescriptionSame()) {
-            profile.setEuropeanaLanguageDescription(languageSelectionMaterial.get(0));
+            if (!languageSelectionMaterial.isEmpty()) {
+                profile.setEuropeanaLanguageDescription(languageSelectionMaterial.get(0));
+            }
         } else {
             profile.setEuropeanaLanguageDescription(languageSelectionDescription);
         }
