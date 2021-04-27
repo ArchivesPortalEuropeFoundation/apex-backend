@@ -34,8 +34,11 @@ public class QueueItem implements java.io.Serializable {
     public static final String DATA_PROVIDER_CHECK = "europeana.dataprovidercheck";
     public static final String EUROPEANA_DAO_TYPE = "europeana.daotype";
     public static final String EUROPEANA_DAO_TYPE_CHECK = "europeana.daotypecheck";
-    public static final String LANGUAGES = "europeana.languages";
-    public static final String LANGUAGE_CHECK = "europeana.languagecheck";
+    public static final String LANGUAGES_MATERIAL = "europeana.languagesmaterial";
+    public static final String LANGUAGES_MATERIAL_CHECK = "europeana.languagesmaterialcheck";
+    public static final String LANGUAGE_DESCRIPTION_SAME_AS_MATERIAL_CHECK = "europeana.languagesdescriptionsameasmaterialcheck";
+    public static final String LANGUAGE_DESCRIPTION = "europeana.languagedescription";
+    public static final String LANGUAGE_DESCRIPTION_CHECK = "europeana.languagedescriptioncheck";
     public static final String LICENSE_CHECK = "europeana.licensecheck";
     public static final String LICENSE = "europeana.license";
     public static final String LICENSE_DETAILS = "europeana.licensedetails";

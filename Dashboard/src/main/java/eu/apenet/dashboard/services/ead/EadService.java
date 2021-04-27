@@ -1079,8 +1079,11 @@ public class EadService extends AbstractService {
         config.setProvider("Archives Portal Europe");
         config.setType(IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE)).getDaoText());
         config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
-        config.setLanguageMaterial(preferences.getProperty(QueueItem.LANGUAGES));
-        config.setUseExistingLanguageMaterial("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
+        config.setLanguageMaterial(preferences.getProperty(QueueItem.LANGUAGES_MATERIAL));
+        config.setUseExistingLanguageMaterial("true".equals(preferences.getProperty(QueueItem.LANGUAGES_MATERIAL_CHECK)));
+        config.setLanguageDescriptionSameAsLanguageMaterial("true".equals(preferences.getProperty(QueueItem.LANGUAGE_DESCRIPTION_SAME_AS_MATERIAL_CHECK)));
+        config.setLanguageDescription(preferences.getProperty(QueueItem.LANGUAGE_DESCRIPTION));
+        config.setUseExistingLanguageDescription("true".equals(preferences.getProperty(QueueItem.LANGUAGE_DESCRIPTION_CHECK)));
         config.setUseExistingRightsInfo("true".equals(preferences.getProperty(QueueItem.LICENSE_CHECK)));
         if ("europeana".equals(preferences.getProperty(QueueItem.LICENSE))) {
             config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));

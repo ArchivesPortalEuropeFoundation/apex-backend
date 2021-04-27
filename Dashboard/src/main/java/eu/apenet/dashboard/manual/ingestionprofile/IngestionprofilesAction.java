@@ -94,8 +94,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String dataProviderCheck;
     private String europeanaDaoType;
     private String europeanaDaoTypeCheck;
-    private List<String> languageSelection = new ArrayList<>();
-    private String languageCheck;
+    private List<String> languageSelectionMaterial = new ArrayList<>();
+    private String languageMaterialCheck;
+    private String languageSelectionDescription;
+    private String languageDescriptionCheck;
+    private String languageDescriptionSameAsMaterialCheck;
     private String licenseCheck;
     private String license;
     private String europeanaLicense;
@@ -172,9 +175,20 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
                 europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
                 europeanaDaoTypeCheck = Boolean.toString(ingestionprofile.getEuropeanaDaoTypeFromFile());
-                String[] tempLang = ingestionprofile.getEuropeanaLanguages().split(" ");
-                languageSelection.addAll(Arrays.asList(tempLang));
-                languageCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguagesFromFile());
+                String[] tempLangMaterial = ingestionprofile.getEuropeanaLanguagesMaterial().split(" ");
+                languageSelectionMaterial.addAll(Arrays.asList(tempLangMaterial));
+                languageMaterialCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguagesMaterialFromFile());
+                languageSelectionDescription = ingestionprofile.getEuropeanaLanguageDescription();
+                if (ingestionprofile.getEuropeanaLanguageDescriptionFromFile() == null) {
+                    languageDescriptionCheck = Boolean.toString(false);
+                } else {
+                    languageDescriptionCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguageDescriptionFromFile());
+                }
+                if (ingestionprofile.getEuropeanaLanguageMaterialDescriptionSame() == null) {
+                    languageDescriptionSameAsMaterialCheck = Boolean.toString(true);
+                } else {
+                    languageDescriptionSameAsMaterialCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguageMaterialDescriptionSame());
+                }
                 licenseCheck = Boolean.toString(ingestionprofile.getEuropeanaLicenseFromFile());
                 license = ingestionprofile.getEuropeanaLicense();
                 if (license.equals(EUROPEANA)) {
@@ -275,14 +289,23 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         }
         profile.setEuropeanaDaoTypeFromFile(Boolean.parseBoolean(europeanaDaoTypeCheck));
         StringBuilder langTemp = new StringBuilder("");
-        for (int i = 0; i < languageSelection.size(); i++) {
-            langTemp.append(languageSelection.get(i));
-            if (i < languageSelection.size() - 1) {
+        for (int i = 0; i < languageSelectionMaterial.size(); i++) {
+            langTemp.append(languageSelectionMaterial.get(i));
+            if (i < languageSelectionMaterial.size() - 1) {
                 langTemp.append(" ");
             }
         }
-        profile.setEuropeanaLanguages(langTemp.toString());
-        profile.setEuropeanaLanguagesFromFile(Boolean.parseBoolean(languageCheck));
+        profile.setEuropeanaLanguagesMaterial(langTemp.toString());
+        profile.setEuropeanaLanguagesMaterialFromFile(Boolean.parseBoolean(languageMaterialCheck));
+        profile.setEuropeanaLanguageMaterialDescriptionSame(Boolean.parseBoolean(languageDescriptionSameAsMaterialCheck));
+        if (profile.getEuropeanaLanguageMaterialDescriptionSame()) {
+            if (!languageSelectionMaterial.isEmpty()) {
+                profile.setEuropeanaLanguageDescription(languageSelectionMaterial.get(0));
+            }
+        } else {
+            profile.setEuropeanaLanguageDescription(languageSelectionDescription);
+        }
+        profile.setEuropeanaLanguageDescriptionFromFile(Boolean.parseBoolean(languageDescriptionCheck));
         profile.setEuropeanaLicenseFromFile(Boolean.parseBoolean(licenseCheck));
         profile.setEuropeanaLicense(license);
         if (IngestionprofilesAction.EUROPEANA.equals(this.license)) {
@@ -417,8 +440,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         dataProviderCheck = Boolean.toString(true);
         europeanaDaoType = "";
         europeanaDaoTypeCheck = Boolean.toString(true);
-        languageSelection = new ArrayList<>();
-        languageCheck = Boolean.toString(true);
+        languageSelectionMaterial = new ArrayList<>();
+        languageMaterialCheck = Boolean.toString(true);
+        languageDescriptionSameAsMaterialCheck = Boolean.toString(true);
+        languageSelectionDescription = "";
+        languageDescriptionCheck = Boolean.toString(true);
         licenseCheck = Boolean.toString(true);
         license = EUROPEANA;
         europeanaLicense = "";
@@ -897,20 +923,44 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.europeanaDaoTypeCheck = europeanaDaoTypeCheck;
     }
 
-    public List<String> getLanguageSelection() {
-        return languageSelection;
+    public List<String> getLanguageSelectionMaterial() {
+        return languageSelectionMaterial;
     }
 
-    public void setLanguageSelection(List<String> languageSelection) {
-        this.languageSelection = languageSelection;
+    public void setLanguageSelectionMaterial(List<String> languageSelectionMaterial) {
+        this.languageSelectionMaterial = languageSelectionMaterial;
     }
 
-    public String getLanguageCheck() {
-        return languageCheck;
+    public String getLanguageMaterialCheck() {
+        return languageMaterialCheck;
     }
 
-    public void setLanguageCheck(String languageCheck) {
-        this.languageCheck = languageCheck;
+    public void setLanguageMaterialCheck(String languageMaterialCheck) {
+        this.languageMaterialCheck = languageMaterialCheck;
+    }
+
+    public String getLanguageSelectionDescription() {
+        return languageSelectionDescription;
+    }
+
+    public void setLanguageSelectionDescription(String languageSelectionDescription) {
+        this.languageSelectionDescription = languageSelectionDescription;
+    }
+
+    public String getLanguageDescriptionCheck() {
+        return languageDescriptionCheck;
+    }
+
+    public void setLanguageDescriptionCheck(String languageDescriptionCheck) {
+        this.languageDescriptionCheck = languageDescriptionCheck;
+    }
+
+    public String getLanguageDescriptionSameAsMaterialCheck() {
+        return languageDescriptionSameAsMaterialCheck;
+    }
+
+    public void setLanguageDescriptionSameAsMaterialCheck(String languageDescriptionSameAsMaterialCheck) {
+        this.languageDescriptionSameAsMaterialCheck = languageDescriptionSameAsMaterialCheck;
     }
 
     public String getLicenseCheck() {

@@ -77,11 +77,20 @@ function validateAndSave(profileNameError, dataProviderError, edmDaoError, langu
             enableButtons();
             return;
         }
-        var languageSelection = $("#languageselection").attr("value");
-        if (languageSelection == null || languageSelection == "") {
+        var languageSelectionMaterial = $("#languageSelectionMaterial").attr("value");
+        if (languageSelectionMaterial == null || languageSelectionMaterial == "") {
             alertAndDecode(languageError);
             enableButtons();
             return;
+        }
+        var languageDescriptionSameAsMaterial = $("#languageDescriptionSameAsMaterialCheck").attr("checked");
+        if (languageDescriptionSameAsMaterial != "checked") {
+            var languageSelectionDescription = $("#languageSelectionDescription").attr("value");
+            if (languageSelectionDescription == null || languageSelectionDescription == "") {
+                alertAndDecode(languageError);
+                enableButtons();
+                return;
+            }
         }
         var license = $("#licenseeuropeana").attr("checked");
         if (license == "checked") {
